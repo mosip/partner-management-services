@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +46,9 @@ public class ClientManagementControllerTest {
     private ClientManagementServiceImpl clientManagementService;
 
     Map<String, Object> public_key;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
@@ -118,6 +122,7 @@ public class ClientManagementControllerTest {
     @WithMockUser(roles = {"AUTH_PARTNER"})
     public void testUpdateOAUTHClient() throws Exception {
         RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequesttime(LocalDateTime.now());
         ClientDetailUpdateRequestV2 clientDetailUpdateRequestV2 = new ClientDetailUpdateRequestV2();
         Map<String, String> clientNameLangMap = new HashMap<>();
         clientNameLangMap.put("eng", "English Client Name");
@@ -135,7 +140,7 @@ public class ClientManagementControllerTest {
         List<String> clientAuthMethods = List.of("private_key_jwt");
         clientDetailUpdateRequestV2.setClientAuthMethods(clientAuthMethods);
         requestWrapper.setRequest(clientDetailUpdateRequestV2);
-        String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);;
 
         mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123")
                         .contentType(MediaType.APPLICATION_JSON)
