@@ -6,6 +6,7 @@ CREATE TABLE pms.partner(
     address character varying(2000),
     contact_no character varying(16),
     email_id character varying(254),
+    email_id_hash character varying(3000),
     certificate_alias character varying(128),
     user_id character varying(256) NOT NULL,
     partner_type_code character varying(36) NOT NULL,
