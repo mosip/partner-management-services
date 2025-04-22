@@ -132,7 +132,7 @@ WHERE id='mpolicy-default-euin';
 
 -- Add new column for email hash
 ALTER TABLE pms.partner
-ADD COLUMN email_id_hash VARCHAR(5000);
+ADD COLUMN email_id_hash VARCHAR(3000);
 
 -- Update column sizes in pms.partner
 ALTER TABLE pms.partner
