@@ -1,6 +1,7 @@
 package io.mosip.pms.oauth.client.controller;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -39,6 +40,9 @@ public class ClientManagementController {
 	@Autowired
 	AuditUtil auditUtil;
 
+	@Autowired
+	RequestValidator requestValidator;
+
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
@@ -51,6 +55,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
+		requestValidator.validateReqTime(requestWrapper.getRequesttime());
 		var clientRespDto = clientManagementService.updateOAuthClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
