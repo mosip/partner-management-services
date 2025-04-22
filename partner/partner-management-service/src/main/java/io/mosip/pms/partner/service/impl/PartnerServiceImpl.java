@@ -389,7 +389,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setContactNo(request.getContactNumber());
 		partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(request.getEmailId());
-		partner.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId()));
+		partner.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
