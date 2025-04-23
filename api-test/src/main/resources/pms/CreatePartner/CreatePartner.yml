@@ -94,12 +94,12 @@ createPartnerSelfRegistration:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_REQUEST_ERROR_004"
     }
   ]
 }'
 
-   Pms_PartnerSelfRegistration_Invalid_Request_Time_Neg:
+   Pms_PartnerSelfRegistration_PastDate_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner with invalid request time
       role: partnerauth
@@ -120,7 +120,7 @@ createPartnerSelfRegistration:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_COR_001"
+      "errorCode": "PMS_REQUEST_ERROR_006"
     }
   ]
 }'
