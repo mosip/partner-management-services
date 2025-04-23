@@ -600,7 +600,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKey(partnerPolicyFromDb.getPolicyApiKey());

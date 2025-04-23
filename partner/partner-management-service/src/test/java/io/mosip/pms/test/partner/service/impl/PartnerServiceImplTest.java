@@ -595,13 +595,15 @@ public class PartnerServiceImplTest {
 	public void getPartnerDetailsTest() {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
 		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
 		RetrievePartnerDetailsResponse partnerDetails = pserviceImpl.getPartnerDetails("12345");
 		assertNotNull(partnerDetails);
-		assertEquals(partnerDetails.getContactNumber(), "47384384");
-		assertEquals(partnerDetails.getEmailId(), "xyz@hotmail.com");
-		assertEquals(partnerDetails.getAddress(), "address");
+		assertEquals(partnerDetails.getContactNumber(), "decrypted-data");
+		assertEquals(partnerDetails.getEmailId(), "decrypted-data");
+		assertEquals(partnerDetails.getAddress(), "decrypted-data");
 	}
 
 	@Test(expected = PartnerServiceException.class)

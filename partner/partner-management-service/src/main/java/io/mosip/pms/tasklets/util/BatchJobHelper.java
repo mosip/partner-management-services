@@ -131,7 +131,7 @@ public class BatchJobHelper {
 			notification.setPartnerId(partnerDetails.getId());
 			notification.setNotificationType(getNotificationType(certificateType));
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(partnerDetails.getEmailId());
+			notification.setEmailId(keyManagerHelper.encryptData(partnerDetails.getEmailId()));
 			notification.setEmailLangCode(partnerDetails.getLangCode());
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);

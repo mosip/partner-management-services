@@ -655,7 +655,7 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		}
 
-		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmail(partnerId, request.getEmailId());
+		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
 		String resultMessage;
 		if (contactsFromDb != null) {
 			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
@@ -673,6 +673,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
+			contactsFromDb.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
 			contactsFromDb.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setIsDeleted(false);

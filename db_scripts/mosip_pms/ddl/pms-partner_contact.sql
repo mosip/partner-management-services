@@ -19,6 +19,7 @@ CREATE TABLE pms.partner_contact(
 	partner_id character varying(36) NOT NULL,
 	contact_no character varying(1000),
 	email_id character varying(3000),
+	email_id_hash character varying(3000),
 	address character varying(10000),
 	is_active boolean NOT NULL,
 	cr_by character varying(256) NOT NULL,
