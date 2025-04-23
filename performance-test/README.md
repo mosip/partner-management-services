@@ -1,44 +1,45 @@
 
 ### Contains
 * This folder contains performance test script of below API endpoint categories.
-	01. Generate Auth Token For Keycloak User And Pms Client Secret Key (Setup)
-	02. Generate Policy Group And Policies (Setup)
-	03. Generate Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup)
-	04. Generate Auth Token For Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup)
-	05. S01 Register Partner (Execution)
-	06. S02 User Consent (Execution)
-	07. S03 Select Policy Group (Execution)
-	08. S04 Partner Certificate (Execution)
-	09. S05 Policy Request (Execution)
-	10. S06 Authentication Services Oidc Client (Preparation)
-	11. S06 Authentication Services Oidc Client (Execution)
-	12. S07 Authentication Services API Key (Preparation)
-	13. S07 Authentication Services API Key (Execution)
-	14. S08 Device Provider Services (Preparation)
-	15. S08 Device Provider Services (Execution)
-	16. S09 FTM Chip Provider Service (Preparation)
-	17. S09 FTM Chip Provider Service (Execution)
-	18. S10 Partner Admin Certificate Trust Store Root CA (Preparation)
-	19. S10 Partner Admin Certificate Trust Store Root CA (Execution)
-	20. S11 Partner Admin Certificate Trust Store Intermediate CA (Preparation)
-	21. S11 Partner Admin Certificate Trust Store Intermediate CA (Execution)
-	22. S12 Partner Admin Partners (Preparation)
-	23. S12 Partner Admin Partners (Execution)
-	24. S13 Partner Admin Policies Policy Group (Execution)
-	25. S14 Partner Admin Policies Authentication And Datashare Policy (Preparation)
-	26. S14 Partner Admin Policies Authentication And Datashare Policy (Execution)
-	27. S15 Partner Admin Partner Policy Linking (Preparation)
-	28. S15 Partner Admin Partner Policy Linking (Execution)
-	29. S16 Partner Admin SBI (Preparation)
-	30. S16 Partner Admin SBI (Execution)
-	31. S17 Partner Admin Device (Preparation)
-	32. S17 Partner Admin Device (Execution)
-	33. S18 Partner Admin FTM Device (Preparation)
-	34. S18 Partner Admin FTM Device (Execution)
-	35. S19 Partner Admin Authentication Services OIDC Client (Preparation)
-	36. S19 Partner Admin Authentication Services OIDC Client (Execution)
-	37. S20 Partner Admin Authentication Services API Key (Preparation)
-	38. S20 Partner Admin Authentication Services API Key (Execution)
+	01. Generate Auth Token For Pms Client (Setup)
+	02. Generate Partner Admin, Device Provider And FTM Provider Partners (Setup)
+	03. Generate Policy Group And Policies (Setup)
+	04. Generate Authentication Partner for Policy Creation,Oidc Client Creation And Api Key Generation (Setup)
+	05. Generate Auth Token For Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup)
+	06. S01 Register Partner (Execution)
+	07. S02 User Consent (Execution)
+	08. S03 Select Policy Group (Execution)
+	09. S04 Partner Certificate (Execution)
+	10. S05 Policy Request (Execution)
+	11. S06 Authentication Services Oidc Client (Preparation)
+	12. S06 Authentication Services Oidc Client (Execution)
+	13. S07 Authentication Services API Key (Preparation)
+	14. S07 Authentication Services API Key (Execution)
+	15. S08 Device Provider Services (Preparation)
+	16. S08 Device Provider Services (Execution)
+	17. S09 FTM Chip Provider Service (Preparation)
+	18. S09 FTM Chip Provider Service (Execution)
+	19. S10 Partner Admin Certificate Trust Store Root CA (Preparation)
+	20. S10 Partner Admin Certificate Trust Store Root CA (Execution)
+	21. S11 Partner Admin Certificate Trust Store Intermediate CA (Preparation)
+	22. S11 Partner Admin Certificate Trust Store Intermediate CA (Execution)
+	23. S12 Partner Admin Partners (Preparation)
+	24. S12 Partner Admin Partners (Execution)
+	25. S13 Partner Admin Policies Policy Group (Execution)
+	26. S14 Partner Admin Policies Authentication And Datashare Policy (Preparation)
+	27. S14 Partner Admin Policies Authentication And Datashare Policy (Execution)
+	28. S15 Partner Admin Partner Policy Linking (Preparation)
+	29. S15 Partner Admin Partner Policy Linking (Execution)
+	30. S16 Partner Admin SBI (Preparation)
+	31. S16 Partner Admin SBI (Execution)
+	32. S17 Partner Admin Device (Preparation)
+	33. S17 Partner Admin Device (Execution)
+	34. S18 Partner Admin FTM Device (Preparation)
+	35. S18 Partner Admin FTM Device (Execution)
+	36. S19 Partner Admin Authentication Services OIDC Client (Preparation)
+	37. S19 Partner Admin Authentication Services OIDC Client (Execution)
+	38. S20 Partner Admin Authentication Services API Key (Preparation)
+	39. S20 Partner Admin Authentication Services API Key (Execution)
 	
 * Open source Tools used,
     1. [Apache JMeter](https://jmeter.apache.org/)
@@ -69,13 +70,13 @@
 
 *Pmsrevamp_Test_Script.jmx
 	
-	* Generate Auth Token For Keycloak User And Pms Client Secret Key (Setup) : This threadgroup generates the token for keycloak user (For Policy creation) and mosip-pms-client (To generate partner)
+	* Generate Auth Token For Pms Client (Setup) : This threadgroup generates the token for mosip-pms-client (To generate partner).
+	
+	* Generate Partner Admin, Device Provider And FTM Provider Partners (Setup): This threadgroup creates Device Provider Partner, FTM Provider Partner, Partner Admin Partner.
 	
 	* Generate Policy Group And Policies (Setup): This threadgroup creates Policy Group with multiple policy names associated with it. The number of policies is defined by user-defined variable - numberOfPolicies
 	
 	* Generate Authentication Partner For Policy Request Creation, Oidc Client Creation And Api Key Generation (Setup) : This threadgroup creates Authentication Partner for policy creation, Authentication Partner for OIDC client creation and Authentication Partner for API key generation.
-	
-	* Generate Device Provider, FTM Provider And Partner Admin Partners (Setup) : This threadgroup creates Device Provider Partner, FTM Provider Partner, Partner Admin Partner.
 	
 	* Generate Authentication Token For Authentication, Device Provider, FTM Provider And Partner Admin Partners (Setup); This threadgroup generates Authentication Token for Authentication Partner, Device Provider Partner, FTM Provider Partner, Partner Admin Partner, Authentication Partner for OIDC client creation and Authentication Partner for API key.
 	
@@ -112,7 +113,7 @@
 		
 	* S07 Authentication Services API Key (Preparation): This threadgroup approves the policies for Api key generation.
 	
-	*S07 Authentication Services API Key (Execution):
+	* S07 Authentication Services API Key (Execution):
 		*S07 T01 Policy Group: This API endpoint fetches the policy group details.
 		*S07 T02 List All Policy Requests: This API endpoint lists all policy requests.
 		*S07 T03 Generate Api Key: This API endpoint generated Api key.
