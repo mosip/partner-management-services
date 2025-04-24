@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -49,6 +50,9 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 
 	@Autowired
 	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
+
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
@@ -131,10 +135,12 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 			Iterator<Partner> pmsPartnerAdminsIterator = pmsPartnerAdmins.iterator();
 			while (pmsPartnerAdminsIterator.hasNext()) {
 				Partner pmsPartnerAdmin = pmsPartnerAdminsIterator.next();
+				// Decrypt the email ID if it's already encrypted to avoid encrypting it again
+				String emailId = keyManagerHelper.decryptData(pmsPartnerAdmin.getEmailId());
 				NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
-						PartnerConstants.WEEKLY, pmsPartnerAdmin, expiringCertificates);
+						PartnerConstants.WEEKLY, pmsPartnerAdmin, expiringCertificates, emailId);
 				// Step 6: send email notification
-				emailNotificationService.sendEmailNotification(savedNotification);
+				emailNotificationService.sendEmailNotification(savedNotification, emailId);
 				log.info("Created weekly summary notification with notification id " + savedNotification.getId());
 				totalNotificationsCreated.add(savedNotification.getId());
 			}
