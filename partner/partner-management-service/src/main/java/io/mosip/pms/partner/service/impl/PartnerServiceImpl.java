@@ -1057,12 +1057,12 @@ public class PartnerServiceImpl implements PartnerService {
 
 		// Exclude encrypted columns from filtering
 		for (SearchFilter filter : dto.getFilters()) {
-			checkForUnsupportedColumn(filter.getColumnName());
+			validateFilterColumns(filter.getColumnName());
 		}
 
 		// Exclude encrypted columns from sorting
 		for (SearchSort sort : dto.getSort()) {
-			checkForUnsupportedColumn(sort.getSortField());
+			validateFilterColumns(sort.getSortField());
 		}
 
 		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
@@ -1090,7 +1090,7 @@ public class PartnerServiceImpl implements PartnerService {
 		return pageDto;
 	}
 
-	private void checkForUnsupportedColumn(String columnName) {
+	private void validateFilterColumns(String columnName) {
 		if (CONTACT_NO.equalsIgnoreCase(columnName) || EMAIL_ID.equalsIgnoreCase(columnName) || ADDRESS.equalsIgnoreCase(columnName)) {
 			throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
 					String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), columnName));
@@ -1241,7 +1241,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 		// Exclude encrypted columns from filtering
 		for (FilterDto filter : filterValueDto.getFilters()) {
-			checkForUnsupportedColumn(filter.getColumnName());
+			validateFilterColumns(filter.getColumnName());
 		}
 
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
