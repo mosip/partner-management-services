@@ -373,6 +373,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHistory.setPartnerTypeCode(partner.getPartnerTypeCode());
 		partnerHistory.setApprovalStatus(partner.getApprovalStatus());
 		partnerHistory.setEmailId(partner.getEmailId());
+		partnerHistory.setEmailIdHash(partner.getEmailIdHash());
 		partnerHistory.setIsActive(partner.getIsActive());
 		partnerHistory.setIsDeleted(partner.getIsDeleted());
 		partnerHistory.setUserId(partner.getUserId());

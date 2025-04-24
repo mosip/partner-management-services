@@ -41,6 +41,9 @@ public class PartnerH implements Serializable {
 	@Column(name="email_id")
 	private String emailId;
 
+	@Column(name="email_id_hash")
+	private String emailIdHash;
+
 	@Column(name="is_active")
 	private Boolean isActive;
 
@@ -151,6 +154,14 @@ public class PartnerH implements Serializable {
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+
+	public String getEmailIdHash() {
+		return this.emailIdHash;
+	}
+
+	public void setEmailIdHash(String emailIdHash) {
+		this.emailIdHash = emailIdHash;
 	}
 
 	public Boolean getIsActive() {

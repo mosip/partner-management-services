@@ -144,7 +144,8 @@ ALTER TABLE pms.partner
 ALTER TABLE pms.partner_h
     ALTER COLUMN contact_no TYPE character varying(1000),
     ALTER COLUMN email_id TYPE character varying(3000),
-    ALTER COLUMN address TYPE character varying(10000);
+    ALTER COLUMN address TYPE character varying(10000),
+    ADD COLUMN email_id_hash character varying(3000);
 
 -- Update column sizes in pms.partner_contact
 ALTER TABLE pms.partner_contact
