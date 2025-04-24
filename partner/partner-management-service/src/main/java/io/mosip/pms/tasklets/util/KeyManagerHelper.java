@@ -140,6 +140,10 @@ public class KeyManagerHelper {
 
 	public String decryptData(String data) {
 		try {
+			if (!Base64.isBase64(data)) {
+				log.debug("Data does not appear to be Base64 encoded. Likely not encrypted previously, returning original value.");
+				return data;
+			}
 			CryptoRequestDto cryptoRequestDto = new CryptoRequestDto();
 			cryptoRequestDto.setData(data);
 			cryptoRequestDto.setApplicationId(appId);

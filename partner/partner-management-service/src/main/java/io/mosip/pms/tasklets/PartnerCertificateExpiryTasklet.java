@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -51,6 +52,9 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 
 	@Autowired
 	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
+
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
@@ -105,10 +109,12 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 										.populateCertificateDetails(expiryPeriod, pmsPartner,
 												decodedPartnerCertificate);
 								expiringCertificates.add(certificateDetailsList);
+								// Decrypt the email ID if it's already encrypted to avoid encrypting it again
+								String emailId = keyManagerHelper.decryptData(pmsPartner.getEmailId());
 								NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
-										PartnerConstants.PARTNER, pmsPartner, expiringCertificates);
+										PartnerConstants.PARTNER, pmsPartner, expiringCertificates, emailId);
 								// Step 6: send email notification
-								emailNotificationService.sendEmailNotification(savedNotification);
+								emailNotificationService.sendEmailNotification(savedNotification, emailId);
 								log.info("Created partner certificate expiry notification with notification id "
 										+ savedNotification.getId());
 								totalNotificationsCreated.add(savedNotification.getId());

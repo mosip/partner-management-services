@@ -29,6 +29,7 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -874,10 +875,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
+			String emailHash = partnerFilterDto.getEmailAddress() != null
+					? DigestUtils.sha256Hex(partnerFilterDto.getEmailAddress().trim().toLowerCase())
+					: null;
+
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
 					getSummaryOfAllPartners(partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
 							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
-							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(),
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailHash,
 							partnerFilterDto.getIsActive(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);

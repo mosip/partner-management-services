@@ -121,7 +121,7 @@ public class BatchJobHelper {
 	}
 
 	public NotificationEntity saveCertificateExpiryNotification(String certificateType, Partner partnerDetails,
-			List<CertificateDetailsDto> certificateDetailsList) throws BatchJobServiceException {
+			List<CertificateDetailsDto> certificateDetailsList, String emailId) throws BatchJobServiceException {
 		try {
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
 			notificationDetailsDto.setCertificateDetails(certificateDetailsList);
@@ -131,7 +131,7 @@ public class BatchJobHelper {
 			notification.setPartnerId(partnerDetails.getId());
 			notification.setNotificationType(getNotificationType(certificateType));
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(keyManagerHelper.encryptData(partnerDetails.getEmailId()));
+			notification.setEmailId(keyManagerHelper.encryptData(emailId));
 			notification.setEmailLangCode(partnerDetails.getLangCode());
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);

@@ -65,7 +65,7 @@ public class EmailNotificationService {
 	KeyManagerHelper keyManagerHelper;
 
 	@Transactional
-	public void sendEmailNotification(NotificationEntity notificationEntity) {
+	public void sendEmailNotification(NotificationEntity notificationEntity, String emailId) {
 		try {
 			// Optional<NotificationEntity> optionalNotification =
 			// notificationServiceRepository.findById(notificationId);
@@ -83,7 +83,7 @@ public class EmailNotificationService {
 			EmailTemplateDto templateDto = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(),
 					notificationEntity.getNotificationType());
 			String populatedTemplate = populateTemplate(templateDto.getBody(), notificationEntity);
-			sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject());
+			sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject(), emailId);
 
 			// update notificationEntity status
 			notificationEntity.setEmailSent(true);
@@ -148,12 +148,10 @@ public class EmailNotificationService {
 		return context;
 	}
 
-	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject) {
+	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject, String emailId) {
 		try {
 			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
-			// Add email details
-			String emailId = keyManagerHelper.decryptData(notificationEntity.getEmailId());
 			log.debug("emailId {}", emailId);
 			requestBody.add("mailTo", emailId);
 			requestBody.add("mailSubject", emailSubject);
