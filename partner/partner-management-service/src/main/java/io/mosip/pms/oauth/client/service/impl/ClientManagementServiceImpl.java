@@ -743,7 +743,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
-
+			partnerHelper.validateRequestParameters(partnerHelper.oidcClientsAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
 			if (!isPartnerAdmin) {

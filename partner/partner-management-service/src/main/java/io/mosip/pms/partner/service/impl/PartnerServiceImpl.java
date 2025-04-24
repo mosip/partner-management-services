@@ -27,6 +27,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -310,12 +311,14 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
-		if (request.getLangCode() != null && !getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
-					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
-		}else {
+		if (request.getLangCode() != null) {
+			if (!getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+						"partnerId");
+				throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
+						ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
+			}
+		} else {
 			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
 		}
 		if (!validatePartnerId(request.getPartnerId())) {
@@ -386,6 +389,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setContactNo(request.getContactNumber());
 		partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(request.getEmailId());
+		partner.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
@@ -430,9 +434,16 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
-		Partner partnerFromDb = partnerRepository.findByEmailId(emailId);
+		String emailHash = DigestUtils.sha256Hex(emailId.toLowerCase());
+
+		Partner partnerFromDb = partnerRepository.findByEmailIdHash(emailHash);
+		if (partnerFromDb == null) {
+			// Fallback: check plain email (backward compatibility)
+			partnerFromDb = partnerRepository.findByEmailId(emailId.toLowerCase());
+		}
+
 		if (partnerFromDb != null) {
-			LOGGER.error("Partner with email " + emailId + "already exists.");
+			LOGGER.error("Partner with email " + emailId + " already exists.");
 			return false;
 		}
 		return true;

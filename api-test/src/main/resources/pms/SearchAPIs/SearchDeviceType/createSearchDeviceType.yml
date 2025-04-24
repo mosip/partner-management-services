@@ -166,7 +166,7 @@ createSearchDeviceType:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS-MSD-310"
+      "errorCode": "PMS-MSD-311"
     }
   ]
 }'

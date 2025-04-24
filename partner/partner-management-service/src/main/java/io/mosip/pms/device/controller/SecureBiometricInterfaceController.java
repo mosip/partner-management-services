@@ -340,7 +340,6 @@ public class SecureBiometricInterfaceController {
 			)
 			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.sbiAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		SbiFilterDto filterDto = new SbiFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
