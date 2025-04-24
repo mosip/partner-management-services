@@ -311,7 +311,7 @@ public class PartnerServiceImplTest {
 		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(par.getId())).thenReturn(partner);
-		Mockito.when(partnerContactRepository.findByPartnerAndEmail(Mockito.anyString(), Mockito.anyString())).thenReturn(contactFromDB);
+		Mockito.when(partnerContactRepository.findByPartnerAndEmailIdHash(Mockito.anyString(), Mockito.anyString())).thenReturn(contactFromDB);
 	    pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, par.getId());
 	    addContactRequestDto.setEmailId("email");
 	    try {
