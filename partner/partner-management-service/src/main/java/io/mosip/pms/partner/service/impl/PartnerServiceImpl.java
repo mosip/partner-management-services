@@ -1055,21 +1055,14 @@ public class PartnerServiceImpl implements PartnerService {
 		List<PartnerSearchResponseDto> partners = new ArrayList<>();
 		PageResponseDto<PartnerSearchResponseDto> pageDto = new PageResponseDto<>();
 
-		// contactNo, emailId, address columns are excluded from filtering as their data is encrypted in the database
+		// Exclude encrypted columns from filtering
 		for (SearchFilter filter : dto.getFilters()) {
-			String column = filter.getColumnName();
-			if (CONTACT_NO.equalsIgnoreCase(column) || EMAIL_ID.equalsIgnoreCase(column) || ADDRESS.equalsIgnoreCase(column)) {
-				throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
-						String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), column));
-			}
+			checkForUnsupportedColumn(filter.getColumnName());
 		}
-		// contactNo, emailId, address columns are excluded from filtering as their data is encrypted in the database
+
+		// Exclude encrypted columns from sorting
 		for (SearchSort sort : dto.getSort()) {
-			String sortField = sort.getSortField();
-			if (CONTACT_NO.equalsIgnoreCase(sortField) || EMAIL_ID.equalsIgnoreCase(sortField) || ADDRESS.equalsIgnoreCase(sortField)) {
-				throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
-						String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), sortField));
-			}
+			checkForUnsupportedColumn(sort.getSortField());
 		}
 
 		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
@@ -1095,6 +1088,13 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_SUCCESS);
 		return pageDto;
+	}
+
+	private void checkForUnsupportedColumn(String columnName) {
+		if (CONTACT_NO.equalsIgnoreCase(columnName) || EMAIL_ID.equalsIgnoreCase(columnName) || ADDRESS.equalsIgnoreCase(columnName)) {
+			throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
+					String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), columnName));
+		}
 	}
 
 	@Override
@@ -1239,13 +1239,9 @@ public class PartnerServiceImpl implements PartnerService {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 
-		// These columns are excluded from filtering as their data is encrypted in the database
+		// Exclude encrypted columns from filtering
 		for (FilterDto filter : filterValueDto.getFilters()) {
-			String column = filter.getColumnName();
-			if (CONTACT_NO.equalsIgnoreCase(column) || EMAIL_ID.equalsIgnoreCase(column) || ADDRESS.equalsIgnoreCase(column)) {
-				throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
-						String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), column));
-			}
+			checkForUnsupportedColumn(filter.getColumnName());
 		}
 
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
