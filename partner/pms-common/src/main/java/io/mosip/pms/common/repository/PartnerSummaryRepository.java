@@ -24,7 +24,7 @@ public interface PartnerSummaryRepository extends BaseRepository<PartnerSummaryE
             "AND (:certificateUploadStatus IS NULL OR " +
             "(:certificateUploadStatus = 'not_uploaded' AND p.certificateAlias IS NULL) " +
             "OR (:certificateUploadStatus = 'uploaded' AND p.certificateAlias IS NOT NULL)) " +
-            "AND (:emailAddress IS NULL OR lower(p.emailId) = :emailAddress OR p.emailIdHash = :emailIdHash) " +
+            "AND (:emailAddress IS NULL OR (lower(p.emailId) = :emailAddress OR p.emailIdHash = :emailAddressHash)) " +
             "AND (:isActive IS NULL OR p.isActive = :isActive)"
     )
     Page<PartnerSummaryEntity> getSummaryOfAllPartners(
@@ -34,7 +34,7 @@ public interface PartnerSummaryRepository extends BaseRepository<PartnerSummaryE
             @Param("policyGroupName") String policyGroupName,
             @Param("certificateUploadStatus") String certificateUploadStatus,
             @Param("emailAddress") String emailAddress,
-            @Param("emailIdHash") String emailIdHash,
+            @Param("emailAddressHash") String emailAddressHash,
             @Param("isActive") Boolean isActive,
             Pageable pageable
     );

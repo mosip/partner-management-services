@@ -1376,7 +1376,7 @@ public class PartnerManagementServiceImplTest {
 		PartnerSummaryEntity partnerSummaryEntity = new PartnerSummaryEntity();
 		partnerSummaryEntity.setPartnerId("123");
 		Page<PartnerSummaryEntity> page = new PageImpl<>(List.of(partnerSummaryEntity), pageable, 1);
-		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 	}
 
@@ -1394,7 +1394,7 @@ public class PartnerManagementServiceImplTest {
 		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
-		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 

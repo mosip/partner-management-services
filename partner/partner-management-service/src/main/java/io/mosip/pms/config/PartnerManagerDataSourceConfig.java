@@ -20,7 +20,6 @@ import io.mosip.kernel.dataaccess.hibernate.repository.impl.HibernateRepositoryI
 		basePackages = "io.mosip.pms.device.authdevice.repository.*, io.mosip.pms.common.repository.*",
 		repositoryBaseClass = HibernateRepositoryImpl.class
 )
-@EntityScan(basePackages ="io.mosip.pms.device.authdevice.entity.*, io.mosip.pms.common.entity.*" )
 public class PartnerManagerDataSourceConfig extends HibernateDaoConfig {
 
 	@Override

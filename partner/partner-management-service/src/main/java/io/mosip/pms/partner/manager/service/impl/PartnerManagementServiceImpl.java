@@ -875,17 +875,21 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
-			String emailHash = partnerFilterDto.getEmailAddress() != null
+			String emailAddressHash = partnerFilterDto.getEmailAddress() != null
 					? DigestUtils.sha256Hex(partnerFilterDto.getEmailAddress().trim().toLowerCase())
 					: null;
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
 					getSummaryOfAllPartners(partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
 							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
-							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailHash,
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailAddressHash,
 							partnerFilterDto.getIsActive(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
+				// Decrypt email address for each partner summary
+				partnerSummaryDtoList.forEach(dto -> {
+					dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
+				});
 				pageResponseV2Dto.setPageNo(pageNo);
 				pageResponseV2Dto.setPageSize(pageSize);
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
