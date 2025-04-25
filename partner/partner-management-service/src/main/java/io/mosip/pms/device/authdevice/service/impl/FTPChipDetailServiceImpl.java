@@ -157,7 +157,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	private String getFtmChipDetailsId;
 
 	@Value("${mosip.pms.ca.signed.partner.certificate.available}")
-	private String isCaSignedPartnerCertificateAvailable;
+	private Boolean isCaSignedPartnerCertificateAvailable;
 
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -752,7 +752,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 								if (ftpChipDetail.getCertificateAlias() != null) {
 									ftmChipDetailsDto.setIsCertificateAvailable(true);
 									try {
-										if (isCaSignedPartnerCertificateAvailable.equals("true")) {
+										if (isCaSignedPartnerCertificateAvailable) {
 											FtmCertificateDownloadResponseDto responseObject = partnerHelper.getCertificate(ftpChipDetail.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", FtmCertificateDownloadResponseDto.class);
 											partnerHelper.populateFtmCertificateExpiryState(responseObject);
 											ftmChipDetailsDto.setCertificateUploadDateTime(responseObject.getMosipSignedCertUploadDateTime());
