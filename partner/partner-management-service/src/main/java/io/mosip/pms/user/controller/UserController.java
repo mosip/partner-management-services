@@ -52,6 +52,15 @@ public class UserController {
 	@Value("${mosip.pms.api.id.configs.get}")
 	private String getConfigsId;
 
+	@Value("${mosip.pms.ca.signed.partner.certificate.available}")
+	private String isCaSignedPartnerCertificateAvailable;
+
+	@Value("${mosip.pms.oidc.client.available}")
+	private String isOidcClientAvailable;
+
+	@Value("${mosip.pms.root.and.intermediate.certificates.available}")
+	private String isRootIntermediateCertAvailable;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -107,6 +116,9 @@ public class UserController {
 		configMap.put("maxAllowedExpiryYear", maxAllowedExpiryYear);
 		configMap.put("maxAllowedCreatedYear", maxAllowedCreatedYear);
 		configMap.put("itemsPerPage", itemsPerPage);
+		configMap.put("isCaSignedPartnerCertificateAvailable", isCaSignedPartnerCertificateAvailable);
+		configMap.put("isOidcClientAvailable", isOidcClientAvailable);
+		configMap.put("isRootIntermediateCertAvailable", isRootIntermediateCertAvailable);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
