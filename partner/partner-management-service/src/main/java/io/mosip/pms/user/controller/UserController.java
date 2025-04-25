@@ -118,7 +118,7 @@ public class UserController {
 		configMap.put("itemsPerPage", itemsPerPage);
 		configMap.put("isCaSignedPartnerCertificateAvailable", isCaSignedPartnerCertificateAvailable);
 		configMap.put("isOidcClientAvailable", isOidcClientAvailable);
-		configMap.put("isCaCertificateApiAvailable", isRootIntermediateCertAvailable);
+		configMap.put("isRootIntermediateCertAvailable", isRootIntermediateCertAvailable);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
