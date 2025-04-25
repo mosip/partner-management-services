@@ -19,6 +19,7 @@ public enum ErrorCode {
 	INVALID_PAGE_NO("PMS_PRT_360", "Invalid Page No"),
 	INVALID_PAGE_SIZE("PMS_PRT_361", "Invalid page size"),
 	INVALID_VALUE("KER_PRT_390", "Invalid filter value"),
+	UNSUPPORTED_COLUMN("KER_PRT_391", "The column '%s' is not supported due to system limitations."),
 	PARTNER_ALREADY_REGISTERED_EXCEPTION("PMS_PRT_001",  "A Partner is already registered with the same Name"),
 	PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION("PMS_PRT_051", "A Partner is already registered with the same Id"),
 	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the selected partner."),

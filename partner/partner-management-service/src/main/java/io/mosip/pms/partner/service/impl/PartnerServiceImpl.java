@@ -124,6 +124,7 @@ import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
@@ -159,6 +160,12 @@ public class PartnerServiceImpl implements PartnerService {
 	public static final String INACTIVE = "INACTIVE";
 
 	public static final String AUTH_PARTNER = "Auth_Partner";
+
+	private static final String CONTACT_NO = "contactNo";
+
+	private static final String EMAIL_ID = "emailId";
+
+	private static final String ADDRESS = "address";
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
@@ -1047,6 +1054,17 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
 		List<PartnerSearchResponseDto> partners = new ArrayList<>();
 		PageResponseDto<PartnerSearchResponseDto> pageDto = new PageResponseDto<>();
+
+		// Exclude encrypted columns from filtering
+		for (SearchFilter filter : dto.getFilters()) {
+			validateFilterColumns(filter.getColumnName());
+		}
+
+		// Exclude encrypted columns from sorting
+		for (SearchSort sort : dto.getSort()) {
+			validateFilterColumns(sort.getSortField());
+		}
+
 		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
 			List<SearchFilter> filters = new ArrayList<>();
 			SearchFilter partnerTypeSearch = new SearchFilter();
@@ -1060,10 +1078,23 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<Partner> page = partnerSearchHelper.search(Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
+			// Decrypt fields after mapping
+			partners.forEach(partner -> {
+				partner.setContactNo(keyManagerHelper.decryptData(partner.getContactNo()));
+				partner.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+				partner.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+			});
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_SUCCESS);
 		return pageDto;
+	}
+
+	private void validateFilterColumns(String columnName) {
+		if (CONTACT_NO.equalsIgnoreCase(columnName) || EMAIL_ID.equalsIgnoreCase(columnName) || ADDRESS.equalsIgnoreCase(columnName)) {
+			throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
+					String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), columnName));
+		}
 	}
 
 	@Override
@@ -1207,6 +1238,12 @@ public class PartnerServiceImpl implements PartnerService {
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+
+		// Exclude encrypted columns from filtering
+		for (FilterDto filter : filterValueDto.getFilters()) {
+			validateFilterColumns(filter.getColumnName());
+		}
+
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			SearchFilter loggedInUserFilterDto = new SearchFilter();
 			loggedInUserFilterDto.setColumnName("id");
