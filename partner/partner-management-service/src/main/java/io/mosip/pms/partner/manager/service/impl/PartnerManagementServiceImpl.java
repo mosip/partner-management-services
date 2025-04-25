@@ -71,6 +71,8 @@ import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
 
+import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
+
 @Service
 @Transactional
 public class PartnerManagementServiceImpl implements PartnerManagerService {
@@ -863,6 +865,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+			if ("emailAddress".equalsIgnoreCase(sortFieldName)) {
+				LOGGER.debug("Sorting on '{}' column is not supported due to system limitations", sortFieldName);
+				throw new PartnerServiceException(
+						UNSUPPORTED_COLUMN.getErrorCode(),
+						String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
+				);
+			}
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 
