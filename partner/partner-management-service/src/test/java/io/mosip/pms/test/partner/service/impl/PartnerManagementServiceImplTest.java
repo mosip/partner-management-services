@@ -22,6 +22,7 @@ import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -137,6 +138,9 @@ public class PartnerManagementServiceImplTest {
 
 	@Mock
 	Environment environment;
+
+	@MockBean
+	KeyManagerHelper keyManagerHelper;
 	
 	@Before
 	public void setUp() {
@@ -598,6 +602,8 @@ public class PartnerManagementServiceImplTest {
 		response.put("response", getCertResponse());
 		response.put("id",null);
 		response.put("version", null);
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
 	}
@@ -659,6 +665,8 @@ public class PartnerManagementServiceImplTest {
 		Optional<Partner> partner = Optional.of(getPartner());
 		partner.get().setIsActive(true);
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(restUtil.getApi(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(response);
 		partnerManagementImpl.activateDeactivateAuthEKYCPartner(partnerId, req);
 	}	
@@ -672,6 +680,8 @@ public class PartnerManagementServiceImplTest {
 	public void getAllAuthEKYCPartnersForThePolicyGroupTest_S2() {		
 		List<Partner> partners = new ArrayList<Partner>();
 		partners.add(getPartner());
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findAll()).thenReturn(partners);
 		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup(Optional.empty());
 	}
@@ -683,6 +693,8 @@ public class PartnerManagementServiceImplTest {
 		Partner part = partner.get();
 		part.setIsActive(false);
 		partners.add(part);
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findAll()).thenReturn(partners);
 		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup(Optional.empty());
 	}
@@ -696,6 +708,8 @@ public class PartnerManagementServiceImplTest {
 		partners.add(part);
 		Mockito.when(partnerRepository.findAll()).thenReturn(partners);
 		Mockito.when(partnerRepository.findByPartnerType(Mockito.anyString())).thenReturn(partners);
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		partnerManagementImpl.getAllAuthEKYCPartnersForThePolicyGroup(Optional.of("Auth_Partner"));
 	}
 	
@@ -836,6 +850,8 @@ public class PartnerManagementServiceImplTest {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
 		statusDto.setStatus("De-Active");
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
@@ -875,6 +891,8 @@ public class PartnerManagementServiceImplTest {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
 		statusDto.setStatus("Active");
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
@@ -1376,7 +1394,7 @@ public class PartnerManagementServiceImplTest {
 		PartnerSummaryEntity partnerSummaryEntity = new PartnerSummaryEntity();
 		partnerSummaryEntity.setPartnerId("123");
 		Page<PartnerSummaryEntity> page = new PageImpl<>(List.of(partnerSummaryEntity), pageable, 1);
-		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 	}
 
@@ -1394,7 +1412,7 @@ public class PartnerManagementServiceImplTest {
 		Integer pageSize = 8;
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		Page<PartnerSummaryEntity> page = null;
-		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, null);
 	}
 

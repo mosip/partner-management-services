@@ -1130,6 +1130,7 @@ public class PolicyManagementService {
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PolicySummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			PolicyUtil.validateGetAllPoliciesRequestParameters(sortFieldName, sortType, pageNo, pageSize);
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 

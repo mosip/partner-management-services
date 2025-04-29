@@ -27,6 +27,8 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -122,6 +124,7 @@ import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
@@ -157,6 +160,12 @@ public class PartnerServiceImpl implements PartnerService {
 	public static final String INACTIVE = "INACTIVE";
 
 	public static final String AUTH_PARTNER = "Auth_Partner";
+
+	private static final String CONTACT_NO = "contactNo";
+
+	private static final String EMAIL_ID = "emailId";
+
+	private static final String ADDRESS = "address";
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
@@ -217,6 +226,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	PartnerHelper partnerHelper;
+
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
 
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
@@ -310,12 +322,14 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
 					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 		}
-		if (request.getLangCode() != null && !getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
-					ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
-		}else {
+		if (request.getLangCode() != null) {
+			if (!getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
+						"partnerId");
+				throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
+						ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
+			}
+		} else {
 			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
 		}
 		if (!validatePartnerId(request.getPartnerId())) {
@@ -366,6 +380,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerHistory.setPartnerTypeCode(partner.getPartnerTypeCode());
 		partnerHistory.setApprovalStatus(partner.getApprovalStatus());
 		partnerHistory.setEmailId(partner.getEmailId());
+		partnerHistory.setEmailIdHash(partner.getEmailIdHash());
 		partnerHistory.setIsActive(partner.getIsActive());
 		partnerHistory.setIsDeleted(partner.getIsDeleted());
 		partnerHistory.setUserId(partner.getUserId());
@@ -382,10 +397,11 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setId(request.getPartnerId());
 		partner.setPolicyGroupId(policyGroup != null ? policyGroup.getId() : null);
 		partner.setName(request.getOrganizationName());
-		partner.setAddress(request.getAddress());
-		partner.setContactNo(request.getContactNumber());
+		partner.setAddress(keyManagerHelper.encryptData(request.getAddress()));
+		partner.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 		partner.setPartnerTypeCode(partnerType);
-		partner.setEmailId(request.getEmailId());
+		partner.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
+		partner.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
@@ -430,9 +446,16 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
-		Partner partnerFromDb = partnerRepository.findByEmailId(emailId);
+		String emailHash = DigestUtils.sha256Hex(emailId.toLowerCase());
+
+		Partner partnerFromDb = partnerRepository.findByEmailIdHash(emailHash);
+		if (partnerFromDb == null) {
+			// Fallback: check plain email (backward compatibility)
+			partnerFromDb = partnerRepository.findByEmailId(emailId.toLowerCase());
+		}
+
 		if (partnerFromDb != null) {
-			LOGGER.error("Partner with email " + emailId + "already exists.");
+			LOGGER.error("Partner with email " + emailId + " already exists.");
 			return false;
 		}
 		return true;
@@ -487,9 +510,9 @@ public class PartnerServiceImpl implements PartnerService {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Partner partner = getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
-		response.setAddress(partner.getAddress());
-		response.setContactNumber(partner.getContactNo());
-		response.setEmailId(partner.getEmailId());
+		response.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+		response.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+		response.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		response.setOrganizationName(partner.getName());
 		response.setPartnerType(partner.getPartnerTypeCode());
 		response.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
@@ -539,8 +562,8 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
 		}
-		partner.setAddress(partnerUpdateRequest.getAddress());
-		partner.setContactNo(partnerUpdateRequest.getContactNumber());
+		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
+		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
 		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
 		partner.setLogoUrl(partnerUpdateRequest.getLogoUrl());
 		partner.setUpdBy(getLoggedInUserId());
@@ -640,11 +663,11 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		}
 
-		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmail(partnerId, request.getEmailId());
+		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
 		String resultMessage;
 		if (contactsFromDb != null) {
-			contactsFromDb.setAddress(request.getAddress());
-			contactsFromDb.setContactNo(request.getContactNumber());
+			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
+			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setUpdBy(getLoggedInUserId());
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
@@ -653,12 +676,13 @@ public class PartnerServiceImpl implements PartnerService {
 			Partner partnerFromDb = getValidPartner(partnerId, false);
 			contactsFromDb = new PartnerContact();
 			contactsFromDb.setId(PartnerUtil.createPartnerId());
-			contactsFromDb.setAddress(request.getAddress());
-			contactsFromDb.setContactNo(request.getContactNumber());
+			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
+			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
-			contactsFromDb.setEmailId(request.getEmailId());
+			contactsFromDb.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+			contactsFromDb.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setIsDeleted(false);
 			resultMessage = "Contacts details added successfully.";
@@ -1030,6 +1054,17 @@ public class PartnerServiceImpl implements PartnerService {
 	public PageResponseDto<PartnerSearchResponseDto> searchPartner(PartnerSearchDto dto) {
 		List<PartnerSearchResponseDto> partners = new ArrayList<>();
 		PageResponseDto<PartnerSearchResponseDto> pageDto = new PageResponseDto<>();
+
+		// Exclude encrypted columns from filtering
+		for (SearchFilter filter : dto.getFilters()) {
+			validateFilterColumns(filter.getColumnName());
+		}
+
+		// Exclude encrypted columns from sorting
+		for (SearchSort sort : dto.getSort()) {
+			validateFilterColumns(sort.getSortField());
+		}
+
 		if (!dto.getPartnerType().equalsIgnoreCase(ALL)) {
 			List<SearchFilter> filters = new ArrayList<>();
 			SearchFilter partnerTypeSearch = new SearchFilter();
@@ -1043,10 +1078,23 @@ public class PartnerServiceImpl implements PartnerService {
 		Page<Partner> page = partnerSearchHelper.search(Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
 			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
+			// Decrypt fields after mapping
+			partners.forEach(partner -> {
+				partner.setContactNo(keyManagerHelper.decryptData(partner.getContactNo()));
+				partner.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+				partner.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+			});
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_SUCCESS);
 		return pageDto;
+	}
+
+	private void validateFilterColumns(String columnName) {
+		if (CONTACT_NO.equalsIgnoreCase(columnName) || EMAIL_ID.equalsIgnoreCase(columnName) || ADDRESS.equalsIgnoreCase(columnName)) {
+			throw new PartnerServiceException(ErrorCode.UNSUPPORTED_COLUMN.getErrorCode(),
+					String.format(ErrorCode.UNSUPPORTED_COLUMN.getErrorMessage(), columnName));
+		}
 	}
 
 	@Override
@@ -1190,6 +1238,12 @@ public class PartnerServiceImpl implements PartnerService {
 	public FilterResponseCodeDto filterValues(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
+
+		// Exclude encrypted columns from filtering
+		for (FilterDto filter : filterValueDto.getFilters()) {
+			validateFilterColumns(filter.getColumnName());
+		}
+
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			SearchFilter loggedInUserFilterDto = new SearchFilter();
 			loggedInUserFilterDto.setColumnName("id");
@@ -1492,7 +1546,7 @@ public class PartnerServiceImpl implements PartnerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);

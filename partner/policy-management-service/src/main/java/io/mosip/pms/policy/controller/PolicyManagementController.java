@@ -353,7 +353,6 @@ public class PolicyManagementController {
 			)
 			@RequestParam(value = "status", required = false) String status) {
 
-		PolicyUtil.validateGetAllPoliciesRequestParameters(sortFieldName, sortType, pageNo, pageSize);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
 		if (policyType != null) {
 			filterDto.setPolicyType(policyType.toLowerCase());

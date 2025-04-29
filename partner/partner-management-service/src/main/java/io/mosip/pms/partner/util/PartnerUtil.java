@@ -101,20 +101,20 @@ public class PartnerUtil {
 
 	public static void validateApiResponse(Map<String, Object> response, String apiUrl) {
 		if (response == null) {
-			LOGGER.error("Received null response from API: {}", apiUrl);
+			LOGGER.debug("Received null response from API: {}", apiUrl);
 			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
 					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
 		}
 		if (response.containsKey(PartnerConstants.ERRORS)) {
 			List<Map<String, Object>> errorList = (List<Map<String, Object>>) response.get(PartnerConstants.ERRORS);
 			if (errorList != null && !errorList.isEmpty()) {
-				LOGGER.error("Error occurred while fetching data: {}", errorList);
+				LOGGER.debug("Error occurred while fetching data: {}", errorList);
 				throw new BatchJobServiceException(String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORCODE)),
 						String.valueOf(errorList.getFirst().get(PartnerConstants.ERRORMESSAGE)));
 			}
 		}
 		if (!response.containsKey(PartnerConstants.RESPONSE) || response.get(PartnerConstants.RESPONSE) == null) {
-			LOGGER.error("Missing response data in API call: {}", apiUrl);
+			LOGGER.debug("Missing response data in API call: {}", apiUrl);
 			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
 					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
 		}
