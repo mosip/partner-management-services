@@ -1,7 +1,7 @@
 GetAllOidcClient:
    Pms_GetAllOidcClient_All_Valid_Smoke:
       endPoint: /v1/partnermanager/oauth/client
-      description: Fetching all OIDC Clients of the loggedin Partner
+      description: Fetching all OIDC Clients of the logged in Auth Partner
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllOidcClient_01
       checkErrorsOnlyInResponse: true
@@ -11,9 +11,446 @@ GetAllOidcClient:
       input: '{
 }'
       output: '{
+}'
+   Pms_GetAllOidcClient_All_Valid_As_partneradmin:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Fetching all OIDC Clients of the logged in Partner admin
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_04
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_without_Auth_Neg:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Fetching all OIDC Clients without authentication
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_02
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "KER-ATH-401"
        }
        ]
+}'
+   Pms_GetAllOidcClient_Invalid_Authentication_neg:
+      endPoint: /v1/partnermanager/oauth/client
+      description: Fetching all OIDC Clients of the logged in ftm Partner
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_03
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_with_only_sortfield_specified_Neg:
+      endPoint: /v1/partnermanager/oauth/client?sortFieldName={sortFieldName}
+      description: Fetching all OIDC Clients of the logged in Partner admin and only sortfield is specified
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_05
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "partnerId",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_with_only_pagesize_specified_Neg:
+      endPoint: /v1/partnermanager/oauth/client?pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and only pagesize is specified
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_06
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "6",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_006"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_with_pagesize_specified:
+      endPoint: /v1/partnermanager/oauth/client?pageNo={pageNo}&pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and pagesize is specified
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_07
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "4",
+      "pageSize": "6",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_Negative_pageNo_specified_neg:
+      endPoint: /v1/partnermanager/oauth/client?pageNo={pageNo}&pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and negative Pageno is specified
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_09
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "-4",
+      "pageSize": "6",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_360"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_with_Negative_pagesize_specified_Neg:
+      endPoint: /v1/partnermanager/oauth/client?pageNo={pageNo}&pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and negative pagesize is specified
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_08
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "4",
+      "pageSize": "-6",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_361"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_with_status_Active:
+      endPoint: /v1/partnermanager/oauth/client?status={status}
+      description: Fetching all OIDC Clients of the logged in Partner admin and status as Active
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_10
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "ACTIVE"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_status_InActive:
+      endPoint: /v1/partnermanager/oauth/client?status={status}
+      description: Fetching all OIDC Clients of the logged in Partner admin and status as InActive
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_11
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "INACTIVE"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_PartnerId_contains_a:
+      endPoint: /v1/partnermanager/oauth/client?partnerId={partnerId}
+      description: Fetching all OIDC Clients of the logged in Partner admin and partnerid value contains 'a'
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_12
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "a",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_Policygroupname_contains_12:
+      endPoint: /v1/partnermanager/oauth/client?policyGroupName={policyGroupName}
+      description: Fetching all OIDC Clients of the logged in Partner admin and policyGroupName value contains '12'
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_13
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "12",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_invalid_Sorttype:
+      endPoint: /v1/partnermanager/oauth/client?sortFieldName={sortFieldName}&sortType={sortType}&pageNo={pageNo}&pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and invalid sort type given
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_14
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/error
+      input: '{
+      "sortFieldName": "partnerId",
+      "sortType": "abcdef",
+      "pageNo": "1",
+      "pageSize": "1",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_358"
+       }
+       ]
+}'
+   Pms_GetAllOidcClient_with_Sorttype_ASC:
+      endPoint: /v1/partnermanager/oauth/client?sortFieldName={sortFieldName}&sortType={sortType}&pageNo={pageNo}&pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and sort type as ASC
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_15
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "partnerId",
+      "sortType": "ASC",
+      "pageNo": "1",
+      "pageSize": "1",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_Sorttype_DESC:
+      endPoint: /v1/partnermanager/oauth/client?sortFieldName={sortFieldName}&sortType={sortType}&pageNo={pageNo}&pageSize={pageSize}
+      description: Fetching all OIDC Clients of the logged in Partner admin and sort type as DESC
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_16
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "partnerId",
+      "sortType": "DESC",
+      "pageNo": "1",
+      "pageSize": "1",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_orgname_contains_a:
+      endPoint: /v1/partnermanager/oauth/client?orgName={orgName}
+      description: Fetching all OIDC Clients of the logged in Partner admin and orgname contains 'a'
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_17
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "a",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_policyName_contains_ab:
+      endPoint: /v1/partnermanager/oauth/client?policyName={policyName}
+      description: Fetching all OIDC Clients of the logged in Partner admin and policyName contains 'ab'
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_18
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "ab",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_clientname_contains_i:
+      endPoint: /v1/partnermanager/oauth/client?clientName={clientName}
+      description: Fetching all OIDC Clients of the logged in Partner admin and clientname contains 'i'
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_19
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "i",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
+}'
+   Pms_GetAllOidcClient_with_random_partnerid:
+      endPoint: /v1/partnermanager/oauth/client?partnerId={partnerId}
+      description: Fetching all OIDC Clients of the logged in Partner admin and partnerid value given 
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllOidcClient_20
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllOidcClient/getAllOidcClient
+      outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
+      input: '{
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "766666545676534567",
+      "orgName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "clientName": "$REMOVE$",
+      "status": "$REMOVE$"                                                            
+}'
+      output: '{
 }'

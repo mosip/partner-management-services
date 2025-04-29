@@ -1,0 +1,58 @@
+DownloadRootCertificate:
+   Pms_DownloadRootCertificate_without_authentication:
+      endPoint: /v1/partnermanager/trust-chain-certificates/{certificateId}/certificateFile
+      description: Fetching all the root certificates without authentication
+      uniqueIdentifier: TC_PMS_getRootCertificateforCertificateId_02      
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/DownloadRootCertificate/downloadRootCertificate
+      outputTemplate: pms/error
+      input: '{
+      "certificateId": "abdcdef"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_DownloadRootCertificate_invalid_roles:
+      endPoint: /v1/partnermanager/trust-chain-certificates/{certificateId}/certificateFile
+      description: Fetching all the root certificates authentication with invalid roles
+      uniqueIdentifier: TC_PMS_getRootCertificateforCertificateId_03      
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/DownloadRootCertificate/downloadRootCertificate
+      outputTemplate: pms/error
+      input: '{
+      "certificateId": "abdcd"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_DownloadRootCertificate_invalid_certificateid:
+      endPoint: /v1/partnermanager/trust-chain-certificates/{certificateId}/certificateFile
+      description: Fetching all the root certificates with invalid certificateid value
+      uniqueIdentifier: TC_PMS_getRootCertificateforCertificateId_04      
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/DownloadRootCertificate/downloadRootCertificate
+      outputTemplate: pms/error
+      input: '{
+      "certificateId": "$$$$$$$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-PMS-019"
+       }
+       ]
+}'
