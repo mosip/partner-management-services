@@ -13,7 +13,7 @@
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>عزيزي ${partnerId},</strong></p>
-					<p>هذا لإعلامك بأن شهادة CA الوسيطة ذات معرف الشهادة ${certificateId} من المقرر أن تنتهي صلاحيتها في ${expiryDateTime} UTC لتحميل الشهادة للتجديد قبل تاريخ انتهاء الصلاحية.</p>
+					<p>نود إعلامكم بأن شهادة CA الوسيطة التي تحمل معرف الشهادة ${certificateId} من المقرر أن تنتهي صلاحيتها في ${expiryDateTime} بتوقيت UTC. لضمان استمرارية الخدمات، نرجو منكم رفع الشهادة للتجديد قبل تاريخ الانتهاء.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">تفاصيل الشهادة</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>

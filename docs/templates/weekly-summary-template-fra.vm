@@ -22,7 +22,7 @@
                     <p style="font-size: 16px; font-weight: bold;">Éléments expirant : du ${fromDate} au ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
                     #if($partnerIdList && $partnerIdList.size() > 0)
-						<p style="margin-bottom: 6px; font-weight: 600;">Les certificats des partenaires suivants expirent :</p>
+						<p style="margin-bottom: 6px; font-weight: 600;">${partnerCertificateCount}&nbsp;certificats partenaires expirent pour les identifiants partenaires suivants</p>
 						<ul style="padding-left: 20px; margin: 0;">
 							#foreach($id in $partnerIdList)
 								<li style="padding: 2px 0;">[$id]</li>
@@ -36,12 +36,13 @@
                 </div>
                 <p>Nous vous remercions pour votre attention rapide à ce sujet.</p>
                 <p>Merci d'avoir choisi nos services.</p>
-                <p style="padding: 6px 0px;">** Ceci est un e-mail généré automatiquement. Veuillez ne pas répondre à cet e-mail. **</p>
+                <p>Cordialement,<br>MOSIP</p>
+                <hr style="border-top: 1px solid #edeef0;" />
+                <p style="padding: 3px 0px;">** Ceci est un e-mail généré automatiquement. Veuillez ne pas répondre à cet e-mail. **</p>
                 <p>
                     Site Web :
                     <a href="http://www.mosip.io" style="color: #014daf; text-decoration: underline;">www.mosip.io</a>
                 </p>
-                <p>Cordialement,<br>MOSIP</p>
                 <hr style="border-top: 1px solid #edeef0;" />
             </div>
             <div style="font-size: 14px; margin-top: 1.5rem; text-align: center;">

@@ -23,7 +23,7 @@
                     <p style="font-size: 16px; font-weight: bold;">Expiring Items: From ${fromDate} to ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
                     #if($partnerIdList && $partnerIdList.size() > 0)
-                        <p style="margin-bottom: 6px; font-weight: 600;">Partner Certificates are expiring for:</p>
+                        <p style="margin-bottom: 6px; font-weight: 600;">${partnerCertificateCount}&nbsp;Partner Certificates expiring for the following Partner IDs</p>
                         <ul style="padding-left: 20px; margin: 0;">
                             #foreach($id in $partnerIdList)
                                 <li style="padding: 2px 0;">[$id]</li>
@@ -38,13 +38,13 @@
 
                 <p>We appreciate your prompt attention to this matter.</p>
                 <p>Thank you for choosing our services.</p>
-                <p style="padding: 6px 0px;">** This is an auto-generated email. Please do not reply to this email. **
-                </p>
+                <p>Best regards,<br>MOSIP</p>
+                <hr style="border-top: 1px solid #edeef0;" />
+                <p style="padding: 3px 0px;">** This is an auto-generated email. Please do not reply to this email. **</p>
                 <p>
                     Website:
                     <a href="http://www.mosip.io" style="color: #014daf; text-decoration: underline;">www.mosip.io</a>
                 </p>
-                <p>Best regards,<br>MOSIP</p>
                 <hr style="border-top: 1px solid #edeef0;" />
             </div>
             <div style="font-size: 14px; margin-top: 1.5rem;">
