@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -155,6 +157,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 	@Value("${mosip.pms.api.id.ftm.chip.details.get}")
 	private String getFtmChipDetailsId;
+
+	@Value("${mosip.pms.ca.signed.partner.certificate.available}")
+	private Boolean isCaSignedPartnerCertificateAvailable;
 
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -754,11 +759,25 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 								// Get certificate data if available
 								if (ftpChipDetail.getCertificateAlias() != null) {
 									ftmChipDetailsDto.setIsCertificateAvailable(true);
-									FtmCertificateDownloadResponseDto responseObject = partnerHelper.getCertificate(ftpChipDetail.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", FtmCertificateDownloadResponseDto.class);
-									partnerHelper.populateFtmCertificateExpiryState(responseObject);
-									ftmChipDetailsDto.setCertificateUploadDateTime(responseObject.getMosipSignedCertUploadDateTime());
-									ftmChipDetailsDto.setCertificateExpiryDateTime(responseObject.getCaSignedCertExpiryDateTime());
-									ftmChipDetailsDto.setIsCertificateExpired(responseObject.getIsCaSignedCertificateExpired());
+									try {
+										if (isCaSignedPartnerCertificateAvailable) {
+											FtmCertificateDownloadResponseDto responseObject = partnerHelper.getCertificate(ftpChipDetail.getCertificateAlias(), "pmp.partner.original.certificate.get.rest.uri", FtmCertificateDownloadResponseDto.class);
+											partnerHelper.populateFtmCertificateExpiryState(responseObject);
+											ftmChipDetailsDto.setCertificateUploadDateTime(responseObject.getMosipSignedCertUploadDateTime());
+											ftmChipDetailsDto.setCertificateExpiryDateTime(responseObject.getCaSignedCertExpiryDateTime());
+											ftmChipDetailsDto.setIsCertificateExpired(responseObject.getIsCaSignedCertificateExpired());
+										} else {
+											FtpCertDownloadResponeDto responeDto = partnerHelper.getCertificate(ftpChipDetail.getCertificateAlias(), "pmp.partner.certificaticate.get.rest.uri", FtpCertDownloadResponeDto.class);
+											X509Certificate cert = MultiPartnerUtil.decodeCertificateData(responeDto.getCertificateData());
+											ftmChipDetailsDto.setCertificateUploadDateTime(cert.getNotBefore().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+										}
+									} catch (ApiAccessibleException ex) {
+										if (ex.getErrorCode().equals("KER-PCM-012")) {
+											LOGGER.info("Error from keymgr: " + ex.getMessage());
+										} else {
+											throw new ApiAccessibleException(ex.getErrorCode(), ex.getMessage());
+										}
+									}
 								} else {
 									ftmChipDetailsDto.setIsCertificateAvailable(false);
 									ftmChipDetailsDto.setIsCertificateExpired(false);
