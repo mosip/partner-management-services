@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -129,9 +130,13 @@ public class EmailNotificationService {
 
 		case PartnerConstants.WEEKLY_SUMMARY:
 			LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 			context.put("partnerId", notificationEntity.getPartnerId());
-			context.put("fromDate", createdDate);
-			context.put("toDate", createdDate.plusDays(7));
+			context.put("fromDate", createdDate.format(formatter));
+			context.put("toDate", createdDate.plusDays(7).format(formatter));
+			context.put("partnerCertificateCount",
+					notificationDetails.getCertificateDetails() != null ? notificationDetails.getCertificateDetails().size() : 0);
 			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
 					.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
 					.collect(Collectors.toList());
