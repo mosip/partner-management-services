@@ -511,7 +511,7 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
 		// check if the data is encrypted
-		boolean isEncrypted = Objects.nonNull(partner.getEmailIdHash());
+		boolean isEncrypted = partner.getEmailIdHash() != null;
 		response.setContactNumber(
 				isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
 		response.setEmailId(
