@@ -307,6 +307,7 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Partner par = partner.get();
 		PartnerContact contactFromDB = new PartnerContact();
+		contactFromDB.setEmailId("email@gmail.com");
 
 		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
