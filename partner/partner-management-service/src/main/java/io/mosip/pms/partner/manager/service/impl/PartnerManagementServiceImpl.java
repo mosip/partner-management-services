@@ -300,9 +300,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			retrievePartnersDetails
 			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
-			retrievePartnersDetails.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
-			retrievePartnersDetails.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+			// check if the data is encrypted
+			boolean isEncrypted = Objects.nonNull(partner.getEmailIdHash());
+			retrievePartnersDetails.setContactNumber(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+			retrievePartnersDetails.setEmailId(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
+			retrievePartnersDetails.setAddress(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getAddress()) : partner.getAddress());
 			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			partners.add(retrievePartnersDetails);
 		}
@@ -328,9 +333,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			retrievePartnersDetails
 			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
-			retrievePartnersDetails.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
-			retrievePartnersDetails.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+			// check if the data is encrypted
+			boolean isEncrypted = Objects.nonNull(partner.getEmailIdHash());
+			retrievePartnersDetails.setContactNumber(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+			retrievePartnersDetails.setEmailId(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
+			retrievePartnersDetails.setAddress(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getAddress()) : partner.getAddress());
 			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			retrievePartnersDetails.setLogoUrl(partner.getLogoUrl());
 			retrievePartnersDetails.setAdditionalInfo(
@@ -585,7 +595,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+		dto.setEmailId(partner.getEmailIdHash() != null ?
+				keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
@@ -603,7 +614,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+		dto.setEmailId(partner.getEmailIdHash() != null ?
+				keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKey(partnerPolicyFromDb.getPolicyApiKey());
@@ -797,8 +809,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
-			partnerDetailsV3Dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
-			partnerDetailsV3Dto.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+			// check if the data is encrypted
+			boolean isEncrypted = Objects.nonNull(partner.getEmailIdHash());
+			partnerDetailsV3Dto.setContactNumber(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+			partnerDetailsV3Dto.setEmailId(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
 					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
 					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {

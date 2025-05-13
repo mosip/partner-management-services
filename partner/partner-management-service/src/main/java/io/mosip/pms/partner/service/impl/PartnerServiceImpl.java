@@ -510,9 +510,14 @@ public class PartnerServiceImpl implements PartnerService {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Partner partner = getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
-		response.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
-		response.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
-		response.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+		// check if the data is encrypted
+		boolean isEncrypted = Objects.nonNull(partner.getEmailIdHash());
+		response.setContactNumber(
+				isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+		response.setEmailId(
+				isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
+		response.setAddress(
+				isEncrypted ? keyManagerHelper.decryptData(partner.getAddress()) : partner.getAddress());
 		response.setOrganizationName(partner.getName());
 		response.setPartnerType(partner.getPartnerTypeCode());
 		response.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
@@ -1077,13 +1082,15 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		Page<Partner> page = partnerSearchHelper.search(Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
-			// Decrypt fields after mapping
-			partners.forEach(partner -> {
-				partner.setContactNo(keyManagerHelper.decryptData(partner.getContactNo()));
-				partner.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
-				partner.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+			// Decrypt fields
+			page.getContent().forEach(partner -> {
+				if (partner.getEmailIdHash() != null) {
+					partner.setContactNo(keyManagerHelper.decryptData(partner.getContactNo()));
+					partner.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+					partner.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+				}
 			});
+			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_SUCCESS);
@@ -1546,7 +1553,8 @@ public class PartnerServiceImpl implements PartnerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+		dto.setEmailId(partner.getEmailIdHash() != null ?
+				keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
