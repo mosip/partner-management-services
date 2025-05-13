@@ -1,0 +1,69 @@
+GetPartnerExpiringCertificate:
+   Pms_GetPartnerExpiringCertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: partnerdevice
+      description: Get Partner Expiring Certificates
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
+      "isCertificateAvailable": true
+}'
+   Pms_GetPartnerExpiringCertificate_Expiry_Days_30_Smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: partnerdevice
+      description: Get Partner Expiring Certificate with Expiry date 30 days
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_02
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "15"
+}'
+      output: '{
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
+      "isCertificateAvailable": true
+}'
+   Pms_GetPartnerExpiringCertificate_Expiry_Date_15_Smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: partnerdevice
+      description: Get Partner Expiring Certificate with Expiry date 15 days
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_03
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "15"
+}'
+      output: '{
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
+      "isCertificateAvailable": true
+}'
+   Pms_GetPartnerExpiringCertificate_Expiry_Date_10_Smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: partnerdevice
+      description: Get Partner Expiring Certificate with Expiry date 10 days
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_04
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "10"
+}'
+      output: '{
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
+      "isCertificateAvailable": true
+}'
