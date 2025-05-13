@@ -567,6 +567,10 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
 		}
+		if (Objects.isNull(partner.getEmailIdHash())){
+			partner.setEmailIdHash(DigestUtils.sha256Hex(partner.getEmailId().toLowerCase()));
+			partner.setEmailId(keyManagerHelper.encryptData(partner.getEmailId()));
+		}
 		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
 		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
 		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
@@ -669,8 +673,15 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+		if (Objects.isNull(contactsFromDb)){
+			contactsFromDb = partnerContactRepository.findByPartnerAndEmailId(partnerId, request.getEmailId());
+		}
 		String resultMessage;
 		if (contactsFromDb != null) {
+			if (Objects.isNull(contactsFromDb.getEmailIdHash())){
+				contactsFromDb.setEmailIdHash(DigestUtils.sha256Hex(contactsFromDb.getEmailId().toLowerCase()));
+				contactsFromDb.setEmailId(keyManagerHelper.encryptData(contactsFromDb.getEmailId()));
+			}
 			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
 			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setIsActive(request.getIs_Active());
