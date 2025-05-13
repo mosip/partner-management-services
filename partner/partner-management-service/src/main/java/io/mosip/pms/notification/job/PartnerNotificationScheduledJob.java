@@ -80,7 +80,9 @@ public class PartnerNotificationScheduledJob {
 		NotificationDto dto = new NotificationDto();
 		dto.setApiKey(partnerPolicy.getPolicyApiKey());
 		dto.setApiKeyExpiryDate(partnerPolicy.getValidToDatetime().toLocalDateTime());
-		dto.setEmailId(keyManagerHelper.decryptData(partnerPolicy.getPartner().getEmailId()));
+		dto.setEmailId(partnerPolicy.getPartner().getEmailIdHash() != null
+				? keyManagerHelper.decryptData(partnerPolicy.getPartner().getEmailId())
+				: partnerPolicy.getPartner().getEmailId());
 		dto.setPartnerId(partnerPolicy.getPartner().getId());
 		dto.setPolicyExpiryDateTime(policy == null ? null : policy.getValidToDate());
 		dto.setPolicyId(partnerPolicy.getPolicyId());
