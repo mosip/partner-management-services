@@ -1,6 +1,7 @@
 package io.mosip.pms.test.partner.service.impl;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.pms.common.dto.NotificationsSeenRequestDto;
 import io.mosip.pms.common.entity.UserDetails;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
@@ -187,6 +188,82 @@ public class UserManagementServiceImplTest {
 	@Test
 	public void isUserConsentGivenExceptionTest1() throws Exception {
 		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void updateNotificationsSeenTimestampTest() {
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		userDetails.setId("abc");
+		userDetails.setCrDtimes(LocalDateTime.now());
+		userDetails.setCrBy("abc");
+		userDetails.setConsentGiven("YES");
+		userDetails.setConsentGivenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+
+		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
+		userDetails.setUpdBy("12345");
+		userDetails.setUpdDtimes(LocalDateTime.now());
+		when(userDetailsRepository.save(any())).thenReturn(userDetails);
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("12345", requestDto);
+
+		NotificationsSeenRequestDto requestDto1 = new NotificationsSeenRequestDto();
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("12345", requestDto1);
+
+		partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("12345", requestDto);
+	}
+
+	@Test
+	public void getNotificationsSeenTimestampTest() {
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		userDetails.setId("abc");
+		userDetails.setCrDtimes(LocalDateTime.now());
+		userDetails.setCrBy("abc");
+		userDetails.setConsentGiven("YES");
+		userDetails.setConsentGivenDtimes(LocalDateTime.now());
+		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
+		userDetails.setUpdBy("abc");
+		userDetails.setUpdDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
+
+		partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
+	}
+
+	@Test
+	public void getNotificationsSeenTimestampExceptionTest() {
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

@@ -55,9 +55,19 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 	@Autowired
 	KeycloakHelper keycloakHelper;
 
+	@Value("${mosip.pms.root.and.intermediate.certificates.available}")
+	private Boolean isRootIntermediateCertAvailable;
+
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
 		log.info("RootAndIntermediateCertificateExpiryTasklet: START");
+
+		// Check if root/intermediate cert endpoint is available
+		if (Boolean.FALSE.equals(isRootIntermediateCertAvailable)) {
+			log.info("RootAndIntermediateCertificateExpiryTasklet: Notifications cannot be generated since the endpoint is not available in the current version of MOSIP platform.");
+			return RepeatStatus.FINISHED;
+		}
+
 		List<String> totalNotificationsCreated = new ArrayList<String>();
 		int pmsPartnerAdminsCount = 0;
 		try {

@@ -22,7 +22,7 @@
                     <p style="font-size: 16px; font-weight: bold;">العناصر التي ستنتهي: من ${fromDate} إلى ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
                     #if($partnerIdList && $partnerIdList.size() > 0)
-						<p style="margin-bottom: 6px; font-weight: 600;">ستنتهي صلاحية شهادات الشركاء لـ:</p>
+						<p style="margin-bottom: 6px; font-weight: 600;">${partnerCertificateCount}&nbsp;شهادات الشركاء تنتهي صلاحيتها للمعرفات التالية للشركاء</p>
 						<ul style="padding-right: 20px; margin: 0;">
 							#foreach($id in $partnerIdList)
 								<li style="padding: 2px 0;">[$id]</li>
@@ -36,12 +36,13 @@
                 </div>
                 <p>نقدر اهتمامكم الفوري بهذا الموضوع.</p>
                 <p>شكرًا لاختياركم خدماتنا.</p>
-                <p style="padding: 6px 0px;">** هذه رسالة بريد إلكتروني تم إنشاؤها تلقائيًا. الرجاء عدم الرد على هذا البريد الإلكتروني. **</p>
+                <p>مع أطيب التحيات،<br>MOSIP</p>
+                <hr style="border-top: 1px solid #edeef0;" />
+                <p style="padding: 3px 0px;">** هذه رسالة بريد إلكتروني تم إنشاؤها تلقائيًا. الرجاء عدم الرد على هذا البريد الإلكتروني. **</p>
                 <p>
                     الموقع الإلكتروني:
                     <a href="http://www.mosip.io" style="color: #014daf; text-decoration: underline;">www.mosip.io</a>
                 </p>
-                <p>مع أطيب التحيات،<br>MOSIP</p>
                 <hr style="border-top: 1px solid #edeef0;" />
             </div>
             <div style="font-size: 14px; margin-top: 1.5rem; text-align: center;">
