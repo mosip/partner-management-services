@@ -13,7 +13,7 @@
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>Dear ${partnerId},</strong></p>
-					<p>This is to inform you that the Root CA certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime} UTC to upload the certificate for renewal before the expiration date.</p>
+					<p>This is to inform you that Root CA Certificate with Certificate ID ${certificateId} is scheduled to expire on ${expiryDateTime} UTC. To ensure uninterrupted services, we request you to upload the certificate for renewal before the expiration date.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Certificate Details</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>

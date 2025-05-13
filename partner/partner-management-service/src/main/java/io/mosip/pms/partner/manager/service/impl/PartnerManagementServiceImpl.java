@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Objects;
+
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import jakarta.transaction.Transactional;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -27,6 +29,7 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -67,6 +70,8 @@ import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
+
+import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 
 @Service
 @Transactional
@@ -149,6 +154,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	PartnerServiceRepository partnerServiceRepository;
+
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
 
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
@@ -292,9 +300,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			retrievePartnersDetails
 			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(partner.getContactNo());
-			retrievePartnersDetails.setEmailId(partner.getEmailId());
-			retrievePartnersDetails.setAddress(partner.getAddress());
+			retrievePartnersDetails.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+			retrievePartnersDetails.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+			retrievePartnersDetails.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
 			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			partners.add(retrievePartnersDetails);
 		}
@@ -320,9 +328,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			retrievePartnersDetails
 			.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 			retrievePartnersDetails.setOrganizationName(partner.getName());
-			retrievePartnersDetails.setContactNumber(partner.getContactNo());
-			retrievePartnersDetails.setEmailId(partner.getEmailId());
-			retrievePartnersDetails.setAddress(partner.getAddress());
+			retrievePartnersDetails.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
+			retrievePartnersDetails.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+			retrievePartnersDetails.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
 			retrievePartnersDetails.setPartnerType(partner.getPartnerTypeCode());
 			retrievePartnersDetails.setLogoUrl(partner.getLogoUrl());
 			retrievePartnersDetails.setAdditionalInfo(
@@ -577,7 +585,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);
@@ -595,7 +603,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(partner.getEmailId());
+		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		dto.setApiKey(partnerPolicyFromDb.getPolicyApiKey());
@@ -789,8 +797,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
 			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
 			partnerDetailsV3Dto.setOrganizationName(partner.getName());
-			partnerDetailsV3Dto.setEmailId(partner.getEmailId());
-			partnerDetailsV3Dto.setContactNumber(partner.getContactNo());
+			partnerDetailsV3Dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+			partnerDetailsV3Dto.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
 			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
 					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
 					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
@@ -857,6 +865,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+			if ("emailAddress".equalsIgnoreCase(sortFieldName)) {
+				LOGGER.debug("Sorting on '{}' column is not supported due to system limitations", sortFieldName);
+				throw new PartnerServiceException(
+						UNSUPPORTED_COLUMN.getErrorCode(),
+						String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
+				);
+			}
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -869,13 +884,21 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
+			String emailAddressHash = partnerFilterDto.getEmailAddress() != null
+					? DigestUtils.sha256Hex(partnerFilterDto.getEmailAddress().trim().toLowerCase())
+					: null;
+
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
 					getSummaryOfAllPartners(partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
 							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
-							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(),
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailAddressHash,
 							partnerFilterDto.getIsActive(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
+				// Decrypt email address for each partner summary
+				partnerSummaryDtoList.forEach(dto -> {
+					dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
+				});
 				pageResponseV2Dto.setPageNo(pageNo);
 				pageResponseV2Dto.setPageSize(pageSize);
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());

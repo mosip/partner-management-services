@@ -32,6 +32,9 @@ public class PartnerV3 {
     @Column(name="email_id")
     private String emailId;
 
+    @Column(name="email_id_hash")
+    private String emailIdHash;
+
     @Column(name="is_active")
     private Boolean isActive;
 

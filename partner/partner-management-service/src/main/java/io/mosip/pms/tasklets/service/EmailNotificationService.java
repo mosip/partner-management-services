@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class EmailNotificationService {
 	KeyManagerHelper keyManagerHelper;
 
 	@Transactional
-	public void sendEmailNotification(NotificationEntity notificationEntity) {
+	public void sendEmailNotification(NotificationEntity notificationEntity, String emailId) {
 		try {
 			// Optional<NotificationEntity> optionalNotification =
 			// notificationServiceRepository.findById(notificationId);
@@ -83,7 +84,7 @@ public class EmailNotificationService {
 			EmailTemplateDto templateDto = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(),
 					notificationEntity.getNotificationType());
 			String populatedTemplate = populateTemplate(templateDto.getBody(), notificationEntity);
-			sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject());
+			sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject(), emailId);
 
 			// update notificationEntity status
 			notificationEntity.setEmailSent(true);
@@ -129,9 +130,13 @@ public class EmailNotificationService {
 
 		case PartnerConstants.WEEKLY_SUMMARY:
 			LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 			context.put("partnerId", notificationEntity.getPartnerId());
-			context.put("fromDate", createdDate);
-			context.put("toDate", createdDate.plusDays(7));
+			context.put("fromDate", createdDate.format(formatter));
+			context.put("toDate", createdDate.plusDays(7).format(formatter));
+			context.put("partnerCertificateCount",
+					notificationDetails.getCertificateDetails() != null ? notificationDetails.getCertificateDetails().size() : 0);
 			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
 					.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
 					.collect(Collectors.toList());
@@ -148,12 +153,10 @@ public class EmailNotificationService {
 		return context;
 	}
 
-	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject) {
+	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject, String emailId) {
 		try {
 			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
-			// Add email details
-			String emailId = keyManagerHelper.decryptData(notificationEntity.getEmailId());
 			log.debug("emailId {}", emailId);
 			requestBody.add("mailTo", emailId);
 			requestBody.add("mailSubject", emailSubject);
