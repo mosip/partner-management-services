@@ -1,7 +1,7 @@
 package io.mosip.pms.common.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -35,6 +35,9 @@ public class PartnerContact implements Serializable {
 
 	@Column(name="email_id")
 	private String emailId;
+
+	@Column(name="email_id_hash")
+	private String emailIdHash;
 
 	@Column(name="is_active")
 	private Boolean isActive;
@@ -109,6 +112,14 @@ public class PartnerContact implements Serializable {
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+
+	public String getEmailIdHash() {
+		return emailIdHash;
+	}
+
+	public void setEmailIdHash(String emailIdHash) {
+		this.emailIdHash = emailIdHash;
 	}
 
 	public Boolean getIsActive() {

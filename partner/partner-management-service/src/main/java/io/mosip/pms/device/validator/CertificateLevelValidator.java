@@ -1,7 +1,7 @@
 package io.mosip.pms.device.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.springframework.web.client.RestClientException;
 
@@ -15,8 +15,8 @@ public class CertificateLevelValidator implements ConstraintValidator<ValidCerti
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.validation.ConstraintValidator#isValid(java.lang.Object,
-	 * javax.validation.ConstraintValidatorContext)
+	 * @see jakarta.validation.ConstraintValidator#isValid(java.lang.Object,
+	 * jakarta.validation.ConstraintValidatorContext)
 	 */
 	@Override
 	public boolean isValid(String certificationLevel, ConstraintValidatorContext context) {

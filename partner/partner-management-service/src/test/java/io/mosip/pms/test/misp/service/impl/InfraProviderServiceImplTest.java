@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -331,7 +330,7 @@ public class InfraProviderServiceImplTest {
 		filtersData.add(filterData);
 		FilterDto filterDto = new FilterDto();
 		filterDto.setColumnName("licenseKey");
-    	filterDto.setText("");
+    	filterDto.setText("test");
     	filterDto.setType("all");
 		SearchFilter searchDto = new SearchFilter();
 		FilterValueDto filterValueDto = new FilterValueDto();
@@ -351,7 +350,7 @@ public class InfraProviderServiceImplTest {
 		filtersData.add(filterData);
 		FilterDto filterDto = new FilterDto();
 		filterDto.setColumnName("licenseKey");
-    	filterDto.setText("");
+    	filterDto.setText("abc");
     	filterDto.setType("all");
 		SearchFilter searchDto = new SearchFilter();
 		FilterValueDto filterValueDto = new FilterValueDto();

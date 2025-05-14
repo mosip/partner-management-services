@@ -28,8 +28,7 @@ CREATE TABLE pms.device_detail(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_devdtl_id PRIMARY KEY (id),
-	CONSTRAINT uk_devdtl_id UNIQUE (dprovider_id,dtype_code,dstype_code,make,model)
+	CONSTRAINT pk_devdtl_id PRIMARY KEY (id)
 
 );
 -- ddl-end --

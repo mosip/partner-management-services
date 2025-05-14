@@ -3,12 +3,11 @@ package io.mosip.pms.device.util;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -211,6 +209,28 @@ public class AuditUtil {
 		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
+		callAuditManager(auditRequestDto);
+	}
+	
+	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum, String refId, String refIdType,
+			String createdByUser) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(createdByUser);
+		auditRequestDto.setSessionUserName(createdByUser);
+		auditRequestDto.setCreatedBy(createdByUser);
 		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
 		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
 		auditRequestDto.setEventType(PartnerManageEnum.getType());
