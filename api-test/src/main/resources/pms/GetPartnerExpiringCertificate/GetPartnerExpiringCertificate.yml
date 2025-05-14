@@ -26,7 +26,7 @@ GetPartnerExpiringCertificate:
       inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
       outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
       input: '{
-      "expiryPeriod": "15"
+      "expiryPeriod": "30"
 }'
       output: '{
       "partnerId": "pms-111998",
@@ -61,6 +61,23 @@ GetPartnerExpiringCertificate:
       outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
       input: '{
       "expiryPeriod": "10"
+}'
+      output: '{
+      "partnerId": "pms-111998",
+      "partnerType": "Device_Provider",
+      "isCertificateAvailable": true
+}'
+   Pms_GetPartnerExpiringCertificate_large_Expiry_Period_9999_Smoke:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: partnerdevice
+      description: Get Partner Expiring Certificate with Expiry date 9999 days
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_05
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "99999"
 }'
       output: '{
       "partnerId": "pms-111998",
