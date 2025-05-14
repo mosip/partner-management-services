@@ -11,4 +11,7 @@ public interface PartnerContactRepository extends JpaRepository<PartnerContact, 
 	
 	@Query(value = "select * from partner_contact pc where pc.partner_id=?1 and pc.email_id_hash = ?2", nativeQuery = true )
 	public PartnerContact findByPartnerAndEmailIdHash(String partnerId, String emailIdHash);
+
+	@Query(value = "select * from partner_contact pc where pc.partner_id=?1 and pc.email_id = ?2", nativeQuery = true )
+	public PartnerContact findByPartnerAndEmailId(String partnerId, String emailId);
 } 

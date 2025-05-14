@@ -28,7 +28,6 @@ import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -401,7 +400,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
-		partner.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+		partner.setEmailIdHash(PartnerUtil.generateSHA256Hash(request.getEmailId()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
@@ -446,12 +445,12 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
-		String emailHash = DigestUtils.sha256Hex(emailId.toLowerCase());
+		String emailHash = PartnerUtil.generateSHA256Hash(emailId);
 
 		Partner partnerFromDb = partnerRepository.findByEmailIdHash(emailHash);
 		if (partnerFromDb == null) {
 			// Fallback: check plain email (backward compatibility)
-			partnerFromDb = partnerRepository.findByEmailId(emailId.toLowerCase());
+			partnerFromDb = partnerRepository.findByEmailId(emailId);
 		}
 
 		if (partnerFromDb != null) {
@@ -567,6 +566,10 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
 		}
+		if (Objects.isNull(partner.getEmailIdHash())){
+			partner.setEmailIdHash(PartnerUtil.generateSHA256Hash(partner.getEmailId()));
+			partner.setEmailId(keyManagerHelper.encryptData(partner.getEmailId()));
+		}
 		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
 		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
 		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
@@ -668,9 +671,16 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		}
 
-		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, PartnerUtil.generateSHA256Hash(request.getEmailId()));
+		if (Objects.isNull(contactsFromDb)){
+			contactsFromDb = partnerContactRepository.findByPartnerAndEmailId(partnerId, request.getEmailId());
+		}
 		String resultMessage;
 		if (contactsFromDb != null) {
+			if (Objects.isNull(contactsFromDb.getEmailIdHash())){
+				contactsFromDb.setEmailIdHash(PartnerUtil.generateSHA256Hash(contactsFromDb.getEmailId()));
+				contactsFromDb.setEmailId(keyManagerHelper.encryptData(contactsFromDb.getEmailId()));
+			}
 			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
 			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setIsActive(request.getIs_Active());
@@ -686,7 +696,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
-			contactsFromDb.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+			contactsFromDb.setEmailIdHash(PartnerUtil.generateSHA256Hash(request.getEmailId()));
 			contactsFromDb.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setIsDeleted(false);

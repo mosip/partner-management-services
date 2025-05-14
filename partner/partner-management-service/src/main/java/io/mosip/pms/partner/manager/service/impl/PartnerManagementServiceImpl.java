@@ -21,7 +21,6 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
-import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -29,7 +28,6 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -40,7 +38,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -901,7 +898,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			String emailAddressHash = partnerFilterDto.getEmailAddress() != null
-					? DigestUtils.sha256Hex(partnerFilterDto.getEmailAddress().trim().toLowerCase())
+					? PartnerUtil.generateSHA256Hash(partnerFilterDto.getEmailAddress().trim())
 					: null;
 
 			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
