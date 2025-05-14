@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,10 +17,10 @@ import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.response.dto.NotificationDto;
+import io.mosip.pms.common.dto.NotificationDto;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.PMSLogger;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 
 @Component
 public class PartnerNotificationScheduledJob {
@@ -35,9 +36,12 @@ public class PartnerNotificationScheduledJob {
 	@Autowired
 	NotificatonService notificationService;
 
+	@Autowired
+	KeyManagerHelper keyManagerHelper;
+
 	@Value("${notifications.sent.before.days:3}")
 	private int notificationsSentBeforeDays;
-
+	
 	@Scheduled(initialDelayString = "#{60 * 60 * 1000 * ${pms.notifications-schedule.init-delay}}", fixedRateString = "#{60 * 60 * 1000 * ${pms.notifications-schedule.fixed-rate}}")
 	public void getAllAPIKeys() {
 		List<NotificationDto> notificationsDto = new ArrayList<>();
@@ -76,7 +80,9 @@ public class PartnerNotificationScheduledJob {
 		NotificationDto dto = new NotificationDto();
 		dto.setApiKey(partnerPolicy.getPolicyApiKey());
 		dto.setApiKeyExpiryDate(partnerPolicy.getValidToDatetime().toLocalDateTime());
-		dto.setEmailId(partnerPolicy.getPartner().getEmailId());
+		dto.setEmailId(partnerPolicy.getPartner().getEmailIdHash() != null
+				? keyManagerHelper.decryptData(partnerPolicy.getPartner().getEmailId())
+				: partnerPolicy.getPartner().getEmailId());
 		dto.setPartnerId(partnerPolicy.getPartner().getId());
 		dto.setPolicyExpiryDateTime(policy == null ? null : policy.getValidToDate());
 		dto.setPolicyId(partnerPolicy.getPolicyId());

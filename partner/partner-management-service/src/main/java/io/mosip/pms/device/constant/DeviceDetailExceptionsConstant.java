@@ -3,7 +3,7 @@ package io.mosip.pms.device.constant;
 public enum DeviceDetailExceptionsConstant {
 
 	REG_DEVICE_SUB_TYPE_NOT_FOUND("PMS_AUT_001","Reg Device Sub Type Code not found in the list of Reg Device Sub Types"), 
-	DEVICE_PROVIDER_NOT_FOUND("PMS_AUT_002","Device provider id not found from the partners list"), 
+	DEVICE_PROVIDER_NOT_FOUND("PMS_AUT_002","This partner has been inactivated by Partner admin"),
 	DEVICE_DETAIL_EXIST("PMS_AUT_003","Device Details already exists"),
 	DUPLICATE_REQUEST("PMS_AUT_004","Duplicate request received"), 
 	DEVICE_DETAIL_NOT_FOUND("PMS_AUT_005","Device detail for id %s does not exist"),

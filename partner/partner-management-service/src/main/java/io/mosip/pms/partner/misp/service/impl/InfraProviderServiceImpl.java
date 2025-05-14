@@ -48,7 +48,7 @@ import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.device.response.dto.ColumnCodeValue;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
-import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;

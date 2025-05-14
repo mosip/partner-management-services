@@ -27,6 +27,9 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
     @Query(value = "select * from partner ppr where ppr.email_id=?", nativeQuery = true)
     public Partner findByEmailId(String emailId);
 
+    @Query("SELECT p FROM Partner p WHERE p.emailIdHash = :emailIdHash")
+    Partner findByEmailIdHash(@Param("emailIdHash") String emailIdHash);
+
     Partner findByIdAndIsActiveIsTrue(String id);
 
     @Query(value = "select * from partner ppr where ppr.id IN :partnerIds and (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true", nativeQuery = true)
@@ -37,4 +40,22 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
 
     @Query(value = "select * from partner ppr where ppr.user_id=?", nativeQuery = true)
     public List<Partner> findByUserId(String userId);
+
+    @Query("SELECT p FROM Partner p " +
+            "WHERE p.userId = :userId " +
+            "AND (p.approvalStatus = :status) " +
+            "AND (:partnerType IS NULL OR p.partnerTypeCode = :partnerType) " +
+            "AND ((:policyGroupAvailable IS NULL) " +
+            "OR (:policyGroupAvailable = TRUE AND p.policyGroupId IS NOT NULL) " +
+            "OR (:policyGroupAvailable = FALSE AND p.policyGroupId IS NULL))")
+    public List<Partner> findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(
+            @Param("status") String status,
+            @Param("userId") String userId,
+            @Param("partnerType") String partnerType,
+            @Param("policyGroupAvailable") Boolean policyGroupAvailable);
+    
+    @Query(value = "select * from partner ppr where (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true", nativeQuery = true)
+    public List<Partner> findAllByIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue();
+
+
 }

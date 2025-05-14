@@ -21,8 +21,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
 import io.mosip.pms.common.exception.ApiAccessibleException;
-import io.mosip.pms.common.response.dto.NotificationDto;
-import io.mosip.pms.common.response.dto.NotificationResponseDto;
+import io.mosip.pms.common.dto.NotificationDto;
+import io.mosip.pms.common.dto.NotificationResponseDto;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 
 /**

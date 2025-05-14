@@ -1,9 +1,7 @@
 package io.mosip.pms.policy.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Type;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -20,10 +18,9 @@ public class PolicyGroupCreateRequestDto {
 
 	@NotBlank(message="value is empty or null")
 	@Size(min = 1, max = 128, message = "Length should be in between 1 and 128 chars")
-	@Type(type="string")
 	public String name;
 	
 	@NotBlank(message="value is empty or null")
-	@Size(min = 1, max = 128, message = "Length should be in between 1 and 128 chars")	
+	@Size(min = 1, max = 256, message = "Length should be in between 1 and 256 chars")
 	public String desc;
 }

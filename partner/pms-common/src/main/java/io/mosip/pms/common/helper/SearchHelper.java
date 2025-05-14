@@ -6,26 +6,24 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Order;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
-import io.mosip.kernel.core.exception.ServiceError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import io.mosip.kernel.core.util.DateUtils;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
@@ -46,7 +44,6 @@ import io.mosip.pms.common.util.UserDetailUtil;
  * @since 1.0.0
  */
 @Repository
-@Transactional(readOnly = true)
 public class SearchHelper {
 
 	private static final String ENTITY_IS_NULL = "entity is null";
@@ -77,48 +74,62 @@ public class SearchHelper {
 	 * @param entity          the entity class for which search will be applied
 	 * @param searchDto       which contains the list of filters, sort and
 	 *                        pagination
-	 * @param optionalFilters filters to be considered as 'or' statements
+
 	 * 
 	 * @return {@link Page} of entity
 	 */
 	public <E> Page<E> search(Class<E> entity, SearchDto searchDto) {
-		long rows = 0l;
-		List<E> result;		
-		Objects.requireNonNull(entity, ENTITY_IS_NULL);
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<E> selectQuery = criteriaBuilder.createQuery(entity);
-		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+		long rows = 0L;
+		List<E> result;
+		Objects.requireNonNull(entity, "ENTITY_IS_NULL");
 
-		// root Query
-		Root<E> rootQuery = selectQuery.from(entity);
-		// count query
-		countQuery.select(criteriaBuilder.count(countQuery.from(entity)));
-		// applying filters
-		if (!searchDto.getFilters().isEmpty())
-			filterQuery(entity, criteriaBuilder, rootQuery, selectQuery, countQuery, searchDto.getFilters());
+		// Create a new CriteriaBuilder for each query
+		CriteriaBuilder selectCriteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaBuilder countCriteriaBuilder = entityManager.getCriteriaBuilder();
 
-		// applying sorting
-		if(!searchDto.getSort().isEmpty())
-		sortQuery(criteriaBuilder, rootQuery, selectQuery, searchDto.getSort());
+		CriteriaQuery<E> selectQuery = selectCriteriaBuilder.createQuery(entity);
+		CriteriaQuery<Long> countQuery = countCriteriaBuilder.createQuery(Long.class);
+
+		// Create roots for each query
+		Root<E> selectRoot = selectQuery.from(entity);
+		Root<E> countRoot = countQuery.from(entity);
+
+		// Count query
+		countQuery.select(countCriteriaBuilder.count(countRoot));
+
+		// Applying filters
+		if (!searchDto.getFilters().isEmpty()) {
+			filterQuery(entity, selectCriteriaBuilder, selectRoot, selectQuery, countCriteriaBuilder, countRoot, countQuery, searchDto.getFilters());
+		}
+
+		// Applying sorting
+		if (!searchDto.getSort().isEmpty()) {
+			sortQuery(selectCriteriaBuilder, selectRoot, selectQuery, searchDto.getSort());
+		}
 
 		try {
-			// creating executable query from select criteria query
+			// Creating executable query from select criteria query
 			TypedQuery<E> executableQuery = entityManager.createQuery(selectQuery);
-			// creating executable query from count criteria query
+
+			// Creating executable query from count criteria query
 			TypedQuery<Long> countExecutableQuery = entityManager.createQuery(countQuery);
-			// getting the rows count
+
+			// Getting the rows count
 			rows = countExecutableQuery.getSingleResult();
-			// adding pagination
+
+			// Adding pagination
 			paginationQuery(executableQuery, searchDto.getPagination());
-			// executing query and returning data
+
+			// Executing query and returning data
 			result = executableQuery.getResultList();
 		} catch (Exception hibernateException) {
-			if(hibernateException instanceof RequestException) {
-				throw new RequestException(((RequestException) hibernateException).getErrors());
+			if (hibernateException instanceof RequestException) {
+				throw (RequestException) hibernateException;
 			}
 			throw new RequestException("PMS-MSD-394",
 					String.format(hibernateException.getMessage(), hibernateException.getLocalizedMessage()));
 		}
+
 		return new PageImpl<>(result,
 				PageRequest.of(searchDto.getPagination().getPageStart(), searchDto.getPagination().getPageFetch()),
 				rows);
@@ -133,38 +144,67 @@ public class SearchHelper {
 	 * @param countQuery  criteria count query
 	 * @param filters     list of {@link SearchFilter}
 	 */
-	private <E> void filterQuery(Class<E> entity, CriteriaBuilder builder, Root<E> root, CriteriaQuery<E> selectQuery,
-			CriteriaQuery<Long> countQuery, List<SearchFilter> filters) {
-		final List<Predicate> predicates = new ArrayList<>();
+	private <E> void filterQuery(Class<E> entity, CriteriaBuilder selectCriteriaBuilder, Root<E> selectRoot,
+								 CriteriaQuery<E> selectQuery, CriteriaBuilder countCriteriaBuilder, Root<E> countRoot,
+								 CriteriaQuery<Long> countQuery, List<SearchFilter> filters) {
+		List<Predicate> selectPredicates = new ArrayList<>();
+		List<Predicate> countPredicates = new ArrayList<>();
+
 		if (filters != null && !filters.isEmpty()) {
 			Field[] childFields = entity.getDeclaredFields();
 			Field[] superFields = entity.getSuperclass().getDeclaredFields();
-			List<Field> fieldList = new ArrayList<>();
-			fieldList.addAll(Arrays.asList(childFields));
-			if (superFields != null)
+			List<Field> fieldList = new ArrayList<>(Arrays.asList(childFields));
+
+			if (superFields != null) {
 				fieldList.addAll(Arrays.asList(superFields));
+			}
+
 			for (SearchFilter filter : filters) {
+				if (filter.getColumnName() == null) {
+					throw new RequestException(SearchErrorCode.MISSING_FILTER_COLUMN.getErrorCode(),
+							SearchErrorCode.MISSING_FILTER_COLUMN.getErrorMessage());
+				}
 				Optional<Field> field = fieldList.stream()
-						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName())).findFirst();
+						.filter(i -> i.getName().equalsIgnoreCase(filter.getColumnName()))
+						.findFirst();
 				if (!field.isPresent()) {
 					throw new RequestException(SearchErrorCode.INVALID_COLUMN.getErrorCode(),
 							String.format(SearchErrorCode.INVALID_COLUMN.getErrorMessage(), filter.getColumnName()));
 				}
 			}
-			filters.stream().filter(this::validateFilters).map(i -> buildFilters(builder, root, i))
-					.filter(Objects::nonNull).collect(Collectors.toCollection(() -> predicates));
+
+			filters.stream()
+					.filter(this::validateFilters)
+					.map(i -> buildFilters(selectCriteriaBuilder, selectRoot, i))
+					.filter(Objects::nonNull)
+					.forEach(selectPredicates::add);
+
+			filters.stream()
+					.filter(this::validateFilters)
+					.map(i -> buildFilters(countCriteriaBuilder, countRoot, i))
+					.filter(Objects::nonNull)
+					.forEach(countPredicates::add);
 		}
 
-		Predicate isDeletedTrue = builder.equal(root.get(DECOMISSION), Boolean.FALSE);
-		Predicate isDeletedNull = builder.isNull(root.get(DECOMISSION));
-		Predicate isDeleted = builder.or(isDeletedTrue, isDeletedNull);
-		predicates.add(isDeleted);
-		if (!predicates.isEmpty()) {
-			Predicate whereClause = builder.and(predicates.toArray(new Predicate[predicates.size()]));
-			selectQuery.where(whereClause);
-			countQuery.where(whereClause);
+		Predicate isDeletedTrueSelect = selectCriteriaBuilder.equal(selectRoot.get(DECOMISSION), Boolean.FALSE);
+		Predicate isDeletedNullSelect = selectCriteriaBuilder.isNull(selectRoot.get(DECOMISSION));
+		Predicate isDeletedSelect = selectCriteriaBuilder.or(isDeletedTrueSelect, isDeletedNullSelect);
+		selectPredicates.add(isDeletedSelect);
+
+		Predicate isDeletedTrueCount = countCriteriaBuilder.equal(countRoot.get(DECOMISSION), Boolean.FALSE);
+		Predicate isDeletedNullCount = countCriteriaBuilder.isNull(countRoot.get(DECOMISSION));
+		Predicate isDeletedCount = countCriteriaBuilder.or(isDeletedTrueCount, isDeletedNullCount);
+		countPredicates.add(isDeletedCount);
+
+		if (!selectPredicates.isEmpty()) {
+			Predicate selectWhereClause = selectCriteriaBuilder.and(selectPredicates.toArray(new Predicate[0]));
+			selectQuery.where(selectWhereClause);
 		}
 
+		if (!countPredicates.isEmpty()) {
+			Predicate countWhereClause = countCriteriaBuilder.and(countPredicates.toArray(new Predicate[0]));
+			countQuery.where(countWhereClause);
+		}
 	}
 
 

@@ -247,10 +247,11 @@ extraEnvVars: []
 extraEnvVarsCM:
   - global
   - config-server-share
+  - artifactory-share
 
 ## Secret with extra environment variables
 ##
-extraEnvVarsSecret:
+extraEnvVarsSecret: []
 
 ## Extra volumes to add to the deployment
 ##
@@ -421,7 +422,7 @@ istio:
   corsPolicy:
     allowOrigins:
       - prefix: https://pmp.sandbox.xyz.net
-      - prefix: https://pmp-new.sandbox.xyz.net
+      - prefix: https://pmp-revamp.sandbox.xyz.net
     allowCredentials: true
     allowHeaders:
       - Accept

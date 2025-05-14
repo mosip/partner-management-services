@@ -9,14 +9,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.pms.common.dto.FilterValueDto;
+import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.common.dto.PageResponseDto;
 import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PartnerType;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.partner.dto.CertificateDto;
-import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
+import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
@@ -31,13 +32,12 @@ import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pms.partner.response.dto.OriginalCertDownloadResponseDto;
 
 public interface PartnerService {
 	
@@ -124,7 +124,7 @@ public interface PartnerService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public OriginalCertDownloadResponseDto getOriginalPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
+	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getPartnerCertificateData(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException;
 
     /**
      * Function to add biometric extractors 
@@ -231,5 +231,9 @@ public interface PartnerService {
 	 * @return
 	 */
 	public PartnerResponse registerPartner(PartnerRequestDto request);
+
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(Integer expiryPeriod);
+
+	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 
 }
