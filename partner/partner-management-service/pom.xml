@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-authcodeflowproxy-api</artifactId>
-			<version>${kernel.version}</version>
+			<version>${kernel-authcodeflowproxy-api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nimbusds</groupId>
