@@ -210,6 +210,15 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
+	<test name="GetPartnerExpiringCertificateBeforeCertificateUpload">
+		<parameter name="ymlFile"
+			value="pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUpload.yml"
+		/>
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 	<test name="UploadCACertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadCACertificate/UploadCACertificate.yml" />
@@ -1602,6 +1611,6 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>			
+	</test>
 
 </suite>
