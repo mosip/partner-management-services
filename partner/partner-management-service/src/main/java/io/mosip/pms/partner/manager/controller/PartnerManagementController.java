@@ -6,6 +6,7 @@ import java.util.Optional;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.util.RequestValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -463,8 +464,10 @@ public class PartnerManagementController {
 			@RequestParam(value = "partnerDomain", required = false) String partnerDomain,
 			@RequestParam(value = "issuedTo", required = false) String issuedTo,
 			@RequestParam(value = "issuedBy", required = false) String issuedBy,
-			@RequestParam(value = "expiryPeriod", required = false) @Min(1) Integer expiryPeriod
-	) {
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod) {
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
 			filterDto.setCaCertificateType(caCertificateType);
