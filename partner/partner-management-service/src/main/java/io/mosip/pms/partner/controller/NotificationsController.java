@@ -46,7 +46,7 @@ public class NotificationsController {
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
     @Operation(summary = "This endpoint retrieves a list of all notifications.",
-            description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and filtering.")
+            description = "Available since release-1.3.0. This endpoint supports pagination, sorting, and filtering.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
