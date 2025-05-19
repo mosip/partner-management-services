@@ -21,6 +21,7 @@ import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -140,6 +141,8 @@ public class PartnerServiceImplTest {
 	AuditUtil auditUtil;
 	@MockBean
 	PartnerHelper partnerHelper;
+	@MockBean
+	KeyManagerHelper keyManagerHelper;
     
     @Mock
 	FilterHelper filterHelper;
@@ -304,9 +307,12 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Partner par = partner.get();
 		PartnerContact contactFromDB = new PartnerContact();
-		
+		contactFromDB.setEmailId("email@gmail.com");
+
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(par.getId())).thenReturn(partner);
-		Mockito.when(partnerContactRepository.findByPartnerAndEmail(Mockito.anyString(), Mockito.anyString())).thenReturn(contactFromDB);
+		Mockito.when(partnerContactRepository.findByPartnerAndEmailIdHash(Mockito.anyString(), Mockito.anyString())).thenReturn(contactFromDB);
 	    pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, par.getId());
 	    addContactRequestDto.setEmailId("email");
 	    try {
@@ -334,7 +340,9 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(true));
 		Partner par = partner.get();
 		//PartnerContact contactFromDB = new PartnerContact();
-		
+
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(Mockito.anyString())).thenReturn(partner);
 		//Mockito.when(partnerContactRepository.findByPartnerAndEmail(Mockito.anyString(), Mockito.anyString())).thenReturn(contactFromDB);
 	    pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, par.getId());
@@ -451,6 +459,8 @@ public class PartnerServiceImplTest {
 		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
 		PartnerRequest partnerRequest = createPartnerRequest();
 		Partner partner = new Partner();
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(policyGroupRepository.findByName(partnerRequest.getPolicyGroup())).thenReturn(policyGroup);
 		Mockito.when(partnerRepository.findByName("Airtel")).thenReturn(partner);
 		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
@@ -608,7 +618,9 @@ public class PartnerServiceImplTest {
 	public void updatePartnerDetailsTest_S1() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));
-		
+
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
@@ -636,7 +648,9 @@ public class PartnerServiceImplTest {
 		String partnerId = "12345";
 		Partner part = createPartner(Boolean.TRUE);
 		part.setName("name");
-		Optional<Partner> partner = Optional.of(part);		
+		Optional<Partner> partner = Optional.of(part);
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
@@ -648,7 +662,9 @@ public class PartnerServiceImplTest {
 		String partnerId = "12345";
 		Partner part = createPartner(Boolean.TRUE);
 		part.setName("name");
-		Optional<Partner> partner = Optional.of(part);		
+		Optional<Partner> partner = Optional.of(part);
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		updatePartner(Boolean.TRUE);		
 		pserviceImpl.updatePartnerDetail(req, partnerId);
@@ -790,6 +806,8 @@ public class PartnerServiceImplTest {
 	public void doNotSetstatusWhenPartnerIsDeactiveTest() {
 		String partnerId = "12345";
 		Optional<Partner> partner = Optional.of(createPartner(true));
+		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);

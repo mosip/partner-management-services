@@ -1,0 +1,55 @@
+GetNotificationsSeenTimestampNegativeScenarios:
+   Pms_GetNotificationsSeenTimestampNegativeScenarios_Invalid_userId_Neg:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      role: partneradmin
+      description: Get Notifications Seen Timestamp
+      uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_01
+      restMethod: get
+      inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
+      outputTemplate: pms/error
+      input: '{
+      "userId": "base-admin"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       }
+       ]
+}'
+   Pms_GetNotificationsSeenTimestampNegativeScenarios_without_AdminRole_Neg:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      role: auth
+      description: Get Notifications Seen Timestamp
+      uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_02
+      restMethod: get
+      inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
+      outputTemplate: pms/error
+      input: '{
+      "userId": "pms-111777"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetNotificationsSeenTimestampNegativeScenarios_without_AdminRole_Neg:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      role: invalidtoken
+      description: Get Notifications Seen Timestamp
+      uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_03
+      restMethod: get
+      inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
+      outputTemplate: pms/error
+      input: '{
+      "userId": "pms-111777"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'

@@ -1,0 +1,15 @@
+GetNotificationsSeenTimestamp:
+   Pms_GetNotificationsSeenTimestamp_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      role: partneradmin
+      description: Get Notifications Seen Timestamp
+      uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestamp_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
+      outputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestampResult
+      input: '{
+      "userId": "pms-111999"
+}'
+      output: ' {
+}'

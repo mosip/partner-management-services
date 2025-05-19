@@ -42,6 +42,7 @@ import io.mosip.pms.device.exception.DeviceServiceException;
 import io.mosip.pms.device.util.dto.AuditRequestDto;
 import io.mosip.pms.device.util.dto.AuditResponseDto;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.manager.constant.AuditConstant;
 
 @Component
 public class AuditUtil {
@@ -209,6 +210,28 @@ public class AuditUtil {
 		auditRequestDto.setSessionUserId(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setSessionUserName(SecurityContextHolder.getContext().getAuthentication().getName());
 		auditRequestDto.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
+		callAuditManager(auditRequestDto);
+	}
+	
+	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum, String refId, String refIdType,
+			String createdByUser) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(createdByUser);
+		auditRequestDto.setSessionUserName(createdByUser);
+		auditRequestDto.setCreatedBy(createdByUser);
 		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
 		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
 		auditRequestDto.setEventType(PartnerManageEnum.getType());

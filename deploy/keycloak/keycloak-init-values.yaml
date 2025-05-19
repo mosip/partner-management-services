@@ -16,6 +16,9 @@ keycloak:
             - mapper_name: addressTest
               mapper_user_attribute: address
               token_claim_name: addressTest
+            - mapper_name: langCode
+              mapper_user_attribute: langCode
+              token_claim_name: langCode
           saroles:
             - REGISTRATION_PROCESSOR
             - CREATE_SHARE

@@ -6,6 +6,7 @@ import java.util.Optional;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.util.RequestValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -305,7 +306,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
 			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
@@ -359,7 +359,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "partnerType", required = false) String partnerType
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -414,7 +413,6 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -466,9 +464,10 @@ public class PartnerManagementController {
 			@RequestParam(value = "partnerDomain", required = false) String partnerDomain,
 			@RequestParam(value = "issuedTo", required = false) String issuedTo,
 			@RequestParam(value = "issuedBy", required = false) String issuedBy,
-			@RequestParam(value = "expiryPeriod", required = false) @Min(1) Integer expiryPeriod
-	) {
-		partnerHelper.validateRequestParameters(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod) {
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
 			filterDto.setCaCertificateType(caCertificateType);

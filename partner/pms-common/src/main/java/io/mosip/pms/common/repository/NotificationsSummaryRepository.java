@@ -16,16 +16,19 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
     @Query(value = "SELECT * " +
             "FROM notifications n " +
             "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+            "AND (n.notification_type IN (:notificationTypeList)) " +
             "AND (n.partner_id IN (:partnerIdList)) " +
             "ORDER BY n.cr_dtimes DESC",
 
             countQuery = "SELECT COUNT(*) " +
                     "FROM notifications n " +
                     "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+                    "AND (n.notification_type IN (:notificationTypeList)) " +
                     "AND (n.partner_id IN (:partnerIdList)) ",
             nativeQuery = true)
     Page<NotificationEntity> getSummaryOfAllNotifications(
             @Param("notificationStatus") String notificationStatus,
+            @Param("notificationTypeList") List<String> notificationTypeList,
             @Param("partnerIdList") List<String> partnerIdList,
             Pageable pageable);
 

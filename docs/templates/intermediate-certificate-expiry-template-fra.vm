@@ -13,7 +13,7 @@
 			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
 				<div style="font-size: 14px;">
 					<p><strong>Chère ${partnerId},</strong></p>
-					<p>Ceci est pour vous informer que le certificat CA intermédiaire avec l'ID de certificat ${certificateId} est prévu pour expirer le ${expiryDateTime} UTC pour télécharger le certificat pour renouvellement avant la date d'expiration.</p>
+					<p>Nous vous informons que le certificat CA intermédiaire avec l'identifiant de certificat ${certificateId} expirera le ${expiryDateTime} UTC. Afin de garantir la continuité des services, nous vous demandons de télécharger le certificat de renouvellement avant la date d'expiration.</p>
 					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
 						<p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>
 						<hr style="border-top: 1px solid #E5E5E5;"/>

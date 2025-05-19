@@ -487,8 +487,6 @@ public class DeviceDetailControllerTest {
         when(deviceDetaillService.getAllDeviceDetails(eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize), any(DeviceDetailFilterDto.class)))
                 .thenReturn(mockResponse);
 
-        doNothing().when(partnerHelper).validateRequestParameters(any(), eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize));
-
         mockMvc.perform(MockMvcRequestBuilders.get("/devicedetail")
                         .param("sortFieldName", sortFieldName)
                         .param("sortType", sortType)

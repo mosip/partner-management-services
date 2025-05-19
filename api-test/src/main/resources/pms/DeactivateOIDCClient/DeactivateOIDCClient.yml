@@ -74,7 +74,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_COR_001"
+            "errorCode": "PMS_REQUEST_ERROR_004"
         }
   ]
 }'
@@ -232,6 +232,7 @@ DeactivateOIDCClient:
       "logoUri": "https://health-services.com/logo.png",
       "redirectUris": "$IDPREDIRECTURI$",
       "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      "grantTypes": $REMOVE$,
       "clientAuthMethods": "private_key_jwt"
 }'
       output: '{
@@ -285,6 +286,7 @@ DeactivateOIDCClient:
       "logoUri": "https://health-services.com/logo.png",
       "redirectUris": "$IDPREDIRECTURI$",
       "grantTypes": "authorization_code",
+      "clientAuthMethods": $REMOVE$,
       "clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}]
 }'
       output: '{

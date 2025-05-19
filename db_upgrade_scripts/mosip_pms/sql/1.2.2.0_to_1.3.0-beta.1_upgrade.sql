@@ -89,7 +89,7 @@ CREATE TABLE pms.notifications
     notification_type character varying(36) NOT NULL,
     notification_status character varying(36) NOT NULL,
 	notification_details_json character varying(4000) NOT NULL,
-    email_id character varying(1000) NOT NULL,
+    email_id character varying(3000) NOT NULL,
     email_lang_code character varying(36) NOT NULL,
     email_sent boolean DEFAULT FALSE,
     email_sent_dtimes timestamp,
@@ -129,3 +129,27 @@ WHERE id='mpolicy-default-qrcode';
 UPDATE pms.auth_policy
 SET  policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}'
 WHERE id='mpolicy-default-euin';
+
+-- Add new column for email hash
+ALTER TABLE pms.partner
+ADD COLUMN email_id_hash VARCHAR(3000);
+
+-- Update column sizes in pms.partner
+ALTER TABLE pms.partner
+    ALTER COLUMN contact_no TYPE character varying(1000),
+    ALTER COLUMN email_id TYPE character varying(3000),
+    ALTER COLUMN address TYPE character varying(10000);
+
+-- Update column sizes in pms.partner_h
+ALTER TABLE pms.partner_h
+    ALTER COLUMN contact_no TYPE character varying(1000),
+    ALTER COLUMN email_id TYPE character varying(3000),
+    ALTER COLUMN address TYPE character varying(10000),
+    ADD COLUMN email_id_hash character varying(3000);
+
+-- Update column sizes in pms.partner_contact
+ALTER TABLE pms.partner_contact
+    ALTER COLUMN contact_no TYPE character varying(1000),
+    ALTER COLUMN email_id TYPE character varying(3000),
+    ALTER COLUMN address TYPE character varying(10000),
+    ADD COLUMN email_id_hash character varying(3000);

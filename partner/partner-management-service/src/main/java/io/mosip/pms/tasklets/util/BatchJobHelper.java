@@ -8,7 +8,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -28,13 +26,19 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.exception.BatchJobServiceException;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.manager.constant.AuditConstant;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 
 @Component
 public class BatchJobHelper {
 
 	private Logger log = PMSLogger.getLogger(BatchJobHelper.class);
+
+	@Autowired
+	AuditUtil auditUtil;
 
 	@Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
 	private List<String> skipPartnerIds;
@@ -121,8 +125,9 @@ public class BatchJobHelper {
 	}
 
 	public NotificationEntity saveCertificateExpiryNotification(String certificateType, Partner partnerDetails,
-			List<CertificateDetailsDto> certificateDetailsList) throws BatchJobServiceException {
+			List<CertificateDetailsDto> certificateDetailsList, String emailId) throws BatchJobServiceException {
 		try {
+			String notificationType = getNotificationType(certificateType);
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
 			notificationDetailsDto.setCertificateDetails(certificateDetailsList);
 			String id = UUID.randomUUID().toString();
@@ -131,7 +136,7 @@ public class BatchJobHelper {
 			notification.setPartnerId(partnerDetails.getId());
 			notification.setNotificationType(getNotificationType(certificateType));
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
-			notification.setEmailId(keyManagerHelper.encryptData(partnerDetails.getEmailId()));
+			notification.setEmailId(keyManagerHelper.encryptData(emailId));
 			notification.setEmailLangCode(partnerDetails.getLangCode());
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);
@@ -139,9 +144,14 @@ public class BatchJobHelper {
 			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
 			log.info("saving notifications, {}", notification);
 			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
+			auditUtil.setAuditRequestDto(getAuditLogEventTypeForNotification(certificateType, true), id,
+					notificationType, AuditConstant.AUDIT_SYSTEM);
 			return savedNotification;
-		} catch (JsonProcessingException jpe) {
-			log.error("Error creating the notification: {}", jpe.getMessage());
+		} catch (Exception e) {
+			String notificationType = getNotificationType(certificateType);
+			auditUtil.setAuditRequestDto(getAuditLogEventTypeForNotification(certificateType, false), "failure",
+					notificationType, AuditConstant.AUDIT_SYSTEM);
+			log.error("Error creating the notification: {}", e.getMessage());
 			throw new BatchJobServiceException(ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorCode(),
 					ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorMessage());
 		}
@@ -160,6 +170,48 @@ public class BatchJobHelper {
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorCode(),
 					ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorMessage());
+		}
+	}
+
+	public PartnerServiceAuditEnum getAuditLogEventTypeForNotification(String certificateType, boolean forSuccess)
+			throws BatchJobServiceException {
+		switch (certificateType) {
+		case PartnerConstants.ROOT:
+			return forSuccess ? PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
+		case PartnerConstants.INTERMEDIATE:
+			return forSuccess ? PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
+		case PartnerConstants.PARTNER:
+			return forSuccess ? PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
+		case PartnerConstants.WEEKLY:
+			return forSuccess ? PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_FAILURE;
+		default:
+			throw new BatchJobServiceException(ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorCode(),
+					ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorMessage());
+		}
+	}
+
+	public PartnerServiceAuditEnum getAuditLogEventTypeForEmail(String notificationType, boolean forSuccess)
+			throws BatchJobServiceException {
+		switch (notificationType) {
+		case PartnerConstants.ROOT_CERT_EXPIRY:
+			return forSuccess ? PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
+		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+			return forSuccess ? PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
+		case PartnerConstants.PARTNER_CERT_EXPIRY:
+			return forSuccess ? PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
+		case PartnerConstants.WEEKLY_SUMMARY:
+			return forSuccess ? PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_EMAIL_FAILURE;
+		default:
+			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
 		}
 	}
 

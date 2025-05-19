@@ -14,7 +14,6 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.DeviceDetailSBI;
-import io.mosip.pms.common.entity.DeviceDetailSBIPK;
 import io.mosip.pms.device.authdevice.entity.DeviceDetailEntity;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailSummaryRepository;
@@ -259,6 +258,10 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Override
 	@Transactional
 	public String updateDeviceDetailStatus(UpdateDeviceDetailStatusDto deviceDetails) {
+		return updateDeviceStatus(deviceDetails);
+	}
+
+	private String updateDeviceStatus(UpdateDeviceDetailStatusDto deviceDetails) {
 		DeviceDetail entity = deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(deviceDetails.getId());
 		if (entity == null) {
 			auditUtil.auditRequest(
@@ -543,7 +546,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			} else {
 				deviceDetails.setApprovalStatus(DeviceConstant.APPROVE);
 			}
-			updateDeviceDetailStatus(deviceDetails);
+			updateDeviceStatus(deviceDetails);
 
 			deviceDetailSBI.setIsActive(true);
 			deviceDetailSBI.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -591,6 +594,7 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 		ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<DeviceDetailSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.deviceAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 

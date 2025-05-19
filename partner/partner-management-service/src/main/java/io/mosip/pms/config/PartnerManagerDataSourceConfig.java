@@ -23,6 +23,6 @@ public class PartnerManagerDataSourceConfig extends HibernateDaoConfig {
 
 
 	public Map<String, Object> jpaProperties() {
-        return super.jpaProperties();
+		return super.jpaProperties();
 	}
 }
