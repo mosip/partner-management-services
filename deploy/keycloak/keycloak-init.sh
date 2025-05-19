@@ -1,5 +1,5 @@
 #!/bin/sh
-# Initialised keycloak for esignet requirements.
+# Initialised keycloak for pms requirements.
 ## Usage: ./keycloak-init.sh [kubeconfig]
 
 if [ $# -ge 1 ] ; then
@@ -19,7 +19,6 @@ PMS_CLIENT_SECRET_KEY='mosip_pms_client_secret'
 PMS_CLIENT_SECRET_VALUE=$(kubectl -n keycloak get secrets keycloak-client-secrets -o jsonpath={.data.$PMS_CLIENT_SECRET_KEY} | base64 -d)
 
 echo "Copying keycloak configmaps and secret"
-$COPY_UTIL configmap keycloak-host keycloak $NS
 $COPY_UTIL configmap keycloak-env-vars keycloak $NS
 $COPY_UTIL secret keycloak keycloak $NS
 
