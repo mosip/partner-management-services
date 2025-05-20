@@ -2,7 +2,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_Invalid_userId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: partneradmin
-      description: Get Notifications Seen Timestamp
+      description: Get Notifications Seen Timestamp with invalid userId
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_01
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
@@ -20,7 +20,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_without_AdminRole_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: auth
-      description: Get Notifications Seen Timestamp
+      description: Get Notifications Seen Timestamp without Adminrole
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_02
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
@@ -35,10 +35,10 @@ GetNotificationsSeenTimestampNegativeScenarios:
        }
        ]
 }'
-   Pms_GetNotificationsSeenTimestampNegativeScenarios_without_AdminRole_Neg:
+   Pms_GetNotificationsSeenTimestampNegativeScenarios_with_InvalidToken_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: invalidtoken
-      description: Get Notifications Seen Timestamp
+      description: Get Notifications Seen Timestamp with invalid token
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_03
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp

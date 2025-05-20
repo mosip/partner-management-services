@@ -28,7 +28,6 @@ import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -401,7 +400,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
-		partner.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+		partner.setEmailIdHash(PartnerUtil.generateSHA256Hash(request.getEmailId()));
 		partner.setPartnerTypeCode(partnerType);
 		partner.setIsActive(false);
 		partner.setIsDeleted(false);
@@ -446,12 +445,12 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	private boolean validatePartnerByEmail(String emailId) {
-		String emailHash = DigestUtils.sha256Hex(emailId.toLowerCase());
+		String emailHash = PartnerUtil.generateSHA256Hash(emailId);
 
 		Partner partnerFromDb = partnerRepository.findByEmailIdHash(emailHash);
 		if (partnerFromDb == null) {
 			// Fallback: check plain email (backward compatibility)
-			partnerFromDb = partnerRepository.findByEmailId(emailId.toLowerCase());
+			partnerFromDb = partnerRepository.findByEmailId(emailId);
 		}
 
 		if (partnerFromDb != null) {
@@ -510,9 +509,14 @@ public class PartnerServiceImpl implements PartnerService {
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Partner partner = getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
-		response.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
-		response.setContactNumber(keyManagerHelper.decryptData(partner.getContactNo()));
-		response.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+		// check if the data is encrypted
+		boolean isEncrypted = partner.getEmailIdHash() != null;
+		response.setContactNumber(
+				isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+		response.setEmailId(
+				isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
+		response.setAddress(
+				isEncrypted ? keyManagerHelper.decryptData(partner.getAddress()) : partner.getAddress());
 		response.setOrganizationName(partner.getName());
 		response.setPartnerType(partner.getPartnerTypeCode());
 		response.setStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
@@ -561,6 +565,10 @@ public class PartnerServiceImpl implements PartnerService {
 		Partner partner = getValidPartner(partnerId, true);
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
+		}
+		if (Objects.isNull(partner.getEmailIdHash())){
+			partner.setEmailIdHash(PartnerUtil.generateSHA256Hash(partner.getEmailId()));
+			partner.setEmailId(keyManagerHelper.encryptData(partner.getEmailId()));
 		}
 		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
 		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
@@ -663,9 +671,16 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		}
 
-		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+		PartnerContact contactsFromDb = partnerContactRepository.findByPartnerAndEmailIdHash(partnerId, PartnerUtil.generateSHA256Hash(request.getEmailId()));
+		if (Objects.isNull(contactsFromDb)){
+			contactsFromDb = partnerContactRepository.findByPartnerAndEmailId(partnerId, request.getEmailId());
+		}
 		String resultMessage;
 		if (contactsFromDb != null) {
+			if (Objects.isNull(contactsFromDb.getEmailIdHash())){
+				contactsFromDb.setEmailIdHash(PartnerUtil.generateSHA256Hash(contactsFromDb.getEmailId()));
+				contactsFromDb.setEmailId(keyManagerHelper.encryptData(contactsFromDb.getEmailId()));
+			}
 			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
 			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setIsActive(request.getIs_Active());
@@ -681,7 +696,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setCrBy(getLoggedInUserId());
 			contactsFromDb.setCrDtimes(LocalDateTime.now());
 			contactsFromDb.setPartner(partnerFromDb);
-			contactsFromDb.setEmailIdHash(DigestUtils.sha256Hex(request.getEmailId().toLowerCase()));
+			contactsFromDb.setEmailIdHash(PartnerUtil.generateSHA256Hash(request.getEmailId()));
 			contactsFromDb.setEmailId(keyManagerHelper.encryptData(request.getEmailId()));
 			contactsFromDb.setIsActive(request.getIs_Active());
 			contactsFromDb.setIsDeleted(false);
@@ -1077,13 +1092,15 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		Page<Partner> page = partnerSearchHelper.search(Partner.class, dto, "id");
 		if (page.getContent() != null && !page.getContent().isEmpty()) {
-			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
-			// Decrypt fields after mapping
-			partners.forEach(partner -> {
-				partner.setContactNo(keyManagerHelper.decryptData(partner.getContactNo()));
-				partner.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
-				partner.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+			// Decrypt fields
+			page.getContent().forEach(partner -> {
+				if (partner.getEmailIdHash() != null) {
+					partner.setContactNo(keyManagerHelper.decryptData(partner.getContactNo()));
+					partner.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+					partner.setAddress(keyManagerHelper.decryptData(partner.getAddress()));
+				}
 			});
+			partners = MapperUtils.mapAll(page.getContent(), PartnerSearchResponseDto.class);
 			pageDto = pageUtils.sortPage(partners, dto.getSort(), dto.getPagination(), page.getTotalElements());
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SEARCH_PARTNER_SUCCESS);
@@ -1546,7 +1563,8 @@ public class PartnerServiceImpl implements PartnerService {
 		NotificationDto dto = new NotificationDto();
 		dto.setPartnerId(partner.getId());
 		dto.setPartnerName(partner.getName());
-		dto.setEmailId(keyManagerHelper.decryptData(partner.getEmailId()));
+		dto.setEmailId(partner.getEmailIdHash() != null ?
+				keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 		dto.setLangCode(partner.getLangCode());
 		dto.setPartnerStatus(partner.getIsActive() == true ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 		notificationDtos.add(dto);

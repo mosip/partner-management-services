@@ -7,6 +7,7 @@ import java.util.List;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.util.RequestValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -372,12 +373,15 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnercertificates())")
 	@GetMapping(value = "/partner-certificates-details")
 	@Operation(summary = "This endpoint retrieves a list of all Partner Certicates uploaded by the logged in user",
-	description = "Available since release-1.2.2.0. It is configured for role any of the partner type or PARTNER_ADMIN.")
-			@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			description = "Available since release-1.2.2.0. It is configured for role any of the partner type or PARTNER_ADMIN.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(@RequestParam(name = "expiryPeriod", required = false) @Min(1) Integer expiryPeriod) {
-		return  partnerService.getPartnerCertificatesDetails(expiryPeriod);
+	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(@RequestParam(name = "expiryPeriod", required = false)
+																				 @Min(value = 1, message = "Expiry period must be at least 1 day.")
+																				 @Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+																				 Integer expiryPeriod) {
+		return partnerService.getPartnerCertificatesDetails(expiryPeriod);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")

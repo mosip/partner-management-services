@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -35,7 +36,9 @@ import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.exception.BatchJobServiceException;
+import io.mosip.pms.partner.manager.constant.AuditConstant;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.tasklets.util.TemplateHelper;
 
@@ -49,6 +52,12 @@ public class EmailNotificationService {
 
 	@Autowired
 	RestUtil restUtil;
+
+	@Autowired
+	AuditUtil auditUtil;
+
+	@Autowired
+	BatchJobHelper batchJobHelper;
 
 	@Autowired
 	VelocityEngine velocityEngine;
@@ -90,13 +99,30 @@ public class EmailNotificationService {
 			notificationEntity.setEmailSent(true);
 			notificationEntity.setEmailSentDatetime(LocalDateTime.now(ZoneId.of("UTC")));
 			notificationServiceRepository.save(notificationEntity);
+
+			saveAuditLogForEmailSuccess(notificationEntity);
+
 			log.debug("notification status successfully updated for ID: {}", notificationEntity.getId());
 		} catch (BatchJobServiceException e) {
+			saveAuditLogForEmailFailure(notificationEntity);
 			log.error("Failed to send email for notification ID: {} - {}", notificationEntity.getId(), e.getMessage());
 		} catch (Exception e) {
+			saveAuditLogForEmailFailure(notificationEntity);
 			log.error("Unexpected error while sending email for notification ID: {} - {}", notificationEntity.getId(),
 					e.getMessage());
 		}
+	}
+
+	private void saveAuditLogForEmailSuccess(NotificationEntity notificationEntity) {
+		String notificationType = notificationEntity.getNotificationType();
+		auditUtil.setAuditRequestDto(batchJobHelper.getAuditLogEventTypeForEmail(notificationType, true),
+				notificationEntity.getId(), notificationType, AuditConstant.AUDIT_SYSTEM);
+	}
+
+	private void saveAuditLogForEmailFailure(NotificationEntity notificationEntity) {
+		String notificationType = notificationEntity.getNotificationType();
+		auditUtil.setAuditRequestDto(batchJobHelper.getAuditLogEventTypeForEmail(notificationType, false), "failure",
+				notificationType, AuditConstant.AUDIT_SYSTEM);
 	}
 
 	private String populateTemplate(String templateContent, NotificationEntity notificationEntity)
@@ -136,7 +162,9 @@ public class EmailNotificationService {
 			context.put("fromDate", createdDate.format(formatter));
 			context.put("toDate", createdDate.plusDays(7).format(formatter));
 			context.put("partnerCertificateCount",
-					notificationDetails.getCertificateDetails() != null ? notificationDetails.getCertificateDetails().size() : 0);
+					notificationDetails.getCertificateDetails() != null
+							? notificationDetails.getCertificateDetails().size()
+							: 0);
 			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
 					.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
 					.collect(Collectors.toList());
@@ -153,7 +181,8 @@ public class EmailNotificationService {
 		return context;
 	}
 
-	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject, String emailId) {
+	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject,
+			String emailId) {
 		try {
 			MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
 
