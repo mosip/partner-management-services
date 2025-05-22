@@ -11,6 +11,7 @@ import static io.mosip.pms.common.constant.PartnerConstants.ROOT_CERT_EXPIRY;
 import static io.mosip.pms.common.constant.PartnerConstants.SBI;
 import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
 import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY;
+import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP_CERT_EXPIRY;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,6 +63,7 @@ public class NotificationsServiceImpl implements NotificationsService {
 
     public static final String VERSION = "1.0";
     public static final String BLANK_STRING = "";
+    public static final String FTM_PROVIDER = "FTM_PROVIDER";
 
 
     @Value("${mosip.pms.api.id.notifications.get}")
@@ -186,6 +188,10 @@ public class NotificationsServiceImpl implements NotificationsService {
                 notificationTypeList.add(WEEKLY_SUMMARY);
             } else {
                 notificationTypeList.add(PARTNER_CERT_EXPIRY);
+                String roles = authUserDetails().getAuthorities().toString();
+                if (roles.contains(FTM_PROVIDER)) {
+                    notificationTypeList.add(FTM_CHIP_CERT_EXPIRY);
+                }
             }
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
                     filterDto.getNotificationStatus(), notificationTypeList, partnerIdList, pageable);
