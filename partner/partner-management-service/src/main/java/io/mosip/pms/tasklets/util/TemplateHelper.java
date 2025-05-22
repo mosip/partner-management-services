@@ -40,6 +40,9 @@ public class TemplateHelper {
 	@Value("${email.notification.weekly.summary.template}")
 	private String weeklySummaryTemplate;
 
+	@Value("${email.notification.ftm.chip.cert.expiry.template}")
+	private String ftmChipCertExpiryTemplate;
+
 	@Value("${email.notification.partner.cert.expiry.subject.template}")
 	private String partnerCertExpirySubjectTemplate;
 
@@ -51,6 +54,9 @@ public class TemplateHelper {
 
 	@Value("${email.notification.weekly.summary.subject.template}")
 	private String weeklySummarySubjectTemplate;
+
+	@Value("${email.notification.ftm.chip.cert.expiry.subject.template}")
+	private String ftmChipCertExpirySubjectTemplate;
 
 	@Value("${resource.template.url}")
 	private String getTemplateUrl;
@@ -102,33 +108,37 @@ public class TemplateHelper {
 
 	private String getSubjectTemplateTypeCode(String notificationType) {
 		switch (notificationType) {
-		case PartnerConstants.ROOT_CERT_EXPIRY:
-			return rootCertExpirySubjectTemplate;
-		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
-			return intermediateCertExpirySubjectTemplate;
-		case PartnerConstants.PARTNER_CERT_EXPIRY:
-			return partnerCertExpirySubjectTemplate;
-		case PartnerConstants.WEEKLY_SUMMARY:
-			return weeklySummarySubjectTemplate;
-		default:
-			throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
-					ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
+			case PartnerConstants.ROOT_CERT_EXPIRY:
+				return rootCertExpirySubjectTemplate;
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+				return intermediateCertExpirySubjectTemplate;
+			case PartnerConstants.PARTNER_CERT_EXPIRY:
+				return partnerCertExpirySubjectTemplate;
+			case PartnerConstants.WEEKLY_SUMMARY:
+				return weeklySummarySubjectTemplate;
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+				return ftmChipCertExpirySubjectTemplate;
+			default:
+				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
+						ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
 		}
 	}
 
 	private String getBodyTemplateTypeCode(String notificationType) {
 		switch (notificationType) {
-		case PartnerConstants.ROOT_CERT_EXPIRY:
-			return rootCertExpiryTemplate;
-		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
-			return intermediateCertExpiryTemplate;
-		case PartnerConstants.PARTNER_CERT_EXPIRY:
-			return partnerCertExpiryTemplate;
-		case PartnerConstants.WEEKLY_SUMMARY:
-			return weeklySummaryTemplate;
-		default:
-			throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
-					ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
+			case PartnerConstants.ROOT_CERT_EXPIRY:
+				return rootCertExpiryTemplate;
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+				return intermediateCertExpiryTemplate;
+			case PartnerConstants.PARTNER_CERT_EXPIRY:
+				return partnerCertExpiryTemplate;
+			case PartnerConstants.WEEKLY_SUMMARY:
+				return weeklySummaryTemplate;
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+				return ftmChipCertExpiryTemplate;
+			default:
+				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
+						ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
 		}
 	}
 

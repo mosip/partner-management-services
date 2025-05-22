@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: right; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-left: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>عزيزي ${partnerId}،</strong></p>
+          <p>
+            نود إعلامك بأن شهادة شريحة FTM لـ <strong>${make}</strong> -
+            <strong>${model}</strong> (معرّف FTM: <strong>${ftmId}</strong>) من المقرر أن تنتهي في
+            <strong>${expiryDateTime} UTC</strong>. لضمان الاستمرارية في الخدمة، يرجى رفع شهادة التجديد قبل تاريخ الانتهاء.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">تفاصيل الشهادة</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              معرّف FTM<br /><span style="font-weight: 400;">${ftmId}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              نطاق الشريك<br /><span style="font-weight: 400;">FTM</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              تاريخ ووقت الانتهاء<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              صادرة لـ<br /><span style="font-weight: 400;">${issuedTo}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              صادرة من<br /><span style="font-weight: 400;">${issuedBy}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              الإجراء المطلوب<br /><span style="font-weight: 400;">يرجى رفع الشهادة الجديدة من خلال 'إدارة شهادة شريحة FTM'.</span>
+            </p>
+          </div>
+          <p>قد يؤدي عدم تجديد الشهادة قبل تاريخ الانتهاء إلى توقف الخدمة.</p>
+          <p>للقيام بالتجديد، يرجى اتباع الخطوات التالية:</p>
+          <ol>
+            <li>تسجيل الدخول إلى بوابة PMS.</li>
+            <li>الذهاب إلى "خدمات شريحة FTM" ضمن لوحة تحكم الشريك.</li>
+            <li>ابحث عن الشريحة المعنية واختر "إدارة شهادة شريحة FTM".</li>
+            <li>اضغط على زر "إعادة الرفع".</li>
+            <li>قم برفع الشهادة الجديدة لإكمال عملية التجديد.</li>
+          </ol>
+          <p>يرجى ملاحظة أن الوقت المذكور هو بتوقيت UTC، لذلك يرجى مراعاة فرق التوقيت.</p>
+          <p>شكراً لاهتمامكم السريع بهذه المسألة.</p>
+          <p>مع أطيب التحيات،<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** هذا البريد تم إنشاؤه تلقائيًا، يرجى عدم الرد عليه. **
+          </p>
+          <p>
+            الموقع الإلكتروني:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem; text-align: center;">
+          <a
+            target="_blank"
+            href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+          >
+            <img
+              src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+              alt="linkedin"
+              style="width: 24px; height: 24px; padding: 0px 4px;"
+            />
+          </a>
+          <a target="_blank" href="https://www.youtube.com/@mosip16">
+            <img
+              src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+              alt="youtube"
+              style="width: 24px; height: 24px; padding: 0px 4px;"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

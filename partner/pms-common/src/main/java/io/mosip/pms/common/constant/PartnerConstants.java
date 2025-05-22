@@ -54,6 +54,8 @@ public final class PartnerConstants {
 
 	public static final String WEEKLY_SUMMARY = "WEEKLY_SUMMARY";
 
+	public static final String FTM_CHIP_CERT_EXPIRY = "FTM_CHIP_CERT_EXPIRY";
+
 	public static final String STATUS_ACTIVE = "ACTIVE";
 
 	public static final String STATUS_DISMISSED = "DISMISSED";
