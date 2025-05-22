@@ -98,7 +98,7 @@ To execute the tests using Jar, use the following steps:
    ```
    java -jar -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression -jar apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar
    ```
-   
+
 # Using Eclipse IDE
 
 To execute the tests using Eclipse IDE, use the following steps:
@@ -166,4 +166,3 @@ To run the tests for both **Smoke** and **Regression**:
 ## License
 
 This project is licensed under the terms of the [Mozilla Public License 2.0](https://github.com/mosip/mosip-platform/blob/master/LICENSE)
-

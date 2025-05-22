@@ -11,7 +11,6 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Level;
@@ -22,8 +21,10 @@ import org.testng.TestNG;
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
 
+import io.mosip.testrig.apirig.dataprovider.BiometricDataProvider;
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.ExtractResource;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -31,7 +32,9 @@ import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthTestsUtil;
 import io.mosip.testrig.apirig.utils.CertsUtil;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
+import io.mosip.testrig.apirig.utils.GlobalMethods;
 import io.mosip.testrig.apirig.utils.JWKKeyUtil;
+import io.mosip.testrig.apirig.utils.KernelAuthentication;
 import io.mosip.testrig.apirig.utils.KeyCloakUserAndAPIKeyGeneration;
 import io.mosip.testrig.apirig.utils.KeycloakUserManager;
 import io.mosip.testrig.apirig.utils.MispPartnerAndLicenseKeyGeneration;
@@ -60,12 +63,8 @@ public class MosipTestRunner {
 	public static void main(String[] arg) {
 
 		try {
+			LOGGER.info("** ------------- API Test Rig Run Started --------------------------------------------- **");
 
-			Map<String, String> envMap = System.getenv();
-			LOGGER.info("** ------------- Get ALL ENV varibales --------------------------------------------- **");
-			for (String envName : envMap.keySet()) {
-				LOGGER.info(String.format("ENV %s = %s%n", envName, envMap.get(envName)));
-			}
 			BaseTestCase.setRunContext(getRunType(), jarUrl);
 			ExtractResource.removeOldMosipTestTestResource();
 			if (getRunType().equalsIgnoreCase("JAR")) {
@@ -77,39 +76,32 @@ public class MosipTestRunner {
 			PMSConfigManger.init();
 			suiteSetup(getRunType());
 			SkipTestCaseHandler.loadTestcaseToBeSkippedList("testCaseSkippedList.txt");
+			GlobalMethods.setModuleNameAndReCompilePattern(PMSConfigManger.getproperty("moduleNamePattern"));
 			setLogLevels();
 
-			// For now we are not doing health check for qa-115.
-			if (BaseTestCase.isTargetEnvLTS()) {
-				HealthChecker healthcheck = new HealthChecker();
-				healthcheck.setCurrentRunningModule(BaseTestCase.currentModule);
-				Thread trigger = new Thread(healthcheck);
-				trigger.start();
-			}
+			HealthChecker healthcheck = new HealthChecker();
+			healthcheck.setCurrentRunningModule(BaseTestCase.currentModule);
+			Thread trigger = new Thread(healthcheck);
+			trigger.start();
+
 			KeycloakUserManager.removeUser();
 			KeycloakUserManager.createUsers();
 			KeycloakUserManager.closeKeycloakInstance();
 
 			startTestRunner();
-
+			PMSUtil.DbCleanRevamp();
 		} catch (Exception e) {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
-		if (BaseTestCase.isTargetEnvLTS())
-			HealthChecker.bTerminate = true;
-
-		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
-
+		KeycloakUserManager.removeUser();
+		KeycloakUserManager.closeKeycloakInstance();
+		
+		HealthChecker.bTerminate = true;
 		System.exit(0);
 
 	}
-	
+
 	public static void suiteSetup(String runType) {
 		if (PMSConfigManger.IsDebugEnabled())
 			LOGGER.setLevel(Level.ALL);
@@ -121,18 +113,10 @@ public class MosipTestRunner {
 		if (!runType.equalsIgnoreCase("JAR")) {
 			AuthTestsUtil.removeOldMosipTempTestResource();
 		}
-		BaseTestCase.currentModule = "partner";
-		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
+		BaseTestCase.currentModule = GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
+		PMSUtil.DbCleanRevamp();
 
-		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
-
-		BaseTestCase.currentModule = "partner";
-		BaseTestCase.setReportName("partner");
-		AdminTestUtil.copyPartnerTestResource();
+		AdminTestUtil.copyPmsTestResource();
 	}
 
 	private static void setLogLevels() {
@@ -143,6 +127,12 @@ public class MosipTestRunner {
 		MispPartnerAndLicenseKeyGeneration.setLogLevel();
 		JWKKeyUtil.setLogLevel();
 		CertsUtil.setLogLevel();
+		KernelAuthentication.setLogLevel();
+		BaseTestCase.setLogLevel();
+		PMSUtil.setLogLevel();
+		KeycloakUserManager.setLogLevel();
+		DBManager.setLogLevel();
+		BiometricDataProvider.setLogLevel();
 	}
 
 	/**
@@ -152,8 +142,6 @@ public class MosipTestRunner {
 	 */
 	public static void startTestRunner() {
 		File homeDir = null;
-		TestNG runner = new TestNG();
-		List<String> suitefiles = new ArrayList<>();
 		String os = System.getProperty("os.name");
 		LOGGER.info(os);
 		if (getRunType().contains("IDE") || os.toLowerCase().contains("windows")) {
@@ -164,15 +152,23 @@ public class MosipTestRunner {
 			homeDir = new File(dir.getParent() + "/mosip/testNgXmlFiles");
 			LOGGER.info("ELSE :" + homeDir);
 		}
-		for (File file : homeDir.listFiles()) {
-			if (file.getName().toLowerCase().contains("partner")) {
-				suitefiles.add(file.getAbsolutePath());
+		File[] files = homeDir.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				TestNG runner = new TestNG();
+				List<String> suitefiles = new ArrayList<>();
+				if (file.getName().toLowerCase().contains("mastertestsuite")) {
+					BaseTestCase.setReportName(GlobalConstants.PARTNER_MANAGEMENT_SERVICE);
+					suitefiles.add(file.getAbsolutePath());
+					runner.setTestSuites(suitefiles);
+					System.getProperties().setProperty("testng.outpur.dir", "testng-report");
+					runner.setOutputDirectory("testng-report");
+					runner.run();
+				}
 			}
+		} else {
+			LOGGER.error("No files found in directory: " + homeDir);
 		}
-		runner.setTestSuites(suitefiles);
-		System.getProperties().setProperty("testng.outpur.dir", "testng-report");
-		runner.setOutputDirectory("testng-report");
-		runner.run();
 	}
 
 	/**

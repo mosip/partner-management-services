@@ -1,0 +1,79 @@
+ApproveSecureBiometricInterface:
+   Pms_ApproveSecureBiometricInterface_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_01
+      description: Approvr Secure Biometric Interface with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterface
+      outputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterfaceResult
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "response": "Secure biometric details approved successfully."
+    }'
+    
+   Pms_ApproveSecureBiometricInterface_Valid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_01
+      description: Approvr Secure Biometric Interface with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterface
+      outputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterfaceResult
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "response": "Secure biometric details approved successfully."
+    }'
+
+   Pms_ApproveSecureBiometricInterface_ToMap_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_01
+      description: Approvr Secure Biometric Interface with valid details
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterface
+      outputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterfaceResult
+      input: '{
+    "approvalStatus": "Activate",
+    "id": "$ID:SaveSecureBiometricInterface_TO_Map_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "response": "Secure biometric details approved successfully."
+    }'
+    
+   Pms_ApproveSecureBiometricInterface_Missing_InputParameter_approvalStatus:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_02
+      description: Approvr Secure Biometric Interface while keeping parameter approval status as empty
+      role: partner
+      restMethod: patch
+      inputTemplate: pms/device/SecureBiometricInterface/approve/approveSecureBiometricInterface
+      outputTemplate: pms/error
+      input: '{
+    "approvalStatus": "$REMOVE$",
+    "id": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$",
+    "isItForRegistrationDevice": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

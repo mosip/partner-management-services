@@ -1,0 +1,388 @@
+GetListOfApiKey:
+   Pms_GetListOfApiKey_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partner-api-keys
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_01
+      description: Fetching all the API Keys
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_without_authentication_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_02
+      description: Fetching the API Keys without authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: ' {
+         "errors": [
+    {
+      "errorCode": "KER-ATH-401"
+    }
+  ]
+}'
+   Pms_GetListOfApiKey_with_individual_partner_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_03
+      description: Fetching the API Keys with individual partner
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfAllDeviceResultNegative
+      input: '{
+      "pageSize": "$REMOVE$",
+      "partnerId": "pms-111998",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+         "errors": [
+    {
+      "errorCode": "KER-ATH-403"
+    }
+  ]
+}'
+   Pms_GetListOfApiKey_with_invalid_pageSize:
+      endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_04
+      description: Fetching the API Keys with pageSize
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/error
+      input: '{
+      "pageSize": "-5",
+      "partnerId": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: '{
+         "errors": [
+    {
+      "errorCode": "PMS_PS_ERROR_006"
+    }
+  ]
+}'
+   Pms_GetListOfApiKey_with_negative_pageNo_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys?pageNo={pageNo}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_05
+      description: Fetching the API Keys with negative pageNo
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "-1",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+         "errors": [
+    {
+      "errorCode": "PMS_PS_ERROR_006"
+    }
+  ]
+}'
+   Pms_GetListOfApiKey_with_negative_pageSize_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_06
+      description: Fetching the API Keys with negative pageSize
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/error
+      input: '{
+      "pageSize": "-5",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+         "errors": [
+    {
+      "errorCode": "PMS_PS_ERROR_006"
+    }
+  ]
+}'
+   Pms_GetListOfApiKey_with_status_activated:
+      endPoint: /v1/partnermanager/partner-api-keys?status={status}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_07
+      description: Fetching the API Keys with status activated
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "status": "activated",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_status_deactivated:
+      endPoint: /v1/partnermanager/partner-api-keys?status={status}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_08
+      description: Fetching the API Keys with status deactivated
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "status": "deactivated",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_partial_partnerId_value:
+      endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_09
+      description: Fetching the API Keys on passing partial partnerId value
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "partnerId": "A",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+	  
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_partial_policyGroupName_value:
+      endPoint: /v1/partnermanager/partner-api-keys?policyGroupName={policyGroupName}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_10
+      description: Fetching the API Keys on passing partial policyGroupName value
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "policyGroupName": "1",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortType" : "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_invalid_sortType_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_11
+      description: Fetching the API Keys with invalid sortType
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/error
+      input: '{
+      "sortType": "cas",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+         "errors": [
+    {
+      "errorCode": "PMS_PS_ERROR_007"
+    }
+  ]
+}'
+   Pms_GetListOfApiKey_with_valid_ascending_sortType:
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}&sortFieldName=partnerId&pageNo={pageNo}&pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_12
+      description: Fetching the API Keys with ascending sortType
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "sortType": "ASC",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "10",
+      "pageNo": "0",
+      "status": "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_valid_descending_sortType:
+      endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}&sortFieldName=orgName&pageNo={pageNo}&pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_13
+      description: Fetching the API Keys with ascending sortType
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "sortType": "DESC",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "10",
+      "pageNo": "0",
+      "status": "$REMOVE$",
+      "orgName" : "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_partial_orgName_value:
+      endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_14
+      description: Fetching the API Keys with partial orgName value
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "orgName": "sp",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "policyName" : "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_partial_policyName_value:
+      endPoint: /v1/partnermanager/partner-api-keys?policyName={policyName}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_15
+      description: Fetching the API Keys with partial policyName values
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "policyName": "pqr",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$",
+      "apiKeyLabel" : "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_partial_apiKeyLabel_value:
+      endPoint: /v1/partnermanager/partner-api-keys?apiKeyLabel={apiKeyLabel}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_16
+      description: Fetching the API Keys with partial apiKeyLabel values
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "apiKeyLabel": "tyy1",
+      "policyName": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$"
+}'
+      output: ' {
+}'
+   Pms_GetListOfApiKey_with_random_data:
+      endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
+      uniqueIdentifier: TC_PMS_GetListOfApiKey_17
+      description: Fetching the API Keys with random values given to a valid parameter
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfApiKey/getListOfApiKey
+      outputTemplate: pms/GetListOfApiKey/getListOfApiKeyResult
+      input: '{
+      "orgName": "zz6762j",
+      "apiKeyLabel": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "status": "$REMOVE$"
+}'
+      output: ' {
+}'

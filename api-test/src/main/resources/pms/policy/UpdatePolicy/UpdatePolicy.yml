@@ -1,0 +1,211 @@
+createUpdatePolicy:
+   Pms_UpdatePolicy_Invalid_PolicyID:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_02
+      description: Update Policy with invalid PolicyID
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "asfgref",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+        "errorCode": "PMS_POL_008",
+        "message": "Policy ID does not exist"
+    }
+  ]
+}'
+   Pms_UpdatePolicy_Invalid_PolicygroupName:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_03
+      description: Update Policy with invalid PolicyGroupName
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "asfgrrw",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+        "errorCode": "PMS_POL_019",
+        "message": "Policy group name does not exist"
+    }
+  ]
+}'
+   Pms_UpdatePolicy_Missing_InputParameter_name:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_04
+      description: Update Policy with invalid PolicyParameterName
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy",
+		"name": "$REMOVE$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - value is empty or null :request.name"
+    }
+  ]
+}'
+   Pms_UpdatePolicy_Missing_InputParameter_desc:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_05
+      description: Update Policy while keeping InputParameter as empty
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "$REMOVE$",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - value is empty or null :request.desc"
+    }
+  ]
+}'
+   Pms_UpdatePolicy_Invalid_InputParameter_policyID:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_06
+      description: Update Policy while keeping InputParameter as invalid for PolicyID
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "1234abcxz",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "mosip policy group",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_POL_008",
+      "message": "Policy ID does not exist"
+    }
+  ]
+}'
+   Pms_UpdatePolicy_Missing_InputParameter_authTokenType_neg:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_07
+      description: Update Policy while keeping authTokeType Parameter as Empty
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy",
+		"name": "mosip policy missing neg",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "$REMOVE$",
+		"policyGroupName": "mosip policy group 19234",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PV_006",
+      "message": "Missing input parameter - authTokenType"
+    }
+  ]
+}'
+   Pms_UpdatePolicy_Missing_InputParameter_policyGroupName_neg:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_08
+      description: Update Policy while keeping PolicyGroupName Parameter as Empty
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy",
+		"name": "mosip policy",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "$REMOVE$",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001",
+      "message": "Invalid request parameter - value is empty or null :request.policyGroupName"
+    }
+  ]
+}'

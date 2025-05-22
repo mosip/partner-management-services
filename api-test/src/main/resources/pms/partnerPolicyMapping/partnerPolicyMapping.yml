@@ -1,0 +1,250 @@
+partnerPolicyMapping:
+   Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip policy 19234",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+    
+   Pms_partnerPolicyMapping_ForDeactivateOIDCNeg_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_02
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip policy",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+    
+   Pms_partnerPolicyMapping_invalid_policyName_neg:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy when invalid policyname is given      
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "%^776hfgsdf",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_073"
+        }
+       ]
+    }'
+   Pms_partnerPolicyMapping_invalid_partnerId_neg:
+      endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
+      description: Mapping Partner & Policy when invalid partnerId is given      
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip policy 19234",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_PRT_005"
+        }
+       ]
+    }'
+   Pms_partnerPolicyMapping_missing_policyName_neg:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy when policyname is removed from request      
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "$REMOVE$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_COR_001"
+        }
+       ]
+    }'
+    
+   Pms_partnerPolicyMapping_missing_useCaseDescription_neg:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy when usecaseDescription is removed from request      
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip policy 19234",
+        "useCaseDescription":"$REMOVE$",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "errors": [
+        { 
+          "errorCode": "PMS_COR_001"
+        }
+       ]
+    }'
+    
+   Pms_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
+      description: Create Partner API Key Request for Partner with valid data
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip data share policy",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+    
+   Pms_SubmitPartnerApiKeyRequest_Approval_All_for_Deactivated_policy:
+      endPoint: /v1/partnermanager/partners/Tech-1233/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
+      description: Create Partner API Key Request for Partner with Deactivated Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip data share policy ApiKey",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_PMP_016"
+    }
+  ]
+    }'
+    
+   Pms_SubmitPartnerApiKeyRequest_Map_partner_partner_inprogress_state_Neg:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_04
+      description: Create Partner API Key Request for Partner and mapping the Partner with Inprogress Policy
+      role: partnerauth
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip policy",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "PMS_PRT_053"
+    }
+  ]
+    }'
+    
+   Pms_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription_neg:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_05
+      description: Create Partner API Key Request for Credential Partner with invalid use case description
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosip data share policy",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'
+   Pms_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription_neg:
+      endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_06
+      description: Create Partner API Key Request for Credential Partner with invalid Policy Name use case description
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/error
+      input: '{
+        "policyName": "mosip@8474748",
+        "useCaseDescription": "mosi182736@636",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_073"
+    }
+  ]
+}'
+
+   Pms_partnerPolicyMapping_ForRejecting_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip reject policy 19234",
+        "useCaseDescription": "Need to submit for Rejecting",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+    
+   Pms_partnerPolicyMapping_ForPending_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      description: Mapping Partner & Policy
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "policyName": "mosip in progress mapping policy 19234",
+        "useCaseDescription": "Need to submit for Pending",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'

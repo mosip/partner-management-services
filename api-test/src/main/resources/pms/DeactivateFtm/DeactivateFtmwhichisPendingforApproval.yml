@@ -1,0 +1,20 @@
+DeactivateFtmwhichisPendingforApproval:
+   Pms_DeactivateFtm_whichisPendingforApproval_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtm_19
+      description: Deactivate FTM which is Pending for Approval
+      role: partnerftm
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtm
+      outputTemplate: pms/error
+      input: '{
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_010"
+       }
+       ]
+}'

@@ -1,0 +1,430 @@
+DeactivateSBIWithAssociatedDevicesNegativeScenarios:
+   Pms_DeactivateSBIWithAssociatedDevices_Without_Authentication_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_01
+      description: Deactivate SBI with associated Devices without Partner authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Missing_requestTime_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_02
+      description: Deactivate SBI while keeping requestTime parameter as Missing in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$REMOVE$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Empty_requestTime_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_03
+      description: Deactivate SBI while keeping requestTime parameter as Empty in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "", 	
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_04
+      description: Deactivate SBI by passing Invalid ID parameter in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "JSKSKA56888",
+      "version": "1.0",	
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Missing_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_05
+      description: Deactivate SBI while keeping ID parameter as Missing in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "$REMOVE$",
+      "version": "1.0",	
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Keeping_IDas_Null_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_06
+      description: Deactivate SBI while keeping ID parameter as Null in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "Null",
+      "version": "1.0",	
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Empty_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_07
+      description: Deactivate SBI while keeping ID parameter as Empty in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "",
+      "version": "1.0",	
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Missing_Version_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_08
+      description: Deactivate SBI without Version parameter in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "$REMOVE$",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Null_Version_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_09
+      description: Deactivate SBI while keeping Version parameter as Null in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "Null",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Empty_Version_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_10
+      description: Deactivate SBI while keeping Version parameter as Empty in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue1_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_11
+      description: Deactivate SBI while keeping Version parameter as invalid value 1 in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue0_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_12
+      description: Deactivate SBI while keeping Version parameter as invalid value 0 in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_13
+      description: Deactivate SBI while keeping Version parameter as invalid values in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "9977",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_requestTime_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_14
+      description: Deactivate SBI while keeping Request Time parameter as invalid in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "1111-07-22T08:21:17.665Z",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
+
+   Pms_DeactivateSBIWithAssociatedDevices_Already_deactivated_SBI_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_15
+      description: Deactivate SBI which already Deactivated in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
+      outputTemplate: pms/error
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_020"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Null_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_16
+      description: Deactivate SBI while keeping SBI ID parameter as Null in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "Null"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Space_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_17
+      description: Deactivate SBI while keeping SBI ID parameter as Empty in request
+      role: partnerdevice
+      checkOnlyStatusCodeInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/responseCode
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": " "
+}'
+      output: '{
+      "responseCode": "400"
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_InvalidNumeric_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_18
+      description: Deactivate SBI while keeping SBI ID parameter as Invalid Numeric values in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "0101022"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_Invalid_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_19
+      description: Deactivate SBI while keeping SBI ID parameter as Invalid values in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "APPLEMANCAP"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_DeactivateSBIWithAssociatedDevices_with_invalid_roles_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_20
+      description: Deactivate SBI with invalid Partner roles
+      role: device
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.sbi.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'

@@ -32,7 +32,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
+public class PatchWithPathParamsAndBody extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(PatchWithPathParamsAndBody.class);
 	protected String testCaseName = "";
 	String pathParams = null;
@@ -84,7 +84,6 @@ public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
-
 
 		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
 		String inputJson = filterInputHbs(testCaseDTO);

@@ -1,0 +1,14 @@
+GetAllApprovedAuthPartnerPolicy:
+   Pms_GetAllApprovedAuthPartnerPolicy_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
+      description: Fetching all Approved Auth Partner Policies
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
+      outputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicyResult
+      input: '{
+}'
+      output: '{
+}'     

@@ -33,7 +33,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
+public class PostWithBodyAndPathParams extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(PostWithBodyAndPathParams.class);
 	protected String testCaseName = "";
 	String pathParams = null;
@@ -112,20 +112,17 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 			}
 		}
 
-		 else {
-				response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
-						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil
-					.doJsonOutputValidation(response.asString(), outputJson, testCaseDTO, response.getStatusCode());
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+		else {
+			response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
 		}
+		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil
+				.doJsonOutputValidation(response.asString(), outputJson, testCaseDTO, response.getStatusCode());
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
-	
-
+		if (!OutputValidationUtil.publishOutputResult(ouputValid))
+			throw new AdminTestException("Failed at output validation");
+	}
 
 	/**
 	 * The method ser current test name to result

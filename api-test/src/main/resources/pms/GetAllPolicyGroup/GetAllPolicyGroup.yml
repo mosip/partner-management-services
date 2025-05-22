@@ -1,0 +1,15 @@
+GetAllPolicyGroup:
+   Pms_GetAllPolicyGroup_allValid_smoke:
+      endPoint: /v1/policymanager/policies/group/all
+      uniqueIdentifier: TC_PMS_GetAllPolicyGroup_01
+      description: Retrieve All Partner Policy Group
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPolicyGroup/getAllPolicyGroup
+      outputTemplate: pms/GetAllPolicyGroup/getAllPolicyGroupResult
+      input: '{
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+    } '

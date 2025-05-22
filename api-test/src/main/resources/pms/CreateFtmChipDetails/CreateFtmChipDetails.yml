@@ -1,0 +1,82 @@
+CreateFtmChipDetails:
+   Pms_CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      role: partnerftm
+      description: Create Ftm Chip Details
+      uniqueIdentifier: TC_PMS_createFtmChipDetails_01
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetails
+      outputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetailsResult
+      input: '{
+       "ftpProviderId": "pms-111888",
+       "make": "AcmeCorpFtm",
+       "model": "mode2"
+
+}'
+      output: '{
+          
+}'
+
+   Partner_CreateFTPChipDetail_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_CreateFTPChipDetail_01
+      description: Create FTP Chip Deatils for Partner
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetails
+      outputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetailsResult
+      input: '{
+    "ftpProviderId": "pms-111888",
+    "make": "Make123",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+      "id": "$IGNORE$"
+}'
+
+   Pms_CreateFTPChipDetail_Missing_InputParameter_ftpProviderId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_CreateFTPChipDetail_02
+      description: Create FTP Chip Deatils for Partner while keeping ftpProviderId parameter as missing
+      role: partner
+      restMethod: post
+      inputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetails
+      outputTemplate: pms/error
+      input: '{
+    "ftpProviderId": "FTP-AUTOMATION",
+    "make": "$REMOVE$",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+
+   Pms_CreateFTPChipDetail_Missing_InputParameter_ftpId:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_CreateFTPChipDetail_03
+      description: Create FTP Chip Deatils for Partner while keeping ftpId parameter as missing
+      role: partner
+      restMethod: post
+      inputTemplate: pms/CreateFtmChipDetails/CreateFtmChipDetails
+      outputTemplate: pms/error
+      input: '{
+    "ftpProviderId": "$REMOVE$",
+    "make": "Make123",
+    "model": "MODEL-01",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

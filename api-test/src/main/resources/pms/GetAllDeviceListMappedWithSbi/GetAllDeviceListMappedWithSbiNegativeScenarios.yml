@@ -1,0 +1,58 @@
+GetAllDeviceListMappedWithSbiNegativeScenarios:
+   Pms_GetAllDeviceListMappedWithSbi_without_authentication_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_01
+      description: Retrieve all Device list which are mapped with SBI without Authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
+      outputTemplate: pms/error
+      input: '{
+       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllDeviceListMappedWithSbi_Invalid_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_02
+      description: Retrieve all Device list which are mapped with SBI by provinding invalid SBI id in request
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
+      outputTemplate: pms/error
+      input: '{
+       "sbiId": "AJDJD9281"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_005"
+       }
+       ]
+}'
+   Pms_GetAllDeviceListMappedWithSbi_when_SBI_not_authenticated_device_provider_SBI_ID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      uniqueIdentifier: TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_03
+      description: Retrieve all Device list when SBI given is different from the authentiacted  device provider
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
+      outputTemplate: pms/error
+      input: '{
+       "sbiId": "$ID:GetListOfAllSBI_All_Valid_Smoke_sid_sbiId$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_019"
+       }
+       ]
+}'

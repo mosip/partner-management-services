@@ -1,0 +1,64 @@
+GetAllDeviceTypes:
+   Pms_GetAllDeviceTypes_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners
+      description: Creating a Partner
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllDeviceTypes_01
+      restMethod: post
+      inputTemplate: pms/GetAllDeviceTypes/GetAllDeviceTypes
+      outputTemplate: pms/GetAllDeviceTypes/GetAllDeviceTypesResult
+      input: '{
+    "filters": [{
+    "columnName": "code",
+    "type": "all",
+    "text": "Finger"
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+      "filters": [
+      {
+        "fieldID": "code",
+        "fieldValue": "Finger",
+        "fieldCode": "Finger"
+      }
+    ]
+  }'
+      output: ' {
+       "filters": [
+      {
+        "fieldID": "code",
+        "fieldValue": "Finger",
+        "fieldCode": "Finger"
+      }
+    ]
+    }'
+    
+    
+      partner_DeviceTypeFilter_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
+      description: Get device type
+      uniqueIdentifier: TC_PMS_GetAllDeviceTypes_02
+      role: partner
+      restMethod: post
+      inputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilter
+      outputTemplate: partner/FilterAPIs/DeviceTypeFilter/deviceTypeFilterResult
+      input: '{
+  "filters": [{
+    "columnName": "code",
+    "type": "all",
+    "text": "Finger"
+  }],
+   "purpose": "REGISTRATION",
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+      "filters": [
+      {
+        "fieldID": "code",
+        "fieldValue": "Finger",
+        "fieldCode": "Finger"
+      }
+    ]
+}'
