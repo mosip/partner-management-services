@@ -12,4 +12,7 @@ public class CertificateDetailsDto {
     private String expiryDateTime;
     private String expiryPeriod;
     private String certificateType;
+    private String ftmId;
+    private String make;
+    private String model;
 }
