@@ -1,0 +1,37 @@
+GetPartnerExpiringCertificateNegativeScenarios:
+   Pms_GetPartnerExpiringCertificateNegativeScenarios_Invalid_Token_Neg:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: invalidtoken
+      description: Get Partner Expiring Certificates with invalid token
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_01
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/error
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetPartnerExpiringCertificateNegativeScenarios_Invalid_Role_Neg:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: device
+      description: Get Partner Expiring Certificates with invalid Role
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_02
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate
+      outputTemplate: pms/error
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'

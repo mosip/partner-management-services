@@ -1,0 +1,19 @@
+UpdateNotificationSeenTimestamp:
+   Pms_UpdateNotificationSeenTimestamp_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestamp_01
+      description: Update Notification Seen Timestamp with valid details
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
+      outputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestampResult
+      input: '{
+      "id": "mosip.pms.users.notifications.seen.timestamp.put",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
+      "userId": "pms-111777"
+}'
+      output: '{
+}'

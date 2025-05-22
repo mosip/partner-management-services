@@ -1,0 +1,54 @@
+GetPolicyForApiKey:
+   Pms_GetPolicyForApiKey_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
+      uniqueIdentifier: TC_PMS_GetPolicyForApiKey_01
+      description: Retrieve Partner Policy API Key
+      role: partner
+      restMethod: get
+      inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey
+      outputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKeyResult
+      input: '{
+    "partnerId": "pms-111999",
+    "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$"
+}'
+      output: '{
+   "partnerID": "pms-111999"      
+}'
+   Pms_GetPolicyForApiKey_InValid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
+      uniqueIdentifier: TC_PMS_GetPolicyForApiKey_02
+      description: Retrieve Partner Policy API Key while keeping invalid PartnerId
+      role: partner
+      restMethod: get
+      inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "fqgfg",
+    "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_009"
+    }
+  ]   
+}'
+   Pms_GetPolicyForApiKey_InValid_apiKey:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
+      uniqueIdentifier: TC_PMS_GetPolicyForApiKey_03
+      description: Retrieve Partner Policy API Key while keeping invalid APIKey
+      role: partner
+      restMethod: get
+      inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "110124",
+    "apiKey": "dhbg"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_009"
+    }
+  ]   
+}'

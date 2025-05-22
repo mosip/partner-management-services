@@ -1,0 +1,75 @@
+UpdateSecureBiometricInterface:
+   Pms_UpdateSecureBiometricInterface_DeviceProvider_AllValid_Smoke:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: patch
+      inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
+      outputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterfaceResult
+      input: '{
+          "id": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+          "approvalStatus": "Activate"
+
+}'
+      output: '{
+          "response": "Secure biometric details approved successfully."
+}'
+
+   Pms_UpdateSecureBiometricInterface_ReApprove_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_02
+      description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
+      role: partner
+      restMethod: put
+      inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
+      outputTemplate: pms/error
+      input: '{
+          "id": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+          "approvalStatus": "Activate"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_AUT_517"
+    }
+  ]
+    }'
+
+   Pms_UpdateSecureBiometricInterface_AfterReject_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_02
+      description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
+      role: partner
+      restMethod: put
+      inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
+      outputTemplate: pms/error
+      input: '{
+          "id": "$ID:SaveSecureBiometricInterface_Valid_Smoke_ForReject_sid_id$",
+          "approvalStatus": "Activate"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_AUT_518"
+    }
+  ]
+    }'
+   Pms_UpdateSecureBiometricInterface_Missing_InputParameter_Id:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_03
+      description: Create UpdateSecureBiometricInterface while keeping parameter ID as empty
+      role: partner
+      restMethod: put
+      inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
+      outputTemplate: pms/error
+      input: '{
+          "id": "$REMOVE$",
+          "approvalStatus": "Activate"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

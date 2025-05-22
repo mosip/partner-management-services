@@ -1,0 +1,21 @@
+GetOriginalFtmCertifacteAfterDeactiveFtm:
+   Pms_GetOriginalFtmCertifacte_AfterDeactiveFtm_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
+      role: partnerftm
+      description: Get Original Ftm Certifacte After Deactivate Ftm
+      uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteAfterDeactiveFtm_01
+      restMethod: get
+      inputTemplate: pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm
+      outputTemplate: pms/error
+      input: '{
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+     "errors": [
+    {
+      "errorCode": "PMS_FTM_ERROR_009",
+      "message": "Cannot download the certificate for a deactivated FTM"
+    }
+  ]
+}'
+

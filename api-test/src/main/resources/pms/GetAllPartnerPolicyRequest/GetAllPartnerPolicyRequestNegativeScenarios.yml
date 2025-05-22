@@ -1,0 +1,137 @@
+GetAllPartnerPolicyRequest:
+   Pms_GetAllPartnerPolicyRequest_without_Authentication_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_02      
+      description: Fetching all the partner policy requests without authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]   
+}'
+
+   Pms_GetAllPartnerPolicyRequest_Invalid_Token_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_03      
+      description: Fetching all the partner policy requests with invalid token
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]     
+}'
+   Pms_GetAllPartnerPolicyRequest_invalid_sortType_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_13   
+      description: Fetching all the partner policy requests by invalid sort type
+      role: partnerauth
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResultWithArray
+      input: '{
+      "sortType": "hdjfdfhg",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllPartnerPolicyRequest_invalid_pageSize_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_17  
+      description: Fetching all the partner policy requests by giving negative pagesize value
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResultWithArray
+      input: '{
+      "pageSize": "-9",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllPartnerPolicyRequest_invalid_pageNo_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_18  
+      description: Fetching all the partner policy requests by giving negative pageNo value
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResultWithArray
+      input: '{
+      "pageNo": "-9",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllPartnerPolicyRequest_invalid_sortFieldName_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests
+      uniqueIdentifier: TC_PMS_partner-policy-requests_20  
+      description: Fetching all the partner policy requests with invalid sortfieldname
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
+      outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestWithArray
+      input: '{
+      "sortFieldName": "$%^%^&&^",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "requestDetails": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "partnerType": "$REMOVE$"      
+}'
+      output: '{
+      "pageNo": "0"
+}'

@@ -1,0 +1,20 @@
+{
+  "id": "string",
+  "metadata": {},
+  "request": {
+    "filters": [
+    {{#each filters}}
+      {
+        "columnName": "{{columnName}}",
+        "text": "{{text}}",
+        "type": "{{type}}"
+      }
+      {{#unless @last}},{{/unless}}
+      	{{/each}}
+    ],
+    "optionalFilters": [],
+     "purpose": "{{purpose}}"
+  },
+  "requesttime": "{{requesttime}}",
+  "version": "string"
+}

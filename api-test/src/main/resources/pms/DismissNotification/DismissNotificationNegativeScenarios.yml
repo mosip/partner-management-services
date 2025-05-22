@@ -1,0 +1,326 @@
+DismissNotificationNegativeScenarios:
+   Pms_DismissNotification_Without_Authentication_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: invalidtoken
+      description: Dismiss Notification without Authentication
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_01
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": "fd0e8be0-9499-448e-9b85-06d5649c3f0e",
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_NotificationID_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Invalid NotificationID
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_02
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": "fd0e8",
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_008"
+       }
+       ]
+}'
+   Pms_DismissNotification_Null_NotificationID_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Null NotificationID
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_03
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": "NULL",
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_008"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_RequestID_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with invalid Request ID
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_04
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DismissNotification_Without_RequestID_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification without Request ID
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_05
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DismissNotification_Null_RequestID_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Null Request ID
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_06
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DismissNotification_Empty_RequestID_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Empty Request ID
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_07
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_DismissNotification_Without_Version_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Version parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_08
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DismissNotification_Null_Version_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Version parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_09
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "Null",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_Version_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Version parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_10
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "12345",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_Value_1_Version_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Version value 1 parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_11
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_Value_0_Version_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Version value 0 parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_12
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_DismissNotification_without_RequestTime_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification without RequestTime parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_13
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DismissNotification_Empty_RequestTime_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Empty Request Time param
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_14
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1",
+      "requesttime": "",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_DismissNotification_without_PartnerAdmin_Role_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: auth
+      description: Dismiss Notification without Partner Admin role
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_15
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISSED"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'

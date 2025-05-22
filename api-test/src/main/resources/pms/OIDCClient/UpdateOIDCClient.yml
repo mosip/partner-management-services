@@ -1,0 +1,23 @@
+UpdateOIDCClient:
+   Pms_UpdateOIDCClient_all_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/oauth/client/{client_id}
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/OIDCClient/oIDCClientUpdate
+      outputTemplate: pms/OIDCClient/oIDCClientResult
+      input: '{
+      	"requesttime": "$TIMESTAMP$",
+      	"client_id": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 8976678",
+      	"status": "ACTIVE",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+		"clientNameLangMap": [{"clientNameLang": "eng", "clientName": "new1112"}],
+      	"clientAuthMethods": "private_key_jwt"
+}'
+      output: '{
+        "clientId": "$IGNORE$",
+    	"status": "ACTIVE"
+}'

@@ -33,7 +33,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class SimplePatchForAutoGenId extends AdminTestUtil implements ITest {
+public class SimplePatchForAutoGenId extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(SimplePatchForAutoGenId.class);
 	protected String testCaseName = "";
 	String idKeyName = null;
@@ -86,7 +86,6 @@ public class SimplePatchForAutoGenId extends AdminTestUtil implements ITest {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
-
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);

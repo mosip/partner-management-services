@@ -1,0 +1,51 @@
+GetListAllFTMChipNegativeScenarios:
+   Pms_GetListAllFTMChip_Without_Authentication_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_01
+      description: Retrieve all FTM chip details without Partner authentication
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListAllFTMChip_Invalid_Token_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_02
+      description: Retrieve all FTM chip details with Invalid access token
+      role: invalidtoken
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetListAllFTMChip_WhenNo_FTM_Chips_AddedNeg:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_03
+      description: Retrieve all FTM chip details when FTM Chips are not added for Partner
+      checkErrorsOnlyInResponse: true
+      role: partnerftm
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResultNegative
+      input: '{
+}'
+      output: '{
+      
+}'

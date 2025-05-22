@@ -1,0 +1,15 @@
+GetAllApprovedAuthPartnerId:
+   Pms_GetAllApprovedAuthPartnerId_allValid_smoke:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
+      description: Fetching all approved Partner Id
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerId_01
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerId
+      outputTemplate: pms/GetAllApprovedPartnerId/getAllApprovedPartnerIdResult
+      input: '{
+}'
+      output: '{
+      "partnerId": "pms-111999"
+
+}'

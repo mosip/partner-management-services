@@ -1,0 +1,117 @@
+CreateSearchPartner:
+   Pms_SearchPartner_AllValid_Smoke:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_01
+      description: Create Search Partner with valid data
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartner
+      outputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartnerResult
+      input: '{
+  "partnerType": "all",
+  "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Pms_SearchPartner_Only_SortCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_02
+      description: Create Search Partner with Only SortCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartner
+      outputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartnerResult
+      input: '{
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+    "pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+   "errors": "[]"
+}'
+   Pms_SearchPartner_Only_FilterCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_03
+      description: Create Search Partner with Only Filter Criteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartner
+      outputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "equals",
+        "value": "IITB"
+      }
+    ],"pageFetch": "$REMOVE$",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Pms_SearchPartner_Only_PaginationCriteria_Smoke:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_04
+      description: Create Search Partner with Only PaginationCriteria
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartner
+      outputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartnerResult
+      input: '{
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
+   Pms_SearchPartner_type_contains_Smoke_asc_sid:
+      endPoint: /v1/partnermanager/partners/search
+      uniqueIdentifier: TC_PMS_createSearchPartner_05
+      description: Create Search Partner while keeping Type parameter as contains
+      role: partner
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartner
+      outputTemplate: pms/SearchAPIs/SearchPartner/createSearchPartnerResult
+      input: '{
+    "filters": [
+      {
+        "columnName": "name",
+        "type": "contains",
+        "value": "Airtekiboi"
+      }
+    ],
+    "sort": [
+      {
+        "sortField": "name",
+        "sortType": "asc"
+      }
+    ],
+  "pageFetch": "10",
+  "pageStart": "0",
+  "partnerType": "all",
+  "requesttime": "$TIMESTAMP$",
+  "version": "v1"
+}'
+      output: '{
+}'
