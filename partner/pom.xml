@@ -67,11 +67,11 @@
     </distributionManagement>
 
     <properties>
-        <kernel.version>1.3.0-SNAPSHOT</kernel.version>
-        <kernel-dataaccess-hibernate.version>1.3.0-SNAPSHOT</kernel-dataaccess-hibernate.version>
-        <kernel-websubclient-api.version>1.3.0-SNAPSHOT</kernel-websubclient-api.version>
-        <kernel.templatemanager.velocity.version>1.3.0-SNAPSHOT</kernel.templatemanager.velocity.version>
-        <kernel.authadapter.version>1.3.0-SNAPSHOT</kernel.authadapter.version>
+        <kernel.version>1.3.0-beta.1</kernel.version>
+        <kernel-dataaccess-hibernate.version>1.3.0-beta.1</kernel-dataaccess-hibernate.version>
+        <kernel-websubclient-api.version>1.3.0-beta.1</kernel-websubclient-api.version>
+        <kernel.templatemanager.velocity.version>1.3.0-beta.1</kernel.templatemanager.velocity.version>
+        <kernel.authadapter.version>1.3.0-beta.1</kernel.authadapter.version>
         <kernel-authcodeflowproxy-api.version>1.3.0-SNAPSHOT</kernel-authcodeflowproxy-api.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -172,7 +172,7 @@
             <dependency>
                 <groupId>io.mosip.kernel</groupId>
                 <artifactId>kernel-bom</artifactId>
-                <version>1.3.0-SNAPSHOT</version>
+                <version>1.3.0-beta.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
