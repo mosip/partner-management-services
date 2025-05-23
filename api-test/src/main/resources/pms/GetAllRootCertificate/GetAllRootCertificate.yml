@@ -4,7 +4,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_01      
       description: Fetching all the root certificates of the Logged in Partner admin
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -18,7 +17,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_02      
       description: Fetching all the root certificates without authentication
       role: invalidtoken
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/error
@@ -36,7 +34,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_03      
       description: Fetching all the root certificates authentication done as individual partner
       role: partnerauth
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/error
@@ -54,7 +51,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_04      
       description: Fetching all the root certificates of the Logged in as Partner admin and pageno is specified
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -77,7 +73,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_05      
       description: Fetching all the root certificates of the Logged in as Partner admin and pagesize is specified
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -100,7 +95,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_06     
       description: Fetching all the root certificates of the Logged in as Partner admin and Negative value for pageno is given
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/error
@@ -127,7 +121,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_07      
       description: Fetching all the root certificates of the Logged in as Partner admin and negative value for pagesize is given
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/error
@@ -154,7 +147,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_08      
       description: Fetching all the root certificates of the Logged in as Partner admin and caCertificateType value is given as ROOT
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -177,7 +169,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_09      
       description: Fetching all the root certificates of the Logged in as Partner admin and caCertificateType value is given as Intermediate
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -200,7 +191,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_10      
       description: Fetching all the root certificates of the Logged in as Partner admin and certificateId contains value 'a'
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -223,7 +213,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_11      
       description: Fetching all the root certificates of the Logged in as Partner admin and partner domain value as FTM
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -246,7 +235,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_12      
       description: Fetching all the root certificates of the Logged in as Partner admin and partner domain value as DEVICE
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -269,7 +257,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_13      
       description: Fetching all the root certificates of the Logged in as Partner admin and partner domain value as AUTH
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -292,7 +279,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_14      
       description: Fetching all the root certificates of the Logged in as Partner admin and issuedBy value as partner
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -315,7 +301,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_15     
       description: Fetching all the root certificates of the Logged in as Partner admin and issuedTo value as partner
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -338,7 +323,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_16     
       description: Fetching all the root certificates of the Logged in as Partner admin and sorttype value as asc
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -361,7 +345,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_17     
       description: Fetching all the root certificates of the Logged in as Partner admin and sorttype value as desc
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
@@ -384,7 +367,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_18     
       description: Fetching all the root certificates of the Logged in as Partner admin and invalid sorttype is given
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/error
@@ -411,7 +393,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_20     
       description: Fetching all the root certificates of the Logged in as Partner admin and only sorttype is given
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/error
@@ -438,7 +419,6 @@ GetAllRootCertificate:
       uniqueIdentifier: TC_pms_GetRootCertificate_16     
       description: Fetching all the root certificates of the Logged in as Partner admin and random value for certificateId 
       role: partneradmin
-      checkErrorsOnlyInResponse: true      
       restMethod: get
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult

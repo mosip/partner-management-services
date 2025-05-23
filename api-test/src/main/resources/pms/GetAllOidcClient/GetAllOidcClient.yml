@@ -30,7 +30,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients without authentication
       uniqueIdentifier: TC_PMS_GetAllOidcClient_02
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
@@ -48,7 +47,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients of the logged in ftm Partner
       uniqueIdentifier: TC_PMS_GetAllOidcClient_03
       role: partnerftm
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
@@ -66,7 +64,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients of the logged in Partner admin and only sortfield is specified
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllOidcClient_05
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
@@ -94,7 +91,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients of the logged in Partner admin and only pagesize is specified
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllOidcClient_06
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
@@ -122,7 +118,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients of the logged in Partner admin and pagesize is specified
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllOidcClient_07
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult
@@ -145,7 +140,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients of the logged in Partner admin and negative Pageno is specified
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllOidcClient_09
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
@@ -173,7 +167,6 @@ GetAllOidcClient:
       description: Fetching all OIDC Clients of the logged in Partner admin and negative pagesize is specified
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllOidcClient_08
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
@@ -288,12 +281,11 @@ GetAllOidcClient:
 }'
       output: '{
 }'
-   Pms_GetAllOidcClient_with_invalid_Sorttype:
+   Pms_GetAllOidcClient_with_invalid_Sorttype_Neg:
       endPoint: /v1/partnermanager/oauth/client?sortFieldName={sortFieldName}&sortType={sortType}&pageNo={pageNo}&pageSize={pageSize}
       description: Fetching all OIDC Clients of the logged in Partner admin and invalid sort type given
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllOidcClient_14
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/error
