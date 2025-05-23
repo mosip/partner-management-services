@@ -1,0 +1,15 @@
+GetPartnerExpiringCertificateBeforeCertificateUpload:
+   Pms_GetPartnerExpiringCertificateBeforeCertificateUpload_Neg:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details
+      role: partnerdevice
+      description: Get Partner Expiring Certificates Before Certificate Upload
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_03
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUpload
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUploadResult
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "isCertificateAvailable": false		
+}'

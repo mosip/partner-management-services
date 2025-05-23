@@ -5,10 +5,12 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.exception.BatchJobServiceException;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -80,6 +82,10 @@ public class PartnerUtil {
 		if (uniqueId.length() <= length)
 			return uniqueId;
 		return uniqueId.substring(0, length);
+	}
+
+	public static String generateSHA256Hash(String input) {
+		return DigestUtils.sha256Hex(input.toLowerCase());
 	}
 
 	public static String trimAndReplace(String str) {
