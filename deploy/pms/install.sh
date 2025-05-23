@@ -31,12 +31,12 @@ function installing_pms() {
 
   echo Installing partner manager
   helm -n $NS install $PARTNER_MANAGER_SERVICE_NAME mosip/pms-partner \
-  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_UI_V2_HOST \
+  --set istio.corsPolicy.allowOrigins[0].prefix=https://$PMP_UI_V2_HOST \
   --version $CHART_VERSION
 
   echo Installing policy manager
   helm -n $NS install $POLICY_MANAGER_SERVICE_NAME mosip/pms-policy \
-  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_UI_V2_HOST \
+  --set istio.corsPolicy.allowOrigins[0].prefix=https://$PMP_UI_V2_HOST \
   --version $CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
