@@ -1777,13 +1777,13 @@ public class FTPChipDetailServiceTest {
 		certificateDownloadResponseDto.setMosipSignedCertExpiryDateTime(LocalDateTime.now().plusYears(1));
 		when(partnerHelper.getCertificate(anyString(), anyString(), any())).thenReturn(certificateDownloadResponseDto);
 		doNothing().when(partnerHelper).populateFtmCertificateExpiryState(certificateDownloadResponseDto);
-		ftpChipDetailService.ftmChipDetail();
+		ftpChipDetailService.ftmChipDetail(null);
 
 		ftpChipDetailList = new ArrayList<>();
 		ftpChipDetail.setCertificateAlias(null);
 		ftpChipDetailList.add(ftpChipDetail);
 		when(ftpChipDetailRepository.findByProviderId(anyString())).thenReturn(ftpChipDetailList);
-		ftpChipDetailService.ftmChipDetail();
+		ftpChipDetailService.ftmChipDetail(null);
 
 		partnerList = new ArrayList<>();
 		partner.setId(null);
@@ -1791,11 +1791,11 @@ public class FTPChipDetailServiceTest {
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
 		doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
-		ftpChipDetailService.ftmChipDetail();
+		ftpChipDetailService.ftmChipDetail(null);
 	}
 
 	@Test
 	public void ftmChipDetailExceptionTest() throws Exception {
-		ftpChipDetailService.ftmChipDetail();
+		ftpChipDetailService.ftmChipDetail(null);
 	}
 }
