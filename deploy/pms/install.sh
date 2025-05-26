@@ -24,7 +24,7 @@ function installing_pms() {
   $COPY_UTIL configmap config-server-share config-server $NS
 
   INTERNAL_API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
-  PMP_UI_V2_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-ui-v2-host})
+  PMP_UI_V2_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-host})
 
   PARTNER_MANAGER_SERVICE_NAME="pms-partner"
   POLICY_MANAGER_SERVICE_NAME="pms-policy"
