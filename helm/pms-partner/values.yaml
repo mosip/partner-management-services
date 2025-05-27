@@ -421,7 +421,7 @@ istio:
   prefix: /v1/partnermanager
   corsPolicy:
     allowOrigins:
-      - prefix: https://pmp-v2-ui.sandbox.xyz.net
+      - prefix: https://pmp.sandbox.xyz.net
     allowCredentials: true
     allowHeaders:
       - Accept
