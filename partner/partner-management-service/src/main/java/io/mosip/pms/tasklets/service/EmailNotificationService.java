@@ -77,8 +77,6 @@ public class EmailNotificationService {
 	@Transactional
 	public void sendEmailNotification(NotificationEntity notificationEntity, String emailId) {
 		try {
-			// Optional<NotificationEntity> optionalNotification =
-			// notificationServiceRepository.findById(notificationId);
 			log.info("notificationEntity: {}", notificationEntity);
 			if (notificationEntity.getId().isEmpty()) {
 				log.error("No notification found for {}", notificationEntity);
@@ -141,41 +139,47 @@ public class EmailNotificationService {
 				.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
 
 		switch (notificationType) {
-		case PartnerConstants.PARTNER_CERT_EXPIRY, PartnerConstants.ROOT_CERT_EXPIRY,
-				PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
-			CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
-			if (cert != null) {
+			case PartnerConstants.PARTNER_CERT_EXPIRY, PartnerConstants.ROOT_CERT_EXPIRY,
+				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY, PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+				CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
+				if (cert != null) {
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("certificateId", cert.getCertificateId());
+					context.put("expiryDateTime", cert.getExpiryDateTime());
+					context.put("partnerDomain", cert.getPartnerDomain());
+					context.put("issuedTo", cert.getIssuedTo());
+					context.put("issuedBy", cert.getIssuedBy());
+					//For FTM certificate expiry
+					if (notificationType.equals(PartnerConstants.FTM_CHIP_CERT_EXPIRY)) {
+						context.put("ftmId", cert.getFtmId());
+						context.put("make", cert.getMake());
+						context.put("model", cert.getModel());
+					}
+				}
+				break;
+
+			case PartnerConstants.WEEKLY_SUMMARY:
+				LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 				context.put("partnerId", notificationEntity.getPartnerId());
-				context.put("certificateId", cert.getCertificateId());
-				context.put("expiryDateTime", cert.getExpiryDateTime());
-				context.put("partnerDomain", cert.getPartnerDomain());
-				context.put("issuedTo", cert.getIssuedTo());
-				context.put("issuedBy", cert.getIssuedBy());
-			}
-			break;
+				context.put("fromDate", createdDate.format(formatter));
+				context.put("toDate", createdDate.plusDays(7).format(formatter));
+				context.put("partnerCertificateCount",
+						notificationDetails.getCertificateDetails() != null
+								? notificationDetails.getCertificateDetails().size()
+								: 0);
+				List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
+						.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
+						.collect(Collectors.toList());
 
-		case PartnerConstants.WEEKLY_SUMMARY:
-			LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+				context.put("partnerIdList", partnerIds);
+				break;
 
-			context.put("partnerId", notificationEntity.getPartnerId());
-			context.put("fromDate", createdDate.format(formatter));
-			context.put("toDate", createdDate.plusDays(7).format(formatter));
-			context.put("partnerCertificateCount",
-					notificationDetails.getCertificateDetails() != null
-							? notificationDetails.getCertificateDetails().size()
-							: 0);
-			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
-					.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
-					.collect(Collectors.toList());
-
-			context.put("partnerIdList", partnerIds);
-			break;
-
-		default:
-			log.error("Invalid Notification Type: {}", notificationEntity.getNotificationType());
-			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
-					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
+			default:
+				log.error("Invalid Notification Type: {}", notificationEntity.getNotificationType());
+				throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
+						ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
 		}
 
 		return context;

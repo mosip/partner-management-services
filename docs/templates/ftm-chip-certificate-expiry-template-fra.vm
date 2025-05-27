@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>Cher(e) ${partnerId},</strong></p>
+          <p>
+            Ceci est pour vous informer que le certificat de la puce FTM pour
+            <strong>${make}</strong> - <strong>${model}</strong> (ID FTM :
+            <strong>${ftmId}</strong>) expirera le
+            <strong>${expiryDateTime} UTC</strong>. Pour garantir la continuité du service, veuillez télécharger un nouveau certificat avant la date d’expiration.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ID FTM<br /><span style="font-weight: 400;">${ftmId}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Domaine partenaire<br /><span style="font-weight: 400;">FTM</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Date et heure d’expiration<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Délivré à<br /><span style="font-weight: 400;">${issuedTo}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Délivré par<br /><span style="font-weight: 400;">${issuedBy}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Action requise<br /><span style="font-weight: 400;">Téléchargez le certificat dans "Gérer le certificat de la puce FTM".</span>
+            </p>
+          </div>
+          <p>Un défaut de renouvellement peut entraîner une interruption du service.</p>
+          <p>Pour renouveler le certificat, veuillez suivre ces étapes :</p>
+          <ol>
+            <li>Connectez-vous à votre compte sur le portail PMS.</li>
+            <li>Allez dans "Services de puce FTM" sous le tableau de bord partenaire.</li>
+            <li>Trouvez la puce concernée et cliquez sur "Gérer le certificat de la puce FTM".</li>
+            <li>Cliquez sur le bouton "Recharger".</li>
+            <li>Téléchargez le nouveau certificat pour finaliser le renouvellement.</li>
+          </ol>
+          <p>Veuillez noter que la date et l’heure sont en UTC. Tenez compte des décalages horaires.</p>
+          <p>Merci pour votre attention rapide à ce sujet.</p>
+          <p>Cordialement,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** Ceci est un e-mail généré automatiquement. Merci de ne pas répondre. **
+          </p>
+          <p>
+            Site web :
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem; text-align: center;">
+          <a
+            target="_blank"
+            href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+          >
+            <img
+              src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+              alt="linkedin"
+              style="width: 24px; height: 24px; padding: 0px 4px;"
+            />
+          </a>
+          <a target="_blank" href="https://www.youtube.com/@mosip16">
+            <img
+              src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+              alt="youtube"
+              style="width: 24px; height: 24px; padding: 0px 4px;"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
