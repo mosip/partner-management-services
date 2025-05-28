@@ -188,7 +188,7 @@ public class EmailNotificationService {
 				context.put("partnerCertificateCount", partnerCertificates.size());
 				context.put("ftmChipCertificateCount", ftmCertificates.size());
 				context.put("partnerIdList", partnerIds);
-				context.put("ftmChipDetailList", ftmIds);
+				context.put("ftmIdList", ftmIds);
 				break;
 
 			default:

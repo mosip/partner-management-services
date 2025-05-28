@@ -29,11 +29,11 @@
 							#end
 						</ul>
 					#end
-					#if($ftmChipDetailList && $ftmChipDetailList.size() > 0)
+					#if($ftmIdList && $ftmIdList.size() > 0)
                         <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
                         <p style="margin-bottom: 6px; font-weight: 600;">${ftmChipCertificateCount}&nbsp;certificats puce FTM expirent pour les identifiants FTM suivants</p>
                         <ul style="padding-left: 20px; margin: 0;">
-                            #foreach($ftmId in $ftmChipDetailList)
+                            #foreach($ftmId in $ftmIdList)
                                 <li style="padding: 2px 0;">[$ftmId]</li>
                             #end
                         </ul>
