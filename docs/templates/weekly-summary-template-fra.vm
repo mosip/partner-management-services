@@ -17,7 +17,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>Cher/Chère ${partnerId},</strong></p>
-                <p>Nous souhaitons attirer votre attention sur l'expiration prochaine des certificats partenaires téléchargés par différents partenaires sur le portail PMS. Vous trouverez ci-dessous un résumé des éléments arrivant à expiration dans les 7 prochains jours.</p>
+                <p>Nous souhaitons attirer votre attention sur l'expiration prochaine des certificats partenaires et des certificats de puce FTM téléchargés par divers partenaires sur le portail PMS. Vous trouverez ci-dessous un résumé des éléments arrivant à expiration dans les 7 prochains jours.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">Éléments expirant : du ${fromDate} au ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -29,6 +29,15 @@
 							#end
 						</ul>
 					#end
+					#if($ftmChipDetailList && $ftmChipDetailList.size() > 0)
+                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                        <p style="margin-bottom: 6px; font-weight: 600;">${ftmChipCertificateCount}&nbsp;certificats puce FTM expirent pour les identifiants FTM suivants</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($ftmId in $ftmChipDetailList)
+                                <li style="padding: 2px 0;">[$ftmId]</li>
+                            #end
+                        </ul>
+                    #end
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
                     <p style="padding: 5px 0px; font-weight: 600;">Action requise<br>
                         <span style="font-weight: 400;">Afin de garantir des services ininterrompus, veuillez informer les utilisateurs partenaires respectifs de renouveler leurs certificats avant leur date d'expiration.</span>

@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -165,15 +165,30 @@ public class EmailNotificationService {
 				context.put("partnerId", notificationEntity.getPartnerId());
 				context.put("fromDate", createdDate.format(formatter));
 				context.put("toDate", createdDate.plusDays(7).format(formatter));
-				context.put("partnerCertificateCount",
-						notificationDetails.getCertificateDetails() != null
-								? notificationDetails.getCertificateDetails().size()
-								: 0);
-				List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
-						.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
-						.collect(Collectors.toList());
 
+				List<CertificateDetailsDto> certificateDetails = Optional.ofNullable(notificationDetails.getCertificateDetails())
+						.orElse(Collections.emptyList());
+
+				List<CertificateDetailsDto> partnerCertificates = new ArrayList<>();
+				List<CertificateDetailsDto> ftmCertificates = new ArrayList<>();
+				List<String> partnerIds = new ArrayList<>();
+				List<String> ftmIds = new ArrayList<>();
+
+				for (CertificateDetailsDto certDetail : certificateDetails) {
+					String certType = certDetail.getCertificateType();
+					if ("partner".equalsIgnoreCase(certType)) {
+						partnerCertificates.add(certDetail);
+						partnerIds.add(certDetail.getPartnerId());
+					} else if ("ftm".equalsIgnoreCase(certType)) {
+						ftmCertificates.add(certDetail);
+						ftmIds.add(certDetail.getFtmId());
+					}
+				}
+
+				context.put("partnerCertificateCount", partnerCertificates.size());
+				context.put("ftmChipCertificateCount", ftmCertificates.size());
 				context.put("partnerIdList", partnerIds);
+				context.put("ftmChipDetailList", ftmIds);
 				break;
 
 			default:
