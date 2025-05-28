@@ -81,7 +81,10 @@ public class NotificationsController {
             @RequestParam(value = "createdFromDate", required = false)
             @Parameter(description = "Created From Date in 'yyyy-MM-dd' format") String createdFromDate,
             @RequestParam(value = "createdToDate", required = false)
-            @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate
+            @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate,
+            @RequestParam(value = "ftmId", required = false) String ftmId,
+            @RequestParam(value = "make", required = false) String make,
+            @RequestParam(value = "model", required = false) String model
     ) {
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
@@ -110,6 +113,15 @@ public class NotificationsController {
         }
         if (createdToDate != null) {
             filterDto.setCreatedToDate(createdToDate);
+        }
+        if (ftmId != null) {
+            filterDto.setFtmId(ftmId);
+        }
+        if (make != null) {
+            filterDto.setMake(make);
+        }
+        if (model != null) {
+            filterDto.setModel(model);
         }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }

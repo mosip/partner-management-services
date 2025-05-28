@@ -120,7 +120,8 @@ public class NotificationsServiceImpl implements NotificationsService {
                 }
             } else {
                 if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) ||
-                    Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain()) || Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate())) {
+                    Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain()) || Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()) ||
+                    Objects.nonNull(filterDto.getFtmId()) || Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel())) {
                     throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
                             ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
                 }
@@ -226,7 +227,9 @@ public class NotificationsServiceImpl implements NotificationsService {
 
             // TODO: Logic for FTM_CHIP notifications to be implemented
             case FTM_CHIP:
-
+                return notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(
+                        filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(),
+                        filterDto.getExpiryDate(), filterDto.getNotificationStatus(), FTM_CHIP_CERT_EXPIRY, partnerIdList, pageable);
            // TODO: Logic for API_KEY notifications to be implemented
             case API_KEY:
 
