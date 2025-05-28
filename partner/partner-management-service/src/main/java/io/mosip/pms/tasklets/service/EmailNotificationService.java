@@ -176,10 +176,10 @@ public class EmailNotificationService {
 
 				for (CertificateDetailsDto certDetail : certificateDetails) {
 					String certType = certDetail.getCertificateType();
-					if ("partner".equalsIgnoreCase(certType)) {
+					if (PartnerConstants.PARTNER.equalsIgnoreCase(certType)) {
 						partnerCertificates.add(certDetail);
 						partnerIds.add(certDetail.getPartnerId());
-					} else if ("ftm".equalsIgnoreCase(certType)) {
+					} else if (PartnerConstants.FTM.equalsIgnoreCase(certType)) {
 						ftmCertificates.add(certDetail);
 						ftmIds.add(certDetail.getFtmId());
 					}
