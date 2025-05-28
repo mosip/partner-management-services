@@ -18,7 +18,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>Dear ${partnerId},</strong></p>
-                <p>We would like to bring to your attention the upcoming expirations of Partner Certificates uploaded by various partners in the PMS portal. Below is a summary of items set to expire within the next 7 days.</p>
+                <p>We would like to bring to your attention the upcoming expirations of Partner Certificates and FTM Chip Certificates uploaded by various partners in the PMS portal. Below is a summary of items set to expire within the next 7 days.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">Expiring Items: From ${fromDate} to ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -29,6 +29,15 @@
                                 <li style="padding: 2px 0;">[$id]</li>
                             #end
                         </ul>
+                    #end
+                    #if($ftmIdList && $ftmIdList.size() > 0)
+                    	<hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                    	<p style="margin-bottom: 6px; font-weight: 600;">${ftmChipCertificateCount}&nbsp;FTM Chip Certificates expiring for the following FTM IDs</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                    		#foreach($ftmId in $ftmIdList)
+                    			<li style="padding: 2px 0;">[$ftmId]</li>
+                    		#end
+                    	</ul>
                     #end
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
                     <p style="padding: 5px 0px; font-weight: 600;">Action Required<br>
