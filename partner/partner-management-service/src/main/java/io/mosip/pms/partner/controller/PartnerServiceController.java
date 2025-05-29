@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.*;
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -81,6 +82,9 @@ public class PartnerServiceController {
 	
 	@Autowired
 	AuditUtil auditUtil;
+
+	@Autowired
+	FeatureAvailabilityUtil featureAvailabilityUtil;
 
 	public static final String VERSION = "1.0";
 
@@ -344,6 +348,7 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getPartnerCertificateData(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
+		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
 		return partnerService.getPartnerCertificateData(requestDto);
