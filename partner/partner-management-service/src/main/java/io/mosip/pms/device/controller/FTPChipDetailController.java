@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -76,6 +77,9 @@ public class FTPChipDetailController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	FeatureAvailabilityUtil featureAvailabilityUtil;
 
 	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
 	private  String patchDeactivateFtm;
@@ -285,6 +289,7 @@ public class FTPChipDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
+		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
 		return ftpChipDetaillService.getFtmCertificateData(ftmId);
 	}
 
