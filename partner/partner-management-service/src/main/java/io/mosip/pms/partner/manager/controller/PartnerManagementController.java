@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -66,6 +67,9 @@ public class PartnerManagementController {
 
 	@Autowired
 	PartnerHelper partnerHelper;
+
+	@Autowired
+	FeatureAvailabilityUtil featureAvailabilityUtil;
 	
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -466,6 +470,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "issuedTo", required = false) String issuedTo,
 			@RequestParam(value = "issuedBy", required = false) String issuedBy
 	) {
+		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
 		partnerHelper.validateRequestParameters(partnerHelper.trustCertificateAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
@@ -497,6 +502,7 @@ public class PartnerManagementController {
 	})
 	ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(
 			@ApiParam("To download trust certificates.")  @PathVariable("certificateId") @NotNull String certificateId) {
+		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
 		return partnerManagementService.downloadTrustCertificates(certificateId);
 	}
 }

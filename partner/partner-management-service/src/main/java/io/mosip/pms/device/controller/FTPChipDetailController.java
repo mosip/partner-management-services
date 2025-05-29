@@ -17,6 +17,7 @@ import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.common.util.RequestValidator;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -72,6 +73,9 @@ public class FTPChipDetailController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	FeatureAvailabilityUtil featureAvailabilityUtil;
 
 	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
 	private  String patchDeactivateFtm;
@@ -281,6 +285,7 @@ public class FTPChipDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
+		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
 		return ftpChipDetaillService.getFtmCertificateData(ftmId);
 	}
 
