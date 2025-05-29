@@ -35,6 +35,14 @@ To deploy PMS on Kubernetes cluster using Dockers refer to [Sandbox Deployment](
 
 defined here.
 
+### Configuration for PMS Revamp with different Keymanager versions
+These properties control the availability of features in the PMS system, depending on the Keymanager version. Features are enabled or disabled based on the specific Keymanager version in use. Please refer [here](https://docs.mosip.io/1.2.0/roadmap-and-releases/releases/pms-revamp-release-1.2.2.1-patch) for more details
+  ```
+  mosip.pms.ca.signed.partner.certificate.available=true
+  mosip.pms.oidc.client.available=true
+  mosip.pms.root.and.intermediate.certificates.available=true
+  ```
+
 ## Deployment in K8 cluster with other MOSIP services:
 ### Pre-requisites
 * Set KUBECONFIG variable to point to existing K8 cluster kubeconfig file:
