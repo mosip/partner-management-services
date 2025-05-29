@@ -96,10 +96,10 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
             "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
             "AND (n.partner_id IN (:partnerIdList)) " +
-            "AND (:ftmId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'ftmId') ILIKE CONCAT('%', :ftmId, '%')) " +
-            "AND (:make IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'make') ILIKE CONCAT('%', :make, '%')) " +
-            "AND (:model IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'model') ILIKE CONCAT('%', :model, '%')) " +
-            "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) " +
+            "AND (:ftmId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'ftmId') ILIKE CONCAT('%', :ftmId, '%')) " +
+            "AND (:make IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'make') ILIKE CONCAT('%', :make, '%')) " +
+            "AND (:model IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'model') ILIKE CONCAT('%', :model, '%')) " +
+            "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) " +
             "ORDER BY n.cr_dtimes DESC",
 
             countQuery = "SELECT COUNT(*) " +
@@ -107,10 +107,10 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
                     "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
                     "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
                     "AND (n.partner_id IN (:partnerIdList)) " +
-                    "AND (:ftmId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'ftmId') ILIKE CONCAT('%', :ftmId, '%')) " +
-                    "AND (:make IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'make') ILIKE CONCAT('%', :make, '%')) " +
-                    "AND (:model IS NULL OR (CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'model') ILIKE CONCAT('%', :model, '%')) " +
-                    "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'certificateDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) ",
+                    "AND (:ftmId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'ftmId') ILIKE CONCAT('%', :ftmId, '%')) " +
+                    "AND (:make IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'make') ILIKE CONCAT('%', :make, '%')) " +
+                    "AND (:model IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'model') ILIKE CONCAT('%', :model, '%')) " +
+                    "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) ",
             nativeQuery = true)
     Page<NotificationEntity> getSummaryOfAllFtmChipCertNotifications(
             @Param("ftmId") String ftmId,

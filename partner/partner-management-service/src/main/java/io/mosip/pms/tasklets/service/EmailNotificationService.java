@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.apache.velocity.VelocityContext;
@@ -140,7 +141,7 @@ public class EmailNotificationService {
 
 		switch (notificationType) {
 			case PartnerConstants.PARTNER_CERT_EXPIRY, PartnerConstants.ROOT_CERT_EXPIRY,
-				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY, PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
 				CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
 				if (cert != null) {
 					context.put("partnerId", notificationEntity.getPartnerId());
@@ -149,15 +150,16 @@ public class EmailNotificationService {
 					context.put("partnerDomain", cert.getPartnerDomain());
 					context.put("issuedTo", cert.getIssuedTo());
 					context.put("issuedBy", cert.getIssuedBy());
-					//For FTM certificate expiry
-					if (notificationType.equals(PartnerConstants.FTM_CHIP_CERT_EXPIRY)) {
-						context.put("ftmId", cert.getFtmId());
-						context.put("make", cert.getMake());
-						context.put("model", cert.getModel());
-					}
 				}
 				break;
-
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+				FtmDetailsDto ftm = notificationDetails.getFtmDetails().stream().findFirst().orElse(null);
+				if (ftm != null) {
+					context.put("ftmId", ftm.getFtmId());
+					context.put("make", ftm.getMake());
+					context.put("model", ftm.getModel());
+				}
+				break;
 			case PartnerConstants.WEEKLY_SUMMARY:
 				LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -168,25 +170,23 @@ public class EmailNotificationService {
 
 				List<CertificateDetailsDto> certificateDetails = Optional.ofNullable(notificationDetails.getCertificateDetails())
 						.orElse(Collections.emptyList());
+				List<FtmDetailsDto> ftmDetails = Optional.ofNullable(notificationDetails.getFtmDetails())
+						.orElse(Collections.emptyList());
 
-				List<CertificateDetailsDto> partnerCertificates = new ArrayList<>();
-				List<CertificateDetailsDto> ftmCertificates = new ArrayList<>();
 				List<String> partnerIds = new ArrayList<>();
 				List<String> ftmIds = new ArrayList<>();
 
 				for (CertificateDetailsDto certDetail : certificateDetails) {
-					String certType = certDetail.getCertificateType();
-					if (PartnerConstants.PARTNER.equalsIgnoreCase(certType)) {
-						partnerCertificates.add(certDetail);
-						partnerIds.add(certDetail.getPartnerId());
-					} else if (PartnerConstants.FTM.equalsIgnoreCase(certType)) {
-						ftmCertificates.add(certDetail);
-						ftmIds.add(certDetail.getFtmId());
-					}
+					partnerIds.add(certDetail.getPartnerId());
 				}
 
-				context.put("partnerCertificateCount", partnerCertificates.size());
-				context.put("ftmChipCertificateCount", ftmCertificates.size());
+				for (FtmDetailsDto ftmDetail : ftmDetails) {
+						ftmIds.add(ftmDetail.getFtmId());
+				}
+
+
+				context.put("partnerCertificateCount", notificationDetails.getCertificateDetails().size());
+				context.put("ftmChipCertificateCount", notificationDetails.getFtmDetails().size());
 				context.put("partnerIdList", partnerIds);
 				context.put("ftmIdList", ftmIds);
 				break;
