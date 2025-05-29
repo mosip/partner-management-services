@@ -8,7 +8,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
-import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,6 +44,9 @@ public class ClientManagementControllerTest {
 
     @MockBean
     private ClientManagementServiceImpl clientManagementService;
+
+    @MockBean
+    FeatureAvailabilityUtil featureAvailabilityUtil;
 
     Map<String, Object> public_key;
 
@@ -87,6 +91,8 @@ public class ClientManagementControllerTest {
 
         requestWrapper.setRequest(clientDetailCreateRequestV2);
         String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
+
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/oauth/client")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,6 +142,7 @@ public class ClientManagementControllerTest {
         clientDetailUpdateRequestV2.setClientAuthMethods(clientAuthMethods);
         requestWrapper.setRequest(clientDetailUpdateRequestV2);
         String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,6 +166,7 @@ public class ClientManagementControllerTest {
         clientDetail.setRedirectUris(Collections.singletonList("Redirect Uris"));
         clientDetail.setStatus("Status");
 
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
         when(clientManagementService.getClientDetails("123")).thenReturn(clientDetail);
 
         ResponseWrapper<io.mosip.pms.oauth.client.dto.ClientDetail> expectedResponse = new ResponseWrapper<>();
@@ -182,6 +190,9 @@ public class ClientManagementControllerTest {
         PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
         responseWrapper.setResponse(pageResponse);
 
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        when(clientManagementService.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
+                .thenReturn(responseWrapper);
         Mockito.when(clientManagementService.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
                 .thenReturn(responseWrapper);
 
