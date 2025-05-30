@@ -324,3 +324,91 @@ DismissNotificationNegativeScenarios:
        }
        ]
 }'
+   Pms_DismissNotification_without_Object_Parameter_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification without object Parameter
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_16
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "$REMOVE$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_019"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_Notification_Status_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with invalid Notification status
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_17
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "CANCEL"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_012"
+       }
+       ]
+}'
+   Pms_DismissNotification_Empty_Notification_Status_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with Empty Notification Status
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_18
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": ""
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_012"
+       }
+       ]
+}'
+   Pms_DismissNotification_Invalid_Param_Dismiss_Notification_Status_Neg:
+      endPoint: /v1/partnermanager/notifications/{notificationId}
+      role: partneradmin
+      description: Dismiss Notification with invalid Notification Status parameter as DISMISS
+      uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_19
+      restMethod: patch
+      inputTemplate: pms/DismissNotification/DismissNotification
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.dismiss.notification.patch",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationId": $NOTIFICATIONID$,
+      "notificationStatus": "DISMISS"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_012"
+       }
+       ]
+}'

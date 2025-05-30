@@ -1612,5 +1612,21 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetRootIntermediateExpiringCertificate">
+		<parameter name="ymlFile"
+			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetRootIntermediateExpiringCertificateNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>	
 
 </suite>
