@@ -1,3 +1,5 @@
+\c mosip_pms
+
 -- Drop the newly added columns from pms.partner and pms.partner_h
 ALTER TABLE pms.partner DROP COLUMN IF EXISTS logo_url;
 ALTER TABLE pms.partner_h DROP COLUMN IF EXISTS logo_url;
