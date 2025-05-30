@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -67,6 +68,9 @@ public class PartnerManagementController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	FeatureAvailabilityUtil featureAvailabilityUtil;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -468,6 +472,7 @@ public class PartnerManagementController {
 			@Min(value = 1, message = "Expiry period must be at least 1 day.")
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod) {
+		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
 			filterDto.setCaCertificateType(caCertificateType);
@@ -501,6 +506,7 @@ public class PartnerManagementController {
 	})
 	ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(
 			@ApiParam("To download trust certificates.")  @PathVariable("certificateId") @NotNull String certificateId) {
+		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
 		return partnerManagementService.downloadTrustCertificates(certificateId);
 	}
 }

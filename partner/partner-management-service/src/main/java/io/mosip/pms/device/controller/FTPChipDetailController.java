@@ -5,11 +5,15 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.FtmChipDetailsDto;
@@ -17,6 +21,7 @@ import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
+import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.common.util.RequestValidator;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -72,6 +77,9 @@ public class FTPChipDetailController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	FeatureAvailabilityUtil featureAvailabilityUtil;
 
 	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
 	private  String patchDeactivateFtm;
@@ -281,6 +289,7 @@ public class FTPChipDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
+		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
 		return ftpChipDetaillService.getFtmCertificateData(ftmId);
 	}
 
@@ -334,12 +343,21 @@ public class FTPChipDetailController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
 	@GetMapping
-	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers associated with the logged in user."
-	, description = "Available since release-1.2.2.0. This endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN.")
-	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+	@Operation(
+			summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers associated with the logged in user.",
+			description = "Available since release-1.2.2.0. This endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN."
+	)
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail() {
-		return ftpChipDetaillService.ftmChipDetail();
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail(
+			@Parameter(description = "Optional filter to get chips with a specific expiry period (1-30 days)")
+			@RequestParam(name = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod) {
+		return ftpChipDetaillService.ftmChipDetail(expiryPeriod);
 	}
 }

@@ -507,6 +507,26 @@ public class DeviceDetailControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getAllDeviceDetailsTest1() throws Exception {
+        String sortFieldName = "deviceId";
+        String sortType = "asc";
+        Integer pageNo = 0;
+        Integer pageSize = 8;
+
+        ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> mockResponse = new ResponseWrapperV2<>();
+        when(deviceDetaillService.getAllDeviceDetails(eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize), any(DeviceDetailFilterDto.class)))
+                .thenReturn(mockResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/devicedetail")
+                        .param("sortFieldName", sortFieldName)
+                        .param("sortType", sortType)
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void approveOrRejectMappingDeviceToSbiTest() throws Exception {
         RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setId("mosip.pms.mapping.device.to.sbi.post");

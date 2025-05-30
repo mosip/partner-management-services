@@ -91,4 +91,34 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             @Param("partnerIdList") List<String> partnerIdList,
             Pageable pageable);
 
+    @Query(value = "SELECT * " +
+            "FROM notifications n " +
+            "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+            "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
+            "AND (n.partner_id IN (:partnerIdList)) " +
+            "AND (:ftmId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'ftmId') ILIKE CONCAT('%', :ftmId, '%')) " +
+            "AND (:make IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'make') ILIKE CONCAT('%', :make, '%')) " +
+            "AND (:model IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'model') ILIKE CONCAT('%', :model, '%')) " +
+            "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) " +
+            "ORDER BY n.cr_dtimes DESC",
+
+            countQuery = "SELECT COUNT(*) " +
+                    "FROM notifications n " +
+                    "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+                    "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
+                    "AND (n.partner_id IN (:partnerIdList)) " +
+                    "AND (:ftmId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'ftmId') ILIKE CONCAT('%', :ftmId, '%')) " +
+                    "AND (:make IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'make') ILIKE CONCAT('%', :make, '%')) " +
+                    "AND (:model IS NULL OR (CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'model') ILIKE CONCAT('%', :model, '%')) " +
+                    "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'ftmDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) ",
+            nativeQuery = true)
+    Page<NotificationEntity> getSummaryOfAllFtmChipCertNotifications(
+            @Param("ftmId") String ftmId,
+            @Param("make") String make,
+            @Param("model") String model,
+            @Param("expiryDate") String expiryDate,
+            @Param("notificationStatus") String notificationStatus,
+            @Param("notificationType") String notificationType,
+            @Param("partnerIdList") List<String> partnerIdList,
+            Pageable pageable);
 }

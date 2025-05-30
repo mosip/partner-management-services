@@ -52,6 +52,12 @@ public class TemplateHelper {
 	@Value("${email.notification.weekly.summary.subject.template}")
 	private String weeklySummarySubjectTemplate;
 
+	@Value("${email.notification.ftm.chip.cert.expiry.template}")
+	private String ftmChipCertExpiryTemplate;
+
+	@Value("${email.notification.ftm.chip.cert.expiry.subject.template}")
+	private String ftmChipCertExpirySubjectTemplate;
+
 	@Value("${resource.template.url}")
 	private String getTemplateUrl;
 
@@ -110,6 +116,8 @@ public class TemplateHelper {
 			return partnerCertExpirySubjectTemplate;
 		case PartnerConstants.WEEKLY_SUMMARY:
 			return weeklySummarySubjectTemplate;
+		case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+			return ftmChipCertExpirySubjectTemplate;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
 					ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
@@ -126,6 +134,8 @@ public class TemplateHelper {
 			return partnerCertExpiryTemplate;
 		case PartnerConstants.WEEKLY_SUMMARY:
 			return weeklySummaryTemplate;
+		case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+			return ftmChipCertExpiryTemplate;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
 					ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
