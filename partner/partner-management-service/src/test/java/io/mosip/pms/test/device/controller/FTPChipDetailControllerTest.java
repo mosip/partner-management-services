@@ -434,6 +434,26 @@ public class FTPChipDetailControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getPartnersFtmDetailsTest1() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		FtmChipFilterDto filterDto = new FtmChipFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(ftpChipDetailServiceImpl.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail/v2")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
 	@WithMockUser(roles = {"FTM_PROVIDER"})
 	public void ftmChipDetailTest() throws Exception {
 		ResponseWrapperV2<List<FtmChipDetailsDto>> responseWrapper = new ResponseWrapperV2<>();
@@ -441,7 +461,7 @@ public class FTPChipDetailControllerTest {
 		FtmChipDetailsDto ftmChipDetailsDto = new FtmChipDetailsDto();
 		ftmChipDetailsDtoList.add(ftmChipDetailsDto);
 		responseWrapper.setResponse(ftmChipDetailsDtoList);
-		Mockito.when(ftpChipDetaillService.ftmChipDetail()).thenReturn(responseWrapper);
+		Mockito.when(ftpChipDetaillService.ftmChipDetail(any())).thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/ftpchipdetail")).
 				andExpect(MockMvcResultMatchers.status().isOk());
 	}

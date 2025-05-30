@@ -203,4 +203,27 @@ public class ClientManagementControllerTest {
                         .param("status", "approved"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getPartnersClientsTest1() throws Exception {
+        String sortFieldName = "createdDateTime";
+        String sortType = "desc";
+        Integer pageNo = 0;
+        Integer pageSize = 8;
+        ClientFilterDto filterDto = new ClientFilterDto();
+        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+        PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+        responseWrapper.setResponse(pageResponse);
+
+        Mockito.when(clientManagementService.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oauth/client")
+                        .param("sortFieldName", sortFieldName)
+                        .param("sortType", sortType)
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

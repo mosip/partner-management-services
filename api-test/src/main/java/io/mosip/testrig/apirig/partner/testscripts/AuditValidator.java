@@ -32,6 +32,7 @@ import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
+import io.mosip.testrig.apirig.utils.SecurityXSSException;
 import io.restassured.response.Response;
 
 public class AuditValidator extends PMSUtil implements ITest {
@@ -69,7 +70,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 	}
 
 	@Test(dataProvider = "testcaselist")
-	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException {
+	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException, SecurityXSSException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
 		if (HealthChecker.signalTerminateExecution) {

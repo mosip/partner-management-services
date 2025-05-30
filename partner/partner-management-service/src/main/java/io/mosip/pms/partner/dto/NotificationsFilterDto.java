@@ -17,4 +17,7 @@ public class NotificationsFilterDto {
     private String partnerDomain;
     private String createdFromDate;
     private String createdToDate;
+    private String ftmId;
+    private String make;
+    private String model;
 }
