@@ -1,0 +1,37 @@
+GetRootIntermediateExpiringCertificateNegativeScenarios:
+   Pms_GetPartnerExpiringCertificateNegativeScenarios_Invalid_Token_Neg:
+      endPoint: /v1/partnermanager/trust-chain-certificates
+      role: invalidtoken
+      description: Get Root Intermediate Expiring Certificates with invalid token
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenariosNegativeScenarios_01
+      restMethod: get
+      inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
+      outputTemplate: pms/error
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetRootIntermediateExpiringCertificateNegativeScenarios_Partner_Role_Neg:
+      endPoint: /v1/partnermanager/trust-chain-certificates
+      role: partnerftm
+      description: Get Root Intermediate Expiring Certificates with Partner Role
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenariosNegativeScenarios_02
+      restMethod: get
+      inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
+      outputTemplate: pms/error
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
