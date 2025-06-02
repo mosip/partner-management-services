@@ -3,7 +3,7 @@ GetRootIntermediateExpiringCertificateNegativeScenarios:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: invalidtoken
       description: Get Root Intermediate Expiring Certificates with invalid token
-      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenariosNegativeScenarios_01
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenarios_01
       restMethod: get
       inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
       outputTemplate: pms/error
@@ -21,7 +21,7 @@ GetRootIntermediateExpiringCertificateNegativeScenarios:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partnerftm
       description: Get Root Intermediate Expiring Certificates with Partner Role
-      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenariosNegativeScenarios_02
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenarios_02
       restMethod: get
       inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
       outputTemplate: pms/error

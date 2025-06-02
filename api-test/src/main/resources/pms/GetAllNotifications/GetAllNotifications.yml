@@ -260,23 +260,6 @@ GetAllNotifications:
        }
        ]
 }'
-   Pms_GetAllNotifications_:
-      endPoint: /v1/partnermanager/notifications
-      role: auth
-      description: Get All Notifications without partner admin role
-      uniqueIdentifier: TC_PMS_GetAllNotifications_16
-      restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
-      outputTemplate: pms/error
-      input: '{
-}'
-      output: '{
-      "errors": [
-      {
-       "errorCode": "KER-ATH-403"
-       }
-       ]
-}'
    Pms_GetAllNotifications_Filter_Weekly_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
       role: partneradmin
