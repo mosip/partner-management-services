@@ -22,7 +22,7 @@ echo "Copying keycloak configmaps and secret"
 $COPY_UTIL configmap keycloak-env-vars keycloak $NS
 $COPY_UTIL secret keycloak keycloak $NS
 
-echo "creating and adding roles to keycloak pms clients for PMS REVAMP"
+echo "creating and adding roles to keycloak pms clients for PMS UI-V2"
 kubectl -n $NS delete secret --ignore-not-found=true keycloak-client-secrets
 helm -n $NS delete pms-keycloak-init
 helm -n $NS install pms-keycloak-init mosip/keycloak-init \
