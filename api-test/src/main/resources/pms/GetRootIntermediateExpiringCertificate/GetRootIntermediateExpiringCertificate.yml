@@ -1,0 +1,61 @@
+GetRootIntermediateExpiringCertificate:
+   Pms_GetRootIntermediateExpiringCertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/trust-chain-certificates
+      role: partneradmin
+      description: Get Root and Intermediate Expiring Certificates
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
+      outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "status": true
+}'
+   Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_30_Smoke:
+      endPoint: /v1/partnermanager/trust-chain-certificates
+      role: partneradmin
+      description: Get Root and Intermediate Expiring Certificates
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_02
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
+      outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "30"
+}'
+      output: '{
+      "status": true
+}'
+   Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_15_Smoke:
+      endPoint: /v1/partnermanager/trust-chain-certificates
+      role: partneradmin
+      description: Get Root and Intermediate Expiring Certificates
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_03
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
+      outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "15"
+}'
+      output: '{
+      "status": true
+}'
+   Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_10_Smoke:
+      endPoint: /v1/partnermanager/trust-chain-certificates
+      role: partneradmin
+      description: Get Root and Intermediate Expiring Certificates
+      uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_04
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
+      outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
+      input: '{
+      "expiryPeriod": "10"
+}'
+      output: '{
+      "status": true
+}'

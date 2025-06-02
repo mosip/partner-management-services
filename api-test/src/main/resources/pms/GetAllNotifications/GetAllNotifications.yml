@@ -38,6 +38,7 @@ GetAllNotifications:
 }'
       output: ' {
 }'
+
    Pms_GetAllNotifications_Invalid_Certificate_ID_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=8&certificateId=777apple123
       role: partneradmin
@@ -258,4 +259,95 @@ GetAllNotifications:
        "errorCode": "KER-ATH-403"
        }
        ]
+}'
+   Pms_GetAllNotifications_Filter_Weekly_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only Weekly summary notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_17
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllNotifications_Filter_Root_Certificates_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only Root certificate notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_18
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllNotifications_Filter_Status_Active_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationStatus=active&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only Active certificate notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_19
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllNotifications_Filter_Status_Dismissed_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationStatus=active&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only Dismissed certificate notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_20
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllNotifications_For_RootType_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only RootType certificate notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_21
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllNotifications_For_IntermediateType_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationType=intermediate&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only IntermediateType certificate notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_22
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetAllNotifications_For_IntermediateType_Notifications:
+      endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
+      role: partneradmin
+      description: Get All Notifications by filtering only IntermediateType certificate notifications
+      uniqueIdentifier: TC_PMS_GetAllNotifications_23
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+}'
+      output: ' {
 }'
