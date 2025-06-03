@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.*;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.apache.velocity.VelocityContext;
@@ -30,9 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
-import io.mosip.pms.common.dto.CertificateDetailsDto;
-import io.mosip.pms.common.dto.EmailTemplateDto;
-import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -158,6 +155,24 @@ public class EmailNotificationService {
 					context.put("ftmId", ftm.getFtmId());
 					context.put("make", ftm.getMake());
 					context.put("model", ftm.getModel());
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("certificateId", ftm.getCertificateId());
+					context.put("expiryDateTime", ftm.getExpiryDateTime());
+					context.put("partnerDomain", ftm.getPartnerDomain());
+					context.put("issuedTo", ftm.getIssuedTo());
+					context.put("issuedBy", ftm.getIssuedBy());
+				}
+				break;
+			case PartnerConstants.API_KEY_EXPIRY:
+				ApiKeyDetailsDto apiKeyDetails = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
+				if (apiKeyDetails != null) {
+					context.put("apiKeyName", apiKeyDetails.getApiKeyName());
+					context.put("partnerId", apiKeyDetails.getPartnerId());
+					context.put("partnerDomain", apiKeyDetails.getPartnerDomain());
+					context.put("expiryDateTime", apiKeyDetails.getExpiryDateTime());
+					context.put("expiryPeriod", apiKeyDetails.getExpiryPeriod());
+					context.put("policyGroup", apiKeyDetails.getPolicyGroup());
+					context.put("policyName", apiKeyDetails.getPolicyName());
 				}
 				break;
 			case PartnerConstants.WEEKLY_SUMMARY:

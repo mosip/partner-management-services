@@ -56,6 +56,8 @@ public final class PartnerConstants {
 
 	public static final String WEEKLY_SUMMARY = "WEEKLY_SUMMARY";
 
+	public static final String API_KEY_EXPIRY = "API_KEY_EXPIRY";
+
 	public static final String STATUS_ACTIVE = "ACTIVE";
 
 	public static final String STATUS_DISMISSED = "DISMISSED";

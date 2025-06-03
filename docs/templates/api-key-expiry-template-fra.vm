@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px; word-break: keep-all; white-space: normal;">
+          <p><strong>Cher/Chère ${partnerId},</strong></p>
+          <p>
+            Ceci est pour vous informer que la clé API nommée <strong>${apiKeyName}</strong> associée à la politique :
+            <strong>${policyName}</strong> expirera le <strong>${expiryDateTime} UTC</strong>.
+            Afin d'assurer la continuité du service, veuillez renouveler la clé avant sa date d'expiration.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">Détails de la clé API</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600; word-break: keep-all; white-space: normal;">
+              Nom de la clé API<br /><span style="font-weight: 400;">${apiKeyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600; word-break: keep-all; white-space: normal;">
+              Domaine partenaire<br /><span style="font-weight: 400;">AUTH</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600; word-break: keep-all; white-space: normal;">
+              Date et heure d'expiration<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600; word-break: keep-all; white-space: normal;">
+              Groupe de politique<br /><span style="font-weight: 400;">${policyGroup}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600; word-break: keep-all; white-space: normal;">
+              Nom de la politique<br /><span style="font-weight: 400;">${policyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600; word-break: keep-all; white-space: normal;">
+              Action requise<br />
+              <span style="font-weight: 400;">Générez une nouvelle clé API dans « Services d'authentification ».</span>
+            </p>
+          </div>
+          <p>
+            Si la clé API n’est pas renouvelée avant son expiration, cela pourrait entraîner des interruptions de service.
+          </p>
+          <p>Pour générer une nouvelle clé API, veuillez suivre les étapes suivantes :</p>
+          <ol>
+            <li>Connectez-vous à votre compte sur le portail PMS.</li>
+            <li>Accédez à « Services d'authentification » dans le tableau de bord partenaire.</li>
+            <li>Cliquez sur le bouton « Générer une clé API » dans l'onglet des clés API.</li>
+            <li>Remplissez les détails de la clé API et soumettez.</li>
+            <li>La clé API est générée — copiez-la et conservez-la en toute sécurité car elle ne s'affichera plus.</li>
+          </ol>
+          <p>
+            Veuillez noter que la date et l'heure d'expiration sont en format UTC. Tenez-en compte en fonction de votre fuseau horaire.
+          </p>
+          <p>Merci pour votre attention rapide à ce sujet.</p>
+          <p>Cordialement,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** Ceci est un courriel généré automatiquement. Veuillez ne pas y répondre. **
+          </p>
+          <p>
+            Site Web :
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

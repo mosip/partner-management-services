@@ -2,12 +2,13 @@ package io.mosip.pms.common.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class ApiKeyDetailsDto {
-    private String apiKeyId;
+    private String apiKeyName;
     private String partnerId;
-    private LocalDateTime expiryDateTime;
-    private int expiryPeriod;
+    private String partnerDomain;
+    private String expiryDateTime;
+    private String expiryPeriod;
+    private String policyGroup;
+    private String policyName;
 }
