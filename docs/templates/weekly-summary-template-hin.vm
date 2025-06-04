@@ -18,7 +18,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>प्रिय ${partnerId},</strong></p>
-                <p>हम आपका ध्यान PMS पोर्टल पर विभिन्न भागीदारों द्वारा अपलोड किए गए पार्टनर सर्टिफिकेट और FTM चिप सर्टिफिकेट की आगामी समाप्ति की ओर आकर्षित करना चाहते हैं। नीचे अगले 7 दिनों के भीतर समाप्त होने वाली वस्तुओं का सारांश दिया गया है.</p>
+                <p>हम आपका ध्यान PMS पोर्टल पर विभिन्न साझेदारों द्वारा अपलोड की गई API कुंजियों, पार्टनर प्रमाणपत्रों और FTM चिप प्रमाणपत्रों की आगामी समाप्ति की ओर आकर्षित करना चाहते हैं। नीचे अगले 7 दिनों में समाप्त होने वाली वस्तुओं का सारांश दिया गया है।</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">समाप्ति तिथि वाले आइटम: ${fromDate} से ${toDate} तक</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -38,6 +38,15 @@
                     			<li style="padding: 2px 0;">[$ftmId]</li>
                     		#end
                     	</ul>
+                    #end
+                    #if($apiKeyNameList && $apiKeyNameList.size() > 0)
+                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                        <p style="margin-bottom: 6px; font-weight: 600;">${apiKeyCount}&nbsp;निम्नलिखित नामों के लिए API कुंजियाँ समाप्त हो रही हैं</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($apiKey in $apiKeyNameList)
+                                <li style="padding: 2px 0;">[$apiKey]</li>
+                            #end
+                        </ul>
                     #end
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
                     <p style="padding: 5px 0px; font-weight: 600;">कार्रवाई आवश्यक है<br>

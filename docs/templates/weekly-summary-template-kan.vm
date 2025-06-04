@@ -18,7 +18,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>ಪ್ರಿಯ ${partnerId},</strong></p>
-                <p>PMS ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ವಿವಿಧ ಪಾಲುದಾರರು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಪಾಲುದಾರ ಪ್ರಮಾಣಪತ್ರಗಳ ಮುಂಬರುವ ಅವಧಿ ಮುಗಿಯುವಿಕೆಯನ್ನು ನಾವು ನಿಮ್ಮ ಗಮನಕ್ಕೆ ತರಲು ಬಯಸುತ್ತೇವೆ. ಮುಂದಿನ 7 ದಿನಗಳಲ್ಲಿ ಅವಧಿ ಮುಗಿಯಲಿರುವ ಐಟಂಗಳ ಸಾರಾಂಶವನ್ನು ಕೆಳಗೆ ನೀಡಲಾಗಿದೆ.</p>
+                <p>API ಕೀಗಳು, ಪಾಲುದಾರ ಪ್ರಮಾಣಪತ್ರಗಳು ಮತ್ತು ವಿವಿಧ ಪಾಲುದಾರರಿಂದ PMS ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳ ಮುಂಬರುವ ಗಡಿವೇಳೆಯನ್ನು ನಿಮ್ಮ ಗಮನಕ್ಕೆ ತರಲು ನಾವು ಇಚ್ಛಿಸುತ್ತೇವೆ. ಮುಂದಿನ 7 ದಿನಗಳಲ್ಲಿ ಅವಧಿ ಮುಕ್ತಾಯಗೊಳ್ಳಲಿರುವ ಐಟಂಗಳ ಸಾರಾಂಶವನ್ನು ಕೆಳಗೆ ನೀಡಲಾಗಿದೆ.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">ಅವಧಿ ಮುಗಿಯುತ್ತಿರುವ ವಸ್ತುಗಳು: ${fromDate} ರಿಂದ ${toDate} ವರೆಗೆ</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -30,6 +30,24 @@
                             #end
                         </ul>
                     #end
+                   #if($ftmIdList && $ftmIdList.size() > 0)
+                       <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                       <p style="margin-bottom: 6px; font-weight: 600;">${ftmChipCertificateCount}&nbsp;FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳು ಈ ಕೆಳಗಿನ FTM ID ಗಳಿಗೆ ಅವಧಿ ಮುಕ್ತಾಯವಾಗುತ್ತಿದೆ</p>
+                       <ul style="padding-left: 20px; margin: 0;">
+                           #foreach($ftmId in $ftmIdList)
+                               <li style="padding: 2px 0;">[$ftmId]</li>
+                           #end
+                       </ul>
+                   #end
+                   #if($apiKeyNameList && $apiKeyNameList.size() > 0)
+                       <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                       <p style="margin-bottom: 6px; font-weight: 600;">${apiKeyCount}&nbsp;ಈ ಕೆಳಗಿನ ಹೆಸರುಗಳಿಗೆ API ಕೀಗಳು ಅವಧಿ ಮುಕ್ತಾಯವಾಗುತ್ತಿದೆ</p>
+                       <ul style="padding-left: 20px; margin: 0;">
+                           #foreach($apiKey in $apiKeyNameList)
+                               <li style="padding: 2px 0;">[$apiKey]</li>
+                           #end
+                       </ul>
+                   #end
                     <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
                     <p style="padding: 5px 0px; font-weight: 600;">ಕ್ರಮ ಅಗತ್ಯವಿದೆ<br>
                         <span style="font-weight: 400;">ಅಡೆತಡೆಯಿಲ್ಲದ ಸೇವೆಗಳನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಲು, ದಯವಿಟ್ಟು ಆಯಾ ಪಾಲುದಾರ ಬಳಕೆದಾರರಿಗೆ ಅವರ ಪ್ರಮಾಣಪತ್ರಗಳ ಮುಕ್ತಾಯ ದಿನಾಂಕದ ಮೊದಲು ನವೀಕರಿಸಲು ತಿಳಿಸಿ.</span>

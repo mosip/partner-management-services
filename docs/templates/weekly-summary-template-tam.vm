@@ -18,7 +18,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>அன்புள்ள ${partnerId},</strong></p>
-                <p>PMS போர்ட்டலில் பல்வேறு கூட்டாளர்களால் பதிவேற்றப்பட்ட கூட்டாளர் சான்றிதழ்களின் வரவிருக்கும் காலாவதி தேதிகளை உங்கள் கவனத்திற்குக் கொண்டுவர விரும்புகிறோம். அடுத்த 7 நாட்களுக்குள் காலாவதியாகவுள்ள பொருட்களின் சுருக்கம் கீழே உள்ளது.</p>
+                <p>PMS போர்டலில் பல்வேறு கூட்டாளர்களால் பதிவேற்றப்பட்ட API விசைகள், கூட்டாளர் சான்றிதழ்கள் மற்றும் FTM சிப் சான்றிதழ்கள் விரைவில் காலாவதியாகவுள்ளதை உங்களது கவனத்திற்கு கொண்டு வர விரும்புகிறோம். அடுத்த 7 நாட்களில் காலாவதியாகவுள்ள உருப்படிகளின் சுருக்கமான விபரம் கீழே கொடுக்கப்பட்டுள்ளது.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">காலாவதியாகும் பொருட்கள்: ${fromDate} முதல் ${toDate} வரை</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -27,6 +27,24 @@
                         <ul style="padding-left: 20px; margin: 0;">
                             #foreach($id in $partnerIdList)
                                 <li style="padding: 2px 0;">[$id]</li>
+                            #end
+                        </ul>
+                    #end
+                    #if($ftmIdList && $ftmIdList.size() > 0)
+                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                        <p style="margin-bottom: 6px; font-weight: 600;">${ftmChipCertificateCount}&nbsp;கீழ்கண்ட FTM அடையாளங்களுக்கு FTM சிப் சான்றிதழ்கள் காலாவதியாகின்றன</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($ftmId in $ftmIdList)
+                                <li style="padding: 2px 0;">[$ftmId]</li>
+                            #end
+                        </ul>
+                    #end
+                    #if($apiKeyNameList && $apiKeyNameList.size() > 0)
+                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                        <p style="margin-bottom: 6px; font-weight: 600;">${apiKeyCount}&nbsp;API விசைகள் கீழ்கண்ட பெயர்களுக்காக விரைவில் காலாவதியாகின்றன</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($apiKey in $apiKeyNameList)
+                                <li style="padding: 2px 0;">[$apiKey]</li>
                             #end
                         </ul>
                     #end
