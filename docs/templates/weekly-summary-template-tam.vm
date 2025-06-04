@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ta">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+</head>
+
+<body>
+    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+        cellpadding="0" cellspacing="0" width="600">
+        <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+            <img style=" height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+                alt="Logo" />
+        </div>
+        <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+            <div style="font-size: 14px;">
+                <p><strong>அன்புள்ள ${partnerId},</strong></p>
+                <p>PMS போர்ட்டலில் பல்வேறு கூட்டாளர்களால் பதிவேற்றப்பட்ட கூட்டாளர் சான்றிதழ்களின் வரவிருக்கும் காலாவதி தேதிகளை உங்கள் கவனத்திற்குக் கொண்டுவர விரும்புகிறோம். அடுத்த 7 நாட்களுக்குள் காலாவதியாகவுள்ள பொருட்களின் சுருக்கம் கீழே உள்ளது.</p>
+                <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+                    <p style="font-size: 16px; font-weight: bold;">காலாவதியாகும் பொருட்கள்: ${fromDate} முதல் ${toDate} வரை</p>
+                    <hr style="border-top: 1px solid #E5E5E5;" />
+                    #if($partnerIdList && $partnerIdList.size() > 0)
+                        <p style="margin-bottom: 6px; font-weight: 600;">${partnerCertificateCount}&nbsp;பின்வரும் கூட்டாளர் ஐடிகளுக்கான கூட்டாளர் சான்றிதழ்கள் காலாவதியாகின்றன.</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($id in $partnerIdList)
+                                <li style="padding: 2px 0;">[$id]</li>
+                            #end
+                        </ul>
+                    #end
+                    <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
+                    <p style="padding: 5px 0px; font-weight: 600;">நடவடிக்கை தேவை<br>
+                        <span style="font-weight: 400;">தடையற்ற சேவைகளை உறுதிசெய்ய, அந்தந்த கூட்டாளர் பயனர்கள் தங்கள் சான்றிதழ்களை காலாவதி தேதிகளுக்கு முன்பு புதுப்பிக்குமாறு தெரிவிக்கவும்.</span>
+                    </P>
+                </div>
+
+                <p>இந்த விஷயத்தில் உங்கள் உடனடி கவனத்தை நாங்கள் பாராட்டுகிறோம்.</p>
+                <p>எங்கள் சேவைகளைத் தேர்ந்தெடுத்ததற்கு நன்றி.</p>
+                <p>வாழ்த்துக்கள்,<br>MOSIP</p>
+                <hr style="border-top: 1px solid #edeef0;" />
+                <p style="padding: 3px 0px;">** இது தானாக உருவாக்கப்பட்ட மின்னஞ்சல். இந்த மின்னஞ்சலுக்கு பதிலளிக்க வேண்டாம். **</p>
+                <p>
+                    வலைத்தளம்:
+                    <a href="http://www.mosip.io" style="color: #014daf; text-decoration: underline;">www.mosip.io</a>
+                </p>
+                <hr style="border-top: 1px solid #edeef0;" />
+            </div>
+            <div style="font-size: 14px; margin-top: 1.5rem;">
+                <div style="margin: auto; border-collapse: collapse; text-align: center;">
+                    <a target="_blank" href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all">
+                        <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                            alt="linkedin" style="width: 24px; height: 24px; padding: 0px 4px;" />
+                    </a>
+                    <a target="_blank" href="https://www.youtube.com/@mosip16">
+                        <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                            alt="youtube" style="width: 24px; height: 24px; padding: 0px 4px;" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
