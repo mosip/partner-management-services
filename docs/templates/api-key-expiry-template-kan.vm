@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="kn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>ಆದರಣೀಯ ${partnerId},</strong></p>
+          <p>
+            <strong>${apiKeyName}</strong> ಹೆಸರಿನ API ಕೀ <strong>${policyName}</strong> ಪಾಲಿಸಿ ಜೊತೆಗೆ
+            <strong>${expiryDateTime} UTC</strong> ರಂದು ಕಾಲಹರಣವಾಗಲಿದೆ ಎಂದು ನಿಮಗೆ ತಿಳಿಸಲು ಇಚ್ಛಿಸುತ್ತೇವೆ.
+            ಸೇವೆಗಳಲ್ಲಿ ವ್ಯತ್ಯಯವಾಗದಂತೆ ತಡೆಗಟ್ಟಲು, ಮುಂಚಿತವಾಗಿ ಹೊಸ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">API ಕೀ ವಿವರಗಳು</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              API ಕೀ ಹೆಸರು<br /><span style="font-weight: 400;">${apiKeyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಪಾಲುದಾರ ಡೊಮೇನ್<br /><span style="font-weight: 400;">AUTH</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಕಾಲಹರಣ ದಿನಾಂಕ ಮತ್ತು ಸಮಯ<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಪಾಲಿಸಿ ಗುಂಪು<br /><span style="font-weight: 400;">${policyGroup}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಪಾಲಿಸಿ ಹೆಸರು<br /><span style="font-weight: 400;">${policyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಕೈಗೆತ್ತಿಕೊಳ್ಳಬೇಕಾದ ಕ್ರಮ<br />
+              <span style="font-weight: 400;">‘Authentication Services’ ನಲ್ಲಿ ಹೊಸ API ಕೀ ರಚಿಸಿ.</span>
+            </p>
+          </div>
+          <p>
+            API ಕೀ ಅನ್ನು ನವೀಕರಿಸದಿದ್ದರೆ ಸೇವೆಗಳಲ್ಲಿ ವ್ಯತ್ಯಯ ಉಂಟಾಗಬಹುದು.
+          </p>
+          <p>ಹೊಸ API ಕೀ ರಚಿಸಲು ದಯವಿಟ್ಟು ಈ ಹಂತಗಳನ್ನು ಅನುಸರಿಸಿ:</p>
+          <ol>
+            <li>PMS ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಲಾಗಿನ್ ಆಗಿ.</li>
+            <li>ಪಾಲುದಾರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನ 'Authentication Services' ಗೆ ಹೋಗಿ.</li>
+            <li>API ಕೀ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ‘Generate API Key’ ಬಟನ್ ಕ್ಲಿಕ್ ಮಾಡಿ.</li>
+            <li>ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ ಮತ್ತು ಸಬ್ಮಿಟ್ ಮಾಡಿ.</li>
+            <li>API ಕೀ ರಚನೆಯಾದ ಬಳಿಕ, ಅದನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಕಾಪಿ ಮಾಡಿ. ಇದು ಮತ್ತೆ ತೋರಿಸಲಾಗುವುದಿಲ್ಲ.</li>
+          </ol>
+          <p>
+            ದಯವಿಟ್ಟು ಗಮನಿಸಿ: ಕಾಲಹರಣ ದಿನಾಂಕ ಮತ್ತು ಸಮಯವು UTC ಫಾರ್ಮ್ಯಾಟ್‌ನಲ್ಲಿ ಒದಗಿಸಲಾಗಿದೆ, ಆದ್ದರಿಂದ ನಿಮ್ಮ ಸಮಯವಲಯವನ್ನು ಪರಿಗಣಿಸಿ ಯೋಜನೆ ರೂಪಿಸಿ.
+          </p>
+          <p>ಈ ವಿಷಯದ ಮೇಲೆ ತ್ವರಿತವಾಗಿ ಗಮನಹರಿಸಿದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು.</p>
+          <p>ಶುಭಾಶಯಗಳೊಂದಿಗೆ,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** ಇದು ಸ್ವಯಂಚಾಲಿತ ಇಮೇಲ್ ಆಗಿದೆ. ದಯವಿಟ್ಟು ಇದಕ್ಕೆ ಪ್ರತಿಕ್ರಿಯಿಸಬೇಡಿ. **
+          </p>
+          <p>
+            ವೆಬ್‌ಸೈಟ್:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

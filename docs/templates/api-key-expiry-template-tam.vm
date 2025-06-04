@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ta">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>அன்புள்ள ${partnerId},</strong></p>
+          <p>
+            <strong>${apiKeyName}</strong> என்ற API விசைக்கு தொடர்புடைய கொள்கை:
+            <strong>${policyName}</strong> என்பது <strong>${expiryDateTime} UTC</strong> அன்று காலாவதியாக உள்ளது என்பதைத் தெரிவித்துக்கொள்கிறோம்.
+            தொடர்ந்து சேவைகள் இடையீடு இல்லாமல் செயற்பட, காலாவதிக்கு முன் சான்றிதழைப் பதிவேற்றுமாறு கேட்டுக்கொள்கிறோம்.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">API விசை விவரங்கள்</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              API விசையின் பெயர்<br /><span style="font-weight: 400;">${apiKeyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              பங்காளர் இடம்<br /><span style="font-weight: 400;">AUTH</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              காலாவதி தேதி மற்றும் நேரம்<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              கொள்கை குழு<br /><span style="font-weight: 400;">${policyGroup}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              கொள்கையின் பெயர்<br /><span style="font-weight: 400;">${policyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              செய்யவேண்டிய செயல்<br />
+              <span style="font-weight: 400;">‘Authentication Services’ இல் புதிய API விசையை உருவாக்கவும்.</span>
+            </p>
+          </div>
+          <p>
+            API விசையை புதுப்பிக்க தவறினால், சேவை தடை ஏற்படலாம்.
+          </p>
+          <p>API விசையை உருவாக்க, கீழ்காணும் படிகள் பின்பற்றவும்:</p>
+          <ol>
+            <li>PMS போர்டலுக்கு உள்நுழைக.</li>
+            <li>பங்காளர் டாஷ்போர்டில் உள்ள ‘Authentication Services’ ஐத் தேர்ந்தெடுக்கவும்.</li>
+            <li>API விசை தாவலில் ‘Generate API Key’ பொத்தானை கிளிக் செய்யவும்.</li>
+            <li>API விசை விவரங்களை பூர்த்தி செய்து சமர்ப்பிக்கவும்.</li>
+            <li>API விசை உருவாக்கப்படும் — இது மீண்டும் காண்பிக்கப்படாது என்பதால் அதை பாதுகாப்பாக சேமிக்கவும்.</li>
+          </ol>
+          <p>
+            காலாவதி தேதி மற்றும் நேரம் UTC வடிவத்தில் வழங்கப்படுகிறது, எனவே உங்கள் நேர மண்டலத்திற்கேற்ப திட்டமிடவும்.
+          </p>
+          <p>இந்த விஷயத்தில் உங்களது விரைவான கவனத்திற்கு நன்றி.</p>
+          <p>மிக்க நன்றி,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** இது தானாக உருவாக்கப்படும் மின்னஞ்சல். தயவுசெய்து பதிலளிக்க வேண்டாம். **
+          </p>
+          <p>
+            இணையதளம்:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
