@@ -17,7 +17,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>Cher/Chère ${partnerId},</strong></p>
-                <p>Nous souhaitons attirer votre attention sur l'expiration prochaine des certificats partenaires et des certificats de puce FTM téléchargés par divers partenaires sur le portail PMS. Vous trouverez ci-dessous un résumé des éléments arrivant à expiration dans les 7 prochains jours.</p>
+                <p>Nous souhaitons attirer votre attention sur l’expiration prochaine des clés API, des certificats partenaires et des certificats de puce FTM téléchargés par divers partenaires sur le portail PMS. Voici un résumé des éléments qui expireront dans les 7 prochains jours.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">Éléments expirant : du ${fromDate} au ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -35,6 +35,15 @@
                         <ul style="padding-left: 20px; margin: 0;">
                             #foreach($ftmId in $ftmIdList)
                                 <li style="padding: 2px 0;">[$ftmId]</li>
+                            #end
+                        </ul>
+                    #end
+                    #if($apiKeyNameList && $apiKeyNameList.size() > 0)
+                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                        <p style="margin-bottom: 6px; font-weight: 600;">${apiKeyCount}&nbsp;clés API expirant pour les noms suivants</p>
+                        <ul style="padding-left: 20px; margin: 0;">
+                            #foreach($apiKey in $apiKeyNameList)
+                                <li style="padding: 2px 0;">[$apiKey]</li>
                             #end
                         </ul>
                     #end

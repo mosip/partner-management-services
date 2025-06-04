@@ -17,7 +17,7 @@
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
             <div style="font-size: 14px;">
                 <p><strong>عزيزي/عزيزتي ${partnerId}،</strong></p>
-                <p>نود لفت انتباهكم إلى قرب انتهاء صلاحية شهادات الشركاء وشهادات شريحة FTM التي رفعها العديد من الشركاء على بوابة PMS. فيما يلي ملخص للشهادات التي ستنتهي صلاحيتها خلال الأيام السبعة القادمة.</p>
+                <p>نود أن نلفت انتباهكم إلى اقتراب انتهاء صلاحية مفاتيح API وشهادات الشركاء وشهادات شرائح FTM التي تم تحميلها من قبل مختلف الشركاء في بوابة PMS. فيما يلي ملخص بالعناصر التي ستنتهي صلاحيتها خلال الأيام السبعة القادمة.</p>
                 <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                     <p style="font-size: 16px; font-weight: bold;">العناصر التي ستنتهي: من ${fromDate} إلى ${toDate}</p>
                     <hr style="border-top: 1px solid #E5E5E5;" />
@@ -34,9 +34,18 @@
                         <p style="margin-bottom: 6px; font-weight: 600; direction: rtl; text-align: right;">
                             ${ftmChipCertificateCount}&nbsp;شهادات شريحة FTM ستنتهي صلاحيتها للمعرفات التالية
                         </p>
-                        <ul style="padding-left: 20px; margin: 0; direction: rtl; text-align: right;">
+                        <ul style="padding-right: 20px; margin: 0;">
                             #foreach($ftmId in $ftmIdList)
                                 <li style="padding: 2px 0;">[$ftmId]</li>
+                            #end
+                        </ul>
+                    #end
+                    #if($apiKeyNameList && $apiKeyNameList.size() > 0)
+                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
+                        <p style="margin-bottom: 6px; font-weight: 600;">${apiKeyCount}&nbsp;مفاتيح API ستنتهي صلاحيتها للأسماء التالية</p>
+                        <ul style="padding-right: 20px; margin: 0;">
+                            #foreach($apiKey in $apiKeyNameList)
+                                <li style="padding: 2px 0;">[$apiKey]</li>
                             #end
                         </ul>
                     #end

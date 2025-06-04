@@ -168,15 +168,15 @@ public class EmailNotificationService {
 				}
 				break;
 			case PartnerConstants.API_KEY_EXPIRY:
-				ApiKeyDetailsDto apiKeyDetails = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
-				if (apiKeyDetails != null) {
-					context.put("apiKeyName", apiKeyDetails.getApiKeyName());
-					context.put("partnerId", apiKeyDetails.getPartnerId());
-					context.put("partnerDomain", apiKeyDetails.getPartnerDomain());
-					context.put("expiryDateTime", apiKeyDetails.getExpiryDateTime());
-					context.put("expiryPeriod", apiKeyDetails.getExpiryPeriod());
-					context.put("policyGroup", apiKeyDetails.getPolicyGroup());
-					context.put("policyName", apiKeyDetails.getPolicyName());
+				ApiKeyDetailsDto apiKey = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
+				if (apiKey != null) {
+					context.put("apiKeyName", apiKey.getApiKeyName());
+					context.put("partnerId", apiKey.getPartnerId());
+					context.put("partnerDomain", apiKey.getPartnerDomain());
+					context.put("expiryDateTime", apiKey.getExpiryDateTime());
+					context.put("expiryPeriod", apiKey.getExpiryPeriod());
+					context.put("policyGroup", apiKey.getPolicyGroup());
+					context.put("policyName", apiKey.getPolicyName());
 				}
 				break;
 			case PartnerConstants.WEEKLY_SUMMARY:
@@ -191,9 +191,12 @@ public class EmailNotificationService {
 						.orElse(Collections.emptyList());
 				List<FtmDetailsDto> ftmDetails = Optional.ofNullable(notificationDetails.getFtmDetails())
 						.orElse(Collections.emptyList());
+				List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
+						.orElse(Collections.emptyList());
 
 				List<String> partnerIds = new ArrayList<>();
 				List<String> ftmIds = new ArrayList<>();
+				List<String> apiKeyNames = new ArrayList<>();
 
 				for (CertificateDetailsDto certDetail : certificateDetails) {
 					partnerIds.add(certDetail.getPartnerId());
@@ -203,11 +206,16 @@ public class EmailNotificationService {
 						ftmIds.add(ftmDetail.getFtmId());
 				}
 
+				for (ApiKeyDetailsDto apiKeyDetail : apiKeyDetails) {
+					apiKeyNames.add(apiKeyDetail.getApiKeyName());
+				}
 
-				context.put("partnerCertificateCount", notificationDetails.getCertificateDetails().size());
-				context.put("ftmChipCertificateCount", notificationDetails.getFtmDetails().size());
+				context.put("partnerCertificateCount", certificateDetails.size());
+				context.put("ftmChipCertificateCount", ftmDetails.size());
+				context.put("apiKeyCount", apiKeyDetails.size());
 				context.put("partnerIdList", partnerIds);
 				context.put("ftmIdList", ftmIds);
+				context.put("apiKeyNameList", apiKeyNames);
 				break;
 
 			default:
