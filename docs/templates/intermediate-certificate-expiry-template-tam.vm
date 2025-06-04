@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ta">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style></style>
+	</head>
+	<body>
+		<div style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;" cellpadding="0" cellspacing="0" width="600">
+			<div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+				<img style=" height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;" src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png" alt="Logo" />			
+			</div>
+			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+				<div style="font-size: 14px;">
+					<p><strong>அன்புள்ள ${partnerId},</strong></p>
+					<p>${certificateId} சான்றிதழ் ஐடியுடன் கூடிய இடைநிலை CA சான்றிதழ் ${expiryDateTime} UTC அன்று காலாவதியாக உள்ளது என்பதை இது உங்களுக்குத் தெரிவிக்கிறது. தடையற்ற சேவைகளை உறுதிசெய்ய, காலாவதி தேதிக்கு முன் புதுப்பிப்பதற்கான சான்றிதழை பதிவேற்றுமாறு கேட்டுக்கொள்கிறோம்.</p>
+					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+						<p style="font-size: 16px; font-weight: bold;">சான்றிதழ் விவரங்கள்</p>
+						<hr style="border-top: 1px solid #E5E5E5;"/>
+						<p style="padding: 5px 0px; font-weight: 600;">சான்றிதழ் ஐடி<br><span style="font-weight: 400;">${certificateId}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">காலாவதி தேதி & நேரம்<br><span style="font-weight: 400;">${expiryDateTime} UTC</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">கூட்டாளர் டொமைன்<br><span style="font-weight: 400;">${partnerDomain}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">வழங்கப்பட்டது<br><span style="font-weight: 400;">${issuedTo}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">வழங்கியவர்<br><span style="font-weight: 400;">${issuedBy}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">நடவடிக்கை தேவை<br><span style="font-weight: 400;"> புதுப்பிப்பதற்கான சான்றிதழை ‘சான்றிதழ் அறக்கட்டளை கடையில்’ பதிவேற்றவும்.</span></P>
+					</div>
+					<p>காலாவதியாகும் முன் சான்றிதழைப் புதுப்பிக்கத் தவறினால் சேவை இடையூறுகள் ஏற்படக்கூடும்.</p>
+					<p>புதுப்பித்தலைத் தொடர, தயவுசெய்து இந்தப் படிகளைப் பின்பற்றவும்:</p>
+					<ol>
+						<li>PMS போர்ட்டலில் உங்கள் கணக்கில் உள்நுழையவும்.</li>
+						<li>கூட்டாளர் நிர்வாக டாஷ்போர்டில் உள்ள ‘சான்றிதழ் அறக்கட்டளை கடை’ என்பதற்குச் சென்று ‘இடைநிலை CA சான்றிதழ்’ தாவலைத் தேர்ந்தெடுக்கவும்.</li>
+						<li>புதுப்பிப்புக்கான சான்றிதழை பதிவேற்றி செயல்முறையை முடிக்க 'நம்பிக்கைச் சான்றிதழைப் பதிவேற்று' என்பதைக் கிளிக் செய்யவும்.</li>
+					</ol>
+					<p>காலாவதி தேதி மற்றும் நேரம் UTC வடிவத்தில் வழங்கப்பட்டுள்ளன என்பதை நினைவில் கொள்ளவும், எனவே உங்கள் புதுப்பித்தலைத் திட்டமிடும்போது ஏதேனும் நேர மண்டல வேறுபாடுகளைக் கருத்தில் கொள்ளவும்.</p>
+					<p>இந்த விஷயத்தில் உங்கள் உடனடி கவனத்திற்கு நன்றி.</p>
+					<p>வாழ்த்துக்கள்,<br>MOSIP</p>
+					<p style="padding: 6px 0px;">** இது தானாக உருவாக்கப்பட்ட மின்னஞ்சல். இந்த மின்னஞ்சலுக்கு பதிலளிக்க வேண்டாம். **</p>
+					<p>வலைத்தளம்: <a target="_blank" href="https://www.mosip.io">www.mosip.io</a></p>
+					<hr style="border-top: 1px solid #edeef0;"/>
+				</div>
+				<div style="font-size: 14px; margin-top: 1.5rem;">
+					<div style="margin: auto; border-collapse: collapse; text-align: center;">
+						<a target="_blank" href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all">
+							<img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png" alt="linkedin" style="width: 24px; height: 24px; padding: 0px 4px;"/>
+						</a>
+						<a target="_blank" href="https://www.youtube.com/@mosip16">
+							<img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png" alt="youtube" style="width: 24px; height: 24px; padding: 0px 4px;"/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

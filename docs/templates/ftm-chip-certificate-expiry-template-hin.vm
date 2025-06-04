@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>प्रिय ${partnerId},</strong></p>
+          <p>
+            आपको सूचित किया जाता है कि FTM चिप प्रमाणपत्र
+            <strong>${make}</strong> - <strong>${model}</strong> (FTM ID:
+            <strong>${ftmId}</strong>) को समाप्त होने वाला है
+            <strong>${expiryDateTime} UTC</strong>. निरंतर कार्यक्षमता और निर्बाध सेवाओं को सुनिश्चित करने के लिए, हम आपसे अनुरोध करते हैं कि आप समाप्ति तिथि से पहले नवीनीकरण के लिए प्रमाणपत्र अपलोड करें।
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">प्रमाणपत्र विवरण</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              FTM ID<br /><span style="font-weight: 400;">${ftmId}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              पार्टनर डोमेन<br /><span style="font-weight: 400;">FTM</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              समाप्ति तिथि और समय<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              जारीकर्ता<br /><span style="font-weight: 400;">${issuedTo}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              जारीकर्ता<br /><span style="font-weight: 400;">${issuedBy}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              कार्रवाई आवश्यक है<br /><span style="font-weight: 400;">नवीनीकरण के लिए प्रमाणपत्र को ‘FTM चिप प्रमाणपत्र प्रबंधित करें’ में अपलोड करें।</span>
+            </p>
+          </div>
+          <p>
+            प्रमाणपत्र की समाप्ति से पहले उसका नवीनीकरण न कराने पर सेवा में व्यवधान आ सकता है।
+          </p>
+          <p>नवीनीकरण के लिए कृपया इन चरणों का पालन करें:</p>
+          <ol>
+            <li>पीएमएस पोर्टल पर अपने खाते में लॉग इन करें।</li>
+            <li>
+              पार्टनर डैशबोर्ड के अंतर्गत ‘FTM चिप सेवाओं’ पर जाएँ।
+            </li>
+            <li>प्रासंगिक FTM चिप का पता लगाएं और ‘FTM चिप प्रमाणपत्र प्रबंधित करें’ का चयन करें।</li>
+            <li>‘पुनः अपलोड’ बटन पर क्लिक करें।</li>
+            <li>नवीनीकरण प्रक्रिया पूरी करने के लिए नया प्रमाणपत्र अपलोड करें।</li>
+          </ol>
+          <p>
+            कृपया ध्यान दें कि समाप्ति तिथि और समय UTC प्रारूप में दिए गए हैं, इसलिए कृपया अपने नवीनीकरण की योजना बनाते समय किसी भी समय क्षेत्र के अंतर को ध्यान में रखें।
+          </p>
+          <p>इस बात पर तुरंत ध्यान देने के लिए आपको धन्यवाद।</p>
+          <p>साभार,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** यह एक स्वतः जनरेट किया गया ईमेल है। कृपया इस ईमेल का उत्तर न दें। **
+          </p>
+          <p>
+            वेबसाइट:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
