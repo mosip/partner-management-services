@@ -121,4 +121,32 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             @Param("notificationType") String notificationType,
             @Param("partnerIdList") List<String> partnerIdList,
             Pageable pageable);
+
+    @Query(value = "SELECT * " +
+            "FROM notifications n " +
+            "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+            "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
+            "AND (n.partner_id IN (:partnerIdList)) " +
+            "AND (:apiKeyName IS NULL OR (CAST(n.notification_details_json AS JSONB)->'apiKeyDetails'->0->>'apiKeyName') ILIKE CONCAT('%', :apiKeyName, '%')) " +
+            "AND (:policyName IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'apiKeyDetails'->0->>'policyName') = LOWER(:policyName)) " +
+            "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'apiKeyDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) " +
+            "ORDER BY n.cr_dtimes DESC",
+
+            countQuery = "SELECT COUNT(*) " +
+                    "FROM notifications n " +
+                    "WHERE (:notificationStatus IS NULL OR LOWER(n.notification_status) = LOWER(:notificationStatus)) " +
+                    "AND (:notificationType IS NULL OR LOWER(n.notification_type) = LOWER(:notificationType)) " +
+                    "AND (n.partner_id IN (:partnerIdList)) " +
+                    "AND (:apiKeyName IS NULL OR (CAST(n.notification_details_json AS JSONB)->'apiKeyDetails'->0->>'apiKeyName') ILIKE CONCAT('%', :apiKeyName, '%')) " +
+                    "AND (:policyName IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'apiKeyDetails'->0->>'policyName') = LOWER(:policyName)) " +
+                    "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'apiKeyDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) ",
+            nativeQuery = true)
+    Page<NotificationEntity> getSummaryOfAllApiKeyNotifications(
+            @Param("apiKeyName") String apiKeyName,
+            @Param("policyName") String policyName,
+            @Param("expiryDate") String expiryDate,
+            @Param("notificationStatus") String notificationStatus,
+            @Param("notificationType") String notificationType,
+            @Param("partnerIdList") List<String> partnerIdList,
+            Pageable pageable);
 }
