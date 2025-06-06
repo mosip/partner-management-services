@@ -194,28 +194,12 @@ public class EmailNotificationService {
 				List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
 						.orElse(Collections.emptyList());
 
-				List<String> partnerIds = new ArrayList<>();
-				List<String> ftmIds = new ArrayList<>();
-				List<String> apiKeyNames = new ArrayList<>();
-
-				for (CertificateDetailsDto certDetail : certificateDetails) {
-					partnerIds.add(certDetail.getPartnerId());
-				}
-
-				for (FtmDetailsDto ftmDetail : ftmDetails) {
-						ftmIds.add(ftmDetail.getFtmId());
-				}
-
-				for (ApiKeyDetailsDto apiKeyDetail : apiKeyDetails) {
-					apiKeyNames.add(apiKeyDetail.getApiKeyName());
-				}
-
 				context.put("partnerCertificateCount", certificateDetails.size());
 				context.put("ftmChipCertificateCount", ftmDetails.size());
 				context.put("apiKeyCount", apiKeyDetails.size());
-				context.put("partnerIdList", partnerIds);
-				context.put("ftmIdList", ftmIds);
-				context.put("apiKeyNameList", apiKeyNames);
+				context.put("certificateDetails", certificateDetails);
+				context.put("ftmDetails", ftmDetails);
+				context.put("apiKeyDetails", apiKeyDetails);
 				break;
 
 			default:
