@@ -1051,7 +1051,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LocalDateTime expiryEndDate = null;
 
 			if (filterDto.getExpiryPeriod() != null) {
-				expiryStartDate = LocalDateTime.now().with(LocalTime.MIN);
+				expiryStartDate = LocalDateTime.now();
 				expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
 			}
 
