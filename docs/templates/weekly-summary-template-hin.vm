@@ -36,7 +36,7 @@
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 2px;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">भागीदार प्रमाणपत्र</div>
-                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount भागीदार प्रमाणपत्र निम्नलिखित भागीदार आईडी के लिए समाप्त हो रहे हैं:</div>
+                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount पार्टनर प्रमाणपत्र निम्नलिखित पार्टनर आईडी के लिए समाप्त हो रहे हैं:</div>
                             </div>
                         </div>
                         #if($certificateDetails && $certificateDetails.size() > 0)

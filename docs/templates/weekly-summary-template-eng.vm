@@ -37,7 +37,7 @@
 							</div>
                             <div style="display: flex; flex-direction: column; gap: 2px;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">Partner Certificates</div>
-                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount partner certificates expiring for the following partner IDs:</div>
+                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount Partner Certificates are expiring for the following partner IDs:</div>
                             </div>
                         </div>
                         #if($certificateDetails && $certificateDetails.size() > 0)
@@ -109,7 +109,7 @@
 							</div>
                             <div style="display: flex; flex-direction: column; gap: 2px;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">API Keys</div>
-                                <div style="font-size: 12px; color: #5f6368;">$apiKeyCount  API Keys are expiring for the following API key names:</div>
+                                <div style="font-size: 12px; color: #5f6368;">$apiKeyCount API Keys are expiring for the following API key names:</div>
                             </div>
                         </div>
                         #if($apiKeyDetails && $apiKeyDetails.size() > 0)

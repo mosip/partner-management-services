@@ -36,7 +36,7 @@
                       </div>
                             <div style="display: flex; flex-direction: column; gap: 2px;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">பங்குதாரர் சான்றிதழ்கள்</div>
-                                <div style="font-size: 12px; color: #5f6368;">பின்வரும் பங்குதாரர் ஐடிகளுக்கு $partnerCertificateCount பங்குதாரர் சான்றிதழ்கள் காலாவதியாகின்றன:</div>
+                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount பங்குதாரர் சான்றிதழ்கள் பின்வரும் பங்குதாரர் அடையாளங்களுக்கு காலாவதியாகின்றன:</div>
                             </div>
                         </div>
                         #if($certificateDetails && $certificateDetails.size() > 0)
