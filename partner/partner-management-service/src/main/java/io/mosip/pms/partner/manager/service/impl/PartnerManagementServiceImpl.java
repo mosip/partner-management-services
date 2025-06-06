@@ -1047,10 +1047,20 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
-			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.
-					getSummaryOfAllApiKeyRequests(filterDto.getPartnerId(), filterDto.getApiKeyLabel(),
-							filterDto.getOrgName(), filterDto.getPolicyName(), filterDto.getPolicyGroupName(),
-							filterDto.getStatus(), partnerIdList, isPartnerAdmin, pageable);
+			LocalDateTime expiryStartDate = null;
+			LocalDateTime expiryEndDate = null;
+
+			if (filterDto.getExpiryPeriod() != null) {
+				expiryStartDate = LocalDateTime.now().with(LocalTime.MIN);
+				expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
+			}
+
+			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(
+					filterDto.getPartnerId(), filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
+					filterDto.getPolicyGroupName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+					expiryEndDate, filterDto.getExpiryPeriod(), pageable
+			);
+
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<ApiKeyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), ApiKeyRequestSummaryDto.class);
 				pageResponseV2Dto.setPageNo(page.getNumber());

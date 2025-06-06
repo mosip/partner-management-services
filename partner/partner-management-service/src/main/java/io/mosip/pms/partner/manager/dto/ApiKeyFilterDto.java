@@ -19,4 +19,6 @@ public class ApiKeyFilterDto {
 
     private String status;
 
+    private Integer expiryPeriod;
+
 }

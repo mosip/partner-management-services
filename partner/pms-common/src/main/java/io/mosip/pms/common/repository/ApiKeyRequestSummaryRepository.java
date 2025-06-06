@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository("ApiKeyRequestSummaryRepository")
@@ -32,8 +33,9 @@ public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyReq
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:status IS NULL OR " +
             "(:status = 'deactivated' AND pp.isActive = false) " +
-            "OR (:status = 'activated' AND pp.isActive = true))" +
-            "AND (:isPartnerAdmin = true OR (p.id IN :partnerIdList)) "
+            "OR (:status = 'activated' AND pp.isActive = true)) " +
+            "AND (:isPartnerAdmin = true OR (p.id IN :partnerIdList)) " +
+            "AND ((:expiryPeriod IS NULL) OR (pp.validToDatetime BETWEEN :expiryStartDate AND :expiryEndDate)) "
     )
     Page<ApiKeyRequestsSummaryEntity> getSummaryOfAllApiKeyRequests(
             @Param("partnerId") String partnerId,
@@ -44,6 +46,9 @@ public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyReq
             @Param("status") String status,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
