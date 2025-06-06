@@ -39,7 +39,7 @@
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">شهادات الشركاء</div>
-                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount شهادات شركاء ستنتهي صلاحيتها لمعرفات الشركاء التالية:</div>
+                                <div style="font-size: 12px; color: #5f6368;">شهادات الشركاء $partnerCertificateCount تنتهي صلاحيتها لمعرفات الشركاء التالية:</div>
                             </div>
                         </div>
                         #if($certificateDetails && $certificateDetails.size() > 0)

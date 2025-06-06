@@ -36,7 +36,7 @@
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 2px;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">Certificats de partenaire</div>
-                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount certificats de partenaire arrivent à expiration pour les ID de partenaire suivants :</div>
+                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount certificats de partenaire expirent pour les identifiants de partenaire suivants :</div>
                             </div>
                         </div>
                         #if($certificateDetails && $certificateDetails.size() > 0)

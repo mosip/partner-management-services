@@ -36,7 +36,7 @@
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 2px;">
                                 <div style="font-size: 14px; font-weight: 600; color: #202124;">ಪಾಲುದಾರರ ಪ್ರಮಾಣಪತ್ರಗಳು</div>
-                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount ಪಾಲುದಾರರ ಪ್ರಮಾಣಪತ್ರಗಳು ಈ ಕೆಳಗಿನ ಪಾಲುದಾರರ ID ಗಳಿಗಾಗಿ ಮುಕ್ತಾಯಗೊಳ್ಳುತ್ತಿವೆ:</div>
+                                <div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount ಪಾಲುದಾರ ಪ್ರಮಾಣಪತ್ರಗಳು ಕೆಳಗಿನ ಪಾಲುದಾರ ಗುರುತುಗಳಿಗೆ ಅಮಾನ್ಯವಾಗುತ್ತಿವೆ:</div>
                             </div>
                         </div>
                         #if($certificateDetails && $certificateDetails.size() > 0)
