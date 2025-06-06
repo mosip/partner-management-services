@@ -415,7 +415,11 @@ public class PartnerManagementController {
 			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyName", required = false) String policyName,
-			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod
 	) {
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) {
@@ -435,6 +439,9 @@ public class PartnerManagementController {
 		}
 		if (policyGroupName != null) {
 			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (expiryPeriod != null){
+			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
