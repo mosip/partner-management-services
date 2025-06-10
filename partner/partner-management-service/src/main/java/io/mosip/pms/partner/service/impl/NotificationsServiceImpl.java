@@ -1,5 +1,20 @@
 package io.mosip.pms.partner.service.impl;
 
+import static io.mosip.pms.common.constant.PartnerConstants.API_KEY;
+import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP;
+import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE;
+import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.PARTNER;
+import static io.mosip.pms.common.constant.PartnerConstants.PARTNER_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.ROOT;
+import static io.mosip.pms.common.constant.PartnerConstants.ROOT_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.SBI;
+import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
+import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY;
+import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP_CERT_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.API_KEY_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.SBI_EXPIRY;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,8 +57,6 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
-
-import static io.mosip.pms.common.constant.PartnerConstants.*;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
