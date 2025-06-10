@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
+import io.mosip.pms.tasklets.FTMChipCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
@@ -35,6 +36,9 @@ public class BatchJobConfig {
 
 	@Autowired
 	private DeletePastNotificationsTasklet deletePastNotificationsTasklet;
+
+	@Autowired
+	private FTMChipCertificateExpiryTasklet ftmChipCertificateExpiryTasklet;
 
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
@@ -61,6 +65,13 @@ public class BatchJobConfig {
 			PlatformTransactionManager transactionManager) {
 		return new StepBuilder("deletePastNotificationsStep", jobRepository)
 				.tasklet(deletePastNotificationsTasklet, transactionManager).build();
+	}
+	
+	@Bean
+	public Step ftmChipExpiryNotificationsStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
+		return new StepBuilder("ftmChipExpiryNotificationsStep", jobRepository)
+				.tasklet(ftmChipCertificateExpiryTasklet, transactionManager).build();
 	}
 
 	@Bean
@@ -89,5 +100,12 @@ public class BatchJobConfig {
 			@Qualifier("deletePastNotificationsStep") Step deletePastNotificationsStep) {
 		return new JobBuilder("deletePastNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
 				.start(deletePastNotificationsStep).build();
+	}
+	
+	@Bean
+	public Job ftmChipExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("ftmChipExpiryNotificationsStep") Step ftmChipExpiryNotificationsStep) {
+		return new JobBuilder("ftmChipExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(ftmChipExpiryNotificationsStep).build();
 	}
 }

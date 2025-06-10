@@ -23,6 +23,8 @@ import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.exception.BatchJobServiceException;
+import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
@@ -56,15 +58,16 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 	KeycloakHelper keycloakHelper;
 
 	@Value("${mosip.pms.root.and.intermediate.certificates.available}")
-	private Boolean isRootIntermediateCertAvailable;
+	private Boolean isRootIntermediateCertEndpointAvailable;
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
 		log.info("RootAndIntermediateCertificateExpiryTasklet: START");
 
 		// Check if root/intermediate cert endpoint is available
-		if (Boolean.FALSE.equals(isRootIntermediateCertAvailable)) {
-			log.info("RootAndIntermediateCertificateExpiryTasklet: Notifications cannot be generated since the endpoint is not available in the current version of MOSIP platform.");
+		if (Boolean.FALSE.equals(isRootIntermediateCertEndpointAvailable)) {
+			log.info(
+					"RootAndIntermediateCertificateExpiryTasklet: Notifications cannot be generated since the \"getCaCertificates()\" endpoint is not available in the current version of KeyManager.");
 			return RepeatStatus.FINISHED;
 		}
 
@@ -74,7 +77,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 			List<String> certificateTypes = new ArrayList<String>();
 			certificateTypes.add(PartnerConstants.ROOT);
 			certificateTypes.add(PartnerConstants.INTERMEDIATE);
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Active Partners
+			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
 			// in PMS
 			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
 			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
@@ -106,12 +109,14 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 									List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
 											certificateType, expiryPeriod, null, expiringCertificate);
 									// Decrypt the email ID if it's already encrypted to avoid encrypting it again
-									String emailId = keyManagerHelper.decryptData(partnerAdminDetails.getEmailId());
+									String decryptedEmailId = keyManagerHelper
+											.decryptData(partnerAdminDetails.getEmailId());
 									NotificationEntity savedNotification = batchJobHelper
-											.saveCertificateExpiryNotification(certificateType, partnerAdminDetails,
-													certificateDetailsList, emailId);
+											.saveNotification(getNotificationType(certificateType),
+													partnerAdminDetails, certificateDetailsList, null,
+													decryptedEmailId);
 									// Step 4: send email notification
-									emailNotificationService.sendEmailNotification(savedNotification, emailId);
+									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 									countPerCertTypeExpiryPeriod.add(savedNotification.getId());
 									totalNotificationsCreated.add(savedNotification.getId());
 								});
@@ -159,6 +164,18 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 		certificateDetails.setExpiryPeriod("" + expiryPeriod);
 		expiringCertificates.add(certificateDetails);
 		return expiringCertificates;
+	}
+
+	private String getNotificationType(String certificateType) throws BatchJobServiceException {
+		switch (certificateType) {
+		case PartnerConstants.ROOT:
+			return PartnerConstants.ROOT_CERT_EXPIRY;
+		case PartnerConstants.INTERMEDIATE:
+			return PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
+		default:
+			throw new BatchJobServiceException(ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorCode(),
+					ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorMessage());
+		}
 	}
 
 }
