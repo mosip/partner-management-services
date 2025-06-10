@@ -56,6 +56,10 @@ public class BatchJobScheduler {
 	@Qualifier("deletePastNotificationsJob")
 	@Autowired
 	private Job deletePastNotificationsJob;
+	
+	@Qualifier("ftmChipExpiryNotificationsJob")
+	@Autowired
+	private Job ftmChipExpiryNotificationsJob;
 
 	@Scheduled(cron = "${mosip.pms.batch.job.root.intermediate.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
@@ -122,6 +126,23 @@ public class BatchJobScheduler {
 				| JobParametersInvalidException e) {
 
 			log.error(LOGDISPLAY, "weeklyNotificationsJob failed", e.getMessage(), null);
+		}
+	}
+	
+	@Scheduled(cron = "${mosip.pms.batch.job.ftm.chip.expiry.notifications.cron.schedule}")
+	public void ftmChipExpiryNotificationsScheduler() {
+
+		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
+				.toJobParameters();
+		try {
+			JobExecution jobExecution = jobLauncher.run(ftmChipExpiryNotificationsJob, jobParam);
+
+			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
+
+		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
+				| JobParametersInvalidException e) {
+
+			log.error(LOGDISPLAY, "ftmChipExpiryNotificationsJob failed", e.getMessage(), null);
 		}
 	}
 

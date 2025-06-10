@@ -97,4 +97,7 @@ public final class PartnerConstants {
 	public static final String PARTNER_DOMAIN_DEVICE = "DEVICE";
 
     public static final String FTM = "ftm";
+    
+    public static final String GET_SIGNED_PARTNER_CERT_URL = "pmp.partner.original.certificate.get.rest.uri";
+
 }
