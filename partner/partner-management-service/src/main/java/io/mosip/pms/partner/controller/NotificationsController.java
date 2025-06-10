@@ -86,7 +86,9 @@ public class NotificationsController {
             @RequestParam(value = "make", required = false) String make,
             @RequestParam(value = "model", required = false) String model,
             @RequestParam(value = "apiKeyName", required = false) String apiKeyName,
-            @RequestParam(value = "policyName", required = false) String policyName
+            @RequestParam(value = "policyName", required = false) String policyName,
+            @RequestParam(value = "sbiId", required = false) String sbiId,
+            @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
@@ -130,6 +132,12 @@ public class NotificationsController {
         }
         if (policyName != null) {
             filterDto.setPolicyName(policyName);
+        }
+        if (sbiId != null) {
+            filterDto.setSbiId(sbiId);
+        }
+        if (sbiVersion != null) {
+            filterDto.setSbiVersion(sbiVersion);
         }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }
