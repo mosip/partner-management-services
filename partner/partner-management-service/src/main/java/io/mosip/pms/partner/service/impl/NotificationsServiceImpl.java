@@ -13,6 +13,7 @@ import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
 import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY;
 import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP_CERT_EXPIRY;
 import static io.mosip.pms.common.constant.PartnerConstants.API_KEY_EXPIRY;
+import static io.mosip.pms.common.constant.PartnerConstants.SBI_EXPIRY;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,6 +67,7 @@ public class NotificationsServiceImpl implements NotificationsService {
     public static final String BLANK_STRING = "";
     public static final String FTM_PROVIDER = "FTM_PROVIDER";
     public static final String AUTH_PARTNER = "AUTH_PARTNER";
+    public static final String DEVICE_PROVIDER = "DEVICE_PROVIDER";
 
 
     @Value("${mosip.pms.api.id.notifications.get}")
@@ -123,7 +125,8 @@ public class NotificationsServiceImpl implements NotificationsService {
             } else {
                 if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) ||
                     Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain()) || Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()) ||
-                    Objects.nonNull(filterDto.getFtmId()) || Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel()) || Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName())) {
+                    Objects.nonNull(filterDto.getFtmId()) || Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel()) || Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName()) ||
+                    Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) {
                     throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
                             ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
                 }
@@ -198,6 +201,9 @@ public class NotificationsServiceImpl implements NotificationsService {
                 if (roles.contains(AUTH_PARTNER)) {
                     notificationTypeList.add(API_KEY_EXPIRY);
                 }
+                if (roles.contains(DEVICE_PROVIDER)) {
+                    notificationTypeList.add(SBI_EXPIRY);
+                }
             }
             return notificationsSummaryRepository.getSummaryOfAllNotifications(
                     filterDto.getNotificationStatus(), notificationTypeList, partnerIdList, pageable);
@@ -216,27 +222,26 @@ public class NotificationsServiceImpl implements NotificationsService {
                         filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
 
-            // TODO: Logic for WEEKLY notifications to be implemented
             case WEEKLY:
                 return notificationsSummaryRepository.getSummaryOfWeeklyNotifications(
                         filterDto.getCreatedFromDate(), filterDto.getCreatedToDate(),
                         filterDto.getNotificationStatus(), WEEKLY_SUMMARY, partnerIdList, pageable);
 
-            // TODO: Logic for PARTNER notifications to be implemented
             case PARTNER:
                 return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
                         filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
                         filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
                         PARTNER_CERT_EXPIRY, partnerIdList, pageable);
             case SBI:
+                return notificationsSummaryRepository.getSummaryOfAllSbiNotifications(
+                        filterDto.getSbiId(), filterDto.getSbiVersion(), filterDto.getExpiryDate(),
+                        filterDto.getNotificationStatus(), SBI_EXPIRY, partnerIdList, pageable);
 
-            // TODO: Logic for FTM_CHIP notifications to be implemented
             case FTM_CHIP:
                 return notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(
                         filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(),
                         filterDto.getExpiryDate(), filterDto.getNotificationStatus(), FTM_CHIP_CERT_EXPIRY, partnerIdList, pageable);
 
-           // TODO: Logic for API_KEY notifications to be implemented
             case API_KEY:
                 return notificationsSummaryRepository.getSummaryOfAllApiKeyNotifications(
                         filterDto.getApiKeyName(), filterDto.getPolicyName(), filterDto.getExpiryDate(),
