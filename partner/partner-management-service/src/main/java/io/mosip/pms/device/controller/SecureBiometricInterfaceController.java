@@ -365,7 +365,7 @@ public class SecureBiometricInterfaceController {
 		if (sbiExpiryStatus != null) {
 			filterDto.setSbiExpiryStatus(sbiExpiryStatus);
 		}
-		if (expiryPeriod != null){
+		if (expiryPeriod != null) {
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
