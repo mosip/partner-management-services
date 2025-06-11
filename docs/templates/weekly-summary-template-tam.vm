@@ -12,7 +12,7 @@
         </div>
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff; font-size: 14px;">
             <p><strong>அன்புள்ள ${partnerId},</strong></p>
-            <p>பங்குதாரர் சான்றிதழ்கள், FTM சிப் சான்றிதழ்கள் மற்றும் API விசைகள் உட்பட பல்வேறு பங்குதாரர்களுக்குச் சொந்தமான பல சான்றோப்பங்கள் காலாவதியாகும் நிலையில் உள்ளன என்பதை உங்கள் கவனத்திற்குக் கொண்டுவர விரும்புகிறோம். இந்தச் சான்றோப்பங்கள் PMS போர்ட்டல் மூலம் வழங்கப்பட்டு அடுத்த 7 நாட்களுக்குள் காலாவதியாக உள்ளன.</p>
+            <p>பல பங்குதாரர்களின் சான்றுகளான பங்குதாரர் சான்றிதழ்கள், FTM சிப் சான்றிதழ்கள், SBI மற்றும் API விசைகள் ஆகியவை காலாவதியாகும் தேதி நெருங்கிவருவதை உங்கள் கவனத்திற்கு கொண்டுவர விரும்புகிறோம். இவை PMS போர்ட்டலின் மூலம் வழங்கப்பட்டவை மற்றும் அடுத்த 7 நாட்களில் காலாவதியாகவுள்ளன.</p>
             <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                <div style="display: flex; align-items: center; background: #F7FAFF; padding: 10px 0px; border-radius: 6px;">
                    <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
@@ -96,6 +96,42 @@
                     #end
                 </div>
 
+                <div id="dropdownContainerSBI" style="margin: 10px auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <button id="dropdownToggleSBI" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 15px; cursor: pointer; background: white; border: #DFEBF8; width: 100%; text-align: left;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #F4F7FF;  border: 0.75px solid #D3E8FF; border-radius: 10%;">
+                                <svg width="26" height="21" viewBox="0 0 26 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M2.74375 19.9444C2.12222 19.9444 1.59282 19.7259 1.15556 19.2889C0.718519 18.8516 0.5 18.3222 0.5 17.7007V2.74375C0.5 2.12222 0.718519 1.59282 1.15556 1.15556C1.59282 0.718519 2.12222 0.5 2.74375 0.5H23.2563C23.8778 0.5 24.4072 0.718519 24.8444 1.15556C25.2815 1.59282 25.5 2.12222 25.5 2.74375V17.7007C25.5 18.3222 25.2815 18.8516 24.8444 19.2889C24.4072 19.7259 23.8778 19.9444 23.2563 19.9444H2.74375ZM2.74375 18.5556H23.2563C23.5056 18.5556 23.7104 18.4755 23.8708 18.3153C24.031 18.1549 24.1111 17.95 24.1111 17.7007V2.74375C24.1111 2.49444 24.031 2.28958 23.8708 2.12917C23.7104 1.96898 23.5056 1.88889 23.2563 1.88889H2.74375C2.49444 1.88889 2.28958 1.96898 2.12917 2.12917C1.96898 2.28958 1.88889 2.49444 1.88889 2.74375V17.7007C1.88889 17.95 1.96898 18.1549 2.12917 18.3153C2.28958 18.4755 2.49444 18.5556 2.74375 18.5556ZM12.3056 15.6174H13.6944L13.8441 14.3889C14.2821 14.291 14.6938 14.1427 15.0792 13.9441C15.4648 13.7457 15.8117 13.4737 16.1198 13.1281L17.3056 13.6198L18.0535 12.4604L17.0705 11.6059C17.2059 11.1446 17.2736 10.6833 17.2736 10.2222C17.2736 9.76111 17.2059 9.29988 17.0705 8.83854L18.0535 7.98403L17.3056 6.82465L16.1198 7.31632C15.8117 6.97072 15.4648 6.69873 15.0792 6.50035C14.6938 6.30174 14.2821 6.15347 13.8441 6.05556L13.6944 4.82708H12.3056L12.1559 6.05556C11.7179 6.15347 11.3063 6.30174 10.9208 6.50035C10.5352 6.69873 10.1883 6.97072 9.88021 7.31632L8.69444 6.82465L7.94653 7.98403L8.92951 8.83854C8.7941 9.29988 8.72639 9.76111 8.72639 10.2222C8.72639 10.6833 8.7941 11.1446 8.92951 11.6059L7.94653 12.4604L8.69444 13.6198L9.88021 13.1281C10.1883 13.4737 10.5352 13.7457 10.9208 13.9441C11.3063 14.1427 11.7179 14.291 12.1559 14.3889L12.3056 15.6174ZM13 13.2135C12.1648 13.2135 11.4574 12.9238 10.8778 12.3444C10.2984 11.7648 10.0087 11.0574 10.0087 10.2222C10.0087 9.38704 10.2984 8.67963 10.8778 8.1C11.4574 7.5206 12.1648 7.2309 13 7.2309C13.8352 7.2309 14.5426 7.5206 15.1222 8.1C15.7016 8.67963 15.9913 9.38704 15.9913 10.2222C15.9913 11.0574 15.7016 11.7648 15.1222 12.3444C14.5426 12.9238 13.8352 13.2135 13 13.2135Z" fill="#006DE7"/>
+									<path d="M1.88889 18.5556V1.88889M2.74375 19.9444C2.12222 19.9444 1.59282 19.7259 1.15556 19.2889C0.718519 18.8516 0.5 18.3222 0.5 17.7007V2.74375C0.5 2.12222 0.718519 1.59282 1.15556 1.15556C1.59282 0.718519 2.12222 0.5 2.74375 0.5H23.2563C23.8778 0.5 24.4072 0.718519 24.8444 1.15556C25.2815 1.59282 25.5 2.12222 25.5 2.74375V17.7007C25.5 18.3222 25.2815 18.8516 24.8444 19.2889C24.4072 19.7259 23.8778 19.9444 23.2563 19.9444H2.74375ZM2.74375 18.5556H23.2563C23.5056 18.5556 23.7104 18.4755 23.8708 18.3153C24.031 18.1549 24.1111 17.95 24.1111 17.7007V2.74375C24.1111 2.49444 24.031 2.28958 23.8708 2.12917C23.7104 1.96898 23.5056 1.88889 23.2563 1.88889H2.74375C2.49444 1.88889 2.28958 1.96898 2.12917 2.12917C1.96898 2.28958 1.88889 2.49444 1.88889 2.74375V17.7007C1.88889 17.95 1.96898 18.1549 2.12917 18.3153C2.28958 18.4755 2.49444 18.5556 2.74375 18.5556ZM12.3056 15.6174H13.6944L13.8441 14.3889C14.2821 14.291 14.6938 14.1427 15.0792 13.9441C15.4648 13.7457 15.8117 13.4737 16.1198 13.1281L17.3056 13.6198L18.0535 12.4604L17.0705 11.6059C17.2059 11.1446 17.2736 10.6833 17.2736 10.2222C17.2736 9.76111 17.2059 9.29988 17.0705 8.83854L18.0535 7.98403L17.3056 6.82465L16.1198 7.31632C15.8117 6.97072 15.4648 6.69873 15.0792 6.50035C14.6938 6.30174 14.2821 6.15347 13.8441 6.05556L13.6944 4.82708H12.3056L12.1559 6.05556C11.7179 6.15347 11.3063 6.30174 10.9208 6.50035C10.5352 6.69873 10.1883 6.97072 9.88021 7.31632L8.69444 6.82465L7.94653 7.98403L8.92951 8.83854C8.7941 9.29988 8.72639 9.76111 8.72639 10.2222C8.72639 10.6833 8.7941 11.1446 8.92951 11.6059L7.94653 12.4604L8.69444 13.6198L9.88021 13.1281C10.1883 13.4737 10.5352 13.7457 10.9208 13.9441C11.3063 14.1427 11.7179 14.291 12.1559 14.3889L12.3056 15.6174ZM13 13.2135C12.1648 13.2135 11.4574 12.9238 10.8778 12.3444C10.2984 11.7648 10.0087 11.0574 10.0087 10.2222C10.0087 9.38704 10.2984 8.67963 10.8778 8.1C11.4574 7.5206 12.1648 7.2309 13 7.2309C13.8352 7.2309 14.5426 7.5206 15.1222 8.1C15.7016 8.67963 15.9913 9.38704 15.9913 10.2222C15.9913 11.0574 15.7016 11.7648 15.1222 12.3444C14.5426 12.9238 13.8352 13.2135 13 13.2135Z" stroke="#006DE7" stroke-width="0.25"/>
+								</svg>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 2px;">
+                                <div style="font-size: 14px; font-weight: 600; color: #202124;">SBI</div>
+                                <div style="font-size: 12px; color: #5f6368;">பின்வரும் SBI ஐடிகளுக்கு $sbiCount SBIகள் காலாவதியாகின்றன:</div>
+                            </div>
+                        </div>
+                        #if($sbiDetails && $sbiDetails.size() > 0)
+                            <svg id="chevronIconSBI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.9353 10.9492C18.5408 11.3507 17.8997 11.3501 17.5056 10.9482L9.9187 3.22168L2.33081 10.9482L2.25366 11.0186C1.85684 11.348 1.27068 11.3249 0.901123 10.9482L0.831787 10.8701C0.511116 10.4691 0.533362 9.87885 0.901123 9.50488L0.9021 9.50586L9.20386 1.05176C9.39274 0.859417 9.65004 0.750005 9.9187 0.75C10.1876 0.75 10.4447 0.859137 10.6335 1.05078V1.05176L18.9353 9.50586C19.3027 9.88003 19.3255 10.4702 19.0037 10.8711L18.9353 10.9492Z" fill="#014DAF" stroke="#014DAF" stroke-width="0.5"/>
+                            </svg>
+                        #end
+                    </button>
+                    #if($sbiDetails && $sbiDetails.size() > 0)
+                        <div id="dropdownContentSBI" style="max-height: 0; overflow: hidden; background: #F4F7FF;">
+                            <div id="contentInnerSBI" style="padding: 5px 20px; display: none;">
+                                    #foreach($sbi in $sbiDetails)
+                                        <div style="display: flex; align-items: center; padding: 8px 0;">
+                                            <div style="font-size: 13px; color: #202124; font-weight: 500;">
+                                                <span style="margin-right: 8px; color: #5f6368;">•</span>
+                                                    $sbi.sbiId
+                                            </div>
+                                        </div>
+                                    #end
+                            </div>
+                        </div>
+                    #end
+                </div>
+
                 <div id="dropdownContainerAPI" style="margin: 15px auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
                     <button id="dropdownToggleAPI" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 15px; cursor: pointer; background: white; border: #DFEBF8; width: 100%; text-align: left;">
                         <div style="display: flex; align-items: center; gap: 12px;">
@@ -135,7 +171,7 @@
                 <p style="padding: 5px 0px; font-weight: 600; margin: 0;">
                    அவசியமான நடவடிக்கை<br>
                    <span style="font-weight: 400;">
-                      தடையற்ற சேவைகளை உறுதிசெய்ய, அந்தந்த பங்குதாரர் பயனர்கள் தங்கள் சான்றிதழ்கள் மற்றும் API விசைகளை காலாவதியாகும் தேதிக்கு முன் PMS போர்ட்டலில் உள்நுழைந்து புதுப்பிக்க வேண்டும் என்பதைத் தெரிவிக்குமாறு கேட்டுக்கொள்கிறோம்.
+                        தடையில்லா சேவைகளை உறுதிப்படுத்த, குறித்த கூட்டாளி பயனர்களை அவர்களின் சான்றிதழ்கள், API விசைகள் மற்றும் SBI ஆகியவற்றை காலாவதிக்கும் முன் PMS போர்ட்டலில் உள்நுழைந்து புதுப்பிக்குமாறு தயவுசெய்து அறிவிக்கவும்.
                    </span>
                 </p>
              </div>
@@ -164,35 +200,38 @@
     </div>
 
     <script>
-       document.addEventListener("DOMContentLoaded", function () {
-          function setupDropdown(toggleId, contentId, iconId) {
-          const toggle = document.getElementById(toggleId);
-          const content = document.getElementById(contentId);
-          const icon = document.getElementById(iconId);
-          const inner = content.querySelector('div');
+		document.addEventListener("DOMContentLoaded", function () {
+			function setupDropdown(toggleId, contentId, iconId) {
+				const toggle = document.getElementById(toggleId);
+				const content = document.getElementById(contentId);
+				const icon = document.getElementById(iconId);
 
-          if (toggle && content && icon && inner) {
-             toggle.addEventListener("click", function () {
-             const isOpen = content.style.maxHeight && content.style.maxHeight !== "0px";
+				if (!toggle || !content || !icon) return;
 
-             if (isOpen) {
-                content.style.maxHeight = "0";
-                inner.style.display = "none";
-                icon.style.transform = "rotate(0deg)";
-             } else {
-                inner.style.display = "block";
-                content.style.maxHeight = inner.scrollHeight + "px";
-                icon.style.transform = "rotate(180deg)";
-             }
-             });
-          }
-          }
+				toggle.addEventListener("click", function () {
+					const inner = content.querySelector('div');
+					const isOpen = content.style.maxHeight && content.style.maxHeight !== "0px";
 
-          setupDropdown("dropdownTogglePartner", "dropdownContentPartner", "chevronIconPartner");
-          setupDropdown("dropdownToggleFTM", "dropdownContentFTM", "chevronIconFTM");
-          setupDropdown("dropdownToggleAPI", "dropdownContentAPI", "chevronIconAPI");
-       });
-    </script>
+					if (isOpen) {
+						content.style.maxHeight = "0";
+						if (inner) inner.style.display = "none";
+						icon.style.transform = "rotate(0deg)";
+					} else {
+						if (inner) {
+							inner.style.display = "block";
+							content.style.maxHeight = inner.scrollHeight + "px";
+						}
+						icon.style.transform = "rotate(180deg)";
+					}
+				});
+			}
+
+			setupDropdown("dropdownTogglePartner", "dropdownContentPartner", "chevronIconPartner");
+			setupDropdown("dropdownToggleFTM", "dropdownContentFTM", "chevronIconFTM");
+			setupDropdown("dropdownToggleAPI", "dropdownContentAPI", "chevronIconAPI");
+			setupDropdown("dropdownToggleSBI", "dropdownContentSBI", "chevronIconSBI");
+		});
+	</script>
 
 </body>
 </html>

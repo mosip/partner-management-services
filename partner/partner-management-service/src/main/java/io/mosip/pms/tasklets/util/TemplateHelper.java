@@ -64,6 +64,12 @@ public class TemplateHelper {
 	@Value("${email.notification.api.key.expiry.subject.template}")
 	private String apiKeyExpirySubjectTemplate;
 
+	@Value("${email.notification.sbi.expiry.template}")
+	private String sbiExpiryTemplate;
+
+	@Value("${email.notification.sbi.expiry.subject.template}")
+	private String sbiExpirySubjectTemplate;
+
 	@Value("${resource.template.url}")
 	private String getTemplateUrl;
 
@@ -126,6 +132,8 @@ public class TemplateHelper {
 				return ftmChipCertExpirySubjectTemplate;
 			case PartnerConstants.API_KEY_EXPIRY:
 				return apiKeyExpirySubjectTemplate;
+			case PartnerConstants.SBI_EXPIRY:
+				return sbiExpirySubjectTemplate;
 			default:
 				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
 						ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
@@ -146,6 +154,8 @@ public class TemplateHelper {
 				return ftmChipCertExpiryTemplate;
 			case PartnerConstants.API_KEY_EXPIRY:
 				return apiKeyExpiryTemplate;
+			case PartnerConstants.SBI_EXPIRY:
+				return sbiExpiryTemplate;
 			default:
 				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
 						ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
