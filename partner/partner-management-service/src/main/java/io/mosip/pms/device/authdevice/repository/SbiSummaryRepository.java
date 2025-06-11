@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository("SbiSummaryRepository")
@@ -44,6 +45,7 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "(:sbiExpiryStatus = 'expired' AND s.swExpiryDateTime < CURRENT_DATE) " +
             "OR (:sbiExpiryStatus = 'valid' AND s.swExpiryDateTime >= CURRENT_DATE)) " +
             "AND (:isPartnerAdmin = true OR (s.providerId IN :partnerIdList)) " +
+            "AND ((:expiryPeriod IS NULL) OR (s.swExpiryDateTime BETWEEN :expiryStartDate AND :expiryEndDate)) " +
             "GROUP BY s.providerId, s.partnerOrgName, s.id, s.swVersion, s.approvalStatus, " +
             "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes";
 
@@ -57,6 +59,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
@@ -70,6 +75,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
@@ -83,6 +91,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
@@ -96,6 +107,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
@@ -109,6 +123,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
@@ -122,6 +139,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 
@@ -135,6 +155,9 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             @Param("sbiExpiryStatus") String sbiExpiryStatus,
             @Param("partnerIdList") List<String> partnerIdList,
             @Param("isPartnerAdmin") boolean isPartnerAdmin,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 }

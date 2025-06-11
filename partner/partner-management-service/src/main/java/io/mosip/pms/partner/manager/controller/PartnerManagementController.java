@@ -440,7 +440,7 @@ public class PartnerManagementController {
 		if (policyGroupName != null) {
 			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
 		}
-		if (expiryPeriod != null){
+		if (expiryPeriod != null) {
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
