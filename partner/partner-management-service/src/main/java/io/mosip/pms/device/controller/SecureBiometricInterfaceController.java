@@ -1,6 +1,8 @@
 package io.mosip.pms.device.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
@@ -338,7 +340,11 @@ public class SecureBiometricInterfaceController {
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"expired", "valid"})
 			)
-			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus
+			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus,
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod
 	) {
 		SbiFilterDto filterDto = new SbiFilterDto();
 		if (partnerId != null) {
@@ -358,6 +364,9 @@ public class SecureBiometricInterfaceController {
 		}
 		if (sbiExpiryStatus != null) {
 			filterDto.setSbiExpiryStatus(sbiExpiryStatus);
+		}
+		if (expiryPeriod != null){
+			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}

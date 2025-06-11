@@ -3,6 +3,7 @@ package io.mosip.pms.device.authdevice.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -1104,6 +1105,14 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto, Pageable pageable, List<String> partnerIdList, boolean isPartnerAdmin) {
+		LocalDateTime expiryStartDate = null;
+		LocalDateTime expiryEndDate = null;
+
+		if (filterDto.getExpiryPeriod() != null) {
+			expiryStartDate = LocalDateTime.now();
+			expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
+		}
+
 		// Sorting
 		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 			String sortKey = sortFieldName + "_" + sortType.toLowerCase();
@@ -1112,37 +1121,43 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin,expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(),pageable);
 
 				case "status_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(),pageable);
 
 				case "sbiExpiryStatus_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(),pageable);
 
 				case "sbiExpiryStatus_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 
 				case "countOfAssociatedDevices_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 
 				case "countOfAssociatedDevices_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 
 				default:
 					// generic sorting logic for other fields
@@ -1154,7 +1169,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return sbiSummaryRepository.getSummaryOfSbiDetails(
 				filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 				filterDto.getSbiVersion(), filterDto.getStatus(),
-				filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+				filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+				expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
