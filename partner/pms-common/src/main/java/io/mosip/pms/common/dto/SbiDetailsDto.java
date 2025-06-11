@@ -11,4 +11,6 @@ public class SbiDetailsDto {
     private String partnerId;
     private String expiryDateTime;
     private String expiryPeriod;
+    private String sbiBinaryHash;
+    private LocalDateTime sbiCreationDate;
 }

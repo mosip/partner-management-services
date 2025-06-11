@@ -34,6 +34,7 @@ import io.mosip.pms.common.dto.EmailTemplateDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -171,12 +172,24 @@ public class EmailNotificationService {
 				ApiKeyDetailsDto apiKey = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
 				if (apiKey != null) {
 					context.put("apiKeyName", apiKey.getApiKeyName());
-					context.put("partnerId", apiKey.getPartnerId());
+					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("partnerDomain", apiKey.getPartnerDomain());
 					context.put("expiryDateTime", apiKey.getExpiryDateTime());
 					context.put("expiryPeriod", apiKey.getExpiryPeriod());
 					context.put("policyGroup", apiKey.getPolicyGroup());
 					context.put("policyName", apiKey.getPolicyName());
+				}
+				break;
+			case PartnerConstants.SBI_EXPIRY:
+				SbiDetailsDto sbi = notificationDetails.getSbiDetails().stream().findFirst().orElse(null);
+				if (sbi != null) {
+					context.put("sbiId", sbi.getSbiId());
+					context.put("sbiVersion", sbi.getSbiVersion());
+					context.put("sbiBinaryHash", sbi.getSbiBinaryHash());
+					context.put("sbiCreationDate", sbi.getSbiCreationDate());
+					context.put("expiryDateTime", sbi.getExpiryDateTime());
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("expiryPeriod", sbi.getExpiryPeriod());
 				}
 				break;
 			case PartnerConstants.WEEKLY_SUMMARY:
@@ -193,13 +206,17 @@ public class EmailNotificationService {
 						.orElse(Collections.emptyList());
 				List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
 						.orElse(Collections.emptyList());
+				List<SbiDetailsDto> sbiDetails = Optional.ofNullable(notificationDetails.getSbiDetails())
+						.orElse(Collections.emptyList());
 
 				context.put("partnerCertificateCount", certificateDetails.size());
 				context.put("ftmChipCertificateCount", ftmDetails.size());
 				context.put("apiKeyCount", apiKeyDetails.size());
+				context.put("sbiCount", sbiDetails.size());
 				context.put("certificateDetails", certificateDetails);
 				context.put("ftmDetails", ftmDetails);
 				context.put("apiKeyDetails", apiKeyDetails);
+				context.put("sbiDetails", sbiDetails);
 				break;
 
 			default:
