@@ -148,7 +148,7 @@ public class EmailNotificationService {
 				if (cert != null) {
 					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("certificateId", cert.getCertificateId());
-					context.put("expiryDateTime", cert.getExpiryDateTime());
+					context.put("expiryDateTime", formatDateTime(cert.getExpiryDateTime()));
 					context.put("partnerDomain", cert.getPartnerDomain());
 					context.put("issuedTo", cert.getIssuedTo());
 					context.put("issuedBy", cert.getIssuedBy());
@@ -162,7 +162,7 @@ public class EmailNotificationService {
 					context.put("model", ftm.getModel());
 					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("certificateId", ftm.getCertificateId());
-					context.put("expiryDateTime", ftm.getExpiryDateTime());
+					context.put("expiryDateTime", formatDateTime(ftm.getExpiryDateTime()));
 					context.put("partnerDomain", ftm.getPartnerDomain());
 					context.put("issuedTo", ftm.getIssuedTo());
 					context.put("issuedBy", ftm.getIssuedBy());
@@ -174,7 +174,7 @@ public class EmailNotificationService {
 					context.put("apiKeyName", apiKey.getApiKeyName());
 					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("partnerDomain", apiKey.getPartnerDomain());
-					context.put("expiryDateTime", apiKey.getExpiryDateTime());
+					context.put("expiryDateTime", formatDateTime(apiKey.getExpiryDateTime()));
 					context.put("expiryPeriod", apiKey.getExpiryPeriod());
 					context.put("policyGroup", apiKey.getPolicyGroup());
 					context.put("policyName", apiKey.getPolicyName());
@@ -186,8 +186,8 @@ public class EmailNotificationService {
 					context.put("sbiId", sbi.getSbiId());
 					context.put("sbiVersion", sbi.getSbiVersion());
 					context.put("sbiBinaryHash", sbi.getSbiBinaryHash());
-					context.put("sbiCreationDate", sbi.getSbiCreationDate());
-					context.put("expiryDateTime", sbi.getExpiryDateTime());
+					context.put("sbiCreationDate", formatDateTime(sbi.getSbiCreationDate()));
+					context.put("expiryDateTime", formatDateTime(sbi.getExpiryDateTime()));
 					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("expiryPeriod", sbi.getExpiryPeriod());
 				}
@@ -252,4 +252,13 @@ public class EmailNotificationService {
 		}
 	}
 
+	public static String formatDateTime(String dateTimeString) {
+		try {
+			LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss");
+			return dateTime.format(formatter);
+		} catch (Exception e) {
+			return dateTimeString;  // fallback
+		}
+	}
 }
