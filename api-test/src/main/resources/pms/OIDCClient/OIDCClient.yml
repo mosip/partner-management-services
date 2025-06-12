@@ -52,6 +52,7 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid policyid      
       role: partnerauth
       restMethod: post
+      allowedErrorCodes: PMS_PRT_073,PMS_FEATURE_002
       inputTemplate: pms/OIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -102,8 +103,8 @@ CreateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client
       description: Creating OAUTH Client with invalid redirectUri      
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
+      allowedErrorCodes: invalid_redirect_uri,PMS_FEATURE_002
       inputTemplate: pms/OIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -182,6 +183,7 @@ CreateOIDCClient:
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
+      allowedErrorCodes: invalid_grant_type,PMS_FEATURE_002
       inputTemplate: pms/OIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
