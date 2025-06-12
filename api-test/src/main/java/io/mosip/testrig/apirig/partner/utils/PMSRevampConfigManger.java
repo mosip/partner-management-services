@@ -14,7 +14,7 @@ public class PMSRevampConfigManger extends ConfigManager{
 	
 	public static void init() {
 		Logger configManagerLogger = Logger.getLogger(ConfigManager.class);
-		configManagerLogger.setLevel(Level.WARN);
+//		configManagerLogger.setLevel(Level.WARN);
 		
 		Map<String, Object> moduleSpecificPropertiesMap = new HashMap<>();
 		// Load scope specific properties
@@ -31,4 +31,21 @@ public class PMSRevampConfigManger extends ConfigManager{
 		// Add module specific properties as well.
 		init(moduleSpecificPropertiesMap);
 	}
+
+	public static String getKeymangrDbUrl() {
+		return "jdbc:postgresql://" + getproperty("km-db-server") + ":" + getproperty("km-db-port") + "/mosip_keymgr";
+	}
+
+	public static String getKeymangrDbUser() {
+		return getproperty("km-db-su-user");
+	}
+
+	public static String getKeymangrDbPass() {
+		return getproperty("km-db-postgres-password");
+	}
+
+	public static String getKeymangrDbSchema() {
+		return getproperty("Keymangr_db_schema");
+	}
+
 }
