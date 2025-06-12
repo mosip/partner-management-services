@@ -52,6 +52,7 @@ GetOriginalPartnerCertificates:
       description: Get original Auth partner certificates when authenticated as device partner     
       role: partnerdevice
       restMethod: get
+      allowedErrorCodes: PMS_CERTIFICATE_ERROR_007,PMS_FEATURE_003
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{
@@ -90,6 +91,7 @@ GetOriginalPartnerCertificates:
       description: Get original Auth partner certificates random value for partnerid   
       role: partneradmin
       restMethod: get
+      allowedErrorCodes: PMS_PRT_005,PMS_FEATURE_003
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{

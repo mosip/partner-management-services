@@ -86,6 +86,7 @@ DeactivateOIDCClient:
       uniqueIdentifier: TC_PMS_DeactivateOIDCClient_04
       checkErrorsOnlyInResponse: true
       restMethod: put
+      allowedErrorCodes: PMS_ESI_004,PMS_FEATURE_002
       inputTemplate: pms/DeactivateOIDCClient/deactivateOIDCClient
       outputTemplate: pms/error
       input: '{
