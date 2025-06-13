@@ -111,10 +111,9 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 									// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 									String decryptedEmailId = keyManagerHelper
 											.decryptData(partnerAdminDetails.getEmailId());
-									NotificationEntity savedNotification = batchJobHelper
-											.saveNotification(getNotificationType(certificateType),
-													partnerAdminDetails, certificateDetailsList, null,
-													decryptedEmailId);
+									NotificationEntity savedNotification = batchJobHelper.saveNotification(
+											getNotificationType(certificateType), partnerAdminDetails,
+											certificateDetailsList, null, null, null, decryptedEmailId);
 									// Step 4: send email notification
 									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 									countPerCertTypeExpiryPeriod.add(savedNotification.getId());
@@ -171,7 +170,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 		case PartnerConstants.ROOT:
 			return PartnerConstants.ROOT_CERT_EXPIRY;
 		case PartnerConstants.INTERMEDIATE:
-			return PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
+			return PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorCode(),
 					ErrorCode.INVALID_CERTIFICATE_TYPE.getErrorMessage());

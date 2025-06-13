@@ -48,17 +48,17 @@ public final class PartnerConstants {
 
 	public static final String ROOT_CERT_EXPIRY = "ROOT_CERT_EXPIRY";
 
-	public static final String INTERMEDIATE_CERT_EXPIRY = "INTERMEDIATE_CERT_EXPIRY";
+	public static final String INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE = "INTERMEDIATE_CERT_EXPIRY";
 
-	public static final String PARTNER_CERT_EXPIRY = "PARTNER_CERT_EXPIRY";
+	public static final String PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE = "PARTNER_CERT_EXPIRY";
 
-	public static final String FTM_CHIP_CERT_EXPIRY = "FTM_CHIP_CERT_EXPIRY";
+	public static final String FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE = "FTM_CHIP_CERT_EXPIRY";
 
-	public static final String WEEKLY_SUMMARY = "WEEKLY_SUMMARY";
+	public static final String WEEKLY_SUMMARY_NOTIFICATION_TYPE = "WEEKLY_SUMMARY";
 
-	public static final String API_KEY_EXPIRY = "API_KEY_EXPIRY";
+	public static final String API_KEY_EXPIRY_NOTIFICATION_TYPE = "API_KEY_EXPIRY";
 
-	public static final String SBI_EXPIRY = "SBI_EXPIRY";
+	public static final String SBI_EXPIRY_NOTIFICATION_TYPE = "SBI_EXPIRY";
 
 	public static final String STATUS_ACTIVE = "ACTIVE";
 

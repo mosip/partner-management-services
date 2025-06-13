@@ -122,17 +122,17 @@ public class TemplateHelper {
 		switch (notificationType) {
 			case PartnerConstants.ROOT_CERT_EXPIRY:
 				return rootCertExpirySubjectTemplate;
-			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 				return intermediateCertExpirySubjectTemplate;
-			case PartnerConstants.PARTNER_CERT_EXPIRY:
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
 				return partnerCertExpirySubjectTemplate;
-			case PartnerConstants.WEEKLY_SUMMARY:
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 				return weeklySummarySubjectTemplate;
-			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 				return ftmChipCertExpirySubjectTemplate;
-			case PartnerConstants.API_KEY_EXPIRY:
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
 				return apiKeyExpirySubjectTemplate;
-			case PartnerConstants.SBI_EXPIRY:
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
 				return sbiExpirySubjectTemplate;
 			default:
 				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
@@ -144,17 +144,17 @@ public class TemplateHelper {
 		switch (notificationType) {
 			case PartnerConstants.ROOT_CERT_EXPIRY:
 				return rootCertExpiryTemplate;
-			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 				return intermediateCertExpiryTemplate;
-			case PartnerConstants.PARTNER_CERT_EXPIRY:
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
 				return partnerCertExpiryTemplate;
-			case PartnerConstants.WEEKLY_SUMMARY:
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 				return weeklySummaryTemplate;
-			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 				return ftmChipCertExpiryTemplate;
-			case PartnerConstants.API_KEY_EXPIRY:
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
 				return apiKeyExpiryTemplate;
-			case PartnerConstants.SBI_EXPIRY:
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
 				return sbiExpiryTemplate;
 			default:
 				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),

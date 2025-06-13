@@ -56,10 +56,18 @@ public class BatchJobScheduler {
 	@Qualifier("deletePastNotificationsJob")
 	@Autowired
 	private Job deletePastNotificationsJob;
-	
+
 	@Qualifier("ftmChipExpiryNotificationsJob")
 	@Autowired
 	private Job ftmChipExpiryNotificationsJob;
+
+	@Qualifier("sbiExpiryNotificationsJob")
+	@Autowired
+	private Job sbiExpiryNotificationsJob;
+
+	@Qualifier("apiKeyExpiryNotificationsJob")
+	@Autowired
+	private Job apiKeyExpiryNotificationsJob;
 
 	@Scheduled(cron = "${mosip.pms.batch.job.root.intermediate.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
@@ -128,7 +136,7 @@ public class BatchJobScheduler {
 			log.error(LOGDISPLAY, "weeklyNotificationsJob failed", e.getMessage(), null);
 		}
 	}
-	
+
 	@Scheduled(cron = "${mosip.pms.batch.job.ftm.chip.expiry.notifications.cron.schedule}")
 	public void ftmChipExpiryNotificationsScheduler() {
 
@@ -143,6 +151,40 @@ public class BatchJobScheduler {
 				| JobParametersInvalidException e) {
 
 			log.error(LOGDISPLAY, "ftmChipExpiryNotificationsJob failed", e.getMessage(), null);
+		}
+	}
+
+	@Scheduled(cron = "${mosip.pms.batch.job.sbi.expiry.notifications.cron.schedule}")
+	public void sbiExpiryNotificationsScheduler() {
+
+		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
+				.toJobParameters();
+		try {
+			JobExecution jobExecution = jobLauncher.run(sbiExpiryNotificationsJob, jobParam);
+
+			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
+
+		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
+				| JobParametersInvalidException e) {
+
+			log.error(LOGDISPLAY, "sbiExpiryNotificationsJob failed", e.getMessage(), null);
+		}
+	}
+
+	@Scheduled(cron = "${mosip.pms.batch.job.api.key.expiry.notifications.cron.schedule}")
+	public void apiKeyExpiryNotificationsScheduler() {
+
+		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
+				.toJobParameters();
+		try {
+			JobExecution jobExecution = jobLauncher.run(apiKeyExpiryNotificationsJob, jobParam);
+
+			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
+
+		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
+				| JobParametersInvalidException e) {
+
+			log.error(LOGDISPLAY, "apiKeyExpiryNotificationsJob failed", e.getMessage(), null);
 		}
 	}
 

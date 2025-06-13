@@ -19,9 +19,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
@@ -90,19 +92,18 @@ public class BatchJobHelper {
 		return nonAdminPartnersList;
 	}
 
-	public List<Partner> getAllActiveAndApprovedFtmProviders() {
+	public List<Partner> getAllActiveAndApprovedPartners(String partnerType) {
 		log.info("As per configuration, number of partners for which notifications are to be skipped is {}",
 				skipPartnerIds.size());
-		List<Partner> allFtmPartnersList = partnerRepository
-				.findAllApprovedActivePartnersByPartnerTypeCode(PartnerConstants.FTM_PROVIDER_PARTNER_TYPE);
-		List<Partner> ftmPartnersList = new ArrayList<Partner>();
-		allFtmPartnersList.forEach(partner -> {
+		List<Partner> allPartnersList = partnerRepository.findAllApprovedActivePartnersByPartnerTypeCode(partnerType);
+		List<Partner> partnersList = new ArrayList<Partner>();
+		allPartnersList.forEach(partner -> {
 			if (!skipPartnerIds.contains(partner.getId())) {
 				// if (partner.getId().contains("mayurad")) {
-				ftmPartnersList.add(partner);
+				partnersList.add(partner);
 			}
 		});
-		return ftmPartnersList;
+		return partnersList;
 	}
 
 	public List<Partner> getValidPartnerAdminsInPms(List<String> keycloakPartnerAdmins) {
@@ -142,11 +143,15 @@ public class BatchJobHelper {
 
 	public NotificationEntity saveNotification(String notificationType, Partner partnerDetails,
 			List<CertificateDetailsDto> certificateDetailsList, List<FtmDetailsDto> ftmDetailsList,
-			String decryptedEmailId) throws BatchJobServiceException {
+			List<SbiDetailsDto> sbiList, List<ApiKeyDetailsDto> apiKeyList, String decryptedEmailId)
+			throws BatchJobServiceException {
 		try {
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
 			notificationDetailsDto.setCertificateDetails(certificateDetailsList);
 			notificationDetailsDto.setFtmDetails(ftmDetailsList);
+			notificationDetailsDto.setSbiDetails(sbiList);
+			notificationDetailsDto.setApiKeyDetails(apiKeyList);
+
 			String id = UUID.randomUUID().toString();
 			NotificationEntity notification = new NotificationEntity();
 			notification.setId(id);
@@ -179,18 +184,24 @@ public class BatchJobHelper {
 		case PartnerConstants.ROOT_CERT_EXPIRY:
 			return forSuccess ? PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
 					: PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
-		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
 					: PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
-		case PartnerConstants.PARTNER_CERT_EXPIRY:
+		case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
 					: PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
-		case PartnerConstants.WEEKLY_SUMMARY:
+		case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_SUCCESS
 					: PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_FAILURE;
-		case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+		case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.FTM_CHIP_CERTIFICATE_EXPIRY_NOTIFICATION_SUCCESS
 					: PartnerServiceAuditEnum.FTM_CHIP_CERTIFICATE_EXPIRY_NOTIFICATION_FAILURE;
+		case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
+			return forSuccess ? PartnerServiceAuditEnum.SBI_EXPIRY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.SBI_EXPIRY_NOTIFICATION_FAILURE;
+		case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
+			return forSuccess ? PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_FAILURE;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
@@ -203,18 +214,24 @@ public class BatchJobHelper {
 		case PartnerConstants.ROOT_CERT_EXPIRY:
 			return forSuccess ? PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
 					: PartnerServiceAuditEnum.ROOT_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
-		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
 					: PartnerServiceAuditEnum.INTERMEDIATE_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
-		case PartnerConstants.PARTNER_CERT_EXPIRY:
+		case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
 					: PartnerServiceAuditEnum.PARTNER_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
-		case PartnerConstants.WEEKLY_SUMMARY:
+		case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_EMAIL_SUCCESS
 					: PartnerServiceAuditEnum.WEEKLY_SUMMARY_NOTIFICATION_EMAIL_FAILURE;
-		case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+		case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.FTM_CHIP_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
 					: PartnerServiceAuditEnum.FTM_CHIP_CERTIFICATE_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
+		case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
+			return forSuccess ? PartnerServiceAuditEnum.SBI_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.SBI_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
+		case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
+			return forSuccess ? PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
