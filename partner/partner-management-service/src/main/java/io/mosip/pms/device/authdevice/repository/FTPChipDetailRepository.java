@@ -18,5 +18,5 @@ public interface FTPChipDetailRepository extends JpaRepository<FTPChipDetail, St
 	List<FTPChipDetail> findByProviderId(String providerId);
 	
 	@Query(value = "select * from ftp_chip_detail fcd where fcd.foundational_trust_provider_id =?1 AND (fcd.is_deleted is null or fcd.is_deleted = false) AND fcd.approval_status = 'approved' AND fcd.is_active = true",nativeQuery = true)
-	List<FTPChipDetail> findAllActiveAndApprovedFtmChipDetailsByProviderId(String providerId);
+	List<FTPChipDetail> findAllActiveAndApprovedByProviderId(String providerId);
 }

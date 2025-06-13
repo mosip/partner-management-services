@@ -142,8 +142,8 @@ public class EmailNotificationService {
 				.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
 
 		switch (notificationType) {
-			case PartnerConstants.PARTNER_CERT_EXPIRY, PartnerConstants.ROOT_CERT_EXPIRY,
-				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, PartnerConstants.ROOT_CERT_EXPIRY,
+				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 				CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
 				if (cert != null) {
 					context.put("partnerId", notificationEntity.getPartnerId());
@@ -154,7 +154,7 @@ public class EmailNotificationService {
 					context.put("issuedBy", cert.getIssuedBy());
 				}
 				break;
-			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 				FtmDetailsDto ftm = notificationDetails.getFtmDetails().stream().findFirst().orElse(null);
 				if (ftm != null) {
 					context.put("ftmId", ftm.getFtmId());
@@ -168,7 +168,7 @@ public class EmailNotificationService {
 					context.put("issuedBy", ftm.getIssuedBy());
 				}
 				break;
-			case PartnerConstants.API_KEY_EXPIRY:
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
 				ApiKeyDetailsDto apiKey = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
 				if (apiKey != null) {
 					context.put("apiKeyName", apiKey.getApiKeyName());
@@ -180,7 +180,7 @@ public class EmailNotificationService {
 					context.put("policyName", apiKey.getPolicyName());
 				}
 				break;
-			case PartnerConstants.SBI_EXPIRY:
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
 				SbiDetailsDto sbi = notificationDetails.getSbiDetails().stream().findFirst().orElse(null);
 				if (sbi != null) {
 					context.put("sbiId", sbi.getSbiId());
@@ -192,7 +192,7 @@ public class EmailNotificationService {
 					context.put("expiryPeriod", sbi.getExpiryPeriod());
 				}
 				break;
-			case PartnerConstants.WEEKLY_SUMMARY:
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 				LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 

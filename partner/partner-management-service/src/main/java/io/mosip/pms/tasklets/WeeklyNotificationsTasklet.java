@@ -2,7 +2,6 @@ package io.mosip.pms.tasklets;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,17 +15,18 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
+import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.FTPChipDetailRepository;
+import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
@@ -66,25 +66,32 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 	@Autowired
 	PartnerHelper partnerHelper;
 
+	@Autowired
+	SecureBiometricInterfaceRepository sbiRepository;
+
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
 		log.info("WeeklyNotificationsTasklet: START");
 		List<String> createdNotificationIds = new ArrayList<String>();
 		try {
-			//Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners in PMS
+			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
+			// in PMS
 			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
 			pmsPartnerAdmins.forEach(admin -> {
 				log.info("PMS Partner Admin Id: {}", admin.getId());
 			});
-			//Step 2: Get the list of all partner certificates expiring this week
+			// Step 2: Get the list of all partner certificates expiring this week
 			Map<Partner, X509Certificate> expiringPartnerCertificates = getListOfExpiringPartnerCertificates(
 					pmsPartnerAdmins);
-			//Step 3: Get the list of all FTM chip certificates expiring this week
+			// Step 3: Get the list of all FTM chip certificates expiring this week
 			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates = getListofExpiringFtmCertificates();
-			//Step 4: Create a weekly notification for all the partner admin users
+			// Step 4: Get the list of all SBI details expiring this week
+			List<SecureBiometricInterface> expiringSbiDetails = getListofExpiringSbi();
+
+			// Step 5: Create a weekly notification for all the partner admin users
 			log.info("Creating weekly summary notifications");
 			createdNotificationIds = createWeeklySummaryNotifications(pmsPartnerAdmins, expiringPartnerCertificates,
-					expiringFtmCertificates);
+					expiringFtmCertificates, expiringSbiDetails);
 
 		} catch (Exception e) {
 			log.error("Error occurred while running WeeklyNotificationsTasklet: {}", e.getMessage(), e);
@@ -96,57 +103,6 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 		});
 
 		return RepeatStatus.FINISHED;
-	}
-
-	private Map<FTPChipDetail, X509Certificate> getListofExpiringFtmCertificates() {
-		log.info("WeeklyNotificationsTasklet: getListofExpiringFtmCertificates(): START");
-
-		Map<FTPChipDetail, X509Certificate> expiringFtmCertificates = new HashMap<FTPChipDetail, X509Certificate>();
-		// Step 1: Get all FTM Providers which are Active and Approved
-		List<Partner> ftmProvidersList = batchJobHelper.getAllActiveAndApprovedFtmProviders();
-		int ftmProvidersCount = ftmProvidersList.size();
-		log.info("PMS has {} FTM Providers which are Active and Approved.", ftmProvidersCount);
-		int countOfPartnersWithInvalidCerts = 0;
-		// Step 2: For each FTM Provider get all the FTM chips which are Active and
-		// Approved
-		Iterator<Partner> ftmProvidersListIterator = ftmProvidersList.iterator();
-		while (ftmProvidersListIterator.hasNext()) {
-			Partner ftmProvider = ftmProvidersListIterator.next();
-			String ftmProviderId = ftmProvider.getId();
-			log.info("Fetching all the FTM chips for the FTM provider id {}", ftmProviderId);
-			List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository
-					.findAllActiveAndApprovedFtmChipDetailsByProviderId(ftmProviderId);
-			int ftmChipDetailsCount = ftpChipDetailList.size();
-			log.info("Found {} FTM chip details which are Active and Approved.", ftmChipDetailsCount);
-			for (FTPChipDetail ftpChipDetail : ftpChipDetailList) {
-				// Step 3: For each FTM chip get the cerificate and check if it is expiring or
-				// not
-				if (ftpChipDetail.getCertificateAlias() != null) {
-					X509Certificate decodedFtmCert = partnerCertificateExpiryHelper
-							.getDecodedFtmCertificate(ftpChipDetail);
-					if (decodedFtmCert != null) {
-						boolean isExpiring = checkIfCertIsExpiringThisWeek(ftmProvider, decodedFtmCert);
-						if (isExpiring) {
-							expiringFtmCertificates.put(ftpChipDetail, decodedFtmCert);
-						}
-					} else {
-						countOfPartnersWithInvalidCerts++;
-						log.debug("Valid FTM chip certificate not found for FTM provider id {}", ftmProviderId);
-					}
-				} else {
-					countOfPartnersWithInvalidCerts++;
-					log.info("Skipping this FTM chip since certificate alias are missing {}",
-							ftpChipDetail.getFtpChipDetailId());
-				}
-			}
-		}
-		log.info("Checked FTM chip certificate expiry for " + ftmProvidersCount + " partners");
-		log.info("Found {} FTM chip certificates expiring in next 7 days. ", expiringFtmCertificates.size());
-		if (countOfPartnersWithInvalidCerts > 0) {
-			log.info("Note: Valid FTM chip certificate is not available for " + countOfPartnersWithInvalidCerts
-					+ " FTM providers.");
-		}
-		return expiringFtmCertificates;
 	}
 
 	private Map<Partner, X509Certificate> getListOfExpiringPartnerCertificates(List<Partner> pmsPartnerAdmins) {
@@ -186,14 +142,103 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 		return expiringPartnerCertificates;
 	}
 
+	private Map<FTPChipDetail, X509Certificate> getListofExpiringFtmCertificates() {
+		log.info("WeeklyNotificationsTasklet: getListofExpiringFtmCertificates(): START");
+
+		Map<FTPChipDetail, X509Certificate> expiringFtmCertificates = new HashMap<FTPChipDetail, X509Certificate>();
+		// Step 1: Get all FTM Providers which are Active and Approved
+		List<Partner> ftmProvidersList = batchJobHelper
+				.getAllActiveAndApprovedPartners(PartnerConstants.FTM_PROVIDER_PARTNER_TYPE);
+		int ftmProvidersCount = ftmProvidersList.size();
+		log.info("PMS has {} FTM Providers which are Active and Approved.", ftmProvidersCount);
+		int countOfPartnersWithInvalidCerts = 0;
+		// Step 2: For each FTM Provider get all the FTM chips which are Active and
+		// Approved
+		Iterator<Partner> ftmProvidersListIterator = ftmProvidersList.iterator();
+		while (ftmProvidersListIterator.hasNext()) {
+			Partner ftmProvider = ftmProvidersListIterator.next();
+			String ftmProviderId = ftmProvider.getId();
+			log.info("Fetching all the FTM chips for the FTM provider id {}", ftmProviderId);
+			List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository
+					.findAllActiveAndApprovedByProviderId(ftmProviderId);
+			int ftmChipDetailsCount = ftpChipDetailList.size();
+			log.info("Found {} FTM chip details which are Active and Approved.", ftmChipDetailsCount);
+			for (FTPChipDetail ftpChipDetail : ftpChipDetailList) {
+				// Step 3: For each FTM chip get the cerificate and check if it is expiring or
+				// not
+				if (ftpChipDetail.getCertificateAlias() != null) {
+					X509Certificate decodedFtmCert = partnerCertificateExpiryHelper
+							.getDecodedFtmCertificate(ftpChipDetail);
+					if (decodedFtmCert != null) {
+						boolean isExpiring = checkIfCertIsExpiringThisWeek(ftmProvider, decodedFtmCert);
+						if (isExpiring) {
+							expiringFtmCertificates.put(ftpChipDetail, decodedFtmCert);
+						}
+					} else {
+						countOfPartnersWithInvalidCerts++;
+						log.debug("Valid FTM chip certificate not found for FTM provider id {}", ftmProviderId);
+					}
+				} else {
+					countOfPartnersWithInvalidCerts++;
+					log.info("Skipping this FTM chip since certificate alias are missing {}",
+							ftpChipDetail.getFtpChipDetailId());
+				}
+			}
+		}
+		log.info("Checked FTM chip certificate expiry for " + ftmProvidersCount + " partners");
+		log.info("Found {} FTM chip certificates expiring in next 7 days. ", expiringFtmCertificates.size());
+		if (countOfPartnersWithInvalidCerts > 0) {
+			log.info("Note: Valid FTM chip certificate is not available for " + countOfPartnersWithInvalidCerts
+					+ " FTM providers.");
+		}
+		return expiringFtmCertificates;
+	}
+
+	private List<SecureBiometricInterface> getListofExpiringSbi() {
+		log.info("WeeklyNotificationsTasklet: getListofExpiringSbi(): START");
+
+		List<SecureBiometricInterface> listofExpiringSbi = new ArrayList<SecureBiometricInterface>();
+		// Step 1: Get all Device Providers which are Active and Approved
+		List<Partner> deviceProvidersList = batchJobHelper
+				.getAllActiveAndApprovedPartners(PartnerConstants.DEVICE_PROVIDER_PARTNER_TYPE);
+		int deviceProvidersCount = deviceProvidersList.size();
+		log.info("PMS has {} Device Providers which are Active and Approved.", deviceProvidersCount);
+		// Step 2: For each Device Provider get all the SBI which are Active and
+		// Approved
+		Iterator<Partner> deviceProvidersListIterator = deviceProvidersList.iterator();
+		while (deviceProvidersListIterator.hasNext()) {
+			Partner deviceProvider = deviceProvidersListIterator.next();
+			String deviceProviderId = deviceProvider.getId();
+			log.info("Fetching all the SBI details for the device provider id {}", deviceProviderId);
+			List<SecureBiometricInterface> sbiList = sbiRepository
+					.findAllActiveAndApprovedByProviderId(deviceProviderId);
+			int sbiCount = sbiList.size();
+			log.info("Found {} SBI details which are Active and Approved.", sbiCount);
+			for (SecureBiometricInterface sbiDetail : sbiList) {
+				// Step 3: For each SBI check if it is expiring or not
+				if (sbiDetail.getSwExpiryDateTime() != null) {
+					LocalDateTime sbiExpiryDateTime = sbiDetail.getSwExpiryDateTime();
+					log.info("The SBI expiry date is {}", sbiExpiryDateTime);
+					boolean isExpiring = partnerCertificateExpiryHelper.checkIfExpiring(deviceProvider,
+							sbiExpiryDateTime, 7, true);
+					if (isExpiring) {
+						listofExpiringSbi.add(sbiDetail);
+					}
+				}
+			}
+		}
+		log.info("Checked SBI expiry for " + deviceProvidersCount + " partners");
+		log.info("Found {} SBI expiring in next 7 days. ", listofExpiringSbi.size());
+		return listofExpiringSbi;
+	}
+
 	private boolean checkIfCertIsExpiringThisWeek(Partner pmsPartner, X509Certificate decodedPartnerCertificate) {
 		// Check if the certificate is expiring within 7 days
 		log.info("Checking if certificate is expiring within next 7 days.");
 		LocalDateTime expiryDate = partnerCertificateExpiryHelper
 				.getCertificateExpiryDateTime(decodedPartnerCertificate);
 		log.info("The certificate expiry date is {}", expiryDate);
-		boolean isExpiringWithin7Days = partnerCertificateExpiryHelper.checkIfCertificateIsExpiring(pmsPartner,
-				expiryDate, 7, true);
+		boolean isExpiringWithin7Days = partnerCertificateExpiryHelper.checkIfExpiring(pmsPartner, expiryDate, 7, true);
 		if (isExpiringWithin7Days) {
 			log.info("Certificate is expiring during the next 7 days.");
 		} else {
@@ -208,11 +253,12 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 	 */
 	private List<String> createWeeklySummaryNotifications(List<Partner> pmsPartnerAdmins,
 			Map<Partner, X509Certificate> expiringPartnerCertificates,
-			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates) {
+			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates, List<SecureBiometricInterface> expiringSbi) {
 
 		List<String> createdNotificationIds = new ArrayList<String>();
 		List<CertificateDetailsDto> certificateDetailsList = new ArrayList<CertificateDetailsDto>();
 		List<FtmDetailsDto> ftmDetailsList = new ArrayList<FtmDetailsDto>();
+		List<SbiDetailsDto> sbiDetailsList = new ArrayList<SbiDetailsDto>();
 
 		if (expiringPartnerCertificates.size() > 0) {
 			expiringPartnerCertificates.forEach((partnerWithExpiringCert, decodedPartnerCertificate) -> {
@@ -234,13 +280,22 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 			});
 		}
 
+		if (expiringSbi.size() > 0) {
+			expiringSbi.forEach((sbiDetail) -> {
+				log.info("Weekly Summary - adding SBI details for device provider id {}", sbiDetail.getProviderId());
+				SbiDetailsDto sbiDetailsDto = partnerCertificateExpiryHelper.populateSbiDetails(7, sbiDetail);
+				sbiDetailsList.add(sbiDetailsDto);
+			});
+		}
+
 		Iterator<Partner> pmsPartnerAdminsIterator = pmsPartnerAdmins.iterator();
 		while (pmsPartnerAdminsIterator.hasNext()) {
 			Partner pmsPartnerAdmin = pmsPartnerAdminsIterator.next();
 			// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 			String decryptedEmailId = keyManagerHelper.decryptData(pmsPartnerAdmin.getEmailId());
-			NotificationEntity savedNotification = batchJobHelper.saveNotification(PartnerConstants.WEEKLY_SUMMARY,
-					pmsPartnerAdmin, certificateDetailsList, ftmDetailsList, decryptedEmailId);
+			NotificationEntity savedNotification = batchJobHelper.saveNotification(
+					PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE, pmsPartnerAdmin, certificateDetailsList,
+					ftmDetailsList, sbiDetailsList, null, decryptedEmailId);
 			// Step 6: send email notification
 			emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 			log.info("Created weekly summary notification with notification id " + savedNotification.getId());

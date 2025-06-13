@@ -18,10 +18,12 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
+import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
@@ -59,9 +61,9 @@ public class PartnerCertificateExpiryHelper {
 		return decodedPartnerCertificate;
 	}
 
-	public boolean checkIfCertificateIsExpiring(Partner pmsPartner, LocalDateTime partnerCertificateExpiryDate,
-			Integer expiryPeriod, boolean withinExpiryPeriod) {
-		boolean isCertificateExpiring = false;
+	public boolean checkIfExpiring(Partner pmsPartner, LocalDateTime expiryDateTime, Integer expiryPeriod,
+			boolean withinExpiryPeriod) {
+		boolean isExpiring = false;
 		LocalDate todayDate = LocalDate.now(ZoneId.of("UTC"));
 		LocalDate validTillDate = todayDate.plusDays(expiryPeriod);
 		LocalTime validTillMinTime = LocalTime.MIN;
@@ -75,13 +77,12 @@ public class PartnerCertificateExpiryHelper {
 		log.debug("validTillMaxDateTime {}", validTillMaxDateTime);
 
 		// Check if the certificate has expired
-		if (partnerCertificateExpiryDate.isAfter(validTillMinDateTime)
-				&& partnerCertificateExpiryDate.isBefore(validTillMaxDateTime)) {
-			log.debug("The certificate for partner id {}",
-					pmsPartner.getId() + "" + " is expiring after " + expiryPeriod + " days.");
-			isCertificateExpiring = true;
+		if (expiryDateTime.isAfter(validTillMinDateTime) && expiryDateTime.isBefore(validTillMaxDateTime)) {
+			log.debug("For partner id {}",
+					pmsPartner.getId() + "" + " certificate is expiring after " + expiryPeriod + " days.");
+			isExpiring = true;
 		}
-		return isCertificateExpiring;
+		return isExpiring;
 	}
 
 	public CertificateDetailsDto populateCertificateDetails(int expiryPeriod, Partner partner,
@@ -120,7 +121,7 @@ public class PartnerCertificateExpiryHelper {
 		}
 		return decodedCaSignedCert;
 	}
-	
+
 	public FtmDetailsDto populateFtmDetails(int expiryPeriod, FTPChipDetail ftpChipDetail,
 			X509Certificate expiringCertificate) {
 		FtmDetailsDto ftmDetailsDto = new FtmDetailsDto();
@@ -130,13 +131,24 @@ public class PartnerCertificateExpiryHelper {
 		ftmDetailsDto.setPartnerDomain(batchJobHelper.getPartnerDomain(PartnerConstants.FTM_PROVIDER_PARTNER_TYPE));
 		ftmDetailsDto.setPartnerId(ftpChipDetail.getFtpProviderId());
 		ftmDetailsDto.setCertificateType(PartnerConstants.FTM);
-		ftmDetailsDto.setExpiryDateTime(
-				this.getCertificateExpiryDateTime(expiringCertificate).toString());
+		ftmDetailsDto.setExpiryDateTime(this.getCertificateExpiryDateTime(expiringCertificate).toString());
 		ftmDetailsDto.setExpiryPeriod("" + expiryPeriod);
 		ftmDetailsDto.setFtmId(ftpChipDetail.getFtpChipDetailId());
 		ftmDetailsDto.setMake(ftpChipDetail.getMake());
 		ftmDetailsDto.setModel(ftpChipDetail.getModel());
 		return ftmDetailsDto;
+	}
+
+	public SbiDetailsDto populateSbiDetails(int expiryPeriod, SecureBiometricInterface sbiDetails) {
+		SbiDetailsDto sbiDetailsDto = new SbiDetailsDto();
+		sbiDetailsDto.setSbiId(sbiDetails.getId());
+		sbiDetailsDto.setSbiVersion(sbiDetails.getSwVersion());
+		sbiDetailsDto.setPartnerId(sbiDetails.getProviderId());
+		sbiDetailsDto.setExpiryDateTime(sbiDetails.getSwExpiryDateTime().toString());
+		sbiDetailsDto.setExpiryPeriod("" + expiryPeriod);
+		sbiDetailsDto.setSbiBinaryHash(sbiDetails.getSwBinaryHash().toString());
+		sbiDetailsDto.setSbiCreationDate(sbiDetails.getCrDtimes());
+		return sbiDetailsDto;
 	}
 
 }

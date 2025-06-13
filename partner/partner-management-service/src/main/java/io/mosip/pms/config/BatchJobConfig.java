@@ -16,10 +16,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import io.mosip.pms.tasklets.APIKeyExpiryTasklet;
 import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
 import io.mosip.pms.tasklets.FTMChipCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
+import io.mosip.pms.tasklets.SBIExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
 
 @Configuration
@@ -39,6 +41,12 @@ public class BatchJobConfig {
 
 	@Autowired
 	private FTMChipCertificateExpiryTasklet ftmChipCertificateExpiryTasklet;
+
+	@Autowired
+	private SBIExpiryTasklet sbiExpiryTasklet;
+
+	@Autowired
+	private APIKeyExpiryTasklet apiKeyExpiryTasklet;
 
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
@@ -66,12 +74,25 @@ public class BatchJobConfig {
 		return new StepBuilder("deletePastNotificationsStep", jobRepository)
 				.tasklet(deletePastNotificationsTasklet, transactionManager).build();
 	}
-	
+
 	@Bean
 	public Step ftmChipExpiryNotificationsStep(JobRepository jobRepository,
 			PlatformTransactionManager transactionManager) {
 		return new StepBuilder("ftmChipExpiryNotificationsStep", jobRepository)
 				.tasklet(ftmChipCertificateExpiryTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step sbiExpiryNotificationsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("sbiExpiryNotificationsStep", jobRepository)
+				.tasklet(sbiExpiryTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step apiKeyExpiryNotificationsStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
+		return new StepBuilder("apiKeyExpiryNotificationsStep", jobRepository)
+				.tasklet(apiKeyExpiryTasklet, transactionManager).build();
 	}
 
 	@Bean
@@ -101,11 +122,25 @@ public class BatchJobConfig {
 		return new JobBuilder("deletePastNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
 				.start(deletePastNotificationsStep).build();
 	}
-	
+
 	@Bean
 	public Job ftmChipExpiryNotificationsJob(JobRepository jobRepository,
 			@Qualifier("ftmChipExpiryNotificationsStep") Step ftmChipExpiryNotificationsStep) {
 		return new JobBuilder("ftmChipExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
 				.start(ftmChipExpiryNotificationsStep).build();
+	}
+
+	@Bean
+	public Job sbiExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("sbiExpiryNotificationsStep") Step sbiExpiryNotificationsStep) {
+		return new JobBuilder("sbiExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(sbiExpiryNotificationsStep).build();
+	}
+
+	@Bean
+	public Job apiKeyExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("apiKeyExpiryNotificationsStep") Step apiKeyExpiryNotificationsStep) {
+		return new JobBuilder("apiKeyExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(apiKeyExpiryNotificationsStep).build();
 	}
 }

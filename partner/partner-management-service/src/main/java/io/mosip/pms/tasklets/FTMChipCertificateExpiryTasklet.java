@@ -83,7 +83,8 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 		int countOfPartnersWithInvalidCerts = 0;
 		try {
 			// Step 1: Get all FTM Providers which are Active and Approved
-			List<Partner> ftmProvidersList = batchJobHelper.getAllActiveAndApprovedFtmProviders();
+			List<Partner> ftmProvidersList = batchJobHelper
+					.getAllActiveAndApprovedPartners(PartnerConstants.FTM_PROVIDER_PARTNER_TYPE);
 			ftmProvidersCount = ftmProvidersList.size();
 			log.info("PMS has {} FTM Providers which are Active and Approved.", ftmProvidersCount);
 			// Step 2: For each FTM Provider get all the FTM chips which are Active and
@@ -94,7 +95,7 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 				String ftmProviderId = ftmProvider.getId();
 				log.info("Fetching all the FTM chips for the FTM provider id {}", ftmProviderId);
 				List<FTPChipDetail> ftpChipDetailList = ftpChipDetailRepository
-						.findAllActiveAndApprovedFtmChipDetailsByProviderId(ftmProviderId);
+						.findAllActiveAndApprovedByProviderId(ftmProviderId);
 				int ftmChipDetailsCount = ftpChipDetailList.size();
 				log.info("Found {} FTM chip details which are Active and Approved.", ftmChipDetailsCount);
 				for (FTPChipDetail ftpChipDetail : ftpChipDetailList) {
@@ -109,8 +110,8 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 							LocalDateTime ftmChipCertificateExpiryDate = partnerCertificateExpiryHelper
 									.getCertificateExpiryDateTime(decodedFtmCert);
 							log.info("The FTM chip certificate expiry date is {}", ftmChipCertificateExpiryDate);
-							boolean isExpiringWithin30Days = partnerCertificateExpiryHelper
-									.checkIfCertificateIsExpiring(ftmProvider, ftmChipCertificateExpiryDate, 30, true);
+							boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(ftmProvider,
+									ftmChipCertificateExpiryDate, 30, true);
 							if (isExpiringWithin30Days) {
 								countOfCertsExpiringWithin30Days++;
 								log.info("FTM chip certificate is expiring for FTM provider id {}",
@@ -123,20 +124,20 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 									log.info("Checking for FTM chip certificate expiry after " + expiryPeriod
 											+ " days.");
 									boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
-											.checkIfCertificateIsExpiring(ftmProvider, ftmChipCertificateExpiryDate,
-													expiryPeriod, false);
+											.checkIfExpiring(ftmProvider, ftmChipCertificateExpiryDate, expiryPeriod,
+													false);
 									// Step 5: If yes, add the notification
 									if (isExpiringAfterExpiryPeriod) {
 										List<FtmDetailsDto> expiringFtmList = new ArrayList<FtmDetailsDto>();
-										FtmDetailsDto ftmDetailsDto = partnerCertificateExpiryHelper.populateFtmDetails(expiryPeriod, ftpChipDetail,
-												decodedFtmCert);
+										FtmDetailsDto ftmDetailsDto = partnerCertificateExpiryHelper
+												.populateFtmDetails(expiryPeriod, ftpChipDetail, decodedFtmCert);
 										expiringFtmList.add(ftmDetailsDto);
 										// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 										String decryptedEmailId = keyManagerHelper
 												.decryptData(ftmProvider.getEmailId());
 										NotificationEntity savedNotification = batchJobHelper.saveNotification(
-												PartnerConstants.FTM_CHIP_CERT_EXPIRY, ftmProvider, null,
-												expiringFtmList, decryptedEmailId);
+												PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE, ftmProvider,
+												null, expiringFtmList, null, null, decryptedEmailId);
 										// Step 6: send email notification
 										emailNotificationService.sendEmailNotification(savedNotification,
 												decryptedEmailId);
@@ -184,5 +185,4 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 		return RepeatStatus.FINISHED;
 	}
 
-	
 }
