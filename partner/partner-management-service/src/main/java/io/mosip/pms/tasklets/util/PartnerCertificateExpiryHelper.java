@@ -147,7 +147,7 @@ public class PartnerCertificateExpiryHelper {
 		sbiDetailsDto.setExpiryDateTime(sbiDetails.getSwExpiryDateTime().toString());
 		sbiDetailsDto.setExpiryPeriod("" + expiryPeriod);
 		sbiDetailsDto.setSbiBinaryHash(sbiDetails.getSwBinaryHash().toString());
-		sbiDetailsDto.setSbiCreationDate(sbiDetails.getCrDtimes());
+		sbiDetailsDto.setSbiCreationDate(sbiDetails.getCrDtimes().toString());
 		return sbiDetailsDto;
 	}
 

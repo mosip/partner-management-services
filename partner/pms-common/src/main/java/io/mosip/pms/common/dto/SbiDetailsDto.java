@@ -2,8 +2,6 @@ package io.mosip.pms.common.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class SbiDetailsDto {
     private String sbiId;
@@ -12,5 +10,5 @@ public class SbiDetailsDto {
     private String expiryDateTime;
     private String expiryPeriod;
     private String sbiBinaryHash;
-    private LocalDateTime sbiCreationDate;
+    private String sbiCreationDate;
 }
