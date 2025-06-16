@@ -6,7 +6,6 @@ import lombok.Data;
 public class ApiKeyDetailsDto {
     private String apiKeyName;
     private String partnerId;
-    private String partnerDomain;
     private String expiryDateTime;
     private String expiryPeriod;
     private String policyGroup;

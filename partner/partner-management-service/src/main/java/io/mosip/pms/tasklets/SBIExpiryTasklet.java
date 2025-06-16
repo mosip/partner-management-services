@@ -100,7 +100,7 @@ public class SBIExpiryTasklet implements Tasklet {
 							countOfSbiExpiringWithin30Days++;
 							log.info("SBI is expiring for device provider id {}",
 									deviceProviderId + " during the next 30 days.");
-							// Step 4: Check if the certificate is expiring after 30 days, 15 days, 10 days,
+							// Step 4: Check if the SBI is expiring after 30 days, 15 days, 10 days,
 							// 9 days and so on, if yes create notifications
 							Iterator<Integer> expiryPeriodsIterator = sbiExpiryPeriods.iterator();
 							while (expiryPeriodsIterator.hasNext()) {

@@ -173,7 +173,7 @@ public class EmailNotificationService {
 				if (apiKey != null) {
 					context.put("apiKeyName", apiKey.getApiKeyName());
 					context.put("partnerId", notificationEntity.getPartnerId());
-					context.put("partnerDomain", apiKey.getPartnerDomain());
+					context.put("partnerDomain", "AUTH");
 					context.put("expiryDateTime", formatDateTime(apiKey.getExpiryDateTime()));
 					context.put("expiryPeriod", apiKey.getExpiryPeriod());
 					context.put("policyGroup", apiKey.getPolicyGroup());

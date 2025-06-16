@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.SbiDetailsDto;
+import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.exception.ApiAccessibleException;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
@@ -45,6 +50,9 @@ public class PartnerCertificateExpiryHelper {
 
 	@Autowired
 	PartnerHelper partnerHelper;
+
+	@Autowired
+	AuthPolicyRepository authPolicyRepository;
 
 	public X509Certificate getDecodedCertificate(Partner pmsPartner) {
 		X509Certificate decodedPartnerCertificate = null;
@@ -79,7 +87,7 @@ public class PartnerCertificateExpiryHelper {
 		// Check if the certificate has expired
 		if (expiryDateTime.isAfter(validTillMinDateTime) && expiryDateTime.isBefore(validTillMaxDateTime)) {
 			log.debug("For partner id {}",
-					pmsPartner.getId() + "" + " certificate is expiring after " + expiryPeriod + " days.");
+					pmsPartner.getId() + "" + ", it is expiring after " + expiryPeriod + " days.");
 			isExpiring = true;
 		}
 		return isExpiring;
@@ -149,6 +157,26 @@ public class PartnerCertificateExpiryHelper {
 		sbiDetailsDto.setSbiBinaryHash(sbiDetails.getSwBinaryHash().toString());
 		sbiDetailsDto.setSbiCreationDate(sbiDetails.getCrDtimes().toString());
 		return sbiDetailsDto;
+	}
+
+	public ApiKeyDetailsDto populateApiKeyDetails(int expiryPeriod, PartnerPolicy apiKeyDetails) {
+		ApiKeyDetailsDto apiKeyDetailsDto = new ApiKeyDetailsDto();
+		apiKeyDetailsDto.setApiKeyName(apiKeyDetails.getLabel());
+		apiKeyDetailsDto.setExpiryDateTime(apiKeyDetails.getValidToDatetime().toLocalDateTime().toString());
+		apiKeyDetailsDto.setPartnerId(apiKeyDetails.getPartner().getId());
+		apiKeyDetailsDto.setExpiryPeriod("" + expiryPeriod);
+		//Fetch the policy name and policy group name
+		List<String> policyIdList = new ArrayList<String>();
+		policyIdList.add(apiKeyDetails.getPolicyId());
+		List<AuthPolicy> authPolicies = authPolicyRepository.findAllByPolicyIds(policyIdList);
+		if (authPolicies != null && authPolicies.size() > 0) {
+			AuthPolicy authPolicy = authPolicies.get(0);
+			String policyName = authPolicy.getName();
+			String policyGroupName = authPolicy.getPolicyGroup().getName();
+			apiKeyDetailsDto.setPolicyGroup(policyGroupName);
+			apiKeyDetailsDto.setPolicyName(policyName);
+		}
+		return apiKeyDetailsDto;
 	}
 
 }
