@@ -17,11 +17,14 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
+import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
+import io.mosip.pms.common.repository.PartnerPolicyRepository;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
@@ -69,6 +72,9 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 	@Autowired
 	SecureBiometricInterfaceRepository sbiRepository;
 
+	@Autowired
+	PartnerPolicyRepository partnerPolicyRepository;
+
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
 		log.info("WeeklyNotificationsTasklet: START");
@@ -87,11 +93,12 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates = getListofExpiringFtmCertificates();
 			// Step 4: Get the list of all SBI details expiring this week
 			List<SecureBiometricInterface> expiringSbiDetails = getListofExpiringSbi();
-
-			// Step 5: Create a weekly notification for all the partner admin users
+			// Step 5: Get the list of all API Keys expiring this week
+			List<PartnerPolicy> expiringApiKeys = getListofExpiringApiKeys();
+			// Step 6: Create a weekly notification for all the partner admin users
 			log.info("Creating weekly summary notifications");
 			createdNotificationIds = createWeeklySummaryNotifications(pmsPartnerAdmins, expiringPartnerCertificates,
-					expiringFtmCertificates, expiringSbiDetails);
+					expiringFtmCertificates, expiringSbiDetails, expiringApiKeys);
 
 		} catch (Exception e) {
 			log.error("Error occurred while running WeeklyNotificationsTasklet: {}", e.getMessage(), e);
@@ -232,6 +239,42 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 		return listofExpiringSbi;
 	}
 
+	private List<PartnerPolicy> getListofExpiringApiKeys() {
+		log.info("WeeklyNotificationsTasklet: getListofExpiringApiKeys(): START");
+
+		List<PartnerPolicy> listofExpiringApiKeys = new ArrayList<PartnerPolicy>();
+		// Step 1: Get all Auth Partners which are Active and Approved
+		List<Partner> authPartnersList = batchJobHelper
+				.getAllActiveAndApprovedPartners(PartnerConstants.AUTH_PARTNER_TYPE);
+		int authPartnersCount = authPartnersList.size();
+		log.info("PMS has {} Device Providers which are Active and Approved.", authPartnersCount);
+		// Step 2: For each Auth Partners get all the API Keys which are Active
+		Iterator<Partner> authPartnersListIterator = authPartnersList.iterator();
+		while (authPartnersListIterator.hasNext()) {
+			Partner authPartner = authPartnersListIterator.next();
+			String authPartnerId = authPartner.getId();
+			log.info("Fetching all the API Keys for the auth partner id {}", authPartnerId);
+			List<PartnerPolicy> apiKeyList = partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(authPartnerId);
+			int apiKeysCount = apiKeyList.size();
+			log.info("Found {} API Keys which are Active.", apiKeysCount);
+			for (PartnerPolicy apiKeyDetails : apiKeyList) {
+				// Step 3: For each API Key check if it is expiring or not
+				if (apiKeyDetails.getValidToDatetime() != null) {
+					LocalDateTime apiKeyExpiryDateTime = apiKeyDetails.getValidToDatetime().toLocalDateTime();
+					log.info("The API Key expiry date is {}", apiKeyExpiryDateTime);
+					boolean isExpiring = partnerCertificateExpiryHelper.checkIfExpiring(authPartner,
+							apiKeyExpiryDateTime, 7, true);
+					if (isExpiring) {
+						listofExpiringApiKeys.add(apiKeyDetails);
+					}
+				}
+			}
+		}
+		log.info("Checked API Key expiry for " + authPartnersCount + " partners");
+		log.info("Found {} API Keys expiring in next 7 days. ", listofExpiringApiKeys.size());
+		return listofExpiringApiKeys;
+	}
+
 	private boolean checkIfCertIsExpiringThisWeek(Partner pmsPartner, X509Certificate decodedPartnerCertificate) {
 		// Check if the certificate is expiring within 7 days
 		log.info("Checking if certificate is expiring within next 7 days.");
@@ -253,12 +296,14 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 	 */
 	private List<String> createWeeklySummaryNotifications(List<Partner> pmsPartnerAdmins,
 			Map<Partner, X509Certificate> expiringPartnerCertificates,
-			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates, List<SecureBiometricInterface> expiringSbi) {
+			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates, List<SecureBiometricInterface> expiringSbi,
+			List<PartnerPolicy> expiringApiKeys) {
 
 		List<String> createdNotificationIds = new ArrayList<String>();
 		List<CertificateDetailsDto> certificateDetailsList = new ArrayList<CertificateDetailsDto>();
 		List<FtmDetailsDto> ftmDetailsList = new ArrayList<FtmDetailsDto>();
 		List<SbiDetailsDto> sbiDetailsList = new ArrayList<SbiDetailsDto>();
+		List<ApiKeyDetailsDto> apiKeyDetailsList = new ArrayList<ApiKeyDetailsDto>();
 
 		if (expiringPartnerCertificates.size() > 0) {
 			expiringPartnerCertificates.forEach((partnerWithExpiringCert, decodedPartnerCertificate) -> {
@@ -288,18 +333,31 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 			});
 		}
 
-		Iterator<Partner> pmsPartnerAdminsIterator = pmsPartnerAdmins.iterator();
-		while (pmsPartnerAdminsIterator.hasNext()) {
-			Partner pmsPartnerAdmin = pmsPartnerAdminsIterator.next();
-			// Decrypt the email ID if it's already encrypted to avoid encrypting it again
-			String decryptedEmailId = keyManagerHelper.decryptData(pmsPartnerAdmin.getEmailId());
-			NotificationEntity savedNotification = batchJobHelper.saveNotification(
-					PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE, pmsPartnerAdmin, certificateDetailsList,
-					ftmDetailsList, sbiDetailsList, null, decryptedEmailId);
-			// Step 6: send email notification
-			emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
-			log.info("Created weekly summary notification with notification id " + savedNotification.getId());
-			createdNotificationIds.add(savedNotification.getId());
+		if (expiringApiKeys.size() > 0) {
+			expiringApiKeys.forEach((apiKeyDetails) -> {
+				log.info("Weekly Summary - adding API key details for auth partner id {}",
+						apiKeyDetails.getPartner().getId());
+				ApiKeyDetailsDto apiKeyDetailsDto = partnerCertificateExpiryHelper.populateApiKeyDetails(7,
+						apiKeyDetails);
+				apiKeyDetailsList.add(apiKeyDetailsDto);
+			});
+		}
+
+		if (certificateDetailsList.size() > 0 || ftmDetailsList.size() > 0 || sbiDetailsList.size() > 0
+				|| expiringApiKeys.size() > 0) {
+			Iterator<Partner> pmsPartnerAdminsIterator = pmsPartnerAdmins.iterator();
+			while (pmsPartnerAdminsIterator.hasNext()) {
+				Partner pmsPartnerAdmin = pmsPartnerAdminsIterator.next();
+				// Decrypt the email ID if it's already encrypted to avoid encrypting it again
+				String decryptedEmailId = keyManagerHelper.decryptData(pmsPartnerAdmin.getEmailId());
+				NotificationEntity savedNotification = batchJobHelper.saveNotification(
+						PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE, pmsPartnerAdmin, certificateDetailsList,
+						ftmDetailsList, sbiDetailsList, apiKeyDetailsList, decryptedEmailId);
+				// Step 6: send email notification
+				emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
+				log.info("Created weekly summary notification with notification id " + savedNotification.getId());
+				createdNotificationIds.add(savedNotification.getId());
+			}
 		}
 		return createdNotificationIds;
 

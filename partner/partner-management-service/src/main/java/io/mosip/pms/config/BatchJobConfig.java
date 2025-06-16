@@ -16,12 +16,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import io.mosip.pms.tasklets.APIKeyExpiryTasklet;
+import io.mosip.pms.tasklets.ApiKeyExpiryTasklet;
 import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
 import io.mosip.pms.tasklets.FTMChipCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
-import io.mosip.pms.tasklets.SBIExpiryTasklet;
+import io.mosip.pms.tasklets.SbiExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
 
 @Configuration
@@ -43,10 +43,10 @@ public class BatchJobConfig {
 	private FTMChipCertificateExpiryTasklet ftmChipCertificateExpiryTasklet;
 
 	@Autowired
-	private SBIExpiryTasklet sbiExpiryTasklet;
+	private SbiExpiryTasklet sbiExpiryTasklet;
 
 	@Autowired
-	private APIKeyExpiryTasklet apiKeyExpiryTasklet;
+	private ApiKeyExpiryTasklet apiKeyExpiryTasklet;
 
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,

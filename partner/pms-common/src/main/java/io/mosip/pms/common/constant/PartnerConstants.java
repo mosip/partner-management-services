@@ -92,6 +92,8 @@ public final class PartnerConstants {
 	
 	public static final String FTM_PROVIDER_PARTNER_TYPE = "FTM_Provider";
 	
+	public static final String AUTH_PARTNER_TYPE = "Auth_Partner";
+	
 	public static final String PARTNER_DOMAIN_AUTH = "AUTH";
 
 	public static final String PARTNER_DOMAIN_FTM = "FTM";
