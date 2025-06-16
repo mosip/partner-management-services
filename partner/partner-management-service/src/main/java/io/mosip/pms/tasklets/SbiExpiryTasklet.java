@@ -36,9 +36,9 @@ import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
  * @since 1.3.x
  */
 @Component
-public class SBIExpiryTasklet implements Tasklet {
+public class SbiExpiryTasklet implements Tasklet {
 
-	private Logger log = PMSLogger.getLogger(SBIExpiryTasklet.class);
+	private Logger log = PMSLogger.getLogger(SbiExpiryTasklet.class);
 
 	@Value("#{'${mosip.pms.batch.job.sbi.expiry.periods}'.split(',')}")
 	private List<Integer> sbiExpiryPeriods;
@@ -66,7 +66,7 @@ public class SBIExpiryTasklet implements Tasklet {
 
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-		log.info("SBIExpiryTasklet: START");
+		log.info("SbiExpiryTasklet: START");
 		List<String> totalNotificationsCreated = new ArrayList<String>();
 		int deviceProvidersCount = 0;
 		int countOfSbiExpiringWithin30Days = 0;
@@ -138,11 +138,11 @@ public class SBIExpiryTasklet implements Tasklet {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Error occurred while running SBIExpiryTasklet: {}", e.getMessage(), e);
+			log.error("Error occurred while running SbiExpiryTasklet: {}", e.getMessage(), e);
 		}
 		log.info("Overall found " + countOfSbiExpiringWithin30Days
 				+ " SBIs which are expiring during the next 30 days. But notifications will only be created as per the configured expiry days.");
-		log.info("SBIExpiryTasklet: DONE, created {}", totalNotificationsCreated.size() + " notifications."
+		log.info("SbiExpiryTasklet: DONE, created {}", totalNotificationsCreated.size() + " notifications."
 				+ " Checked SBI expiry for " + deviceProvidersCount + " device providers.");
 		totalNotificationsCreated.forEach(notificationId -> {
 			log.info(notificationId);
