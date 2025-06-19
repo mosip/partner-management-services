@@ -524,19 +524,18 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				if (status.equals(DeviceConstant.APPROVED)) {
 					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
 							ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
-				} else {
-					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorCode(),
-							ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorMessage());
 				}
 			}
 			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
-
-			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
-			if (Objects.isNull(deviceDetailSBI)) {
-				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
-				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
-						ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, Objects.isNull(sbiId));
+			DeviceDetailSBI deviceDetailSBI = null;
+			if (Objects.nonNull(sbiId)) {
+				deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
+				if (Objects.isNull(deviceDetailSBI)) {
+					LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+					throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
+							ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
+				}
 			}
 
 			UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
@@ -547,12 +546,13 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				deviceDetails.setApprovalStatus(DeviceConstant.APPROVE);
 			}
 			updateDeviceStatus(deviceDetails);
-
-			deviceDetailSBI.setIsActive(true);
-			deviceDetailSBI.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			deviceDetailSBI.setUpdBy(getUserId());
-			deviceDetailSbiRepository.save(deviceDetailSBI);
-			LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
+			if (Objects.nonNull(deviceDetailSBI)) {
+				deviceDetailSBI.setIsActive(true);
+				deviceDetailSBI.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+				deviceDetailSBI.setUpdBy(getUserId());
+				deviceDetailSbiRepository.save(deviceDetailSBI);
+				LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
+			}
 			responseWrapper.setResponse(true);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In approveOrRejectMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
