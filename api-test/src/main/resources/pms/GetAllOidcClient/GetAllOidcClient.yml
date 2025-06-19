@@ -5,6 +5,7 @@ GetAllOidcClient:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllOidcClient_01
       checkErrorsOnlyInResponse: true
+      allowedErrorCodes: PMS_CERTIFICATE_ERROR_002,PMS_FEATURE_002
       restMethod: get
       inputTemplate: pms/GetAllOidcClient/getAllOidcClient
       outputTemplate: pms/GetAllOidcClient/getAllOidcClientResult

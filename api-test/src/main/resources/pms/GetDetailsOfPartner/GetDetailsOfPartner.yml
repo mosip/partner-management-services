@@ -103,7 +103,7 @@ GetDetailsOfPartner:
    Pms_GetDetailsOfPartner_without_admin_role_Neg:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Fetching all the details of the Partner Id
-      role: idrepo
+      role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
