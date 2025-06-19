@@ -813,7 +813,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		}
 
 		// validate sbi and device mapping
-		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
+		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, false);
 
 		DeviceDetailSBI entity = new DeviceDetailSBI();
 
