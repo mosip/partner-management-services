@@ -1,20 +1,5 @@
 package io.mosip.pms.partner.service.impl;
 
-import static io.mosip.pms.common.constant.PartnerConstants.API_KEY;
-import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP;
-import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE;
-import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE;
-import static io.mosip.pms.common.constant.PartnerConstants.PARTNER;
-import static io.mosip.pms.common.constant.PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE;
-import static io.mosip.pms.common.constant.PartnerConstants.ROOT;
-import static io.mosip.pms.common.constant.PartnerConstants.ROOT_CERT_EXPIRY;
-import static io.mosip.pms.common.constant.PartnerConstants.SBI;
-import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
-import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE;
-import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE;
-import static io.mosip.pms.common.constant.PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE;
-import static io.mosip.pms.common.constant.PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,6 +42,8 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+
+import static io.mosip.pms.common.constant.PartnerConstants.*;
 
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
@@ -110,19 +97,7 @@ public class NotificationsServiceImpl implements NotificationsService {
 				validateDate(filterDto.getCreatedToDate(), "createdToDate");
 			}
 			if (filterDto.getNotificationType() != null) {
-				String filterNotificationType = filterDto.getNotificationType();
-
-				// Validate notificationType access for non-admin users
-				if (!isPartnerAdmin && !filterNotificationType.isBlank()
-						&& validateNotificationTypeForPartner(filterNotificationType)) {
-					throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
-							ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
-				}
-				if ((Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()))
-						&& !filterNotificationType.equals(WEEKLY)) {
-					throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorCode(),
-							ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorMessage());
-				}
+				validateNotificationsFilter(filterDto, isPartnerAdmin);
 			} else {
 				if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy())
 						|| Objects.nonNull(filterDto.getIssuedTo()) || Objects.nonNull(filterDto.getExpiryDate())
@@ -184,6 +159,48 @@ public class NotificationsServiceImpl implements NotificationsService {
 		responseWrapper.setId(getNotificationsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private void validateNotificationsFilter(NotificationsFilterDto filterDto, boolean isPartnerAdmin) {
+		String notificationType = filterDto.getNotificationType();
+		// Validate notificationType access for non-admin users
+		if (!isPartnerAdmin && !notificationType.isBlank()
+				&& validateNotificationTypeForPartner(notificationType)) {
+			throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
+					ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+		}
+		// validate createdFromdate and createdTodate fields
+		if ((Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()))
+				&& !notificationType.equals(WEEKLY)) {
+			throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorCode(),
+					ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorMessage());
+		}
+		// validate expiryDate field
+		if (notificationType.equals(WEEKLY) && Objects.nonNull(filterDto.getExpiryDate())) {
+			throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER.getErrorCode(),
+					ErrorCode.WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER.getErrorMessage());
+		}
+		// validate certificateId, issuedBy, issuedTo and partnerDomain
+		if ((Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) || Objects.nonNull(filterDto.getPartnerDomain()))
+				&& (!notificationType.equals(ROOT) && !notificationType.equals(INTERMEDIATE) && !notificationType.equals(PARTNER))) {
+			throw new PartnerServiceException(ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorCode(),
+					ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorMessage());
+		}
+		// validate apiKeyName and policyName
+		if ((Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName())) && (!notificationType.equals(API_KEY))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorMessage());
+		}
+		// validate make, model and ftmId
+		if ((Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel()) || Objects.nonNull(filterDto.getFtmId())) && (!notificationType.equals(FTM_CHIP))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_FTM_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_FTM_FILTER.getErrorMessage());
+		}
+		// validate sbiId and sbiVersion
+		if ((Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) && (!notificationType.equals(SBI))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorMessage());
+		}
 	}
 
 	public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable,
