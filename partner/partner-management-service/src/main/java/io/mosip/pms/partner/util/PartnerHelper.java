@@ -101,6 +101,7 @@ public class PartnerHelper {
         apiKeyAliasToColumnMap.put("policyGroupName", "pg.name");
         apiKeyAliasToColumnMap.put("status", "isActive");
         apiKeyAliasToColumnMap.put("createdDateTime", "createdDateTime");
+        apiKeyAliasToColumnMap.put("apiKeyExpiryDateTime", "validToDatetime");
     }
 
     public final Map<String, String> ftmAliasToColumnMap = new HashMap<>();
