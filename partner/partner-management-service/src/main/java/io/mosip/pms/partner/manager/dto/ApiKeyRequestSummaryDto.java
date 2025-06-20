@@ -41,4 +41,7 @@ public class ApiKeyRequestSummaryDto {
     @Schema(description = "Date and time when the API key was created", example = "2024-08-01T14:30:00Z")
     private Date createdDateTime;
 
+    @Schema(description = "Date and time when the API key expires", example = "2024-08-01T14:30:00Z")
+    private Date apiKeyExpiryDateTime;
+
 }
