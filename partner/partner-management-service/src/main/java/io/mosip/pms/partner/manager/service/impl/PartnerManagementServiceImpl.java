@@ -1007,9 +1007,18 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto) {
-		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		return getApiKeyRequestsGeneric(sortFieldName, sortType, pageNo, pageSize, filterDto, ApiKeyRequestSummaryDto.class);
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> getAllApiKeyRequestsV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto) {
+		return getApiKeyRequestsGeneric(sortFieldName, sortType, pageNo, pageSize, filterDto, ApiKeyRequestSummaryV2Dto.class);
+	}
+
+	private <D> ResponseWrapperV2<PageResponseV2Dto<D>> getApiKeyRequestsGeneric(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto, Class<D> dtoClass) {
+		ResponseWrapperV2<PageResponseV2Dto<D>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			PageResponseV2Dto<ApiKeyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			PageResponseV2Dto<D> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
@@ -1023,10 +1032,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				}
 				partnerIdList = new ArrayList<>();
 				for (Partner partner : partnerList) {
-						partnerHelper.validatePartnerId(partner, userId);
-						partnerHelper.validatePolicyGroupId(partner, userId);
-						partnerHelper.validatePolicyGroup(partner);
-						partnerIdList.add(partner.getId());
+					partnerHelper.validatePartnerId(partner, userId);
+					partnerHelper.validatePolicyGroupId(partner, userId);
+					partnerHelper.validatePolicyGroup(partner);
+					partnerIdList.add(partner.getId());
 				}
 			}
 
@@ -1062,11 +1071,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			);
 
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<ApiKeyRequestSummaryDto> partnerPolicyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), ApiKeyRequestSummaryDto.class);
+				List<D> apiKeyRequestSummaryDtoList = MapperUtils.mapAll(page.getContent(), dtoClass);
 				pageResponseV2Dto.setPageNo(page.getNumber());
 				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
-				pageResponseV2Dto.setData(partnerPolicyRequestSummaryDtoList);
+				pageResponseV2Dto.setData(apiKeyRequestSummaryDtoList);
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {

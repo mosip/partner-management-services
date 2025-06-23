@@ -421,30 +421,57 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
-		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
-		if (partnerId != null) {
-			filterDto.setPartnerId(partnerId.toLowerCase());
-		}
-		if (apiKeyLabel != null) {
-			filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
-		}
-		if (orgName != null) {
-			filterDto.setOrgName(orgName.toLowerCase());
-		}
-		if (status != null) {
-			filterDto.setStatus(status);
-		}
-		if (policyName != null) {
-			filterDto.setPolicyName(policyName.toLowerCase());
-		}
-		if (policyGroupName != null) {
-			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
-		}
-		if (expiryPeriod != null) {
-			filterDto.setExpiryPeriod(expiryPeriod);
-		}
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
+	@GetMapping(value = "/v2/partner-api-keys")
+	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners.",
+			description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> getAllApiKeyRequestsV2(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@Parameter(
+					description = "Status of request",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"activated", "deactivated"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyName", required = false) String policyName,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod
+	) {
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
+		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	private ApiKeyFilterDto populateApiKeyFilterDto(String partnerId, String apiKeyLabel, String orgName, String status,
+													String policyName, String policyGroupName, Integer expiryPeriod) {
+		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
+		if (partnerId != null) filterDto.setPartnerId(partnerId.toLowerCase());
+		if (apiKeyLabel != null) filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
+		if (orgName != null) filterDto.setOrgName(orgName.toLowerCase());
+		if (status != null) filterDto.setStatus(status);
+		if (policyName != null) filterDto.setPolicyName(policyName.toLowerCase());
+		if (policyGroupName != null) filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		if (expiryPeriod != null) filterDto.setExpiryPeriod(expiryPeriod);
+		return filterDto;
+	}
+
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGettrustcertificates())")
 	@GetMapping(value = "/trust-chain-certificates")
