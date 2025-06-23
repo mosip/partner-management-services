@@ -3,6 +3,7 @@ package io.mosip.pms.tasklets;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import io.mosip.pms.common.repository.PartnerServiceRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -32,6 +33,9 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
     PartnerPolicyRepository partnerPolicyRepository;
 
     @Autowired
+    PartnerServiceRepository partnerServiceRepository;
+
+    @Autowired
     BatchJobHelper batchJobHelper;
 
     @Autowired
@@ -45,8 +49,8 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
         log.info("ApiKeyAutoDeactivationTasklet: START");
         int deactivatedCount = 0;
         try {
-            // Get all Auth Partners that are Active and Approved
-            List<Partner> authPartnersList = batchJobHelper.getAllActiveAndApprovedPartners(PartnerConstants.AUTH_PARTNER_TYPE);
+            // Get all Auth Partners
+            List<Partner> authPartnersList = partnerServiceRepository.findByPartnerTypeCode(PartnerConstants.AUTH_PARTNER_TYPE);
             for (Partner authPartner : authPartnersList) {
                 String authPartnerId = authPartner.getId();
                 List<PartnerPolicy> apiKeyList = partnerPolicyRepository.findByPartnerIdAndIsActiveTrue(authPartnerId);
