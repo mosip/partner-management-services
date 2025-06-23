@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-
 import io.mosip.pms.tasklets.ApiKeyExpiryTasklet;
 import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
 import io.mosip.pms.tasklets.FTMChipCertificateExpiryTasklet;
@@ -23,6 +22,7 @@ import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.SbiExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
+import io.mosip.pms.tasklets.ApiKeyAutoDeactivationTasklet;
 
 @Configuration
 public class BatchJobConfig {
@@ -44,6 +44,9 @@ public class BatchJobConfig {
 
 	@Autowired
 	private SbiExpiryTasklet sbiExpiryTasklet;
+
+	@Autowired
+	private ApiKeyAutoDeactivationTasklet apiKeyAutoDeactivationTasklet;
 
 	@Autowired
 	private ApiKeyExpiryTasklet apiKeyExpiryTasklet;
@@ -96,6 +99,12 @@ public class BatchJobConfig {
 	}
 
 	@Bean
+	public Step apiKeyAutoDeactivationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("apiKeyAutoDeactivationStep", jobRepository)
+				.tasklet(apiKeyAutoDeactivationTasklet, transactionManager).build();
+	}
+
+	@Bean
 	public Job rootAndIntermediateCertificateExpiryJob(JobRepository jobRepository,
 			@Qualifier("rootAndIntermediateCertificateExpiryStep") Step rootAndIntermediateCertificateExpiryStep) {
 		return new JobBuilder("rootAndIntermediateCertificateExpiryJob", jobRepository)
@@ -142,5 +151,14 @@ public class BatchJobConfig {
 			@Qualifier("apiKeyExpiryNotificationsStep") Step apiKeyExpiryNotificationsStep) {
 		return new JobBuilder("apiKeyExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
 				.start(apiKeyExpiryNotificationsStep).build();
+	}
+
+	@Bean
+	public Job apiKeyAutoDeactivationJob(JobRepository jobRepository,
+			@Qualifier("apiKeyAutoDeactivationStep") Step apiKeyAutoDeactivationStep) {
+		return new JobBuilder("apiKeyAutoDeactivationJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(apiKeyAutoDeactivationStep)
+				.build();
 	}
 }
