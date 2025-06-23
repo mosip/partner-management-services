@@ -1007,15 +1007,15 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto) {
-		return getApiKeyRequestsGeneric(sortFieldName, sortType, pageNo, pageSize, filterDto, ApiKeyRequestSummaryDto.class);
+		return getApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto, ApiKeyRequestSummaryDto.class);
 	}
 
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> getAllApiKeyRequestsV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto) {
-		return getApiKeyRequestsGeneric(sortFieldName, sortType, pageNo, pageSize, filterDto, ApiKeyRequestSummaryV2Dto.class);
+		return getApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto, ApiKeyRequestSummaryV2Dto.class);
 	}
 
-	private <D> ResponseWrapperV2<PageResponseV2Dto<D>> getApiKeyRequestsGeneric(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto, Class<D> dtoClass) {
+	private <D> ResponseWrapperV2<PageResponseV2Dto<D>> getApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto, Class<D> dtoClass) {
 		ResponseWrapperV2<PageResponseV2Dto<D>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<D> pageResponseV2Dto = new PageResponseV2Dto<>();
