@@ -14,7 +14,7 @@ public class PMSRevampConfigManger extends ConfigManager{
 	
 	public static void init() {
 		Logger configManagerLogger = Logger.getLogger(ConfigManager.class);
-//		configManagerLogger.setLevel(Level.WARN);
+		configManagerLogger.setLevel(Level.WARN);
 		
 		Map<String, Object> moduleSpecificPropertiesMap = new HashMap<>();
 		// Load scope specific properties

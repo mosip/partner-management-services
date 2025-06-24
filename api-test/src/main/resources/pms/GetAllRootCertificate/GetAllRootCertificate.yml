@@ -4,7 +4,6 @@ GetAllRootCertificate:
       description: Fetching all the root certificates of the Logged in Partner
       role: partneradmin
       restMethod: get
-      allowedErrorCodes: ROOT,PMS_FEATURE_001
       inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
       outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
       input: '{

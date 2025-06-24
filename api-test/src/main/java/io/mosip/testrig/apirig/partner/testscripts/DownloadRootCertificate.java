@@ -27,6 +27,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.testrunner.JsonPrecondtion;
@@ -97,33 +98,43 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		
 		
 		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
-				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
+				"partneradmin", testCaseDTO.getTestCaseName());
+		if (response != null
+				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
+						|| response.asString().contains("PMS_FEATURE_003"))) {
+			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
+
+		}
 		String responseBody = response.getBody().asString();
 		JSONObject jsonObject = new JSONObject(responseBody);
 		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
 
-		String certId = ""; 
+		String certId = "";
 
 		if (dataArray.length() > 0) {
-		    JSONObject firstDataObject = dataArray.getJSONObject(0);
-		    certId = firstDataObject.getString("certId");
-		    System.out.println("First certId: " + certId);
+			JSONObject firstDataObject = dataArray.getJSONObject(0);
+			certId = firstDataObject.getString("certId");
+			System.out.println("First certId: " + certId);
 		} else {
-		    System.out.println("No data available.");
+			System.out.println("No data available.");
 		}
 
 		if (certId != null) {
-		    System.out.println("Using certId in another place: " + certId);
+			System.out.println("Using certId in another place: " + certId);
 		}
-		String url="/v1/partnermanager/trust-chain-certificates/"+certId+"/certificateFile";
-		
+		String url = "/v1/partnermanager/trust-chain-certificates/" + certId + "/certificateFile";
+
 		response = getWithPathParamAndCookie(ApplnURI + url,
-				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
-		
-		
-		
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
+				"partneradmin", testCaseDTO.getTestCaseName());
+		if (response != null
+				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
+						|| response.asString().contains("PMS_FEATURE_003"))) {
+			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
+
+		}
+
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 		if (testCaseName.contains("_StatusCode")) {
 

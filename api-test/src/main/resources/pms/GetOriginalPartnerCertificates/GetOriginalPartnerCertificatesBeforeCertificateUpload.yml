@@ -4,7 +4,7 @@ GetOriginalPartnerCertificates:
       uniqueIdentifier: TC_PMS_getPartner_certificate_08      
       description: Get original Auth partner certificates before certificate upload    
       role: partnerauth
-      allowedErrorCodes: PMS_PRT_108,PMS_FEATURE_003
+      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error

@@ -45,7 +45,6 @@ GetOriginalFtmCertifacteNegativeScenarios:
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
-      allowedErrorCodes: PMS_FTM_ERROR_005,PMS_FEATURE_003
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
       outputTemplate: pms/error
       input: '{
@@ -65,7 +64,6 @@ GetOriginalFtmCertifacteNegativeScenarios:
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
-      allowedErrorCodes: PMS_FTM_ERROR_005,PMS_FEATURE_003
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
       outputTemplate: pms/error
       input: '{
@@ -85,7 +83,6 @@ GetOriginalFtmCertifacteNegativeScenarios:
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
-      allowedErrorCodes: PMS_FTM_ERROR_005,PMS_FEATURE_003
       inputTemplate: pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacte
       outputTemplate: pms/error
       input: '{

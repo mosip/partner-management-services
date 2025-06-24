@@ -23,6 +23,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -111,21 +112,27 @@ public class PutWithPathParamsAndBody extends AdminTestUtil implements ITest {
 			}
 		}
 
-		 else {
-				response = putWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
-						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = null;
-			
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+		else {
+			response = putWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
 		}
+		if (response != null
+				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
+						|| response.asString().contains("PMS_FEATURE_003"))) {
+			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
+
+		}
+		Map<String, List<OutputValidationDto>> ouputValid = null;
+
+		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+				getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+				response.getStatusCode());
+
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+
+		if (!OutputValidationUtil.publishOutputResult(ouputValid))
+			throw new AdminTestException("Failed at output validation");
+	}
 
 	/**
 	 * The method ser current test name to result
