@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.1-SNAPSHOT</version>
+		<version>1.2.1-rc1</version>
 	</parent>
 	
-	<version>1.2.1-SNAPSHOT</version>
+	<version>1.2.1-rc1</version>
 	<artifactId>policy-management-service</artifactId>
 	<name>policy-management-service</name>
 	<dependencies>
@@ -21,12 +21,12 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>policy-validator</artifactId>
-            <version>1.2.1-SNAPSHOT</version>
+            <version>1.2.1-rc1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.1-SNAPSHOT</version>
+			<version>1.2.1-rc1</version>
 		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -108,6 +108,9 @@
 							<goal>build-info</goal>
 							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<attach>false</attach>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -161,12 +164,23 @@
 						<configuration>
 							<executable>true</executable>
 							<layout>ZIP</layout>
-							<wait>1000</wait>
-							<maxAttempts>100</maxAttempts>
 						</configuration>
 						<executions>
+							<!-- Build info and repackage -->
+							<execution>
+								<id>build-info-repackage</id>
+								<goals>
+									<goal>build-info</goal>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<attach>false</attach>
+								</configuration>
+							</execution>
+							<!-- Integration test startup -->
 							<execution>
 								<id>pre-integration-test</id>
+								<phase>pre-integration-test</phase>
 								<goals>
 									<goal>start</goal>
 								</goals>
@@ -179,21 +193,16 @@
 									</profiles>
 									<arguments>
 										<argument>--server.port=8090</argument>
-										<argument>--server.servlet.context-path=/app/generic</argument>
+										<argument>--server.servlet.path=/app/generic</argument>
 									</arguments>
-
 								</configuration>
 							</execution>
+							<!-- Integration test shutdown -->
 							<execution>
 								<id>post-integration-test</id>
+								<phase>post-integration-test</phase>
 								<goals>
 									<goal>stop</goal>
-								</goals>
-							</execution>
-							<execution>
-								<goals>
-									<goal>build-info</goal>
-									<goal>repackage</goal>
 								</goals>
 							</execution>
 						</executions>
