@@ -9,6 +9,7 @@ import java.util.Map;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.manager.constant.AuditConstant;
+import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -35,6 +36,9 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
 
     @Autowired
     PartnerPolicyRepository partnerPolicyRepository;
+
+    @Autowired
+    PartnerManagementServiceImpl partnerManagementService;
 
     @Autowired
     BatchJobHelper batchJobHelper;
@@ -106,8 +110,7 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
         try {
             Map<String, Object> data = new HashMap<>();
             data.put(PartnerConstants.APIKEY_DATA, MapperUtils.mapKeyDataToPublishDto(policy));
-            batchJobHelper.notifyWebSubPublisher(data, EventType.APIKEY_UPDATED,
-                    this.getClass().getSimpleName(), this.getClass().getName());
+            partnerManagementService.notify(data, EventType.APIKEY_UPDATED);
         } catch (Exception e) {
             log.error("WebSub notification failed for successful Expired API Key deactivation. API Key ID: {}, Error: {}", policy.getPolicyApiKey(), e.getMessage(), e);
         }

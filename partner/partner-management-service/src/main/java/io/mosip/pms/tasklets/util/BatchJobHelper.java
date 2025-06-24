@@ -251,10 +251,4 @@ public class BatchJobHelper {
 		}
 	}
 
-	public void notifyWebSubPublisher(Map<String, Object> data, EventType eventType, String typeName, String typeNamespace) {
-        Type type = new Type();
-        type.setName(typeName);
-        type.setNamespace(typeNamespace);
-        webSubPublisher.notify(eventType, data, type);
-    }
 }
