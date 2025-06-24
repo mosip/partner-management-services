@@ -8,9 +8,13 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.mosip.pms.common.constant.EventType;
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.helper.WebSubPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,11 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.PartnerConstants;
-import io.mosip.pms.common.dto.ApiKeyDetailsDto;
-import io.mosip.pms.common.dto.CertificateDetailsDto;
-import io.mosip.pms.common.dto.FtmDetailsDto;
-import io.mosip.pms.common.dto.NotificationDetailsDto;
-import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
@@ -57,6 +56,9 @@ public class BatchJobHelper {
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
+
+	@Autowired
+	private WebSubPublisher webSubPublisher;
 
 	public boolean validatePartnerId(Optional<Partner> partnerById) {
 		if (partnerById.isEmpty()) {
@@ -248,4 +250,11 @@ public class BatchJobHelper {
 			return PartnerConstants.PARTNER_DOMAIN_AUTH;
 		}
 	}
+
+	public void notifyWebSubPublisher(Map<String, Object> data, EventType eventType, String typeName, String typeNamespace) {
+        Type type = new Type();
+        type.setName(typeName);
+        type.setNamespace(typeNamespace);
+        webSubPublisher.notify(eventType, data, type);
+    }
 }

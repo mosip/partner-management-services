@@ -324,7 +324,19 @@ public enum PartnerServiceAuditEnum {
 			"API_KEY_EXPIRY NOTIFICATION EMAIL FAILURE",
 			"API key expiry notification email failed for the auth partner", AuditConstant.PARTNER_MODULE_ID,
 			AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
-			AuditConstant.APPLICATION_ID);
+			AuditConstant.APPLICATION_ID),
+	DEACTIVATE_EXPIRED_API_KEY_SUCCESS("PMS_AAD_001", AuditConstant.AUDIT_SYSTEM,
+			"Expired API Key Deactivation Success",
+			"Successfully deactivated expired API key", AuditConstant.PARTNER_MODULE_ID,
+			AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
+			AuditConstant.APPLICATION_ID
+	),
+	DEACTIVATE_EXPIRED_API_KEY_FAILURE("PMS_AAD_002", AuditConstant.AUDIT_SYSTEM,
+			"Expired API Key Deactivation Failure",
+			"Failed to deactivate expired API key",
+			AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
+			AuditConstant.APPLICATION_ID
+	);
 
 	private final String eventId;
 
