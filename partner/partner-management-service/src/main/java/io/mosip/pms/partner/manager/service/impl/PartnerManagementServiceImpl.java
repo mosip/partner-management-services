@@ -575,7 +575,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	 * @param data
 	 * @param eventType
 	 */
-	private void notify(Map<String, Object> data,EventType eventType) {
+	public void notify(Map<String, Object> data,EventType eventType) {
 		Type type = new Type();
 		type.setName("PartnerManagementServiceImpl");
 		type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
