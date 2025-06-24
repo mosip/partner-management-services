@@ -168,11 +168,11 @@ public class BatchJobHelper {
 			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
 			log.info("saving notifications, {}", notification);
 			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
-			auditUtil.setAuditRequestDto(getAuditLogEventTypeForNotification(notificationType, true), id,
+			sendAuditEvent(getAuditLogEventTypeForNotification(notificationType, true), id,
 					notificationType, AuditConstant.AUDIT_SYSTEM);
 			return savedNotification;
 		} catch (Exception e) {
-			auditUtil.setAuditRequestDto(getAuditLogEventTypeForNotification(notificationType, false), "failure",
+			sendAuditEvent(getAuditLogEventTypeForNotification(notificationType, false), "failure",
 					notificationType, AuditConstant.AUDIT_SYSTEM);
 			log.error("Error creating the notification: {}", e.getMessage());
 			throw new BatchJobServiceException(ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorCode(),
@@ -248,6 +248,15 @@ public class BatchJobHelper {
 			return PartnerConstants.PARTNER_DOMAIN_FTM;
 		default:
 			return PartnerConstants.PARTNER_DOMAIN_AUTH;
+		}
+	}
+
+	public void sendAuditEvent(PartnerServiceAuditEnum auditEnum, String refId, String refIdType, String createdByUser) {
+		try {
+			auditUtil.setAuditRequestDto(auditEnum, refId, refIdType, createdByUser);
+		} catch (Exception e) {
+			log.error("Failed to log audit event [{}] for ref Id: {}. Error: {}",
+					auditEnum.name(), refId, e.getMessage(), e);
 		}
 	}
 
