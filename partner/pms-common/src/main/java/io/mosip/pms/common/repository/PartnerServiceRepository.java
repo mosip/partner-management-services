@@ -60,7 +60,4 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
     @Query(value = "select * from partner ppr where (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true and ppr.approval_status = 'approved' and ppr.partner_type_code=?", nativeQuery = true)
     public List<Partner> findAllApprovedActivePartnersByPartnerTypeCode(String partnerTypeCode);
 
-    @Query(value = "select * from partner ppr where (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.partner_type_code=?", nativeQuery = true)
-    public List<Partner> findAllPartnersByPartnerTypeCode(String partnerTypeCode);
-
 }
