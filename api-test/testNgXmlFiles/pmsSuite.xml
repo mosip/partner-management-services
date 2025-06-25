@@ -577,6 +577,7 @@
 	<test name="GetAllOidcClient">
 		<parameter name="ymlFile"
 			value="pms/GetAllOidcClient/GetAllOidcClient.yml" />
+			<parameter name="pathParams" value="sortFieldName,sortType,pageSize,pageNo,pageSize" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1268,6 +1269,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.DownloadRootCertificate" />
 		</classes>
 	</test>
+	<test name="DownloadRootCertificateNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/DownloadRootCertificate/DownloadRootCertificateNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.DownloadRootCertificate" />
+		</classes>
+	</test>	
+	
 
 	<test name="CreateMispLicense">
 		<parameter name="ymlFile"

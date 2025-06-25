@@ -1,13 +1,15 @@
 DownloadRootCertificate:
    Pms_DownloadRootCertificate_allValid_smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates/{certificateId}/certificateFile
-      description: Fetching all the root certificates of the Logged in Partner
+      description: Fetching all the root certificates of the Logged in as Partner admin
+      uniqueIdentifier: TC_PMS_getRootCertificateforCertificateId_01      
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/DownloadRootCertificate/downloadRootCertificate
       outputTemplate: pms/DownloadRootCertificate/downloadRootCertificateResult
       input: '{
+      "certificateId": "$REMOVE$"      
 }'
       output: '{
 }'
