@@ -10,8 +10,9 @@ import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceHistoryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.device.authdevice.service.impl.SecureBiometricInterfaceServiceImpl;
-import io.mosip.pms.device.constant.DeviceConstant;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.manager.constant.AuditConstant;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -26,9 +27,9 @@ import java.time.ZoneId;
 import java.util.List;
 
 @Component
-public class SbiAutoDeactivationTasklet implements Tasklet {
+public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
 
-    private Logger log = PMSLogger.getLogger(SbiAutoDeactivationTasklet.class);
+    private Logger log = PMSLogger.getLogger(SbiExpiryAutoDeactivationTasklet.class);
 
     @Autowired
     BatchJobHelper batchJobHelper;
@@ -48,13 +49,13 @@ public class SbiAutoDeactivationTasklet implements Tasklet {
     @Autowired
     AuditUtil auditUtil;
 
-    @Value("${mosip.pms.batch.job.enable.sbi.auto.deactivation}")
-    private Boolean enableSbiAutoDeactivation;
+    @Value("${mosip.pms.batch.job.enable.sbi.expiry.auto.deactivation}")
+    private Boolean enableSbiExpiryAutoDeactivation;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        if (enableSbiAutoDeactivation) {
-            log.info("SbiAutoDeactivationTasklet: START");
+        if (enableSbiExpiryAutoDeactivation) {
+            log.info("SbiExpiryAutoDeactivationTasklet: START");
             int deviceProvidersCount = 0;
             int countOfSbiDeactivated = 0;
             int countOfSbiRejected = 0;
@@ -91,11 +92,7 @@ public class SbiAutoDeactivationTasklet implements Tasklet {
                                             deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
                                             deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
                                             deviceDetailRepository.save(deviceDetail);
-                                            auditUtil.auditRequest(
-                                                String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
-                                                DeviceConstant.AUDIT_SYSTEM,
-                                                String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
-                                                "AUT-007", deviceDetail.getId(), "deviceDetailId");
+                                            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                         }
                                         log.info("{} pending approval devices have been rejected for SBI id: {}", pendingApprovalDevices.size(), sbiId);
                                     }
@@ -115,25 +112,18 @@ public class SbiAutoDeactivationTasklet implements Tasklet {
                                 SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
                                 secureBiometricInterfaceServiceImpl.getUpdateHistoryMapping(history, updatedSbi);
                                 sbiHistoryRepository.save(history);
-                                auditUtil.auditRequest(
-                                    String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
-                                    DeviceConstant.AUDIT_SYSTEM, String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
-                                    "AUT-012", sbiId, "sbiId");
+                                auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_SBI_SUCCESS, sbiId, "sbiId", AuditConstant.AUDIT_SYSTEM);
                             }
                         }
                     } catch (Exception e) {
                         log.error("Error deactivating the SBI with id {} for partner id {}: {} }", sbiDetail.getId(), sbiDetail.getProviderId(), e.getMessage(), e);
-                        auditUtil.auditRequest(
-                            String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
-                            DeviceConstant.AUDIT_SYSTEM,
-                            String.format(DeviceConstant.FAILURE_DESC, SecureBiometricInterface.class.getCanonicalName(), e.getMessage()),
-                            "AUT-016", sbiDetail.getId(), "sbiId");
+                        auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_SBI_FAILURE, sbiDetail.getId(), "sbiId", AuditConstant.AUDIT_SYSTEM);
                     }
                 }
             } catch (Exception e) {
                 log.error("Error occurred while running SbiAutoDeactivationTasklet: {}", e.getMessage(), e);
             }
-            log.info("SbiAutoDeactivationTasklet: DONE — " + countOfSbiDeactivated + " SBIs deactivated, "
+            log.info("SbiExpiryAutoDeactivationTasklet: DONE — " + countOfSbiDeactivated + " SBIs deactivated, "
                     + countOfSbiRejected + " SBIs rejected. Checked SBI expiry for "
                     + deviceProvidersCount + " device providers.");
         }

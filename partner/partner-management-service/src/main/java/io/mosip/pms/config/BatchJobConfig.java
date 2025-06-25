@@ -23,7 +23,7 @@ import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.SbiExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
-import io.mosip.pms.tasklets.SbiAutoDeactivationTasklet;
+import io.mosip.pms.tasklets.SbiExpiryAutoDeactivationTasklet;
 
 @Configuration
 public class BatchJobConfig {
@@ -50,7 +50,7 @@ public class BatchJobConfig {
 	private ApiKeyExpiryTasklet apiKeyExpiryTasklet;
 
 	@Autowired
-	private SbiAutoDeactivationTasklet sbiAutoDeactivationTasklet;
+	private SbiExpiryAutoDeactivationTasklet sbiExpiryAutoDeactivationTasklet;
 
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
@@ -100,10 +100,10 @@ public class BatchJobConfig {
 	}
 
 	@Bean
-	public Step sbiAutoDeactivationStep(JobRepository jobRepository,
+	public Step sbiExpiryAutoDeactivationStep(JobRepository jobRepository,
 		  	PlatformTransactionManager transactionManager) {
-		return new StepBuilder("sbiAutoDeactivationStep", jobRepository)
-				.tasklet(sbiAutoDeactivationTasklet, transactionManager).build();
+		return new StepBuilder("sbiExpiryAutoDeactivationStep", jobRepository)
+				.tasklet(sbiExpiryAutoDeactivationTasklet, transactionManager).build();
 	}
 
 	@Bean
@@ -156,9 +156,9 @@ public class BatchJobConfig {
 	}
 
 	@Bean
-	public Job sbiAutoDeactivationJob(JobRepository jobRepository,
-		  	@Qualifier("sbiAutoDeactivationStep") Step sbiAutoDeactivationStep) {
-		return new JobBuilder("sbiAutoDeactivationStep", jobRepository).incrementer(new RunIdIncrementer())
-				.start(sbiAutoDeactivationStep).build();
+	public Job sbiExpiryAutoDeactivationJob(JobRepository jobRepository,
+		  	@Qualifier("sbiExpiryAutoDeactivationStep") Step sbiExpiryAutoDeactivationStep) {
+		return new JobBuilder("sbiExpiryAutoDeactivationStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(sbiExpiryAutoDeactivationStep).build();
 	}
 }

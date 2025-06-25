@@ -999,9 +999,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 					auditUtil.auditRequest(
-						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE, DeviceDetailDto.class.getCanonicalName()),
 						DeviceConstant.AUDIT_SYSTEM,
-						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE, DeviceDetailDto.class.getCanonicalName()),
 						"AUT-007", deviceDetail.getId(), "deviceDetailId");
 				}
 			}
@@ -1021,8 +1021,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 			responseWrapper.setResponse(sbiDetailsResponseDto);
 			auditUtil.auditRequest(
-					String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
-					DeviceConstant.AUDIT_SYSTEM, String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterfaceUpdateDto.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM,
+					String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterfaceUpdateDto.class.getCanonicalName()),
 					"AUT-012", sbiId, "sbiId");
 
 		} catch (PartnerServiceException ex) {
