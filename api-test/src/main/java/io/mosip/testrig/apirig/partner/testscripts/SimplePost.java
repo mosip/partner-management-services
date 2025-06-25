@@ -35,7 +35,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class SimplePost extends AdminTestUtil implements ITest {
+public class SimplePost extends PMSRevampUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(SimplePost.class);
 	protected String testCaseName = "";
 	public Response response = null;
@@ -114,12 +114,7 @@ public class SimplePost extends AdminTestUtil implements ITest {
 			response = postWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, auditLogCheck, COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
-		if (response != null
-				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
-						|| response.asString().contains("PMS_FEATURE_003"))) {
-			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
-
-		}
+		validateResponse(response, testCaseName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),

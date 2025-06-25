@@ -33,19 +33,18 @@ public class PMSRevampConfigManger extends ConfigManager{
 	}
 
 	public static String getKeymangrDbUrl() {
-		return "jdbc:postgresql://" + getproperty("km-db-server") + ":" + getproperty("km-db-port") + "/mosip_keymgr";
+		return "jdbc:postgresql://"
+				+ (getproperty("km-db-server").isBlank() ? getproperty("db-server") : getproperty("km-db-server")) + ":"
+				+ (getproperty("km-db-port").isBlank() ? getproperty("db-port") : getproperty("km-db-port"))
+				+ "/mosip_keymgr";
 	}
 
 	public static String getKeymangrDbUser() {
-		return getproperty("km-db-su-user");
+		return getproperty("km-db-su-user").isBlank() ? getproperty("db-su-user") : getproperty("km-db-su-user");
 	}
 
 	public static String getKeymangrDbPass() {
-		return getproperty("km-db-postgres-password");
+		return getproperty("km-db-postgres-password").isBlank() ? getproperty("postgres-password")
+				: getproperty("km-db-postgres-password");
 	}
-
-	public static String getKeymangrDbSchema() {
-		return getproperty("Keymangr_db_schema");
-	}
-
 }

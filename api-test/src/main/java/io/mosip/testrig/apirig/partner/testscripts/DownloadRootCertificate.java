@@ -42,7 +42,7 @@ import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.mosip.testrig.apirig.utils.RestClient;
 import io.restassured.response.Response;
 
-public class DownloadRootCertificate extends AdminTestUtil implements ITest {
+public class DownloadRootCertificate extends PMSRevampUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(DownloadRootCertificate.class);
 	protected String testCaseName = "";
 	public Response response = null;
@@ -100,12 +100,7 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
 				"partneradmin", testCaseDTO.getTestCaseName());
-		if (response != null
-				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
-						|| response.asString().contains("PMS_FEATURE_003"))) {
-			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
-
-		}
+		validateResponse(response, testCaseName);
 		String responseBody = response.getBody().asString();
 		JSONObject jsonObject = new JSONObject(responseBody);
 		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
@@ -128,12 +123,7 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		response = getWithPathParamAndCookie(ApplnURI + url,
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
 				"partneradmin", testCaseDTO.getTestCaseName());
-		if (response != null
-				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
-						|| response.asString().contains("PMS_FEATURE_003"))) {
-			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
-
-		}
+		validateResponse(response, testCaseName);
 
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 		if (testCaseName.contains("_StatusCode")) {

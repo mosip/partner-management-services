@@ -34,7 +34,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class GetWithParamForAutoGenId extends AdminTestUtil implements ITest {
+public class GetWithParamForAutoGenId extends PMSRevampUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(GetWithParamForAutoGenId.class);
 	protected String testCaseName = "";
 	public String idKeyName = null;
@@ -114,12 +114,7 @@ public class GetWithParamForAutoGenId extends AdminTestUtil implements ITest {
 					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), idKeyName);
 		}
 
-		if (response != null
-				&& (response.asString().contains("PMS_FEATURE_001") || response.asString().contains("PMS_FEATURE_002")
-						|| response.asString().contains("PMS_FEATURE_003"))) {
-			throw new SkipException(PMSRevampConstants.FEATURE_NOT_SUPPORTED_PMSREVAMP);
-
-		}
+		validateResponse(response, testCaseName, idKeyName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
@@ -130,7 +125,6 @@ public class GetWithParamForAutoGenId extends AdminTestUtil implements ITest {
 		if (!OutputValidationUtil.publishOutputResult(ouputValid))
 			throw new AdminTestException("Failed at output validation");
 	}
-	
 
 	/**
 	 * The method ser current test name to result
