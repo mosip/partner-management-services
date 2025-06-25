@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,11 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.dto.ApiKeyDetailsDto;
+import io.mosip.pms.common.dto.CertificateDetailsDto;
+import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
