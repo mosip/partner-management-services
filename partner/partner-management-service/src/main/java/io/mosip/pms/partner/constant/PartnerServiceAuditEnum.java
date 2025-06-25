@@ -324,7 +324,22 @@ public enum PartnerServiceAuditEnum {
 			"API_KEY_EXPIRY NOTIFICATION EMAIL FAILURE",
 			"API key expiry notification email failed for the auth partner", AuditConstant.PARTNER_MODULE_ID,
 			AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
-			AuditConstant.APPLICATION_ID);
+			AuditConstant.APPLICATION_ID),
+	DEACTIVATE_EXPIRED_SBI_SUCCESS("AUT-017", AuditConstant.AUDIT_SYSTEM,
+			"DEACTIVATE EXPIRED SBI SUCCESS",
+			"SbiAutoDeactivationTasklet successfully deactivated expired SBIs", AuditConstant.PARTNER_MODULE_ID,
+		  	AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
+		  	AuditConstant.APPLICATION_ID),
+	DEACTIVATE_EXPIRED_SBI_FAILURE("AUT-018", AuditConstant.AUDIT_SYSTEM,
+			"DEACTIVATE EXPIRED SBI FAILURE",
+					"Deactivation of expired SBIs failed in SbiAutoDeactivationTasklet.", AuditConstant.PARTNER_MODULE_ID,
+								   AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
+								   AuditConstant.APPLICATION_ID),
+	REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS("AUT-007", AuditConstant.AUDIT_SYSTEM,
+			"REJECT DEVICE WITH EXPIRED SBI SUCCESS",
+					"SbiAutoDeactivationTasklet successfully rejected pending_approval devices associated with expired SBIs.", AuditConstant.PARTNER_MODULE_ID,
+								   AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
+								   AuditConstant.APPLICATION_ID);
 
 	private final String eventId;
 

@@ -110,4 +110,7 @@ public class DeviceConstant {
 	public static final String APPROVED = "approved";
 	public static final String REJECTED = "rejected";
 
+	public static final String DEACTIVATE_SBI_FAILURE = "Deactivate SBI - Failure";
+	public static final String DEACTIVATE_SBI_SUCCESS = "Deactivate SBI - Success";
+
 }
