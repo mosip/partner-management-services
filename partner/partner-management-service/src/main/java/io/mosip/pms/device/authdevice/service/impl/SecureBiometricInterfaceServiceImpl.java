@@ -999,9 +999,9 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 					auditUtil.auditRequest(
-						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeactivateSbiRequestDto.class.getCanonicalName()),
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
 						DeviceConstant.AUDIT_SYSTEM,
-						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeactivateSbiRequestDto.class.getCanonicalName()),
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
 						"AUT-007", deviceDetail.getId(), "deviceDetailId");
 				}
 			}
@@ -1021,16 +1021,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 
 			responseWrapper.setResponse(sbiDetailsResponseDto);
 			auditUtil.auditRequest(
-					DeviceConstant.DEACTIVATE_SBI_SUCCESS,
-					DeviceConstant.AUDIT_SYSTEM, DeviceConstant.DEACTIVATE_SBI_SUCCESS,
-					"AUT-017", sbiId, "sbiId");
+					String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					DeviceConstant.AUDIT_SYSTEM, String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+					"AUT-012", sbiId, "sbiId");
 
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
-			auditUtil.auditRequest( DeviceConstant.DEACTIVATE_SBI_FAILURE,
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC, ex.getErrorCode(), ex.getErrorText()),
-					"AUT-018", sbiId, "sbiId");
+					"AUT-016", sbiId, "sbiId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -1038,10 +1039,11 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					"In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
-			auditUtil.auditRequest( DeviceConstant.DEACTIVATE_SBI_FAILURE,
+			auditUtil.auditRequest(
+					String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
 					DeviceConstant.AUDIT_SYSTEM,
 					String.format(DeviceConstant.FAILURE_DESC, errorCode, errorMessage),
-					"AUT-018", sbiId, "sbiId");
+					"AUT-016", sbiId, "sbiId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(patchDeactivateSbi);
