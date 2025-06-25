@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import jakarta.annotation.PostConstruct;
 
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -224,6 +225,28 @@ public class AuditUtil {
 	
 	public void setAuditRequestDto(PartnerServiceAuditEnum PartnerManageEnum, String refId, String refIdType,
 			String createdByUser) {
+		AuditRequestDto auditRequestDto = new AuditRequestDto();
+		auditRequestDto.setHostIp(hostIpAddress);
+		auditRequestDto.setHostName(hostName);
+		auditRequestDto.setApplicationId(PartnerManageEnum.getApplicationId());
+		auditRequestDto.setApplicationName(PartnerManageEnum.getApplicationName());
+		auditRequestDto.setSessionUserId(createdByUser);
+		auditRequestDto.setSessionUserName(createdByUser);
+		auditRequestDto.setCreatedBy(createdByUser);
+		auditRequestDto.setActionTimeStamp(DateUtils.getUTCCurrentDateTime());
+		auditRequestDto.setDescription(PartnerManageEnum.getDescription());
+		auditRequestDto.setEventType(PartnerManageEnum.getType());
+		auditRequestDto.setEventName(PartnerManageEnum.getName());
+		auditRequestDto.setModuleId(PartnerManageEnum.getModuleId());
+		auditRequestDto.setModuleName(PartnerManageEnum.getModuleName());
+		auditRequestDto.setEventId(PartnerManageEnum.getEventId());
+		auditRequestDto.setId(refId);
+		auditRequestDto.setIdType(refIdType);
+		callAuditManager(auditRequestDto);
+	}
+
+	public void setAuditRequestDto(PartnerManageEnum PartnerManageEnum, String refId, String refIdType,
+								   String createdByUser) {
 		AuditRequestDto auditRequestDto = new AuditRequestDto();
 		auditRequestDto.setHostIp(hostIpAddress);
 		auditRequestDto.setHostName(hostName);

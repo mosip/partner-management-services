@@ -8,13 +8,12 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -168,11 +167,11 @@ public class BatchJobHelper {
 			notification.setNotificationDetailsJson(objectMapper.writeValueAsString(notificationDetailsDto));
 			log.info("saving notifications, {}", notification);
 			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
-			sendAuditEvent(getAuditLogEventTypeForNotification(notificationType, true), id,
+			sendPartnerServiceAuditEvent(getAuditLogEventTypeForNotification(notificationType, true), id,
 					notificationType, AuditConstant.AUDIT_SYSTEM);
 			return savedNotification;
 		} catch (Exception e) {
-			sendAuditEvent(getAuditLogEventTypeForNotification(notificationType, false), "failure",
+			sendPartnerServiceAuditEvent(getAuditLogEventTypeForNotification(notificationType, false), "failure",
 					notificationType, AuditConstant.AUDIT_SYSTEM);
 			log.error("Error creating the notification: {}", e.getMessage());
 			throw new BatchJobServiceException(ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorCode(),
@@ -251,7 +250,16 @@ public class BatchJobHelper {
 		}
 	}
 
-	public void sendAuditEvent(PartnerServiceAuditEnum auditEnum, String refId, String refIdType, String createdByUser) {
+	public void sendPartnerServiceAuditEvent(PartnerServiceAuditEnum auditEnum, String refId, String refIdType, String createdByUser) {
+		try {
+			auditUtil.setAuditRequestDto(auditEnum, refId, refIdType, createdByUser);
+		} catch (Exception e) {
+			log.error("Failed to log audit event [{}] for ref Id: {}. Error: {}",
+					auditEnum.name(), refId, e.getMessage(), e);
+		}
+	}
+
+	public void sendPartnerManageAuditEvent(PartnerManageEnum auditEnum, String refId, String refIdType, String createdByUser) {
 		try {
 			auditUtil.setAuditRequestDto(auditEnum, refId, refIdType, createdByUser);
 		} catch (Exception e) {

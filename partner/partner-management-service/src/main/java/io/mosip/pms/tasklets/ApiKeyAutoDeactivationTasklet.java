@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.mosip.pms.device.util.AuditUtil;
-import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.manager.constant.AuditConstant;
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -68,8 +68,8 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
                         log.info("Deactivated expired API Key with id {} for partner id : {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId());
 
                         // Audit log
-                        batchJobHelper.sendAuditEvent(
-                                PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_SUCCESS,
+                        batchJobHelper.sendPartnerManageAuditEvent(
+                                PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS,
                                 apiKeyDetails.getPartner().getId(),
                                 "partnerId",
                                 AuditConstant.AUDIT_SYSTEM
@@ -83,8 +83,8 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
                     }
                 } catch (Exception e) {
                     log.error("Error deactivating API Key with id {} for partner id {}: {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId(), e.getMessage(), e);
-                    batchJobHelper.sendAuditEvent(
-                            PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_FAILURE,
+                    batchJobHelper.sendPartnerManageAuditEvent(
+                            PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_FAILED,
                             apiKeyDetails.getPartner().getId(),
                             "partnerId",
                             AuditConstant.AUDIT_SYSTEM
