@@ -46,7 +46,6 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         if (enableSbiExpiryAutoDeactivation) {
             log.info("SbiExpiryAutoDeactivationTasklet: START");
-            int deviceProvidersCount = 0;
             int countOfSbiDeactivated = 0;
             int countOfSbiRejected = 0;
             try {
@@ -111,8 +110,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                 log.error("Error occurred while running SbiAutoDeactivationTasklet: {}", e.getMessage());
             }
             log.info("SbiExpiryAutoDeactivationTasklet: DONE — " + countOfSbiDeactivated + " SBIs deactivated, "
-                    + countOfSbiRejected + " SBIs rejected. Checked SBI expiry for "
-                    + deviceProvidersCount + " device providers.");
+                    + countOfSbiRejected + " SBIs rejected.");
         }
         return RepeatStatus.FINISHED;
     }
