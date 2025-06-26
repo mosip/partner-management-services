@@ -307,15 +307,17 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		historyEntity.setId(entity.getId());
 		historyEntity.setActive(entity.isActive());
 		historyEntity.setApprovalStatus(entity.getApprovalStatus());
-		historyEntity.setCrBy(entity.getUpdBy());
+		historyEntity.setCrBy(entity.getCrBy());
 		historyEntity.setEffectDateTime(entity.getUpdDtimes());
-		historyEntity.setCrDtimes(entity.getUpdDtimes());
+		historyEntity.setCrDtimes(entity.getCrDtimes());
 		historyEntity.setSwVersion(entity.getSwVersion());
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
 		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
 		historyEntity.setProviderId(entity.getProviderId());
 		historyEntity.setPartnerOrgName(entity.getPartnerOrgName());
+		historyEntity.setUpdBy(entity.getUpdBy());
+		historyEntity.setUpdDtimes(entity.getUpdDtimes());
 		return historyEntity;
 	}
 
@@ -985,7 +987,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!approvedDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : approvedDevices) {
 					deviceDetail.setIsActive(false);
-					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 				}
@@ -995,15 +997,18 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!pendingApprovalDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : pendingApprovalDevices) {
 					deviceDetail.setApprovalStatus(REJECTED);
-					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
 				}
 			}
 			sbi.setActive(false);
-			sbi.setUpdDtimes(LocalDateTime.now());
+			sbi.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 			sbi.setUpdBy(getUserId());
 			SecureBiometricInterface updatedSbi = sbiRepository.save(sbi);
+			SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
+			getUpdateHistoryMapping(history, updatedSbi);
+			sbiHistoryRepository.save(history);
 			SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
 
 			sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
