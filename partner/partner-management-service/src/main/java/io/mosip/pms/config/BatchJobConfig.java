@@ -22,7 +22,7 @@ import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.SbiExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
-import io.mosip.pms.tasklets.ApiKeyAutoDeactivationTasklet;
+import io.mosip.pms.tasklets.ApiKeyExpiryAutoDeactivationTasklet;
 
 @Configuration
 public class BatchJobConfig {
@@ -46,7 +46,7 @@ public class BatchJobConfig {
 	private SbiExpiryTasklet sbiExpiryTasklet;
 
 	@Autowired
-	private ApiKeyAutoDeactivationTasklet apiKeyAutoDeactivationTasklet;
+	private ApiKeyExpiryAutoDeactivationTasklet apiKeyExpiryAutoDeactivationTasklet;
 
 	@Autowired
 	private ApiKeyExpiryTasklet apiKeyExpiryTasklet;
@@ -99,9 +99,9 @@ public class BatchJobConfig {
 	}
 
 	@Bean
-	public Step apiKeyAutoDeactivationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-		return new StepBuilder("apiKeyAutoDeactivationStep", jobRepository)
-				.tasklet(apiKeyAutoDeactivationTasklet, transactionManager).build();
+	public Step apiKeyExpiryAutoDeactivationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("apiKeyExpiryAutoDeactivationStep", jobRepository)
+				.tasklet(apiKeyExpiryAutoDeactivationTasklet, transactionManager).build();
 	}
 
 	@Bean
@@ -154,11 +154,11 @@ public class BatchJobConfig {
 	}
 
 	@Bean
-	public Job apiKeyAutoDeactivationJob(JobRepository jobRepository,
-			@Qualifier("apiKeyAutoDeactivationStep") Step apiKeyAutoDeactivationStep) {
-		return new JobBuilder("apiKeyAutoDeactivationJob", jobRepository)
+	public Job apiKeyExpiryAutoDeactivationJob(JobRepository jobRepository,
+			@Qualifier("apiKeyExpiryAutoDeactivationStep") Step apiKeyExpiryAutoDeactivationStep) {
+		return new JobBuilder("apiKeyExpiryAutoDeactivationJob", jobRepository)
 				.incrementer(new RunIdIncrementer())
-				.start(apiKeyAutoDeactivationStep)
+				.start(apiKeyExpiryAutoDeactivationStep)
 				.build();
 	}
 }

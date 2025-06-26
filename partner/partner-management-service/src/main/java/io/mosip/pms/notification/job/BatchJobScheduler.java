@@ -69,9 +69,9 @@ public class BatchJobScheduler {
 	@Autowired
 	private Job apiKeyExpiryNotificationsJob;
 
-	@Qualifier("apiKeyAutoDeactivationJob")
+	@Qualifier("apiKeyExpiryAutoDeactivationJob")
 	@Autowired
-	private Job apiKeyAutoDeactivationJob;
+	private Job apiKeyExpiryAutoDeactivationJob;
 
 	@Scheduled(cron = "${mosip.pms.batch.job.root.intermediate.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
@@ -192,16 +192,16 @@ public class BatchJobScheduler {
 		}
 	}
 
-	@Scheduled(cron = "${mosip.pms.batch.job.api.key.auto.deactivation.cron.schedule}")
-	public void apiKeyAutoDeactivationScheduler() {
+	@Scheduled(cron = "${mosip.pms.batch.job.api.key.expiry.auto.deactivation.cron.schedule}")
+	public void apiKeyExpiryAutoDeactivationScheduler() {
 		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
 				.toJobParameters();
 		try {
-			JobExecution jobExecution = jobLauncher.run(apiKeyAutoDeactivationJob, jobParam);
+			JobExecution jobExecution = jobLauncher.run(apiKeyExpiryAutoDeactivationJob, jobParam);
 			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
 		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
 				| JobParametersInvalidException e) {
-			log.error(LOGDISPLAY, "apiKeyAutoDeactivationJob failed", e.getMessage(), null);
+			log.error(LOGDISPLAY, "ApiKeyExpiryAutoDeactivationJob failed", e.getMessage(), null);
 		}
 	}
 
