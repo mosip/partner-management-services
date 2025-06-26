@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.manager.constant.AuditConstant;
-import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -38,13 +39,13 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
     PartnerPolicyRepository partnerPolicyRepository;
 
     @Autowired
-    PartnerManagementServiceImpl partnerManagementService;
-
-    @Autowired
     BatchJobHelper batchJobHelper;
 
     @Autowired
     private AuditUtil auditUtil;
+
+    @Autowired
+    WebSubPublisher webSubPublisher;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
@@ -67,7 +68,10 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
                         // Send event to websub publisher
                         Map<String, Object> data = new HashMap<>();
                         data.put(PartnerConstants.APIKEY_DATA, MapperUtils.mapKeyDataToPublishDto(apiKeyDetails));
-                        partnerManagementService.notify(data, EventType.APIKEY_UPDATED);
+                        Type type = new Type();
+                        type.setName("PartnerManagementServiceImpl");
+                        type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
+                        webSubPublisher.notify(EventType.APIKEY_UPDATED, data, type);
 
                         // Audit log
                         auditUtil.setAuditRequestDto(
