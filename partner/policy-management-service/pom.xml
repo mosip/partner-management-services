@@ -5,10 +5,10 @@
 	<parent>
 		<artifactId>pms-parent</artifactId>
 		<groupId>io.mosip.pms</groupId>
-		<version>1.2.1-rc1</version>
+		<version>1.2.1-SNAPSHOT</version>
 	</parent>
 	
-	<version>1.2.1-rc1</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<artifactId>policy-management-service</artifactId>
 	<name>policy-management-service</name>
 	<dependencies>
@@ -21,12 +21,12 @@
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>policy-validator</artifactId>
-            <version>1.2.1-rc1</version>
+            <version>1.2.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.pms</groupId>
 			<artifactId>pms-common</artifactId>
-			<version>1.2.1-rc1</version>
+			<version>1.2.1-SNAPSHOT</version>
 		</dependency>		
 		<dependency>
 			<groupId>io.micrometer</groupId>
@@ -164,6 +164,8 @@
 						<configuration>
 							<executable>true</executable>
 							<layout>ZIP</layout>
+							<wait>1000</wait>
+							<maxAttempts>100</maxAttempts>
 						</configuration>
 						<executions>
 							<!-- Build info and repackage -->
@@ -193,7 +195,7 @@
 									</profiles>
 									<arguments>
 										<argument>--server.port=8090</argument>
-										<argument>--server.servlet.path=/app/generic</argument>
+										<argument>--server.servlet.context-path=/app/generic</argument>
 									</arguments>
 								</configuration>
 							</execution>
