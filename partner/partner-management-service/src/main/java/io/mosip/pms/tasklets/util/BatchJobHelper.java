@@ -145,12 +145,12 @@ public class BatchJobHelper {
 			log.info("saving notifications, {}", notification);
 			NotificationEntity savedNotification = notificationServiceRepository.save(notification);
 			auditUtil.setAuditRequestDto(getAuditLogEventTypeForNotification(certificateType, true), id,
-					notificationType, AuditConstant.AUDIT_SYSTEM);
+					"notificationId", AuditConstant.AUDIT_SYSTEM);
 			return savedNotification;
 		} catch (Exception e) {
 			String notificationType = getNotificationType(certificateType);
 			auditUtil.setAuditRequestDto(getAuditLogEventTypeForNotification(certificateType, false), "failure",
-					notificationType, AuditConstant.AUDIT_SYSTEM);
+					"notificationId", AuditConstant.AUDIT_SYSTEM);
 			log.error("Error creating the notification: {}", e.getMessage());
 			throw new BatchJobServiceException(ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorCode(),
 					ErrorCode.NOTIFICATION_CREATE_ERROR.getErrorMessage());
