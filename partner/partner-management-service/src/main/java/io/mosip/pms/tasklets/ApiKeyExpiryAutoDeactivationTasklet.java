@@ -30,9 +30,9 @@ import io.mosip.pms.common.util.MapperUtils;
  * Batch Job to auto deactivate API Keys after expiry.
  */
 @Component
-public class ApiKeyAutoDeactivationTasklet implements Tasklet {
+public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
 
-    private Logger log = PMSLogger.getLogger(ApiKeyAutoDeactivationTasklet.class);
+    private Logger log = PMSLogger.getLogger(ApiKeyExpiryAutoDeactivationTasklet.class);
 
     @Autowired
     PartnerPolicyRepository partnerPolicyRepository;
@@ -48,7 +48,7 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        log.info("ApiKeyAutoDeactivationTasklet: START");
+        log.info("ApiKeyExpiryAutoDeactivationTasklet: START");
         int deactivatedCount = 0;
         try {
             // Fetch all active API keys
@@ -65,54 +65,39 @@ public class ApiKeyAutoDeactivationTasklet implements Tasklet {
                         partnerPolicyRepository.save(apiKeyDetails);
                         deactivatedCount++;
 
-                        log.info("Deactivated expired API Key with id {} for partner id : {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId());
+                        // Send event to websub publisher
+                        Map<String, Object> data = new HashMap<>();
+                        data.put(PartnerConstants.APIKEY_DATA, MapperUtils.mapKeyDataToPublishDto(apiKeyDetails));
+                        partnerManagementService.notify(data, EventType.APIKEY_UPDATED);
 
                         // Audit log
-                        sendAuditSuccess(apiKeyDetails);
-
-                        // Send event to websub publisher
-                        notifyWebSub(apiKeyDetails);
+                        auditUtil.setAuditRequestDto(
+                                PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_SUCCESS,
+                                apiKeyDetails.getPolicyApiKey(),
+                                "apiKeyId",
+                                AuditConstant.AUDIT_SYSTEM
+                        );
 
                         // TODO: Send email notification to partner
 
+                        log.info("Deactivated expired API Key with id {} for partner id : {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId());
                     }
                 } catch (Exception e) {
                     log.error("Error deactivating API Key with id {} for partner id {}: {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId(), e.getMessage(), e);
-                    sendAuditFailure(apiKeyDetails);
+                    auditUtil.setAuditRequestDto(
+                            PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_FAILURE,
+                            apiKeyDetails.getPolicyApiKey(),
+                            "apiKeyId",
+                            AuditConstant.AUDIT_SYSTEM
+                    );
+                    throw e;
                 }
             }
         } catch (Exception e) {
-            log.error("Error occurred while running ApiKeyAutoDeactivationTasklet: {}", e.getMessage(), e);
+            log.error("Error occurred while running ApiKeyExpiryAutoDeactivationTasklet: {}", e.getMessage(), e);
+            throw e;
         }
-        log.info("ApiKeyAutoDeactivationTasklet: DONE, deactivated {} expired API Keys.", deactivatedCount);
+        log.info("ApiKeyExpiryAutoDeactivationTasklet: DONE, deactivated {} expired API Keys.", deactivatedCount);
         return RepeatStatus.FINISHED;
-    }
-
-    private void sendAuditSuccess(PartnerPolicy policy) {
-        try {
-            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_SUCCESS,
-                    policy.getPartner().getId(), "partnerId", AuditConstant.AUDIT_SYSTEM);
-        } catch (Exception e) {
-            log.error("Failed to log audit event for successful Expired API Key deactivation. API Key ID: {}, Error: {}", policy.getPolicyApiKey(), e.getMessage(), e);
-        }
-    }
-
-    private void sendAuditFailure(PartnerPolicy policy) {
-        try {
-            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_FAILURE,
-                    policy.getPartner().getId(), "partnerId");
-        } catch (Exception e) {
-            log.error("Failed to log audit event for Expired API Key deactivation failure. API Key ID: {}, Error: {}", policy.getPolicyApiKey(), e.getMessage(), e);
-        }
-    }
-
-    private void notifyWebSub(PartnerPolicy policy) {
-        try {
-            Map<String, Object> data = new HashMap<>();
-            data.put(PartnerConstants.APIKEY_DATA, MapperUtils.mapKeyDataToPublishDto(policy));
-            partnerManagementService.notify(data, EventType.APIKEY_UPDATED);
-        } catch (Exception e) {
-            log.error("WebSub notification failed for successful Expired API Key deactivation. API Key ID: {}, Error: {}", policy.getPolicyApiKey(), e.getMessage(), e);
-        }
     }
 }
