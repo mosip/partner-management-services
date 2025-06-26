@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.authdevice.service.impl.SecureBiometricInterfaceServiceImpl;
 import io.mosip.pms.device.dto.SbiFilterDto;
 import io.mosip.pms.device.response.dto.SbiSummaryDto;
 import io.mosip.pms.partner.dto.DeviceDto;
@@ -50,7 +51,6 @@ import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
-import io.mosip.pms.device.authdevice.service.SecureBiometricInterfaceService;
 import io.mosip.pms.device.request.dto.DeviceDetailSBIMappingDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.SecureBiometricInterfaceCreateDto;
@@ -82,7 +82,7 @@ public class SecureBiometricInterfaceControllerTest {
 	AuditUtil auditUtil;
 	
     @MockBean	
-   private  SecureBiometricInterfaceService secureBiometricInterfaceService;
+   	private SecureBiometricInterfaceServiceImpl secureBiometricInterfaceService;
     
     RequestWrapper<SecureBiometricInterfaceCreateDto> createRequest=null;
     RequestWrapper<SecureBiometricInterfaceUpdateDto> updateRequest=null;
