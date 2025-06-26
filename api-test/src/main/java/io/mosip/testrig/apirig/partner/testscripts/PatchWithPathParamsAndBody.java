@@ -21,6 +21,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -33,7 +34,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
+public class PatchWithPathParamsAndBody extends PMSRevampUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(PatchWithPathParamsAndBody.class);
 	protected String testCaseName = "";
 	String pathParams = null;
@@ -87,13 +88,12 @@ public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 
-
 		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
 		String inputJson = filterInputHbs(testCaseDTO);
 
 		response = patchWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 				testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-
+		validateResponse(response, testCaseName);
 		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
 				response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
 				testCaseDTO, response.getStatusCode());
@@ -101,8 +101,8 @@ public class PatchWithPathParamsAndBody extends AdminTestUtil implements ITest {
 
 		if (!OutputValidationUtil.publishOutputResult(ouputValid))
 			throw new AdminTestException("Failed at output validation");
-
 	}
+	
 
 	private String filterInputHbs(TestCaseDTO testCaseDTO) {
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());

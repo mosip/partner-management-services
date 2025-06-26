@@ -23,6 +23,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -35,7 +36,7 @@ import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.restassured.response.Response;
 
-public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
+public class PostWithBodyAndPathParams extends PMSRevampUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(PostWithBodyAndPathParams.class);
 	protected String testCaseName = "";
 	String pathParams = null;
@@ -115,18 +116,18 @@ public class PostWithBodyAndPathParams extends AdminTestUtil implements ITest {
 			}
 		}
 
-		 else {
-				response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
-						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-			}
-			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil
-					.doJsonOutputValidation(response.asString(), outputJson, testCaseDTO, response.getStatusCode());
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-
-			if (!OutputValidationUtil.publishOutputResult(ouputValid))
-				throw new AdminTestException("Failed at output validation");
+		else {
+			response = postWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
 		}
+		validateResponse(response, testCaseName);
+		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil
+				.doJsonOutputValidation(response.asString(), outputJson, testCaseDTO, response.getStatusCode());
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
+		if (!OutputValidationUtil.publishOutputResult(ouputValid))
+			throw new AdminTestException("Failed at output validation");
+	}
 	
 
 

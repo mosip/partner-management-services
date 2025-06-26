@@ -81,8 +81,8 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_06
       description: Upload CA Cert with invalid data      
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
+      allowedErrorCodes: KER-CRY-003,KER-KMS-013
       inputTemplate: pms/UploadCACertificate/uploadCertificate3
       outputTemplate: pms/error
       input: '{

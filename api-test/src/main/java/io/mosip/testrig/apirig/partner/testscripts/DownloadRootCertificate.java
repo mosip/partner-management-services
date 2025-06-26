@@ -27,6 +27,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.testrunner.JsonPrecondtion;
@@ -41,7 +42,7 @@ import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.mosip.testrig.apirig.utils.RestClient;
 import io.restassured.response.Response;
 
-public class DownloadRootCertificate extends AdminTestUtil implements ITest {
+public class DownloadRootCertificate extends PMSRevampUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(DownloadRootCertificate.class);
 	protected String testCaseName = "";
 	public Response response = null;
@@ -97,33 +98,33 @@ public class DownloadRootCertificate extends AdminTestUtil implements ITest {
 		
 		
 		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
-				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
+				"partneradmin", testCaseDTO.getTestCaseName());
+		validateResponse(response, testCaseName);
 		String responseBody = response.getBody().asString();
 		JSONObject jsonObject = new JSONObject(responseBody);
 		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
 
-		String certId = ""; 
+		String certId = "";
 
 		if (dataArray.length() > 0) {
-		    JSONObject firstDataObject = dataArray.getJSONObject(0);
-		    certId = firstDataObject.getString("certId");
-		    System.out.println("First certId: " + certId);
+			JSONObject firstDataObject = dataArray.getJSONObject(0);
+			certId = firstDataObject.getString("certId");
+			System.out.println("First certId: " + certId);
 		} else {
-		    System.out.println("No data available.");
+			System.out.println("No data available.");
 		}
 
 		if (certId != null) {
-		    System.out.println("Using certId in another place: " + certId);
+			System.out.println("Using certId in another place: " + certId);
 		}
-		String url="/v1/partnermanager/trust-chain-certificates/"+certId+"/certificateFile";
-		
+		String url = "/v1/partnermanager/trust-chain-certificates/" + certId + "/certificateFile";
+
 		response = getWithPathParamAndCookie(ApplnURI + url,
-				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
-				COOKIENAME, "partneradmin", testCaseDTO.getTestCaseName());
-		
-		
-		
+				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
+				"partneradmin", testCaseDTO.getTestCaseName());
+		validateResponse(response, testCaseName);
+
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 		if (testCaseName.contains("_StatusCode")) {
 
