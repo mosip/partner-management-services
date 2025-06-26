@@ -302,7 +302,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return entity;
 	}
 
-	private SecureBiometricInterfaceHistory getUpdateHistoryMapping(SecureBiometricInterfaceHistory historyEntity,
+	public SecureBiometricInterfaceHistory getUpdateHistoryMapping(SecureBiometricInterfaceHistory historyEntity,
 			SecureBiometricInterface entity) {
 		historyEntity.setId(entity.getId());
 		historyEntity.setActive(entity.isActive());
