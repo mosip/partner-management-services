@@ -760,11 +760,12 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 					FtmChipDetailsDto dto = getFtmChipDetailsDto(ftpChipDetail, partnerStatus);
 
-					// Filter based on certificate expiry period if specified
+					// Filter based on certificate expiry period if specified for approved ftm chip
 					if (expiryPeriod != null && dto.getCertificateExpiryDateTime() != null) {
 						LocalDateTime validTillDateTime = LocalDateTime.now().plusDays(expiryPeriod).with(LocalTime.MAX);
 						if (dto.getCertificateExpiryDateTime().isBefore(LocalDateTime.now())
-								|| dto.getCertificateExpiryDateTime().isAfter(validTillDateTime)) {
+								|| dto.getCertificateExpiryDateTime().isAfter(validTillDateTime)
+								|| (!dto.getIsActive() && !dto.getStatus().equals(APPROVED))) {
 							continue;
 						}
 					}

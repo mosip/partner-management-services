@@ -49,7 +49,30 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             "GROUP BY s.providerId, s.partnerOrgName, s.id, s.swVersion, s.approvalStatus, " +
             "s.isActive, s.swCreateDateTime, s.swExpiryDateTime, s.crDtimes";
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY)
+    String SBI_DETAILS_SUMMARY_COUNT_QUERY =
+            "SELECT COUNT(DISTINCT s.id) " +
+                    "FROM SecureBiometricInterface s " +
+                    "LEFT JOIN DeviceDetailSBI dd ON dd.id.sbiId = s.id " +
+                    "LEFT JOIN DeviceDetail d ON d.id = dd.id.deviceDetailId " +
+                    "WHERE (:partnerId IS NULL OR lower(s.providerId) LIKE %:partnerId%) " +
+                    "AND (:orgName IS NULL OR lower(s.partnerOrgName) LIKE %:orgName%) " +
+                    "AND (:sbiId IS NULL OR lower(s.id) LIKE %:sbiId%) " +
+                    "AND (:sbiVersion IS NULL OR lower(s.swVersion) LIKE %:sbiVersion%) " +
+                    "AND (:status IS NULL OR " +
+                    "(:status = 'deactivated' AND s.approvalStatus = 'approved' AND s.isActive = false) " +
+                    "OR (:status = 'approved' AND s.approvalStatus = 'approved' AND s.isActive = true) " +
+                    "OR (:status = 'rejected' AND s.approvalStatus = 'rejected') " +
+                    "OR (:status = 'pending_approval' AND s.approvalStatus = 'pending_approval')) " +
+                    "AND (:sbiExpiryStatus IS NULL OR " +
+                    "(:sbiExpiryStatus = 'expired' AND s.swExpiryDateTime < CURRENT_DATE) " +
+                    "OR (:sbiExpiryStatus = 'valid' AND s.swExpiryDateTime >= CURRENT_DATE)) " +
+                    "AND (:isPartnerAdmin = true OR (s.providerId IN :partnerIdList)) " +
+                    "AND ((:expiryPeriod IS NULL) OR (s.swExpiryDateTime BETWEEN :expiryStartDate AND :expiryEndDate))";
+
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY,
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetails(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
@@ -65,7 +88,10 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             Pageable pageable
     );
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY status ASC")
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY + " ORDER BY status ASC",
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByStatusAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
@@ -81,7 +107,10 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             Pageable pageable
     );
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY status DESC")
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY + " ORDER BY status DESC",
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByStatusDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
@@ -97,7 +126,10 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             Pageable pageable
     );
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus ASC")
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus ASC",
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
@@ -113,7 +145,10 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             Pageable pageable
     );
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus DESC")
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY + " ORDER BY sbiExpiryStatus DESC",
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByExpiryStatusDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
@@ -129,7 +164,10 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             Pageable pageable
     );
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY countOfAssociatedDevices ASC")
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY + " ORDER BY countOfAssociatedDevices ASC",
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByDevicesCountAsc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
@@ -145,7 +183,10 @@ public interface SbiSummaryRepository extends BaseRepository<SbiSummaryEntity, S
             Pageable pageable
     );
 
-    @Query(SBI_DETAILS_SUMMARY_QUERY + " ORDER BY countOfAssociatedDevices DESC")
+    @Query(
+            value = SBI_DETAILS_SUMMARY_QUERY + " ORDER BY countOfAssociatedDevices DESC",
+            countQuery = SBI_DETAILS_SUMMARY_COUNT_QUERY
+    )
     Page<SbiSummaryEntity> getSummaryOfSbiDetailsByDevicesCountDesc(
             @Param("partnerId") String partnerId,
             @Param("orgName") String orgName,
