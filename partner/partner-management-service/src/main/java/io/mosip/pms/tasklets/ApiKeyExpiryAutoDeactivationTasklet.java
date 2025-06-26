@@ -63,7 +63,6 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
                         apiKeyDetails.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
                         apiKeyDetails.setUpdBy(this.getClass().getSimpleName());
                         partnerPolicyRepository.save(apiKeyDetails);
-                        deactivatedCount++;
 
                         // Send event to websub publisher
                         Map<String, Object> data = new HashMap<>();
@@ -79,7 +78,8 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
                         );
 
                         // TODO: Send email notification to partner
-
+                        
+                        deactivatedCount++;
                         log.info("Deactivated expired API Key with id {} for partner id : {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId());
                     }
                 } catch (Exception e) {
@@ -90,12 +90,10 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
                             "apiKeyId",
                             AuditConstant.AUDIT_SYSTEM
                     );
-                    throw e;
                 }
             }
         } catch (Exception e) {
             log.error("Error occurred while running ApiKeyExpiryAutoDeactivationTasklet: {}", e.getMessage(), e);
-            throw e;
         }
         log.info("ApiKeyExpiryAutoDeactivationTasklet: DONE, deactivated {} expired API Keys.", deactivatedCount);
         return RepeatStatus.FINISHED;
