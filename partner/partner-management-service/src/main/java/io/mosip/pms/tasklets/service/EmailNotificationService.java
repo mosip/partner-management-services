@@ -116,13 +116,13 @@ public class EmailNotificationService {
 	private void saveAuditLogForEmailSuccess(NotificationEntity notificationEntity) {
 		String notificationType = notificationEntity.getNotificationType();
 		auditUtil.setAuditRequestDto(batchJobHelper.getAuditLogEventTypeForEmail(notificationType, true),
-				notificationEntity.getId(), notificationType, AuditConstant.AUDIT_SYSTEM);
+				notificationEntity.getId(), "notificationId", AuditConstant.AUDIT_SYSTEM);
 	}
 
 	private void saveAuditLogForEmailFailure(NotificationEntity notificationEntity) {
 		String notificationType = notificationEntity.getNotificationType();
 		auditUtil.setAuditRequestDto(batchJobHelper.getAuditLogEventTypeForEmail(notificationType, false), "failure",
-				notificationType, AuditConstant.AUDIT_SYSTEM);
+				"notificationId", AuditConstant.AUDIT_SYSTEM);
 	}
 
 	private String populateTemplate(String templateContent, NotificationEntity notificationEntity)
