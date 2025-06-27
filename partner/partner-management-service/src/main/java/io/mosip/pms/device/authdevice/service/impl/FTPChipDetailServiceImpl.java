@@ -604,8 +604,18 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			ftmDetailResponseDto.setActive(updatedDetail.isActive());
 
 			responseWrapper.setResponse(ftmDetailResponseDto);
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE , FTPChipDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE , FTPChipDetail.class.getCanonicalName()),
+				"AUT-007", ftmId, "ftpChipDetailId");
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateFtm method of FTPChipDetailServiceImpl - " + ex.getMessage());
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_CREATE, FTPChipDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, ex.getErrorCode(), ex.getErrorText()),
+				"AUT-003", ftmId, "ftpChipDetailId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -613,6 +623,11 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					"In deactivateFtm method of FTPChipDetailServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.DEACTIVATE_FTM_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.DEACTIVATE_FTM_ERROR.getErrorMessage();
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_CREATE, FTPChipDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, errorCode, errorMessage),
+				"AUT-003", ftmId, "ftpChipDetailId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(patchDeactivateFtm);
