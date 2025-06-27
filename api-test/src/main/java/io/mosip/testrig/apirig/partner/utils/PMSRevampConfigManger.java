@@ -15,7 +15,7 @@ public class PMSRevampConfigManger extends ConfigManager{
 	public static void init() {
 		Logger configManagerLogger = Logger.getLogger(ConfigManager.class);
 		configManagerLogger.setLevel(Level.WARN);
-		
+
 		Map<String, Object> moduleSpecificPropertiesMap = new HashMap<>();
 		// Load scope specific properties
 		try {
@@ -23,7 +23,8 @@ public class PMSRevampConfigManger extends ConfigManager{
 			Properties props = getproperties(path);
 			// Convert Properties to Map and add to moduleSpecificPropertiesMap
 			for (String key : props.stringPropertyNames()) {
-				moduleSpecificPropertiesMap.put(key, props.getProperty(key));
+				String value = System.getenv(key) == null ? props.getProperty(key) : System.getenv(key);
+				moduleSpecificPropertiesMap.put(key, value);
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
