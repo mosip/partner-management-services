@@ -1,6 +1,7 @@
 package io.mosip.pms.tasklets;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.constant.AuditConstant;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
@@ -10,12 +11,13 @@ import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceHistoryRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
 import io.mosip.pms.device.authdevice.service.impl.SecureBiometricInterfaceServiceImpl;
+import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -38,6 +40,9 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
 
     @Autowired
     SecureBiometricInterfaceServiceImpl secureBiometricInterfaceServiceImpl;
+
+    @Autowired
+    AuditUtil auditUtil;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
@@ -66,6 +71,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                         deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
                                         deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
                                         deviceDetailRepository.save(deviceDetail);
+                                        auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                     }
                                     log.info("{} approved devices have been deactivated for SBI id: {}", approvedDevices.size(), sbiId);
                                 }
@@ -77,6 +83,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                         deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
                                         deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
                                         deviceDetailRepository.save(deviceDetail);
+                                        auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                     }
                                     log.info("{} pending approval devices have been rejected for SBI id: {}", pendingApprovalDevices.size(), sbiId);
                                 }
@@ -96,10 +103,12 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                             SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
                             secureBiometricInterfaceServiceImpl.getUpdateHistoryMapping(history, updatedSbi);
                             sbiHistoryRepository.save(history);
+                            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_SBI_SUCCESS, sbiId, "sbiId", AuditConstant.AUDIT_SYSTEM);
                         }
                     }
                 } catch (Exception e) {
                     log.error("Error deactivating the SBI with id {} for partner id {}: {} }", sbiDetail.getId(), sbiDetail.getProviderId(), e.getMessage(), e);
+                    auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_SBI_FAILURE, sbiDetail.getId(), "sbiId", AuditConstant.AUDIT_SYSTEM);
                 }
             }
         } catch (Exception e) {
