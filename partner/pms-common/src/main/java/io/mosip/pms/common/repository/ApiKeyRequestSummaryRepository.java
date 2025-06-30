@@ -20,7 +20,11 @@ public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyReq
             "WHEN pp.isActive = false THEN 'deactivated' " +
             "WHEN pp.isActive = true THEN 'activated' " +
             "END, " +
-            "pp.createdDateTime, pp.validToDatetime) " +
+            "pp.createdDateTime, pp.validToDatetime, " +
+            "CASE " +
+            "WHEN pp.validToDatetime < CURRENT_DATE THEN true " +
+            "ELSE false " +
+            "END AS isApiKeyExpiredStatus ) " +
             "FROM PartnerPolicyV2 pp " +
             "LEFT JOIN pp.partner p " +
             "LEFT JOIN pp.policy ap " +

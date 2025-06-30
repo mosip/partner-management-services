@@ -43,4 +43,7 @@ public class ApiKeyRequestSummaryV2Dto {
 
     @Schema(description = "Date and time when the API key expires", example = "2024-08-01T14:30:00Z")
     private Date apiKeyExpiryDateTime;
+
+    @Schema(description = "Indicates whether the API key is expired (true if expired, false otherwise)", example = "false")
+    private Boolean isApiKeyExpiredStatus;
 }

@@ -29,7 +29,8 @@ import java.util.Date;
                                 @ColumnResult(name = "policyGroupDescription", type = String.class),
                                 @ColumnResult(name = "status", type = String.class),
                                 @ColumnResult(name = "createdDateTime", type = Date.class),
-                                @ColumnResult(name = "apiKeyExpiryDateTime", type = Date.class)
+                                @ColumnResult(name = "apiKeyExpiryDateTime", type = Date.class),
+                                @ColumnResult(name = "isApiKeyExpiredStatus", type = Boolean.class)
                         }
                 )
         }
@@ -39,7 +40,7 @@ public class ApiKeyRequestsSummaryEntity {
     public ApiKeyRequestsSummaryEntity(
             String apiKeyId, String partnerId, String apiKeyLabel, String orgName, String policyId,
             String policyName, String policyDescription, String policyGroupId, String policyGroupName, String policyGroupDescription,
-            String status, Date createdDateTime, Date apiKeyExpiryDateTime) {
+            String status, Date createdDateTime, Date apiKeyExpiryDateTime, Boolean isApiKeyExpiredStatus) {
         this.apiKeyId = apiKeyId;
         this.partnerId = partnerId;
         this.apiKeyLabel = apiKeyLabel;
@@ -53,6 +54,7 @@ public class ApiKeyRequestsSummaryEntity {
         this.status = status;
         this.createdDateTime = createdDateTime;
         this.apiKeyExpiryDateTime = apiKeyExpiryDateTime;
+        this.isApiKeyExpiredStatus = isApiKeyExpiredStatus;
     }
 
     // No-argument constructor
@@ -86,4 +88,6 @@ public class ApiKeyRequestsSummaryEntity {
     private Date createdDateTime;
 
     private Date apiKeyExpiryDateTime;
+
+    private Boolean isApiKeyExpiredStatus;
 }

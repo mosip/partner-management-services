@@ -415,18 +415,14 @@ public class PartnerManagementController {
 			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyName", required = false) String policyName,
-			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
-			@RequestParam(value = "expiryPeriod", required = false)
-			@Min(value = 1, message = "Expiry period must be at least 1 day.")
-			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
-			Integer expiryPeriod
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
-	@GetMapping(value = "/v2/partner-api-keys")
+	@GetMapping(value = "/partner-api-keys/v2")
 	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners.",
 			description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
 	@ApiResponses(value = {
