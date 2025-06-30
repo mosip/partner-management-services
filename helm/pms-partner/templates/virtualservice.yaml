@@ -27,12 +27,12 @@ spec:
           number: {{ .Values.service.port }}
     corsPolicy:
     {{- include "common.tplvalues.render" ( dict "value" .Values.istio.corsPolicy "context" $ ) | nindent 6 }}
-      headers:
-        response:
-          set:
-            Vary: Origin
+
     headers:
       request:
         set:
           x-forwarded-proto: https
+      response:
+          set:
+            vary: Origin
 {{- end }}
