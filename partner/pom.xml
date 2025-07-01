@@ -36,9 +36,9 @@
 
     <repositories>
         <repository>
-            <id>ossrh</id>
-            <name>CentralRepository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<id>ossrh-central</id>
+			<name>MavenCentralRepository</name>
+			<url>https://central.sonatype.com/repository/maven-snapshots</url>
             <layout>default</layout>
             <snapshots>
             <enabled>true</enabled>
@@ -56,14 +56,14 @@
     </repositories>
 	
 	<distributionManagement>
-                <snapshotRepository>
-                        <id>ossrh</id>
-                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                        <id>ossrh</id>
-                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
+		<snapshotRepository>
+				<id>ossrh</id>
+				<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+				<id>ossrh</id>
+				<url>https://central.sonatype.com/api/v1/publisher</url>
+		</repository>
 	</distributionManagement>	
 
 	<properties>
@@ -90,6 +90,7 @@
 		</sonar.coverage.exclusions>
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<kernel-auth-adapter.version>1.2.0.1</kernel-auth-adapter.version>
+		<central.publishing.maven.plugin.version>0.7.0</central.publishing.maven.plugin.version>
 	</properties>
 	
 	<modules>		
@@ -151,26 +152,6 @@
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.12.0</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>2.12.0</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>2.12.0</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-jsr310</artifactId>
-				<version>2.12.0</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>	
 	<build>	
@@ -235,14 +216,13 @@
                 	  	</configuration>
                 	</plugin>
 			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>${central.publishing.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+					<publishingServerId>ossrh</publishingServerId>
+					<autoPublish>false</autoPublish>
 				</configuration>
 			</plugin>
 		 	<plugin>

@@ -117,6 +117,9 @@
 							<goal>build-info</goal>
 							<goal>repackage</goal>
 						</goals>
+						<configuration>
+							<attach>false</attach>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -150,8 +153,21 @@
 							<maxAttempts>100</maxAttempts>
 						</configuration>
 						<executions>
+							<!-- Build info and repackage -->
+							<execution>
+								<id>build-info-repackage</id>
+								<goals>
+									<goal>build-info</goal>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<attach>false</attach>
+								</configuration>
+							</execution>
+							<!-- Integration test startup -->
 							<execution>
 								<id>pre-integration-test</id>
+								<phase>pre-integration-test</phase>
 								<goals>
 									<goal>start</goal>
 								</goals>
@@ -166,19 +182,14 @@
 										<argument>--server.port=8090</argument>
 										<argument>--server.servlet.context-path=/app/generic</argument>
 									</arguments>
-
 								</configuration>
 							</execution>
+							<!-- Integration test shutdown -->
 							<execution>
 								<id>post-integration-test</id>
+								<phase>post-integration-test</phase>
 								<goals>
 									<goal>stop</goal>
-								</goals>
-							</execution>
-							<execution>
-								<goals>
-									<goal>build-info</goal>
-									<goal>repackage</goal>
 								</goals>
 							</execution>
 						</executions>
