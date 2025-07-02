@@ -23,9 +23,11 @@
         <div style="font-size: 14px;">
           <p><strong>عزيزي ${partnerId}،</strong></p>
           <p>
-            نود إعلامك بأن شهادة شريحة FTM لـ <strong>${make}</strong> -
-            <strong>${model}</strong> (معرّف FTM: <strong>${ftmId}</strong>) من المقرر أن تنتهي في
-            <strong>${expiryDateTime} UTC</strong>. لضمان الاستمرارية في الخدمة، يرجى رفع شهادة التجديد قبل تاريخ الانتهاء.
+            نود إعلامكم بأن شهادة شريحة FTM لـ  
+            <strong>النوع: ${make}</strong> - <strong>الموديل: ${model}</strong> (معرّف FTM:  
+            <strong>${ftmId}</strong>) من المقرر أن تنتهي صلاحيتها في  
+            <strong>${expiryDateTime} بالتوقيت العالمي</strong>. لضمان استمرارية  
+            الوظائف وعدم انقطاع الخدمات، نرجو منكم تحميل الشهادة لتجديدها قبل تاريخ الانتهاء.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">تفاصيل الشهادة</p>

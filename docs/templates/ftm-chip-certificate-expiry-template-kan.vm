@@ -23,10 +23,12 @@
         <div style="font-size: 14px;">
           <p><strong>ಪ್ರಿಯ ${partnerId},</strong></p>
           <p>
-            ಇದು ನಿಮಗೆ ತಿಳಿಸಲು FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರ
-            <strong>${make}</strong> - <strong>${model}</strong> (FTM ID:
-            <strong>${ftmId}</strong>) ಅವಧಿ ಮುಗಿಯಲು ನಿಗದಿಪಡಿಸಲಾಗಿದೆ
-            <strong>${expiryDateTime} UTC</strong>. ನಿರಂತರ ಕಾರ್ಯಕ್ಷಮತೆ ಮತ್ತು ಅಡೆತಡೆಯಿಲ್ಲದ ಸೇವೆಗಳನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಲು, ಮುಕ್ತಾಯ ದಿನಾಂಕದ ಮೊದಲು ನವೀಕರಣಕ್ಕಾಗಿ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ನಾವು ನಿಮ್ಮನ್ನು ವಿನಂತಿಸುತ್ತೇವೆ.
+            ಈ ಮೂಲಕ ನಿಮಗೆ ತಿಳಿಸಲಾಗುತ್ತಿದೆ कि  
+            <strong>ತಯಾರಕರು: ${make}</strong> - <strong>ಮಾದರಿ: ${model}</strong> (FTM ಐಡಿ:  
+            <strong>${ftmId}</strong>) ಗೆ ಸಂಬಂಧಿಸಿದ FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರವು  
+            <strong>${expiryDateTime} UTC</strong> ರಂದು ಅವಧಿ ಮುಗಿಯಲಿದೆ.  
+            ನಿರಂತರ ಕಾರ್ಯಕ್ಷಮತೆ ಮತ್ತು ಸೇವೆಗಳ ಅಡಚಣೆಯಿಂದ ತಪ್ಪಿಸಿಕೊಳ್ಳಲು,  
+            ದಯವಿಟ್ಟು ಅವಧಿ ಮುಗಿಯುವ ಮೊದಲು ಪ್ರಮಾಣಪತ್ರವನ್ನು ನವೀಕರಣಕ್ಕಾಗಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">ಪ್ರಮಾಣಪತ್ರ ವಿವರಗಳು</p>

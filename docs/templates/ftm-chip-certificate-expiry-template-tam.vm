@@ -23,10 +23,11 @@
         <div style="font-size: 14px;">
           <p><strong>அன்புள்ள ${partnerId},</strong></p>
           <p>
-            இது உங்களுக்குத் தெரிவிக்க, FTM சிப் சான்றிதழ்
-            <strong>${make}</strong> - <strong>${model}</strong> (FTM ஐடி:
-            <strong>${ftmId}</strong>) காலாவதியாக திட்டமிடப்பட்டுள்ளது
-            <strong>${expiryDateTime} UTC</strong>. தொடர்ச்சியான செயல்பாடு மற்றும் தடையற்ற சேவைகளை உறுதி செய்வதற்காக, காலாவதி தேதிக்கு முன்னர் புதுப்பிப்பதற்கான சான்றிதழை பதிவேற்றுமாறு கேட்டுக்கொள்கிறோம்.
+            இந்த FTM சிப் சான்றிதழ்  
+            <strong>தயாரிப்பாளர்: ${make}</strong> - <strong>மாதிரி: ${model}</strong> (FTM ஐடி:  
+            <strong>${ftmId}</strong>) ${expiryDateTime} UTC அன்று காலாவதியாக உள்ளது என்பதைத் தெரிவித்துக் கொள்கிறோம்.  
+            தொடர்ந்த செயல்பாடு மற்றும் இடையற்ற சேவையை உறுதிப்படுத்த,  
+            சான்றிதழை காலாவதியாகும் தேதிக்கு முன் புதுப்பிக்கக் கேட்டுக்கொள்கிறோம்.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">சான்றிதழ் விவரங்கள்</p>
