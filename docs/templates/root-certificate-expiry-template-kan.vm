@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="kn">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style></style>
+	</head>
+	<body>
+		<div style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;" cellpadding="0" cellspacing="0" width="600">
+			<div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+				<img style=" height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;" src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png" alt="Logo" />
+			</div>
+			<div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+				<div style="font-size: 14px;">
+					<p><strong>ಪ್ರಿಯ ${partnerId},</strong></p>
+					<p>${certificateId} ಪ್ರಮಾಣಪತ್ರ ಐಡಿ ಹೊಂದಿರುವ ರೂಟ್ CA ಪ್ರಮಾಣಪತ್ರವು ${expiryDateTime} UTC ರಂದು ಮುಕ್ತಾಯಗೊಳ್ಳಲಿದೆ ಎಂದು ನಿಮಗೆ ತಿಳಿಸಲು ಇದು. ಅಡಚಣೆಯಿಲ್ಲದ ಸೇವೆಗಳನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಲು, ಮುಕ್ತಾಯ ದಿನಾಂಕದ ಮೊದಲು ನವೀಕರಣಕ್ಕಾಗಿ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ನಾವು ನಿಮ್ಮನ್ನು ವಿನಂತಿಸುತ್ತೇವೆ.</p>
+					<div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+						<p style="font-size: 16px; font-weight: bold;">ಪ್ರಮಾಣಪತ್ರ ವಿವರಗಳು</p>
+						<hr style="border-top: 1px solid #E5E5E5;"/>
+						<p style="padding: 5px 0px; font-weight: 600;">ಪ್ರಮಾಣಪತ್ರ ಐಡಿ<br><span style="font-weight: 400;">${certificateId}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">ಮುಕ್ತಾಯ ದಿನಾಂಕ ಮತ್ತು ಸಮಯ<br><span style="font-weight: 400;">${expiryDateTime} UTC</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">ಪಾಲುದಾರ ಡೊಮೇನ್<br><span style="font-weight: 400;">${partnerDomain}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">ನೀಡಲಾಗಿದೆ<br><span style="font-weight: 400;">${issuedTo}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">ನೀಡಿದವರು<br><span style="font-weight: 400;">${issuedBy}</span></P>
+						<p style="padding: 5px 0px; font-weight: 600;">ಕ್ರಮ ಅಗತ್ಯವಿದೆ<br><span style="font-weight: 400;"> ನವೀಕರಣಕ್ಕಾಗಿ ಪ್ರಮಾಣಪತ್ರವನ್ನು 'ಸರ್ಟಿಫಿಕೇಟ್ ಟ್ರಸ್ಟ್ ಸ್ಟೋರ್' ನಲ್ಲಿ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.</span></P>
+					</div>
+					<p>ಪ್ರಮಾಣಪತ್ರದ ಅವಧಿ ಮುಗಿಯುವ ಮೊದಲು ಅದನ್ನು ನವೀಕರಿಸಲು ವಿಫಲವಾದರೆ ಸೇವೆಯಲ್ಲಿ ಅಡಚಣೆಗಳು ಉಂಟಾಗಬಹುದು.</p>
+					<p>ನವೀಕರಣವನ್ನು ಮುಂದುವರಿಸಲು, ದಯವಿಟ್ಟು ಈ ಹಂತಗಳನ್ನು ಅನುಸರಿಸಿ:</p>
+					<ol>
+						<li>PMS ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ..</li>
+						<li>ಪಾಲುದಾರ ನಿರ್ವಾಹಕ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ 'ಸರ್ಟಿಫಿಕೇಟ್ ಟ್ರಸ್ಟ್ ಸ್ಟೋರ್' ಗೆ ನ್ಯಾವಿಗೇಟ್ ಮಾಡಿ ಮತ್ತು 'ರೂಟ್ CA ಪ್ರಮಾಣಪತ್ರ' ಟ್ಯಾಬ್ ಆಯ್ಕೆಮಾಡಿ.</li>
+						<li>ನವೀಕರಣಕ್ಕಾಗಿ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಮತ್ತು ಪ್ರಕ್ರಿಯೆಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು 'ಟ್ರಸ್ಟ್ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ' ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ.</li>
+					</ol>
+					<p>ದಯವಿಟ್ಟು ಗಮನಿಸಿ, ಮುಕ್ತಾಯ ದಿನಾಂಕ ಮತ್ತು ಸಮಯವನ್ನು UTC ಸ್ವರೂಪದಲ್ಲಿ ನೀಡಲಾಗಿದೆ, ಆದ್ದರಿಂದ ನಿಮ್ಮ ನವೀಕರಣವನ್ನು ಯೋಜಿಸುವಾಗ ಯಾವುದೇ ಸಮಯ ವಲಯ ವ್ಯತ್ಯಾಸಗಳನ್ನು ದಯವಿಟ್ಟು ಪರಿಗಣಿಸಿ.</p>
+					<p>ಈ ವಿಷಯದ ಬಗ್ಗೆ ನಿಮ್ಮ ತ್ವರಿತ ಗಮನಕ್ಕೆ ಧನ್ಯವಾದಗಳು.</p>
+					<p>ಶುಭಾಶಯಗಳು,<br>MOSIP</p>
+					<p style="padding: 6px 0px;">** ಇದು ಸ್ವಯಂ-ರಚಿತ ಇಮೇಲ್. ದಯವಿಟ್ಟು ಈ ಇಮೇಲ್‌ಗೆ ಪ್ರತ್ಯುತ್ತರಿಸಬೇಡಿ. **</p>
+					<p>ವೆಬ್‌ಸೈಟ್: <a target="_blank" href="https://www.mosip.io">www.mosip.io</a></p>
+					<hr style="border-top: 1px solid #edeef0;"/>
+				</div>
+				<div style="font-size: 14px; margin-top: 1.5rem;">
+					<div style="margin: auto; border-collapse: collapse; text-align: center;">
+						<a target="_blank" href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all">
+							<img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png" alt="linkedin" style="width: 24px; height: 24px; padding: 0px 4px;"/>
+						</a>
+						<a target="_blank" href="https://www.youtube.com/@mosip16">
+							<img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png" alt="youtube" style="width: 24px; height: 24px; padding: 0px 4px;"/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

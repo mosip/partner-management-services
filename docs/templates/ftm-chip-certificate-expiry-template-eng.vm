@@ -24,7 +24,7 @@
           <p><strong>Dear ${partnerId},</strong></p>
           <p>
             This is to inform you that the FTM Chip Certificate for
-            <strong>${make}</strong> - <strong>${model}</strong> (FTM ID:
+            <strong>Make: ${make}</strong> - <strong>Model: ${model}</strong> (FTM ID:
             <strong>${ftmId}</strong>) is scheduled to expire on
             <strong>${expiryDateTime} UTC</strong>. To ensure continued
             functionality and uninterrupted services, we request you to upload

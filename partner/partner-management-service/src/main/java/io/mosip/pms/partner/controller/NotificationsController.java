@@ -84,7 +84,11 @@ public class NotificationsController {
             @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate,
             @RequestParam(value = "ftmId", required = false) String ftmId,
             @RequestParam(value = "make", required = false) String make,
-            @RequestParam(value = "model", required = false) String model
+            @RequestParam(value = "model", required = false) String model,
+            @RequestParam(value = "apiKeyName", required = false) String apiKeyName,
+            @RequestParam(value = "policyName", required = false) String policyName,
+            @RequestParam(value = "sbiId", required = false) String sbiId,
+            @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
@@ -122,6 +126,18 @@ public class NotificationsController {
         }
         if (model != null) {
             filterDto.setModel(model);
+        }
+        if (apiKeyName != null) {
+            filterDto.setApiKeyName(apiKeyName);
+        }
+        if (policyName != null) {
+            filterDto.setPolicyName(policyName);
+        }
+        if (sbiId != null) {
+            filterDto.setSbiId(sbiId);
+        }
+        if (sbiVersion != null) {
+            filterDto.setSbiVersion(sbiVersion);
         }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }

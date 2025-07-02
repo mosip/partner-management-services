@@ -64,7 +64,7 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		int countOfCertsExpiringWithin30Days = 0;
 		int countOfPartnersWithInvalidCerts = 0;
 		try {
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Active Partners
+			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
 			// in PMS
 			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
 			pmsPartnerAdmins.forEach(admin -> {
@@ -84,11 +84,11 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 				if (decodedPartnerCertificate != null) {
 					log.info("Checking if certificate is expiring for partner id {}",
 							pmsPartner.getId() + " within next 30 days.");
-					LocalDateTime partnerCertificateExpiryDate = decodedPartnerCertificate.getNotAfter().toInstant()
-							.atZone(ZoneId.of("UTC")).toLocalDateTime();
+					LocalDateTime partnerCertificateExpiryDate = partnerCertificateExpiryHelper
+							.getCertificateExpiryDateTime(decodedPartnerCertificate);
 					log.info("The certificate expiry date is {}", partnerCertificateExpiryDate);
-					boolean isExpiringWithin30Days = partnerCertificateExpiryHelper
-							.checkIfCertificateIsExpiring(pmsPartner, partnerCertificateExpiryDate, 30, true);
+					boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(pmsPartner,
+							partnerCertificateExpiryDate, 30, true);
 					if (isExpiringWithin30Days) {
 						countOfCertsExpiringWithin30Days++;
 						log.info("Certificate is expiring for partner id {}",
@@ -100,21 +100,21 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 							Integer expiryPeriod = expiryPeriodsIterator.next();
 							log.info("Checking for certificate expiry after " + expiryPeriod + " days.");
 							boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
-									.checkIfCertificateIsExpiring(pmsPartner, partnerCertificateExpiryDate,
-											expiryPeriod, false);
+									.checkIfExpiring(pmsPartner, partnerCertificateExpiryDate, expiryPeriod, false);
 							// Step 5: If yes, add the notification
 							if (isExpiringAfterExpiryPeriod) {
 								List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
-								CertificateDetailsDto certificateDetailsList = partnerCertificateExpiryHelper
+								CertificateDetailsDto certificateDetails = partnerCertificateExpiryHelper
 										.populateCertificateDetails(expiryPeriod, pmsPartner,
 												decodedPartnerCertificate);
-								expiringCertificates.add(certificateDetailsList);
+								expiringCertificates.add(certificateDetails);
 								// Decrypt the email ID if it's already encrypted to avoid encrypting it again
-								String emailId = keyManagerHelper.decryptData(pmsPartner.getEmailId());
-								NotificationEntity savedNotification = batchJobHelper.saveCertificateExpiryNotification(
-										PartnerConstants.PARTNER, pmsPartner, expiringCertificates, emailId);
+								String decryptedEmailId = keyManagerHelper.decryptData(pmsPartner.getEmailId());
+								NotificationEntity savedNotification = batchJobHelper.saveNotification(
+										PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, pmsPartner, expiringCertificates, null,
+										null, null, decryptedEmailId);
 								// Step 6: send email notification
-								emailNotificationService.sendEmailNotification(savedNotification, emailId);
+								emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 								log.info("Created partner certificate expiry notification with notification id "
 										+ savedNotification.getId());
 								totalNotificationsCreated.add(savedNotification.getId());

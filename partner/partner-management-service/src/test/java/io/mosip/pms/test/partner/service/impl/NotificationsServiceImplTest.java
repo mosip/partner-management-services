@@ -243,7 +243,7 @@ public class NotificationsServiceImplTest {
 
         NotificationEntity notificationEntity = new NotificationEntity();
         notificationEntity.setId("12345");
-        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY");
+        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
         notificationEntity.setPartnerId("123");
         notificationEntity.setEmailId("abc@gmail.com");
         notificationEntity.setEmailLangCode("eng");
@@ -283,7 +283,7 @@ public class NotificationsServiceImplTest {
 
         DismissNotificationResponseDto responseDto = new DismissNotificationResponseDto();
         responseDto.setId("12345");
-        responseDto.setNotificationType("PARTNER_CERT_EXPIRY");
+        responseDto.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
         responseDto.setNotificationStatus("DISMISSED");
         when(mapper.convertValue(entity, DismissNotificationResponseDto.class)).thenReturn(responseDto);
         notificationsServiceImpl.dismissNotification("12345", requestDto);
@@ -352,12 +352,12 @@ public class NotificationsServiceImplTest {
 
         DismissNotificationResponseDto responseDto = new DismissNotificationResponseDto();
         responseDto.setId("12345");
-        responseDto.setNotificationType("PARTNER_CERT_EXPIRY");
+        responseDto.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
         responseDto.setNotificationStatus("DISMISSED");
         when(mapper.convertValue(entity, DismissNotificationResponseDto.class)).thenReturn(responseDto);
         notificationsServiceImpl.dismissNotification("12345", requestDto);
 
-        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY");
+        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
         notificationEntity.setNotificationStatus("DISMISSED");
         when(notificationServiceRepository.findById(anyString())).thenReturn(optionalEntity);
         notificationsServiceImpl.dismissNotification("12345", requestDto);

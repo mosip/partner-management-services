@@ -11,4 +11,5 @@ public class SbiFilterDto {
     private String sbiVersion;
     private String status;
     private String sbiExpiryStatus;
+    private Integer expiryPeriod;
 }

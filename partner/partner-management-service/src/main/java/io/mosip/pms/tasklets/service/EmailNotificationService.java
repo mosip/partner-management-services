@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.apache.velocity.VelocityContext;
@@ -33,6 +32,9 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.EmailTemplateDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.ApiKeyDetailsDto;
+import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -115,13 +117,13 @@ public class EmailNotificationService {
 	private void saveAuditLogForEmailSuccess(NotificationEntity notificationEntity) {
 		String notificationType = notificationEntity.getNotificationType();
 		auditUtil.setAuditRequestDto(batchJobHelper.getAuditLogEventTypeForEmail(notificationType, true),
-				notificationEntity.getId(), notificationType, AuditConstant.AUDIT_SYSTEM);
+				notificationEntity.getId(), "notificationId", AuditConstant.AUDIT_SYSTEM);
 	}
 
 	private void saveAuditLogForEmailFailure(NotificationEntity notificationEntity) {
 		String notificationType = notificationEntity.getNotificationType();
 		auditUtil.setAuditRequestDto(batchJobHelper.getAuditLogEventTypeForEmail(notificationType, false), "failure",
-				notificationType, AuditConstant.AUDIT_SYSTEM);
+				"notificationId", AuditConstant.AUDIT_SYSTEM);
 	}
 
 	private String populateTemplate(String templateContent, NotificationEntity notificationEntity)
@@ -140,27 +142,57 @@ public class EmailNotificationService {
 				.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
 
 		switch (notificationType) {
-			case PartnerConstants.PARTNER_CERT_EXPIRY, PartnerConstants.ROOT_CERT_EXPIRY,
-				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, PartnerConstants.ROOT_CERT_EXPIRY,
+				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 				CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
 				if (cert != null) {
 					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("certificateId", cert.getCertificateId());
-					context.put("expiryDateTime", cert.getExpiryDateTime());
+					context.put("expiryDateTime", formatDateTime(cert.getExpiryDateTime()));
 					context.put("partnerDomain", cert.getPartnerDomain());
 					context.put("issuedTo", cert.getIssuedTo());
 					context.put("issuedBy", cert.getIssuedBy());
 				}
 				break;
-			case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 				FtmDetailsDto ftm = notificationDetails.getFtmDetails().stream().findFirst().orElse(null);
 				if (ftm != null) {
 					context.put("ftmId", ftm.getFtmId());
 					context.put("make", ftm.getMake());
 					context.put("model", ftm.getModel());
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("certificateId", ftm.getCertificateId());
+					context.put("expiryDateTime", formatDateTime(ftm.getExpiryDateTime()));
+					context.put("partnerDomain", ftm.getPartnerDomain());
+					context.put("issuedTo", ftm.getIssuedTo());
+					context.put("issuedBy", ftm.getIssuedBy());
 				}
 				break;
-			case PartnerConstants.WEEKLY_SUMMARY:
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
+				ApiKeyDetailsDto apiKey = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
+				if (apiKey != null) {
+					context.put("apiKeyName", apiKey.getApiKeyName());
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("partnerDomain", "AUTH");
+					context.put("expiryDateTime", formatDateTime(apiKey.getExpiryDateTime()));
+					context.put("expiryPeriod", apiKey.getExpiryPeriod());
+					context.put("policyGroup", apiKey.getPolicyGroup());
+					context.put("policyName", apiKey.getPolicyName());
+				}
+				break;
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
+				SbiDetailsDto sbi = notificationDetails.getSbiDetails().stream().findFirst().orElse(null);
+				if (sbi != null) {
+					context.put("sbiId", sbi.getSbiId());
+					context.put("sbiVersion", sbi.getSbiVersion());
+					context.put("sbiBinaryHash", sbi.getSbiBinaryHash());
+					context.put("sbiCreationDate", formatDateTime(sbi.getSbiCreationDate()));
+					context.put("expiryDateTime", formatDateTime(sbi.getExpiryDateTime()));
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("expiryPeriod", sbi.getExpiryPeriod());
+				}
+				break;
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 				LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -172,23 +204,19 @@ public class EmailNotificationService {
 						.orElse(Collections.emptyList());
 				List<FtmDetailsDto> ftmDetails = Optional.ofNullable(notificationDetails.getFtmDetails())
 						.orElse(Collections.emptyList());
+				List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
+						.orElse(Collections.emptyList());
+				List<SbiDetailsDto> sbiDetails = Optional.ofNullable(notificationDetails.getSbiDetails())
+						.orElse(Collections.emptyList());
 
-				List<String> partnerIds = new ArrayList<>();
-				List<String> ftmIds = new ArrayList<>();
-
-				for (CertificateDetailsDto certDetail : certificateDetails) {
-					partnerIds.add(certDetail.getPartnerId());
-				}
-
-				for (FtmDetailsDto ftmDetail : ftmDetails) {
-						ftmIds.add(ftmDetail.getFtmId());
-				}
-
-
-				context.put("partnerCertificateCount", notificationDetails.getCertificateDetails().size());
-				context.put("ftmChipCertificateCount", notificationDetails.getFtmDetails().size());
-				context.put("partnerIdList", partnerIds);
-				context.put("ftmIdList", ftmIds);
+				context.put("partnerCertificateCount", certificateDetails.size());
+				context.put("ftmChipCertificateCount", ftmDetails.size());
+				context.put("apiKeyCount", apiKeyDetails.size());
+				context.put("sbiCount", sbiDetails.size());
+				context.put("certificateDetails", certificateDetails);
+				context.put("ftmDetails", ftmDetails);
+				context.put("apiKeyDetails", apiKeyDetails);
+				context.put("sbiDetails", sbiDetails);
 				break;
 
 			default:
@@ -224,4 +252,13 @@ public class EmailNotificationService {
 		}
 	}
 
+	public static String formatDateTime(String dateTimeString) {
+		try {
+			LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss");
+			return dateTime.format(formatter);
+		} catch (Exception e) {
+			return dateTimeString;  // fallback
+		}
+	}
 }

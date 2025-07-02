@@ -58,6 +58,18 @@ public class TemplateHelper {
 	@Value("${email.notification.ftm.chip.cert.expiry.subject.template}")
 	private String ftmChipCertExpirySubjectTemplate;
 
+	@Value("${email.notification.api.key.expiry.template}")
+	private String apiKeyExpiryTemplate;
+
+	@Value("${email.notification.api.key.expiry.subject.template}")
+	private String apiKeyExpirySubjectTemplate;
+
+	@Value("${email.notification.sbi.expiry.template}")
+	private String sbiExpiryTemplate;
+
+	@Value("${email.notification.sbi.expiry.subject.template}")
+	private String sbiExpirySubjectTemplate;
+
 	@Value("${resource.template.url}")
 	private String getTemplateUrl;
 
@@ -108,37 +120,45 @@ public class TemplateHelper {
 
 	private String getSubjectTemplateTypeCode(String notificationType) {
 		switch (notificationType) {
-		case PartnerConstants.ROOT_CERT_EXPIRY:
-			return rootCertExpirySubjectTemplate;
-		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
-			return intermediateCertExpirySubjectTemplate;
-		case PartnerConstants.PARTNER_CERT_EXPIRY:
-			return partnerCertExpirySubjectTemplate;
-		case PartnerConstants.WEEKLY_SUMMARY:
-			return weeklySummarySubjectTemplate;
-		case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
-			return ftmChipCertExpirySubjectTemplate;
-		default:
-			throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
-					ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
+			case PartnerConstants.ROOT_CERT_EXPIRY:
+				return rootCertExpirySubjectTemplate;
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
+				return intermediateCertExpirySubjectTemplate;
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
+				return partnerCertExpirySubjectTemplate;
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
+				return weeklySummarySubjectTemplate;
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
+				return ftmChipCertExpirySubjectTemplate;
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
+				return apiKeyExpirySubjectTemplate;
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
+				return sbiExpirySubjectTemplate;
+			default:
+				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
+						ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
 		}
 	}
 
 	private String getBodyTemplateTypeCode(String notificationType) {
 		switch (notificationType) {
-		case PartnerConstants.ROOT_CERT_EXPIRY:
-			return rootCertExpiryTemplate;
-		case PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
-			return intermediateCertExpiryTemplate;
-		case PartnerConstants.PARTNER_CERT_EXPIRY:
-			return partnerCertExpiryTemplate;
-		case PartnerConstants.WEEKLY_SUMMARY:
-			return weeklySummaryTemplate;
-		case PartnerConstants.FTM_CHIP_CERT_EXPIRY:
-			return ftmChipCertExpiryTemplate;
-		default:
-			throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
-					ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
+			case PartnerConstants.ROOT_CERT_EXPIRY:
+				return rootCertExpiryTemplate;
+			case PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
+				return intermediateCertExpiryTemplate;
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
+				return partnerCertExpiryTemplate;
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
+				return weeklySummaryTemplate;
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
+				return ftmChipCertExpiryTemplate;
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
+				return apiKeyExpiryTemplate;
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
+				return sbiExpiryTemplate;
+			default:
+				throw new BatchJobServiceException(ErrorCode.INVALID_TEMPLATE_TYPE.getErrorCode(),
+						ErrorCode.INVALID_TEMPLATE_TYPE.getErrorMessage());
 		}
 	}
 

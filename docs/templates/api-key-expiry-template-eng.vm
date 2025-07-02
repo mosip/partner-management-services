@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>Dear ${partnerId},</strong></p>
+          <p>
+            This is to inform you that the API Key named <strong>${apiKeyName}</strong> associated with policy:
+            <strong>${policyName}</strong> is scheduled to expire on <strong>${expiryDateTime} UTC</strong>.
+            To ensure continued functionality and uninterrupted services, we request you to upload the certificate for renewal before the expiration date.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">API Key Details</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              API Key Name<br /><span style="font-weight: 400;">${apiKeyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Partner Domain<br /><span style="font-weight: 400;">AUTH</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Expiration Date & Time<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Policy Group<br /><span style="font-weight: 400;">${policyGroup}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Policy Name<br /><span style="font-weight: 400;">${policyName}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Action Required<br />
+              <span style="font-weight: 400;">Generate a new API Key in ‘Authentication Services’.</span>
+            </p>
+          </div>
+          <p>
+            Failure to renew the API Key before its expiration may result in service disruptions.
+          </p>
+          <p>To proceed with the API Key generation, please follow these steps:</p>
+          <ol>
+            <li>Log in to your account on the PMS Portal.</li>
+            <li>Navigate to ‘Authentication Services’ under the Partner Dashboard.</li>
+            <li>Click on ‘Generate API Key’ button within the API Key tab.</li>
+            <li>Fill the API Key details and submit.</li>
+            <li>The API Key is generated — please copy and store it securely as it will not be displayed again.</li>
+          </ol>
+          <p>
+            Please note that the expiry date and time are provided in UTC format, so kindly account for any time zone differences when planning your renewal.
+          </p>
+          <p>Thank you for your prompt attention to this matter.</p>
+          <p>Best regards,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** This is an auto-generated email. Please do not reply to this email. **
+          </p>
+          <p>
+            Website:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

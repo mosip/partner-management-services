@@ -1,73 +1,230 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        body {
+            text-align: right;
+        }
+    </style>
 </head>
-
 <body>
-    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
-        cellpadding="0" cellspacing="0" width="600">
+    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;">
         <div style="color: #ffffff; text-align: right; padding: 24px 36px;">
-            <img style="height: 58px; width: 150px; vertical-align: middle; margin-left: 10px;"
-                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
-                alt="الشعار" />
+            <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png" alt="الشعار" style="height: 58px; width: 150px; vertical-align: middle; margin-left: 10px;"/>
         </div>
-        <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
-            <div style="font-size: 14px;">
-                <p><strong>عزيزي/عزيزتي ${partnerId}،</strong></p>
-                <p>نود لفت انتباهكم إلى قرب انتهاء صلاحية شهادات الشركاء وشهادات شريحة FTM التي رفعها العديد من الشركاء على بوابة PMS. فيما يلي ملخص للشهادات التي ستنتهي صلاحيتها خلال الأيام السبعة القادمة.</p>
-                <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
-                    <p style="font-size: 16px; font-weight: bold;">العناصر التي ستنتهي: من ${fromDate} إلى ${toDate}</p>
-                    <hr style="border-top: 1px solid #E5E5E5;" />
-                    #if($partnerIdList && $partnerIdList.size() > 0)
-						<p style="margin-bottom: 6px; font-weight: 600;">${partnerCertificateCount}&nbsp;شهادات الشركاء تنتهي صلاحيتها للمعرفات التالية للشركاء</p>
-						<ul style="padding-right: 20px; margin: 0;">
-							#foreach($id in $partnerIdList)
-								<li style="padding: 2px 0;">[$id]</li>
-							#end
-						</ul>
-					#end
-					#if($ftmIdList && $ftmIdList.size() > 0)
-                        <hr style="border-top: 1px solid #E5E5E5; margin-top: 20px;" />
-                        <p style="margin-bottom: 6px; font-weight: 600; direction: rtl; text-align: right;">
-                            ${ftmChipCertificateCount}&nbsp;شهادات شريحة FTM ستنتهي صلاحيتها للمعرفات التالية
-                        </p>
-                        <ul style="padding-left: 20px; margin: 0; direction: rtl; text-align: right;">
-                            #foreach($ftmId in $ftmIdList)
-                                <li style="padding: 2px 0;">[$ftmId]</li>
-                            #end
-                        </ul>
-                    #end
-                    <hr style="border: none; border-bottom: 1px solid #e4e7ec; margin: 24px 0;" />
-                    <p style="padding: 5px 0px; font-weight: 600;">الإجراء المطلوب<br>
-                        <span style="font-weight: 400;">لضمان استمرارية الخدمات، يرجى إبلاغ مستخدمي الشركاء المعنيين بتجديد شهاداتهم قبل تاريخ انتهاء صلاحيتها.</span>
-                    </P>
+        <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff; font-size: 14px; text-align: right;">
+            <p><strong>مرحباً ${partnerId}،</strong></p>
+            <p>نود لفت انتباهكم إلى أن العديد من بيانات الاعتماد الخاصة بشركاء مختلفين، بما في ذلك شهادات الشركاء وشهادات شرائح FTM وSBI ومفاتيح API، تقترب من تواريخ انتهاء صلاحيتها. تم إصدار هذه البيانات من خلال بوابة PMS ومن المقرر أن تنتهي صلاحيتها خلال الأيام السبعة القادمة.</p>
+            <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+                <div style="display: flex; align-items: center; background: #F7FAFF; padding: 10px 0px; border-radius: 6px;">
+                    <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: 10px;">
+                        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M38.0655 18.6229H5.43799M29.0023 4.12183V11.3724M14.5012 4.12183V11.3724M14.1387 40.3746H29.3648C32.4103 40.3746 33.9331 40.3746 35.0963 39.7819C36.1195 39.2605 36.9514 38.4286 37.4728 37.4054C38.0655 36.2422 38.0655 34.7194 38.0655 31.6739V16.4478C38.0655 13.4022 38.0655 11.8795 37.4728 10.7163C36.9514 9.69305 36.1195 8.86115 35.0963 8.3398C33.9331 7.7471 32.4103 7.7471 29.3648 7.7471H14.1387C11.0931 7.7471 9.57038 7.7471 8.40714 8.3398C7.38393 8.86115 6.55204 9.69305 6.03069 10.7163C5.43799 11.8795 5.43799 13.4022 5.43799 16.4478V31.6739C5.43799 34.7194 5.43799 36.2422 6.03069 37.4054C6.55204 38.4286 7.38393 39.2605 8.40714 39.7819C9.57038 40.3746 11.0931 40.3746 14.1387 40.3746Z" stroke="#006DE7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; text-align: right;">
+                        <span style="font-size: 16px; font-weight: 600; color: #202124;">تقرير العناصر التي ستنتهي صلاحيتها</span>
+                        <span style="font-size: 13px; color: #006DE7;">الفترة: ${fromDate}&nbsp;&nbsp;-&nbsp;&nbsp;${toDate}</span>
+                    </div>
                 </div>
-                <p>نقدر اهتمامكم الفوري بهذا الموضوع.</p>
-                <p>شكرًا لاختياركم خدماتنا.</p>
-                <p>مع أطيب التحيات،<br>MOSIP</p>
-                <hr style="border-top: 1px solid #edeef0;" />
-                <p style="padding: 3px 0px;">** هذه رسالة بريد إلكتروني تم إنشاؤها تلقائيًا. الرجاء عدم الرد على هذا البريد الإلكتروني. **</p>
-                <p>
-                    الموقع الإلكتروني:
-                    <a href="http://www.mosip.io" style="color: #014daf; text-decoration: underline;">www.mosip.io</a>
-                </p>
-                <hr style="border-top: 1px solid #edeef0;" />
+				#if($certificateDetails && $certificateDetails.size() > 0)
+					<div id="dropdownContainerPartner" style="margin: 10px auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+						<button id="dropdownTogglePartner" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 15px; cursor: pointer; background: white; border: #DFEBF8; width: 100%; text-align: right;">
+							<div style="display: flex; align-items: center; gap: 12px;">
+								<div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #F4F7FF;  border: 0.75px solid #D3E8FF; border-radius: 10%;">
+									<svg width="25" height="23" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2.5 23.5874V21.3991C2.5 20.7821 2.65973 20.2516 2.9792 19.8077C3.29866 19.3639 3.72801 19.0092 4.26725 18.7436C5.42038 18.1946 6.5652 17.7569 7.70171 17.4306C8.83845 17.1043 10.2061 16.9411 11.8048 16.9411C13.4032 16.9411 14.7708 17.1043 15.9075 17.4306C17.0443 17.7569 18.1891 18.1946 19.342 18.7436C19.8813 19.0092 20.3106 19.3639 20.6301 19.8077C20.9498 20.2516 21.1096 20.7821 21.1096 21.3991V23.5874H2.5ZM23.7681 23.5874V21.3376C23.7681 20.5673 23.6121 19.8402 23.3002 19.1563C22.9885 18.4724 22.5463 17.8857 21.9736 17.3961C22.6263 17.529 23.2551 17.7134 23.8602 17.9494C24.465 18.1855 25.0631 18.4509 25.6547 18.7456C26.2307 19.0354 26.6823 19.4061 27.0095 19.8578C27.3365 20.3098 27.5 20.803 27.5 21.3376V23.5874H23.7681ZM11.8048 13.9755C10.7082 13.9755 9.76937 13.5851 8.98844 12.8041C8.2075 12.0232 7.81703 11.0844 7.81703 9.98777C7.81703 8.89113 8.2075 7.95235 8.98844 7.17141C9.76937 6.39047 10.7082 6 11.8048 6C12.9014 6 13.8402 6.39047 14.6212 7.17141C15.4021 7.95235 15.7926 8.89113 15.7926 9.98777C15.7926 11.0844 15.4021 12.0232 14.6212 12.8041C13.8402 13.5851 12.9014 13.9755 11.8048 13.9755ZM21.4675 9.98777C21.4675 11.0844 21.077 12.0232 20.2961 12.8041C19.5152 13.5851 18.5764 13.9755 17.4797 13.9755C17.4235 13.9755 17.3518 13.9692 17.2647 13.9566C17.1779 13.9437 17.1063 13.9297 17.05 13.9144C17.5004 13.3628 17.8465 12.7509 18.0882 12.0787C18.3301 11.4065 18.4511 10.7086 18.4511 9.98478C18.4511 9.261 18.3245 8.56934 18.0712 7.90981C17.8182 7.25028 17.4778 6.63417 17.05 6.06148C17.1216 6.036 17.1932 6.01938 17.2647 6.01163C17.3363 6.00388 17.4079 6 17.4797 6C18.5764 6 19.5152 6.39047 20.2961 7.17141C21.077 7.95235 21.4675 8.89113 21.4675 9.98777ZM3.82926 22.2581H19.7803V21.3991C19.7803 21.0872 19.7024 20.8145 19.5464 20.581C19.3904 20.3477 19.1105 20.1245 18.7066 19.9113C17.7148 19.3814 16.6692 18.9754 15.5699 18.6934C14.4708 18.4114 13.2158 18.2704 11.8048 18.2704C10.3936 18.2704 9.13842 18.4114 8.03935 18.6934C6.94005 18.9754 5.89448 19.3814 4.90263 19.9113C4.49876 20.1245 4.21884 20.3477 4.06287 20.581C3.90713 20.8145 3.82926 21.0872 3.82926 21.3991V22.2581ZM11.8048 12.6463C12.5359 12.6463 13.1617 12.386 13.6824 11.8653C14.203 11.3447 14.4633 10.7189 14.4633 9.98777C14.4633 9.25668 14.203 8.63082 13.6824 8.1102C13.1617 7.58957 12.5359 7.32926 11.8048 7.32926C11.0737 7.32926 10.4478 7.58957 9.92722 8.1102C9.4066 8.63082 9.14629 9.25668 9.14629 9.98777C9.14629 10.7189 9.4066 11.3447 9.92722 11.8653C10.4478 12.386 11.0737 12.6463 11.8048 12.6463Z" fill="#1447B2" stroke="#1447B2" stroke-width="0.35"/>
+									</svg>
+								</div>
+								<div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
+									<div style="font-size: 14px; font-weight: 600; color: #202124;">شهادات الشركاء</div>
+									<div style="font-size: 12px; color: #5f6368;">شهادات الشركاء $partnerCertificateCount تنتهي صلاحيتها لمعرفات الشركاء التالية:</div>
+								</div>
+							</div>
+							<svg id="chevronIconPartner" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M18.9353 10.9492C18.5408 11.3507 17.8997 11.3501 17.5056 10.9482L9.9187 3.22168L2.33081 10.9482L2.25366 11.0186C1.85684 11.348 1.27068 11.3249 0.901123 10.9482L0.831787 10.8701C0.511116 10.4691 0.533362 9.87885 0.901123 9.50488L0.9021 9.50586L9.20386 1.05176C9.39274 0.859417 9.65004 0.750005 9.9187 0.75C10.1876 0.75 10.4447 0.859137 10.6335 1.05078V1.05176L18.9353 9.50586C19.3027 9.88003 19.3255 10.4702 19.0037 10.8711L18.9353 10.9492Z" fill="#014DAF" stroke="#014DAF" stroke-width="0.5"/>
+							</svg>
+						</button>
+						<div id="dropdownContentPartner" style="max-height: 0; overflow: hidden; background: #F4F7FF;">
+							<div id="contentInnerPartner" style="padding: 5px 20px; display: none; text-align: right;">
+								#foreach($certificate in $certificateDetails)
+									<div style="display: flex; align-items: center; padding: 8px 0;">
+										<div style="font-size: 13px; color: #202124; font-weight: 500;">
+											<span style="margin-left: 8px; color: #5f6368;">•</span>
+												$certificate.partnerId
+										</div>
+									</div>
+								#end
+							</div>
+						</div>
+					</div>
+				#end
+				
+				#if($ftmDetails && $ftmDetails.size() > 0)
+					<div id="dropdownContainerFTM" style="margin: 15px auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+						<button id="dropdownToggleFTM" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 15px; cursor: pointer; background: white; border: #DFEBF8; width: 100%; text-align: right;">
+							<div style="display: flex; align-items: center; gap: 12px;">
+								<div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #F4F7FF;  border: 0.75px solid #D3E8FF; border-radius: 10%;">
+									<svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M11.9337 18.057V11.5331H18.5663V18.057H11.9337ZM13.5918 16.4261H16.9082V13.1641H13.5918V16.4261ZM11.1046 27.0902V24.5809H7.97982C7.21652 24.5809 6.57923 24.3295 6.06797 23.8266C5.5567 23.3237 5.30107 22.6969 5.30107 21.9461V18.8725H2.75V17.2415H5.30107V12.3486H2.75V10.7177H5.30107V7.64408C5.30107 6.89329 5.5567 6.26646 6.06797 5.76357C6.57923 5.26069 7.21652 5.00925 7.97982 5.00925H11.1046V2.5H12.7628V5.00925H17.7372V2.5H19.3954V5.00925H22.5202C23.2835 5.00925 23.9208 5.26069 24.432 5.76357C24.9433 6.26646 25.1989 6.89329 25.1989 7.64408V10.7177H27.75V12.3486H25.1989V17.2415H27.75V18.8725H25.1989V21.9461C25.1989 22.6969 24.9433 23.3237 24.432 23.8266C23.9208 24.3295 23.2835 24.5809 22.5202 24.5809H19.3954V27.0902H17.7372V24.5809H12.7628V27.0902H11.1046ZM22.5202 22.9499C22.7755 22.9499 23.0095 22.8454 23.222 22.6364C23.4345 22.4274 23.5408 22.1973 23.5408 21.9461V7.64408C23.5408 7.39292 23.4345 7.16281 23.222 6.95378C23.0095 6.74474 22.7755 6.64022 22.5202 6.64022H7.97982C7.72446 6.64022 7.49053 6.74474 7.27801 6.95378C7.06549 7.16281 6.95923 7.39292 6.95923 7.64408V21.9461C6.95923 22.1973 7.06549 22.4274 7.27801 22.6364C7.49053 22.8454 7.72446 22.9499 7.97982 22.9499H22.5202Z" fill="#006DE7" stroke="#006DE7" stroke-width="0.2"/>
+									</svg>
+								</div>
+								<div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
+									<div style="font-size: 14px; font-weight: 600; color: #202124;">شهادات رقاقة FTM</div>
+									<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount شهادات رقاقة FTM ستنتهي صلاحيتها لمعرفات FTM التالية:</div>
+								</div>
+							</div>
+							<svg id="chevronIconFTM" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M18.9353 10.9492C18.5408 11.3507 17.8997 11.3501 17.5056 10.9482L9.9187 3.22168L2.33081 10.9482L2.25366 11.0186C1.85684 11.348 1.27068 11.3249 0.901123 10.9482L0.831787 10.8701C0.511116 10.4691 0.533362 9.87885 0.901123 9.50488L0.9021 9.50586L9.20386 1.05176C9.39274 0.859417 9.65004 0.750005 9.9187 0.75C10.1876 0.75 10.4447 0.859137 10.6335 1.05078V1.05176L18.9353 9.50586C19.3027 9.88003 19.3255 10.4702 19.0037 10.8711L18.9353 10.9492Z" fill="#014DAF" stroke="#014DAF" stroke-width="0.5"/>
+							</svg>
+						</button>
+						<div id="dropdownContentFTM" style="max-height: 0; overflow: hidden; background: #F4F7FF;">
+							<div id="contentInnerFTM" style="padding: 5px 20px; display: none; text-align: right;">
+								#foreach($ftm in $ftmDetails)
+									<div style="display: flex; align-items: center; padding: 8px 0;">
+										<div style="font-size: 13px; color: #202124; font-weight: 500;">
+											<span style="margin-left: 8px; color: #5f6368;">•</span>
+												$ftm.ftmId
+										</div>
+									</div>
+								#end
+							</div>
+						</div>
+					</div>
+				#end
+
+				#if($sbiDetails && $sbiDetails.size() > 0)
+					<div id="dropdownContainerSBI" style="margin: 10px auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+						<button id="dropdownToggleSBI" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 15px; cursor: pointer; background: white; border: #DFEBF8; width: 100%; text-align: right;">
+							<div style="display: flex; align-items: center; gap: 12px;">
+								<div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #F4F7FF;  border: 0.75px solid #D3E8FF; border-radius: 10%;">
+									<svg width="26" height="21" viewBox="0 0 26 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M2.74375 19.9444C2.12222 19.9444 1.59282 19.7259 1.15556 19.2889C0.718519 18.8516 0.5 18.3222 0.5 17.7007V2.74375C0.5 2.12222 0.718519 1.59282 1.15556 1.15556C1.59282 0.718519 2.12222 0.5 2.74375 0.5H23.2563C23.8778 0.5 24.4072 0.718519 24.8444 1.15556C25.2815 1.59282 25.5 2.12222 25.5 2.74375V17.7007C25.5 18.3222 25.2815 18.8516 24.8444 19.2889C24.4072 19.7259 23.8778 19.9444 23.2563 19.9444H2.74375ZM2.74375 18.5556H23.2563C23.5056 18.5556 23.7104 18.4755 23.8708 18.3153C24.031 18.1549 24.1111 17.95 24.1111 17.7007V2.74375C24.1111 2.49444 24.031 2.28958 23.8708 2.12917C23.7104 1.96898 23.5056 1.88889 23.2563 1.88889H2.74375C2.49444 1.88889 2.28958 1.96898 2.12917 2.12917C1.96898 2.28958 1.88889 2.49444 1.88889 2.74375V17.7007C1.88889 17.95 1.96898 18.1549 2.12917 18.3153C2.28958 18.4755 2.49444 18.5556 2.74375 18.5556ZM12.3056 15.6174H13.6944L13.8441 14.3889C14.2821 14.291 14.6938 14.1427 15.0792 13.9441C15.4648 13.7457 15.8117 13.4737 16.1198 13.1281L17.3056 13.6198L18.0535 12.4604L17.0705 11.6059C17.2059 11.1446 17.2736 10.6833 17.2736 10.2222C17.2736 9.76111 17.2059 9.29988 17.0705 8.83854L18.0535 7.98403L17.3056 6.82465L16.1198 7.31632C15.8117 6.97072 15.4648 6.69873 15.0792 6.50035C14.6938 6.30174 14.2821 6.15347 13.8441 6.05556L13.6944 4.82708H12.3056L12.1559 6.05556C11.7179 6.15347 11.3063 6.30174 10.9208 6.50035C10.5352 6.69873 10.1883 6.97072 9.88021 7.31632L8.69444 6.82465L7.94653 7.98403L8.92951 8.83854C8.7941 9.29988 8.72639 9.76111 8.72639 10.2222C8.72639 10.6833 8.7941 11.1446 8.92951 11.6059L7.94653 12.4604L8.69444 13.6198L9.88021 13.1281C10.1883 13.4737 10.5352 13.7457 10.9208 13.9441C11.3063 14.1427 11.7179 14.291 12.1559 14.3889L12.3056 15.6174ZM13 13.2135C12.1648 13.2135 11.4574 12.9238 10.8778 12.3444C10.2984 11.7648 10.0087 11.0574 10.0087 10.2222C10.0087 9.38704 10.2984 8.67963 10.8778 8.1C11.4574 7.5206 12.1648 7.2309 13 7.2309C13.8352 7.2309 14.5426 7.5206 15.1222 8.1C15.7016 8.67963 15.9913 9.38704 15.9913 10.2222C15.9913 11.0574 15.7016 11.7648 15.1222 12.3444C14.5426 12.9238 13.8352 13.2135 13 13.2135Z" fill="#006DE7"/>
+										<path d="M1.88889 18.5556V1.88889M2.74375 19.9444C2.12222 19.9444 1.59282 19.7259 1.15556 19.2889C0.718519 18.8516 0.5 18.3222 0.5 17.7007V2.74375C0.5 2.12222 0.718519 1.59282 1.15556 1.15556C1.59282 0.718519 2.12222 0.5 2.74375 0.5H23.2563C23.8778 0.5 24.4072 0.718519 24.8444 1.15556C25.2815 1.59282 25.5 2.12222 25.5 2.74375V17.7007C25.5 18.3222 25.2815 18.8516 24.8444 19.2889C24.4072 19.7259 23.8778 19.9444 23.2563 19.9444H2.74375ZM2.74375 18.5556H23.2563C23.5056 18.5556 23.7104 18.4755 23.8708 18.3153C24.031 18.1549 24.1111 17.95 24.1111 17.7007V2.74375C24.1111 2.49444 24.031 2.28958 23.8708 2.12917C23.7104 1.96898 23.5056 1.88889 23.2563 1.88889H2.74375C2.49444 1.88889 2.28958 1.96898 2.12917 2.12917C1.96898 2.28958 1.88889 2.49444 1.88889 2.74375V17.7007C1.88889 17.95 1.96898 18.1549 2.12917 18.3153C2.28958 18.4755 2.49444 18.5556 2.74375 18.5556ZM12.3056 15.6174H13.6944L13.8441 14.3889C14.2821 14.291 14.6938 14.1427 15.0792 13.9441C15.4648 13.7457 15.8117 13.4737 16.1198 13.1281L17.3056 13.6198L18.0535 12.4604L17.0705 11.6059C17.2059 11.1446 17.2736 10.6833 17.2736 10.2222C17.2736 9.76111 17.2059 9.29988 17.0705 8.83854L18.0535 7.98403L17.3056 6.82465L16.1198 7.31632C15.8117 6.97072 15.4648 6.69873 15.0792 6.50035C14.6938 6.30174 14.2821 6.15347 13.8441 6.05556L13.6944 4.82708H12.3056L12.1559 6.05556C11.7179 6.15347 11.3063 6.30174 10.9208 6.50035C10.5352 6.69873 10.1883 6.97072 9.88021 7.31632L8.69444 6.82465L7.94653 7.98403L8.92951 8.83854C8.7941 9.29988 8.72639 9.76111 8.72639 10.2222C8.72639 10.6833 8.7941 11.1446 8.92951 11.6059L7.94653 12.4604L8.69444 13.6198L9.88021 13.1281C10.1883 13.4737 10.5352 13.7457 10.9208 13.9441C11.3063 14.1427 11.7179 14.291 12.1559 14.3889L12.3056 15.6174ZM13 13.2135C12.1648 13.2135 11.4574 12.9238 10.8778 12.3444C10.2984 11.7648 10.0087 11.0574 10.0087 10.2222C10.0087 9.38704 10.2984 8.67963 10.8778 8.1C11.4574 7.5206 12.1648 7.2309 13 7.2309C13.8352 7.2309 14.5426 7.5206 15.1222 8.1C15.7016 8.67963 15.9913 9.38704 15.9913 10.2222C15.9913 11.0574 15.7016 11.7648 15.1222 12.3444C14.5426 12.9238 13.8352 13.2135 13 13.2135Z" stroke="#006DE7" stroke-width="0.25"/>
+									</svg>
+								</div>
+								<div style="display: flex; flex-direction: column; gap: 2px;">
+									<div style="font-size: 14px; font-weight: 600; color: #202124;">SBI</div>
+									<div style="font-size: 12px; color: #5f6368;">$sbiCount SBIs تنتهي صلاحيتها لمعرفات SBI التالية:</div>
+								</div>
+							</div>
+							<svg id="chevronIconSBI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M18.9353 10.9492C18.5408 11.3507 17.8997 11.3501 17.5056 10.9482L9.9187 3.22168L2.33081 10.9482L2.25366 11.0186C1.85684 11.348 1.27068 11.3249 0.901123 10.9482L0.831787 10.8701C0.511116 10.4691 0.533362 9.87885 0.901123 9.50488L0.9021 9.50586L9.20386 1.05176C9.39274 0.859417 9.65004 0.750005 9.9187 0.75C10.1876 0.75 10.4447 0.859137 10.6335 1.05078V1.05176L18.9353 9.50586C19.3027 9.88003 19.3255 10.4702 19.0037 10.8711L18.9353 10.9492Z" fill="#014DAF" stroke="#014DAF" stroke-width="0.5"/>
+							</svg>
+						</button>
+						<div id="dropdownContentSBI" style="max-height: 0; overflow: hidden; background: #F4F7FF;">
+							<div id="contentInnerSBI" style="padding: 5px 20px; display: none;">
+								#foreach($sbi in $sbiDetails)
+									<div style="display: flex; align-items: center; padding: 8px 0;">
+										<div style="font-size: 13px; color: #202124; font-weight: 500;">
+											<span style="margin-right: 8px; color: #5f6368;">•</span>
+												$sbi.sbiId
+										</div>
+									</div>
+								#end
+							</div>
+						</div>
+					</div>
+				#end
+
+				#if($apiKeyDetails && $apiKeyDetails.size() > 0)
+					<div id="dropdownContainerAPI" style="margin: 15px auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+						<button id="dropdownToggleAPI" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 15px; cursor: pointer; background: white; border: #DFEBF8; width: 100%; text-align: right;">
+							<div style="display: flex; align-items: center; gap: 12px;">
+								<div style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: #F4F7FF;  border: 0.75px solid #D3E8FF; border-radius: 10%;">
+									<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M13.8634 17.9381H16.6355L16.0134 14.4632C16.359 14.315 16.6372 14.0826 16.8481 13.7661C17.059 13.4493 17.1645 13.0976 17.1645 12.711C17.1645 12.1833 16.9772 11.7323 16.6027 11.3577C16.2282 10.9832 15.7771 10.796 15.2495 10.796C14.7218 10.796 14.2707 10.9832 13.8962 11.3577C13.5217 11.7323 13.3344 12.1833 13.3344 12.711C13.3344 13.0976 13.4399 13.4493 13.6508 13.7661C13.8617 14.0826 14.1399 14.315 14.4855 14.4632L13.8634 17.9381ZM15.2495 25.3449C12.8694 24.6959 10.8988 23.2949 9.33784 21.1421C7.77668 18.9893 6.99609 16.5824 6.99609 13.9215V7.58981L15.2495 4.5L23.5028 7.58981V13.9215C23.5028 16.5824 22.7222 18.9893 21.161 21.1421C19.6001 23.2949 17.6295 24.6959 15.2495 25.3449ZM15.2495 23.6054C17.1569 23.0002 18.7342 21.7897 19.9814 19.9739C21.2285 18.1582 21.8521 16.1407 21.8521 13.9215V8.72189L15.2495 6.25635L8.64676 8.72189V13.9215C8.64676 16.1407 9.27035 18.1582 10.5175 19.9739C11.7647 21.7897 13.342 23.0002 15.2495 23.6054Z" fill="#006DE7"/>
+									</svg>
+								</div>
+								<div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
+									<div style="font-size: 14px; font-weight: 600; color: #202124;">مفاتيح API</div>
+									<div style="font-size: 12px; color: #5f6368;">$apiKeyCount مفاتيح API ستنتهي صلاحيتها لأسماء مفاتيح API التالية:</div>
+								</div>
+							</div>
+							<svg id="chevronIconAPI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M18.9353 10.9492C18.5408 11.3507 17.8997 11.3501 17.5056 10.9482L9.9187 3.22168L2.33081 10.9482L2.25366 11.0186C1.85684 11.348 1.27068 11.3249 0.901123 10.9482L0.831787 10.8701C0.511116 10.4691 0.533362 9.87885 0.901123 9.50488L0.9021 9.50586L9.20386 1.05176C9.39274 0.859417 9.65004 0.750005 9.9187 0.75C10.1876 0.75 10.4447 0.859137 10.6335 1.05078V1.05176L18.9353 9.50586C19.3027 9.88003 19.3255 10.4702 19.0037 10.8711L18.9353 10.9492Z" fill="#014DAF" stroke="#014DAF" stroke-width="0.5"/>
+							</svg>
+						</button>
+						<div id="dropdownContentAPI" style="max-height: 0; overflow: hidden; background: #F4F7FF;">
+							<div id="contentInnerAPI" style="padding: 5px 20px; display: none; text-align: right;">
+								#foreach($apiKey in $apiKeyDetails)
+									<div style="display: flex; align-items: center; padding: 8px 0;">
+										<div style="font-size: 13px; color: #202124; font-weight: 500;">
+											<span style="margin-left: 8px; color: #5f6368;">•</span>
+												$apiKey.apiKeyName
+										</div>
+									</div>
+								#end
+							</div>
+						</div>
+					</div>
+				#end
+
+                <div style="border: 1px solid #DFEBF8; margin-top:10px; border-radius: 8px; padding: 10px 15px; background: #F9FBFF; text-align: right;">
+                    <p style="padding: 5px 0px; font-weight: 600; margin: 0;">
+                        الإجراء المطلوب<br>
+                        <span style="font-weight: 400;">
+                            لضمان استمرارية الخدمات دون انقطاع، يرجى إبلاغ مستخدمي الشركاء المعنيين بتجديد شهاداتهم ومفاتيح API وSBI الخاصة بهم من خلال تسجيل الدخول إلى بوابة PMS قبل تواريخ انتهاء صلاحيتها.
+                        </span>
+                    </p>
+                </div>
             </div>
-            <div style="font-size: 14px; margin-top: 1.5rem; text-align: center;">
+
+            <p>نقدر اهتمامكم العاجل بهذا الأمر.</p>
+            <p>شكراً لاختياركم خدماتنا.</p>
+            <p>مع أطيب التحيات،<br/>MOSIP</p>
+
+            <hr style="border-top: 1px solid #edeef0;"/>
+            <p style="padding: 3px 0px;">** هذه رسالة بريد إلكتروني تم إنشاؤها تلقائيًا. يرجى عدم الرد عليها. **</p>
+            <p>الموقع الإلكتروني: <a href="http://www.mosip.io" style="color: #014daf; text-decoration: underline;">www.mosip.io</a></p>
+            <hr style="border-top: 1px solid #edeef0;"/>
+        </div>
+
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+            <div style="margin: auto; border-collapse: collapse; text-align: center;">
                 <a target="_blank" href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all">
-                    <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
-                        alt="linkedin" style="width: 24px; height: 24px; padding: 0px 4px;" />
+                    <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png" alt="لينكد إن" style="width: 24px; height: 24px; padding: 0px 4px;"/>
                 </a>
                 <a target="_blank" href="https://www.youtube.com/@mosip16">
-                    <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
-                        alt="youtube" style="width: 24px; height: 24px; padding: 0px 4px;" />
+                    <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png" alt="يوتيوب" style="width: 24px; height: 24px; padding: 0px 4px;"/>
                 </a>
             </div>
         </div>
     </div>
-</body>
 
+    <script>
+		document.addEventListener("DOMContentLoaded", function () {
+			function setupDropdown(toggleId, contentId, iconId) {
+				const toggle = document.getElementById(toggleId);
+				const content = document.getElementById(contentId);
+				const icon = document.getElementById(iconId);
+
+				if (!toggle || !content || !icon) return;
+
+				toggle.addEventListener("click", function () {
+					const inner = content.querySelector('div');
+					const isOpen = content.style.maxHeight && content.style.maxHeight !== "0px";
+
+					if (isOpen) {
+						content.style.maxHeight = "0";
+						if (inner) inner.style.display = "none";
+						icon.style.transform = "rotate(0deg)";
+					} else {
+						if (inner) {
+							inner.style.display = "block";
+							content.style.maxHeight = inner.scrollHeight + "px";
+						}
+						icon.style.transform = "rotate(180deg)";
+					}
+				});
+			}
+
+			setupDropdown("dropdownTogglePartner", "dropdownContentPartner", "chevronIconPartner");
+			setupDropdown("dropdownToggleFTM", "dropdownContentFTM", "chevronIconFTM");
+			setupDropdown("dropdownToggleAPI", "dropdownContentAPI", "chevronIconAPI");
+			setupDropdown("dropdownToggleSBI", "dropdownContentSBI", "chevronIconSBI");
+		});
+	</script>
+
+</body>
 </html>

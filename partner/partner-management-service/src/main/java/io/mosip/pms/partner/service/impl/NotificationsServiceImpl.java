@@ -1,18 +1,5 @@
 package io.mosip.pms.partner.service.impl;
 
-import static io.mosip.pms.common.constant.PartnerConstants.API_KEY;
-import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP;
-import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE;
-import static io.mosip.pms.common.constant.PartnerConstants.INTERMEDIATE_CERT_EXPIRY;
-import static io.mosip.pms.common.constant.PartnerConstants.PARTNER;
-import static io.mosip.pms.common.constant.PartnerConstants.PARTNER_CERT_EXPIRY;
-import static io.mosip.pms.common.constant.PartnerConstants.ROOT;
-import static io.mosip.pms.common.constant.PartnerConstants.ROOT_CERT_EXPIRY;
-import static io.mosip.pms.common.constant.PartnerConstants.SBI;
-import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY;
-import static io.mosip.pms.common.constant.PartnerConstants.WEEKLY_SUMMARY;
-import static io.mosip.pms.common.constant.PartnerConstants.FTM_CHIP_CERT_EXPIRY;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -56,362 +43,409 @@ import io.mosip.pms.partner.service.NotificationsService;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 
+import static io.mosip.pms.common.constant.PartnerConstants.*;
+
 @Service
 public class NotificationsServiceImpl implements NotificationsService {
 
-    private static final Logger LOGGER = PMSLogger.getLogger(NotificationsServiceImpl.class);
+	private static final Logger LOGGER = PMSLogger.getLogger(NotificationsServiceImpl.class);
 
-    public static final String VERSION = "1.0";
-    public static final String BLANK_STRING = "";
-    public static final String FTM_PROVIDER = "FTM_PROVIDER";
+	public static final String VERSION = "1.0";
+	public static final String BLANK_STRING = "";
+	public static final String FTM_PROVIDER = "FTM_PROVIDER";
+	public static final String AUTH_PARTNER = "AUTH_PARTNER";
+	public static final String DEVICE_PROVIDER = "DEVICE_PROVIDER";
 
+	@Value("${mosip.pms.api.id.notifications.get}")
+	private String getNotificationsId;
 
-    @Value("${mosip.pms.api.id.notifications.get}")
-    private String getNotificationsId;
+	@Value("${mosip.pms.api.id.dismiss.notification.patch}")
+	private String patchDismissNotificationId;
 
-    @Value("${mosip.pms.api.id.dismiss.notification.patch}")
-    private String patchDismissNotificationId;
+	@Autowired
+	PartnerHelper partnerHelper;
 
-    @Autowired
-    PartnerHelper partnerHelper;
+	@Autowired
+	PartnerServiceRepository partnerServiceRepository;
 
-    @Autowired
-    PartnerServiceRepository partnerServiceRepository;
+	@Autowired
+	NotificationsSummaryRepository notificationsSummaryRepository;
 
-    @Autowired
-    NotificationsSummaryRepository notificationsSummaryRepository;
+	@Autowired
+	NotificationServiceRepository notificationServiceRepository;
 
-    @Autowired
-    NotificationServiceRepository notificationServiceRepository;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(Integer pageNo,
+			Integer pageSize, NotificationsFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
+		PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 
-    @Override
-    public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(
-            Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto) {
-        ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
-        PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+		try {
+			validatePaginationParams(pageNo, pageSize);
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			// Validate expiry date
+			if (Objects.nonNull(filterDto.getExpiryDate())) {
+				validateDate(filterDto.getExpiryDate(), "expiryDate");
+			}
+			if (Objects.nonNull(filterDto.getCreatedFromDate())) {
+				validateDate(filterDto.getCreatedFromDate(), "createdFromDate");
+			}
+			if (Objects.nonNull(filterDto.getCreatedToDate())) {
+				validateDate(filterDto.getCreatedToDate(), "createdToDate");
+			}
+			if (filterDto.getNotificationType() != null) {
+				validateNotificationsFilter(filterDto, isPartnerAdmin);
+			} else {
+				if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy())
+						|| Objects.nonNull(filterDto.getIssuedTo()) || Objects.nonNull(filterDto.getExpiryDate())
+						|| Objects.nonNull(filterDto.getPartnerDomain())
+						|| Objects.nonNull(filterDto.getCreatedFromDate())
+						|| Objects.nonNull(filterDto.getCreatedToDate()) || Objects.nonNull(filterDto.getFtmId())
+						|| Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel())
+						|| Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName())
+						|| Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) {
+					throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
+							ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
+				}
+			}
 
-        try {
-            validatePaginationParams(pageNo, pageSize);
-            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-            // Validate expiry date
-            if (Objects.nonNull(filterDto.getExpiryDate())) {
-                validateDate(filterDto.getExpiryDate(), "expiryDate");
-            }
-            if (Objects.nonNull(filterDto.getCreatedFromDate())) {
-                validateDate(filterDto.getCreatedFromDate(), "createdFromDate");
-            }
-            if (Objects.nonNull(filterDto.getCreatedToDate())) {
-                validateDate(filterDto.getCreatedToDate(), "createdToDate");
-            }
-            if (filterDto.getNotificationType() != null) {
-                String filterNotificationType = filterDto.getNotificationType();
+			// Fetch and validate partner list
+			String userId = getUserId();
+			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User ID does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
 
-                // Validate notificationType access for non-admin users
-                if (!isPartnerAdmin && !filterNotificationType.isBlank() && validateNotificationTypeForPartner(filterNotificationType)) {
-                    throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
-                            ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
-                }
-                if ((Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate())) && !filterNotificationType.equals(WEEKLY)) {
-                    throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorCode(),
-                            ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorMessage());
-                }
-            } else {
-                if (Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) ||
-                    Objects.nonNull(filterDto.getExpiryDate()) || Objects.nonNull(filterDto.getPartnerDomain()) || Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()) ||
-                    Objects.nonNull(filterDto.getFtmId()) || Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel())) {
-                    throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
-                            ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
-                }
-            }
+			// Filter active partners
+			List<String> partnerIdList = new ArrayList<>();
+			for (Partner partner : partnerList) {
+				partnerHelper.validatePartnerId(partner, userId);
+				if (isPartnerAdmin || partner.getIsActive()) {
+					partnerIdList.add(partner.getId());
+				}
+			}
 
-            // Fetch and validate partner list
-            String userId = getUserId();
-            List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-            if (partnerList.isEmpty()) {
-                LOGGER.info("sessionId", "idType", "id", "User ID does not exist.");
-                throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-            // Filter active partners
-            List<String> partnerIdList = new ArrayList<>();
-            for (Partner partner : partnerList) {
-                partnerHelper.validatePartnerId(partner, userId);
-                if (isPartnerAdmin || partner.getIsActive()) {
-                    partnerIdList.add(partner.getId());
-                }
-            }
+			// Fetch notifications
+			Page<NotificationEntity> page = fetchNotifications(filterDto, pageable, partnerIdList, isPartnerAdmin);
 
-            Pageable pageable = PageRequest.of(pageNo, pageSize);
+			if (page != null && !page.getContent().isEmpty()) {
+				pageResponseV2Dto.setPageNo(page.getNumber());
+				pageResponseV2Dto.setPageSize(page.getSize());
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto
+						.setData(page.getContent().stream().map(this::mapToResponseDto).collect(Collectors.toList()));
+			}
 
-            // Fetch notifications
-            Page<NotificationEntity> page = fetchNotifications(filterDto, pageable, partnerIdList, isPartnerAdmin);
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getNotifications method of NotificationsServiceImpl - {}",
+					ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"Unexpected error in getNotifications method of NotificationsServiceImpl - {}", ex.getMessage(),
+					ex);
+			responseWrapper
+					.setErrors(MultiPartnerUtil.setErrorResponse(ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorCode(),
+							ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(getNotificationsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
 
-            if (page != null && !page.getContent().isEmpty()) {
-                pageResponseV2Dto.setPageNo(page.getNumber());
-                pageResponseV2Dto.setPageSize(page.getSize());
-                pageResponseV2Dto.setTotalResults(page.getTotalElements());
-                pageResponseV2Dto.setData(page.getContent().stream()
-                        .map(this::mapToResponseDto)
-                        .collect(Collectors.toList()));
-            }
+	private void validateNotificationsFilter(NotificationsFilterDto filterDto, boolean isPartnerAdmin) {
+		String notificationType = filterDto.getNotificationType();
+		// Validate notificationType access for non-admin users
+		if (!isPartnerAdmin && !notificationType.isBlank()
+				&& validateNotificationTypeForPartner(notificationType)) {
+			throw new PartnerServiceException(ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorCode(),
+					ErrorCode.UNABLE_TO_GET_NOTIFICATIONS.getErrorMessage());
+		}
+		// validate createdFromdate and createdTodate fields
+		if ((Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()))
+				&& !notificationType.equals(WEEKLY)) {
+			throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorCode(),
+					ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorMessage());
+		}
+		// validate expiryDate field
+		if (notificationType.equals(WEEKLY) && Objects.nonNull(filterDto.getExpiryDate())) {
+			throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER.getErrorCode(),
+					ErrorCode.WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER.getErrorMessage());
+		}
+		// validate certificateId, issuedBy, issuedTo and partnerDomain
+		if ((Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) || Objects.nonNull(filterDto.getPartnerDomain()))
+				&& (!notificationType.equals(ROOT) && !notificationType.equals(INTERMEDIATE) && !notificationType.equals(PARTNER))) {
+			throw new PartnerServiceException(ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorCode(),
+					ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorMessage());
+		}
+		// validate apiKeyName and policyName
+		if ((Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName())) && (!notificationType.equals(API_KEY))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorMessage());
+		}
+		// validate make, model and ftmId
+		if ((Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel()) || Objects.nonNull(filterDto.getFtmId())) && (!notificationType.equals(FTM_CHIP))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_FTM_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_FTM_FILTER.getErrorMessage());
+		}
+		// validate sbiId and sbiVersion
+		if ((Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) && (!notificationType.equals(SBI))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorMessage());
+		}
+	}
 
-            responseWrapper.setResponse(pageResponseV2Dto);
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id",
-                    "In getNotifications method of NotificationsServiceImpl - {}", ex.getMessage());
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-        } catch (Exception ex) {
-            LOGGER.error("sessionId", "idType", "id",
-                    "Unexpected error in getNotifications method of NotificationsServiceImpl - {}", ex.getMessage(), ex);
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-                    ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorCode(),
-                    ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorMessage()));
-        }
-        responseWrapper.setId(getNotificationsId);
-        responseWrapper.setVersion(VERSION);
-        return responseWrapper;
-    }
+	public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable,
+			List<String> partnerIdList, boolean isPartnerAdmin) {
 
-    public Page<NotificationEntity> fetchNotifications(NotificationsFilterDto filterDto, Pageable pageable, List<String> partnerIdList, boolean isPartnerAdmin) {
+		String notificationType = filterDto.getNotificationType();
 
-        String notificationType = filterDto.getNotificationType();
+		// Default case when notificationType is null
+		if (Objects.isNull(notificationType)) {
+			List<String> notificationTypeList = new ArrayList<>();
+			if (isPartnerAdmin) {
+				notificationTypeList.add(ROOT_CERT_EXPIRY);
+				notificationTypeList.add(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE);
+				notificationTypeList.add(WEEKLY_SUMMARY_NOTIFICATION_TYPE);
+			} else {
+				notificationTypeList.add(PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE);
+				String roles = authUserDetails().getAuthorities().toString();
+				if (roles.contains(FTM_PROVIDER)) {
+					notificationTypeList.add(FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE);
+				}
+				if (roles.contains(AUTH_PARTNER)) {
+					notificationTypeList.add(API_KEY_EXPIRY_NOTIFICATION_TYPE);
+				}
+				if (roles.contains(DEVICE_PROVIDER)) {
+					notificationTypeList.add(SBI_EXPIRY_NOTIFICATION_TYPE);
+				}
+			}
+			return notificationsSummaryRepository.getSummaryOfAllNotifications(filterDto.getNotificationStatus(),
+					notificationTypeList, partnerIdList, pageable);
+		}
 
-        // Default case when notificationType is null
-        if (Objects.isNull(notificationType)) {
-            List<String> notificationTypeList = new ArrayList<>();
-            if (isPartnerAdmin) {
-                notificationTypeList.add(ROOT_CERT_EXPIRY);
-                notificationTypeList.add(INTERMEDIATE_CERT_EXPIRY);
-                notificationTypeList.add(WEEKLY_SUMMARY);
-            } else {
-                notificationTypeList.add(PARTNER_CERT_EXPIRY);
-                String roles = authUserDetails().getAuthorities().toString();
-                if (roles.contains(FTM_PROVIDER)) {
-                    notificationTypeList.add(FTM_CHIP_CERT_EXPIRY);
-                }
-            }
-            return notificationsSummaryRepository.getSummaryOfAllNotifications(
-                    filterDto.getNotificationStatus(), notificationTypeList, partnerIdList, pageable);
-        }
+		switch (notificationType) {
+		case ROOT:
+			return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
+					filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+					filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+					ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
-        switch (notificationType) {
-            case ROOT:
-                return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        ROOT_CERT_EXPIRY, partnerIdList, pageable);
+		case INTERMEDIATE:
+			return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
+					filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+					filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+					INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-            case INTERMEDIATE:
-                return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        INTERMEDIATE_CERT_EXPIRY, partnerIdList, pageable);
+		case WEEKLY:
+			return notificationsSummaryRepository.getSummaryOfWeeklyNotifications(filterDto.getCreatedFromDate(),
+					filterDto.getCreatedToDate(), filterDto.getNotificationStatus(), WEEKLY_SUMMARY_NOTIFICATION_TYPE,
+					partnerIdList, pageable);
 
-            // TODO: Logic for WEEKLY notifications to be implemented
-            case WEEKLY:
-                return notificationsSummaryRepository.getSummaryOfWeeklyNotifications(
-                        filterDto.getCreatedFromDate(), filterDto.getCreatedToDate(),
-                        filterDto.getNotificationStatus(), WEEKLY_SUMMARY, partnerIdList, pageable);
+		case PARTNER:
+			return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
+					filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
+					filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+					PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
+		case SBI:
+			return notificationsSummaryRepository.getSummaryOfAllSbiNotifications(filterDto.getSbiId(),
+					filterDto.getSbiVersion(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+					SBI_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-            // TODO: Logic for PARTNER notifications to be implemented
-            case PARTNER:
-                return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
-                        filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
-                        filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
-                        PARTNER_CERT_EXPIRY, partnerIdList, pageable);
-            case SBI:
+		case FTM_CHIP:
+			return notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(filterDto.getFtmId(),
+					filterDto.getMake(), filterDto.getModel(), filterDto.getExpiryDate(),
+					filterDto.getNotificationStatus(), FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-            // TODO: Logic for FTM_CHIP notifications to be implemented
-            case FTM_CHIP:
-                return notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(
-                        filterDto.getFtmId(), filterDto.getMake(), filterDto.getModel(),
-                        filterDto.getExpiryDate(), filterDto.getNotificationStatus(), FTM_CHIP_CERT_EXPIRY, partnerIdList, pageable);
-           // TODO: Logic for API_KEY notifications to be implemented
-            case API_KEY:
+		case API_KEY:
+			return notificationsSummaryRepository.getSummaryOfAllApiKeyNotifications(filterDto.getApiKeyName(),
+					filterDto.getPolicyName(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+					API_KEY_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-            default:
-                return Page.empty(pageable); // Return empty paginated response
-        }
-    }
+		default:
+			return Page.empty(pageable); // Return empty paginated response
+		}
+	}
 
-    public void validatePaginationParams(Integer pageNo, Integer pageSize) {
-        // Validate pageNo and pageSize
-        if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize)) || (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
-            LOGGER.error("Both pageNo and pageSize must be provided together.");
-            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_PARAMETERS.getErrorCode(),
-                    ErrorCode.INVALID_PAGE_PARAMETERS.getErrorMessage());
-        }
+	public void validatePaginationParams(Integer pageNo, Integer pageSize) {
+		// Validate pageNo and pageSize
+		if ((Objects.nonNull(pageNo) && Objects.isNull(pageSize))
+				|| (Objects.isNull(pageNo) && Objects.nonNull(pageSize))) {
+			LOGGER.error("Both pageNo and pageSize must be provided together.");
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_PARAMETERS.getErrorCode(),
+					ErrorCode.INVALID_PAGE_PARAMETERS.getErrorMessage());
+		}
 
-        // Validate pageNo
-        if (Objects.nonNull(pageNo) && pageNo < 0) {
-            LOGGER.error("Invalid page no: " + pageNo);
-            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
-                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
-        }
+		// Validate pageNo
+		if (Objects.nonNull(pageNo) && pageNo < 0) {
+			LOGGER.error("Invalid page no: " + pageNo);
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+					ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+		}
 
-        // Validate pageSize
-        if (Objects.nonNull(pageSize) && pageSize <= 0) {
-            LOGGER.error("Invalid page size: " + pageSize);
-            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
-                    ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
-        }
-    }
+		// Validate pageSize
+		if (Objects.nonNull(pageSize) && pageSize <= 0) {
+			LOGGER.error("Invalid page size: " + pageSize);
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+					ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
+		}
+	}
 
-    private boolean validateNotificationTypeForPartner(String notificationType) {
-        return notificationType.equalsIgnoreCase(PartnerConstants.ROOT) ||
-                notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE) ||
-                notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
-    }
+	private boolean validateNotificationTypeForPartner(String notificationType) {
+		return notificationType.equalsIgnoreCase(PartnerConstants.ROOT)
+				|| notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE)
+				|| notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
+	}
 
-    private void validateDate(String date, String fieldName) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            LocalDate.parse(date, formatter);
-        } catch (DateTimeParseException e) {
-            throw new PartnerServiceException(ErrorCode.INVALID_DATE.getErrorCode(),
-                    String.format(ErrorCode.INVALID_DATE.getErrorMessage(), fieldName));
-        }
-    }
+	private void validateDate(String date, String fieldName) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		try {
+			LocalDate.parse(date, formatter);
+		} catch (DateTimeParseException e) {
+			throw new PartnerServiceException(ErrorCode.INVALID_DATE.getErrorCode(),
+					String.format(ErrorCode.INVALID_DATE.getErrorMessage(), fieldName));
+		}
+	}
 
-    @Override
-    public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(String notificationId, DismissNotificationRequestDto dismissNotificationRequestDto) {
-        ResponseWrapperV2<DismissNotificationResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        try {
-            if (Objects.isNull(notificationId) || notificationId.isBlank()) {
-                LOGGER.info("Invalid request: Notification ID is null or empty");
-                throw new PartnerServiceException(
-                        ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-                        ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
-            }
-            if(Objects.isNull(dismissNotificationRequestDto.getNotificationStatus())) {
-                LOGGER.info("Notification status is null or empty");
-                throw new PartnerServiceException(
-                        ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorCode(),
-                        ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorMessage());
-            }
-            if (!dismissNotificationRequestDto.getNotificationStatus().equals(PartnerConstants.STATUS_DISMISSED)){
-                LOGGER.info("Invalid Notification status for Notification Id: {}", notificationId);
-                throw new PartnerServiceException(
-                        ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorCode(),
-                        ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorMessage());
-            }
-            Optional<NotificationEntity> optionalNotification = notificationServiceRepository.findById(notificationId);
-            if (optionalNotification.isEmpty()) {
-                LOGGER.info("Notification does not exist: {}", notificationId);
-                throw new PartnerServiceException(
-                        ErrorCode.NOTIFICATION_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.NOTIFICATION_NOT_EXISTS.getErrorMessage());
-            }
+	@Override
+	public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(String notificationId,
+			DismissNotificationRequestDto dismissNotificationRequestDto) {
+		ResponseWrapperV2<DismissNotificationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(notificationId) || notificationId.isBlank()) {
+				LOGGER.info("Invalid request: Notification ID is null or empty");
+				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			if (Objects.isNull(dismissNotificationRequestDto.getNotificationStatus())) {
+				LOGGER.info("Notification status is null or empty");
+				throw new PartnerServiceException(ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorCode(),
+						ErrorCode.NOTIFICATION_STATUS_REQUIRED_IN_REQUEST.getErrorMessage());
+			}
+			if (!dismissNotificationRequestDto.getNotificationStatus().equals(PartnerConstants.STATUS_DISMISSED)) {
+				LOGGER.info("Invalid Notification status for Notification Id: {}", notificationId);
+				throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorCode(),
+						ErrorCode.INVALID_NOTIFICATION_STATUS.getErrorMessage());
+			}
+			Optional<NotificationEntity> optionalNotification = notificationServiceRepository.findById(notificationId);
+			if (optionalNotification.isEmpty()) {
+				LOGGER.info("Notification does not exist: {}", notificationId);
+				throw new PartnerServiceException(ErrorCode.NOTIFICATION_NOT_EXISTS.getErrorCode(),
+						ErrorCode.NOTIFICATION_NOT_EXISTS.getErrorMessage());
+			}
 
-            NotificationEntity notificationEntity = optionalNotification.get();
-            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-            if (notificationEntity.getNotificationType().equals(ROOT_CERT_EXPIRY) || notificationEntity.getNotificationType().equals(INTERMEDIATE_CERT_EXPIRY)
-                    || notificationEntity.getNotificationType().equals(WEEKLY_SUMMARY)) {
-                if(!isPartnerAdmin) {
-                    LOGGER.info("Partner Admin can only dismiss this notifications: {}", notificationId);
-                    throw new PartnerServiceException(
-                            ErrorCode.UNABLE_TO_DISMISS.getErrorCode(),
-                            ErrorCode.UNABLE_TO_DISMISS.getErrorMessage());
-                }
-            }
+			NotificationEntity notificationEntity = optionalNotification.get();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (notificationEntity.getNotificationType().equals(ROOT_CERT_EXPIRY)
+					|| notificationEntity.getNotificationType().equals(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE)
+					|| notificationEntity.getNotificationType().equals(WEEKLY_SUMMARY_NOTIFICATION_TYPE)) {
+				if (!isPartnerAdmin) {
+					LOGGER.info("Partner Admin can only dismiss this notifications: {}", notificationId);
+					throw new PartnerServiceException(ErrorCode.UNABLE_TO_DISMISS.getErrorCode(),
+							ErrorCode.UNABLE_TO_DISMISS.getErrorMessage());
+				}
+			}
 
-            String userId = getUserId();
-            List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+			String userId = getUserId();
+			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
 
-            if (partnerList.isEmpty()) {
-                LOGGER.info("User ID does not exist: {}", userId);
-                throw new PartnerServiceException(
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-                        ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-            }
+			if (partnerList.isEmpty()) {
+				LOGGER.info("User ID does not exist: {}", userId);
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
 
-            String notificationPartnerId = notificationEntity.getPartnerId();
-            boolean partnerIdExists = false;
+			String notificationPartnerId = notificationEntity.getPartnerId();
+			boolean partnerIdExists = false;
 
-            // check if partnerId is associated with user
-            for (Partner partner : partnerList) {
-                partnerHelper.validatePartnerId(partner, userId);
-                if (partner.getId().equals(notificationPartnerId)) {
-                    //check if partner is active or not
-                    if(!isPartnerAdmin) {
-                        partnerHelper.checkIfPartnerIsNotActive(partner);
-                    }
-                    partnerIdExists = true;
-                    break;
-                }
-            }
+			// check if partnerId is associated with user
+			for (Partner partner : partnerList) {
+				partnerHelper.validatePartnerId(partner, userId);
+				if (partner.getId().equals(notificationPartnerId)) {
+					// check if partner is active or not
+					if (!isPartnerAdmin) {
+						partnerHelper.checkIfPartnerIsNotActive(partner);
+					}
+					partnerIdExists = true;
+					break;
+				}
+			}
 
-            if (!partnerIdExists) {
-                LOGGER.info("Notification does not belong to the partner: {}", notificationId);
-                throw new PartnerServiceException(
-                        ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorCode(),
-                        ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorMessage());
-            }
+			if (!partnerIdExists) {
+				LOGGER.info("Notification does not belong to the partner: {}", notificationId);
+				throw new PartnerServiceException(ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorCode(),
+						ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorMessage());
+			}
 
-            if (PartnerConstants.STATUS_DISMISSED.equals(notificationEntity.getNotificationStatus())) {
-                LOGGER.info("Notification already dismissed: {}", notificationId);
-                throw new PartnerServiceException(
-                        ErrorCode.NOTIFICATION_ALREADY_DISMISSED.getErrorCode(),
-                        ErrorCode.NOTIFICATION_ALREADY_DISMISSED.getErrorMessage());
-            }
+			if (PartnerConstants.STATUS_DISMISSED.equals(notificationEntity.getNotificationStatus())) {
+				LOGGER.info("Notification already dismissed: {}", notificationId);
+				throw new PartnerServiceException(ErrorCode.NOTIFICATION_ALREADY_DISMISSED.getErrorCode(),
+						ErrorCode.NOTIFICATION_ALREADY_DISMISSED.getErrorMessage());
+			}
 
-            // Update notification status
-            notificationEntity.setNotificationStatus(PartnerConstants.STATUS_DISMISSED);
-            notificationEntity.setUpdatedDatetime(LocalDateTime.now());
-            notificationEntity.setUpdatedBy(getUserId());
+			// Update notification status
+			notificationEntity.setNotificationStatus(PartnerConstants.STATUS_DISMISSED);
+			notificationEntity.setUpdatedDatetime(LocalDateTime.now());
+			notificationEntity.setUpdatedBy(getUserId());
 
-            NotificationEntity savedEntity = notificationServiceRepository.save(notificationEntity);
+			NotificationEntity savedEntity = notificationServiceRepository.save(notificationEntity);
 
-            DismissNotificationResponseDto responseDto = objectMapper.convertValue(savedEntity, DismissNotificationResponseDto.class);
-            responseWrapper.setResponse(responseDto);
-        } catch (PartnerServiceException ex) {
-            LOGGER.info("sessionId", "idType", "id", "In dismissNotification method of NotificationsServiceImpl - " + ex.getMessage());
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-        } catch (Exception ex) {
-            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-            LOGGER.error("sessionId", "idType", "id",
-                    "In dismissNotification method of NotificationsServiceImpl - " + ex.getMessage());
-            String errorCode = ErrorCode.DISMISS_NOTIFICATION_ERROR.getErrorCode();
-            String errorMessage = ErrorCode.DISMISS_NOTIFICATION_ERROR.getErrorMessage();
-            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
-        }
-        responseWrapper.setId(patchDismissNotificationId);
-        responseWrapper.setVersion(VERSION);
-        return responseWrapper;
-    }
+			DismissNotificationResponseDto responseDto = objectMapper.convertValue(savedEntity,
+					DismissNotificationResponseDto.class);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In dismissNotification method of NotificationsServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In dismissNotification method of NotificationsServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.DISMISS_NOTIFICATION_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.DISMISS_NOTIFICATION_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDismissNotificationId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
 
-    public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
-        NotificationsResponseDto responseDto = new NotificationsResponseDto();
-        responseDto.setNotificationId(notificationEntity.getId());
-        responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
-        responseDto.setNotificationType(notificationEntity.getNotificationType());
-        responseDto.setNotificationStatus(notificationEntity.getNotificationStatus());
-        responseDto.setCreatedDateTime(notificationEntity.getCreatedDatetime());
+	public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
+		NotificationsResponseDto responseDto = new NotificationsResponseDto();
+		responseDto.setNotificationId(notificationEntity.getId());
+		responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
+		responseDto.setNotificationType(notificationEntity.getNotificationType());
+		responseDto.setNotificationStatus(notificationEntity.getNotificationStatus());
+		responseDto.setCreatedDateTime(notificationEntity.getCreatedDatetime());
 
-        // Convert JSON string to NotificationDetailsDto
-        if (notificationEntity.getNotificationDetailsJson() != null) {
-            try {
-                NotificationDetailsDto detailsDto = objectMapper.readValue(
-                        notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
-                responseDto.setNotificationDetails(detailsDto);
-            } catch (JsonProcessingException e) {
-                throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
-                        ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorMessage());
-            }
-        }
+		// Convert JSON string to NotificationDetailsDto
+		if (notificationEntity.getNotificationDetailsJson() != null) {
+			try {
+				NotificationDetailsDto detailsDto = objectMapper
+						.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
+				responseDto.setNotificationDetails(detailsDto);
+			} catch (JsonProcessingException e) {
+				throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
+						ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorMessage());
+			}
+		}
 
-        return responseDto;
-    }
+		return responseDto;
+	}
 
-    private AuthUserDetails authUserDetails() {
-        return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 
-    private String getUserId() {
-        return authUserDetails().getUserId();
-    }
+	private String getUserId() {
+		return authUserDetails().getUserId();
+	}
 }

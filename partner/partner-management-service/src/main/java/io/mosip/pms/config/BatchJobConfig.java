@@ -15,11 +15,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-
+import io.mosip.pms.tasklets.ApiKeyExpiryTasklet;
 import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
+import io.mosip.pms.tasklets.FTMChipCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
+import io.mosip.pms.tasklets.SbiExpiryTasklet;
 import io.mosip.pms.tasklets.WeeklyNotificationsTasklet;
+import io.mosip.pms.tasklets.SbiExpiryAutoDeactivationTasklet;
+import io.mosip.pms.tasklets.ApiKeyExpiryAutoDeactivationTasklet;
 
 @Configuration
 public class BatchJobConfig {
@@ -35,6 +39,21 @@ public class BatchJobConfig {
 
 	@Autowired
 	private DeletePastNotificationsTasklet deletePastNotificationsTasklet;
+
+	@Autowired
+	private FTMChipCertificateExpiryTasklet ftmChipCertificateExpiryTasklet;
+
+	@Autowired
+	private SbiExpiryTasklet sbiExpiryTasklet;
+
+	@Autowired
+	private ApiKeyExpiryAutoDeactivationTasklet apiKeyExpiryAutoDeactivationTasklet;
+
+	@Autowired
+	private ApiKeyExpiryTasklet apiKeyExpiryTasklet;
+
+	@Autowired
+	private SbiExpiryAutoDeactivationTasklet sbiExpiryAutoDeactivationTasklet;
 
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
@@ -64,6 +83,39 @@ public class BatchJobConfig {
 	}
 
 	@Bean
+	public Step ftmChipExpiryNotificationsStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
+		return new StepBuilder("ftmChipExpiryNotificationsStep", jobRepository)
+				.tasklet(ftmChipCertificateExpiryTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step sbiExpiryNotificationsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("sbiExpiryNotificationsStep", jobRepository)
+				.tasklet(sbiExpiryTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step apiKeyExpiryNotificationsStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
+		return new StepBuilder("apiKeyExpiryNotificationsStep", jobRepository)
+				.tasklet(apiKeyExpiryTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step sbiExpiryAutoDeactivationStep(JobRepository jobRepository,
+											  PlatformTransactionManager transactionManager) {
+		return new StepBuilder("sbiExpiryAutoDeactivationStep", jobRepository)
+				.tasklet(sbiExpiryAutoDeactivationTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step apiKeyExpiryAutoDeactivationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+		return new StepBuilder("apiKeyExpiryAutoDeactivationStep", jobRepository)
+				.tasklet(apiKeyExpiryAutoDeactivationTasklet, transactionManager).build();
+	}
+
+	@Bean
 	public Job rootAndIntermediateCertificateExpiryJob(JobRepository jobRepository,
 			@Qualifier("rootAndIntermediateCertificateExpiryStep") Step rootAndIntermediateCertificateExpiryStep) {
 		return new JobBuilder("rootAndIntermediateCertificateExpiryJob", jobRepository)
@@ -89,5 +141,42 @@ public class BatchJobConfig {
 			@Qualifier("deletePastNotificationsStep") Step deletePastNotificationsStep) {
 		return new JobBuilder("deletePastNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
 				.start(deletePastNotificationsStep).build();
+	}
+
+	@Bean
+	public Job ftmChipExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("ftmChipExpiryNotificationsStep") Step ftmChipExpiryNotificationsStep) {
+		return new JobBuilder("ftmChipExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(ftmChipExpiryNotificationsStep).build();
+	}
+
+	@Bean
+	public Job sbiExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("sbiExpiryNotificationsStep") Step sbiExpiryNotificationsStep) {
+		return new JobBuilder("sbiExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(sbiExpiryNotificationsStep).build();
+	}
+
+	@Bean
+	public Job apiKeyExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("apiKeyExpiryNotificationsStep") Step apiKeyExpiryNotificationsStep) {
+		return new JobBuilder("apiKeyExpiryNotificationsStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(apiKeyExpiryNotificationsStep).build();
+	}
+
+	@Bean
+	public Job sbiExpiryAutoDeactivationJob(JobRepository jobRepository,
+											@Qualifier("sbiExpiryAutoDeactivationStep") Step sbiExpiryAutoDeactivationStep) {
+		return new JobBuilder("sbiExpiryAutoDeactivationStep", jobRepository).incrementer(new RunIdIncrementer())
+				.start(sbiExpiryAutoDeactivationStep).build();
+	}
+
+	@Bean
+	public Job apiKeyExpiryAutoDeactivationJob(JobRepository jobRepository,
+			@Qualifier("apiKeyExpiryAutoDeactivationStep") Step apiKeyExpiryAutoDeactivationStep) {
+		return new JobBuilder("apiKeyExpiryAutoDeactivationJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(apiKeyExpiryAutoDeactivationStep)
+				.build();
 	}
 }

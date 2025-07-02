@@ -100,6 +100,8 @@ public interface PartnerManagerService {
 
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto);
 
+	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> getAllApiKeyRequestsV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ApiKeyFilterDto filterDto);
+
 	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, TrustCertificateFilterDto filterDto);
 
 	public ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(String certificateId);

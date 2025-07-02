@@ -101,6 +101,7 @@ public class PartnerHelper {
         apiKeyAliasToColumnMap.put("policyGroupName", "pg.name");
         apiKeyAliasToColumnMap.put("status", "isActive");
         apiKeyAliasToColumnMap.put("createdDateTime", "createdDateTime");
+        apiKeyAliasToColumnMap.put("apiKeyExpiryDateTime", "validToDatetime");
     }
 
     public final Map<String, String> ftmAliasToColumnMap = new HashMap<>();
@@ -177,32 +178,34 @@ public class PartnerHelper {
     @Autowired
     private Environment environment;
 
-    public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId) {
-        Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
-        if (secureBiometricInterface.isEmpty()) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi does not exists.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
-                    ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
-        } else if (!secureBiometricInterface.get().getProviderId().equals(partnerId)) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
-            throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
-                    ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
-        } else if (secureBiometricInterface.get().getApprovalStatus().equals(PENDING_APPROVAL)) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
-            throw new PartnerServiceException(ErrorCode.PENDING_APPROVAL_SBI.getErrorCode(),
-                    ErrorCode.PENDING_APPROVAL_SBI.getErrorMessage());
-        } else if (secureBiometricInterface.get().getApprovalStatus().equals(REJECTED)) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is already rejected.");
-            throw new PartnerServiceException(ErrorCode.REJECTED_SBI.getErrorCode(),
-                    ErrorCode.REJECTED_SBI.getErrorMessage());
-        } else if (secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && !secureBiometricInterface.get().isActive()) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is already deactivated.");
-            throw new PartnerServiceException(ErrorCode.DEACTIVATED_SBI.getErrorCode(),
-                    ErrorCode.DEACTIVATED_SBI.getErrorMessage());
-        } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
-            LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
-            throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),
-                    ErrorCode.SBI_EXPIRED.getErrorMessage());
+    public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
+        if (!isOrphanedDevice) {
+            Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
+            if (secureBiometricInterface.isEmpty()) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi does not exists.");
+                throw new PartnerServiceException(ErrorCode.SBI_NOT_EXISTS.getErrorCode(),
+                        ErrorCode.SBI_NOT_EXISTS.getErrorMessage());
+            } else if (!secureBiometricInterface.get().getProviderId().equals(partnerId)) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi is not associated with partner Id.");
+                throw new PartnerServiceException(ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorCode(),
+                        ErrorCode.SBI_NOT_ASSOCIATED_WITH_PARTNER_ID.getErrorMessage());
+            } else if (secureBiometricInterface.get().getApprovalStatus().equals(PENDING_APPROVAL)) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi is not approved.");
+                throw new PartnerServiceException(ErrorCode.PENDING_APPROVAL_SBI.getErrorCode(),
+                        ErrorCode.PENDING_APPROVAL_SBI.getErrorMessage());
+            } else if (secureBiometricInterface.get().getApprovalStatus().equals(REJECTED)) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi is already rejected.");
+                throw new PartnerServiceException(ErrorCode.REJECTED_SBI.getErrorCode(),
+                        ErrorCode.REJECTED_SBI.getErrorMessage());
+            } else if (secureBiometricInterface.get().getApprovalStatus().equals(APPROVED) && !secureBiometricInterface.get().isActive()) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi is already deactivated.");
+                throw new PartnerServiceException(ErrorCode.DEACTIVATED_SBI.getErrorCode(),
+                        ErrorCode.DEACTIVATED_SBI.getErrorMessage());
+            } else if (secureBiometricInterface.get().getSwExpiryDateTime().toLocalDate().isBefore(LocalDate.now())) {
+                LOGGER.info("sessionId", "idType", "id", "Sbi is expired.");
+                throw new PartnerServiceException(ErrorCode.SBI_EXPIRED.getErrorCode(),
+                        ErrorCode.SBI_EXPIRED.getErrorMessage());
+            }
         }
 
         Optional<DeviceDetail> deviceDetail = deviceDetailRepository.findById(deviceDetailId);

@@ -24,10 +24,12 @@
         <div style="font-size: 14px;">
           <p><strong>Cher(e) ${partnerId},</strong></p>
           <p>
-            Ceci est pour vous informer que le certificat de la puce FTM pour
-            <strong>${make}</strong> - <strong>${model}</strong> (ID FTM :
-            <strong>${ftmId}</strong>) expirera le
-            <strong>${expiryDateTime} UTC</strong>. Pour garantir la continuité du service, veuillez télécharger un nouveau certificat avant la date d’expiration.
+            Nous vous informons que le certificat de puce FTM pour  
+            <strong>Marque : ${make}</strong> - <strong>Modèle : ${model}</strong> (ID FTM :  
+            <strong>${ftmId}</strong>) est prévu pour expirer le  
+            <strong>${expiryDateTime} UTC</strong>. Afin d'assurer la continuité  
+            des fonctionnalités et des services sans interruption, nous vous demandons de  
+            téléverser le certificat pour renouvellement avant la date d'expiration.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">Détails du certificat</p>

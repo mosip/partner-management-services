@@ -20,4 +20,8 @@ public class NotificationsFilterDto {
     private String ftmId;
     private String make;
     private String model;
+    private String apiKeyName;
+    private String policyName;
+    private String sbiId;
+    private String sbiVersion;
 }
