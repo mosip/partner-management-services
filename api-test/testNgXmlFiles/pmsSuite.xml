@@ -692,14 +692,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-
+<!--	POST /partners/search has been deprecated from release 1.2.2.0 onwards, replaced by GET /admin-partners with updated test cases.
 	<test name="SearchPartner">
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchPartner/createSearchPartner.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
-	</test>
+	</test>-->
 	<test name="CreateDeviceDetail">
 		<parameter name="ymlFile"
 			value="pms/device/makeAndModel/create/CreateDeviceDetail.yml" />
@@ -859,7 +859,7 @@
 		<parameter name="ymlFile"
 			value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
 		<parameter name="pathParams"
-			value="sortFieldName,sortType,status,sbiVersion" />
+			value="partnerId,sortFieldName,sortType,status,sbiVersion" />
 		<parameter name="idKeyName" value="sbiId" />
 		<classes>
 			<class
@@ -1366,6 +1366,8 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+<!--	GET /partners has been deprecated from release 1.2.2.0 onwards, replaced by GET /admin-partners with updated test cases.
+	added in GET /admin-partners 
 	<test name="GetPartners">
 		<parameter name="ymlFile"
 			value="pms/GetPartners/GetPartners.yml" />
@@ -1373,7 +1375,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>
+	</test>-->
 	<test name="ActivateDeactivatePartner">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartner/ActivateDeactivatePartner.yml" />
