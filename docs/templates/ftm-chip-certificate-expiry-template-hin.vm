@@ -23,10 +23,12 @@
         <div style="font-size: 14px;">
           <p><strong>प्रिय ${partnerId},</strong></p>
           <p>
-            आपको सूचित किया जाता है कि FTM चिप प्रमाणपत्र
-            <strong>${make}</strong> - <strong>${model}</strong> (FTM ID:
-            <strong>${ftmId}</strong>) को समाप्त होने वाला है
-            <strong>${expiryDateTime} UTC</strong>. निरंतर कार्यक्षमता और निर्बाध सेवाओं को सुनिश्चित करने के लिए, हम आपसे अनुरोध करते हैं कि आप समाप्ति तिथि से पहले नवीनीकरण के लिए प्रमाणपत्र अपलोड करें।
+            यह सूचित किया जाता है कि  
+            <strong>निर्माता: ${make}</strong> - <strong>मॉडल: ${model}</strong> (FTM आईडी:  
+            <strong>${ftmId}</strong>) के लिए FTM चिप प्रमाणपत्र  
+            <strong>${expiryDateTime} UTC</strong> को समाप्त होने वाला है।  
+            निरंतर कार्यक्षमता और सेवाओं में बाधा से बचने के लिए,  
+            कृपया समाप्ति तिथि से पहले प्रमाणपत्र को नवीनीकरण हेतु अपलोड करें।
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">प्रमाणपत्र विवरण</p>
