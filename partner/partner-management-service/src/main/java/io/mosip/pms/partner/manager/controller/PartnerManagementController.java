@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -23,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,6 +74,9 @@ public class PartnerManagementController {
 
 	@Autowired
 	FeatureAvailabilityUtil featureAvailabilityUtil;
+
+	@Value("${mosip.pms.certificate.id.regex}")
+	private String certificateIdRegex;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -507,6 +513,16 @@ public class PartnerManagementController {
 	ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(
 			@ApiParam("To download trust certificates.")  @PathVariable("certificateId") @NotNull String certificateId) {
 		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
+		if (!certificateId.matches(certificateIdRegex)) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(
+							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"certificateId",
+							"Only alphanumeric characters (A–Z, a–z, 0–9) and hyphens (-) are allowed with a maximum length of 36 characters"
+					)
+			);
+		}
 		return partnerManagementService.downloadTrustCertificates(certificateId);
 	}
 }

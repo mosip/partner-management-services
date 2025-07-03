@@ -177,7 +177,8 @@ public enum ErrorCode {
 	NOTIFICATION_STATUS_REQUIRED_IN_REQUEST("PMS_NOTIFICATION_ERROR_019", "Notification status is required in the request"),
 	ROOT_AND_INTERMEDIATE_CERTS_DISABLED("PMS_FEATURE_001", "Root and Intermediate Certificates list is not available in the current deployment."),
 	OIDC_CLIENT_FEATURE_DISABLED("PMS_FEATURE_002", "OIDC client related features are not available in the current deployment."),
-	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment.");
+	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment."),
+	INVALID_INPUT_FORMAT("PMS_PRT_099", "Invalid input for '%s'. Expected: %s.");
 
 	/**
 	 * The error code.
