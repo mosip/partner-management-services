@@ -5,6 +5,8 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.mosip.pms.oauth.client.service.ClientManagementService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +32,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ClientManagementController {
+
+	@Value("${mosip.pms.client.id.regex}")
+	private String clientIdRegex;
 
 	@Autowired
 	ClientManagementService clientManagementService;
@@ -59,6 +65,16 @@ public class ClientManagementController {
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		if (!clientId.matches(clientIdRegex)) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(
+							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"clientId",
+							"Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"
+					)
+			);
+		}
 		requestValidator.validateReqTime(requestWrapper.getRequesttime());
 		var clientRespDto = clientManagementService.updateOAuthClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
@@ -92,6 +108,16 @@ public class ClientManagementController {
 	public ResponseWrapper<ClientDetailResponse> updateClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequest> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		if (!clientId.matches(clientIdRegex)) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(
+							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"clientId",
+							"Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"
+					)
+			);
+		}
 		var clientRespDto = clientManagementService.updateOIDCClient(clientId, requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT, clientId, "clientID");

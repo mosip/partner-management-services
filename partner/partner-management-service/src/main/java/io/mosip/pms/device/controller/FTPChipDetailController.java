@@ -5,6 +5,8 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -79,6 +81,9 @@ public class FTPChipDetailController {
 
 	@Value("${mosip.pms.api.id.deactivate.ftm.patch}")
 	private  String patchDeactivateFtm;
+
+	@Value("${mosip.pms.ftm.id.regex}")
+	private String ftmIdRegex;
 
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
@@ -286,6 +291,12 @@ public class FTPChipDetailController {
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
+		if (!ftmId.matches(ftmIdRegex)) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "ftmId", "Only digits (0-9), with a maximum length of 36 characters")
+			);
+		}
 		return ftpChipDetaillService.getFtmCertificateData(ftmId);
 	}
 
