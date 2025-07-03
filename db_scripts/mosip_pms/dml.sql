@@ -8,9 +8,19 @@ TRUNCATE TABLE pms.policy_group cascade ;
 
 TRUNCATE TABLE pms.auth_policy cascade ;
 \COPY pms.auth_policy (id,policy_group_id,name,descr,policy_file_id,policy_type,version,policy_schema,valid_from_date,valid_to_date,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-auth_policy.csv' delimiter ',' HEADER  csv;
+-- Update valid_to_date
+UPDATE auth_policy
+SET valid_to_date = now() + interval '200 years'
+WHERE policy_group_id LIKE 'mpolicygroup-default%'
+  AND id LIKE 'mpolicy-default%';
 
 TRUNCATE TABLE pms.auth_policy_h cascade ;
 \COPY pms.auth_policy_h (id,eff_dtimes,policy_group_id,name,descr,policy_file_id,policy_type,version,policy_schema,valid_from_date,valid_to_date,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-auth_policy_h.csv' delimiter ',' HEADER  csv;
+-- Update valid_to_date
+UPDATE auth_policy_h
+SET valid_to_date = now() + interval '200 years'
+WHERE policy_group_id LIKE 'mpolicygroup-default%'
+  AND id LIKE 'mpolicy-default%';
 
 TRUNCATE TABLE pms.partner cascade ;
 \COPY pms.partner (id,policy_group_id,name,address,contact_no,email_id,certificate_alias,user_id,partner_type_code,approval_status,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-partner.csv' delimiter ',' HEADER  csv;
@@ -26,6 +36,11 @@ TRUNCATE TABLE pms.partner_policy_bioextract cascade ;
 
 TRUNCATE TABLE pms.partner_policy cascade ;
 \COPY pms.partner_policy (policy_api_key,label,part_id,policy_id,valid_from_datetime,valid_to_datetime,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes) FROM './dml/pms-partner_policy.csv' delimiter ',' HEADER  csv;
+-- Update valid_to_datetime
+UPDATE partner_policy
+SET valid_to_datetime = now() + interval '200 years'
+WHERE part_id LIKE 'mpartner-default%'
+  AND policy_id LIKE 'mpolicy-default%';
 
 TRUNCATE TABLE pms.partner_policy_credential_type cascade ;
 \COPY pms.partner_policy_credential_type (part_id,policy_id,credential_type,is_active,cr_by,cr_dtimes,upd_by,upd_dtimes,is_deleted,del_dtimes) FROM './dml/pms-partner_policy_credential_type.csv' delimiter ',' HEADER  csv;
