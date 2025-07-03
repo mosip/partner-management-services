@@ -117,7 +117,7 @@ GetListOfPartners:
       ]
 }'
    Pms_GetListOfPartners_invalid_pageno_Neg:
-      endPoint: /v1/partnermanager/admin-partners?pageNo=22
+      endPoint: /v1/partnermanager/admin-partners?pageNo=-1
       description: Fetching all the active List Of Partner with invalid sort
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartners_08	  
@@ -128,7 +128,11 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_360"		
+      }
+      ]	  	
 }'
    Pms_GetListOfPartners_empty_pageno_Neg:
       endPoint: /v1/partnermanager/admin-partners?pageNo=111111
@@ -165,6 +169,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_invalid_partnerid_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerId=-dndn333
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_11
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -178,19 +183,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_empty_partnerid_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerId=bcbcb
       description: Fetching all the active List Of Partner with invalid sort
-      role: partneradmin
-      checkErrorsOnlyInResponse: true
-      restMethod: get
-      inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/error
-      input: '{
-}'
-      output: '{
-      "pageNo": "0"
-}'
-   Pms_GetListOfPartners_empty_partnerid_Neg:
-      endPoint: /v1/partnermanager/admin-partners?partnerId=bcbcb
-      description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_12
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -204,6 +197,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_invalid_partnertype_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerType=2233ddd
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_13
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -217,6 +211,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_empty_partnertype_Neg:
       endPoint: /v1/partnermanager/admin-partners?partnerType=dfdgd
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_14
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -230,6 +225,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_deactivated_partner_Neg:
       endPoint: /v1/partnermanager/admin-partners?isActive=false
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_15
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -243,6 +239,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_invalid_organization_name_Neg:
       endPoint: /v1/partnermanager/admin-partners?orgName=123@1sse
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_16
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -256,6 +253,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_empty_organization_name_Neg:
       endPoint: /v1/partnermanager/admin-partners?orgName=123@1sse
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_17
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -269,6 +267,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_empty_emailAddress_Neg:
       endPoint: /v1/partnermanager/admin-partners?emailAddress=454646
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_18
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -282,6 +281,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_invalid_email_Neg:
       endPoint: /v1/partnermanager/admin-partners?emailAddress=2t63t@@@
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_19
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -295,6 +295,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_not_uploaded_email_Neg:
       endPoint: /v1/partnermanager/admin-partners?certificateUploadStatus=not_uploaded
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_20
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -308,6 +309,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_invalid_policyGroup_Name_Neg:
       endPoint: /v1/partnermanager/admin-partners?policyGroupName=-12
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_21
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -321,6 +323,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_with_empty_policyGroup_Name_Neg:
       endPoint: /v1/partnermanager/admin-partners?policyGroupName=
       description: Fetching all the active List Of Partner with invalid sort
+      uniqueIdentifier: TC_PMS_GetListOfPartners_22
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -331,9 +334,108 @@ GetListOfPartners:
       output: '{
       "pageNo": "0"
 }'
-   Pms_GetListOfPartners_with_invalid_policyGroup_Name_Neg:
-      endPoint: /v1/partnermanager/admin-partners?policyGroupName=@374b
-      description: Fetching all the active List Of Partner with invalid sort
+   Pms_GetListOfPartners_Filter_isActive_type_true:
+      endPoint: /v1/partnermanager/admin-partners?pageSize=8&isActive=true
+      description: Retrieving all the Active partners
+      uniqueIdentifier: TC_PMS_GetListOfPartners_23
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Filter_OrgName_SortType_asc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=orgName&sortType=ASC&pageNo=0&pageSize=8&orgName=partner
+      description: Retrieving all partners filtered by organization name and sorted in ascending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_24
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_partnerType_Sort_asc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerType&sortType=asc&pageSize=8&partnerType=Auth
+      description: Retrieving all partners filtered by partnerType and sorted in ascending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_25
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_partnerType_Sort_desc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerType&sortType=desc&pageSize=8&partnerType=Auth
+      description: Retrieving all partners filtered by partnerType and sorted in descending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_26
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_partnerid_desc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerId&sortType=desc&pageNo=0&pageSize=8
+      description: Retrieving all partners filtered by partnerid and sorted in descending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_27
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_partnerid_asc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerId&sortType=asc&pageNo=0&pageSize=8
+      description: Retrieving all partners filtered by partnerid and sorted in ascending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_28
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_emailAddress_asc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerId&sortType=asc&pageNo=0&pageSize=8
+      description: Retrieving all partners filtered by partnerid and sorted in ascending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_28
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_invalid_sortFieldName_Neg:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=-1&sortType=-1
+      description: Retrieving all partners filtered by sortFieldName with invalid data
+      uniqueIdentifier: TC_PMS_GetListOfPartners_29
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -342,5 +444,87 @@ GetListOfPartners:
       input: '{
 }'
       output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_357"		
+      }
+      ]	  	
+}'
+   Pms_GetListOfPartners_certificateUploadStatus:
+      endPoint: /v1/partnermanager/admin-partners?certificateUploadStatus=uploaded
+      description: Retrieving all partners filtered by certificateUploadStatus
+      uniqueIdentifier: TC_PMS_GetListOfPartners_30
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
       "pageNo": "0"
+}'
+   Pms_GetListOfPartners_certificateUploadStatus_asc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=certificateUploadStatus&sortType=asc&certificateUploadStatus=uploaded
+      description: Retrieving all partners filtered by certificateUploadStatus in ascending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_31
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_certificateUploadStatus_desc:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=certificateUploadStatus&sortType=desc&certificateUploadStatus=uploaded
+      description: Retrieving all partners filtered by certificateUploadStatus in descending order
+      uniqueIdentifier: TC_PMS_GetListOfPartners_32
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_certificateUploadStatus_asc_without_sortFieldName_Neg:
+      endPoint: /v1/partnermanager/admin-partners?sortType=asc&certificateUploadStatus=uploaded
+      description: Retrieving all partners filtered by certificateUploadStatus in ascending order and without sortFieldName
+      uniqueIdentifier: TC_PMS_GetListOfPartners_33
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"		
+      }
+      ]	  	
+}'
+   Pms_GetListOfPartners_invalid_sortType_Neg:
+      endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerId&sortType=-1
+      description: Retrieving all partners filtered with invalid sortType
+      uniqueIdentifier: TC_PMS_GetListOfPartners_34
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_358"		
+      }
+      ]	  	
 }'

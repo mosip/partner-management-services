@@ -173,8 +173,8 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
-   Pms_GetListOfAllSBI_partnerId_valid:
-      endPoint: /v1/partnermanager/securebiometricinterface
+   Pms_GetListOfAllSBI_partnerId_valid_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_SBI_List_15      
       description: Fetching all the active SBI with partnerId contains 'a'
       role: partneradmin
@@ -192,7 +192,7 @@ GetListOfAllSBI:
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "policyId": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -244,8 +244,7 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
-
-   Pms_GetListOfAllSBI_random_value_given:
+   Pms_GetListOfAllSBI_random_value_given_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_18      
       description: Fetching all the active SBI with random value for partnerId

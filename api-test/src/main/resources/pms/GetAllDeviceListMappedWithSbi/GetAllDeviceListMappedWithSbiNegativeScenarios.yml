@@ -47,7 +47,7 @@ GetAllDeviceListMappedWithSbiNegativeScenarios:
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
       outputTemplate: pms/error
       input: '{
-       "sbiId": "$ID:GetListOfAllSBI_status_pending_approval_sid_sbiId$"
+       "sbiId": "$ID:GetListOfAllSBI_partnerId_valid_sid_sbiId$"
 }'
       output: '{
       "errors": [

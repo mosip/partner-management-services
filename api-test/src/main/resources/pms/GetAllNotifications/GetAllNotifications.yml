@@ -38,6 +38,7 @@ GetAllNotifications:
 }'
       output: ' {
 }'
+
    Pms_GetAllNotifications_Invalid_Certificate_ID_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=8&certificateId=777apple123
       role: partneradmin
