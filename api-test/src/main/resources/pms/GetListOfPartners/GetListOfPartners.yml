@@ -322,7 +322,7 @@ GetListOfPartners:
 }'
    Pms_GetListOfPartners_with_empty_policyGroup_Name_Neg:
       endPoint: /v1/partnermanager/admin-partners?policyGroupName=
-      description: Fetching all the active List Of Partner with invalid sort
+      description: Fetching all the active List Of Partner with empty policyGroup Name
       uniqueIdentifier: TC_PMS_GetListOfPartners_22
       role: partneradmin
       checkErrorsOnlyInResponse: true
