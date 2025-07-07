@@ -102,7 +102,7 @@ DeactivateOIDCClient:
       output: '{
     "errors": [
     {
-            "errorCode": "PMS_ESI_004"
+            "errorCode": "PMS_PRT_099"
         }
   ]
 }'
