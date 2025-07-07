@@ -779,8 +779,8 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 					if (expiryPeriod != null && dto.getCertificateExpiryDateTime() != null) {
 						LocalDateTime validTillDateTime = LocalDateTime.now().plusDays(expiryPeriod).with(LocalTime.MAX);
 						if (dto.getCertificateExpiryDateTime().isBefore(LocalDateTime.now())
-								|| dto.getCertificateExpiryDateTime().isAfter(validTillDateTime)
-								|| (!dto.getIsActive() && !dto.getStatus().equals(APPROVED))) {
+								|| dto.getCertificateExpiryDateTime().isAfter(validTillDateTime) ||
+								!dto.getStatus().equals(APPROVED) || !dto.getIsActive()) {
 							continue;
 						}
 					}

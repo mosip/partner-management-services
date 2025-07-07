@@ -182,7 +182,8 @@ public enum ErrorCode {
 	WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER("PMS_NOTIFICATION_ERROR_024", "The selected notification type is invalid. Please select a type other than 'weekly'."),
 	ROOT_AND_INTERMEDIATE_CERTS_DISABLED("PMS_FEATURE_001", "Root and Intermediate Certificates list is not available in the current deployment."),
 	OIDC_CLIENT_FEATURE_DISABLED("PMS_FEATURE_002", "OIDC client related features are not available in the current deployment."),
-	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment.");
+	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment."),
+	INVALID_INPUT_FORMAT("PMS_PRT_099", "Invalid input for '%s'. Expected: %s.");
 
 	/**
 	 * The error code.
