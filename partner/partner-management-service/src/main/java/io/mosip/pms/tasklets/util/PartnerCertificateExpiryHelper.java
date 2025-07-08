@@ -1,5 +1,6 @@
 package io.mosip.pms.tasklets.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -154,9 +155,13 @@ public class PartnerCertificateExpiryHelper {
 		sbiDetailsDto.setPartnerId(sbiDetails.getProviderId());
 		sbiDetailsDto.setExpiryDateTime(sbiDetails.getSwExpiryDateTime().toString());
 		sbiDetailsDto.setExpiryPeriod("" + expiryPeriod);
-		sbiDetailsDto.setSbiBinaryHash(sbiDetails.getSwBinaryHash().toString());
+		sbiDetailsDto.setSbiBinaryHash(convertBytesToString(sbiDetails.getSwBinaryHash()));
 		sbiDetailsDto.setSbiCreationDate(sbiDetails.getCrDtimes().toString());
 		return sbiDetailsDto;
+	}
+
+	private String convertBytesToString(byte[] bytes) {
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
 	public ApiKeyDetailsDto populateApiKeyDetails(int expiryPeriod, PartnerPolicy apiKeyDetails) {
