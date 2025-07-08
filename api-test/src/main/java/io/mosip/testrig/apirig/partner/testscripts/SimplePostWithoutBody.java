@@ -111,26 +111,25 @@ public class SimplePostWithoutBody extends PMSUtil implements ITest {
 		}
 		
 		else {
-			response = postWithBodyAndCookieWithoutBody(ApplnURI + testCaseDTO.getEndPoint(), inputJson,
-					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
+			response = postWithBodyAndCookieWithoutBody(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
-			Map<String, List<OutputValidationDto>> ouputValid = null;
-			
-				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
-						getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
-						response.getStatusCode());
-			
+		validateResponse(response, testCaseName);
+		Map<String, List<OutputValidationDto>> ouputValid = null;
 
-			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
+				getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()), testCaseDTO,
+				response.getStatusCode());
 
-			if (!OutputValidationUtil.publishOutputResult(ouputValid)) {
-				if (response.asString().contains("IDA-OTA-001"))
-					throw new AdminTestException(
-							"Exceeded number of OTP requests in a given time, Increase otp.request.flooding.max-count");
-				else
-					throw new AdminTestException("Failed at otp output validation");
-			}
-		
+		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+
+		if (!OutputValidationUtil.publishOutputResult(ouputValid)) {
+			if (response.asString().contains("IDA-OTA-001"))
+				throw new AdminTestException(
+						"Exceeded number of OTP requests in a given time, Increase otp.request.flooding.max-count");
+			else
+				throw new AdminTestException("Failed at otp output validation");
+		}
 
 	}
 

@@ -23,6 +23,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
@@ -111,7 +112,8 @@ public class GetWithParam extends PMSUtil implements ITest {
 			response = getWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
 					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
-
+			
+			validateResponse(response, testCaseName);
 			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
 					response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
 					testCaseDTO, response.getStatusCode());

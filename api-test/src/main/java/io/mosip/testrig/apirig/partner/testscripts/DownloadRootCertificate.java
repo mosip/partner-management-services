@@ -91,6 +91,7 @@ public class DownloadRootCertificate extends PMSUtil implements ITest {
 		response = getWithPathParamAndCookie(ApplnURI + "/v1/partnermanager/trust-chain-certificates",
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
 				"partneradmin", testCaseDTO.getTestCaseName());
+		validateResponse(response, testCaseName);
 		String responseBody = response.getBody().asString();
 		JSONObject jsonObject = new JSONObject(responseBody);
 		JSONArray dataArray = jsonObject.getJSONObject("response").getJSONArray("data");
@@ -113,7 +114,7 @@ public class DownloadRootCertificate extends PMSUtil implements ITest {
 		response = getWithPathParamAndCookie(ApplnURI + url,
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck, COOKIENAME,
 				"partneradmin", testCaseDTO.getTestCaseName());
-
+		validateResponse(response, testCaseName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 		if (testCaseName.contains("_StatusCode")) {
 
