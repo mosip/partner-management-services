@@ -24,6 +24,7 @@ import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -86,6 +87,9 @@ public class PolicyManagementControllerTest {
 
 	@Mock
 	private RequestValidator requestValidator;
+
+	@Mock
+	InputValidator inputValidator;
 
 	@InjectMocks
 	PolicyManagementController policyManagementController;
@@ -536,6 +540,7 @@ public class PolicyManagementControllerTest {
 		requestWrapper.setRequest(createRequestDto);
 		PolicyGroupCreateResponseDto mockedResponseDto = new PolicyGroupCreateResponseDto();
 		Mockito.when(policyManagementService.createPolicyGroup(createRequestDto)).thenReturn(mockedResponseDto);
+		doNothing().when(inputValidator).validateRequestInput(any());
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = policyManagementController.definePolicyGroup(requestWrapper);
 		assertNotNull(response);
 		assertNotNull(response.getResponse());
@@ -621,6 +626,7 @@ public class PolicyManagementControllerTest {
 		requestWrapper.setVersion("1.2.0");
 		requestWrapper.setRequest(createRequestDto);
 		PolicyCreateResponseDto mockedResponseDto = new PolicyCreateResponseDto();
+		doNothing().when(inputValidator).validateRequestInput(any());
 		Mockito.when(policyManagementService.createPolicies(createRequestDto)).thenReturn(mockedResponseDto);
 		ResponseWrapper<PolicyCreateResponseDto> response = policyManagementController.definePolicy(requestWrapper);
 		assertNotNull(response);
@@ -662,6 +668,7 @@ public class PolicyManagementControllerTest {
 		requestWrapper.setVersion("1.12.2");
 		requestWrapper.setId("id");
 		requestWrapper.setRequest(updateRequestDto);
+		doNothing().when(inputValidator).validateRequestInput(any());
 		ResponseWrapper<PolicyCreateResponseDto> response = policyManagementController.updatePolicyDetails(requestWrapper, policyId);
 		assertNotNull(response);
 	}
@@ -723,6 +730,7 @@ public class PolicyManagementControllerTest {
 		RequestWrapper<SearchDto> requestWrapper = new RequestWrapper<>();
 		requestWrapper.setRequest(searchDto);
 		PageResponseDto<PolicyGroup> mockedResponse = new PageResponseDto<>();
+		doNothing().when(inputValidator).validateRequestInput(any());
 		Mockito.when(policyManagementService.searchPolicyGroup(searchDto)).thenReturn(mockedResponse);
 		ResponseWrapper<PageResponseDto<PolicyGroup>> response = policyManagementController.searchPolicyGroup(requestWrapper);
 		assertNotNull(response);
@@ -827,6 +835,7 @@ public class PolicyManagementControllerTest {
 		filterDto.setPolicyGroupName("default");
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
+		doNothing().when(inputValidator).validateRequestInput(any());
 		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", "activated");

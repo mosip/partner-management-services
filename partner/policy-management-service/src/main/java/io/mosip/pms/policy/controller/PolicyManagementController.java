@@ -261,8 +261,10 @@ public class PolicyManagementController {
 	@Operation(summary = "Service to search policy group", description = "Service to search policy group")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		for (SearchFilter filter : request.getRequest().getFilters()) {
-			inputValidator.validateRequestInput(filter.getValue());
+		if (request.getRequest().getFilters() != null) {
+			for (SearchFilter filter : request.getRequest().getFilters()) {
+				inputValidator.validateRequestInput(filter.getValue());
+			}
 		}
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_GROUP);
