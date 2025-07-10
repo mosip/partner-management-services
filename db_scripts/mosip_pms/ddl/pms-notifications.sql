@@ -5,7 +5,7 @@ CREATE TABLE pms.notifications
     partner_id character varying(128) NOT NULL,
     notification_type character varying(36) NOT NULL,
     notification_status character varying(36) NOT NULL,
-	notification_details_json character varying(4000) NOT NULL,
+	notification_details_json character varying(10000) NOT NULL,
     email_id character varying(3000) NOT NULL,
     email_lang_code character varying(36) NOT NULL,
     email_sent boolean DEFAULT FALSE,
