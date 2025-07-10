@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.validator.InputValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
@@ -36,13 +38,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.dto.FilterValueDto;
-import io.mosip.pms.common.dto.PageResponseDto;
-import io.mosip.pms.common.dto.PolicyFilterValueDto;
-import io.mosip.pms.common.dto.PolicySearchDto;
-import io.mosip.pms.common.dto.SearchAuthPolicy;
-import io.mosip.pms.common.dto.SearchDto;
-import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.policy.dto.FilterResponseCodeDto;
@@ -95,12 +90,17 @@ public class PolicyManagementController {
 	@Autowired
 	RequestValidator requestValidator;
 
+	@Autowired
+	private InputValidator inputValidator;
+
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
 	@Operation(summary = "Service to create a new policy group", description = "Service to craete a new policy group")
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
+		inputValidator.validateRequestInput(createRequest.getRequest().getName());
+		inputValidator.validateRequestInput(createRequest.getRequest().getDesc());
 		requestValidator.validateReqTime(createRequest.getRequesttime());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.createPolicyGroup(createRequest.getRequest());
@@ -132,6 +132,8 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
+		inputValidator.validateRequestInput(createRequest.getRequest().getName());
+		inputValidator.validateRequestInput(createRequest.getRequest().getDesc());
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY, createRequest.getRequest().getName(), "policyName");
 		PolicyCreateResponseDto responseDto = policyManagementService.
@@ -162,6 +164,8 @@ public class PolicyManagementController {
 			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyId)
 			throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
+		inputValidator.validateRequestInput(updateRequestDto.getRequest().getName());
+		inputValidator.validateRequestInput(updateRequestDto.getRequest().getDesc());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY, updateRequestDto.getRequest().getName(), "policyName");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.updatePolicies(updateRequestDto.getRequest(),
@@ -257,6 +261,9 @@ public class PolicyManagementController {
 	@Operation(summary = "Service to search policy group", description = "Service to search policy group")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
+		for (SearchFilter filter : request.getRequest().getFilters()) {
+			inputValidator.validateRequestInput(filter.getValue());
+		}
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_GROUP);
 		responseWrapper.setResponse(policyManagementService.searchPolicyGroup(request.getRequest()));
@@ -352,7 +359,10 @@ public class PolicyManagementController {
 					schema = @Schema(allowableValues = {"activated", "deactivated", "draft"})
 			)
 			@RequestParam(value = "status", required = false) String status) {
-
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(policyName);
+		inputValidator.validateRequestInput(policyDescription);
+		inputValidator.validateRequestInput(policyGroupName);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
 		if (policyType != null) {
 			filterDto.setPolicyType(policyType.toLowerCase());

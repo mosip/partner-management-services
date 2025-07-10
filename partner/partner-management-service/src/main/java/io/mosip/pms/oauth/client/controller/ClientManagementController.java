@@ -2,6 +2,7 @@ package io.mosip.pms.oauth.client.controller;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
@@ -51,10 +52,14 @@ public class ClientManagementController {
 	@Autowired
 	FeatureAvailabilityUtil featureAvailabilityUtil;
 
+	@Autowired
+	private InputValidator inputValidator;
+
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getName());
 		var clientRespDto = clientManagementService.createOAuthClient(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
@@ -65,6 +70,7 @@ public class ClientManagementController {
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getClientName());
 		if (!clientId.matches(clientIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
@@ -160,6 +166,11 @@ public class ClientManagementController {
 			@RequestParam(value = "status", required = false) String status
 	) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput(policyName);
+		inputValidator.validateRequestInput(clientName);
 		ClientFilterDto filterDto = new ClientFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

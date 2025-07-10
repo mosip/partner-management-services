@@ -1,5 +1,6 @@
 package io.mosip.pms.device.controller;
 
+import io.mosip.pms.common.validator.InputValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -85,6 +86,9 @@ public class SecureBiometricInterfaceController {
 	@Autowired
 	RequestValidator requestValidator;
 
+	@Autowired
+	private InputValidator inputValidator;
+
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterface())")
 	@ResponseFilter
 	@PostMapping
@@ -94,6 +98,8 @@ public class SecureBiometricInterfaceController {
 			@ApiResponse(code = 500, message = "While creating SecureBiometricInterfaceCreateDto any error occured") })
 	public ResponseWrapper<IdDto> SecureBiometricInterface(
 			@Valid @RequestBody RequestWrapper<SecureBiometricInterfaceCreateDto> secureBiometricInterfaceCreateDto) {
+		inputValidator.validateRequestInput(secureBiometricInterfaceCreateDto.getRequest().getSwVersion());
+		inputValidator.validateRequestInput(secureBiometricInterfaceCreateDto.getRequest().getSwBinaryHash());
 		auditUtil.auditRequest(
 				DeviceConstant.CREATE_API_IS_CALLED + SecureBiometricInterfaceCreateDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -346,6 +352,10 @@ public class SecureBiometricInterfaceController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(sbiVersion);
+		inputValidator.validateRequestInput(sbiId);
 		SbiFilterDto filterDto = new SbiFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

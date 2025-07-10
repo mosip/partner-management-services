@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -89,6 +90,9 @@ public class FTPChipDetailController {
 	@Value("${mosip.pms.ftm.id.regex}")
 	private String ftmIdRegex;
 
+	@Autowired
+	private InputValidator inputValidator;
+
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
 	 * 
@@ -106,6 +110,8 @@ public class FTPChipDetailController {
 			@ApiResponse(code = 500, message = "While creating ftpChipDetail any error occured") })
 	public ResponseWrapper<IdDto> createDeviceDetail(
 			@Valid @RequestBody RequestWrapper<FtpChipDetailDto> chipDetailRequestDto) {
+		inputValidator.validateRequestInput(chipDetailRequestDto.getRequest().getMake());
+		inputValidator.validateRequestInput(chipDetailRequestDto.getRequest().getModel());
 		auditUtil.auditRequest(
 				DeviceConstant.CREATE_API_IS_CALLED + FtpChipDetailDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
@@ -330,6 +336,11 @@ public class FTPChipDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(ftmId);
+		inputValidator.validateRequestInput(make);
+		inputValidator.validateRequestInput(model);
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -74,6 +75,9 @@ public class PartnerManagementController {
 
 	@Autowired
 	FeatureAvailabilityUtil featureAvailabilityUtil;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	@Value("${mosip.pms.certificate.id.regex}")
 	private String certificateIdRegex;
@@ -316,6 +320,10 @@ public class PartnerManagementController {
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(emailAddress);
+		inputValidator.validateRequestInput(policyGroupName);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
 			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
@@ -369,6 +377,11 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "partnerType", required = false) String partnerType
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(policyName);
+		inputValidator.validateRequestInput(policyGroupName);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -424,6 +437,11 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(apiKeyLabel);
+		inputValidator.validateRequestInput(policyName);
+		inputValidator.validateRequestInput(policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
@@ -458,6 +476,11 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(apiKeyLabel);
+		inputValidator.validateRequestInput(policyName);
+		inputValidator.validateRequestInput(policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
 		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
@@ -510,6 +533,9 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod) {
 		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
+		inputValidator.validateRequestInput(certificateId);
+		inputValidator.validateRequestInput(issuedBy);
+		inputValidator.validateRequestInput(issuedTo);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
 			filterDto.setCaCertificateType(caCertificateType);
