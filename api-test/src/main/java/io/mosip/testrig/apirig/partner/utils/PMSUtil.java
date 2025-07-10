@@ -58,9 +58,6 @@ public class PMSUtil extends AdminTestUtil {
 		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
 				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
-
-//		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-//				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
 				
 		DBManager.executeDBQueries(PMSConfigManger.getKeymangrDbUrl(), PMSConfigManger.getKeymangrDbUser(),
 				PMSConfigManger.getKeymangrDbPass(), PMSConfigManger.getKMDbSchema(),
