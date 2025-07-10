@@ -397,10 +397,11 @@ public class PartnerManagementController {
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
+	@Deprecated(since = "release-1.3.0-beta.2")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys")
-	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners.",
-	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
+	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners - deprecated since the release-1.3.0-beta.2",
+	description = "This endpoint has been deprecated since the release-1.3.0-beta.2 and replaced by the GET /partner-api-keys/v2 endpoint")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
