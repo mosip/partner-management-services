@@ -8,6 +8,7 @@ import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -42,6 +43,9 @@ public class NotificationsController {
 
     @Autowired
     RequestValidator requestValidator;
+
+    @Autowired
+	private InputValidator inputValidator;
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
@@ -90,6 +94,16 @@ public class NotificationsController {
             @RequestParam(value = "sbiId", required = false) String sbiId,
             @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
+        inputValidator.validateRequestInput(certificateId);
+        inputValidator.validateRequestInput(issuedBy);
+        inputValidator.validateRequestInput(sbiVersion);
+        inputValidator.validateRequestInput(sbiId);
+        inputValidator.validateRequestInput(issuedTo);
+        inputValidator.validateRequestInput(make);
+        inputValidator.validateRequestInput(model);
+        inputValidator.validateRequestInput(ftmId);
+        inputValidator.validateRequestInput(apiKeyName);
+        inputValidator.validateRequestInput(policyName);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);

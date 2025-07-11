@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -86,6 +87,9 @@ public class PartnerServiceController {
 
 	@Autowired
 	FeatureAvailabilityUtil featureAvailabilityUtil;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	public static final String VERSION = "1.0";
 

@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -88,6 +89,9 @@ public class FTPChipDetailController {
 
 	@Value("${mosip.pms.ftm.id.regex}")
 	private String ftmIdRegex;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
@@ -330,6 +334,11 @@ public class FTPChipDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(ftmId);
+		inputValidator.validateRequestInput(make);
+		inputValidator.validateRequestInput(model);
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
