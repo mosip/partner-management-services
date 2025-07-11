@@ -113,6 +113,7 @@ public class SimplePatchForAutoGenId extends PMSUtil implements ITest {
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), idKeyName);
 
+			validateResponse(response, testCaseName, idKeyName);
 			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
 					response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
 					testCaseDTO, response.getStatusCode());

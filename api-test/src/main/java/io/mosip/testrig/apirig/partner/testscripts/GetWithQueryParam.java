@@ -114,6 +114,7 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
+		validateResponse(response, testCaseName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),

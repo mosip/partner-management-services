@@ -113,6 +113,7 @@ public class SimplePost extends PMSUtil implements ITest {
 			response = postWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, auditLogCheck, COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
+		validateResponse(response, testCaseName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),

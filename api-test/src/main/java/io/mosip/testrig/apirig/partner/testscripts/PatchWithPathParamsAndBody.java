@@ -91,7 +91,8 @@ public class PatchWithPathParamsAndBody extends PMSUtil implements ITest {
 
 		response = patchWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 				testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
-
+		
+		validateResponse(response, testCaseName);
 		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
 				response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
 				testCaseDTO, response.getStatusCode());
