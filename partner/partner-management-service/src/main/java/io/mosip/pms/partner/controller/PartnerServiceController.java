@@ -545,7 +545,6 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<PartnerPolicyMappingResponseDto>> mapPolicyToPartner(
 			@ApiParam("partnerId") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<PartnerPolicyMappingRequest> request) {
-		inputValidator.validateRequestInput(request.getRequest().useCaseDescription);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_PARTNER, partnerId, "partnerId");
 		ResponseWrapper<PartnerPolicyMappingResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.requestForPolicyMapping(request.getRequest(), partnerId));
@@ -560,7 +559,6 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
 			@RequestBody @Valid RequestWrapper<APIKeyGenerateRequestDto> request) {
-		inputValidator.validateRequestInput(request.getRequest().getLabel());
 		requestValidator.validateReqTime(request.getRequesttime());
 		ResponseWrapper<APIKeyGenerateResponseDto> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");

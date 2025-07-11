@@ -59,7 +59,6 @@ public class ClientManagementController {
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getName());
 		var clientRespDto = clientManagementService.createOAuthClient(requestWrapper.getRequest());
 		var response = new ResponseWrapper<ClientDetailResponse>();
 		response.setResponse(clientRespDto);
@@ -70,7 +69,6 @@ public class ClientManagementController {
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getClientName());
 		if (!clientId.matches(clientIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),

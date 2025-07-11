@@ -19,7 +19,7 @@ public enum ValidationErrorCode {
 	INVALID_REQUEST_DATETIME("PMS_REQUEST_ERROR_004", "Invalid request time"),
 	INVALID_REQUEST_BODY("PMS_REQUEST_ERROR_005", "Request body is invalid"),
 	INVALID_REQUEST_DATETIME_NOT_CURRENT_DATE("PMS_REQUEST_ERROR_006", "Request date should be current date"),
-	INVALID_INPUT_VALUE("PMS_REQUEST_ERROR_007", "Invalid input for '%s'. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # & ( ) \\ - ' ? ! \" : ; =");;
+	INVALID_INPUT_VALUE("PMS_REQUEST_ERROR_007", "Invalid input for '%s'. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # & ( ) \\ - ' ? ! \" : ; =");
 
 	/**
 	 * Error Code

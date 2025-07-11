@@ -98,8 +98,6 @@ public class SecureBiometricInterfaceController {
 			@ApiResponse(code = 500, message = "While creating SecureBiometricInterfaceCreateDto any error occured") })
 	public ResponseWrapper<IdDto> SecureBiometricInterface(
 			@Valid @RequestBody RequestWrapper<SecureBiometricInterfaceCreateDto> secureBiometricInterfaceCreateDto) {
-		inputValidator.validateRequestInput(secureBiometricInterfaceCreateDto.getRequest().getSwVersion());
-		inputValidator.validateRequestInput(secureBiometricInterfaceCreateDto.getRequest().getSwBinaryHash());
 		auditUtil.auditRequest(
 				DeviceConstant.CREATE_API_IS_CALLED + SecureBiometricInterfaceCreateDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,

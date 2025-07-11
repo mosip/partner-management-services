@@ -99,8 +99,6 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyGroupCreateResponseDto> definePolicyGroup(
 			@RequestBody @Valid RequestWrapper<PolicyGroupCreateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		inputValidator.validateRequestInput(createRequest.getRequest().getName());
-		inputValidator.validateRequestInput(createRequest.getRequest().getDesc());
 		requestValidator.validateReqTime(createRequest.getRequesttime());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.createPolicyGroup(createRequest.getRequest());
@@ -132,8 +130,6 @@ public class PolicyManagementController {
 	public ResponseWrapper<PolicyCreateResponseDto> definePolicy(
 			@RequestBody @Valid RequestWrapper<PolicyCreateRequestDto> createRequest) throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		inputValidator.validateRequestInput(createRequest.getRequest().getName());
-		inputValidator.validateRequestInput(createRequest.getRequest().getDesc());
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY, createRequest.getRequest().getName(), "policyName");
 		PolicyCreateResponseDto responseDto = policyManagementService.
@@ -164,8 +160,6 @@ public class PolicyManagementController {
 			@RequestBody @Valid RequestWrapper<PolicyUpdateRequestDto> updateRequestDto, @PathVariable String policyId)
 			throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
-		inputValidator.validateRequestInput(updateRequestDto.getRequest().getName());
-		inputValidator.validateRequestInput(updateRequestDto.getRequest().getDesc());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY, updateRequestDto.getRequest().getName(), "policyName");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.updatePolicies(updateRequestDto.getRequest(),
@@ -261,11 +255,6 @@ public class PolicyManagementController {
 	@Operation(summary = "Service to search policy group", description = "Service to search policy group")
 	public ResponseWrapper<PageResponseDto<PolicyGroup>> searchPolicyGroup(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
-		if (request.getRequest().getFilters() != null) {
-			for (SearchFilter filter : request.getRequest().getFilters()) {
-				inputValidator.validateRequestInput(filter.getValue());
-			}
-		}
 		ResponseWrapper<PageResponseDto<PolicyGroup>> responseWrapper = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.SEARCH_POLICY_GROUP);
 		responseWrapper.setResponse(policyManagementService.searchPolicyGroup(request.getRequest()));

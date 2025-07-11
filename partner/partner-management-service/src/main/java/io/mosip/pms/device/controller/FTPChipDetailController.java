@@ -110,8 +110,6 @@ public class FTPChipDetailController {
 			@ApiResponse(code = 500, message = "While creating ftpChipDetail any error occured") })
 	public ResponseWrapper<IdDto> createDeviceDetail(
 			@Valid @RequestBody RequestWrapper<FtpChipDetailDto> chipDetailRequestDto) {
-		inputValidator.validateRequestInput(chipDetailRequestDto.getRequest().getMake());
-		inputValidator.validateRequestInput(chipDetailRequestDto.getRequest().getModel());
 		auditUtil.auditRequest(
 				DeviceConstant.CREATE_API_IS_CALLED + FtpChipDetailDto.class.getCanonicalName(),
 				DeviceConstant.AUDIT_SYSTEM,
