@@ -278,6 +278,8 @@ public class SecureBiometricInterfaceController {
 	})
 	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeviceDetailDto> requestWrapper) {
 		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
