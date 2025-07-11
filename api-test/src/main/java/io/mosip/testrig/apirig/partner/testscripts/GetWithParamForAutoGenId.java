@@ -113,6 +113,7 @@ public class GetWithParamForAutoGenId extends PMSUtil implements ITest {
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
 					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), idKeyName);
 		}
+		validateResponse(response, testCaseName, idKeyName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
