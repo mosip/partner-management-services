@@ -40,7 +40,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">شهادات الشركاء</div>
-									<div style="font-size: 12px; color: #5f6368;">شهادات الشركاء $partnerCertificateCount تنتهي صلاحيتها لمعرفات الشركاء التالية:</div>
+									#if($certificateDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount تنتهي صلاحيتها لمعرفات الشركاء التالية:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount تنتهي صلاحية شهادة الشريك لمعرف الشريك التالي:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconPartner" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -72,7 +76,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">شهادات رقاقة FTM</div>
-									<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount شهادات رقاقة FTM ستنتهي صلاحيتها لمعرفات FTM التالية:</div>
+									#if($ftmDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount شهادات رقاقة FTM ستنتهي صلاحيتها لمعرفات FTM التالية:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount شهادة شريحة FTM تنتهي صلاحيتها لمعرف FTM التالي:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconFTM" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +114,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">SBI</div>
-									<div style="font-size: 12px; color: #5f6368;">$sbiCount SBIs تنتهي صلاحيتها لمعرفات SBI التالية:</div>
+									#if($sbiDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$sbiCount SBIs تنتهي صلاحيتها لمعرفات SBI التالية:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$sbiCount سيتم انتهاء صلاحية SBI لمعرف SBI التالي:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconSBI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -138,7 +150,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px; text-align: right;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">مفاتيح API</div>
-									<div style="font-size: 12px; color: #5f6368;">$apiKeyCount مفاتيح API ستنتهي صلاحيتها لأسماء مفاتيح API التالية:</div>
+									#if($apiKeyDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$apiKeyCount مفاتيح API ستنتهي صلاحيتها لأسماء مفاتيح API التالية:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$apiKeyCount مفتاح API على وشك الانتهاء لاسم مفتاح API التالي:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconAPI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">

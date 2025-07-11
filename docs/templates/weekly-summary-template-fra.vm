@@ -37,7 +37,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">Certificats de partenaire</div>
-									<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount certificats de partenaire expirent pour les identifiants de partenaire suivants :</div>
+									#if($certificateDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount certificats de partenaire expirent pour les identifiants de partenaire suivants :</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount Le certificat de partenaire expire pour l'ID de partenaire suivant :</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconPartner" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,7 +74,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">Certificats de puce FTM</div>
-									<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount certificats de puce FTM arrivent à expiration pour les ID FTM suivants :</div>
+									#if($ftmDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount certificats de puce FTM arrivent à expiration pour les ID FTM suivants :</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount Le certificat de puce FTM expire pour l'ID FTM suivant :</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconFTM" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,7 +112,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">SBI</div>
-									<div style="font-size: 12px; color: #5f6368;">$sbiCount SBI expire pour les ID SBI suivants :</div>
+									#if($sbiDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$sbiCount SBI expire pour les ID SBI suivants :</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$sbiCount Le SBI expire pour l'ID SBI suivant :</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconSBI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -137,7 +149,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">Clés API</div>
-									<div style="font-size: 12px; color: #5f6368;">$apiKeyCount clés API arrivent à expiration pour les noms de clé API suivants :</div>
+									#if($apiKeyDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$apiKeyCount clés API arrivent à expiration pour les noms de clé API suivants :</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$apiKeyCount La clé API expire pour le nom de clé API suivant :</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconAPI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">

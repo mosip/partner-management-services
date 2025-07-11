@@ -37,7 +37,11 @@
 								 </div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">பங்குதாரர் சான்றிதழ்கள்</div>
-									<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount பங்குதாரர் சான்றிதழ்கள் பின்வரும் பங்குதாரர் அடையாளங்களுக்கு காலாவதியாகின்றன:</div>
+									#if($certificateDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount பங்குதாரர் சான்றிதழ்கள் பின்வரும் பங்குதாரர் அடையாளங்களுக்கு காலாவதியாகின்றன:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$partnerCertificateCount பின்வரும் கூட்டாளர் ஐடிக்கான கூட்டாளர் சான்றிதழ் காலாவதியாகிறது:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconPartner" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,7 +74,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">FTM சிப் சான்றிதழ்கள்</div>
-									<div style="font-size: 12px; color: #5f6368;">பின்வரும் FTM ஐடிகளுக்கு $ftmChipCertificateCount FTM சிப் சான்றிதழ்கள் காலாவதியாகின்றன:</div>
+									#if($ftmDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount பின்வரும் FTM ஐடிகளுக்கான FTM சிப் சான்றிதழ்கள் காலாவதியாகின்றன:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$ftmChipCertificateCount பின்வரும் FTM ஐடிக்கான FTM சிப் சான்றிதழ் காலாவதியாகிறது:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconFTM" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,7 +112,11 @@
 								</div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">SBI</div>
-									<div style="font-size: 12px; color: #5f6368;">பின்வரும் SBI ஐடிகளுக்கு $sbiCount SBIகள் காலாவதியாகின்றன:</div>
+									#if($sbiDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">பின்வரும் SBI ஐடிகளுக்கு $sbiCount SBIகள் காலாவதியாகின்றன:</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">$sbiCount SBI-யின் பின்வரும் SBI ஐடி காலாவதியாகிறது:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconSBI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -137,7 +149,11 @@
 								 </div>
 								<div style="display: flex; flex-direction: column; gap: 2px;">
 									<div style="font-size: 14px; font-weight: 600; color: #202124;">API விசைகள்</div>
-									<div style="font-size: 12px; color: #5f6368;">பின்வரும் API விசைப் பெயர்களுக்கு $apiKeyCount API விசைகள் காலாவதியாகின்றன:</div>
+									#if($apiKeyDetails.size() > 1)
+										<div style="font-size: 12px; color: #5f6368;">பின்வரும் API விசைப் பெயர்களுக்கு $apiKeyCount API விசைகள் காலாவதியாகின்றன::</div>
+									#else
+										<div style="font-size: 12px; color: #5f6368;">பின்வரும் API விசைப் பெயருக்கு $apiKeyCount API விசை காலாவதியாகிறது:</div>
+									#end
 								</div>
 							</div>
 							<svg id="chevronIconAPI" style="width: 16px; height: 16px; transition: transform 0.3s ease; color: #5f6368;" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
