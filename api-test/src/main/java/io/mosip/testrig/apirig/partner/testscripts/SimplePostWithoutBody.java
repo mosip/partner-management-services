@@ -114,6 +114,7 @@ public class SimplePostWithoutBody extends PMSUtil implements ITest {
 			response = postWithBodyAndCookieWithoutBody(ApplnURI + testCaseDTO.getEndPoint(), inputJson,
 					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
+			validateResponse(response, testCaseName);
 			Map<String, List<OutputValidationDto>> ouputValid = null;
 			
 				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),

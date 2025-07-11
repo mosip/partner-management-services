@@ -114,6 +114,7 @@ public class PutWithPathParamsAndBody extends PMSUtil implements ITest {
 				response = putWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
 			}
+			validateResponse(response, testCaseName);
 			Map<String, List<OutputValidationDto>> ouputValid = null;
 			
 				ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),

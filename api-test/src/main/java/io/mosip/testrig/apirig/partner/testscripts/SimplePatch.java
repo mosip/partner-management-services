@@ -109,7 +109,8 @@ public class SimplePatch extends PMSUtil implements ITest {
 			response = patchWithBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
-
+			
+			validateResponse(response, testCaseName);
 			Map<String, List<OutputValidationDto>> ouputValid = null;
 
 			ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
