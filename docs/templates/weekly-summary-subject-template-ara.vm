@@ -1,1 +1,29 @@
-ملخص أسبوعي: انتهاء صلاحية وشيكة لشهادات الشركاء، وشهادات شرائح FTM، وSBIs ومفاتيح API
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("شهادات الشركاء"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("شهادات رقاقات FTM"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("وحدات SBI"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("مفاتيح API"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary و ")
+      #else
+        #set($summary = "$summary، ")
+      #end
+    #end
+  #end
+  ملخص أسبوعي: تواريخ انتهاء الصلاحية القادمة لـ $summary
+#end
