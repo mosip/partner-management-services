@@ -12,7 +12,37 @@
         </div>
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff; font-size: 14px;">
             <p><strong>ಆತ್ಮೀಯ ${partnerId},</strong></p>
-            <p>ವಿಭಿನ್ನ ಪಾಲುದಾರರಿಗೆ ಸೇರಿರುವ ಹಲವಾರು ಪ್ರಮಾಣಪತ್ರಗಳು, ಸೇರಿ ಪಾಲುದಾರರ ಪ್ರಮಾಣಪತ್ರಗಳು, FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳು, SBI ಮತ್ತು API ಕೀಗಳು ಮುಗಿಯುವ ದಿನಾಂಕದ ಹತ್ತಿರವಲ್ಲಿವೆ ಎಂಬುದನ್ನು ನಿಮ್ಮ ಗಮನಕ್ಕೆ ತರಲು ನಾವು ಇಚ್ಛಿಸುತ್ತೇವೆ. ಈ ದಾಖಲೆಗಳನ್ನು PMS ಪೋರ್ಟಲ್ ಮೂಲಕ ಜಾರಿಗೆ ತಂದಿದ್ದು ಮುಂದಿನ 7 ದಿನಗಳಲ್ಲಿ ಅವು ಅವಧಿ ಮುಗಿಯಲಿವೆ.</p>
+			<div>
+				#set($titleParts = [])
+
+				#if($partnerCertificateCount > 0)
+					#set($void = $titleParts.add("ಪಾರ್ಟ್ನರ್ ಪ್ರಮಾಣಪತ್ರಗಳು"))
+				#end
+				#if($ftmChipCertificateCount > 0)
+					#set($void = $titleParts.add("FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳು"))
+				#end
+				#if($sbiCount > 0)
+					#set($void = $titleParts.add("SBI ಗಳು"))
+				#end
+				#if($apiKeyCount > 0)
+					#set($void = $titleParts.add("API ಕೀಗಳು"))
+				#end
+
+				#if(!$titleParts.isEmpty())
+					#set($summary = "")
+					#foreach($item in $titleParts)
+					#set($summary = "$summary$item")
+					#if($foreach.hasNext)
+						#if($foreach.count == $titleParts.size() - 1)
+						#set($summary = "$summary ಮತ್ತು ")
+						#else
+						#set($summary = "$summary, ")
+						#end
+					#end
+					#end
+					<p>ನಿಮ್ಮ ಗಮನವನ್ನು ಕೆಳಗಿನ ಕ್ರೆಡೆನ್ಶಿಯಲ್ ಪ್ರಕಾರಗಳ ಅವಧಿ ಮುಕ್ತಾಯವಾಗುತ್ತಿರುವುದರತ್ತ ಸೆಳೆಯಲು ನಾವು ಇಚ್ಛಿಸುತ್ತೇವೆ: $summary. ಈ ಕ್ರೆಡೆನ್ಶಿಯಲ್‌ಗಳನ್ನು PMS ಪೋರ್ಟಲ್ ಮುಖಾಂತರ ನೀಡಲಾಗಿದೆ ಮತ್ತು ಮುಂದಿನ 7 ದಿನಗಳಲ್ಲಿ ಅವು ಅವಧಿ ಮುಕ್ತಾಯವಾಗಲಿವೆ.</p>
+				#end
+			</div>
             <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                 <div style="display: flex; align-items: center; background: #F7FAFF; padding: 10px 0px; border-radius: 6px;">
                     <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">

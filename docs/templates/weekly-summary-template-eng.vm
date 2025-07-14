@@ -11,8 +11,38 @@
             <img src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png" alt="Logo" style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"/>
         </div>
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff; font-size: 14px;">
-            <p><strong>Dear ${partnerId},</strong></p>
-            <p>We would like to bring to your attention that several credentials belonging to various partners, including Partner Certificates, FTM Chip Certificates, SBI, and API keys are approaching their expiration dates. These items were issued through the PMS portal and are set to expire within the next 7 days.</p>
+			<p><strong>Dear ${partnerId},</strong></p>
+			<div>
+				#set($titleParts = [])
+
+				#if($partnerCertificateCount > 0)
+					#set($void = $titleParts.add("Partner Certificates"))
+				#end
+				#if($ftmChipCertificateCount > 0)
+					#set($void = $titleParts.add("FTM Chip Certificates"))
+				#end
+				#if($sbiCount > 0)
+					#set($void = $titleParts.add("SBIs"))
+				#end
+				#if($apiKeyCount > 0)
+					#set($void = $titleParts.add("API Keys"))
+				#end
+
+				#if(!$titleParts.isEmpty())
+					#set($summary = "")
+					#foreach($item in $titleParts)
+					#set($summary = "$summary$item")
+					#if($foreach.hasNext)
+						#if($foreach.count == $titleParts.size() - 1)
+						#set($summary = "$summary and ")
+						#else
+						#set($summary = "$summary, ")
+						#end
+					#end
+					#end
+					<p>We would like to bring to your attention that the following credential types are approaching their expiration dates: $summary. These credentials were issued through the PMS portal and are set to expire within the next 7 days.</p>
+				#end
+			</div>
             <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                <div style="display: flex; align-items: center; background: #F7FAFF; padding: 10px 0px; border-radius: 6px;">
                    <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">

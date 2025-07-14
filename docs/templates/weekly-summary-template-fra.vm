@@ -12,7 +12,37 @@
         </div>
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff; font-size: 14px;">
             <p><strong>Bonjour ${partnerId},</strong></p>
-            <p>Nous souhaitons porter à votre attention que plusieurs identifiants appartenant à divers partenaires, y compris les certificats partenaires, les certificats de puce FTM, les SBI et les clés API, approchent de leur date d’expiration. Ces éléments ont été émis via le portail PMS et expireront dans les 7 prochains jours.</p>
+			<div>
+				#set($titleParts = [])
+
+				#if($partnerCertificateCount > 0)
+					#set($void = $titleParts.add("Certificats Partenaires"))
+				#end
+				#if($ftmChipCertificateCount > 0)
+					#set($void = $titleParts.add("Certificats Puce FTM"))
+				#end
+				#if($sbiCount > 0)
+					#set($void = $titleParts.add("SBIs"))
+				#end
+				#if($apiKeyCount > 0)
+					#set($void = $titleParts.add("Clés API"))
+				#end
+
+				#if(!$titleParts.isEmpty())
+					#set($summary = "")
+					#foreach($item in $titleParts)
+					#set($summary = "$summary$item")
+					#if($foreach.hasNext)
+						#if($foreach.count == $titleParts.size() - 1)
+						#set($summary = "$summary et ")
+						#else
+						#set($summary = "$summary, ")
+						#end
+					#end
+					#end
+					<p>Nous souhaitons attirer votre attention sur le fait que les types d'identifiants suivants approchent de leur date d’expiration : $summary. Ces identifiants ont été émis via le portail PMS et expireront dans les 7 prochains jours.</p>
+				#end
+			</div>
             <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                 <div style="display: flex; align-items: center; background: #F7FAFF; padding: 10px 0px; border-radius: 6px;">
                     <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
