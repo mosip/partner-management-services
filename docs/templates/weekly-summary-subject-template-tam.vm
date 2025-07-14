@@ -1,1 +1,29 @@
-வாராந்திர சுருக்கம்: கூட்டாளர் சான்றிதழ்கள், FTM சிப் சான்றிதழ்கள், SBIகள் மற்றும் API விசைகளின் வரவிருக்கும் காலாவதிகள்
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("கூட்டாளர் சான்றிதழ்கள்"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("FTM சிப் சான்றிதழ்கள்"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("SBI கள்"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("API விசைகள்"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary மற்றும் ")
+      #else
+        #set($summary = "$summary, ")
+      #end
+    #end
+  #end
+  வார சுருக்கம்: விரைவில் காலாவதியாகும் உருப்படிகள் - $summary
+#end

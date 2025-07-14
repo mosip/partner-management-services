@@ -16,7 +16,37 @@
         </div>
         <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff; font-size: 14px; text-align: right;">
             <p><strong>مرحباً ${partnerId}،</strong></p>
-            <p>نود لفت انتباهكم إلى أن العديد من بيانات الاعتماد الخاصة بشركاء مختلفين، بما في ذلك شهادات الشركاء وشهادات شرائح FTM وSBI ومفاتيح API، تقترب من تواريخ انتهاء صلاحيتها. تم إصدار هذه البيانات من خلال بوابة PMS ومن المقرر أن تنتهي صلاحيتها خلال الأيام السبعة القادمة.</p>
+			<div>
+				#set($titleParts = [])
+
+				#if($partnerCertificateCount > 0)
+					#set($void = $titleParts.add("شهادات الشركاء"))
+				#end
+				#if($ftmChipCertificateCount > 0)
+					#set($void = $titleParts.add("شهادات رقاقات FTM"))
+				#end
+				#if($sbiCount > 0)
+					#set($void = $titleParts.add("وحدات SBI"))
+				#end
+				#if($apiKeyCount > 0)
+					#set($void = $titleParts.add("مفاتيح API"))
+				#end
+
+				#if(!$titleParts.isEmpty())
+					#set($summary = "")
+					#foreach($item in $titleParts)
+					#set($summary = "$summary$item")
+					#if($foreach.hasNext)
+						#if($foreach.count == $titleParts.size() - 1)
+						#set($summary = "$summary و ")
+						#else
+						#set($summary = "$summary، ")
+						#end
+					#end
+					#end
+					<p>نود أن نلفت انتباهكم إلى أن أنواع بيانات الاعتماد التالية تقترب من تواريخ انتهاء صلاحيتها: $summary. تم إصدار هذه البيانات من خلال بوابة PMS وهي ستنتهي خلال الأيام السبعة القادمة.</p>
+				#end
+			</div>
             <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
                 <div style="display: flex; align-items: center; background: #F7FAFF; padding: 10px 0px; border-radius: 6px;">
                     <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-left: 10px;">

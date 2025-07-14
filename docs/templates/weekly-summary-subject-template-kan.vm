@@ -1,1 +1,29 @@
-ವಾರದ ಸಾರಾಂಶ: ಪಾಲುದಾರ ಪ್ರಮಾಣಪತ್ರಗಳು, FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳು, SBI ಗಳು ಮತ್ತು API ಕೀಗಳ ಮುಂಬರುವ ಅವಧಿ ಮುಕ್ತಾಯಗಳು
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("ಪಾರ್ಟ್ನರ್ ಪ್ರಮಾಣಪತ್ರಗಳು"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳು"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("SBI ಗಳು"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("API ಕೀಗಳು"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary ಮತ್ತು ")
+      #else
+        #set($summary = "$summary, ")
+      #end
+    #end
+  #end
+  ವಾರದ ಸಾರಾಂಶ: ಮುಂದಿನ ಅವಧಿ ಪೂರ್ಣಗೊಳ್ಳುವವುಗಳು - $summary
+#end

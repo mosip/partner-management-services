@@ -94,7 +94,8 @@ public class EmailNotificationService {
 			EmailTemplateDto templateDto = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(),
 					notificationEntity.getNotificationType());
 			String populatedTemplate = populateTemplate(templateDto.getBody(), notificationEntity);
-			sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject(), emailId);
+			String populatedSubject = populateSubjectTemplate(templateDto.getSubject(), notificationEntity);
+			sendEmail(notificationEntity, populatedTemplate, populatedSubject, emailId);
 
 			// update notificationEntity status
 			notificationEntity.setEmailSent(true);
@@ -132,6 +133,24 @@ public class EmailNotificationService {
 		StringWriter writer = new StringWriter();
 		velocityEngine.evaluate(context, writer, "logTag", templateContent);
 		return writer.toString();
+	}
+
+	private String populateSubjectTemplate(String subjectTemplate, NotificationEntity notificationEntity)
+			throws JsonProcessingException {
+
+		// Only populate subject template if it's a weekly summary
+		if (PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE.equals(notificationEntity.getNotificationType())) {
+			VelocityContext context = new VelocityContext();
+			NotificationDetailsDto notificationDetails = objectMapper
+					.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
+			addWeeklySummaryContext(context, notificationDetails);
+			StringWriter writer = new StringWriter();
+			velocityEngine.evaluate(context, writer, "subjectLogTag", subjectTemplate);
+			return writer.toString().trim();
+		}
+
+		// For all other notification types
+		return subjectTemplate;
 	}
 
 	private VelocityContext createVelocityContext(NotificationEntity notificationEntity)
@@ -200,23 +219,7 @@ public class EmailNotificationService {
 				context.put("fromDate", createdDate.format(formatter));
 				context.put("toDate", createdDate.plusDays(7).format(formatter));
 
-				List<CertificateDetailsDto> certificateDetails = Optional.ofNullable(notificationDetails.getCertificateDetails())
-						.orElse(Collections.emptyList());
-				List<FtmDetailsDto> ftmDetails = Optional.ofNullable(notificationDetails.getFtmDetails())
-						.orElse(Collections.emptyList());
-				List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
-						.orElse(Collections.emptyList());
-				List<SbiDetailsDto> sbiDetails = Optional.ofNullable(notificationDetails.getSbiDetails())
-						.orElse(Collections.emptyList());
-
-				context.put("partnerCertificateCount", certificateDetails.size());
-				context.put("ftmChipCertificateCount", ftmDetails.size());
-				context.put("apiKeyCount", apiKeyDetails.size());
-				context.put("sbiCount", sbiDetails.size());
-				context.put("certificateDetails", certificateDetails);
-				context.put("ftmDetails", ftmDetails);
-				context.put("apiKeyDetails", apiKeyDetails);
-				context.put("sbiDetails", sbiDetails);
+				addWeeklySummaryContext(context, notificationDetails);
 				break;
 
 			default:
@@ -226,6 +229,26 @@ public class EmailNotificationService {
 		}
 
 		return context;
+	}
+
+	private void addWeeklySummaryContext(VelocityContext context, NotificationDetailsDto notificationDetails) {
+		List<CertificateDetailsDto> certificateDetails = Optional.ofNullable(notificationDetails.getCertificateDetails())
+				.orElse(Collections.emptyList());
+		List<FtmDetailsDto> ftmDetails = Optional.ofNullable(notificationDetails.getFtmDetails())
+				.orElse(Collections.emptyList());
+		List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
+				.orElse(Collections.emptyList());
+		List<SbiDetailsDto> sbiDetails = Optional.ofNullable(notificationDetails.getSbiDetails())
+				.orElse(Collections.emptyList());
+
+		context.put("partnerCertificateCount", certificateDetails.size());
+		context.put("ftmChipCertificateCount", ftmDetails.size());
+		context.put("apiKeyCount", apiKeyDetails.size());
+		context.put("sbiCount", sbiDetails.size());
+		context.put("certificateDetails", certificateDetails);
+		context.put("ftmDetails", ftmDetails);
+		context.put("apiKeyDetails", apiKeyDetails);
+		context.put("sbiDetails", sbiDetails);
 	}
 
 	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject,
