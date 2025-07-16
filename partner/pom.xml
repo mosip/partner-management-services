@@ -94,6 +94,7 @@
         <module>pms-common</module>
         <module>policy-management-service</module>
         <module>partner-management-service</module>
+        <module>partner-data-encrypt-utility</module>
     </modules>
 
     <dependencies>
