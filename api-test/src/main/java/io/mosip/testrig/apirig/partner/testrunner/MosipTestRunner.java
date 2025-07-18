@@ -31,6 +31,7 @@ import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthTestsUtil;
 import io.mosip.testrig.apirig.utils.CertsUtil;
+import io.mosip.testrig.apirig.utils.DependencyResolver;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.GlobalMethods;
 import io.mosip.testrig.apirig.utils.JWKKeyUtil;
@@ -87,6 +88,13 @@ public class MosipTestRunner {
 			KeycloakUserManager.removeUser();
 			KeycloakUserManager.createUsers();
 			KeycloakUserManager.closeKeycloakInstance();
+			
+			String testCasesToExecuteString = PMSConfigManger.getproperty("testCasesToExecute");
+
+			DependencyResolver.loadDependencies(getGlobalResourcePath() + "/" + "config/testCaseInterDependency.json");
+			if (!testCasesToExecuteString.isBlank()) {
+				PMSUtil.testCasesInRunScope = DependencyResolver.getDependencies(testCasesToExecuteString);
+			}
 
 			startTestRunner();
 			PMSUtil.DbCleanRevamp();
@@ -98,6 +106,9 @@ public class MosipTestRunner {
 		KeycloakUserManager.closeKeycloakInstance();
 		
 		HealthChecker.bTerminate = true;
+		
+		//AdminTestUtil.generateTestCaseInterDependencies(getGlobalResourcePath() + "/config/testCaseInterDependency.json");
+		
 		System.exit(0);
 
 	}
