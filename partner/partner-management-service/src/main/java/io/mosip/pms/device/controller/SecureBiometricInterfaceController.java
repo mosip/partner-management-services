@@ -277,6 +277,13 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeviceDetailDto> requestWrapper) {
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceProviderId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceTypeCode());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceSubTypeCode());
 		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
@@ -296,6 +303,7 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
+		inputValidator.validateRequestInput(sbiId);
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
@@ -310,6 +318,8 @@ public class SecureBiometricInterfaceController {
 	})
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeactivateSbiRequestDto>
 			requestWrapper) {
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(patchDeactivateSbi, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -352,10 +362,14 @@ public class SecureBiometricInterfaceController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
 		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(sbiVersion);
 		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(sbiVersion);
+		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput(sbiExpiryStatus);
 		SbiFilterDto filterDto = new SbiFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
