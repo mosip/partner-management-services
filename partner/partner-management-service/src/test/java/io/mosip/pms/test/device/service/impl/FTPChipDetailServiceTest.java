@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -44,8 +45,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -1529,6 +1529,9 @@ public class FTPChipDetailServiceTest {
 		ResponseWrapperV2<FtmCertificateDownloadResponseDto> response = ftpChipDetailService.getFtmCertificateData("23456");
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getResponse());
+
+		when(partnerHelper.getCertificate(any(),any(),any())).thenThrow(new ApiAccessibleException("test", "test") {});
+		ftpChipDetailService.getFtmCertificateData("23456");
 	}
 
 	@Test
@@ -1639,6 +1642,56 @@ public class FTPChipDetailServiceTest {
 	public void getFtmCertificateData_Test2() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("FTM_PROVIDER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setName("abc");
+		partner.setIsActive(false);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("23456");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setApprovalStatus("rejected");
+		ftpChipDetail.setActive(false);
+		ftpChipDetail.setCertificateAlias("xxxyyxxx");
+		ftpChipDetailService.getFtmCertificateData("23456");
+
+		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ftpChipDetail));
+		ftpChipDetailService.getFtmCertificateData("23456");
+
+		ftpChipDetail.setApprovalStatus("pending_cert_upload");
+		ftpChipDetail.setActive(false);
+		ftpChipDetailService.getFtmCertificateData("23456");
+
+		partner.setId("");
+		ftpChipDetail.setFtpProviderId("");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		ftpChipDetailService.getFtmCertificateData("23456");
+
+		partner.setId("abc");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		ftpChipDetailService.getFtmCertificateData("23456");
+
+	}
+
+	@Test
+	public void getFtmCertificateData_Test3() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1658,30 +1711,40 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetail.setActive(true);
 		ftpChipDetail.setCertificateAlias("xxxyyxxx");
 		Mockito.when(ftpChipDetailRepository.findById(Mockito.anyString())).thenReturn(Optional.of(ftpChipDetail));
-
 		ftpChipDetailService.getFtmCertificateData("23456");
+
 	}
 
 	@Test
 	public void getPartnersFtmChipDetailsTest() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		String sortFieldName = "createdDateTime";
-		String sortType = "desc";
-		Integer pageNo = 0;
-		Integer pageSize = 8;
+		int pageNo = 0;
+		int pageSize = 8;
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		filterDto.setPartnerId("abc");
 		filterDto.setMake("make");
 		filterDto.setOrgName("ABC");
-		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
-		Page<FtmDetailSummaryEntity> page = null;
-		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
-		ftpChipDetailService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
+		FtmDetailSummaryEntity entity = new FtmDetailSummaryEntity();
+		entity.setFtmId("abc");
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<FtmDetailSummaryEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetailsByStatusAsc(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		ftpChipDetailService.getPartnersFtmChipDetails("status", "asc", pageNo, pageSize, filterDto);
+
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetailsByStatusDesc(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		ftpChipDetailService.getPartnersFtmChipDetails("status", "desc", pageNo, pageSize, filterDto);
 	}
 
 	@Test
@@ -1775,9 +1838,18 @@ public class FTPChipDetailServiceTest {
 		certificateDownloadResponseDto.setIsMosipSignedCertificateExpired(false);
 		certificateDownloadResponseDto.setMosipSignedCertUploadDateTime(LocalDateTime.now());
 		certificateDownloadResponseDto.setMosipSignedCertExpiryDateTime(LocalDateTime.now().plusYears(1));
+		// Access and set private field via reflection
+		Field field = FTPChipDetailServiceImpl.class.getDeclaredField("isCaSignedPartnerCertificateAvailable");
+		field.setAccessible(true);
+		field.set(ftpChipDetailService, true);
 		when(partnerHelper.getCertificate(anyString(), anyString(), any())).thenReturn(certificateDownloadResponseDto);
 		doNothing().when(partnerHelper).populateFtmCertificateExpiryState(certificateDownloadResponseDto);
 		ftpChipDetailService.ftmChipDetail(null);
+
+		certificateDownloadResponseDto.setCaSignedCertExpiryDateTime(LocalDateTime.now().minusDays(3));
+		when(partnerHelper.getCertificate(anyString(), anyString(), any())).thenReturn(certificateDownloadResponseDto);
+		doNothing().when(partnerHelper).populateFtmCertificateExpiryState(certificateDownloadResponseDto);
+		ftpChipDetailService.ftmChipDetail(30);
 
 		ftpChipDetailList = new ArrayList<>();
 		ftpChipDetail.setCertificateAlias(null);
@@ -1786,11 +1858,101 @@ public class FTPChipDetailServiceTest {
 		ftpChipDetailService.ftmChipDetail(null);
 
 		partnerList = new ArrayList<>();
+		partner.setIsActive(false);
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		ftpChipDetailService.ftmChipDetail(null);
+
+		partnerList = new ArrayList<>();
+		partner.setApprovalStatus("InProgress");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		ftpChipDetailService.ftmChipDetail(null);
+
+		partnerList = new ArrayList<>();
 		partner.setId(null);
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
 		doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
+		ftpChipDetailService.ftmChipDetail(null);
+	}
+
+	@Test
+	public void ftmChipDetailTest1() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
+		partner.setCertificateAlias("abs");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
+
+		List<FTPChipDetail> ftpChipDetailList = new ArrayList<>();
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("xxx");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setMake("make");
+		ftpChipDetail.setModel("model");
+		ftpChipDetail.setApprovalStatus("approved");
+		ftpChipDetail.setActive(true);
+		ftpChipDetail.setCrDtimes(LocalDateTime.now());
+		ftpChipDetail.setCertificateAlias("dff");
+		ftpChipDetailList.add(ftpChipDetail);
+		when(ftpChipDetailRepository.findByProviderId(anyString())).thenReturn(ftpChipDetailList);
+		FtpCertDownloadResponeDto certDownloadResponeDto = new FtpCertDownloadResponeDto();
+		String certificate = "-----BEGIN CERTIFICATE-----\n" +
+				"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\n" +
+				"m0UA3Sxxre0vVWYO4GmmZUY=\n" +
+				"-----END CERTIFICATE-----";
+		certDownloadResponeDto.setCertificateData(certificate);
+		certDownloadResponeDto.setTimestamp(LocalDateTime.now());
+		// Access and set private field via reflection
+		Field field = FTPChipDetailServiceImpl.class.getDeclaredField("isCaSignedPartnerCertificateAvailable");
+		field.setAccessible(true);
+		field.set(ftpChipDetailService, false);
+		when(partnerHelper.getCertificate(anyString(), anyString(), any())).thenReturn(certDownloadResponeDto);
+		ftpChipDetailService.ftmChipDetail(null);
+
+		when(partnerHelper.getCertificate(any(),any(),any())).thenThrow(new ApiAccessibleException("KER-PCM-012", "test") {});
 		ftpChipDetailService.ftmChipDetail(null);
 	}
 
