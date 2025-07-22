@@ -94,7 +94,10 @@ public class NotificationsController {
             @RequestParam(value = "sbiId", required = false) String sbiId,
             @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
+        inputValidator.validateRequestInput(notificationStatus);
+        inputValidator.validateRequestInput(notificationType);
         inputValidator.validateRequestInput(certificateId);
+        inputValidator.validateRequestInput(expiryDate);
         inputValidator.validateRequestInput(issuedBy);
         inputValidator.validateRequestInput(sbiVersion);
         inputValidator.validateRequestInput(sbiId);
@@ -104,6 +107,9 @@ public class NotificationsController {
         inputValidator.validateRequestInput(ftmId);
         inputValidator.validateRequestInput(apiKeyName);
         inputValidator.validateRequestInput(policyName);
+        inputValidator.validateRequestInput(partnerDomain);
+        inputValidator.validateRequestInput(createdFromDate);
+        inputValidator.validateRequestInput(createdToDate);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);
@@ -170,6 +176,8 @@ public class NotificationsController {
     public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(
             @PathVariable String notificationId,
             @RequestBody RequestWrapperV2<DismissNotificationRequestDto> requestWrapper) {
+        inputValidator.validateRequestInput(notificationId);
+        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
         Optional<ResponseWrapperV2<DismissNotificationResponseDto>> validationResponse = requestValidator.validate(patchDismissNotificationId, requestWrapper);
         if (validationResponse.isPresent()) {
             return validationResponse.get();

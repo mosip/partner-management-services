@@ -261,6 +261,8 @@ public class DeviceDetailController {
 	})
 	public ResponseWrapperV2<DeviceDetailResponseDto> deactivateDevice(@PathVariable("deviceId") @NotBlank String deviceId, @RequestBody @Valid RequestWrapperV2<DeactivateDeviceRequestDto>
 			requestWrapper) {
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<DeviceDetailResponseDto>> validationResponse = requestValidator.validate(patchDeactivateDevice, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -278,6 +280,10 @@ public class DeviceDetailController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<Boolean> approveOrRejectMappingDeviceToSbi(@PathVariable("id") String deviceId, @RequestBody @Valid RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper) {
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getSbiId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getPartnerId());
 		Optional<ResponseWrapperV2<Boolean>> validationResponse = requestValidator.validate(postApprovalMappingDeviceToSbiId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -315,8 +321,13 @@ public class DeviceDetailController {
 			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
 			@RequestParam(value = "deviceId", required = false) String deviceId
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
 		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(deviceType);
+		inputValidator.validateRequestInput(deviceSubType);
+		inputValidator.validateRequestInput(status);
 		inputValidator.validateRequestInput(sbiVersion);
 		inputValidator.validateRequestInput(sbiId);
 		inputValidator.validateRequestInput(deviceId);

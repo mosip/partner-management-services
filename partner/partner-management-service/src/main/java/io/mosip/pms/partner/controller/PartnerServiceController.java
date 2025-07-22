@@ -374,6 +374,7 @@ public class PartnerServiceController {
 	public ResponseWrapperV2<OriginalCertDownloadResponseDto> getPartnerCertificateData(
 			@ApiParam("To download original partner certificate.")  @PathVariable("partnerId") @NotNull String partnerId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
+		inputValidator.validateRequestInput(partnerId);
 		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
 		requestDto.setPartnerId(partnerId);
 		return partnerService.getPartnerCertificateData(requestDto);
@@ -404,7 +405,8 @@ public class PartnerServiceController {
 			@RequestParam(name = "status") String status,
 			@RequestParam(name = "policyGroupAvailable", required = false) Boolean policyGroupAvailable,
 			@RequestParam(name = "partnerType", required = false) String partnerType) {
-
+		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput(partnerType);
 		return partnerService.getPartnersV3(status, policyGroupAvailable, partnerType);
 	}
 

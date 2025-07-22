@@ -356,10 +356,14 @@ public class PolicyManagementController {
 					schema = @Schema(allowableValues = {"activated", "deactivated", "draft"})
 			)
 			@RequestParam(value = "status", required = false) String status) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
+		inputValidator.validateRequestInput(policyType);
 		inputValidator.validateRequestInput(policyId);
 		inputValidator.validateRequestInput(policyName);
 		inputValidator.validateRequestInput(policyDescription);
 		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput(status);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
 		if (policyType != null) {
 			filterDto.setPolicyType(policyType.toLowerCase());
@@ -392,6 +396,8 @@ public class PolicyManagementController {
 	})
 	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(@PathVariable("policyId") @NotBlank String policyId, @RequestBody @Valid RequestWrapperV2<DeactivateRequestDto>
 			requestWrapper) {
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<DeactivatePolicyResponseDto>> validationResponse = requestValidator.validate(patchDeactivatePolicy, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -410,6 +416,8 @@ public class PolicyManagementController {
 	})
 	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(@PathVariable("policyGroupId") @NotBlank String policyGroupId, @RequestBody @Valid RequestWrapperV2<DeactivateRequestDto>
 			requestWrapper) {
+		inputValidator.validateRequestInput(policyGroupId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<DeactivatePolicyGroupResponseDto>> validationResponse = requestValidator.validate(patchDeactivatePolicyGroupId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();

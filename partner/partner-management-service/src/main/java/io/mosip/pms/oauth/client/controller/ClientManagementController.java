@@ -164,11 +164,14 @@ public class ClientManagementController {
 			@RequestParam(value = "status", required = false) String status
 	) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
 		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(policyGroupName);
 		inputValidator.validateRequestInput(policyName);
 		inputValidator.validateRequestInput(clientName);
+		inputValidator.validateRequestInput(status);
 		ClientFilterDto filterDto = new ClientFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
