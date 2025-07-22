@@ -277,6 +277,11 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeviceDetailDto> requestWrapper) {
+
+		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
 		inputValidator.validateRequestInput(sbiId);
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
@@ -284,12 +289,8 @@ public class SecureBiometricInterfaceController {
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getId());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceTypeCode());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceSubTypeCode());
-		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
 		return secureBiometricInterface.addDeviceToSbi(requestWrapper.getRequest(), sbiId);
 	}
 
@@ -318,12 +319,12 @@ public class SecureBiometricInterfaceController {
 	})
 	public ResponseWrapperV2<SbiDetailsResponseDto> deactivateSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeactivateSbiRequestDto>
 			requestWrapper) {
-		inputValidator.validateRequestInput(sbiId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<SbiDetailsResponseDto>> validationResponse = requestValidator.validate(patchDeactivateSbi, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return secureBiometricInterface.deactivateSbi(sbiId, requestWrapper.getRequest());
 	}
 

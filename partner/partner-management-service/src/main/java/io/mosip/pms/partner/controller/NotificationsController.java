@@ -176,12 +176,12 @@ public class NotificationsController {
     public ResponseWrapperV2<DismissNotificationResponseDto> dismissNotification(
             @PathVariable String notificationId,
             @RequestBody RequestWrapperV2<DismissNotificationRequestDto> requestWrapper) {
-        inputValidator.validateRequestInput(notificationId);
-        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
         Optional<ResponseWrapperV2<DismissNotificationResponseDto>> validationResponse = requestValidator.validate(patchDismissNotificationId, requestWrapper);
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
+        inputValidator.validateRequestInput(notificationId);
+        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
     }
 }

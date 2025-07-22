@@ -396,12 +396,12 @@ public class PolicyManagementController {
 	})
 	public ResponseWrapperV2<DeactivatePolicyResponseDto> deactivatePolicy(@PathVariable("policyId") @NotBlank String policyId, @RequestBody @Valid RequestWrapperV2<DeactivateRequestDto>
 			requestWrapper) {
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<DeactivatePolicyResponseDto>> validationResponse = requestValidator.validate(patchDeactivatePolicy, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
@@ -416,12 +416,12 @@ public class PolicyManagementController {
 	})
 	public ResponseWrapperV2<DeactivatePolicyGroupResponseDto> deactivatePolicyGroup(@PathVariable("policyGroupId") @NotBlank String policyGroupId, @RequestBody @Valid RequestWrapperV2<DeactivateRequestDto>
 			requestWrapper) {
-		inputValidator.validateRequestInput(policyGroupId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<DeactivatePolicyGroupResponseDto>> validationResponse = requestValidator.validate(patchDeactivatePolicyGroupId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(policyGroupId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicyGroup(policyGroupId, requestWrapper.getRequest());
 	}
 }
