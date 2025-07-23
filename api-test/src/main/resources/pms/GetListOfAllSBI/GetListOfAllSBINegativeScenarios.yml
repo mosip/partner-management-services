@@ -141,3 +141,30 @@ GetListOfAllSBI:
        }
        ]
 }'
+   Pms_GetListOfAllSBI_invalid_partnerId_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?partnerId={partnerId}
+      uniqueIdentifier: TC_PMS_SBI_List_08     
+      description: Fetching all the active SBI with negative pageNo value
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "*11",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'

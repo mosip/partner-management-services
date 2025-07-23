@@ -1,5 +1,5 @@
 GetAllApiKeyForAuthPartnerV2:
-   Pms_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
+   Pms_GetAllApiKeyForAuthPartnerV2_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partner-api-keys/v2
       description: Fetching all the API Key created by Authentication Partner by Partner Admin token
       role: partneradmin
