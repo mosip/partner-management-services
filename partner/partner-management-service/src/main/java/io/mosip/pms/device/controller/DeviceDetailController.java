@@ -265,6 +265,8 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return deviceDetaillService.deactivateDevice(deviceId, requestWrapper.getRequest());
 	}
 
@@ -282,6 +284,10 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getSbiId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getPartnerId());
 		return deviceDetaillService.approveOrRejectMappingDeviceToSbi(deviceId, requestWrapper.getRequest());
 	}
 
@@ -315,8 +321,13 @@ public class DeviceDetailController {
 			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
 			@RequestParam(value = "deviceId", required = false) String deviceId
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
 		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(deviceType);
+		inputValidator.validateRequestInput(deviceSubType);
+		inputValidator.validateRequestInput(status);
 		inputValidator.validateRequestInput(sbiVersion);
 		inputValidator.validateRequestInput(sbiId);
 		inputValidator.validateRequestInput(deviceId);

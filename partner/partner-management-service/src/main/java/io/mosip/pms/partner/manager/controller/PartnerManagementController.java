@@ -290,6 +290,7 @@ public class PartnerManagementController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(@PathVariable String partnerId) {
+		inputValidator.validateRequestInput(partnerId);
 		return partnerManagementService.getPartnerDetails(partnerId);
 	}
 
@@ -320,9 +321,13 @@ public class PartnerManagementController {
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(partnerType);
 		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(emailAddress);
+		inputValidator.validateRequestInput(certificateUploadStatus);
 		inputValidator.validateRequestInput(policyGroupName);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
@@ -377,11 +382,16 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "partnerType", required = false) String partnerType
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(partnerComment);
 		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(status);
 		inputValidator.validateRequestInput(policyId);
 		inputValidator.validateRequestInput(policyName);
 		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput(partnerType);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -437,9 +447,12 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(apiKeyLabel);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(status);
 		inputValidator.validateRequestInput(policyName);
 		inputValidator.validateRequestInput(policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null);
@@ -476,9 +489,12 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(apiKeyLabel);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(status);
 		inputValidator.validateRequestInput(policyName);
 		inputValidator.validateRequestInput(policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
@@ -533,7 +549,11 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod) {
 		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
+		inputValidator.validateRequestInput(caCertificateType);
 		inputValidator.validateRequestInput(certificateId);
+		inputValidator.validateRequestInput(partnerDomain);
 		inputValidator.validateRequestInput(issuedBy);
 		inputValidator.validateRequestInput(issuedTo);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
@@ -570,6 +590,7 @@ public class PartnerManagementController {
 	ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(
 			@ApiParam("To download trust certificates.")  @PathVariable("certificateId") @NotNull String certificateId) {
 		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
+		inputValidator.validateRequestInput(certificateId);
 		if (!certificateId.matches(certificateIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),

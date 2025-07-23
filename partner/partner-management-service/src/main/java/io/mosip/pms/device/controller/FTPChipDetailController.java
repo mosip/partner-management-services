@@ -286,6 +286,8 @@ public class FTPChipDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(ftmId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return ftpChipDetaillService.deactivateFtm(ftmId, requestWrapper.getRequest());
 	}
 
@@ -299,6 +301,7 @@ public class FTPChipDetailController {
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
+		inputValidator.validateRequestInput(ftmId);
 		if (!ftmId.matches(ftmIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
@@ -334,11 +337,14 @@ public class FTPChipDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
 		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(ftmId);
 		inputValidator.validateRequestInput(make);
 		inputValidator.validateRequestInput(model);
+		inputValidator.validateRequestInput(status);
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

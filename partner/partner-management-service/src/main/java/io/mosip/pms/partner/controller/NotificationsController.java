@@ -94,7 +94,10 @@ public class NotificationsController {
             @RequestParam(value = "sbiId", required = false) String sbiId,
             @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
+        inputValidator.validateRequestInput(notificationStatus);
+        inputValidator.validateRequestInput(notificationType);
         inputValidator.validateRequestInput(certificateId);
+        inputValidator.validateRequestInput(expiryDate);
         inputValidator.validateRequestInput(issuedBy);
         inputValidator.validateRequestInput(sbiVersion);
         inputValidator.validateRequestInput(sbiId);
@@ -104,6 +107,9 @@ public class NotificationsController {
         inputValidator.validateRequestInput(ftmId);
         inputValidator.validateRequestInput(apiKeyName);
         inputValidator.validateRequestInput(policyName);
+        inputValidator.validateRequestInput(partnerDomain);
+        inputValidator.validateRequestInput(createdFromDate);
+        inputValidator.validateRequestInput(createdToDate);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);
@@ -174,6 +180,8 @@ public class NotificationsController {
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
+        inputValidator.validateRequestInput(notificationId);
+        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
     }
 }
