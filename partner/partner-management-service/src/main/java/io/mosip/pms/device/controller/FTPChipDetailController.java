@@ -282,12 +282,12 @@ public class FTPChipDetailController {
 	})
 	public ResponseWrapperV2<FtmDetailResponseDto> deactivateFtm(@PathVariable("ftmId") @NotBlank String ftmId, @RequestBody @Valid RequestWrapperV2<DeactivateFtmRequestDto>
 			requestWrapper) {
-		inputValidator.validateRequestInput(ftmId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		Optional<ResponseWrapperV2<FtmDetailResponseDto>> validationResponse = requestValidator.validate(patchDeactivateFtm, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(ftmId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return ftpChipDetaillService.deactivateFtm(ftmId, requestWrapper.getRequest());
 	}
 
