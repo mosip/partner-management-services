@@ -1,7 +1,0 @@
-modules:
-  pms:
-    enabled: true
-    image:
-      repository: mosipqa/apitest-pms
-      tag: develop
-      pullPolicy: Always
