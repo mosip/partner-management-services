@@ -21,7 +21,7 @@
           <p>
             Ceci est pour vous informer que la clé API nommée <strong>${apiKeyName}</strong> associée à la politique :
             <strong>${policyName}</strong> expirera le <strong>${expiryDateTime} UTC</strong>.
-            Afin d'assurer la continuité du service, veuillez renouveler la clé avant sa date d'expiration.
+            Pour garantir la continuité du service et éviter toute interruption, nous vous demandons de générer une nouvelle clé API avant la date d'expiration.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">Détails de la clé API</p>

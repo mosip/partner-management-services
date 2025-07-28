@@ -23,9 +23,9 @@
         <div style="font-size: 14px;">
           <p><strong>ಆದರಣೀಯ ${partnerId},</strong></p>
           <p>
-            <strong>${apiKeyName}</strong> ಹೆಸರಿನ API ಕೀ <strong>${policyName}</strong> ಪಾಲಿಸಿ ಜೊತೆಗೆ
-            <strong>${expiryDateTime} UTC</strong> ರಂದು ಕಾಲಹರಣವಾಗಲಿದೆ ಎಂದು ನಿಮಗೆ ತಿಳಿಸಲು ಇಚ್ಛಿಸುತ್ತೇವೆ.
-            ಸೇವೆಗಳಲ್ಲಿ ವ್ಯತ್ಯಯವಾಗದಂತೆ ತಡೆಗಟ್ಟಲು, ಮುಂಚಿತವಾಗಿ ಹೊಸ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.
+            <strong>${apiKeyName}</strong> ಎಂಬ ಹೆಸರಿನ API ಕೀ, <strong>${policyName}</strong> ಎಂಬ ನೀತಿಯೊಂದಿಗೆ ಸಂಯೋಜಿತವಾಗಿದೆ,
+            ಇದು <strong>${expiryDateTime} UTC</strong> ರಂದು ಅವಧಿ ಮುಗಿಯಲಿದೆ ಎಂಬುದನ್ನು ನಿಮಗೆ ತಿಳಿಸಲು ಇದು.
+            ನಿರಂತರ ಕಾರ್ಯಕ್ಷಮತೆ ಮತ್ತು ನಿರ್ವಿಘ್ನ ಸೇವೆಗಾಗಿ, ದಯವಿಟ್ಟು ಅವಧಿ ಮುಗಿಯುವ ಮೊದಲು ಹೊಸ API ಕೀ ರಚಿಸಿ.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">API ಕೀ ವಿವರಗಳು</p>

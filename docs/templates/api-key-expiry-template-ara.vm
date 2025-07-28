@@ -25,7 +25,7 @@
           <p>
             نود إعلامك بأن مفتاح API المسمى <strong>${apiKeyName}</strong> المرتبط بالسياسة:
             <strong>${policyName}</strong> من المقرر أن ينتهي في <strong>${expiryDateTime} UTC</strong>.
-            لضمان استمرار الوظائف والخدمات دون انقطاع، نرجو منك تحميل الشهادة للتجديد قبل تاريخ الانتهاء.
+            لضمان استمرار الوظائف وعدم انقطاع الخدمات، نرجو منك إنشاء مفتاح API جديد قبل تاريخ الانتهاء.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">تفاصيل مفتاح API</p>
