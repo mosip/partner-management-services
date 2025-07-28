@@ -47,7 +47,7 @@
             </p>
           </div>
           <p>
-            Si la clé API n’est pas renouvelée avant son expiration, cela pourrait entraîner des interruptions de service.
+            Le fait de ne pas générer une nouvelle clé API avant son expiration peut entraîner des interruptions de service.
           </p>
           <p>Pour générer une nouvelle clé API, veuillez suivre les étapes suivantes :</p>
           <ol>
