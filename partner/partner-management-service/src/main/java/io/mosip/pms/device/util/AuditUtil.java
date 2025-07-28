@@ -42,6 +42,7 @@ import io.mosip.pms.device.exception.DeviceServiceException;
 import io.mosip.pms.device.util.dto.AuditRequestDto;
 import io.mosip.pms.device.util.dto.AuditResponseDto;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.manager.constant.AuditConstant;
 
 @Component
 public class AuditUtil {

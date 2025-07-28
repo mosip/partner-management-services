@@ -5,14 +5,18 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.dto.FtmChipDetailsDto;
@@ -20,6 +24,7 @@ import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.request.dto.*;
 import io.mosip.pms.device.response.dto.*;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
+import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.common.util.RequestValidator;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -84,6 +89,9 @@ public class FTPChipDetailController {
 
 	@Value("${mosip.pms.ftm.id.regex}")
 	private String ftmIdRegex;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	/**
 	 * Post API to insert a new row of ftpChipDetail data
@@ -278,6 +286,8 @@ public class FTPChipDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(ftmId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return ftpChipDetaillService.deactivateFtm(ftmId, requestWrapper.getRequest());
 	}
 
@@ -291,6 +301,7 @@ public class FTPChipDetailController {
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
+		inputValidator.validateRequestInput(ftmId);
 		if (!ftmId.matches(ftmIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
@@ -326,6 +337,14 @@ public class FTPChipDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(ftmId);
+		inputValidator.validateRequestInput(make);
+		inputValidator.validateRequestInput(model);
+		inputValidator.validateRequestInput(status);
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -350,12 +369,21 @@ public class FTPChipDetailController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
 	@GetMapping
-	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers associated with the logged in user."
-	, description = "Available since release-1.2.2.0. This endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN.")
-	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
+	@Operation(
+			summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers associated with the logged in user.",
+			description = "Available since release-1.2.2.0. This endpoint is configured for the roles FTM_PROVIDER or PARTNER_ADMIN."
+	)
+	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail() {
-		return ftpChipDetaillService.ftmChipDetail();
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<List<FtmChipDetailsDto>> ftmChipDetail(
+			@Parameter(description = "Optional filter to get chips with a specific expiry period (1-30 days)")
+			@RequestParam(name = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod) {
+		return ftpChipDetaillService.ftmChipDetail(expiryPeriod);
 	}
 }

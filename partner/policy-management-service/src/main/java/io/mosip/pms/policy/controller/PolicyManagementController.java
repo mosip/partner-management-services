@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.validator.InputValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
@@ -94,6 +95,9 @@ public class PolicyManagementController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpoliciesgroupnew())")
 	@PostMapping(value = "/group/new")
@@ -352,7 +356,14 @@ public class PolicyManagementController {
 					schema = @Schema(allowableValues = {"activated", "deactivated", "draft"})
 			)
 			@RequestParam(value = "status", required = false) String status) {
-
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
+		inputValidator.validateRequestInput(policyType);
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(policyName);
+		inputValidator.validateRequestInput(policyDescription);
+		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput(status);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
 		if (policyType != null) {
 			filterDto.setPolicyType(policyType.toLowerCase());
@@ -389,6 +400,8 @@ public class PolicyManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
@@ -407,6 +420,8 @@ public class PolicyManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(policyGroupId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicyGroup(policyGroupId, requestWrapper.getRequest());
 	}
 }

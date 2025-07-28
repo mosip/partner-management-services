@@ -1,1 +1,29 @@
-पार्टनर प्रमाणपत्रों की आगामी समाप्ति का साप्ताहिक सारांश
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("पार्टनर प्रमाणपत्र"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("FTM चिप प्रमाणपत्र"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("SBI"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("API कुंजी"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary और ")
+      #else
+        #set($summary = "$summary, ")
+      #end
+    #end
+  #end
+  साप्ताहिक सारांश: $summary की आगामी समाप्ति
+#end

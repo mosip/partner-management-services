@@ -48,4 +48,7 @@ public interface PartnerPolicyRepository extends JpaRepository<PartnerPolicy, St
 
 	@Query(value = "select * from partner_policy ppr where ppr.part_id=?", nativeQuery = true )
 	public List<PartnerPolicy> findAPIKeysByPartnerId(String partId);
+
+	@Query(value = "select * from partner_policy pp where (pp.is_deleted is null or pp.is_deleted = false) and pp.is_active=true", nativeQuery = true)
+    List<PartnerPolicy> findAllActiveApiKeys();
 }

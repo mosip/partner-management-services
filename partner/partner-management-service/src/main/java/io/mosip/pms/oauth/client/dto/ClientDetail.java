@@ -8,6 +8,7 @@ package io.mosip.pms.oauth.client.dto;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ClientDetail {

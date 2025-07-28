@@ -1,1 +1,29 @@
-Résumé hebdomadaire des expirations à venir des certificats partenaires
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("Certificats Partenaires"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("Certificats Puce FTM"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("SBIs"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("Clés API"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary et ")
+      #else
+        #set($summary = "$summary, ")
+      #end
+    #end
+  #end
+  Résumé hebdomadaire : Expiration prochaine de $summary
+#end

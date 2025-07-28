@@ -232,9 +232,6 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${pmp.partner.partnerId.max.length}")
 	private int partnerIdMaxLength;
 
-	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
-	private int partnerPolicyExpiryInDays;
-
 	@Value("${pmp.partner.valid.email.address.regex}")
 	private String emailRegex;
 

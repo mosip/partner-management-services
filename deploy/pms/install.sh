@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=pms
-CHART_VERSION=1.3.0-beta.1-develop
+CHART_VERSION=1.3.0-beta.2-develop
 COPY_UTIL=../copy_cm_func.sh
 
 echo Create $NS namespace
@@ -24,26 +24,26 @@ function installing_pms() {
   $COPY_UTIL configmap config-server-share config-server $NS
 
   INTERNAL_API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
-  PMP_UI_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-ui-host})
+  PMP_UI_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-pmp-host})
 
   PARTNER_MANAGER_SERVICE_NAME="pms-partner"
   POLICY_MANAGER_SERVICE_NAME="pms-policy"
 
   echo Installing partner manager
   helm -n $NS install $PARTNER_MANAGER_SERVICE_NAME mosip/pms-partner \
-  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_UI_HOST \
+  --set istio.corsPolicy.allowOrigins[0].prefix=https://$PMP_UI_HOST \
   --version $CHART_VERSION
 
   echo Installing policy manager
   helm -n $NS install $POLICY_MANAGER_SERVICE_NAME mosip/pms-policy \
-  --set istio.corsPolicy.allowOrigins\[1\].prefix=https://$PMP_UI_HOST \
+  --set istio.corsPolicy.allowOrigins[0].prefix=https://$PMP_UI_HOST \
   --version $CHART_VERSION
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
   echo Installed pms services
 
-  echo "Partner management portal URL: https://$PMP_UI_HOST/pmp-revamp-ui/"
+  echo "Partner management portal URL: https://$PMP_UI_HOST/pmp-ui-v2/"
   return 0
 }
 
