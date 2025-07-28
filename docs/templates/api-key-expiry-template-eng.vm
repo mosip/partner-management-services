@@ -51,7 +51,7 @@
             </p>
           </div>
           <p>
-            Failure to renew the API Key before its expiration may result in service disruptions.
+            Failure to generate new API Key before its expiration may result in service disruptions.
           </p>
           <p>To proceed with the API Key generation, please follow these steps:</p>
           <ol>
