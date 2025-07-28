@@ -1,1 +1,29 @@
-ಪಾಲುದಾರ ಪ್ರಮಾಣಪತ್ರಗಳ ಮುಂಬರುವ ಮುಕ್ತಾಯ ದಿನಾಂಕಗಳ ಸಾಪ್ತಾಹಿಕ ಸಾರಾಂಶ
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("ಪಾರ್ಟ್ನರ್ ಪ್ರಮಾಣಪತ್ರಗಳು"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("FTM ಚಿಪ್ ಪ್ರಮಾಣಪತ್ರಗಳು"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("SBI ಗಳು"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("API ಕೀಗಳು"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary ಮತ್ತು ")
+      #else
+        #set($summary = "$summary, ")
+      #end
+    #end
+  #end
+  ವಾರದ ಸಾರಾಂಶ: $summary ಶೀಘ್ರದಲ್ಲೇ ಕಾಲಾವಧಿ ಮುಕ್ತಾಯವಾಗಲಿದೆ
+#end

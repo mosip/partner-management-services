@@ -1,1 +1,29 @@
-Weekly Summary of Upcoming Expirations of Partner Certificates
+#set($titleParts = [])
+
+#if($partnerCertificateCount > 0)
+  #set($void = $titleParts.add("Partner Certificates"))
+#end
+#if($ftmChipCertificateCount > 0)
+  #set($void = $titleParts.add("FTM Chip Certificates"))
+#end
+#if($sbiCount > 0)
+  #set($void = $titleParts.add("SBIs"))
+#end
+#if($apiKeyCount > 0)
+  #set($void = $titleParts.add("API Keys"))
+#end
+
+#if(!$titleParts.isEmpty())
+  #set($summary = "")
+  #foreach($item in $titleParts)
+    #set($summary = "$summary$item")
+    #if($foreach.hasNext)
+      #if($foreach.count == $titleParts.size() - 1)
+        #set($summary = "$summary and ")
+      #else
+        #set($summary = "$summary, ")
+      #end
+    #end
+  #end
+  Weekly Summary: Upcoming Expiry of $summary
+#end

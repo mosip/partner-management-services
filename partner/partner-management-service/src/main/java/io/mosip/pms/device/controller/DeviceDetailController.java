@@ -1,5 +1,6 @@
 package io.mosip.pms.device.controller;
 
+import io.mosip.pms.common.validator.InputValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
@@ -78,6 +79,9 @@ public class DeviceDetailController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	/*
 	 * This endpoint has been deprecated since the release-1.2.2.0
@@ -261,6 +265,8 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return deviceDetaillService.deactivateDevice(deviceId, requestWrapper.getRequest());
 	}
 
@@ -278,6 +284,10 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getSbiId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getPartnerId());
 		return deviceDetaillService.approveOrRejectMappingDeviceToSbi(deviceId, requestWrapper.getRequest());
 	}
 
@@ -311,6 +321,18 @@ public class DeviceDetailController {
 			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
 			@RequestParam(value = "deviceId", required = false) String deviceId
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(deviceType);
+		inputValidator.validateRequestInput(deviceSubType);
+		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput(sbiVersion);
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(deviceId);
+		inputValidator.validateRequestInput(make);
+		inputValidator.validateRequestInput(model);
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

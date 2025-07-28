@@ -486,9 +486,19 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			deviceDetailResponseDto.setActive(updatedDetail.getIsActive());
 
 			responseWrapper.setResponse(deviceDetailResponseDto);
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+				"AUT-007", deviceDetailId, "deviceDetailId");
 
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateDevice method of DeviceDetailServiceImpl - " + ex.getMessage());
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, ex.getErrorCode(), ex.getErrorText()),
+				"AUT-008", deviceDetailId, "deviceDetailId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -496,6 +506,11 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					"In deactivateDevice method of DeviceDetailServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.DEACTIVATE_DEVICE_ERROR.getErrorMessage();
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, errorCode, errorMessage),
+				"AUT-008", deviceDetailId, "deviceDetailId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(patchDeactivateDevice);
@@ -524,19 +539,18 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				if (status.equals(DeviceConstant.APPROVED)) {
 					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(),
 							ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorMessage());
-				} else {
-					throw new PartnerServiceException(ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorCode(),
-							ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorMessage());
 				}
 			}
 			// validate sbi and device mapping
-			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
-
-			DeviceDetailSBI deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
-			if (Objects.isNull(deviceDetailSBI)) {
-				LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
-				throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
-						ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
+			partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, Objects.isNull(sbiId));
+			DeviceDetailSBI deviceDetailSBI = null;
+			if (Objects.nonNull(sbiId)) {
+				deviceDetailSBI = deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(partnerId, sbiId, deviceId);
+				if (Objects.isNull(deviceDetailSBI)) {
+					LOGGER.info("sessionId", "idType", "id", "SBI and Device mapping already exists in DB.");
+					throw new PartnerServiceException(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(),
+							ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorMessage());
+				}
 			}
 
 			UpdateDeviceDetailStatusDto deviceDetails = new UpdateDeviceDetailStatusDto();
@@ -547,15 +561,26 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 				deviceDetails.setApprovalStatus(DeviceConstant.APPROVE);
 			}
 			updateDeviceStatus(deviceDetails);
-
-			deviceDetailSBI.setIsActive(true);
-			deviceDetailSBI.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			deviceDetailSBI.setUpdBy(getUserId());
-			deviceDetailSbiRepository.save(deviceDetailSBI);
-			LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
+			if (Objects.nonNull(deviceDetailSBI)) {
+				deviceDetailSBI.setIsActive(true);
+				deviceDetailSBI.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+				deviceDetailSBI.setUpdBy(getUserId());
+				deviceDetailSbiRepository.save(deviceDetailSBI);
+				LOGGER.info("sessionId", "idType", "id", "updated device mapping to sbi successfully in Db.");
+			}
 			responseWrapper.setResponse(true);
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+				"AUT-007", deviceId, "deviceDetailId");
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In approveOrRejectMappingDeviceToSbi method of DeviceDetailServiceImpl - " + ex.getMessage());
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, ex.getErrorCode(), ex.getErrorText()),
+				"AUT-008", deviceId, "deviceDetailId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -563,6 +588,11 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 					"In approveOrRejectMappingDeviceToSbi method of DeviceDetailServiceImplN - " + ex.getMessage());
 			String errorCode = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.APPROVE_OR_REJECT_DEVICE_WITH_SBI_MAPPING_ERROR.getErrorMessage();
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, errorCode, errorMessage),
+				"AUT-008", deviceId, "deviceDetailId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(postApprovalMappingDeviceToSbiId);

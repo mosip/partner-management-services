@@ -1,6 +1,9 @@
 package io.mosip.pms.device.controller;
 
+import io.mosip.pms.common.validator.InputValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
@@ -82,6 +85,9 @@ public class SecureBiometricInterfaceController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	private InputValidator inputValidator;
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostsecurebiometricinterface())")
 	@ResponseFilter
@@ -271,10 +277,20 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<IdDto> addDeviceToSbi(@PathVariable("sbiId") @NotBlank String sbiId, @RequestBody @Valid RequestWrapperV2<DeviceDetailDto> requestWrapper) {
+
 		Optional<ResponseWrapperV2<IdDto>> validationResponse = requestValidator.validate(postAddDeviceToSbi, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceProviderId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceTypeCode());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceSubTypeCode());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
 		return secureBiometricInterface.addDeviceToSbi(requestWrapper.getRequest(), sbiId);
 	}
 
@@ -288,6 +304,7 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
+		inputValidator.validateRequestInput(sbiId);
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
@@ -306,6 +323,8 @@ public class SecureBiometricInterfaceController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
 		return secureBiometricInterface.deactivateSbi(sbiId, requestWrapper.getRequest());
 	}
 
@@ -338,8 +357,20 @@ public class SecureBiometricInterfaceController {
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"expired", "valid"})
 			)
-			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus
+			@RequestParam(value = "sbiExpiryStatus", required = false) String sbiExpiryStatus,
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput(sortFieldName);
+		inputValidator.validateRequestInput(sortType);
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
+		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput(sbiVersion);
+		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput(sbiExpiryStatus);
 		SbiFilterDto filterDto = new SbiFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -358,6 +389,9 @@ public class SecureBiometricInterfaceController {
 		}
 		if (sbiExpiryStatus != null) {
 			filterDto.setSbiExpiryStatus(sbiExpiryStatus);
+		}
+		if (expiryPeriod != null) {
+			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}

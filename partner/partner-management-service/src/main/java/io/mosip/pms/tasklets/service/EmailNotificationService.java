@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -32,6 +32,9 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.EmailTemplateDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.ApiKeyDetailsDto;
+import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -77,8 +80,6 @@ public class EmailNotificationService {
 	@Transactional
 	public void sendEmailNotification(NotificationEntity notificationEntity, String emailId) {
 		try {
-			// Optional<NotificationEntity> optionalNotification =
-			// notificationServiceRepository.findById(notificationId);
 			log.info("notificationEntity: {}", notificationEntity);
 			if (notificationEntity.getId().isEmpty()) {
 				log.error("No notification found for {}", notificationEntity);
@@ -93,7 +94,8 @@ public class EmailNotificationService {
 			EmailTemplateDto templateDto = templateHelper.fetchEmailTemplate(notificationEntity.getEmailLangCode(),
 					notificationEntity.getNotificationType());
 			String populatedTemplate = populateTemplate(templateDto.getBody(), notificationEntity);
-			sendEmail(notificationEntity, populatedTemplate, templateDto.getSubject(), emailId);
+			String populatedSubject = populateSubjectTemplate(templateDto.getSubject(), notificationEntity);
+			sendEmail(notificationEntity, populatedTemplate, populatedSubject, emailId);
 
 			// update notificationEntity status
 			notificationEntity.setEmailSent(true);
@@ -133,6 +135,24 @@ public class EmailNotificationService {
 		return writer.toString();
 	}
 
+	private String populateSubjectTemplate(String subjectTemplate, NotificationEntity notificationEntity)
+			throws JsonProcessingException {
+
+		// Only populate subject template if it's a weekly summary
+		if (PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE.equals(notificationEntity.getNotificationType())) {
+			VelocityContext context = new VelocityContext();
+			NotificationDetailsDto notificationDetails = objectMapper
+					.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
+			addWeeklySummaryContext(context, notificationDetails);
+			StringWriter writer = new StringWriter();
+			velocityEngine.evaluate(context, writer, "subjectLogTag", subjectTemplate);
+			return writer.toString().trim();
+		}
+
+		// For all other notification types
+		return subjectTemplate;
+	}
+
 	private VelocityContext createVelocityContext(NotificationEntity notificationEntity)
 			throws JsonProcessingException {
 		VelocityContext context = new VelocityContext();
@@ -141,44 +161,94 @@ public class EmailNotificationService {
 				.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
 
 		switch (notificationType) {
-		case PartnerConstants.PARTNER_CERT_EXPIRY, PartnerConstants.ROOT_CERT_EXPIRY,
-				PartnerConstants.INTERMEDIATE_CERT_EXPIRY:
-			CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
-			if (cert != null) {
+			case PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, PartnerConstants.ROOT_CERT_EXPIRY,
+				 PartnerConstants.INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
+				CertificateDetailsDto cert = notificationDetails.getCertificateDetails().stream().findFirst().orElse(null);
+				if (cert != null) {
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("certificateId", cert.getCertificateId());
+					context.put("expiryDateTime", formatDateTime(cert.getExpiryDateTime()));
+					context.put("partnerDomain", cert.getPartnerDomain());
+					context.put("issuedTo", cert.getIssuedTo());
+					context.put("issuedBy", cert.getIssuedBy());
+				}
+				break;
+			case PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
+				FtmDetailsDto ftm = notificationDetails.getFtmDetails().stream().findFirst().orElse(null);
+				if (ftm != null) {
+					context.put("ftmId", ftm.getFtmId());
+					context.put("make", ftm.getMake());
+					context.put("model", ftm.getModel());
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("certificateId", ftm.getCertificateId());
+					context.put("expiryDateTime", formatDateTime(ftm.getExpiryDateTime()));
+					context.put("partnerDomain", ftm.getPartnerDomain());
+					context.put("issuedTo", ftm.getIssuedTo());
+					context.put("issuedBy", ftm.getIssuedBy());
+				}
+				break;
+			case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
+				ApiKeyDetailsDto apiKey = notificationDetails.getApiKeyDetails().stream().findFirst().orElse(null);
+				if (apiKey != null) {
+					context.put("apiKeyName", apiKey.getApiKeyName());
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("partnerDomain", "AUTH");
+					context.put("expiryDateTime", formatDateTime(apiKey.getExpiryDateTime()));
+					context.put("expiryPeriod", apiKey.getExpiryPeriod());
+					context.put("policyGroup", apiKey.getPolicyGroup());
+					context.put("policyName", apiKey.getPolicyName());
+				}
+				break;
+			case PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE:
+				SbiDetailsDto sbi = notificationDetails.getSbiDetails().stream().findFirst().orElse(null);
+				if (sbi != null) {
+					context.put("sbiId", sbi.getSbiId());
+					context.put("sbiVersion", sbi.getSbiVersion());
+					context.put("sbiBinaryHash", sbi.getSbiBinaryHash());
+					context.put("sbiCreationDate", formatDateTime(sbi.getSbiCreationDate()));
+					context.put("expiryDateTime", formatDateTime(sbi.getExpiryDateTime()));
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("expiryPeriod", sbi.getExpiryPeriod());
+				}
+				break;
+			case PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE:
+				LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 				context.put("partnerId", notificationEntity.getPartnerId());
-				context.put("certificateId", cert.getCertificateId());
-				context.put("expiryDateTime", cert.getExpiryDateTime());
-				context.put("partnerDomain", cert.getPartnerDomain());
-				context.put("issuedTo", cert.getIssuedTo());
-				context.put("issuedBy", cert.getIssuedBy());
-			}
-			break;
+				context.put("fromDate", createdDate.format(formatter));
+				context.put("toDate", createdDate.plusDays(7).format(formatter));
 
-		case PartnerConstants.WEEKLY_SUMMARY:
-			LocalDate createdDate = notificationEntity.getCreatedDatetime().toLocalDate();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+				addWeeklySummaryContext(context, notificationDetails);
+				break;
 
-			context.put("partnerId", notificationEntity.getPartnerId());
-			context.put("fromDate", createdDate.format(formatter));
-			context.put("toDate", createdDate.plusDays(7).format(formatter));
-			context.put("partnerCertificateCount",
-					notificationDetails.getCertificateDetails() != null
-							? notificationDetails.getCertificateDetails().size()
-							: 0);
-			List<String> partnerIds = Optional.ofNullable(notificationDetails.getCertificateDetails())
-					.orElse(Collections.emptyList()).stream().map(CertificateDetailsDto::getPartnerId)
-					.collect(Collectors.toList());
-
-			context.put("partnerIdList", partnerIds);
-			break;
-
-		default:
-			log.error("Invalid Notification Type: {}", notificationEntity.getNotificationType());
-			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
-					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
+			default:
+				log.error("Invalid Notification Type: {}", notificationEntity.getNotificationType());
+				throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
+						ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
 		}
 
 		return context;
+	}
+
+	private void addWeeklySummaryContext(VelocityContext context, NotificationDetailsDto notificationDetails) {
+		List<CertificateDetailsDto> certificateDetails = Optional.ofNullable(notificationDetails.getCertificateDetails())
+				.orElse(Collections.emptyList());
+		List<FtmDetailsDto> ftmDetails = Optional.ofNullable(notificationDetails.getFtmDetails())
+				.orElse(Collections.emptyList());
+		List<ApiKeyDetailsDto> apiKeyDetails = Optional.ofNullable(notificationDetails.getApiKeyDetails())
+				.orElse(Collections.emptyList());
+		List<SbiDetailsDto> sbiDetails = Optional.ofNullable(notificationDetails.getSbiDetails())
+				.orElse(Collections.emptyList());
+
+		context.put("partnerCertificateCount", certificateDetails.size());
+		context.put("ftmChipCertificateCount", ftmDetails.size());
+		context.put("apiKeyCount", apiKeyDetails.size());
+		context.put("sbiCount", sbiDetails.size());
+		context.put("certificateDetails", certificateDetails);
+		context.put("ftmDetails", ftmDetails);
+		context.put("apiKeyDetails", apiKeyDetails);
+		context.put("sbiDetails", sbiDetails);
 	}
 
 	private void sendEmail(NotificationEntity notificationEntity, String emailTemplate, String emailSubject,
@@ -205,4 +275,13 @@ public class EmailNotificationService {
 		}
 	}
 
+	public static String formatDateTime(String dateTimeString) {
+		try {
+			LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss");
+			return dateTime.format(formatter);
+		} catch (Exception e) {
+			return dateTimeString;  // fallback
+		}
+	}
 }

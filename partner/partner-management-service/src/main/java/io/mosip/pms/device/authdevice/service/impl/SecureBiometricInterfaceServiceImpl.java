@@ -3,6 +3,7 @@ package io.mosip.pms.device.authdevice.service.impl;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -301,20 +302,22 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return entity;
 	}
 
-	private SecureBiometricInterfaceHistory getUpdateHistoryMapping(SecureBiometricInterfaceHistory historyEntity,
+	public SecureBiometricInterfaceHistory getUpdateHistoryMapping(SecureBiometricInterfaceHistory historyEntity,
 			SecureBiometricInterface entity) {
 		historyEntity.setId(entity.getId());
 		historyEntity.setActive(entity.isActive());
 		historyEntity.setApprovalStatus(entity.getApprovalStatus());
-		historyEntity.setCrBy(entity.getUpdBy());
+		historyEntity.setCrBy(entity.getCrBy());
 		historyEntity.setEffectDateTime(entity.getUpdDtimes());
-		historyEntity.setCrDtimes(entity.getUpdDtimes());
+		historyEntity.setCrDtimes(entity.getCrDtimes());
 		historyEntity.setSwVersion(entity.getSwVersion());
 		historyEntity.setSwCreateDateTime(entity.getSwCreateDateTime());
 		historyEntity.setSwExpiryDateTime(entity.getSwExpiryDateTime());
 		historyEntity.setSwBinaryHAsh(entity.getSwBinaryHash());
 		historyEntity.setProviderId(entity.getProviderId());
 		historyEntity.setPartnerOrgName(entity.getPartnerOrgName());
+		historyEntity.setUpdBy(entity.getUpdBy());
+		historyEntity.setUpdDtimes(entity.getUpdDtimes());
 		return historyEntity;
 	}
 
@@ -731,11 +734,29 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			deviceId = dto.getId();
 			addInactiveMappingDeviceToSbi(sbiId, deviceId, partnerId, partnerOrgname, userId);
 			responseWrapper.setResponse(dto);
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.SUCCESSFUL_CREATE , DeviceDetailDto.class.getCanonicalName()),
+				"AUT-005", deviceDetailDto.getDeviceProviderId(), "partnerId");
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In addDeviceToSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			if (Objects.nonNull(deviceId) && !deviceId.equals(BLANK_STRING)) {
 				deleteDeviceDetail(deviceId);
 			}
+			String eventId;
+			if (ex.getErrorCode().equals("PMS_AUT_001")) {
+				eventId = "AUT-002";
+			} else if (ex.getErrorCode().equals("PMS_AUT_002")) {
+				eventId = "AUT-003";
+			} else {
+				eventId = "AUT-004";
+			}
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_CREATE, DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, ex.getErrorCode(), ex.getErrorText()),
+					eventId, deviceDetailDto.getDeviceProviderId(), "partnerId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -746,6 +767,11 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 			String errorCode = ErrorCode.CREATE_DEVICE_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.CREATE_DEVICE_ERROR.getErrorMessage();
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_CREATE, DeviceDetail.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, errorCode, errorMessage),
+				"AUT-004", deviceDetailDto.getDeviceProviderId(), "partnerId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(postAddDeviceToSbi);
@@ -812,7 +838,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		}
 
 		// validate sbi and device mapping
-		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId);
+		partnerHelper.validateSbiDeviceMapping(partnerId, sbiId, deviceId, false);
 
 		DeviceDetailSBI entity = new DeviceDetailSBI();
 
@@ -984,9 +1010,14 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!approvedDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : approvedDevices) {
 					deviceDetail.setIsActive(false);
-					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
+					auditUtil.auditRequest(
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+						DeviceConstant.AUDIT_SYSTEM,
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+						"AUT-007", deviceDetail.getId(), "deviceDetailId");
 				}
 			}
 			// Reject pending_approval devices
@@ -994,15 +1025,23 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			if (!pendingApprovalDevices.isEmpty()) {
 				for (DeviceDetail deviceDetail : pendingApprovalDevices) {
 					deviceDetail.setApprovalStatus(REJECTED);
-					deviceDetail.setUpdDtimes(LocalDateTime.now());
+					deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 					deviceDetail.setUpdBy(getUserId());
 					deviceDetailRepository.save(deviceDetail);
+					auditUtil.auditRequest(
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+						DeviceConstant.AUDIT_SYSTEM,
+						String.format(DeviceConstant.SUCCESSFUL_UPDATE , DeviceDetail.class.getCanonicalName()),
+						"AUT-007", deviceDetail.getId(), "deviceDetailId");
 				}
 			}
 			sbi.setActive(false);
-			sbi.setUpdDtimes(LocalDateTime.now());
+			sbi.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
 			sbi.setUpdBy(getUserId());
 			SecureBiometricInterface updatedSbi = sbiRepository.save(sbi);
+			SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
+			getUpdateHistoryMapping(history, updatedSbi);
+			sbiHistoryRepository.save(history);
 			SbiDetailsResponseDto sbiDetailsResponseDto = new SbiDetailsResponseDto();
 
 			sbiDetailsResponseDto.setSbiId(updatedSbi.getId());
@@ -1011,8 +1050,18 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			sbiDetailsResponseDto.setActive(updatedSbi.isActive());
 
 			responseWrapper.setResponse(sbiDetailsResponseDto);
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.SUCCESSFUL_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+				"AUT-012", sbiId, "sbiId");
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, ex.getErrorCode(), ex.getErrorText()),
+				"AUT-016", sbiId, "sbiId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -1020,6 +1069,11 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					"In deactivateSbi method of SecureBiometricInterfaceServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.DEACTIVATE_SBI_ERROR.getErrorMessage();
+			auditUtil.auditRequest(
+				String.format(DeviceConstant.FAILURE_UPDATE, SecureBiometricInterface.class.getCanonicalName()),
+				DeviceConstant.AUDIT_SYSTEM,
+				String.format(DeviceConstant.FAILURE_DESC, errorCode, errorMessage),
+				"AUT-016", sbiId, "sbiId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(patchDeactivateSbi);
@@ -1104,6 +1158,14 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	}
 
 	private Page<SbiSummaryEntity> getSbiDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, SbiFilterDto filterDto, Pageable pageable, List<String> partnerIdList, boolean isPartnerAdmin) {
+		LocalDateTime expiryStartDate = null;
+		LocalDateTime expiryEndDate = null;
+
+		if (filterDto.getExpiryPeriod() != null) {
+			expiryStartDate = LocalDateTime.now();
+			expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
+		}
+
 		// Sorting
 		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 			String sortKey = sortFieldName + "_" + sortType.toLowerCase();
@@ -1112,37 +1174,43 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusAsc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin,expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(),pageable);
 
 				case "status_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByStatusDesc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(),pageable);
 
 				case "sbiExpiryStatus_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusAsc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(),pageable);
 
 				case "sbiExpiryStatus_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByExpiryStatusDesc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 
 				case "countOfAssociatedDevices_asc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountAsc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 
 				case "countOfAssociatedDevices_desc":
 					return sbiSummaryRepository.getSummaryOfSbiDetailsByDevicesCountDesc(
 							filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 							filterDto.getSbiVersion(), filterDto.getStatus(),
-							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+							filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+							expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 
 				default:
 					// generic sorting logic for other fields
@@ -1154,7 +1222,8 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 		return sbiSummaryRepository.getSummaryOfSbiDetails(
 				filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getSbiId(),
 				filterDto.getSbiVersion(), filterDto.getStatus(),
-				filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, pageable);
+				filterDto.getSbiExpiryStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
+				expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

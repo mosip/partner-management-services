@@ -24,6 +24,7 @@ import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.policy.controller.PolicyManagementController;
 import io.mosip.pms.policy.dto.*;
 import io.mosip.pms.policy.errorMessages.ServiceError;
@@ -86,6 +87,9 @@ public class PolicyManagementControllerTest {
 
 	@Mock
 	private RequestValidator requestValidator;
+
+	@Mock
+	InputValidator inputValidator;
 
 	@InjectMocks
 	PolicyManagementController policyManagementController;
@@ -827,6 +831,7 @@ public class PolicyManagementControllerTest {
 		filterDto.setPolicyGroupName("default");
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
+		doNothing().when(inputValidator).validateRequestInput(any());
 		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", "activated");

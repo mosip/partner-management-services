@@ -8,6 +8,7 @@ import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -43,10 +44,13 @@ public class NotificationsController {
     @Autowired
     RequestValidator requestValidator;
 
+    @Autowired
+	private InputValidator inputValidator;
+
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
     @Operation(summary = "This endpoint retrieves a list of all notifications.",
-            description = "Available since release-1.3.0. This endpoint supports pagination, sorting, and filtering.")
+            description = "Available since release-1.2.1. This endpoint supports pagination, sorting, and filtering.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -81,8 +85,31 @@ public class NotificationsController {
             @RequestParam(value = "createdFromDate", required = false)
             @Parameter(description = "Created From Date in 'yyyy-MM-dd' format") String createdFromDate,
             @RequestParam(value = "createdToDate", required = false)
-            @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate
+            @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate,
+            @RequestParam(value = "ftmId", required = false) String ftmId,
+            @RequestParam(value = "make", required = false) String make,
+            @RequestParam(value = "model", required = false) String model,
+            @RequestParam(value = "apiKeyName", required = false) String apiKeyName,
+            @RequestParam(value = "policyName", required = false) String policyName,
+            @RequestParam(value = "sbiId", required = false) String sbiId,
+            @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
+        inputValidator.validateRequestInput(notificationStatus);
+        inputValidator.validateRequestInput(notificationType);
+        inputValidator.validateRequestInput(certificateId);
+        inputValidator.validateRequestInput(expiryDate);
+        inputValidator.validateRequestInput(issuedBy);
+        inputValidator.validateRequestInput(sbiVersion);
+        inputValidator.validateRequestInput(sbiId);
+        inputValidator.validateRequestInput(issuedTo);
+        inputValidator.validateRequestInput(make);
+        inputValidator.validateRequestInput(model);
+        inputValidator.validateRequestInput(ftmId);
+        inputValidator.validateRequestInput(apiKeyName);
+        inputValidator.validateRequestInput(policyName);
+        inputValidator.validateRequestInput(partnerDomain);
+        inputValidator.validateRequestInput(createdFromDate);
+        inputValidator.validateRequestInput(createdToDate);
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);
@@ -111,6 +138,27 @@ public class NotificationsController {
         if (createdToDate != null) {
             filterDto.setCreatedToDate(createdToDate);
         }
+        if (ftmId != null) {
+            filterDto.setFtmId(ftmId);
+        }
+        if (make != null) {
+            filterDto.setMake(make);
+        }
+        if (model != null) {
+            filterDto.setModel(model);
+        }
+        if (apiKeyName != null) {
+            filterDto.setApiKeyName(apiKeyName);
+        }
+        if (policyName != null) {
+            filterDto.setPolicyName(policyName);
+        }
+        if (sbiId != null) {
+            filterDto.setSbiId(sbiId);
+        }
+        if (sbiVersion != null) {
+            filterDto.setSbiVersion(sbiVersion);
+        }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }
 
@@ -132,6 +180,8 @@ public class NotificationsController {
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
+        inputValidator.validateRequestInput(notificationId);
+        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
     }
 }

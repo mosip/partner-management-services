@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.URL;
 
 import jakarta.validation.constraints.*;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor

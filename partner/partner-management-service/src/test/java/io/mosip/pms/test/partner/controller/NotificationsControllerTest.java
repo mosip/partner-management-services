@@ -77,6 +77,22 @@ public class NotificationsControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getNotificationsTest1() throws Exception {
+        Integer pageNo = 0;
+        Integer pageSize = 4;
+        NotificationsFilterDto filterDto = new NotificationsFilterDto();
+        ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
+
+        Mockito.when(notificationsService.getNotifications(pageNo, pageSize, filterDto))
+                .thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.get("/notifications")
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void dismissNotificationTest() throws Exception {
         RequestWrapperV2<DismissNotificationRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setId(patchDismissNotificationId);
