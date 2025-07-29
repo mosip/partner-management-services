@@ -30,6 +30,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"                                                      
 }'
@@ -53,6 +54,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"            
 }'
@@ -76,6 +78,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"            
 }'
@@ -99,6 +102,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"            
 }'
@@ -123,6 +127,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$"
 }'
       output: ' {
@@ -146,6 +151,7 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$"
 }'
       output: ' {
@@ -168,6 +174,7 @@ GetListOfAllSBI:
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "policyId": "$REMOVE$      
 }'
@@ -191,6 +198,7 @@ GetListOfAllSBI:
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "policyId": "$REMOVE$"
 }'
@@ -214,6 +222,7 @@ GetListOfAllSBI:
       "sortType": "ASC",
       "pageNo": "0",
       "pageSize": "5",
+      "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
       "policyId": "$REMOVE$"
@@ -238,6 +247,7 @@ GetListOfAllSBI:
       "sortType": "DESC",
       "pageNo": "0",
       "pageSize": "5",
+      "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
       "policyId": "$REMOVE$"
@@ -263,6 +273,7 @@ GetListOfAllSBI:
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "policyId": "$REMOVE$      
 }'
@@ -285,6 +296,7 @@ GetListOfAllSBI:
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "sbiVersion": "abcd",
       "orgName": "$REMOVE$",
       "policyId": "$REMOVE$"
@@ -305,6 +317,7 @@ GetListOfAllSBI:
       "sbiVersion": "$REMOVE$",
       "partnerId": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$",
       "status": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -314,4 +327,16 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
-
+   Pms_GetListOfAllSBI_Partner_device_token:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_SBI_List_21    
+      description: Fetching all the SBI details with Parter device token
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
+      input: '{
+}'
+      output: ' {
+}'
