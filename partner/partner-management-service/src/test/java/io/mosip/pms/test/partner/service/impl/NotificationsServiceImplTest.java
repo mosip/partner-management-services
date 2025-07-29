@@ -1,16 +1,14 @@
 package io.mosip.pms.test.partner.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
-import io.mosip.kernel.openid.bridge.model.MosipUserDto;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
-import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.entity.ApiKeyRequestsSummaryEntity;
+import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.UserDetails;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.repository.NotificationsSummaryRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
@@ -24,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -39,7 +36,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -112,6 +108,7 @@ public class NotificationsServiceImplTest {
         Integer pageSize = 4;
         List<String> partnerIdList = new ArrayList<>();
         partnerIdList.add("123");
+        when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
 
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         filterDto.setNotificationType("root");
@@ -135,6 +132,9 @@ public class NotificationsServiceImplTest {
                 anyString(), anyString(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
+        filterDto.setExpiryDate("2025-04-07");
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
         filterDto.setCreatedFromDate("2025-04-07");
         filterDto.setCreatedToDate("2025-04-07T13:08:37");
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
@@ -144,7 +144,6 @@ public class NotificationsServiceImplTest {
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
         filterDto.setNotificationType(null);
-        filterDto.setExpiryDate("2025-04-07");
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
 
@@ -153,7 +152,7 @@ public class NotificationsServiceImplTest {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         Collection<GrantedAuthority> newAuthorities = List.of(
-                new SimpleGrantedAuthority("Auth_Partner")
+                new SimpleGrantedAuthority("AUTH_PARTNER")
         );
         Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
         addAuthoritiesMethod.setAccessible(true);
@@ -182,6 +181,8 @@ public class NotificationsServiceImplTest {
         entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
         Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
         when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        when(mapper.readValue(anyString(), eq(NotificationDetailsDto.class)))
+                .thenThrow(new JsonProcessingException("test") {});
         when(notificationsSummaryRepository.getSummaryOfAllNotifications(anyString(), any(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
@@ -196,6 +197,15 @@ public class NotificationsServiceImplTest {
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
         filterDto.setNotificationType("abc");
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(Page.empty());
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto.setNotificationType("partner");
+        filterDto.setApiKeyName("123");
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(Page.empty());
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto.setNotificationType("root");
         when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(Page.empty());
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
@@ -217,7 +227,7 @@ public class NotificationsServiceImplTest {
         io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         Collection<GrantedAuthority> newAuthorities = List.of(
-                new SimpleGrantedAuthority("Auth_Partner")
+                new SimpleGrantedAuthority("AUTH_PARTNER")
         );
         Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
         addAuthoritiesMethod.setAccessible(true);
@@ -233,6 +243,106 @@ public class NotificationsServiceImplTest {
         Integer pageSize = 4;
 
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+    }
+
+    @Test
+    public void getNotificationsTest5() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        Collection<GrantedAuthority> newAuthorities = List.of(
+                new SimpleGrantedAuthority("DEVICE_PROVIDER")
+        );
+        Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+        addAuthoritiesMethod.setAccessible(true);
+        addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("Device_Provider");
+        partner.setIsActive(true);
+        partnerList.add(partner);
+        when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        Integer pageNo = 0;
+        Integer pageSize = 4;
+        List<String> partnerIdList = new ArrayList<>();
+        partnerIdList.add("123");
+
+        NotificationsFilterDto filterDto = new NotificationsFilterDto();
+        filterDto.setNotificationType("sbi");
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        NotificationEntity entity = new NotificationEntity();
+        entity.setId("12345");
+        entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
+        Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        when(notificationsSummaryRepository.getSummaryOfAllSbiNotifications(anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto.setNotificationType("partner");
+        filterDto.setSbiVersion("123");
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto.setNotificationType("apikey");
+        filterDto.setCertificateId("123");
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto = new NotificationsFilterDto();
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+    }
+
+    @Test
+    public void getNotificationsTest6() throws Exception {
+        io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        Collection<GrantedAuthority> newAuthorities = List.of(
+                new SimpleGrantedAuthority("FTM_PROVIDER")
+        );
+        Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+        addAuthoritiesMethod.setAccessible(true);
+        addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        List<Partner> partnerList = new ArrayList<>();
+        Partner partner = new Partner();
+        partner.setId("123");
+        partner.setPartnerTypeCode("FTM_Provider");
+        partner.setIsActive(true);
+        partnerList.add(partner);
+        when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+        Integer pageNo = 0;
+        Integer pageSize = 4;
+        List<String> partnerIdList = new ArrayList<>();
+        partnerIdList.add("123");
+
+        NotificationsFilterDto filterDto = new NotificationsFilterDto();
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        NotificationEntity entity = new NotificationEntity();
+        entity.setId("12345");
+        entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
+        Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        when(notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto.setNotificationType("ftm-chip");
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        filterDto.setNotificationType("partner");
+        filterDto.setFtmId("123");
+        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
 

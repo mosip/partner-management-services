@@ -25,7 +25,7 @@
           <p>
             This is to inform you that the API Key named <strong>${apiKeyName}</strong> associated with policy:
             <strong>${policyName}</strong> is scheduled to expire on <strong>${expiryDateTime} UTC</strong>.
-            To ensure continued functionality and uninterrupted services, we request you to upload the certificate for renewal before the expiration date.
+            To ensure continued functionality and uninterrupted services, we request you to generate a new API Key before the expiration date.
           </p>
           <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
             <p style="font-size: 16px; font-weight: bold;">API Key Details</p>
@@ -51,7 +51,7 @@
             </p>
           </div>
           <p>
-            Failure to renew the API Key before its expiration may result in service disruptions.
+            Failure to generate new API Key before its expiration may result in service disruptions.
           </p>
           <p>To proceed with the API Key generation, please follow these steps:</p>
           <ol>

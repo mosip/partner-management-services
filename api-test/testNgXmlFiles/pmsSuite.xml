@@ -1629,6 +1629,23 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
+	</test>
+		<test name="GetAllApiKeyForAuthPartnerV2">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+		<test name="GetAllApiKeyForAuthPartnerV2NegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2NegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
 	</test>	
+	
 
 </suite>
