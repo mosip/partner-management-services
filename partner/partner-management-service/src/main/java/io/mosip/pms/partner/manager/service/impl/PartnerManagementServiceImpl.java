@@ -158,7 +158,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${pmp.bioextractors.required.partner.types}")
 	private String biometricExtractorsRequiredPartnerTypes;
 
-	@Value("${mosip.pmp.partner.policy.expiry.period.indays}")
+	@Value("${mosip.pmp.partner.policy.expiry.period.indays:36500}")
 	private int partnerPolicyExpiryInDays;
 
 	@Value("${mosip.pms.api.id.partner.details.get}")

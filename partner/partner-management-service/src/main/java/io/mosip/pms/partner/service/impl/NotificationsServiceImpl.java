@@ -88,13 +88,13 @@ public class NotificationsServiceImpl implements NotificationsService {
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			// Validate expiry date
 			if (Objects.nonNull(filterDto.getExpiryDate())) {
-				validateDate(filterDto.getExpiryDate(), "expiryDate");
+				validateDate(filterDto.getExpiryDate(), ErrorCode.INVALID_EXPIRY_DATE);
 			}
 			if (Objects.nonNull(filterDto.getCreatedFromDate())) {
-				validateDate(filterDto.getCreatedFromDate(), "createdFromDate");
+				validateDate(filterDto.getCreatedFromDate(), ErrorCode.INVALID_CREATED_FROM_DATE);
 			}
 			if (Objects.nonNull(filterDto.getCreatedToDate())) {
-				validateDate(filterDto.getCreatedToDate(), "createdToDate");
+				validateDate(filterDto.getCreatedToDate(), ErrorCode.INVALID_CREATED_TO_DATE);
 			}
 			if (filterDto.getNotificationType() != null) {
 				validateNotificationsFilter(filterDto, isPartnerAdmin);
@@ -305,13 +305,12 @@ public class NotificationsServiceImpl implements NotificationsService {
 				|| notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
 	}
 
-	private void validateDate(String date, String fieldName) {
+	private void validateDate(String date, ErrorCode errorCode) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		try {
 			LocalDate.parse(date, formatter);
 		} catch (DateTimeParseException e) {
-			throw new PartnerServiceException(ErrorCode.INVALID_DATE.getErrorCode(),
-					String.format(ErrorCode.INVALID_DATE.getErrorMessage(), fieldName));
+			throw new PartnerServiceException(errorCode.getErrorCode(), errorCode.getErrorMessage());
 		}
 	}
 
