@@ -69,7 +69,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_025"
        }
        ]
 }'
@@ -86,7 +86,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_025"
        }
        ]
 }'
@@ -103,7 +103,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_026"
        }
        ]
 }'
@@ -120,7 +120,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_026"
        }
        ]
 }'

@@ -336,7 +336,7 @@ DismissNotificationNegativeScenarios:
       "id": "mosip.pms.dismiss.notification.patch",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
-      "notificationId": $NOTIFICATIONID$,
+      "notificationId": notificationId,
       "notificationStatus": "$REMOVE$"
 }'
       output: '{
@@ -358,7 +358,7 @@ DismissNotificationNegativeScenarios:
       "id": "mosip.pms.dismiss.notification.patch",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
-      "notificationId": $NOTIFICATIONID$,
+      "notificationId": notificationId,
       "notificationStatus": "CANCEL"
 }'
       output: '{
@@ -380,7 +380,7 @@ DismissNotificationNegativeScenarios:
       "id": "mosip.pms.dismiss.notification.patch",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
-      "notificationId": $NOTIFICATIONID$,
+      "notificationId": notificationId,
       "notificationStatus": ""
 }'
       output: '{
@@ -402,7 +402,7 @@ DismissNotificationNegativeScenarios:
       "id": "mosip.pms.dismiss.notification.patch",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
-      "notificationId": $NOTIFICATIONID$,
+      "notificationId": notificationId,
       "notificationStatus": "DISMISS"
 }'
       output: '{

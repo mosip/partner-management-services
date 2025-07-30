@@ -311,7 +311,7 @@ GetListOfAllDevice:
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
       outputTemplate: pms/error
       input: '{
-      "sortType": "$$$$$$",
+      "sortType": "device",
       "status": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "pageNo": "$REMOVE$",
@@ -446,7 +446,7 @@ GetListOfAllDevice:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PRT_357"
+       "errorCode": "PMS_REQUEST_ERROR_007"
        }
        ]
 }'
