@@ -50,13 +50,14 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"      
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_007"
+       "errorCode": "PMS_REQUEST_ERROR_007"
        }
        ]
 }'
@@ -77,13 +78,14 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"      
 }'
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_007"
+       "errorCode": "PMS_REQUEST_ERROR_007"
        }
        ]
 }'
@@ -104,6 +106,7 @@ GetListOfAllSBI:
       "pageNo": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"      
 }'
@@ -131,6 +134,7 @@ GetListOfAllSBI:
       "partnerId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"      
 }'
@@ -158,6 +162,7 @@ GetListOfAllSBI:
       "partnerId": "*11",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
       "sbiExpiryStatus": "$REMOVE$"      
 }'
@@ -165,6 +170,198 @@ GetListOfAllSBI:
       "errors": [
       {
        "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfAllSBI_invalid_sortFieldName_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?sortFieldName={sortFieldName}&sortType={sortType}&pageNo={pageNo}&pageSize={pageSize}
+      uniqueIdentifier: TC_PMS_SBI_List_09
+      description: Fetching all the active SBI with invalid sortFieldName
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "0",
+      "pageSize": "4",
+      "sortType": "asc",
+      "sortFieldName": "partner",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_357"
+       }
+       ]
+}'
+   Pms_GetListOfAllSBI_SBI_Version_Special_Character_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiVersion={sbiVersion}
+      uniqueIdentifier: TC_PMS_SBI_List_10 
+      description: Fetching all the SBI Version with passing Special Character
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/GetListOfAllSBITotalResult
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "@#",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: ' {
+      "totalResults": "0"
+}'
+   Pms_GetListOfAllSBI_Invalid_orgName_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?orgName={orgName}
+      uniqueIdentifier: TC_PMS_SBI_List_11
+      description: Fetching all the SBI with invalid orgName
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "*PMS",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfAllSBI_Invalid_sbiID_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiId={sbiId}
+      uniqueIdentifier: TC_PMS_SBI_List_12
+      description: Fetching all the SBI with invalid sbiID
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "*12*",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfAllSBI_Invalid_sbiVersion_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?sbiVersion={sbiVersion}
+      uniqueIdentifier: TC_PMS_SBI_List_13
+      description: Fetching all the SBI with invalid sbiVersion
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "*PMS",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfAllSBI_Only_sortFieldName_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?sortFieldName={sortFieldName}
+      uniqueIdentifier: TC_PMS_SBI_List_15
+      description: Fetching all the SBI by selecting only sortFieldName without selecting sortType and sortFieldName
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "partnerId",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetListOfAllSBI_Only_sortType_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}
+      uniqueIdentifier: TC_PMS_SBI_List_16
+      description: Fetching all the SBI by selecting only sortType without selecting sortFieldName
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/error
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "asc",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$"      
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
        }
        ]
 }'
