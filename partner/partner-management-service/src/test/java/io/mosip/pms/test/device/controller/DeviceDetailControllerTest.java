@@ -8,6 +8,8 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.device.authdevice.service.impl.DeviceDetailServiceImpl;
 import io.mosip.pms.device.dto.DeviceDetailFilterDto;
 import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
@@ -44,6 +46,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -80,6 +83,12 @@ public class DeviceDetailControllerTest {
 
     @MockBean
     PartnerHelper partnerHelper;
+
+    @MockBean
+    InputValidator inputValidator;
+
+    @MockBean
+    RequestValidator requestValidator;
     
     @Before
     public void setup() {
@@ -109,6 +118,7 @@ public class DeviceDetailControllerTest {
         when(deviceDetaillService.deviceFilterValues(Mockito.any())).thenReturn(filterResponse);
         when(deviceDetaillService.deviceTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
         when(deviceDetaillService.deviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
+        doNothing().when(inputValidator).validateRequestInput(any());
     }
     
     @WithMockUser(roles = {"PARTNER_ADMIN"})
@@ -464,6 +474,26 @@ public class DeviceDetailControllerTest {
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void deactivateDeviceTest_InvalidRequest() throws Exception {
+        RequestWrapperV2<DeactivateDeviceRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+        requestDto.setStatus("De-Activate");
+        requestWrapper.setRequest(requestDto);
+        ResponseWrapperV2<DeviceDetailResponseDto> responseWrapper = new ResponseWrapperV2<>();
+        DeviceDetailResponseDto deviceDetailResponseDto = new DeviceDetailResponseDto();
+        responseWrapper.setResponse(deviceDetailResponseDto);
+
+        ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
+        when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
+
+        Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+    }
+
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
@@ -536,6 +566,24 @@ public class DeviceDetailControllerTest {
         requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(true);
+        Mockito.when(deviceDetaillService.approveOrRejectMappingDeviceToSbi(any(), any())).thenReturn(responseWrapper);
+        mockMvc.perform(post("/devicedetail/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void approveOrRejectMappingDeviceToSbiTest_InvalidRequest() throws Exception {
+        RequestWrapperV2<SbiAndDeviceMappingRequestDto> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setId("mosip.pms.mapping.device.to.sbi.post");
+        requestWrapper.setVersion(VERSION);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        SbiAndDeviceMappingRequestDto sbiAndDeviceMappingRequestDto = new SbiAndDeviceMappingRequestDto();
+        requestWrapper.setRequest(sbiAndDeviceMappingRequestDto);
+        ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(true);
+        ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
+        when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
         Mockito.when(deviceDetaillService.approveOrRejectMappingDeviceToSbi(any(), any())).thenReturn(responseWrapper);
         mockMvc.perform(post("/devicedetail/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
