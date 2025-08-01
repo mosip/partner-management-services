@@ -5,10 +5,13 @@ import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
+import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,12 +29,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -45,13 +48,19 @@ public class ClientManagementControllerTest {
     @MockBean
     private ClientManagementServiceImpl clientManagementService;
 
+    @MockBean
+    FeatureAvailabilityUtil featureAvailabilityUtil;
+
+    @MockBean
+    AuditUtil auditUtil;
+
     Map<String, Object> public_key;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(clientManagementController).build();
 
@@ -63,6 +72,10 @@ public class ClientManagementControllerTest {
         public_key.put( "alg", "RS256");
         public_key.put(  "n","wXGQA574CU-WTWPILd4S3_1sJf0Yof0kwMeNctXc1thQo70Ljfn9f4igpRe7f8qNs_W6dLuLWemFhGJBQBQ7vvickECKNJfo_EzSD_yyPCg7k_AGbTWTkuoObHrpilwJGyKVSkOIujH_FqHIVkwkVXjWc25Lsb8Gq4nAHNQEqqgaYPLEi5evCR6S0FzcXTPuRh9zH-cM0Onjv4orrfYpEr61HcRp5MXL55b7yBoIYlXD8NfalcgdrWzp4VZHvQ8yT9G5eaf27XUn6ZBeBf7VnELcKFTyw1pK2wqoOxRBc8Y1wO6rEy8PlCU6wD-mbIzcjG1wUfnbgvJOM4A5G41quQ");
 
+        // Inject the value of clientIdRegex using reflection
+        Field field = ClientManagementController.class.getDeclaredField("clientIdRegex");
+        field.setAccessible(true);
+        field.set(clientManagementController, "^[a-zA-Z0-9_-]{1,100}$");
     }
 
 
@@ -140,11 +153,158 @@ public class ClientManagementControllerTest {
         List<String> clientAuthMethods = List.of("private_key_jwt");
         clientDetailUpdateRequestV2.setClientAuthMethods(clientAuthMethods);
         requestWrapper.setRequest(clientDetailUpdateRequestV2);
-        String requestJson = objectMapper.writeValueAsString(requestWrapper);;
-
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
         mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void updateOAUTHClientTest_InvalidClientId() throws Exception {
+        RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequesttime(LocalDateTime.now());
+        ClientDetailUpdateRequestV2 clientDetailUpdateRequestV2 = new ClientDetailUpdateRequestV2();
+        Map<String, String> clientNameLangMap = new HashMap<>();
+        clientNameLangMap.put("eng", "English Client Name");
+        clientNameLangMap.put("fra", "French Client Name");
+        clientNameLangMap.put("ara", "Arabic Client Name");
+
+        clientDetailUpdateRequestV2.setClientNameLangMap(clientNameLangMap);
+        clientDetailUpdateRequestV2.setClientName("Mock Name");
+        clientDetailUpdateRequestV2.setLogoUri("https://example.com/logo.png");
+        clientDetailUpdateRequestV2.setStatus("ACTIVE");
+        List<String> redirectUris = List.of("https://example.com/redirect1");
+        clientDetailUpdateRequestV2.setRedirectUris(redirectUris);
+        List<String> grantTypes = Arrays.asList("authorization_code", "refresh_token");
+        clientDetailUpdateRequestV2.setGrantTypes(grantTypes);
+        List<String> clientAuthMethods = List.of("private_key_jwt");
+        clientDetailUpdateRequestV2.setClientAuthMethods(clientAuthMethods);
+        requestWrapper.setRequest(clientDetailUpdateRequestV2);
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123~1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void createClientTest() throws Exception {
+        ClientDetailCreateRequest clientDetailCreateRequest = new ClientDetailCreateRequest();
+        clientDetailCreateRequest.setName("Mock Name");
+        clientDetailCreateRequest.setPolicyId("policy-id");
+        clientDetailCreateRequest.setPublicKey(public_key);
+
+        clientDetailCreateRequest.setAuthPartnerId("auth-partner-id");
+        clientDetailCreateRequest.setLogoUri("https://example.com/logo.png");
+        clientDetailCreateRequest.setRedirectUris(List.of("https://example.com/redirect1"));
+        clientDetailCreateRequest.setGrantTypes(List.of("authorization_code", "refresh_token"));
+        clientDetailCreateRequest.setClientAuthMethods(List.of("private_key_jwt"));
+
+        RequestWrapper<ClientDetailCreateRequest> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequest(clientDetailCreateRequest);
+
+        ClientDetailResponse responseDto = new ClientDetailResponse();
+        responseDto.setClientId("clientID");
+
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(auditUtil)
+                .setAuditRequestDto((PartnerManageEnum) Mockito.any(), Mockito.any(), Mockito.any());
+        Mockito.when(clientManagementService.createOIDCClient(Mockito.any()))
+                .thenReturn(responseDto);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(requestWrapper)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void updateClientTest() throws Exception {
+
+        ClientDetailUpdateRequest updateRequest = new ClientDetailUpdateRequest();
+        updateRequest.setLogoUri("https://example.com/logo.png");
+        updateRequest.setRedirectUris(List.of("https://example.com/redirect1"));
+        updateRequest.setStatus("ACTIVE");
+        updateRequest.setGrantTypes(List.of("authorization_code"));
+        updateRequest.setClientName("Updated Client");
+        updateRequest.setClientAuthMethods(List.of("private_key_jwt"));
+
+        RequestWrapper<ClientDetailUpdateRequest> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequest(updateRequest);
+
+        // Expected response
+        ClientDetailResponse responseDto = new ClientDetailResponse();
+        responseDto.setClientId("clientID");
+
+        // Mock dependencies
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(auditUtil)
+                .setAuditRequestDto((PartnerManageEnum) Mockito.any(), Mockito.any(), Mockito.any());
+        when(clientManagementService.updateOIDCClient(any(),any())).thenReturn(responseDto);
+
+        String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
+
+        // Perform PUT request
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc/client/123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void updateClientTest_InvalidClientId() throws Exception {
+
+        ClientDetailUpdateRequest updateRequest = new ClientDetailUpdateRequest();
+        updateRequest.setLogoUri("https://example.com/logo.png");
+        updateRequest.setRedirectUris(List.of("https://example.com/redirect1"));
+        updateRequest.setStatus("ACTIVE");
+        updateRequest.setGrantTypes(List.of("authorization_code"));
+        updateRequest.setClientName("Updated Client");
+        updateRequest.setClientAuthMethods(List.of("private_key_jwt"));
+
+        RequestWrapper<ClientDetailUpdateRequest> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequest(updateRequest);
+
+        // Expected response
+        ClientDetailResponse responseDto = new ClientDetailResponse();
+        responseDto.setClientId("clientID");
+
+        // Mock dependencies
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(auditUtil)
+                .setAuditRequestDto((PartnerManageEnum) Mockito.any(), Mockito.any(), Mockito.any());
+        when(clientManagementService.updateOIDCClient(any(),any())).thenReturn(responseDto);
+
+        String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
+
+        // Perform PUT request
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc/client/1~23")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void getOIDCClientTest() throws Exception {
+        String clientId = "test-client-123";
+
+        ClientDetail clientDetail = new ClientDetail();
+
+        // Mock dependencies
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.when(clientManagementService.getClientDetails(clientId))
+                .thenReturn(clientDetail);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oidc/client/" + clientId)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
