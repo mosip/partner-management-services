@@ -118,7 +118,7 @@ public class DeviceDetailControllerTest {
         when(deviceDetaillService.deviceFilterValues(Mockito.any())).thenReturn(filterResponse);
         when(deviceDetaillService.deviceTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
         when(deviceDetaillService.deviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
-        doNothing().when(inputValidator).validateRequestInput(any());
+        doNothing().when(inputValidator).validateRequestInput(any()); 
     }
     
     @WithMockUser(roles = {"PARTNER_ADMIN"})
