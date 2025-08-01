@@ -17,6 +17,7 @@ import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -121,6 +122,9 @@ public class ClientManagementServiceImplTest {
 	@MockBean
 	PolicyGroupRepository policyGroupRepository;
 
+	@MockBean
+	private AuthenticationContextRefUtil authenticationContextClassRefUtil;
+
 	Map<String, Object> public_key;
 	
 	@Before
@@ -169,6 +173,120 @@ public class ClientManagementServiceImplTest {
 		}catch (PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
 		}
+	}
+
+	@Test(expected = Exception.class)
+	public void createOIDCClientTest_InvalidPolicy() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("authPartnerId");
+		List<String> clientAuthMethods = new ArrayList<String>();
+		clientAuthMethods.add("ClientAuthMethod");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(clientAuthMethods);
+		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		request.setRedirectUris(clientAuthMethods);
+		request.setName("ClientName");
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(true);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setPolicy_type("Auth");
+		authPolicy.setId("123");
+		when(authPolicyRepository.findById(any())).thenReturn(Optional.of(authPolicy));
+		serviceImpl.createOIDCClient(request);
+	}
+
+	@Test(expected = Exception.class)
+	public void createOIDCClientTest_NoUserClaim() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("authPartnerId");
+		List<String> clientAuthMethods = new ArrayList<String>();
+		clientAuthMethods.add("ClientAuthMethod");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(clientAuthMethods);
+		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		request.setRedirectUris(clientAuthMethods);
+		request.setName("ClientName");
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(true);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setPolicy_type("Auth");
+		authPolicy.setId("123");
+		authPolicy.setPolicyFileId("{"
+				+ "\"policyFileId\": \"212\","
+				+ "\"policyName\": \"Test Policy\","
+				+ "\"active\": true,"
+				+ "\"authTokenType\": \"partner\","
+				+ "\"allowedKycAttributes\": ["
+				+ "{\"attributeName\": \"fullName\"},"
+				+ "{\"attributeName\": \"gender\"},"
+				+ "{\"attributeName\": \"residenceStatus\"},"
+				+ "{\"attributeName\": \"dateOfBirth\"},"
+				+ "{\"attributeName\": \"photo\"},"
+				+ "{\"attributeName\": \"firstName\"},"
+				+ "{\"attributeName\": \"province\"},"
+				+ "{\"attributeName\": \"city\"},"
+				+ "{\"attributeName\": \"zone\"},"
+				+ "{\"attributeName\": \"postalCode\"},"
+				+ "{\"attributeName\": \"phone\"},"
+				+ "{\"attributeName\": \"email\"}"
+				+ "],"
+				+ "\"kycLanguages\": [\"ara\", \"eng\"],"
+				+ "\"allowedAuthTypes\": ["
+				+ "{\"authSubType\": \"IRIS\", \"authType\": \"bio\", \"mandatory\": false},"
+				+ "{\"authSubType\": \"FINGER\", \"authType\": \"bio\", \"mandatory\": false},"
+				+ "{\"authSubType\": \"FACE\", \"authType\": \"bio\", \"mandatory\": false},"
+				+ "{\"authSubType\": \"\", \"authType\": \"otp\", \"mandatory\": false},"
+				+ "{\"authSubType\": \"\", \"authType\": \"otp-request\", \"mandatory\": false},"
+				+ "{\"authSubType\": \"\", \"authType\": \"kyc\", \"mandatory\": false},"
+				+ "{\"authSubType\": \"\", \"authType\": \"demo\", \"mandatory\": false}"
+				+ "]"
+				+ "}");
+		when(authPolicyRepository.findById(any())).thenReturn(Optional.of(authPolicy));
+		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest.setPartner(partner);
+		partnerPolicyRequestList.add(partnerPolicyRequest);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(any(), any())).thenReturn(partnerPolicyRequestList);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(any(), any(), any())).thenReturn(partnerPolicyRequestList);
+		Set<String> supportedClaims = new HashSet<>();
+		when(authenticationContextClassRefUtil.getPolicySupportedClaims(any())).thenReturn(supportedClaims);
+		serviceImpl.createOIDCClient(request);
 	}
 
 	@Test (expected = PartnerServiceException.class)
