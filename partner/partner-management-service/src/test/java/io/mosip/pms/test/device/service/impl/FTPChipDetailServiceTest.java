@@ -1729,17 +1729,25 @@ public class FTPChipDetailServiceTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		int pageNo = 0;
-		int pageSize = 8;
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		filterDto.setPartnerId("abc");
 		filterDto.setMake("make");
 		filterDto.setOrgName("ABC");
 
 		FtmDetailSummaryEntity entity = new FtmDetailSummaryEntity();
-		entity.setFtmId("abc");
+		entity.setFtmId("1");
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<FtmDetailSummaryEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
+		Page<FtmDetailSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(any(), any(), any(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
+		ftpChipDetailService.getPartnersFtmChipDetails(null, null, pageNo, pageSize, filterDto);
+
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(any(), any(), any(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
+		ftpChipDetailService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
 		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetailsByStatusAsc(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
 		ftpChipDetailService.getPartnersFtmChipDetails("status", "asc", pageNo, pageSize, filterDto);
 
@@ -1960,4 +1968,68 @@ public class FTPChipDetailServiceTest {
 	public void ftmChipDetailExceptionTest() throws Exception {
 		ftpChipDetailService.ftmChipDetail(null);
 	}
+
+	@Test
+	public void ftmChipDetailPartnerServiceExceptionTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
+		partner.setCertificateAlias("abs");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		doThrow(new PartnerServiceException("PMS_CERTIFICATE_ERROR_003", "Partner Id is null or empty."))
+				.when(partnerHelper).validatePartnerId(any(), anyString());
+		ftpChipDetailService.ftmChipDetail(null);
+	}
+
+	@Test
+	public void ftmChipDetailApiAccessibleExceptionTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("FTM_Provider");
+		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
+		partner.setCertificateAlias("abs");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
+
+		List<FTPChipDetail> ftpChipDetailList = new ArrayList<>();
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("xxx");
+		ftpChipDetail.setFtpProviderId("123");
+		ftpChipDetail.setMake("make");
+		ftpChipDetail.setModel("model");
+		ftpChipDetail.setApprovalStatus("approved");
+		ftpChipDetail.setActive(true);
+		ftpChipDetail.setCrDtimes(LocalDateTime.now());
+		ftpChipDetail.setCertificateAlias("dff");
+		ftpChipDetailList.add(ftpChipDetail);
+		when(ftpChipDetailRepository.findByProviderId(anyString())).thenReturn(ftpChipDetailList);
+		// Access and set private field via reflection
+		Field field = FTPChipDetailServiceImpl.class.getDeclaredField("isCaSignedPartnerCertificateAvailable");
+		field.setAccessible(true);
+		field.set(ftpChipDetailService, false);
+		when(partnerHelper.getCertificate(any(),any(),any())).thenThrow(new ApiAccessibleException("test", "test") {});
+		ftpChipDetailService.ftmChipDetail(null);
+	}
+
 }

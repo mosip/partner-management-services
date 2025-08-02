@@ -71,7 +71,14 @@ public class NotificationsControllerTest {
                         .param("expiryDate", "2025-04-29T11:21:19.226Z")
                         .param("partnerDomain", "auth")
                         .param("createdFromDate", "2025-04-29T11:21:19.226Z")
-                        .param("createdToDate", "2025-04-29T11:21:19.226Z"))
+                        .param("createdToDate", "2025-04-29T11:21:19.226Z")
+                        .param("ftmId", "23")
+                        .param("make", "make")
+                        .param("model", "model")
+                        .param("apiKeyName", "apiKeyName")
+                        .param("policyName", "policyName")
+                        .param("sbiId", "12345")
+                        .param("sbiVersion", "1.0"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
