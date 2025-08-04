@@ -32,7 +32,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"                                                      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"                                                      
 }'
       output: ' {
 }'
@@ -56,7 +57,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"            
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"    
 }'
       output: ' {
 }'
@@ -80,7 +82,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"            
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"           
 }'
       output: ' {
 }'
@@ -104,7 +107,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"            
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"    
 }'
       output: ' {
 }'
@@ -128,7 +132,8 @@ GetListOfAllSBI:
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
-      "policyId": "$REMOVE$"
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$" 
 }'
       output: ' {
 }'
@@ -152,7 +157,8 @@ GetListOfAllSBI:
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
-      "policyId": "$REMOVE$"
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$" 
 }'
       output: ' {
 }'
@@ -176,7 +182,8 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"  
 }'
       output: ' {
 }'
@@ -200,7 +207,9 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$"
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
+	  
 }'
       output: ' {
 }'
@@ -225,7 +234,8 @@ GetListOfAllSBI:
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
-      "policyId": "$REMOVE$"
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -250,7 +260,8 @@ GetListOfAllSBI:
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
       "orgName": "$REMOVE$",
-      "policyId": "$REMOVE$"
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -275,7 +286,8 @@ GetListOfAllSBI:
       "pageSize": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -299,7 +311,8 @@ GetListOfAllSBI:
       "sbiId": "$REMOVE$",
       "sbiVersion": "abcd",
       "orgName": "$REMOVE$",
-      "policyId": "$REMOVE$"
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: ' {
 }'
@@ -323,7 +336,8 @@ GetListOfAllSBI:
       "sortFieldName": "$REMOVE$",
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
-      "policyId": "$REMOVE$      
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "10"
 }'
       output: ' {
 }'
@@ -337,6 +351,81 @@ GetListOfAllSBI:
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
       outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
       input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllSBI_Filter_Expiry_Period_30_days:
+      endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
+      uniqueIdentifier: TC_PMS_SBI_List_22
+      description: Fetching all the SBI details filter by Expiry period 30 days
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
+      input: '{
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "30"
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllSBI_Filter_Expiry_Period_15_days:
+      endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
+      uniqueIdentifier: TC_PMS_SBI_List_23
+      description: Fetching all the SBI details filter by Expiry period 15 days
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
+      input: '{
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "15"
+}'
+      output: ' {
+}'
+   Pms_GetListOfAllSBI_Filter_Expiry_Period_10_days:
+      endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
+      uniqueIdentifier: TC_PMS_SBI_List_24
+      description: Fetching all the SBI details filter by Expiry period 10 days
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBIResult
+      input: '{
+      "pageSize": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "status": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "expiryPeriod": "10"
 }'
       output: ' {
 }'

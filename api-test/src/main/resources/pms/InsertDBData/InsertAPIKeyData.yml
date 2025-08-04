@@ -1,0 +1,40 @@
+InsertDBData:
+   PMS_InsertDBData_For_API_Key_Valid_smoke_Pos:
+      endPoint: no endpoint
+      uniqueIdentifier: TC_DBDependent_InsertQuery_01
+      description: Inserting data in partner policy table for creation of API Key ID
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/InsertDBData/InsertAPIKeyData
+      outputTemplate: pms/InsertDBData/InsertAPIKeyDataResult
+      input: '{
+      "policy_id": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
+}'
+      output: '{
+}'
+   PMS_InsertDBData_For_API_Key_15_days:
+      endPoint: no endpoint
+      uniqueIdentifier: TC_DBDependent_InsertQuery_02
+      description: Inserting data in partner policy table for creation of API Key ID
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/InsertDBData/InsertAPIKeyData15daysAPIKey
+      outputTemplate: pms/InsertDBData/InsertAPIKeyDataResult
+      input: '{
+      "policy_id": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
+}'
+      output: '{
+}'
+   PMS_InsertDBData_For_API_Key_10_days:
+      endPoint: no endpoint
+      uniqueIdentifier: TC_DBDependent_InsertQuery_03
+      description: Inserting data in partner policy table for creation of API Key ID
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/InsertDBData/InsertAPIKeyData10daysAPIKey
+      outputTemplate: pms/InsertDBData/InsertAPIKeyDataResult
+      input: '{
+      "policy_id": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
+}'
+      output: '{
+}'
