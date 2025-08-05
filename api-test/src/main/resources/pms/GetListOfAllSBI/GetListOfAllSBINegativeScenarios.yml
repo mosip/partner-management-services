@@ -52,7 +52,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -80,7 +81,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -108,7 +110,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -136,7 +139,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -164,7 +168,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -192,7 +197,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -208,7 +214,7 @@ GetListOfAllSBI:
       role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
-      outputTemplate: pms/GetListOfAllSBI/GetListOfAllSBITotalResult
+      outputTemplate: pms/GetListOfAllSBI/getListOfAllSBITotalResult
       input: '{
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
@@ -220,7 +226,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: ' {
       "totalResults": "0"
@@ -244,7 +251,8 @@ GetListOfAllSBI:
       "orgName": "*PMS",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -272,7 +280,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "*12*",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -300,7 +309,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -328,7 +338,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
@@ -356,7 +367,8 @@ GetListOfAllSBI:
       "orgName": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "sbiExpiryStatus": "$REMOVE$"      
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$"
 }'
       output: '{
       "errors": [
