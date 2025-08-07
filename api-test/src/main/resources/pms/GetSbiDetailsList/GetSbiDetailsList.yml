@@ -59,3 +59,37 @@ GetSbiDetailsList:
       }
       ]
 }'
+   Pms_GetSbiDetailsList_get_response_Auth_Partner_roles_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_pms_GetSbiDetailsList_05
+      description: Retrieve Response With Authentication Partner Role and Expecting an Error in The Response
+      role: partnerauth
+      restMethod: get
+      inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
+}'
+   Pms_GetSbiDetailsList_get_response_ftm_Partner_roles_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_pms_GetSbiDetailsList_06
+      description: Retrieve Response With Authentication Partner Role and Expecting an Error in The Response
+      role: partnerftm
+      restMethod: get
+      inputTemplate: pms/GetSbiDetailsList/GetSbiDetailsList
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403" 		
+      }
+      ]
+}'

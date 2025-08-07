@@ -49,3 +49,37 @@ GetListAllFTMChipNegativeScenarios:
       output: '{
       
 }'
+   Pms_GetListAllFTMChip_Without_Authentication_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_04
+      description: Retrieve all FTM chip details with Auth Partner token
+      role: partnerauth
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetListAllFTMChip_Without_Authentication_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_05
+      description: Retrieve all FTM chip details wwith Device Partner token
+      role: partnerdevice
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'

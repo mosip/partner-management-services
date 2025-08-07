@@ -223,7 +223,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       output: '{
 	  "errors": [
       {
-       "errorCode": "PMS_DEVICE_ERROR_006"
+       "errorCode": "PMS_REQUEST_ERROR_007"
        }
        ]
 }'
