@@ -460,7 +460,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
-
+	<test name="InsertDBData">
+		<parameter name="ymlFile"
+			value="pms/InsertDBData/InsertAPIKeyData.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.DBIntegration" />
+		</classes>
+	</test>
 	<test name="GetAllApiKeyForAuthPartner">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartner/GetAllApiKeyForAuthPartner.yml" />
@@ -821,7 +828,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-
+	<test name="UpdateSBIID">
+		<parameter name="ymlFile"
+			value="pms/InsertDBData/UpdateSBIID.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.DBIntegration" />
+		</classes>
+	</test>
 	<test name="GetSbiDetailsList">
 		<parameter name="ymlFile"
 			value="pms/GetSbiDetailsList/GetSbiDetailsList.yml" />
@@ -1625,6 +1639,22 @@
 	<test name="GetRootIntermediateExpiringCertificateNegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateNegativeScenarios.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+		<test name="GetAllApiKeyForAuthPartnerV2">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+		<test name="GetAllApiKeyForAuthPartnerV2NegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2NegativeScenarios.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />

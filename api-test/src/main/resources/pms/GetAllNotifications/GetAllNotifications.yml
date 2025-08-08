@@ -69,7 +69,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_025"
        }
        ]
 }'
@@ -86,7 +86,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_025"
        }
        ]
 }'
@@ -103,7 +103,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_026"
        }
        ]
 }'
@@ -120,7 +120,7 @@ GetAllNotifications:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_NOTIFICATION_ERROR_016"
+       "errorCode": "PMS_NOTIFICATION_ERROR_026"
        }
        ]
 }'
@@ -350,4 +350,290 @@ GetAllNotifications:
       input: '{
 }'
       output: ' {
+}'
+   Pms_GetAllNotifications_invalid_apiKeyName_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=apikey&apiKeyName=%2APMS121
+      role: partneradmin
+      description: Fetch all API key expiry notifications that with invalid API key name
+      uniqueIdentifier: TC_PMS_GetAllNotifications_24
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_policyName_without_notificationType_Neg:
+      endPoint: /v1/partnermanager/notifications?policyName=PMS-test
+      role: partneradmin
+      description: Fetch all policyName without selecting notificationType
+      uniqueIdentifier: TC_PMS_GetAllNotifications_25
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_015"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_policyName_invalid_notificationType_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&policyName=PMS-test
+      role: partneradmin
+      description: Fetch all policyName by selecting invalid notificationType
+      uniqueIdentifier: TC_PMS_GetAllNotifications_26
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_020"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_policyName_Neg:
+      endPoint: /v1/partnermanager/notifications?policyName=PMS-test
+      role: partneradmin
+      description: Fetch all policyName with invalid data
+      uniqueIdentifier: TC_PMS_GetAllNotifications_27
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_015"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_ftmId_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&ftmId=342342
+      role: partneradmin
+      description: Fetch all FTM Chip with invalid data
+      uniqueIdentifier: TC_PMS_GetAllNotifications_28
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsTotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllNotifications_Filter_invalid_make_model_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
+      role: partneradmin
+      description: Fetch all ftmChip with make & model data
+      uniqueIdentifier: TC_PMS_GetAllNotifications_29
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsTotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllNotifications_Filter_ftmChip_without_notificationType_Neg::
+      endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
+      role: partneradmin
+      description: Fetch all ftmChip without selecting notificationType
+      uniqueIdentifier: TC_PMS_GetAllNotifications_30
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_015"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_SbiID_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI
+      role: partneradmin
+      description: Fetch all SBI Chip with invalid data
+      uniqueIdentifier: TC_PMS_GetAllNotifications_31
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsTotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllNotifications_Filter_SbiID_without_notificationType_Neg::
+      endPoint: /v1/partnermanager/notifications?sbiId=PMS-SBI
+      role: partneradmin
+      description: Fetch all ftmChip without selecting notificationType
+      uniqueIdentifier: TC_PMS_GetAllNotifications_32
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_015"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_SbiVersion_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI&sbiVersion=ab-102-13881
+      role: partneradmin
+      description: Fetch all SBI Chip with invalid SBI Version data
+      uniqueIdentifier: TC_PMS_GetAllNotifications_33
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsTotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllNotifications_Filter_invalid_SbiVersionValues_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI&sbiVersion=_%2ASBI
+      role: partneradmin
+      description: Fetch all SBI Chip with invalid SBI Version data
+      uniqueIdentifier: TC_PMS_GetAllNotifications_34
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_PageNo_2_Neg:
+      endPoint: /v1/partnermanager/notifications?pageSize=2
+      role: partneradmin
+      description: Fetch all notifications invalid PageNo
+      uniqueIdentifier: TC_PMS_GetAllNotifications_35
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsPageSize
+      input: '{
+}'
+      output: '{
+      "pageSize": "2"
+}'
+   Pms_GetAllNotifications_Filter_invalid_PageNo_Neg:
+      endPoint: /v1/partnermanager/notifications?pageNo=-4
+      role: partneradmin
+      description: Fetch all Notifications with invalid pageNo
+      uniqueIdentifier: TC_PMS_GetAllNotifications_36
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_360"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_PageSize_Neg:
+      endPoint: /v1/partnermanager/notifications?pageSize=-22
+      role: partneradmin
+      description: Fetch all Notifications with invalid pageNo
+      uniqueIdentifier: TC_PMS_GetAllNotifications_37
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_361"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_ApiKey_Invalid_ftmChipType_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=sbi&apiKeyName=12
+      role: partneradmin
+      description: Fetch all Notifications by selecting Api key name label and selecting NotificationType as ftmChip
+      uniqueIdentifier: TC_PMS_GetAllNotifications_38
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_020"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_ftmChip_Invalid_apikeyType_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=sbi&ftmId=12
+      role: partneradmin
+      description: Fetch all Notifications by selecting ftmChip Id and selecting NotificationType as sbi
+      uniqueIdentifier: TC_PMS_GetAllNotifications_39
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_022"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_sbiId_Invalid_ftmChip_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&sbiId=12
+      role: partneradmin
+      description: Fetch all Notifications by selecting sbi Id and selecting NotificationType as ftmChip
+      uniqueIdentifier: TC_PMS_GetAllNotifications_40
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_023"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_Invalid_NotificationType_invalid_partnerDomain_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&partnerDomain=AUTH
+      role: partneradmin
+      description: Fetch all Notifications by selecting sbi Id and selecting NotificationType as ftmChip
+      uniqueIdentifier: TC_PMS_GetAllNotifications_41
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_021"
+       }
+       ]
 }'

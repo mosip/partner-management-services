@@ -1,0 +1,225 @@
+GetAllApiKeyForAuthPartnerV2:
+   Pms_GetAllApiKeyForAuthPartnerV2_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partner-api-keys/v2
+      description: Fetching all the API Key created by Authentication Partner by Partner Admin token
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_01
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Auth_Partner_Token_Smoke:
+      endPoint: /v1/partnermanager/partner-api-keys/v2
+      description: Fetching all the API Key created by Authentication Partner
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_02
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_apiKeyLabel:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?apiKeyLabel=s
+      description: Fetching all the API Key created by Authentication Partner Filter by apiKeyLabel
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_03
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_orgName:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?orgName=PMS
+      description: Fetching all the API Key created by Authentication Partner Filter by orgName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_04
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_ByPageNo:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?pageNo=2&pageSize=4
+      description: Fetching all the API Key created by Authentication Partner Filter by pageNo
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_05
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2PageNoResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "2"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_pageSize:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?orgName=PMS
+      description: Fetching all the API Key created by Authentication Partner Filter by pageSize
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_06
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_partnerID:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?partnerId=pms-111999
+      description: Fetching all the API Key created by Authentication Partner Filter by partnerId
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_07
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_policyGroupName:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?policyGroupName=mosip
+      description: Fetching all the API Key created by Authentication Partner Filter by policyGroupName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_08
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_policyName:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?policyName=mosip
+      description: Fetching all the API Key created by Authentication Partner Filter by policyName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_09
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_sortFieldName_sortType_ASC:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=partnerId&sortType=asc&pageNo=0&pageSize=4
+      description: Fetching all the API Key created by Authentication Partner Filter by sortFieldName and sortType Ascending
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_10
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_sortFieldName_sortType_DESC:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=partnerId&sortType=desc&pageNo=0&pageSize=4
+      description: Fetching all the API Key created by Authentication Partner Filter by sortFieldName and sortType Descending
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_11
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_Status_Activated:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?status=activated
+      description: Fetching all the API Key created by Authentication Partner Filter by Status Activated
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_12
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_Status_Dectivated:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?status=deactivated
+      description: Fetching all the API Key created by Authentication Partner Filter by Status Deactivated
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_13
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_Expiry_Period_30_days:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=30
+      description: Fetching all the API Key created by Authentication Partner Filter by Expiry period 30 days
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_14
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_Expiry_Period_15_days:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=15
+      description: Fetching all the API Key created by Authentication Partner Filter by Expiry period 15 days
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_15
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_Expiry_Period_10_days:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=10
+      description: Fetching all the API Key created by Authentication Partner Filter by Expiry period 10 days
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_16
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerResultV2
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'

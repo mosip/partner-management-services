@@ -1,0 +1,227 @@
+GetAllApiKeyForAuthPartnerV2NegativeScenarios:
+   Pms_GetAllApiKeyForAuthPartner_without_Authentication_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2
+      description: Fetching all the API Key created by Authentication Partner without Authentication for Partner Admin
+      role: invalidtoken
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_01
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_DevicePartner_Token_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2
+      description: Fetching all the API Key created by Authentication Partner Filter by Device Partner token
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_02
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_FTMPartner_Token_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2
+      description: Fetching all the API Key created by Authentication Partner Filter by FTM Partner token
+      role: partnerftm
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_03
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_apiKeyLabel_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?apiKeyLabel=InvalidAPIKey
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid apiKeyLabel
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_04
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2TotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_orgName_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?orgName=%2APMS-1100
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid orgName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_05
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_pageNo_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?pageNo=-22&pageSize=2
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid pageNo
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_06
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_360"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_pageSize_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?pageNo=1&pageSize=-1
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid pageSize
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_07
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_361"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_partnerID_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?partnerId=%252APMS
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid partnerId
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_08
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_policyGroupName_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?policyGroupName=testmosip12121
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid policyGroupName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_09
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2TotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_policyName_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?policyName=testmosip1212
+      description: Fetching all the API Key created by Authentication Partner Filter by Invalid policyName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_10
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2TotalResultResult
+      input: '{
+}'
+      output: '{
+      "totalResults": "0"
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_sortFieldName_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=MOSIP_PMS
+      description: Fetching all the API Key created by Authentication Partner Filter by sortFieldName and without selecting pageno & pageSize
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_11
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invalid_sortFieldName_1_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=_partnerID&sortType=asc&pageNo=1&pageSize=1
+      description: Fetching all the API Key created by Authentication Partner Filter by invalid sortFieldName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_12
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_357"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Invaid_Role_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2
+      description: Fetching all the API Key created by Authentication Partner Filter by invalid sortFieldName
+      role: admin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_13
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+       }
+       ]
+}'
+   Pms_GetAllApiKeyForAuthPartner_Filter_WithoutPageNo_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?pageSize=4
+      description: Fetching all the API Key created by Authentication Partner Filter by invalid sortFieldName
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_14
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_006"
+       }
+       ]
+}'
