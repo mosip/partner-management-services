@@ -671,7 +671,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey(PartnerUtil.createPartnerApiKey());
+		String apiKeyId = PartnerUtil.createPartnerApiKey();
+		// Keep generating new until its unique
+		while (partnerPolicyRepository.existsById(apiKeyId)) {
+			apiKeyId = PartnerUtil.createPartnerApiKey();
+		}
+		partnerPolicy.setPolicyApiKey(apiKeyId);
 		partnerPolicy.setPartner(approvedMappedPolicy.get(0).getPartner());
 		partnerPolicy.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
 		partnerPolicy.setIsActive(true);
