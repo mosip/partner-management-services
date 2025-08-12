@@ -687,7 +687,12 @@ public class PartnerServiceImpl implements PartnerService {
 		} else {
 			Partner partnerFromDb = getValidPartner(partnerId, false);
 			contactsFromDb = new PartnerContact();
-			contactsFromDb.setId(PartnerUtil.createPartnerId());
+			String id = PartnerUtil.createPartnerId();
+			// Keep generating new until its unique
+			while (partnerContactRepository.existsById(id)) {
+				id = PartnerUtil.createPartnerId();
+			}
+			contactsFromDb.setId(id);
 			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
 			contactsFromDb.setContactNo(keyManagerHelper.encryptData(request.getContactNumber()));
 			contactsFromDb.setCrBy(getLoggedInUserId());
@@ -982,7 +987,12 @@ public class PartnerServiceImpl implements PartnerService {
 			extractorProvider = new BiometricExtractorProvider();
 			extractorProvider.setPartnerId(partnerId);
 			extractorProvider.setPolicyId(policyId);
-			extractorProvider.setId(PartnerUtil.generateId());
+			String id = PartnerUtil.generateId();
+			// Keep generating new until its unique
+			while (extractorProviderRepository.existsById(id)) {
+				id = PartnerUtil.generateId();
+			}
+			extractorProvider.setId(id);
 			extractorProvider.setAttributeName(extractor.getAttributeName());
 			extractorProvider.setBiometricModality(extractor.getBiometric().split("\\[")[0]);
 			if (extractor.getBiometric().split("\\[").length > 1) {
@@ -1719,12 +1729,17 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
 		partnerPolicyRequest.setCrBy(getLoggedInUserId());
 		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
 		partnerPolicyRequest.setPartner(partner);
 		partnerPolicyRequest.setPolicyId(authPolicy.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
 		partnerPolicyRequest.setIsDeleted(false);
+		String id = PartnerUtil.createPartnerPolicyRequestId();
+		// Keep generating new until its unique
+		while (partnerPolicyRequestRepository.existsById(id)) {
+			id = PartnerUtil.createPartnerPolicyRequestId();
+		}
+		partnerPolicyRequest.setId(id);
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS, partnerId, "partnerId");
 		response.setMappingkey(partnerPolicyRequest.getId());
