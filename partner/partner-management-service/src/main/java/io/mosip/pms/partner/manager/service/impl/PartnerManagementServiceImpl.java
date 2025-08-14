@@ -169,6 +169,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Override
 	public PartnersPolicyMappingResponse updatePolicyAgainstApikey(PartnersPolicyMappingRequest request,
 			String partnerId, String partnerApikey) {
+		if(request.getOldPolicyID().equals(request.getNewPolicyID())) {
+			auditUtil.setAuditRequestDto(PartnerManageEnum.API_KEY_MAPPING_FAILURE, partnerId, "partnerId");
+			throw new PartnerManagerServiceException(ErrorCode.UNABLE_TO_UPDATE_POLICY_AGAINST_APIKEY.getErrorCode(),
+					ErrorCode.UNABLE_TO_UPDATE_POLICY_AGAINST_APIKEY.getErrorMessage());
+		}
 		PartnerPolicy partnerPolicyFromDb = partnerPolicyRepository.findByPartnerIdAndPolicyIdAndApikey(partnerId,
 				request.getOldPolicyID(), partnerApikey);
 		if (partnerPolicyFromDb == null) {
