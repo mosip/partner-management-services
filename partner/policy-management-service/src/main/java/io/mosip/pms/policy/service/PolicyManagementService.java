@@ -183,6 +183,9 @@ public class PolicyManagementService {
 	@Autowired
 	private FilterColumnValidator filterColumnValidator;
 
+	@Value("${mosip.pms.id.generation.max.retries}")
+	private int maxRetries;
+
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -499,7 +502,34 @@ public class PolicyManagementService {
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
-			authPolicy.setId((authPolicyId == null || authPolicyId.isBlank() || authPolicyId.isEmpty()) ? PolicyUtil.generateId() : authPolicyId);
+			String id = authPolicyId;
+
+			// If ID is provided, validate it and use it
+			if (id != null && !id.isBlank()) {
+				if (authPolicyRepository.existsById(id)) {
+					logger.error("Policy with the same ID already exists: {}", id);
+					auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE, policyType, "policyType");
+					throw new PolicyManagementServiceException(ErrorMessages.POLICY_ID_ALREADY_EXISTS.getErrorCode(),
+							ErrorMessages.POLICY_ID_ALREADY_EXISTS.getErrorMessage());
+				}
+			}
+			// If ID is not provided, generate one and ensure uniqueness
+			else {
+				id = PolicyUtil.generateId();
+				int attempts = 0;
+
+				while (authPolicyRepository.existsById(id)) {
+					if (attempts >= maxRetries) {
+						logger.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts","Policy ID", "id", authPolicy.getClass().getSimpleName(), maxRetries);
+						auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE, policyType, "policyType");
+						throw new PolicyManagementServiceException(ErrorMessages.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+								String.format(ErrorMessages.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),"Policy ID", "id", authPolicy.getClass().getSimpleName(), maxRetries));
+					}
+					id = PolicyUtil.generateId();
+					attempts++;
+				}
+			}
+			authPolicy.setId(id);
 			authPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
