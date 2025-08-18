@@ -499,7 +499,21 @@ public class PolicyManagementService {
 		} else {
 			authPolicy = new AuthPolicy();
 			authPolicy.setCrBy(getUser());
-			authPolicy.setId((authPolicyId == null || authPolicyId.isBlank() || authPolicyId.isEmpty()) ? PolicyUtil.generateId() : authPolicyId);
+			if (authPolicyId == null || authPolicyId.isBlank()) {
+				// Generate new ID if none provided
+				authPolicy.setId(PolicyUtil.generateId());
+			} else {
+				// ID is provided, validate uniqueness
+				if (authPolicyRepository.existsById(authPolicyId)) {
+					logger.error("Policy with the same ID already exists: {}", authPolicyId);
+					auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_FAILURE, policyType, "policyType");
+					throw new PolicyManagementServiceException(
+							ErrorMessages.POLICY_ID_ALREADY_EXISTS.getErrorCode(),
+							ErrorMessages.POLICY_ID_ALREADY_EXISTS.getErrorMessage()
+					);
+				}
+				authPolicy.setId(authPolicyId);
+			}
 			authPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			authPolicy.setDescr(policyDesc);
 			authPolicy.setName(newPolicyName);
