@@ -1,10 +1,20 @@
 package io.mosip.pms.partner.keycloak.service;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAPublicKeySpec;
 import java.time.ZoneOffset;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.JWTVerifier;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +61,9 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Autowired
+	ObjectMapper objectMapper;
+
 	@Value("${mosip.iam.open-id-url}")
 	private String keycloakOpenIdUrl;
 
@@ -71,8 +84,8 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 			throws IOException {
 		AccessTokenResponse accessTokenResponse = null;
 		if ((accessTokenResponse = memoryCache.get("adminToken")) != null) {
-			boolean accessTokenExpired = isExpired(accessTokenResponse.getAccess_token());
-			boolean refreshTokenExpired = isExpired(accessTokenResponse.getRefresh_token());
+			boolean accessTokenExpired = isAccessTokenExpired(accessTokenResponse.getAccess_token());
+			boolean refreshTokenExpired = isRefreshTokenExpired(accessTokenResponse.getRefresh_token());
 			LOGGER.info("access token expired: " + accessTokenExpired + " ,refresh token expired: " + refreshTokenExpired);
 			if (refreshTokenExpired){
 				accessTokenResponse = getAdminToken(false, null);				
@@ -130,18 +143,90 @@ public class RestInterceptor implements ClientHttpRequestInterceptor {
 		map.add("client_id", adminClientID);
 		return map;
 	}
-	
+
 	/**
 	 * Returns true if token if expired else false
-	 * 
+	 *
 	 * @param token the token
 	 * @return true if token if expired else false
 	 */
-	public boolean isExpired(String token) {
+	public boolean isRefreshTokenExpired(String token) {
 		DecodedJWT decodedJWT = JWT.decode(token);
 		long expiryEpochTime = decodedJWT.getClaim("exp").asLong();
 		long currentEpoch = DateUtils.getUTCCurrentDateTime().toEpochSecond(ZoneOffset.UTC);
 		LOGGER.debug("invoked isExpired token " + expiryEpochTime + " currentEpoch " + currentEpoch);
 		return currentEpoch > expiryEpochTime;
 	}
+
+	/**
+	 * Returns true if token is expired else false
+	 *
+	 * @param token the token
+	 * @return true if token is expired else false
+	 * @throws IllegalArgumentException if the token is invalid or cannot be verified
+	 */
+	public boolean isAccessTokenExpired(String token) {
+		// Verify the token
+		DecodedJWT verifiedJWT = verifyToken(token);
+
+		// Check expiration
+		if (verifiedJWT.getExpiresAt() == null) {
+			throw new IllegalArgumentException("Token missing exp claim");
+		}
+
+		long expiryEpochTime = verifiedJWT.getExpiresAt().toInstant().getEpochSecond();
+		long currentEpoch = DateUtils.getUTCCurrentDateTime().toEpochSecond(ZoneOffset.UTC);
+
+		LOGGER.debug("invoked isExpired token {} currentEpoch {}", expiryEpochTime, currentEpoch);
+		return currentEpoch > expiryEpochTime;
+	}
+
+	/**
+	 * Verifies the token signature and returns a decoded JWT.
+	 *
+	 * @param token the JWT token
+	 * @return a verified DecodedJWT
+	 * @throws IllegalArgumentException if verification fails
+	 */
+	private DecodedJWT verifyToken(String token) {
+		try {
+			DecodedJWT decodedJWT = JWT.decode(token);
+			String kid = decodedJWT.getKeyId();
+
+			String jwksUrl = UriComponentsBuilder
+					.fromUriString(keycloakOpenIdUrl + "/certs")
+					.buildAndExpand(realmId)
+					.toUriString();
+
+			ResponseEntity<String> response = restTemplate.getForEntity(jwksUrl, String.class);
+			JsonNode jwks = objectMapper.readTree(response.getBody());
+
+			RSAPublicKey publicKey = null;
+			for (JsonNode key : jwks.get("keys")) {
+				if (kid.equals(key.get("kid").asText())) {
+					BigInteger modulus = new BigInteger(1,
+							Base64.getUrlDecoder().decode(key.get("n").asText()));
+					BigInteger exponent = new BigInteger(1,
+							Base64.getUrlDecoder().decode(key.get("e").asText()));
+					RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
+					publicKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
+					break;
+				}
+			}
+
+			if (publicKey == null) {
+				throw new IllegalArgumentException("No matching JWK found for kid: " + kid);
+			}
+
+			Algorithm algorithm = Algorithm.RSA256(publicKey, null);
+			JWTVerifier verifier = JWT.require(algorithm).build();
+			return verifier.verify(token);
+
+		} catch (JWTVerificationException e) {
+			throw new IllegalArgumentException("Token verification failed: " + e.getMessage(), e);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Unexpected error verifying token: " + e.getMessage(), e);
+		}
+	}
+
 }
