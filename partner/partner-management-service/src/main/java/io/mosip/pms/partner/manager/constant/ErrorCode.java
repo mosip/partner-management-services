@@ -31,6 +31,7 @@ public enum ErrorCode {
 	PARTNER_APIKEY_POLICY_MAPPING_NOTEXISTS("PMS_PMP_50","Given apikey,partner and policy mapping not exists."),
 	POLICY_NOT_BELONGS_TO_PARTNER_POLICY_GROUP("PMS_PMP_51","Given policy is not belongs to partner's policy group"),
 	PARTNER_CERTIFICATE_NOT_EXISTS("PMS_PMP_052","Partner Certificate not available"),
+	UNABLE_TO_UPDATE_POLICY_AGAINST_APIKEY("PMS_PMP_053","The old and new policy IDs are same, so the policy cannot be updated for the given API key"),
 	POLICY_NOT_EXIST_EXCEPTION("PMS_PMP_014","Policy does not exist"),
 	PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION("PMS_PMS_022","Given Partner api key is not active."),
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),

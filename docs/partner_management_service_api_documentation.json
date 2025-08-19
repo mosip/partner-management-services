@@ -22,7 +22,7 @@
           "secure-biometric-interface-controller"
         ],
         "summary": "NEW: Get the list of all the SBI details created by Device Providers",
-        "description": "This endpoint is for both regular users and the Partner Admin users.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the SBI's created by all the Device Providers associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the SBI's created by all the Device Providers across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThis endpoint upgrades the earlier GET endpoint `/partners/securebiometricinterface/search` \r\nby adding new features like:\r\n1. Performance improvement\r\n2. Handling `deactivated` status\r\n3. Adding details of associated devices (`countOfAssociatedDevices, countOfApprovedDevices, countOfPendingDevices`)\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER, PARTNER_ADMIN",
+        "description": "This endpoint is for both regular users and the Partner Admin users.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the SBI's created by all the Device Providers associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the SBI's created by all the Device Providers across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThis endpoint upgrades the earlier GET endpoint `/partners/securebiometricinterface/search` \r\nby adding new features like:\r\n1. Performance improvement\r\n2. Handling `deactivated` status\r\n3. Adding details of associated devices (`countOfAssociatedDevices, countOfApprovedDevices, countOfPendingDevices`)\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER, PARTNER_ADMIN\r\n\r\nThis endpoint will also be used to populate the Count of expiring SBI's in the \r\ncorresponding Dashboard Card by passing the `expiryPeriod` optional request parameter.\r\n",
         "operationId": "secure-biometric-interface-get",
         "parameters": [
           {
@@ -115,6 +115,14 @@
             "name": "sbiId",
             "in": "query",
             "description": "Optional request parameter. Can be used to filter the response by the given SBI id.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expiryPeriod",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values 1-30.",
             "schema": {
               "type": "string"
             }
@@ -1556,7 +1564,7 @@
           "ftp-chip-detail-controller"
         ],
         "summary": "NEW: Get the list of all the FTM Chip details",
-        "description": "This endpoint will fetch the list of all the FTM Chip details created \r\nby all the partner Id's associated with the logged in user.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nIf there are no FTM Chip details associated with any of the partner Ids' associated with the logged in user, \r\nthen it will return an empty array as the response along with the id, version, responsetime \r\nand metadata (optional) attributes.\r\n\r\nThis endpoint should be configured for the Roles: FTM_PROVIDER,PARTNER_ADMIN\r\n\r\n",
+        "description": "This endpoint will fetch the list of all the FTM Chip details created \r\nby all the partner Id's associated with the logged in user.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nIf there are no FTM Chip details associated with any of the partner Ids' associated with the logged in user, \r\nthen it will return an empty array as the response along with the id, version, responsetime \r\nand metadata (optional) attributes.\r\n\r\nThis endpoint should be configured for the Roles: FTM_PROVIDER,PARTNER_ADMIN\r\n\r\nThis endpoint will also be used to populate the Count of expiring FTM chip certificates \r\nin the corresponding Dashboard Card by passing the `expiryPeriod` optional request parameter.\r\n",
         "operationId": "ftm-chip-details",
         "parameters": [
           {
@@ -1564,6 +1572,14 @@
             "in": "header",
             "description": "Authorization={jwt_token}",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expiryPeriod",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values are between 1-30.",
             "schema": {
               "type": "string"
             }
@@ -1576,6 +1592,38 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponseWrapperListFtmProviderDetailsDto"
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "string",
+                      "version": "string",
+                      "responseTime": "2019-08-24T14:15:22Z",
+                      "metadata": {},
+                      "response": [
+                        {
+                          "ftmId": "ftp-001",
+                          "partnerId": "partner123",
+                          "make": "make-123",
+                          "model": "model-123",
+                          "status": "pending_approval",
+                          "isActive": false,
+                          "isCertificateAvailable": true,
+                          "isCertificateExpired": false,
+                          "createdDateTime": "2019-08-24T14:15:22Z",
+                          "certificateUploadDateTime": "2019-08-24T14:15:22Z",
+                          "certificateExpiryDateTime": "2019-08-24T14:15:22Z",
+                          "partnerStatus": "approved"
+                        }
+                      ],
+                      "errors": [
+                        {
+                          "errorCode": "string",
+                          "message": "string"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -3953,13 +4001,306 @@
         ]
       }
     },
+    "/partner-api-keys/v2": {
+      "get": {
+        "tags": [
+          "partner-management-controller"
+        ],
+        "summary": "NEW: V2 version of get the list of all the API keys created by all the Auth Partners",
+        "description": "Added in PMS Release 1.3.x, this V2 version of endpoint `/partner-api-keys` which includes below new attributes added in the response:\r\n1. `apiKeyExpiryDateTime`\r\n2. `isApiKeyExpiredStatus`\r\nAlso this endpoint will also be used to populate the Count of expiring API keys in the corresponding Dashboard Card \r\nby passing the `expiryPeriod` optional request parameter.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the Auth Partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the Auth Partners across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN,AUTH_PARTNER\r\n",
+        "operationId": "get-auth-partners-apikeys-v2",
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "description": "Authorization={jwt_token}",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortFieldName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to sort the response by the sortFieldName. Sorting parameters should be given along with pagination.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortType",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to sort the response with this sort order. Default is asc order.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "description": "Page Number for the pagination. Starts with 0.",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Page Size for the pagination. Page Number and Page Size should be given together in the request.",
+            "schema": {
+              "type": "integer",
+              "default": 8
+            }
+          },
+          {
+            "name": "partnerId",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given partnerId.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apiKeyLabel",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given apiKeyLabel.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orgName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given `orgName`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given `policyName`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given status of API key. Allowed values as activated or deactivated.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyGroupName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given `policyGroupName`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expiryPeriod",
+            "in": "query",
+            "description": "Optional request parameter. This can be used to filter the response by the given expiryPeriod. Allowed values are between 1-30",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique id required to access this endpoint `mosip.pms.all.api.key.requests.get`"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version of this endpoint. \r\n`1.0`"
+                    },
+                    "responseTime": {
+                      "type": "string",
+                      "description": "Date in ISO format indicating date time when response was sent",
+                      "format": "date-time"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "description": "Optional metadata about the response"
+                    },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "pageNo": {
+                          "type": "integer",
+                          "description": "Page Number of the data in the response"
+                        },
+                        "pageSize": {
+                          "type": "integer",
+                          "description": "Page Size of the data in the response"
+                        },
+                        "totalResults": {
+                          "type": "integer",
+                          "description": "Total number of records across all the pages in the response"
+                        },
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "partnerId": {
+                                "type": "string",
+                                "description": "Unique identifier for the Partner"
+                              },
+                              "apiKeyLabel": {
+                                "type": "string",
+                                "description": "Unique label for the API key"
+                              },
+                              "orgName": {
+                                "type": "string",
+                                "description": "Name of the Organisation"
+                              },
+                              "policyName": {
+                                "type": "string",
+                                "description": "Name of the Policy"
+                              },
+                              "policyId": {
+                                "type": "string",
+                                "description": "Unique identifier for the Policy"
+                              },
+                              "policyDescription": {
+                                "type": "string",
+                                "description": "Description of the Policy"
+                              },
+                              "policyGroupName": {
+                                "type": "string",
+                                "description": "Name of the Policy Group"
+                              },
+                              "policyGroupDescription": {
+                                "type": "string",
+                                "description": "Description of the Policy Group"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "activated",
+                                  "deactivated"
+                                ],
+                                "description": "Status of the API key"
+                              },
+                              "createdDateTime": {
+                                "type": "string",
+                                "description": "Created date in ISO format"
+                              },
+                              "policyGroupId": {
+                                "type": "string",
+                                "description": "Unique identifier of the Policy Group"
+                              },
+                              "apiKeyExpiryDateTime": {
+                                "type": "string",
+                                "description": "Date in ISO format indicating when API key is going to expire"
+                              },
+                              "isApiKeyExpiredStatus ": {
+                                "type": "boolean",
+                                "description": "Flag indicating if API key has expired or not"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Aray of error code and message indicating the error that has occured",
+                        "properties": {
+                          "errorCode": {
+                            "type": "string",
+                            "description": "Unique code of the error indicating the error that has occured"
+                          },
+                          "message": {
+                            "type": "string",
+                            "description": "Message indicating the error that has occured"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example 1": {
+                    "value": {
+                      "id": "string",
+                      "version": "string",
+                      "responseTime": "2019-08-24T14:15:22Z",
+                      "metadata": {},
+                      "response": {
+                        "pageNo": 0,
+                        "pageSize": 0,
+                        "totalResults": 0,
+                        "data": [
+                          {
+                            "partnerId": "string",
+                            "apiKeyLabel": "string",
+                            "orgName": "string",
+                            "policyName": "string",
+                            "policyId": "string",
+                            "policyDescription": "string",
+                            "policyGroupName": "string",
+                            "policyGroupDescription": "string",
+                            "status": "activated",
+                            "createdDateTime": "string",
+                            "policyGroupId": "string",
+                            "apiKeyExpiryDateTime": "string",
+                            "isApiKeyExpiredStatus ": true
+                          }
+                        ]
+                      },
+                      "errors": [
+                        {
+                          "errorCode": "string",
+                          "message": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+            "description": "Partner Management Service"
+          }
+        ]
+      }
+    },
     "/partner-api-keys": {
       "get": {
         "tags": [
           "partner-management-controller"
         ],
         "summary": "NEW: Get the list of all the API keys created by all the Auth Partners",
-        "description": "This endpoint is for both regular users and the Partner Admin users.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the Auth Partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the Auth Partners across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThis endpoint upgrades the earlier GET endpoint `/partners/apikey/search` by adding new features like:\r\n1. Performance improvement\r\n2. Fields like policyGroupName, policyDescription, policyGroupDescription\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN,AUTH_PARTNER",
+        "description": "This endpoint is for both regular users and the Partner Admin users.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the Auth Partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the Auth Partners across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThis endpoint upgrades the earlier GET endpoint `/partners/apikey/search` by adding new features like:\r\n1. Performance improvement\r\n2. Fields like policyGroupName, policyDescription, policyGroupDescription\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN,AUTH_PARTNER\r\n",
         "operationId": "get-auth-partners-apikeys",
         "parameters": [
           {
@@ -4027,7 +4368,7 @@
           {
             "name": "orgName",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given orgName.",
+            "description": "Optional request parameter. Can be used to filter the response by the given `orgName`.",
             "schema": {
               "type": "string"
             }
@@ -4035,7 +4376,7 @@
           {
             "name": "policyName",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given policyName.",
+            "description": "Optional request parameter. Can be used to filter the response by the given `policyName`.",
             "schema": {
               "type": "string"
             }
@@ -4051,7 +4392,7 @@
           {
             "name": "policyGroupName",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given policyGroupName.",
+            "description": "Optional request parameter. Can be used to filter the response by the given `policyGroupName`.",
             "schema": {
               "type": "string"
             }
@@ -4964,7 +5305,7 @@
           {
             "name": "partnerDomain",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given partnerDomain.To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `partnerDomain`.To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
             "schema": {
               "type": "string"
             }
@@ -4972,7 +5313,7 @@
           {
             "name": "expiryDate",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given expiryDate. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner` / `sbi` / `ftm-chip` / `apikey`",
             "schema": {
               "type": "string"
             }
@@ -4980,7 +5321,7 @@
           {
             "name": "createdFromDate",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given createdFromDate. Created from date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `weekly`",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `createdFromDate`. Created from date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `weekly`",
             "schema": {
               "type": "string"
             }
@@ -4988,7 +5329,63 @@
           {
             "name": "createdToDate",
             "in": "query",
-            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given createdToDate. Created todate should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `weekly`",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `createdToDate`. Created to date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `weekly`",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apiKeyName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `apiKeyName`. To use this filter set `notificationType` as `apikey`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyName",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `policyName`. To use this filter set `notificationType` as `apikey`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ftmId",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `ftmId`. To use this filter set `notificationType` as `ftm-chip`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "make",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `make`. To use this filter set `notificationType` as `ftm-chip`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `model`. To use this filter set `notificationType` as `ftm-chip` .",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sbiId",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `sbiId`. To use this filter set `notificationType` as `sbi`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sbiVersion",
+            "in": "query",
+            "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `sbiId`. To use this filter set `notificationType` as `sbi`.",
             "schema": {
               "type": "string"
             }
@@ -5077,7 +5474,7 @@
                                 "properties": {
                                   "certificateDetails": {
                                     "type": "array",
-                                    "description": "This will be null in case of SBI / API key expiry notification.",
+                                    "description": "This will be null in case of FTM chip certificate / SBI / API key expiry notification.",
                                     "items": {
                                       "type": "object",
                                       "properties": {
@@ -5114,10 +5511,65 @@
                                           "enum": [
                                             "root",
                                             "intermediate",
-                                            "partner",
+                                            "partner"
+                                          ],
+                                          "description": "Type of the certificate."
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "ftmDetails": {
+                                    "type": "array",
+                                    "description": "This will be null in case of Root, Intermediate, Partner,SBI or API key expiry notification.",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "certificateId": {
+                                          "type": "string",
+                                          "description": "Unique id of the FTM chip certificate."
+                                        },
+                                        "issuedBy": {
+                                          "type": "string",
+                                          "description": "Issued By attribute of the FTM chip certificate. "
+                                        },
+                                        "issuedTo": {
+                                          "type": "string",
+                                          "description": "Issued To attribute of the FTM chip certificate. "
+                                        },
+                                        "partnerId": {
+                                          "type": "string",
+                                          "description": "Unique identifier of the partner to which the expiring FTM chip certificate belongs to."
+                                        },
+                                        "partnerDomain": {
+                                          "type": "string",
+                                          "description": "Domain attribute of the certificate. "
+                                        },
+                                        "expiryDateTime": {
+                                          "type": "string",
+                                          "description": "Expiry date in ISO format"
+                                        },
+                                        "expiryPeriod": {
+                                          "type": "string",
+                                          "description": "Expiry period in days. Number of days in which the certificate is expiring. "
+                                        },
+                                        "certificateType": {
+                                          "type": "string",
+                                          "enum": [
                                             "ftm"
                                           ],
                                           "description": "Type of the certificate."
+                                        },
+                                        "ftmId": {
+                                          "type": "string",
+                                          "description": "Unique id of the FTM chip"
+                                        },
+                                        "make": {
+                                          "type": "string",
+                                          "description": "Make value of FTM chip"
+                                        },
+                                        "model": {
+                                          "type": "string",
+                                          "description": "Model value of SBI"
                                         }
                                       }
                                     }
@@ -5132,30 +5584,42 @@
                                           "type": "string",
                                           "description": "Unique id of the SBI."
                                         },
+                                        "sbiVersion": {
+                                          "type": "string",
+                                          "description": "Version of the SBI."
+                                        },
                                         "partnerId": {
                                           "type": "string",
                                           "description": "Unique identifier of the partner to which the expiring SBI belongs to."
                                         },
                                         "expiryDateTime": {
                                           "type": "string",
-                                          "description": "Expiry date in ISO format"
+                                          "description": "SBI expiry date in ISO format"
                                         },
                                         "expiryPeriod": {
                                           "type": "string",
                                           "description": "Expiry period in days. Number of days in which the SBI is expiring. "
+                                        },
+                                        "sbiBinaryHash": {
+                                          "type": "string",
+                                          "description": "Unique Hash value of SBI"
+                                        },
+                                        "sbiCreationDate": {
+                                          "type": "string",
+                                          "description": "SBI creation date in ISO format"
                                         }
                                       }
                                     }
                                   },
                                   "apiKeyDetails": {
                                     "type": "array",
-                                    "description": "This will be null in case of any Certificate / SBI expiry notification.",
+                                    "description": "This will be null in case of Root, Intermediate, Partner, FTM chip certificate, SBI expiry notification.",
                                     "items": {
                                       "type": "object",
                                       "properties": {
-                                        "apiKeyId": {
+                                        "apiKeyName": {
                                           "type": "string",
-                                          "description": "Unique id of the API Key."
+                                          "description": "Unique name of the API Key."
                                         },
                                         "partnerId": {
                                           "type": "string",
@@ -5168,6 +5632,14 @@
                                         "expiryPeriod": {
                                           "type": "string",
                                           "description": "Expiry period in days. Number of days in which the API key is expiring. "
+                                        },
+                                        "policyGroup": {
+                                          "type": "string",
+                                          "description": "Name of the Policy Group associated with the API Key"
+                                        },
+                                        "policyName": {
+                                          "type": "string",
+                                          "description": "Name of the Policy associated with the API Key."
                                         }
                                       }
                                     }
@@ -5476,6 +5948,10 @@
                         "notificationsSeenDtimes": {
                           "type": "string",
                           "description": "Date in ISO format indicating date time when notifications were last seen.\r\nThis date is in UTC."
+                        },
+                        "userId": {
+                          "type": "string",
+                          "description": "Unique id of the logged in user"
                         }
                       }
                     },
@@ -5635,6 +6111,10 @@
                     "response": {
                       "type": "object",
                       "properties": {
+                        "userId": {
+                          "type": "string",
+                          "description": "Logged in user's unique identifier"
+                        },
                         "notificationsSeenDtimes": {
                           "type": "string",
                           "description": "Date in ISO format indicating date time when notifications were last seen"
