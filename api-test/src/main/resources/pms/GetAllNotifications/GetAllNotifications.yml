@@ -445,7 +445,7 @@ GetAllNotifications:
       output: '{
       "totalResults": "0"
 }'
-   Pms_GetAllNotifications_Filter_ftmChip_without_notificationType_Neg::
+   Pms_GetAllNotifications_Filter_ftmChip_without_notificationType_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
       role: partneradmin
       description: Fetch all ftmChip without selecting notificationType
@@ -475,7 +475,7 @@ GetAllNotifications:
       output: '{
       "totalResults": "0"
 }'
-   Pms_GetAllNotifications_Filter_SbiID_without_notificationType_Neg::
+   Pms_GetAllNotifications_Filter_SbiID_without_notificationType_Neg:
       endPoint: /v1/partnermanager/notifications?sbiId=PMS-SBI
       role: partneradmin
       description: Fetch all ftmChip without selecting notificationType
@@ -529,11 +529,11 @@ GetAllNotifications:
       uniqueIdentifier: TC_PMS_GetAllNotifications_35
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
-      outputTemplate: pms/GetAllNotifications/GetAllNotificationsPageSize
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsPageNoResult
       input: '{
 }'
       output: '{
-      "pageSize": "2"
+      "pageNo": "0"
 }'
    Pms_GetAllNotifications_Filter_invalid_PageNo_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=-4
