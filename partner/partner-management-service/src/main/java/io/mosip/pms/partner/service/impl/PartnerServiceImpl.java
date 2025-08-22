@@ -268,6 +268,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.partners.v3.get}")
 	private String getPartnersV3Id;
 
+	@Value("${mosip.pms.id.generation.max.retries}")
+	private int maxRetries;
+
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -687,10 +690,23 @@ public class PartnerServiceImpl implements PartnerService {
 		} else {
 			Partner partnerFromDb = getValidPartner(partnerId, false);
 			contactsFromDb = new PartnerContact();
+
 			String id = PartnerUtil.createPartnerId();
-			// Keep generating new until its unique
+			int attempts = 0;
+
+			// Keep generating new Partner Conatact ID until a unique one is found or maxRetries is reached
 			while (partnerContactRepository.existsById(id)) {
+				if (attempts >= maxRetries) {
+					LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "Partner Contact ID",
+							"id", contactsFromDb.getClass().getSimpleName(), maxRetries);
+					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_FAILURE, partnerId, "partnerId");
+					throw new PartnerServiceException(
+							ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+							String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "Partner Contact ID", "id", contactsFromDb.getClass().getSimpleName(), maxRetries)
+					);
+				}
 				id = PartnerUtil.createPartnerId();
+				attempts++;
 			}
 			contactsFromDb.setId(id);
 			contactsFromDb.setAddress(keyManagerHelper.encryptData(request.getAddress()));
@@ -987,10 +1003,23 @@ public class PartnerServiceImpl implements PartnerService {
 			extractorProvider = new BiometricExtractorProvider();
 			extractorProvider.setPartnerId(partnerId);
 			extractorProvider.setPolicyId(policyId);
+
 			String id = PartnerUtil.generateId();
-			// Keep generating new until its unique
+			int attempts = 0;
+
+			// Keep generating a new ID until a unique one is found or maxRetries is reached
 			while (extractorProviderRepository.existsById(id)) {
+				if (attempts >= maxRetries) {
+					LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "Biometric Extractor Provider ID",
+							"id", extractorProvider.getClass().getSimpleName(), maxRetries);
+					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_FAILURE, partnerId, "partnerId");
+					throw new PartnerServiceException(
+							ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+							String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "Biometric Extractor Provider ID", "id", extractorProvider.getClass().getSimpleName(), maxRetries)
+					);
+				}
 				id = PartnerUtil.generateId();
+				attempts++;
 			}
 			extractorProvider.setId(id);
 			extractorProvider.setAttributeName(extractor.getAttributeName());
@@ -1735,10 +1764,24 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setRequestDetail(partnerAPIKeyRequest.getUseCaseDescription());
 		partnerPolicyRequest.setIsDeleted(false);
 		String id = PartnerUtil.createPartnerPolicyRequestId();
-		// Keep generating new until its unique
+
+		int attempts = 0;
+
+		// Keep generating new ID until a unique one is found or maxRetries is reached
 		while (partnerPolicyRequestRepository.existsById(id)) {
+			if (attempts >= maxRetries) {
+				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "Partner Policy Request ID",
+						"id", partnerPolicyRequest.getClass().getSimpleName(), maxRetries);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "Partner Policy Request ID", "id", partnerPolicyRequest.getClass().getSimpleName(), maxRetries)
+				);
+			}
 			id = PartnerUtil.createPartnerPolicyRequestId();
+			attempts++;
 		}
+
 		partnerPolicyRequest.setId(id);
 		partnerPolicyRequestRepository.save(partnerPolicyRequest);
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_API_REQUEST_SUCCESS, partnerId, "partnerId");

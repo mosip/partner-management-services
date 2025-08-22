@@ -171,6 +171,9 @@ public class PolicyManagementService {
 	@Value("${mosip.pms.api.id.deactivate.policy.group.patch}")
 	private String patchDeactivatePolicyGroupId;
 
+	@Value("${mosip.pms.id.generation.max.retries}")
+	private int maxRetries;
+
 	@Autowired
 	SearchHelper searchHelper;
 
@@ -182,9 +185,6 @@ public class PolicyManagementService {
 
 	@Autowired
 	private FilterColumnValidator filterColumnValidator;
-
-	@Value("${mosip.pms.id.generation.max.retries}")
-	private int maxRetries;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -217,7 +217,26 @@ public class PolicyManagementService {
 		policyGroup.setName(requestDto.getName());
 		policyGroup.setDesc(requestDto.getDesc());
 		policyGroup.setUserId(getUser());
-		policyGroup.setId(PolicyUtil.generateId());
+		String id = PolicyUtil.generateId();
+		int attempts = 0;
+
+		// Keep generating a new ID while it already exists in the repository,
+		while (policyGroupRepository.existsById(id)) {
+			if (attempts >= maxRetries) {
+				logger.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "Policy Group ID",
+						"id", policyGroup.getClass().getSimpleName(), maxRetries);
+				auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_FAILURE, policyGroup.getName(), "policyGroupName");
+				// If still exists after max retries, throw an exception
+				throw new PolicyManagementServiceException(
+						ErrorMessages.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(ErrorMessages.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "Policy Group ID", "id", policyGroup.getClass().getSimpleName(), maxRetries)
+				);
+			}
+			id = PolicyUtil.generateId();
+			attempts++;
+		}
+
+		policyGroup.setId(id);
 		policyGroup.setIsDeleted(false);
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP_SUCCESS, requestDto.getName(), "policyGroupName");
 		return savePolicyGroup(policyGroup);
