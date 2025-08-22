@@ -186,9 +186,6 @@ public class PolicyManagementService {
 	@Autowired
 	private FilterColumnValidator filterColumnValidator;
 
-	@Value("${mosip.pms.id.generation.max.retries}")
-	private int maxRetries;
-
 	@Autowired
 	AuditUtil auditUtil;
 
