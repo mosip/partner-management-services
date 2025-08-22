@@ -8,7 +8,8 @@ public enum FoundationalTrustProviderErrorMessages {
 	FTP_CHIP_ID_PROVIDER_ID_NOT_MATCHED("PMP_AUT_034","Ftp chip detail id and ftp provider id not mappped. "),
 	FTP_PROVIDER_DETAILS_EXISTS("PMP_AUT_037","Given ftp chip details already registered."),
 	INVALID_FTP_CHIP_STATUS("PMP_AUT_038","The certificate can only be uploaded for FTM that is either pending certificate upload or has an approved status."),
-	FTP_CHIP_DEACTIVATED("PMP_AUT_039","FTM chip is deactivated.");
+	FTP_CHIP_DEACTIVATED("PMP_AUT_039","FTM chip is deactivated."),
+	FTP_CHIP_DETAIL_ID_GENERATION_FAILURE("PMP_AUT_040","Failed to generate a unique FTP Chip Detail ID");
 	
 	private final String errorCode;
 	private final String errorMessage;

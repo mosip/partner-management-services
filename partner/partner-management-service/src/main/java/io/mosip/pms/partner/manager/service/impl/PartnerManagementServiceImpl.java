@@ -164,6 +164,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.partner.details.get}")
 	private String getPartnerDetailsId;
 
+	@Value("${mosip.pms.id.generation.max.retries}")
+	private int maxRetries;
+
 	public static final String VERSION = "1.0";
 
 	@Override
@@ -676,11 +679,26 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
+		// Generate an initial API key ID
 		String apiKeyId = PartnerUtil.createPartnerApiKey();
-		// Keep generating new until its unique
+
+		int attempts = 0;
+
+		// Keep generating new API key ID until a unique one is found or maxRetries is reached
 		while (partnerPolicyRepository.existsById(apiKeyId)) {
+			if (attempts >= maxRetries) {
+				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "API Key ID",
+						"policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries)
+				);
+			}
 			apiKeyId = PartnerUtil.createPartnerApiKey();
+			attempts++;
 		}
+
 		partnerPolicy.setPolicyApiKey(apiKeyId);
 		partnerPolicy.setPartner(approvedMappedPolicy.get(0).getPartner());
 		partnerPolicy.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
