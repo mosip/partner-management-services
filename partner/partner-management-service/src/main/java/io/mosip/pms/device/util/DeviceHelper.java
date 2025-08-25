@@ -37,16 +37,18 @@ public class DeviceHelper {
     public DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
         String id = deviceDetailDto.getId();
 
-        if (id != null && !id.isBlank() && deviceDetailRepository.existsById(id)) {
-            LOGGER.error("Device Detail with same Id already exists: {}", id);
-            sendAuditLogAndThrowException(
-                    DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
-                    DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage(),
-                    "AUT-002",
-                    deviceDetailDto.getDeviceProviderId(),
-                    ErrorCode.DEVICE_DETAIL_ID_ALREADY_EXISTS.getErrorCode(),
-                    ErrorCode.DEVICE_DETAIL_ID_ALREADY_EXISTS.getErrorMessage()
-            );
+        if (id != null && !id.isBlank()) {
+            if (deviceDetailRepository.existsById(id)) {
+                LOGGER.error("Device Detail with same Id already exists: {}", id);
+                sendAuditLogAndThrowException(
+                        DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
+                        DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage(),
+                        "AUT-002",
+                        deviceDetailDto.getDeviceProviderId(),
+                        ErrorCode.DEVICE_DETAIL_ID_ALREADY_EXISTS.getErrorCode(),
+                        ErrorCode.DEVICE_DETAIL_ID_ALREADY_EXISTS.getErrorMessage()
+                );
+            }
         } else {
             id = generateUniqueDeviceId(deviceDetail, deviceDetailDto);
         }
