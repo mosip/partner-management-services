@@ -159,6 +159,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	@Value("${mosip.pms.ca.signed.partner.certificate.available}")
 	private Boolean isCaSignedPartnerCertificateAvailable;
 
+	@Value("${mosip.pms.id.generation.max.retries}")
+	private int maxRetries;
+
 	@Autowired
 	private WebSubPublisher webSubPublisher;
 	
@@ -202,7 +205,31 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		chipDetail.setDeleted(false);
 		chipDetail.setCrDtimes(LocalDateTime.now());
 		chipDetail.setFtpProviderId(chipDetails.getFtpProviderId());
-		chipDetail.setFtpChipDetailId(DeviceUtil.generateId());
+		String ftpChipDetailId = DeviceUtil.generateId();
+		int attempts = 0;
+
+		while (ftpChipDetailRepository.existsById(ftpChipDetailId)) {
+			if (attempts >= maxRetries) {
+				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "FTP Chip Detail ID",
+						"ftpChipDetailId", chipDetail.getClass().getSimpleName(), maxRetries);
+				auditUtil.auditRequest(
+						String.format(
+								DeviceConstant.FAILURE_CREATE, FtpChipDetailUpdateDto.class.getCanonicalName()),
+						DeviceConstant.AUDIT_SYSTEM,
+						String.format(DeviceConstant.FAILURE_DESC,
+								FoundationalTrustProviderErrorMessages.FTP_CHIP_DETAIL_ID_GENERATION_FAILURE.getErrorCode(),
+								FoundationalTrustProviderErrorMessages.FTP_CHIP_DETAIL_ID_GENERATION_FAILURE.getErrorMessage()),
+						"AUT-003", chipDetails.getFtpProviderId(), "ftpChipId");
+				throw new PartnerServiceException(
+						ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "FTP Chip Detail ID", "ftpChipDetailId", chipDetail.getClass().getSimpleName(), maxRetries)
+				);
+			}
+			ftpChipDetailId = DeviceUtil.generateId();
+			attempts++;
+		}
+
+		chipDetail.setFtpChipDetailId(ftpChipDetailId);
 		chipDetail.setMake(chipDetails.getMake());
 		chipDetail.setModel(chipDetails.getModel());
 		chipDetail.setPartnerOrganizationName(partnerFromDb.getName());
