@@ -63,8 +63,10 @@ public enum ErrorMessages {
 	DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP("PMS_POL_070","Draft policies exists under the policy group."),
 	POLICY_GROUP_DEACTIVATION_ERROR("PMS_POL_071", "Error while deactivating policy group"),
 	POLICY_NOT_APPROVED("PMS_POL_072", "The selected policy is not in activated status"),
-	DEACTIVATE_STATUS_CODE("PMS_POL_073", "Request status should be De-Activate");
-	
+	DEACTIVATE_STATUS_CODE("PMS_POL_073", "Request status should be De-Activate"),
+	UNABLE_TO_GENERATE_UNIQUE_ID("PMS_POL_074", "Unable to generate a unique %s (field: '%s') for entity '%s' after %s attempts."),
+	POLICY_ID_ALREADY_EXISTS("PMS_POL_075", "A policy with the same Policy ID already exists");
+
 	private final String errorCode;
 	private final String errorMessage;
 

@@ -155,7 +155,10 @@ public enum ErrorCode {
 	MISSING_PAGINATION_FOR_SORT("PMS_PS_ERROR_008", "Please provide pagination parameters ('pageNo' and 'pageSize') when requesting sorted data."),
 	ROOT_AND_INTERMEDIATE_CERTS_DISABLED("PMS_FEATURE_001", "Root and Intermediate Certificates list is not available in the current deployment."),
 	OIDC_CLIENT_FEATURE_DISABLED("PMS_FEATURE_002", "OIDC client related features are not available in the current deployment."),
-	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment.");
+	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment."),
+	UNABLE_TO_GENERATE_UNIQUE_ID("PMS_PRT_100", "Unable to generate a unique %s (field: '%s') for entity '%s' after %s attempts."),
+	DEVICE_DETAIL_ID_ALREADY_EXISTS("PMS_PRT_101", "A Device with the same Device Detail ID already exists");;
+
 	/**
 	 * The error code.
 	 */

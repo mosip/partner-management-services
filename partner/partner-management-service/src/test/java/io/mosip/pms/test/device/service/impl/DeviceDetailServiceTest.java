@@ -34,6 +34,7 @@ import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.device.util.DeviceHelper;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.test.PartnerManagementServiceTest;
@@ -121,6 +122,9 @@ public class DeviceDetailServiceTest {
 
 	@Mock
 	PartnerHelper partnerHelper;
+
+	@Mock
+	DeviceHelper deviceHelper;
 
 	private RequestWrapper<DeviceSearchDto> deviceRequestDto;
 
@@ -317,6 +321,9 @@ public class DeviceDetailServiceTest {
 	public void createDeviceDetailTest() throws Exception {
 		Mockito.doReturn(null).when(deviceDetailRepository).findByDeviceDetail(Mockito.anyString(), Mockito.anyString(),
 				Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+		DeviceDetail device = new DeviceDetail();
+		device.setId("121");
+		when(deviceHelper.getCreateMapping(any(), any())).thenReturn(device);
 		assertTrue(deviceDetaillService.createDeviceDetails(deviceDetailDto).getId().equals("121"));
 	}
 

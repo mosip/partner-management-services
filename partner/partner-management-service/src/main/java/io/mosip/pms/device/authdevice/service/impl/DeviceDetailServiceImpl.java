@@ -22,6 +22,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.device.dto.DeviceDetailFilterDto;
 import io.mosip.pms.device.dto.DeviceDetailSummaryDto;
+import io.mosip.pms.device.util.DeviceHelper;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -128,6 +129,9 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 	@Autowired
 	private PageUtils pageUtils;
 
+	@Autowired
+	DeviceHelper deviceHelper;
+
 	@Override
 	public IdDto createDeviceDetails(DeviceDetailDto deviceDetailDto) {
 		DeviceDetail entity = new DeviceDetail();
@@ -178,27 +182,10 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorCode(),
 					DeviceDetailExceptionsConstant.DEVICE_DETAIL_EXIST.getErrorMessage());
 		}
-		entity = getCreateMapping(entity, deviceDetailDto);
+		entity = deviceHelper.getCreateMapping(entity, deviceDetailDto);
 		deviceDetail = deviceDetailRepository.save(entity);
 		dto.setId(deviceDetail.getId());
 		return dto;
-	}
-
-	private DeviceDetail getCreateMapping(DeviceDetail deviceDetail, DeviceDetailDto deviceDetailDto) {
-		deviceDetail.setId(deviceDetailDto.getId() == null ? DeviceUtil.generateId(): deviceDetailDto.getId());
-		deviceDetail.setIsActive(false);
-		deviceDetail.setIsDeleted(false);
-		deviceDetail.setApprovalStatus(CommonConstant.PENDING_APPROVAL);
-		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
-		if (!EmptyCheckUtils.isNullEmpty(authN)) {
-			deviceDetail.setCrBy(authN.getName());
-		}
-		deviceDetail.setCrDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-		deviceDetail.setDeviceProviderId(deviceDetailDto.getDeviceProviderId());
-		deviceDetail.setMake(deviceDetailDto.getMake());
-		deviceDetail.setModel(deviceDetailDto.getModel());
-		return deviceDetail;
-
 	}
 
 	@Override
