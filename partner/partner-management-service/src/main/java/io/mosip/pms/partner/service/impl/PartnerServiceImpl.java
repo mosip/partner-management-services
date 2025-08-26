@@ -1678,7 +1678,6 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerPolicyRequest.setStatusCode(PartnerConstants.IN_PROGRESS);
 		partnerPolicyRequest.setCrBy(getLoggedInUserId());
 		partnerPolicyRequest.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRequest.setId(PartnerUtil.createPartnerPolicyRequestId());
 		partnerPolicyRequest.setPartner(partner);
 		partnerPolicyRequest.setPolicyId(authPolicy.getId());
 		partnerPolicyRequest.setRequestDatetimes(Timestamp.valueOf(LocalDateTime.now()));
