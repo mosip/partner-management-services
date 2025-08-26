@@ -268,9 +268,15 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		List<PartnerPolicyRequest> approvedPolicyMappedReq = partnerPolicyRequestRepository.findByPartnerId(mispId);
 		PartnerPolicyRequest mispPolicy= new  PartnerPolicyRequest();
 		String policyId = null;
-		if(!approvedPolicyMappedReq.isEmpty() && !mispPolicy.getPolicyId().isBlank()) {
-			mispPolicy= approvedPolicyMappedReq.get(0);
-			policyId = mispPolicy.getId();
+		if (!approvedPolicyMappedReq.isEmpty()) {
+			if (approvedPolicyMappedReq.size() > 1) {
+				throw new MISPServiceException(MISPErrorMessages.MISP_MULTIPLE_POLICIES_MAPPED.getErrorCode(),
+						MISPErrorMessages.MISP_MULTIPLE_POLICIES_MAPPED.getErrorMessage());
+			}
+			mispPolicy = approvedPolicyMappedReq.get(0);
+			if (mispPolicy.getPolicyId() != null && !mispPolicy.getPolicyId().isBlank()) {
+				policyId = mispPolicy.getId();
+			}
 		}
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		if (mispValidLicenses.isEmpty()) {
