@@ -271,7 +271,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		if (!approvedPolicyMappedReq.isEmpty()) {
 			mispPolicy = approvedPolicyMappedReq.get(0);
 			if (mispPolicy.getPolicyId() != null && !mispPolicy.getPolicyId().isBlank()) {
-				policyId = mispPolicy.getId();
+				policyId = mispPolicy.getPolicyId();
 			}
 		}
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
