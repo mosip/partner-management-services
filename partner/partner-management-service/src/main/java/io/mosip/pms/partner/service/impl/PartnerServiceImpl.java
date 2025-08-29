@@ -297,7 +297,7 @@ public class PartnerServiceImpl implements PartnerService {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
-					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage() + partnerIdMaxLength);
+					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage());
 		}		
 		if (!validatePartnerIdLength(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
