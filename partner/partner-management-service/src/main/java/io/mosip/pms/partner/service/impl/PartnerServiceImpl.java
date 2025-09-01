@@ -1883,7 +1883,7 @@ public class PartnerServiceImpl implements PartnerService {
 				}
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			} else {
-				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
+				partners = partnerRepository.findPartnersByStatusAndPartnerType(status, partnerType);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
 			for (Partner partner : partners) {
@@ -1891,7 +1891,7 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerHelper.validatePartnerId(partner, userId);
 				partnerDtoV3.setPartnerId(partner.getId());
 				partnerDtoV3.setPartnerType(partner.getPartnerTypeCode());
-				if (Boolean.TRUE.equals(policyGroupAvailable)) {
+				if (partner.getPolicyGroupId() != null) {
 					PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
 					partnerDtoV3.setPolicyGroupId(partner.getPolicyGroupId());
 					partnerDtoV3.setPolicyGroupName(policyGroup.getName());
