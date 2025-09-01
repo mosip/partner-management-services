@@ -15,6 +15,7 @@ import io.mosip.pms.common.dto.PartnerPolicySearchResponseDto;
 import io.mosip.pms.common.dto.PolicyRequestSearchResponseDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.PartnerType;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.dto.*;
@@ -38,6 +39,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import jakarta.validation.Valid;
 
 public interface PartnerService {
 	
@@ -236,4 +238,5 @@ public interface PartnerService {
 
 	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 
+	ResponseWrapperV2<PartnerResponse> createPartner(@Valid PartnerRequestDto partnerRequest);
 }

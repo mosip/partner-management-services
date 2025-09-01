@@ -3,8 +3,10 @@ package io.mosip.pms.partner.controller;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Optional;
 
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -20,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -69,7 +72,10 @@ import io.swagger.v3.oas.annotations.Operation;
 @RestController
 @RequestMapping(value = "/partners")
 @Api(tags = { "Partner Service Controller" })
-public class PartnerServiceController {	
+public class PartnerServiceController {
+
+	@Value("${mosip.pms.api.id.create.partner.post}")
+	private String postCreatePartnerId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -568,5 +574,22 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/v3")
+	@Operation(summary = "This endpoint is used for partner self registration",
+			description = "Available since release-1.3.0-beta.2. This endpoint is used for partner self registration.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<PartnerResponse> createPartner(@RequestBody @Valid RequestWrapperV2<PartnerRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<PartnerResponse>> validationResponse = requestValidator.validate(postCreatePartnerId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, requestWrapper.getRequest().getPartnerId(),
+				"partnerId");
+
+		return partnerService.createPartner(requestWrapper.getRequest());
 	}
 }
