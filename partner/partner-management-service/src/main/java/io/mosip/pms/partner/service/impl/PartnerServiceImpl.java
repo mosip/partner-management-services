@@ -1873,7 +1873,7 @@ public class PartnerServiceImpl implements PartnerService {
 			String userId = getUserId();
 			List<Partner> partners = new ArrayList<>();
 			// if not MISP_Partner type, fetch partners for logged in user
-			// if MISP_Partner type, fetch all partners
+			// if MISP_Partner type, fetch all MISP partners
 			if (!partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
