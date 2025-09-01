@@ -1872,9 +1872,7 @@ public class PartnerServiceImpl implements PartnerService {
 		try {
 			String userId = getUserId();
 			List<Partner> partners = new ArrayList<>();
-			if (partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
-				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
-			} else {
+			if (!partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
 					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -1882,6 +1880,8 @@ public class PartnerServiceImpl implements PartnerService {
 							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
+			} else {
+				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
 			for (Partner partner : partners) {
