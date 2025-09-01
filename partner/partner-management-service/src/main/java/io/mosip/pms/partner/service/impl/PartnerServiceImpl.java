@@ -1874,7 +1874,7 @@ public class PartnerServiceImpl implements PartnerService {
 			List<Partner> partners = new ArrayList<>();
 			// if not MISP_Partner type, fetch partners for logged in user
 			// if MISP_Partner type, fetch all MISP partners
-			if (!partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
+			if (Objects.isNull(partnerType) || !partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
 					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
