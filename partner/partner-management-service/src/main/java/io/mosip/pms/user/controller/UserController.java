@@ -72,8 +72,8 @@ public class UserController {
 	@Value("${mosip.pms.api.id.users.notifications.seen.timestamp.put}")
 	private String putNotificationsSeenTimestampId;
 
-	@Value("${mosip.pms.oidc.supported.languages}")
-	private String oidcSupportedLanguages;
+	@Value("${mosip.pms.supported.notification.languages}")
+	private String supportedNotificationLanguages;
 
 	public static final String VERSION = "1.0";
 
@@ -137,7 +137,7 @@ public class UserController {
 		configMap.put("isOidcClientAvailable", isOidcClientAvailable);
 		configMap.put("isRootIntermediateCertAvailable", isRootIntermediateCertAvailable);
 		configMap.put("refreshNotificationsTime", refreshNotificationsTime);
-		configMap.put("oidcSupportedLanguages", oidcSupportedLanguages);
+		configMap.put("supportedNotificationLanguages", supportedNotificationLanguages);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
