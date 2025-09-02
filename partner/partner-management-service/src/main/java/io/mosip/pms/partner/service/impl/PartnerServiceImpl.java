@@ -1845,6 +1845,7 @@ public class PartnerServiceImpl implements PartnerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.error("sessionId", "idType", "id", "In createPartner method of PartnerServiceImpl - " + ex.getMessage(), ex);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, partnerRequest.getPartnerId(), "partnerId");
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
 					ErrorCode.PARTNER_CREATE_ERROR.getErrorCode(),
 					ErrorCode.PARTNER_CREATE_ERROR.getErrorMessage()));
@@ -1880,7 +1881,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if (isInputStringContainsSpaces(request.getPartnerId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
-					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage() + partnerIdMaxLength);
+					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage());
 		}
 
 		// validate partnerId length
