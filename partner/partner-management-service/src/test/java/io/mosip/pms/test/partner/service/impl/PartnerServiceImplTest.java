@@ -221,8 +221,14 @@ public class PartnerServiceImplTest {
 		partnerCertificateRequestDto.setPartnerDomain("network");
 		partnerCertificateRequestDto.setPartnerId("id");
 		partnerCertificateRequestDto.setPartnerType("Auth");		
-		
+	
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(PartnerServiceAuditEnum.class));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

@@ -271,6 +271,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.id.generation.max.retries}")
 	private int maxRetries;
 
+	@Value("${mosip.pms.api.id.create.partner.post}")
+	private String postCreatePartnerId;
+
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -281,89 +284,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse registerPartner(PartnerRequestDto request) {
-		// Registered partner cannot create another partner 
 		String loggedInUserEmail = getLoggedInUserEmail();
-		if(loggedInUserEmail != null && isPartnerExistsWithEmail(loggedInUserEmail).getEmailExists()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
-		if (!validateMobileNumeber(request.getContactNumber())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
-					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
-		}
-
-		if (!validateEmail(request.getEmailId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
-					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
-		}
-		if(isInputStringContainsSpaces(request.getPartnerId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
-					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage());
-		}		
-		if (!validatePartnerIdLength(request.getPartnerId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
-		}
-
-		if (!validatePartnerByEmail(request.getEmailId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
-					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
-		}
-		if (request.getLangCode() != null) {
-			if (!getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-						"partnerId");
-				throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
-						ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
-			}
-		} else {
-			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
-		}
-		if (!validatePartnerId(request.getPartnerId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
-		}
-		
-		if(request.getAdditionalInfo() != null) {
-			isJSONValid(request.getAdditionalInfo().toString());
-		}
-
-		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
-		PolicyGroup policyGroup = null;
-		if (partnerType.getIsPolicyRequired() &&  (request.getPolicyGroup()==null||request.getPolicyGroup().isEmpty())) {
-			LOGGER.error("Policy Group is mandatory for "+partnerType.getCode());
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
-			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorCode(),
-					String.format(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorMessage(),partnerType.getCode()));
-		}
-		if(request.getPolicyGroup()!=null && !request.getPolicyGroup().isEmpty()) {
-			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
-		}
-		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());		
-		partner.setPartnerTypeCode(partnerType.getCode());
-		partnerRepository.save(partner);
-		saveToPartnerH(partner);
-		PartnerResponse partnerResponse = new PartnerResponse();
-		partnerResponse.setPartnerId(partner.getId());
-		partnerResponse.setStatus(partner.getApprovalStatus());
-		sendNotifications(EventType.PARTNER_REGISTRED, partner);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_SUCCESS, request.getPartnerId(),
-				"partnerId");
-		return partnerResponse;
+		return validateAndSavePartner(request, loggedInUserEmail);
 	}
 
 	private void saveToPartnerH(Partner partner) {
@@ -1907,6 +1829,127 @@ public class PartnerServiceImpl implements PartnerService {
 		responseWrapper.setId(getPartnersV3Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest) {
+		ResponseWrapperV2<PartnerResponse> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			String partnerEmail = isAdmin ? partnerRequest.getEmailId() : getLoggedInUserEmail();
+
+			PartnerResponse partnerResponse = validateAndSavePartner(partnerRequest, partnerEmail);
+			responseWrapper.setResponse(partnerResponse);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In createPartner method of PartnerServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id", "In createPartner method of PartnerServiceImpl - " + ex.getMessage(), ex);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, partnerRequest.getPartnerId(), "partnerId");
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					ErrorCode.PARTNER_CREATE_ERROR.getErrorCode(),
+					ErrorCode.PARTNER_CREATE_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(postCreatePartnerId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private PartnerResponse validateAndSavePartner(PartnerRequestDto request, String partnerEmail) {
+		// validate if partner with email already exists
+		if (partnerEmail != null && isPartnerExistsWithEmail(partnerEmail).getEmailExists()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
+
+		// validate mobile
+		if (!validateMobileNumeber(request.getContactNumber())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
+					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
+		}
+
+		// validate email
+		if (!validateEmail(partnerEmail)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
+					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
+		}
+
+		// validate partnerId spacing
+		if (isInputStringContainsSpaces(request.getPartnerId())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorCode(),
+					ErrorCode.PARTNER_ID_CONTAINS_SPACES.getErrorMessage());
+		}
+
+		// validate partnerId length
+		if (!validatePartnerIdLength(request.getPartnerId())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_ID_LENGTH_EXCEPTION.getErrorMessage() + partnerIdMaxLength);
+		}
+
+		// validate duplicate email
+		if (!validatePartnerByEmail(partnerEmail)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(),
+					ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
+		}
+
+		// validate language code
+		if (request.getLangCode() != null) {
+			if (!getSystemSupportedLanguageCodes().contains(request.getLangCode())) {
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+				throw new PartnerServiceException(ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorCode(),
+						ErrorCode.PARTNER_LANG_CODE_NOT_SUPPORTED.getErrorMessage());
+			}
+		} else {
+			request.setLangCode(getSystemSupportedLanguageCodes().get(0));
+		}
+
+		// validate partnerId uniqueness
+		if (!validatePartnerId(request.getPartnerId())) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_ALREADY_REGISTERED_WITH_ID_EXCEPTION.getErrorMessage());
+		}
+
+		// validate additional info JSON
+		if (request.getAdditionalInfo() != null) {
+			isJSONValid(request.getAdditionalInfo().toString());
+		}
+
+		// validate partner type and policy group
+		PartnerType partnerType = validateAndGetPartnerType(request.getPartnerType());
+		PolicyGroup policyGroup = null;
+		if (partnerType.getIsPolicyRequired() && (request.getPolicyGroup() == null || request.getPolicyGroup().isEmpty())) {
+			LOGGER.error("Policy Group is mandatory for " + partnerType.getCode());
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorCode(),
+					String.format(ErrorCode.POLICY_GROUP_IS_MANDATORY.getErrorMessage(), partnerType.getCode()));
+		}
+		if (request.getPolicyGroup() != null && !request.getPolicyGroup().isEmpty()) {
+			policyGroup = validateAndGetPolicyGroupByName(request.getPolicyGroup());
+		}
+
+		// map Partner
+		Partner partner = mapPartnerFromRequest(request, policyGroup, partnerType.getCode());
+		partner.setPartnerTypeCode(partnerType.getCode());
+		partner.setEmailId(partnerEmail);
+
+		partnerRepository.save(partner);
+		saveToPartnerH(partner);
+
+		PartnerResponse partnerResponse = new PartnerResponse();
+		partnerResponse.setPartnerId(partner.getId());
+		partnerResponse.setStatus(partner.getApprovalStatus());
+
+		sendNotifications(EventType.PARTNER_REGISTRED, partner);
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_SUCCESS, request.getPartnerId(), "partnerId");
+
+		return partnerResponse;
 	}
 
 	/**
