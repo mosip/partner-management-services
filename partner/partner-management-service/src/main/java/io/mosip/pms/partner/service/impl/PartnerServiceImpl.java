@@ -1871,9 +1871,9 @@ public class PartnerServiceImpl implements PartnerService {
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<Partner> partners = new ArrayList<>();
 			// if not MISP_Partner type, fetch partners for logged in user
-			// if MISP_Partner type, fetch all MISP partners
 			if (Objects.isNull(partnerType) || !partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
@@ -1882,8 +1882,10 @@ public class PartnerServiceImpl implements PartnerService {
 							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
-			} else {
-				partners = partnerRepository.findPartnersByStatusAndPartnerType(status, partnerType);
+			}
+			// if MISP_Partner type and Partner_Admin, fetch all MISP partners
+			if (isPartnerAdmin && partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
+				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
 			for (Partner partner : partners) {
