@@ -1935,13 +1935,6 @@ public class PartnerServiceImpl implements PartnerService {
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			String partnerEmail = isAdmin ? partnerRequest.getEmailId() : getLoggedInUserEmail();
 
-			if(isPartnerExistsWithEmail(partnerEmail).getEmailExists()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, partnerRequest.getPartnerId(),
-						"partnerId");
-				throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-						ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-			}
-
 			if (!validateEmail(partnerEmail)) {
 				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, partnerRequest.getPartnerId(),
 						"partnerId");
