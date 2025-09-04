@@ -578,7 +578,7 @@ public class PartnerServiceController {
 
 	@PostMapping(value = "/v3")
 	@Operation(summary = "This endpoint is used for partner self registration",
-			description = "Available since release-1.3.0-beta.2. This endpoint is used for partner self registration.")
+			description = "Available since release-1.3.0-beta.3. This endpoint is used for partner self registration.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
