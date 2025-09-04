@@ -1871,7 +1871,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		// validate email
-		if (!validateEmail(partnerEmail)) {
+		if (!validateEmail(request.getEmailId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, request.getPartnerId(), "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
