@@ -1874,7 +1874,7 @@ public class PartnerServiceImpl implements PartnerService {
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<Partner> partners = new ArrayList<>();
 			// if not MISP_Partner type, fetch partners for logged in user
-			if (Objects.isNull(partnerType) || !partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
+			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType)) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
 					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -1884,7 +1884,12 @@ public class PartnerServiceImpl implements PartnerService {
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			}
 			// if MISP_Partner type and Partner_Admin, fetch all MISP partners
-			if (isPartnerAdmin && partnerType.equals(PartnerConstants.MISP_PARTNER_TYPE)) {
+			else {
+				if (!isPartnerAdmin) {
+					LOGGER.info("sessionId", "idType", "id", "Only Partner Admin can fetch all MISP partners.");
+					throw new PartnerServiceException(ErrorCode.UNABLE_TO_FETCH_MISP_PARTNERS_LIST.getErrorCode(),
+							ErrorCode.UNABLE_TO_FETCH_MISP_PARTNERS_LIST.getErrorMessage());
+				}
 				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
