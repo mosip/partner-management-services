@@ -1890,20 +1890,34 @@ public class PartnerServiceImpl implements PartnerService {
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<Partner> partners = new ArrayList<>();
+			// if not MISP_Partner type, fetch partners for logged in user
+			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType)) {
+				List<Partner> partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
+			}
+			// if MISP_Partner type and Partner_Admin, fetch all MISP partners
+			else {
+				if (!isPartnerAdmin) {
+					LOGGER.info("sessionId", "idType", "id", "Only Partner Admin can fetch all MISP partners.");
+					throw new PartnerServiceException(ErrorCode.UNABLE_TO_FETCH_MISP_PARTNERS_LIST.getErrorCode(),
+							ErrorCode.UNABLE_TO_FETCH_MISP_PARTNERS_LIST.getErrorMessage());
+				}
+				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
-			List<Partner> partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			for (Partner partner : partners) {
 				PartnerDtoV3 partnerDtoV3 = new PartnerDtoV3();
 				partnerHelper.validatePartnerId(partner, userId);
 				partnerDtoV3.setPartnerId(partner.getId());
 				partnerDtoV3.setPartnerType(partner.getPartnerTypeCode());
-				if (Boolean.TRUE.equals(policyGroupAvailable)) {
+				if (partner.getPolicyGroupId() != null) {
 					PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
 					partnerDtoV3.setPolicyGroupId(partner.getPolicyGroupId());
 					partnerDtoV3.setPolicyGroupName(policyGroup.getName());

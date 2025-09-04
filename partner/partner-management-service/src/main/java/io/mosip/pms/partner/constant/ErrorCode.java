@@ -101,6 +101,7 @@ public enum ErrorCode {
 	PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC("PMS_POLICY_ERROR_009", "The given partner ID does not belong to the user.So unable to create OIDC client"),
 	PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC("PMS_POLICY_ERROR_010", "The given partner ID does not belong to the user.So unable to update OIDC client details"),
 	PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC("PMS_POLICY_ERROR_011", "The given partner ID does not belong to the user.So unable to get OIDC client details"),
+	UNABLE_TO_FETCH_MISP_PARTNERS_LIST("PMS_POLICY_ERROR_012", "Unable to fetch MISP partners list. Only Partner Admin can get the MISP partners list."),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
