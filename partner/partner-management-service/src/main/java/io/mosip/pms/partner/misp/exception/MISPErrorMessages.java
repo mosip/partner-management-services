@@ -16,8 +16,8 @@ public enum MISPErrorMessages {
 	MISP_LICENSE_KEY_EXISTS("PMS_MSP_416","License key exists for the given provider."),
 	MISP_POLICY_NOT_MAPPED("PMS_MSP_417", "Policy not mapped."),
 	MISP_POLICY_NOT_APPROVED("PMS_MSP_418", "Policy not approved."),
-	MISP_POLICY_NOT_EXISTS("PMS_MSP_419", "Policy not exists.");
-
+	MISP_POLICY_NOT_EXISTS("PMS_MSP_419", "Policy not exists."),
+	ERROR_FETCHING_MISP_DETAILS("PMS_MSP_420","Error while fetching all MISP Licence details.");
 
 	private final String errorCode;
 	private final String errorMessage;

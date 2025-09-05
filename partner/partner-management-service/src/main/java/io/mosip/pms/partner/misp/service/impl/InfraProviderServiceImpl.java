@@ -7,7 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
+import io.mosip.pms.partner.misp.dto.MISPFilterDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
+import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -15,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +41,13 @@ import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
+import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.entity.Partner;
 
 import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.MISPLicenseSummaryEntity;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
@@ -41,6 +55,7 @@ import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.MISPLicenseSummaryRepository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.UserDetailUtil;
@@ -58,11 +73,20 @@ import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 @Component
 public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
+	private static final Logger LOGGER = PMSLogger.getLogger(InfraProviderServiceImpl.class);
+	public static final String VERSION = "1.0";
+
 	@Value("${mosip.kernel.idgenerator.misp.license-key-length}")
 	private int licenseKeyLength;
 
 	@Value("${mosip.pmp.misp.license.expiry.period.indays}")
 	private int mispLicenseExpiryInDays;
+
+	@Value("${mosip.pms.api.id.misp.licenses.get}")
+	private String getAllMispLicensesId;
+
+	@Autowired
+	MISPLicenseSummaryRepository mispLicenseSummaryRepository;
 
 	@Autowired
 	MispLicenseRepository mispLicenseRepository;
@@ -84,6 +108,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 	@Autowired
 	FilterHelper filterHelper;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	@Autowired
 	private PageUtils pageUtils;
@@ -399,5 +426,52 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> getAllMISPLicenses(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, MISPFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<MISPLicenseSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.mispAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				if (sortFieldName.equalsIgnoreCase("status")) {
+					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+				}
+				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.mispAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+			Page<MISPLicenseSummaryEntity> page = mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(filterDto.getPartnerId(), filterDto.getPolicyGroupName(),
+					filterDto.getPolicyName(), filterDto.getStatus(), pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<MISPLicenseSummaryDto> mispLicenseSummaryDtoList = MapperUtils.mapAll(page.getContent(), MISPLicenseSummaryDto.class);
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(mispLicenseSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAllMISPLicenses method of InfraProviderServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAllMISPLicenses method of InfraProviderServiceImpl - " + ex.getMessage());
+			String errorCode = MISPErrorMessages.ERROR_FETCHING_MISP_DETAILS.getErrorCode();
+			String errorMessage = MISPErrorMessages.ERROR_FETCHING_MISP_DETAILS.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAllMispLicensesId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
+		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 }
