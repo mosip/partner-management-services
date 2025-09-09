@@ -137,6 +137,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getadminpartners;
 
+	private List<String> postLinkPolicyGroupToPartner;
+
 	//MISP License controller
 	
 	private List<String> postmisplicense;
