@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -81,6 +84,9 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.certificate.id.regex}")
 	private String certificateIdRegex;
+
+	@Value("${mosip.pms.api.id.link.policy.group.post}")
+	private String postLinkPolicyGroup;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -602,5 +608,25 @@ public class PartnerManagementController {
 			);
 		}
 		return partnerManagementService.downloadTrustCertificates(certificateId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostlinkpolicygrouptopartner())")
+	@PostMapping(value = "/{partnerId}/policy-group")
+	@Operation(summary = "This endpoint is used for linking a policy group to a partner.",
+			description = "Available since release-1.3.0-beta.3. This endpoint is used for linking a policy group to a partner.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Policy group linked successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(
+			@PathVariable("partnerId") String partnerId,
+			@RequestBody @Valid RequestWrapperV2<LinkPolicyGroupRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<LinkPolicyGroupResponseDto>> validationResponse =
+				requestValidator.validate(postLinkPolicyGroup, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerManagementService.linkPolicyGroup(partnerId, requestWrapper.getRequest());
 	}
 }

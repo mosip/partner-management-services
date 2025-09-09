@@ -189,7 +189,10 @@ public enum ErrorCode {
 	INVALID_INPUT_FORMAT("PMS_PRT_099", "Invalid input for '%s'. Expected: %s."),
 	UNABLE_TO_GENERATE_UNIQUE_ID("PMS_PRT_100", "Unable to generate a unique %s (field: '%s') for entity '%s' after %s attempts."),
 	DEVICE_DETAIL_ID_ALREADY_EXISTS("PMS_PRT_101", "A Device with the same Device Detail ID already exists"),
-	PARTNER_CREATE_ERROR("PMS_PRT_102", "Error while creating partner"),;
+	PARTNER_CREATE_ERROR("PMS_PRT_252", "Error while creating partner"),
+	POLICY_GROUP_LINK_ERROR("PMS_PRT_253", "Error while linking policy group to partner"),
+	INACTIVE_PARTNER_CANNOT_BE_MAPPED("PMS_PRT_254", "Inactive partner cannot be mapped to policy group"),
+	POLICY_GROUP_LINK_NOT_ALLOWED("PMS_PRT_255", "Only MISP partners can be linked to a policy group. Partner type '%s' is not allowed.");
 	/**
 	 * The error code.
 	 */
