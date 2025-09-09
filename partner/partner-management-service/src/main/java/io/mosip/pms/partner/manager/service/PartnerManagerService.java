@@ -10,7 +10,11 @@ import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public interface PartnerManagerService {
 
@@ -105,4 +109,6 @@ public interface PartnerManagerService {
 	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, TrustCertificateFilterDto filterDto);
 
 	public ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(String certificateId);
+
+    ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, @NotNull @Valid LinkPolicyGroupRequestDto request);
 }
