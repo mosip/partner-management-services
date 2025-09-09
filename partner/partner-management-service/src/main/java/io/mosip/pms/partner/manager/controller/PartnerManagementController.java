@@ -610,7 +610,7 @@ public class PartnerManagementController {
 		return partnerManagementService.downloadTrustCertificates(certificateId);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostLinkPolicyGroupToPartner())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostlinkpolicygrouptopartner())")
 	@PostMapping(value = "/{partnerId}/policy-group")
 	@Operation(summary = "This endpoint is used for linking a policy group to a partner.",
 			description = "Available since release-1.3.0-beta.3. This endpoint is used for linking a policy group to a partner.")
