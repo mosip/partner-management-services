@@ -55,3 +55,7 @@ WHERE approval_status != 'rejected' AND NOT (approval_status = 'approved' AND is
 CREATE UNIQUE INDEX uk_fcdtl_make_model_approval_status
 ON pms.ftp_chip_detail (foundational_trust_provider_id, make, model)
 WHERE approval_status != 'rejected' AND NOT (approval_status = 'approved' AND is_active = false);
+
+-- Creating unique index for policy_id and license_key_name
+CREATE UNIQUE INDEX IF NOT EXISTS uq_policy_id_license_key_name
+ON pms.misp_license (COALESCE(policy_id, 'N/A'), license_key_name);
