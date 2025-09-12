@@ -13,9 +13,9 @@ DeactivatePolicyGroupBeforePolicyCreation:
     "id": "mosip.pms.deactivate.policy.group.patch",
     "version": "1.0",        
     "requestTime": "$TIMESTAMP$",
-	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_DeleteBeforePolicyCreation_pms_sid_id$"
+	"policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_DeleteBeforePolicyCreation_pms_sid_id$"
 }'
       output: ' {
-      "policyGroupId": "$ID:DefinePolicyGroup_All_Valid_DeleteBeforePolicyCreation_pms_sid_id$",
+      "policyGroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_DeleteBeforePolicyCreation_pms_sid_id$",
       "isActive": false
 }'

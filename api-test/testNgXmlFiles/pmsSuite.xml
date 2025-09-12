@@ -551,7 +551,7 @@
 		<parameter name="ymlFile"
 			value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
 		<parameter name="pathParams"
-			value="sortFieldName,sortType,status,sbiVersion" />
+			value="partnerId,sortFieldName,sortType,status,sbiVersion" /> 
 		<parameter name="idKeyName" value="sbiId" />
 		<classes>
 			<class

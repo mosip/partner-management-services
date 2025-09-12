@@ -24,7 +24,7 @@ definePolicy:
     "is_Active": false
 }'
 
-   Pms_DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid:
+   Pms_DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Get API key for deactivated SID
