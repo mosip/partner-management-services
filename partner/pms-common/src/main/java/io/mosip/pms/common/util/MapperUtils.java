@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import io.mosip.pms.common.entity.*;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
@@ -30,6 +29,13 @@ import io.mosip.pms.common.dto.MISPDataPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.BaseEntity;
+import io.mosip.pms.common.entity.ClientDetail;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
+import io.mosip.pms.common.entity.Partner;
+import io.mosip.pms.common.entity.PartnerPolicy;
+import io.mosip.pms.common.entity.MISPLicenseEntityV2;
 
 
 /**

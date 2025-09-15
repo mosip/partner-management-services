@@ -8,7 +8,6 @@ import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
-import io.mosip.pms.partner.misp.dto.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,6 +34,13 @@ import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseUpdateRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
+import io.mosip.pms.partner.misp.dto.MISPFilterDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,7 +59,7 @@ public class MISPLicenseController {
 	RequestValidator requestValidator;
 
 	@Value("${mosip.pms.api.id.misp.generate.license.post}")
-	private String generateMISPApiId;
+	private String postGenerateMISPApiId;
 
 	@Deprecated(since = "release-1.3.0-beta.3")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmisplicense())")
@@ -173,7 +179,7 @@ public class MISPLicenseController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<MISPLicenseResponseDtoV2> generateMISPLicense( @RequestBody @Valid RequestWrapperV2<MISPLicenseRequestDtoV2> requestWrapper) {
-		Optional<ResponseWrapperV2<MISPLicenseResponseDtoV2>> validationResponse = requestValidator.validate(generateMISPApiId, requestWrapper);
+		Optional<ResponseWrapperV2<MISPLicenseResponseDtoV2>> validationResponse = requestValidator.validate(postGenerateMISPApiId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}

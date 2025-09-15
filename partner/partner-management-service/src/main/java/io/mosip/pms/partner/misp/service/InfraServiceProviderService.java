@@ -9,7 +9,11 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.entity.MISPLicenseEntity;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
-import io.mosip.pms.partner.misp.dto.*;
+import io.mosip.pms.partner.misp.dto.MISPFilterDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 
 public interface InfraServiceProviderService {
 

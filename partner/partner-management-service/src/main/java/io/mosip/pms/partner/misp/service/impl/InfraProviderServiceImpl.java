@@ -1,7 +1,11 @@
 package io.mosip.pms.partner.misp.service.impl;
 
 import java.security.SecureRandom;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +14,12 @@ import java.util.Optional;
 import java.util.Objects;
 
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.entity.*;
-import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
-import io.mosip.pms.partner.misp.dto.*;
+import io.mosip.pms.partner.misp.dto.MISPFilterDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -42,10 +47,23 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.MISPLicenseEntity;
+import io.mosip.pms.common.entity.Partner;
 
+import io.mosip.pms.common.entity.PartnerPolicyRequest;
+import io.mosip.pms.common.entity.MISPLicenseSummaryEntity;
+import io.mosip.pms.common.entity.MISPLicenseEntityV2;
+import io.mosip.pms.common.entity.MISPLicenseEntityPK;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.repository.AuthPolicyRepository;
+import io.mosip.pms.common.repository.MispLicenseRepository;
+import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
+import io.mosip.pms.common.repository.PartnerServiceRepository;
+import io.mosip.pms.common.repository.MISPLicenseSummaryRepository;
+import io.mosip.pms.common.repository.MispLicenseV2Repository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.UserDetailUtil;
@@ -55,6 +73,7 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
@@ -75,7 +94,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	private String getAllMispLicensesId;
 
 	@Value("${mosip.pms.api.id.misp.generate.license.post}")
-	private String generateMISPApiId;
+	private String postGenerateMISPApiId;
 
 	@Autowired
 	MISPLicenseSummaryRepository mispLicenseSummaryRepository;
@@ -573,7 +592,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			String errorMessage = MISPErrorMessages.ERROR_GENERATING_MISP_LICENSE.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(generateMISPApiId);
+		responseWrapper.setId(postGenerateMISPApiId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
