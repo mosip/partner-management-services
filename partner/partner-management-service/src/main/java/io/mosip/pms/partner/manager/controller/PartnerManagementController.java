@@ -376,9 +376,9 @@ public class PartnerManagementController {
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@Parameter(
-					description = "Search type for partnerId. Default is 'contains'",
+					description = "Search type for partnerId. Applicable only if 'partnerId' is provided. Default is 'contains'.",
 					in = ParameterIn.QUERY,
-					schema = @Schema(allowableValues = {"contains", "equals"}, defaultValue = "contains")
+					schema = @Schema(allowableValues = {"equals"})
 			)
 			@RequestParam(value = "partnerIdSearchType", required = false, defaultValue = "contains") String partnerIdSearchType,
 			@RequestParam(value = "partnerComment", required = false) String partnerComment,
@@ -408,6 +408,8 @@ public class PartnerManagementController {
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (partnerIdSearchType != null) {
 			filterDto.setPartnerIdSearchType(partnerIdSearchType.toLowerCase());
 		}
 		if (partnerComment != null) {

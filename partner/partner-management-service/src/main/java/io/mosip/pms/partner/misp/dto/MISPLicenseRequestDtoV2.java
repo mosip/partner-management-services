@@ -8,10 +8,8 @@ import java.time.LocalDate;
 
 @Data
 public class MISPLicenseRequestDtoV2 {
-    @NotBlank
-    @NotNull
-    private String partnerId;
 
+    private String partnerId;
     private String policyId;
     private String licenseKeyName;
     private LocalDate expiryDate;

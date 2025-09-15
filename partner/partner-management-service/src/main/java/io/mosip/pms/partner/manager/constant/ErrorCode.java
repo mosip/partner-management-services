@@ -49,6 +49,8 @@ public enum ErrorCode {
 	FETCH_ALL_PARTNER_POLICY_MAPPING_REQUEST_ERROR("PMS_PM_062", "Error while fetching all partner policy mapping requests"),
 	PARTNER_ALREADY_DEACTIVATED("PMS_PM_063", "The selected partner has already been deactivated."),
 	FETCH_ALL_API_KEY_REQUESTS_ERROR("PMS_PM_064", "Error while fetching all api key requests"),
+	INVALID_PARTNER_ID_SEARCH_TYPE("PMS_PM_065", "Invalid partnerIdSearchType. Allowed values are 'contains' and 'equals'"),
+	PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS("PMS_PM_066", "partnerId is mandatory when partnerIdSearchType is 'equals'"),
 	API_NOT_ACCESSIBLE("PMS-BJ-001", "API not accessible"),
     API_NULL_RESPONSE("PMS-BJ-002", "API returned a null response"),
     PARTNER_CERTIFICATE_FETCH_ERROR("PMS-BJ-003", "Error while fetching partner certificate"),

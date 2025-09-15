@@ -83,6 +83,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private static final String APPROVED = "approved";
 	public static final String BLANK_STRING = "";
 	private static final String MISP_PARTNER = "MISP_Partner";
+	private static final String EQUALS = "equals";
+	private static final String CONTAINS = "contains";
 
 	@Value("${mosip.pms.api.id.admin.partners.get}")
 	private String getAdminPartnersId;
@@ -975,6 +977,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		try {
 			PageResponseV2Dto<PartnerPolicyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+
+			// partnerIdSearchType validation
+			if (Objects.nonNull(filterDto.getPartnerIdSearchType()) && !filterDto.getPartnerIdSearchType().equals(BLANK_STRING)) {
+				if (!filterDto.getPartnerIdSearchType().equals(CONTAINS) && !filterDto.getPartnerIdSearchType().equals(EQUALS)) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PARTNER_ID_SEARCH_TYPE.getErrorCode(),
+							ErrorCode.INVALID_PARTNER_ID_SEARCH_TYPE.getErrorMessage()
+					);
+				}
+				if (filterDto.getPartnerIdSearchType().equals(EQUALS) && (Objects.isNull(filterDto.getPartnerId()) || filterDto.getPartnerId().isEmpty())) {
+					throw new PartnerServiceException(
+							ErrorCode.PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS.getErrorCode(),
+							ErrorCode.PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS.getErrorMessage()
+					);
+				}
+			}
 
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
