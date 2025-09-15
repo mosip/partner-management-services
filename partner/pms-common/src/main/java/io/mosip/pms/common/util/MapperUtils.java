@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.mosip.pms.common.entity.*;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
@@ -29,12 +30,6 @@ import io.mosip.pms.common.dto.MISPDataPublishDto;
 import io.mosip.pms.common.dto.PartnerDataPublishDto;
 import io.mosip.pms.common.dto.PolicyPublishDto;
 import io.mosip.pms.common.dto.SearchAuthPolicy;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.BaseEntity;
-import io.mosip.pms.common.entity.ClientDetail;
-import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicy;
 
 
 /**
@@ -550,16 +545,31 @@ public class MapperUtils {
 	 * @param entity
 	 * @return
 	 */
-	public static MISPDataPublishDto mapDataToPublishDto(MISPLicenseEntity entity) {
-		MISPDataPublishDto dataToPublish = new MISPDataPublishDto();
-		dataToPublish.setLicenseKey(entity.getLicenseKey());
-		dataToPublish.setMispCommenceOn(entity.getValidFromDate());
-		dataToPublish.setMispExpiresOn(entity.getValidToDate());
-		dataToPublish.setMispId(entity.getMispId());
-		dataToPublish.setMispStatus(entity.getIsActive() == true ? ACTIVE: NOTACTIVE);
-		return dataToPublish;
+	private static void populateDto(MISPDataPublishDto dto, String licenseKey,
+									LocalDateTime validFrom, LocalDateTime validTo,
+									String mispId, Boolean isActive) {
+		dto.setLicenseKey(licenseKey);
+		dto.setMispCommenceOn(validFrom);
+		dto.setMispExpiresOn(validTo);
+		dto.setMispId(mispId);
+		dto.setMispStatus(Boolean.TRUE.equals(isActive) ? ACTIVE : NOTACTIVE);
 	}
-	
+
+	public static MISPDataPublishDto mapDataToPublishDto(MISPLicenseEntity entity) {
+		MISPDataPublishDto dto = new MISPDataPublishDto();
+		populateDto(dto, entity.getLicenseKey(), entity.getValidFromDate(),
+				entity.getValidToDate(), entity.getMispId(), entity.getIsActive());
+		return dto;
+	}
+
+	public static MISPDataPublishDto mapDataToPublishDtoV2(MISPLicenseEntityV2 entity) {
+		MISPDataPublishDto dto = new MISPDataPublishDto();
+		populateDto(dto, entity.getId().getLicenseKey(), entity.getValidFromDate(),
+				entity.getValidToDate(), entity.getId().getMispId(), entity.getIsActive());
+		return dto;
+	}
+
+
 	private static LocalDateTime toISOFormat(LocalDateTime localDateTime) {
 		ZonedDateTime zonedtime = localDateTime.atZone(ZoneId.systemDefault());
 		ZonedDateTime converted = zonedtime.withZoneSameInstant(ZoneOffset.UTC);

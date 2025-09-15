@@ -1,7 +1,6 @@
 package io.mosip.pms.common.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,16 +17,14 @@ public class MISPLicenseEntityV2 implements Serializable {
 
     private static final long serialVersionUID = -8541947597557590399L;
 
-    @Id
-    @Column(name = "misp_id")
-    private String mispId;
+    @EmbeddedId
+    private MISPLicenseEntityPK id;
 
     @Column(name = "policy_id")
     private String policyId;
 
-    @NotNull
-    @Column(name = "license_key")
-    private String licenseKey;
+    @Column(name = "license_key_name")
+    private String licenseKeyName;
 
     @Column(name = "valid_from_date")
     private LocalDateTime validFromDate;

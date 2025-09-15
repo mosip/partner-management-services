@@ -1,7 +1,7 @@
 package io.mosip.pms.partner.misp.service.impl;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.Optional;
 import java.util.Objects;
 
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
-import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
-import io.mosip.pms.partner.misp.dto.MISPFilterDto;
-import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
+import io.mosip.pms.partner.misp.dto.*;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
 import org.json.simple.JSONObject;
@@ -42,20 +42,10 @@ import io.mosip.pms.common.dto.SearchDto;
 import io.mosip.pms.common.dto.SearchFilter;
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.Partner;
 
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.MISPLicenseSummaryEntity;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.MispLicenseRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.common.repository.MISPLicenseSummaryRepository;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.UserDetailUtil;
@@ -65,7 +55,6 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
@@ -85,11 +74,17 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	@Value("${mosip.pms.api.id.misp.licenses.get}")
 	private String getAllMispLicensesId;
 
+	@Value("${mosip.pms.api.id.misp.generate.license.post}")
+	private String generateMISPApiId;
+
 	@Autowired
 	MISPLicenseSummaryRepository mispLicenseSummaryRepository;
 
 	@Autowired
 	MispLicenseRepository mispLicenseRepository;
+
+	@Autowired
+	MispLicenseV2Repository mispLicenseV2Repository;
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
@@ -445,7 +440,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 			Page<MISPLicenseSummaryEntity> page = mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(filterDto.getPartnerId(), filterDto.getPolicyGroupName(),
-					filterDto.getPolicyName(), filterDto.getStatus(), pageable);
+					filterDto.getPolicyName(), filterDto.getMispLicenseKeyName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<MISPLicenseSummaryDto> mispLicenseSummaryDtoList = MapperUtils.mapAll(page.getContent(), MISPLicenseSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -473,5 +468,113 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
 		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
+	}
+
+	@Override
+	public ResponseWrapperV2<MISPLicenseResponseDtoV2> generateMISPLicense( MISPLicenseRequestDtoV2 request) {
+		ResponseWrapperV2<MISPLicenseResponseDtoV2> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			// input validations
+			String partnerId = request.getPartnerId();
+			if(Objects.isNull(partnerId) || partnerId.trim().isBlank()) {
+				throw new MISPServiceException(MISPErrorMessages.INVALID_PARTNER_ID.getErrorCode(),
+						MISPErrorMessages.INVALID_PARTNER_ID.getErrorMessage());
+			}
+			String licenseKeyName = request.getLicenseKeyName();
+			if(Objects.isNull(licenseKeyName) || licenseKeyName.trim().isBlank()) {
+				throw new MISPServiceException(MISPErrorMessages.INVALID_LICENSE_KEY_NAME.getErrorCode(),
+						MISPErrorMessages.INVALID_LICENSE_KEY_NAME.getErrorMessage());
+			}
+			// partnerId validation
+			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
+			if (partnerFromDb.isEmpty()) {
+				throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
+						MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorMessage());
+			}
+			if (!partnerFromDb.get().getPartnerTypeCode()
+					.equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
+				throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_VALID.getErrorCode(),
+						MISPErrorMessages.MISP_ID_NOT_VALID.getErrorMessage());
+			}
+			if (!partnerFromDb.get().getIsActive()) {
+				throw new MISPServiceException(MISPErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
+						MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());
+			}
+
+			// policyId validation
+			String policyId = request.getPolicyId();
+			Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
+			if (policyId != null && !policyId.isBlank()) {
+				List<PartnerPolicyRequest> approvedPartnerPolicyrequests = partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, "approved");
+				if (approvedPartnerPolicyrequests.isEmpty()) {
+					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
+							MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
+				}
+				mispPolicyFromDb = authPolicyRepository.findById(policyId);
+				if(mispPolicyFromDb.isEmpty()) {
+					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
+							MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
+				}
+			}
+			policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
+
+			// licenseKeyName validation
+			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, licenseKeyName);
+			if (!mispLicenseFromDb.isEmpty()) {
+				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorCode(),
+						MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorMessage());
+			}
+
+			// expiryDate validation
+			LocalDate expiryDate = request.getExpiryDate();
+			if(expiryDate.isBefore(LocalDate.now()) || expiryDate.isEqual(LocalDate.now())) {
+				throw new MISPServiceException(MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorCode(),
+						MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorMessage());
+			}
+
+			MISPLicenseEntityV2 entity = new MISPLicenseEntityV2();
+			MISPLicenseEntityPK pk = new MISPLicenseEntityPK();
+			pk.setMispId(partnerId);
+			pk.setLicenseKey(generateLicenseKey());
+			entity.setId(pk);
+			entity.setLicenseKeyName(licenseKeyName);
+			entity.setValidFromDate(LocalDateTime.now(ZoneId.of("UTC")));
+			entity.setValidToDate(request.getExpiryDate().atTime(LocalTime.of(23, 59, 59)).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
+			entity.setCreatedBy(partnerId);
+			entity.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			entity.setIsActive(true);
+			entity.setIsDeleted(false);
+			entity.setPolicyId(policyId);
+			mispLicenseV2Repository.save(entity);
+
+			MISPLicenseResponseDtoV2 responseDtoV2 = new MISPLicenseResponseDtoV2();
+			responseDtoV2.setLicenseKey(entity.getId().getLicenseKey());
+			responseDtoV2.setExpiryDateTime(entity.getValidToDate());
+			responseDtoV2.setLicenseKeyName(entity.getLicenseKeyName());
+			responseDtoV2.setLicenseKeyStatus(ACTIVE);
+			responseDtoV2.setPartnerId(entity.getId().getMispId());
+			responseDtoV2.setPolicyId(entity.getPolicyId());
+			if(mispPolicyFromDb.isPresent()) {
+				notify(MapperUtils.mapDataToPublishDtoV2(entity), MapperUtils.mapPolicyToPublishDto(mispPolicyFromDb.get(),
+						getPolicyObject(mispPolicyFromDb.get().getPolicyFileId())), EventType.MISP_LICENSE_GENERATED);
+			}
+			else {
+				notify(MapperUtils.mapDataToPublishDtoV2(entity), null, EventType.MISP_LICENSE_GENERATED);
+			}
+			responseWrapper.setResponse(responseDtoV2);
+		} catch (MISPServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In generateMISPLicense method of InfraProviderServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In generateMISPLicense method of InfraProviderServiceImpl - " + ex.getMessage());
+			String errorCode = MISPErrorMessages.ERROR_GENERATING_MISP_LICENSE.getErrorCode();
+			String errorMessage = MISPErrorMessages.ERROR_GENERATING_MISP_LICENSE.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(generateMISPApiId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 }

@@ -7,5 +7,6 @@ public class MISPFilterDto {
     private String partnerId;
     private String policyGroupName;
     private String policyName;
+    private String mispLicenseKeyName;
     private String status;
 }

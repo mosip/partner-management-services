@@ -1012,7 +1012,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
-					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerType(),
+					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerIdSearchType(), filterDto.getPartnerType(),
 							filterDto.getOrganizationName(), filterDto.getPolicyId(), filterDto.getPolicyName(),
 							filterDto.getStatus(), filterDto.getPartnerComment(),
 							filterDto.getPolicyGroupName(), partnerIdList, isPartnerAdmin, pageable);

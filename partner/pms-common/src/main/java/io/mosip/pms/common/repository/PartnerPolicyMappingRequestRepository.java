@@ -27,7 +27,11 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
             "LEFT JOIN ppr.policy ap " +
             "LEFT JOIN ppr.partner p " +
             "LEFT JOIN p.policyGroup pg " +
-            "WHERE (:partnerId IS NULL OR lower(ppr.partnerId) LIKE %:partnerId%) " +
+            "WHERE ( " +
+            "   :partnerId IS NULL OR " +
+            "   (:partnerIdSearchType = 'contains' AND lower(ppr.partnerId) LIKE %:partnerId%) OR " +
+            "   (:partnerIdSearchType = 'equals' AND ppr.partnerId = :partnerId) " +
+            ") " +
             "AND (:partnerTypeCode IS NULL OR lower(p.partnerTypeCode) LIKE %:partnerTypeCode%) " +
             "AND (:organizationName IS NULL OR lower(p.name) LIKE %:organizationName%) " +
             "AND (:policyId IS NULL OR lower(ap.id) LIKE %:policyId%) " +
@@ -39,6 +43,7 @@ public interface PartnerPolicyMappingRequestRepository extends BaseRepository<Pa
     )
     Page<PartnerPolicyRequestSummaryEntity> getSummaryOfAllPartnerPolicyRequests(
             @Param("partnerId") String partnerId,
+            @Param("partnerIdSearchType") String partnerIdSearchType,
             @Param("partnerTypeCode") String partnerTypeCode,
             @Param("organizationName") String organizationName,
             @Param("policyId") String policyId,
