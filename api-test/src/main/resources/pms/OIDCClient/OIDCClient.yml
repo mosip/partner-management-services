@@ -34,7 +34,7 @@ CreateOIDCClient:
       input: '{
       	"requestTime": "$TIMESTAMP$",
       	"name": "OIDC TEST CLIENT 89766",
-      	"policyId": "$ID:DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid_id$",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_id$",
       	"publicKey": "$JWKKEY$",
       	"authPartnerId": "pms-111999",
       	"logoUri": "https://health-services.com/logo.png",

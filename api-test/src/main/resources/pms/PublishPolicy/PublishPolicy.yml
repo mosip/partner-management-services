@@ -118,7 +118,7 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_ForDeactivatePolicy_pms_sid_id$",
+		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_id$",
 		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
 		"requesttime": "$TIMESTAMP$"
 }'
@@ -138,7 +138,7 @@ createPublishPolicy:
         "authTokenType": "$IGNORE$"
     }'
 
-   Pms_PublishPolicy_All_Valid_ForNeg:
+   Pms_PublishPolicy_All_Valid_ForNeg_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy
       role: partneradmin
@@ -148,7 +148,7 @@ createPublishPolicy:
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
 		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_For_Get_ApiKey_with_deactivated_sid_id$",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_id$",
 		"requesttime": "$TIMESTAMP$"
 }'
       output: '{

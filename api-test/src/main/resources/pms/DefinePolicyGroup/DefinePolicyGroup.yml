@@ -204,7 +204,7 @@ definePolicyGroup:
         "is_Active": true
 }' 
 
-   Pms_DefinePolicyGroup_All_Valid_ForDeactivatePolicy_pms_sid:
+   Pms_DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup for deactivate policy
       role: partneradmin
@@ -261,7 +261,7 @@ definePolicyGroup:
         "is_Active": true
     }'
     
-   Pms_DefinePolicyGroup_All_Valid_DeleteBeforePolicyCreation_pms_sid:
+   Pms_DefinePolicyGroup_All_Valid_Smoke_DeleteBeforePolicyCreation_pms_sid:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup for draft policy
       role: partneradmin
