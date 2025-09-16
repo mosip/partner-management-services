@@ -6,4 +6,5 @@ import lombok.Data;
 public class LinkPolicyGroupResponseDto {
     private String partnerId;
     private String policyGroupId;
+    private String policyGroupName;
 }

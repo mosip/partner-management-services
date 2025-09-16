@@ -849,6 +849,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
 					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
+					!partner.getPartnerTypeCode().equals(MISP_PARTNER) &&
 					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
 				LOGGER.info("sessionId", "idType", "id",
 						"Policy Group Id is empty for partner Id -" + partner.getId());
@@ -1316,6 +1317,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LinkPolicyGroupResponseDto responseDto = new LinkPolicyGroupResponseDto();
 			responseDto.setPartnerId(partner.getId());
 			responseDto.setPolicyGroupId(partner.getPolicyGroupId());
+			responseDto.setPolicyGroupName(policyGroup.getName());
 
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
