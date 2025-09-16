@@ -986,7 +986,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 							ErrorCode.INVALID_PARTNER_ID_SEARCH_TYPE.getErrorMessage()
 					);
 				}
-				if (filterDto.getPartnerIdSearchType().equals(EQUALS) && (Objects.isNull(filterDto.getPartnerId()))) {
+				if (filterDto.getPartnerIdSearchType().equals(EQUALS) && Objects.isNull(filterDto.getPartnerId())) {
 					throw new PartnerServiceException(
 							ErrorCode.PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS.getErrorCode(),
 							ErrorCode.PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS.getErrorMessage()
