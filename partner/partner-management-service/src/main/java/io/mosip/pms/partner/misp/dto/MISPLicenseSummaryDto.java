@@ -29,6 +29,9 @@ public class MISPLicenseSummaryDto {
     @Schema(description = "Description of the policy", example = "Data Protection Policy")
     private String policyDescription;
 
+    @Schema(description = "Name of the MISP license key", example = "MISP License Key 1")
+    private String mispLicenseKeyName;
+
     @Schema(description = "Unique identifier for the MISP partner", example = "xyz")
     private String mispLicenseKey;
 

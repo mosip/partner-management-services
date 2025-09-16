@@ -17,7 +17,12 @@ public enum MISPErrorMessages {
 	MISP_POLICY_NOT_MAPPED("PMS_MSP_417", "Policy not mapped."),
 	MISP_POLICY_NOT_APPROVED("PMS_MSP_418", "Policy not approved."),
 	MISP_POLICY_NOT_EXISTS("PMS_MSP_419", "Policy not exists."),
-	ERROR_FETCHING_MISP_DETAILS("PMS_MSP_420","Error while fetching all MISP Licence details.");
+	ERROR_FETCHING_MISP_DETAILS("PMS_MSP_420","Error while fetching all MISP Licence details."),
+	ERROR_GENERATING_MISP_LICENSE("PMS_MSP_421","Error while generating MISP license key."),
+	INVALID_LICENSE_KEY_NAME("PMS_MSP_422","Invalid license key name."),
+	INVALID_PARTNER_ID("PMS_MSP_422","Invalid Partner ID."),
+	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_423","MISP License key name already exists."),
+	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_424","ExpiryDate should be greater than or equal today.");
 
 	private final String errorCode;
 	private final String errorMessage;

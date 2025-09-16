@@ -1547,7 +1547,7 @@ public class PartnerManagementServiceImplTest {
 		PartnerPolicyRequestSummaryEntity entity = new PartnerPolicyRequestSummaryEntity();
 		entity.setId("12345");
 		Page<PartnerPolicyRequestSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1 );
-		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
+		when(partnerPolicyMappingRequestRepository.getSummaryOfAllPartnerPolicyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any())).thenReturn(page);
 		partnerManagementImpl.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto);
 	}
 
