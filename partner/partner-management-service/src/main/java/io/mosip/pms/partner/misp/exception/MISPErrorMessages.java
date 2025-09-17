@@ -22,7 +22,9 @@ public enum MISPErrorMessages {
 	INVALID_LICENSE_KEY_NAME("PMS_MSP_422","Invalid license key name."),
 	INVALID_PARTNER_ID("PMS_MSP_423","Invalid Partner ID."),
 	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_424","MISP License key name already exists."),
-	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","ExpiryDate should be greater than today.");
+	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","ExpiryDate should be greater than today."),
+	ERROR_FETCHING_INDIVIDUAL_MISP_DETAILS("PMS_MSP_426","Error while fetching MISP Licence details."),
+	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","MISP License does not exist for the given provider.");
 
 	private final String errorCode;
 	private final String errorMessage;

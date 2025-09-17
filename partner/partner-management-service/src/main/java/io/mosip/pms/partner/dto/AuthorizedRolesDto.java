@@ -155,6 +155,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getallmisplicenses;
 
+	private List<String> getmisplicensedetails;
+
 	private List<String> postgeneratemisplicense;
 
 	private List<String> getpartnercertificates;
