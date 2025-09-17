@@ -160,6 +160,7 @@ public class PartnerHelper {
     public final Map<String, String> mispAliasToColumnMap = new HashMap<>();
     {
         mispAliasToColumnMap.put("partnerId", "id.mispId");
+        mispAliasToColumnMap.put("orgName", "p.name");
         mispAliasToColumnMap.put("policyGroupName", "pg.name");
         mispAliasToColumnMap.put("policyName", "ap.name");
         mispAliasToColumnMap.put("mispLicenseKey", "id.licenseKey");

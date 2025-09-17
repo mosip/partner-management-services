@@ -458,7 +458,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.mispAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
-			Page<MISPLicenseSummaryEntity> page = mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(filterDto.getPartnerId(), filterDto.getPolicyGroupName(),
+			Page<MISPLicenseSummaryEntity> page = mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getPolicyGroupName(),
 					filterDto.getPolicyName(), filterDto.getMispLicenseKeyName(), filterDto.getStatus(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<MISPLicenseSummaryDto> mispLicenseSummaryDtoList = MapperUtils.mapAll(page.getContent(), MISPLicenseSummaryDto.class);

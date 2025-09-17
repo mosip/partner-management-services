@@ -11,6 +11,9 @@ public class MISPLicenseSummaryDto {
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
+    @Schema(description = "Name of the partner organization", example = "Example Organization")
+    private String orgName;
+
     @Schema(description = "Unique identifier for the policy group", example = "policyGroup789")
     private String policyGroupId;
 

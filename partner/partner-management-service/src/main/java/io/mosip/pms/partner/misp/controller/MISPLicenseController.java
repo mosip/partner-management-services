@@ -134,6 +134,7 @@ public class MISPLicenseController {
 			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName,
@@ -147,6 +148,7 @@ public class MISPLicenseController {
 		inputValidator.validateRequestInput(sortFieldName);
 		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(policyGroupName);
 		inputValidator.validateRequestInput(policyName);
 		inputValidator.validateRequestInput(mispLicenseKeyName);
@@ -154,6 +156,9 @@ public class MISPLicenseController {
 		MISPFilterDto filterDto = new MISPFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (orgName != null) {
+			filterDto.setOrgName(orgName.toLowerCase());
 		}
 		if (policyGroupName != null) {
 			filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
