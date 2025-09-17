@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
                 targetClass = MISPLicenseSummaryEntity.class,
                 columns = {
                         @ColumnResult(name = "partnerId", type = String.class),
+                        @ColumnResult(name = "orgName", type = String.class),
                         @ColumnResult(name = "policyGroupId", type = String.class),
                         @ColumnResult(name = "policyGroupName", type = String.class),
                         @ColumnResult(name = "policyGroupDescription", type = String.class),
@@ -32,11 +33,12 @@ import java.time.LocalDateTime;
         }
 )
 public class MISPLicenseSummaryEntity {
-    public MISPLicenseSummaryEntity(String partnerId, String policyGroupId, String policyGroupName,
+    public MISPLicenseSummaryEntity(String partnerId, String orgName, String policyGroupId, String policyGroupName,
                                    String policyGroupDescription, String policyId, String policyName,
                                    String policyDescription, String mispLicenseKeyName, String mispLicenseKey, String status,
                                     LocalDateTime createdDateTime, LocalDateTime expiryDateTime) {
         this.partnerId = partnerId;
+        this.orgName = orgName;
         this.policyGroupId = policyGroupId;
         this.policyGroupName = policyGroupName;
         this.policyGroupDescription = policyGroupDescription;
@@ -57,6 +59,8 @@ public class MISPLicenseSummaryEntity {
 
     @Id
     private String partnerId;
+
+    private String orgName;
 
     private String policyGroupId;
 

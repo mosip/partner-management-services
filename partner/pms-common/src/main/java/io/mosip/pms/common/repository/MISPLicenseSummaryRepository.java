@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicenseSummaryEntity, String> {
 
     @Query(value = "SELECT new MISPLicenseSummaryEntity(" +
-            "m.id.mispId, pg.id, pg.name, pg.desc, ap.id, ap.name, " +
+            "m.id.mispId, p.name, pg.id, pg.name, pg.desc, ap.id, ap.name, " +
             "ap.descr, m.licenseKeyName, " +
             "CONCAT(FUNCTION('repeat', '*', LENGTH(m.id.licenseKey) - 4), SUBSTRING(m.id.licenseKey, LENGTH(m.id.licenseKey) - 3, 4)) as mispLicenseKey, " +
             "CASE " +
@@ -25,6 +25,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             "LEFT JOIN m.partner p " +
             "LEFT JOIN p.policyGroup pg " +
             "WHERE (:partnerId IS NULL OR lower(m.id.mispId) LIKE %:partnerId%) " +
+            "AND (:orgName IS NULL OR lower(p.name) LIKE %:orgName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
             "AND (:mispLicenseKeyName IS NULL OR lower(m.licenseKeyName) LIKE %:mispLicenseKeyName%) " +
@@ -36,6 +37,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
     )
     Page<MISPLicenseSummaryEntity> getSummaryOfAllMispLicenseDetails(
             @Param("partnerId") String partnerId,
+            @Param("orgName") String orgName,
             @Param("policyGroupName") String policyGroupName,
             @Param("policyName") String policyName,
             @Param("mispLicenseKeyName") String mispLicenseKeyName,
