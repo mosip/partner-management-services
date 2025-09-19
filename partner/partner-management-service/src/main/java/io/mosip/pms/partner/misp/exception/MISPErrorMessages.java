@@ -24,7 +24,8 @@ public enum MISPErrorMessages {
 	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_424","MISP License key name already exists."),
 	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","ExpiryDate should be greater than today."),
 	ERROR_FETCHING_INDIVIDUAL_MISP_DETAILS("PMS_MSP_426","Error while fetching MISP Licence details."),
-	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","MISP License does not exist for the given provider.");
+	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","MISP License does not exist for the given provider."),
+	MULTIPLE_MISP_LICENSES_FOUND("PMS_MSP_428","Multiple MISP license keys found for the given provider. So please filter with license key name and policy id.");
 
 	private final String errorCode;
 	private final String errorMessage;

@@ -569,7 +569,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			entity.setLicenseKeyName(licenseKeyName);
 			entity.setValidFromDate(LocalDateTime.now(ZoneId.of("UTC")));
 			entity.setValidToDate(request.getExpiryDate().atTime(LocalTime.of(23, 59, 59)).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
-			entity.setCreatedBy(partnerId);
+			entity.setCreatedBy(getLoggedInUserId());
 			entity.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 			entity.setIsActive(true);
 			entity.setIsDeleted(false);
@@ -633,6 +633,10 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				if (filteredList.isEmpty()) {
 					throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorCode(),
 							MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorMessage());
+				}
+				if (filteredList.size() > 1) {
+					throw new MISPServiceException(MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorCode(),
+							MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorMessage());
 				}
 				entity = filteredList.getFirst();
 			}
