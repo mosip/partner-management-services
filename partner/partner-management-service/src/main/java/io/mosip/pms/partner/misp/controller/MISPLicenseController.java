@@ -41,6 +41,7 @@ import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
 import io.mosip.pms.partner.misp.dto.MISPFilterDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
+import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -192,5 +193,23 @@ public class MISPLicenseController {
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getLicenseKeyName());
 		return infraProviderService.generateMISPLicense(requestWrapper.getRequest());
+	}
+
+	@GetMapping("/misp-licenses/{partnerId}")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensedetails())")
+	@Operation(summary = "This endpoint retrieves the details of MISP Licence Key.",
+			description = "Available since release-1.3.0-beta.3. This endpoint retrieves the details of MISP Licence Key based on Partner Id and optional query parameters. It is configured for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<MISPLicenseDetailsDto> getMISPLicenseDetails( @PathVariable @Valid String partnerId,
+			@RequestParam(value = "policyId", required = false) String policyId,
+			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName
+	) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(policyId);
+		inputValidator.validateRequestInput(mispLicenseKeyName);
+		return infraProviderService.getMISPLicenseDetails(partnerId, policyId, mispLicenseKeyName);
 	}
 }

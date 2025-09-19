@@ -14,6 +14,7 @@ import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
+import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
 
 public interface InfraServiceProviderService {
 
@@ -58,4 +59,6 @@ public interface InfraServiceProviderService {
 	public ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> getAllMISPLicenses(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, MISPFilterDto filterDto);
 
 	public ResponseWrapperV2<MISPLicenseResponseDtoV2> generateMISPLicense(MISPLicenseRequestDtoV2 request);
+
+	public ResponseWrapperV2<MISPLicenseDetailsDto> getMISPLicenseDetails(String partnerId, String policyId, String mispLicenseKeyName);
 }
