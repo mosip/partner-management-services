@@ -517,17 +517,17 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			// partnerId validation
 			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 			if (partnerFromDb.isEmpty()) {
-				throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
-						MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorMessage());
+				throw new MISPServiceException(MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+						MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorMessage());
 			}
 			if (!partnerFromDb.get().getPartnerTypeCode()
 					.equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
-				throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_VALID.getErrorCode(),
-						MISPErrorMessages.MISP_ID_NOT_VALID.getErrorMessage());
+				throw new MISPServiceException(MISPErrorMessages.INVALID_PARTNER_TYPE.getErrorCode(),
+						MISPErrorMessages.INVALID_PARTNER_TYPE.getErrorMessage());
 			}
 			if (!partnerFromDb.get().getIsActive()) {
-				throw new MISPServiceException(MISPErrorMessages.MISP_IS_INACTIVE.getErrorCode(),
-						MISPErrorMessages.MISP_IS_INACTIVE.getErrorMessage());
+				throw new MISPServiceException(MISPErrorMessages.PARTNER_NOT_ACTIVE.getErrorCode(),
+						MISPErrorMessages.PARTNER_NOT_ACTIVE.getErrorMessage());
 			}
 
 			// policyId validation
@@ -617,8 +617,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			}
 			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 			if (partnerFromDb.isEmpty()) {
-				throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
-						MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorMessage());
+				throw new MISPServiceException(MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+						MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorMessage());
 			}
 			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerId(partnerId);
 			if (mispLicenseFromDb.isEmpty()) {
