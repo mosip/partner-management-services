@@ -568,7 +568,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			entity.setId(pk);
 			entity.setLicenseKeyName(licenseKeyName);
 			entity.setValidFromDate(LocalDateTime.now(ZoneId.of("UTC")));
-			entity.setValidToDate(request.getExpiryDate().atTime(LocalTime.of(23, 59, 59)).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime());
+			// Get current UTC time
+			LocalTime currentUtcTime = LocalTime.now(ZoneOffset.UTC);
+			entity.setValidToDate(LocalDateTime.of(expiryDate, currentUtcTime));
 			entity.setCreatedBy(getLoggedInUserId());
 			entity.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 			entity.setIsActive(true);
