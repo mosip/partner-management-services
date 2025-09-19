@@ -620,26 +620,17 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				throw new MISPServiceException(MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorCode(),
 						MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorMessage());
 			}
-			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerId(partnerId);
+			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, mispLicenseKeyName);
 			if (mispLicenseFromDb.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorCode(),
 						MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorMessage());
 			}
-			MISPLicenseEntityV2 entity = null;
-			if (mispLicenseFromDb.size() == 1) {
-				entity = mispLicenseFromDb.getFirst();
-			} else {
-				List<MISPLicenseEntityV2> filteredList = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, mispLicenseKeyName);
-				if (filteredList.isEmpty()) {
-					throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorCode(),
-							MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorMessage());
-				}
-				if (filteredList.size() > 1) {
-					throw new MISPServiceException(MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorCode(),
-							MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorMessage());
-				}
-				entity = filteredList.getFirst();
+			if (mispLicenseFromDb.size() > 1) {
+				throw new MISPServiceException(MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorCode(),
+						MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorMessage());
 			}
+			MISPLicenseEntityV2 entity = mispLicenseFromDb.getFirst();
+
 			MISPLicenseDetailsDto responseDto = new MISPLicenseDetailsDto();
 			responseDto.setPartnerId(entity.getId().getMispId());
 			responseDto.setOrgName(partnerFromDb.get().getName());

@@ -24,11 +24,11 @@ public enum MISPErrorMessages {
 	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_424","MISP License key name already exists."),
 	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","ExpiryDate should be greater than today."),
 	ERROR_FETCHING_INDIVIDUAL_MISP_DETAILS("PMS_MSP_426","Error while fetching MISP Licence details."),
-	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","MISP License does not exist for the given provider."),
-	MULTIPLE_MISP_LICENSES_FOUND("PMS_MSP_428","Multiple MISP license keys found for the given provider. So please filter with license key name and policy id."),
+	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","No matching MISP License Key exists for the specified Partner ID, Policy ID, and MISP License Key Name."),
+	MULTIPLE_MISP_LICENSES_FOUND("PMS_MSP_428","Unable to fetch MISP License Key details because multiple matches were found for the provided Partner ID, Policy ID, and MISP License Key Name. Please use the correct MISP License Key Name and Policy ID to filter."),
 	PARTNER_ID_NOT_EXISTS("PMS_MSP_429","Partner ID does not exist."),
 	PARTNER_NOT_ACTIVE("PMS_MSP_430","Partner is not active."),
-	INVALID_PARTNER_TYPE("PMS_MSP_431","Invalid Partner Type. Partner Type should be MISP_Partner.");
+	INVALID_PARTNER_TYPE("PMS_MSP_431","Invalid Partner Type. The Partner Type should be 'MISP_Partner'.");
 
 	private final String errorCode;
 	private final String errorMessage;
