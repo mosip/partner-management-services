@@ -77,6 +77,8 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
@@ -101,6 +103,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 	@Value("${mosip.pms.api.id.misp.licenses.details.get}")
 	private String getMispLicenseDetailsId;
+
+	@Value("${mosip.pms.api.id.deactivate.misp.license.patch}")
+	private String patchDeactivateMISPApiId;
 
 	@Autowired
 	MISPLicenseSummaryRepository mispLicenseSummaryRepository;
@@ -684,6 +689,79 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getMispLicenseDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<MISPDeactivateResponseDto> deactivateMISPLicense(String partnerId, MISPDeactivateRequestDto request) {
+		ResponseWrapperV2<MISPDeactivateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id is null.");
+				throw new MISPServiceException(MISPErrorMessages.INVALID_PARTNER_ID.getErrorCode(),
+						MISPErrorMessages.INVALID_PARTNER_ID.getErrorMessage());
+			}
+			String status = request.getStatus();
+			if (Objects.isNull(status) || !status.equals(PartnerConstants.DEACTIVATE)) {
+				LOGGER.info("sessionId", "idType", "id", " Status is invalid, it should be (De-Activate)");
+				throw new MISPServiceException(MISPErrorMessages.DEACTIVATE_STATUS_CODE.getErrorCode(),
+						MISPErrorMessages.DEACTIVATE_STATUS_CODE.getErrorMessage());
+			}
+			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
+			if (partnerFromDb.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "Partner id does not exist.");
+				throw new MISPServiceException(MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+						MISPErrorMessages.PARTNER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			if (!partnerFromDb.get().getIsActive()) {
+				LOGGER.info("sessionId", "idType", "id", "Partner is not active.");
+				throw new MISPServiceException(MISPErrorMessages.PARTNER_NOT_ACTIVE.getErrorCode(),
+						MISPErrorMessages.PARTNER_NOT_ACTIVE.getErrorMessage());
+			}
+			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, request.getPolicyId(), request.getLicenseKeyName());
+			if (mispLicenseFromDb.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "MISP License does not exist.");
+				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorCode(),
+						MISPErrorMessages.MISP_LICENSE_NOT_EXISTS.getErrorMessage());
+			}
+			if (mispLicenseFromDb.size() > 1) {
+				LOGGER.info("sessionId", "idType", "id", "Multiple MISP licenses found.");
+				throw new MISPServiceException(MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorCode(),
+						MISPErrorMessages.MULTIPLE_MISP_LICENSES_FOUND.getErrorMessage());
+			}
+			MISPLicenseEntityV2 entity = mispLicenseFromDb.getFirst();
+			if (!entity.getIsActive()) {
+				LOGGER.info("sessionId", "idType", "id", "MISP License is already deactivated.");
+				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_ALREADY_DEACTIVATED.getErrorCode(),
+						MISPErrorMessages.MISP_LICENSE_ALREADY_DEACTIVATED.getErrorMessage());
+			}
+			entity.setIsActive(false);
+			entity.setUpdatedBy(getLoggedInUserId());
+			entity.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			MISPLicenseEntityV2 updatedEntity = mispLicenseV2Repository.save(entity);
+
+			MISPDeactivateResponseDto responseDto = new MISPDeactivateResponseDto();
+			responseDto.setPartnerId(updatedEntity.getId().getMispId());
+			responseDto.setPolicyId(updatedEntity.getPolicyId());
+			responseDto.setLicenseKeyName(updatedEntity.getLicenseKeyName());
+			responseDto.setLicenseKeyStatus(INACTIVE);
+
+			notify(MapperUtils.mapDataToPublishDtoV2(updatedEntity), EventType.MISP_LICENSE_UPDATED);
+
+			responseWrapper.setResponse(responseDto);
+		} catch (MISPServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getMISPLicenseDetails method of InfraProviderServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getMISPLicenseDetails method of InfraProviderServiceImpl - " + ex.getMessage());
+			String errorCode = MISPErrorMessages.ERROR_DEACTIVATING_MISP_LICENSE.getErrorCode();
+			String errorMessage = MISPErrorMessages.ERROR_DEACTIVATING_MISP_LICENSE.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDeactivateMISPApiId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

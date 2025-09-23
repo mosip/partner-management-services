@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.pms.common.dto.FilterValueDto;
@@ -42,6 +43,8 @@ import io.mosip.pms.partner.misp.dto.MISPFilterDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,6 +65,9 @@ public class MISPLicenseController {
 	@Value("${mosip.pms.api.id.misp.generate.license.post}")
 	private String postGenerateMISPApiId;
 
+	@Value("${mosip.pms.api.id.deactivate.misp.license.patch}")
+	private String patchDeactivateMISPApiId;
+
 	@Deprecated(since = "release-1.3.0-beta.3")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmisplicense())")
 	@PostMapping(value = "/misps")
@@ -71,10 +77,11 @@ public class MISPLicenseController {
 		response.setResponse(infraProviderService.approveInfraProvider(request.getRequest().getProviderId()));
 		return response;
 	}
-	
+
+	@Deprecated(since = "release-1.3.0-beta.3")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutmisplicense())")
 	@PutMapping(value = "/misps")
-	@Operation(summary = "Service to update license details of misp", description = "Service to update license details of misp")
+	@Operation(summary = "Service to update license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the PATCH /misp-licenses/{partnerId} endpoint.")
 	public ResponseWrapper<MISPLicenseResponseDto> updateLicenseDetails(@RequestBody @Valid RequestWrapper<MISPLicenseUpdateRequestDto> request){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
 		response.setResponse(infraProviderService.updateInfraProvider(request.getRequest().getProviderId(), request.getRequest().getLicenseKey(),
@@ -211,5 +218,26 @@ public class MISPLicenseController {
 		inputValidator.validateRequestInput(policyId);
 		inputValidator.validateRequestInput(mispLicenseKeyName);
 		return infraProviderService.getMISPLicenseDetails(partnerId, policyId, mispLicenseKeyName);
+	}
+
+	@PatchMapping("/misp-licenses/{partnerId}")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatemisplicensekey())")
+	@Operation(summary = "This endpoint deactivates the MISP Licence Key.",
+			description = "Available since release-1.3.0-beta.3. This endpoint deactivates the MISP Licence Key based on Partner Id and request parameters. It is configured for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<MISPDeactivateResponseDto> deactivateMISPLicense( @PathVariable @Valid String partnerId,
+			@RequestBody @Valid RequestWrapperV2<MISPDeactivateRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<MISPDeactivateResponseDto>> validationResponse = requestValidator.validate(patchDeactivateMISPApiId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getLicenseKeyName());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		return infraProviderService.deactivateMISPLicense(partnerId, requestWrapper.getRequest());
 	}
 }
