@@ -751,12 +751,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 			responseWrapper.setResponse(responseDto);
 		} catch (MISPServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getMISPLicenseDetails method of InfraProviderServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In deactivateMISPLicense method of InfraProviderServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getMISPLicenseDetails method of InfraProviderServiceImpl - " + ex.getMessage());
+					"In deactivateMISPLicense method of InfraProviderServiceImpl - " + ex.getMessage());
 			String errorCode = MISPErrorMessages.ERROR_DEACTIVATING_MISP_LICENSE.getErrorCode();
 			String errorMessage = MISPErrorMessages.ERROR_DEACTIVATING_MISP_LICENSE.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
