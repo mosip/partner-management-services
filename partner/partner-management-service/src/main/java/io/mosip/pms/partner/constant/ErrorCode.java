@@ -192,7 +192,9 @@ public enum ErrorCode {
 	PARTNER_CREATE_ERROR("PMS_PRT_252", "Error while creating partner"),
 	POLICY_GROUP_LINK_ERROR("PMS_PRT_253", "Error while linking policy group to partner"),
 	INACTIVE_PARTNER_CANNOT_BE_MAPPED("PMS_PRT_254", "Inactive partner cannot be mapped to policy group"),
-	POLICY_GROUP_LINK_NOT_ALLOWED("PMS_PRT_255", "Only MISP partners can be linked to a policy group. Partner type '%s' is not allowed.");
+	POLICY_GROUP_LINK_NOT_ALLOWED("PMS_PRT_255", "Only MISP partners can be linked to a policy group. Partner type '%s' is not allowed."),
+	EMAIL_PARTNER_CONFLICT("PMS_PRT_268", "Email already registered with a different partnerId"),
+	EMAIL_VERIFICATION_ERROR("PMS_PRT_269", "Error while verifying email"),;
 	/**
 	 * The error code.
 	 */
