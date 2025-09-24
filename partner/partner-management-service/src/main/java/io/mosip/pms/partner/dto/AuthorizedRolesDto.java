@@ -159,6 +159,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> postgeneratemisplicense;
 
+	private List<String> patchdeactivatemisplicensekey;
+
 	private List<String> getpartnercertificates;
 
 	private List<String> getapikeysforauthpartners;
