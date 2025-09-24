@@ -54,6 +54,7 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.request.dto.EmailVerificationV2RequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -76,6 +77,9 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
+
+	@Value("${mosip.pms.api.id.verify.email.post}")
+	private String postVerifyEmailId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -545,6 +549,21 @@ public class PartnerServiceController {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP, request.getRequest().getEmailId(), "email");
 		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PutMapping("/email/verify/v2")
+	@Operation(summary = "This endpoint is used for verification of partner email",
+			description = "Available since release-1.3.0-beta.3. This endpoint is used for verification of partner email.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<EmailVerificationResponseDto> verifyEmail(
+			@RequestBody @Valid RequestWrapperV2<EmailVerificationV2RequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<EmailVerificationResponseDto>> validationResponse = requestValidator.validate(postVerifyEmailId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerService.verifyEmail(requestWrapper.getRequest());
 	}
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerspolicymap())")
