@@ -1918,10 +1918,14 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerDtoV3.setPartnerId(partner.getId());
 				partnerDtoV3.setPartnerType(partner.getPartnerTypeCode());
 				if (partner.getPolicyGroupId() != null) {
-					PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
-					partnerDtoV3.setPolicyGroupId(partner.getPolicyGroupId());
-					partnerDtoV3.setPolicyGroupName(policyGroup.getName());
-					partnerDtoV3.setPolicyGroupDescription(policyGroup.getDesc());
+					try {
+						PolicyGroup policyGroup = partnerHelper.validatePolicyGroup(partner);
+						partnerDtoV3.setPolicyGroupId(partner.getPolicyGroupId());
+						partnerDtoV3.setPolicyGroupName(policyGroup.getName());
+						partnerDtoV3.setPolicyGroupDescription(policyGroup.getDesc());
+					} catch (PartnerServiceException ex) {
+						LOGGER.error("The policy group assigned to this partner does not exist for partner ID:: " + partner.getId());
+					}
 				}
 				partnerDtoV3List.add(partnerDtoV3);
 			}
