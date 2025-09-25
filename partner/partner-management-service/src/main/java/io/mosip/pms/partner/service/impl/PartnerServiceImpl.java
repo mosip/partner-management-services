@@ -275,8 +275,8 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
 
-	@Value("${mosip.pms.api.id.verify.email.post}")
-	private String postVerifyEmailId;
+	@Value("${mosip.pms.api.id.verify.email.put}")
+	private String putVerifyEmailId;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -2069,7 +2069,7 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.EMAIL_VERIFICATION_ERROR.getErrorMessage()));
 		}
 
-		responseWrapper.setId(postVerifyEmailId);
+		responseWrapper.setId(putVerifyEmailId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

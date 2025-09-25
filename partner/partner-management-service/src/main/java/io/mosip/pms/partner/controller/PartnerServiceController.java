@@ -78,8 +78,8 @@ public class PartnerServiceController {
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
 
-	@Value("${mosip.pms.api.id.verify.email.post}")
-	private String postVerifyEmailId;
+	@Value("${mosip.pms.api.id.verify.email.put}")
+	private String putVerifyEmailId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -559,7 +559,7 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapperV2<EmailVerificationResponseDto> verifyEmail(
 			@RequestBody @Valid RequestWrapperV2<EmailVerificationV2RequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<EmailVerificationResponseDto>> validationResponse = requestValidator.validate(postVerifyEmailId, requestWrapper);
+		Optional<ResponseWrapperV2<EmailVerificationResponseDto>> validationResponse = requestValidator.validate(putVerifyEmailId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
