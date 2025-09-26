@@ -2060,8 +2060,8 @@ public class PartnerServiceImpl implements PartnerService {
 		} catch (Exception ex) {
 			LOGGER.error("sessionId", "idType", "id", "In checkPartnerExists method of PartnerServiceImpl - {}", ex.getMessage(), ex);
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-					ErrorCode.EMAIL_VERIFICATION_ERROR.getErrorCode(),
-					ErrorCode.EMAIL_VERIFICATION_ERROR.getErrorMessage()));
+					ErrorCode.PARTNER_VERIFICATION_ERROR.getErrorCode(),
+					ErrorCode.PARTNER_VERIFICATION_ERROR.getErrorMessage()));
 		}
 		return responseWrapper;
 	}
