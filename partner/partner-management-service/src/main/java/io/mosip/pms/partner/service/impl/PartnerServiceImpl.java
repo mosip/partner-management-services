@@ -119,7 +119,8 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
-import io.mosip.pms.partner.request.dto.EmailVerificationV2RequestDto;
+import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
@@ -275,8 +276,8 @@ public class PartnerServiceImpl implements PartnerService {
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
 
-	@Value("${mosip.pms.api.id.verify.email.put}")
-	private String putVerifyEmailId;
+	@Value("${mosip.pms.api.id.partner.exists.post}")
+	private String postPartnerExistsId;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -1989,19 +1990,17 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<EmailVerificationResponseDto> verifyEmail(EmailVerificationV2RequestDto request) {
-		ResponseWrapperV2<EmailVerificationResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		EmailVerificationResponseDto response = new EmailVerificationResponseDto();
+	public ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request) {
+		ResponseWrapperV2<PartnerExistsResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		responseWrapper.setId(postPartnerExistsId);
+		responseWrapper.setVersion(VERSION);
+		PartnerExistsResponseDto response = new PartnerExistsResponseDto();
 
 		try {
 			String emailId = request.getEmailId();
 			String partnerId = request.getPartnerId();
-			String partnerType = null;
-
-			if (request.getPartnerType() != null && !request.getPartnerType().isBlank()) {
-				PartnerType partnerTypeCode = validateAndGetPartnerType(request.getPartnerType());
-				partnerType = partnerTypeCode.getCode();
-			}
+			PartnerType partnerTypeCode = validateAndGetPartnerType(request.getPartnerType());
+			String partnerType = partnerTypeCode.getCode();
 
 			LOGGER.info("Starting email verification for emailId: {}", emailId);
 
@@ -2012,38 +2011,35 @@ public class PartnerServiceImpl implements PartnerService {
 				partnerByEmail = partnerRepository.findByEmailId(emailId);
 			}
 
-			response.setEmailExists(false);
+			response.setPartnerExists(false);
 
 			if (partnerByEmail != null) {
-				if (partnerId != null && partnerType != null) {
-					// check if both partnerId and partnerType match existing record
-					if (!partnerByEmail.getId().equals(partnerId) ||
-							!partnerByEmail.getPartnerTypeCode().equals(partnerType)) {
-
-						LOGGER.error("Email conflict detected. Existing partnerId: {}, requested partnerId: {}, " +
-										"existing partnerType: {}, requested partnerType: {}",
-								partnerByEmail.getId(), partnerId,
-								partnerByEmail.getPartnerTypeCode(), partnerType);
-
-						throw new PartnerServiceException(
-								ErrorCode.EMAIL_PARTNER_CONFLICT.getErrorCode(),
-								ErrorCode.EMAIL_PARTNER_CONFLICT.getErrorMessage()
-						);
-					}
-				}
-
 				// Email exists
-				response.setEmailExists(true);
+				response.setPartnerExists(true);
+				// check if both partnerId and partnerType match existing record
+				if (!partnerByEmail.getId().equals(partnerId) || !partnerByEmail.getPartnerTypeCode().equals(partnerType)) {
+
+					LOGGER.error("Email conflict detected. Existing partnerId: {}, requested partnerId: {}, " +
+									"existing partnerType: {}, requested partnerType: {}",
+							partnerByEmail.getId(), partnerId,
+							partnerByEmail.getPartnerTypeCode(), partnerType);
+
+					response.setDuplicateExists(true);
+					response.setMessage(ErrorCode.EMAIL_PARTNER_CONFLICT.getErrorMessage());
+					responseWrapper.setResponse(response);
+					return responseWrapper;
+				}
 
 			} else if (partnerId != null) {
 				// Email doesn't exist → check if partnerId already exists
 				LOGGER.info("Email does not exist. Checking if partnerId already exists: {}", partnerId);
 				if (partnerRepository.findById(partnerId).isPresent()) {
 					LOGGER.error("Partner ID conflict detected. PartnerId already exists: {}", partnerId);
-					throw new PartnerServiceException(
-							ErrorCode.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorCode(),
-							ErrorCode.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage()
-					);
+					response.setPartnerExists(true);
+					response.setDuplicateExists(true);
+					response.setMessage(ErrorCode.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
+					responseWrapper.setResponse(response);
+					return responseWrapper;
 				}
 			}
 
@@ -2058,19 +2054,15 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setPolicyRequiredPartnerTypes(requiredPartnerTypes);
 
 			responseWrapper.setResponse(response);
-
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In verifyEmail method of PartnerServiceImpl - {}", ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In checkPartnerExists method of PartnerServiceImpl - {}", ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
-			LOGGER.error("sessionId", "idType", "id", "In verifyEmail method of PartnerServiceImpl - {}", ex.getMessage(), ex);
+			LOGGER.error("sessionId", "idType", "id", "In checkPartnerExists method of PartnerServiceImpl - {}", ex.getMessage(), ex);
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
 					ErrorCode.EMAIL_VERIFICATION_ERROR.getErrorCode(),
 					ErrorCode.EMAIL_VERIFICATION_ERROR.getErrorMessage()));
 		}
-
-		responseWrapper.setId(putVerifyEmailId);
-		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
 

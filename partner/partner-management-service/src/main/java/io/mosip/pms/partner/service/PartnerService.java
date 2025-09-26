@@ -29,7 +29,8 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
-import io.mosip.pms.partner.request.dto.EmailVerificationV2RequestDto;
+import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
@@ -39,8 +40,6 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 public interface PartnerService {
 	
@@ -241,5 +240,5 @@ public interface PartnerService {
 
 	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest);
 
-    ResponseWrapperV2<EmailVerificationResponseDto> verifyEmail(EmailVerificationV2RequestDto request);
+    ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request);
 }

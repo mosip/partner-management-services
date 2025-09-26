@@ -4,11 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class EmailVerificationV2RequestDto {
+public class PartnerExistsRequestDto {
     @NotBlank
     private String emailId;
 
+    @NotBlank
     private String partnerId;
-    
+
+    @NotBlank
     private String partnerType;
 }
