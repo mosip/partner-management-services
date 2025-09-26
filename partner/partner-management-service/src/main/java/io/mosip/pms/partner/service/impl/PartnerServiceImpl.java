@@ -2030,7 +2030,7 @@ public class PartnerServiceImpl implements PartnerService {
 					return responseWrapper;
 				}
 
-			} else if (partnerId != null) {
+			} else {
 				// Email doesn't exist → check if partnerId already exists
 				LOGGER.info("Email does not exist. Checking if partnerId already exists: {}", partnerId);
 				if (partnerRepository.findById(partnerId).isPresent()) {
