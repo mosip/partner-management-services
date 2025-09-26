@@ -553,8 +553,8 @@ public class PartnerServiceController {
 	}
 
 	@PutMapping("/exists")
-	@Operation(summary = "This endpoint is used for verification of partner email",
-			description = "Available since release-1.3.0-beta.3. This endpoint is used for verification of partner email.")
+	@Operation(summary = "This endpoint is used for verification of partner",
+			description = "Available since release 1.3.0-beta.3. This endpoint checks whether a partner already exists in PMS. It validates the partner by checking for duplicates based on the provided email and partner ID, and returns a conflict if either is already registered.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
