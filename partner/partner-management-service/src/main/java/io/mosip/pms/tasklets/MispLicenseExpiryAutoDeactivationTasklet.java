@@ -1,6 +1,7 @@
 package io.mosip.pms.tasklets;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class MispLicenseExpiryAutoDeactivationTasklet implements Tasklet {
                 try {
                     // Deactivate MISP License
                     mispLicenseDetails.setIsActive(false);
-                    mispLicenseDetails.setUpdatedDateTime(LocalDateTime.now());
+                    mispLicenseDetails.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
                     mispLicenseDetails.setUpdatedBy(this.getClass().getSimpleName());
                     mispLicenseRepository.save(mispLicenseDetails);
 
@@ -62,8 +63,8 @@ public class MispLicenseExpiryAutoDeactivationTasklet implements Tasklet {
                     Map<String, Object> data = new HashMap<>();
                     data.put(PartnerConstants.MISP_DATA, MapperUtils.mapDataToPublishDtoV2(mispLicenseDetails));
                     Type type = new Type();
-                    type.setName("PartnerManagementServiceImpl");
-                    type.setNamespace("io.mosip.pmp.partner.manager.service.impl.PartnerManagementServiceImpl");
+                    type.setName("InfraProviderServiceImpl");
+                    type.setNamespace("io.mosip.pmp.partner.service.impl.InfraProviderServiceImpl");
                     webSubPublisher.notify(EventType.MISP_LICENSE_UPDATED, data, type);
 
                     deactivatedCount++;
