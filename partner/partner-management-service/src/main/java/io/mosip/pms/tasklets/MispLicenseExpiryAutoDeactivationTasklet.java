@@ -48,7 +48,7 @@ public class MispLicenseExpiryAutoDeactivationTasklet implements Tasklet {
         int deactivatedCount = 0;
         try {
             // Fetch all expired active MISP Licenses
-            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of("UTC"));
             List<MISPLicenseEntityV2> mispLicenseList = mispLicenseRepository.findAllExpiredActiveMISPLicenses(currentDateTime);
             log.info("MISPLicenseExpiryAutoDeactivationTasklet: Found {} expired active MISP Licenses", mispLicenseList.size());
             for (MISPLicenseEntityV2 mispLicenseDetails : mispLicenseList) {
