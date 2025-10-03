@@ -406,11 +406,19 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput(policyGroupName);
 		inputValidator.validateRequestInput(partnerType);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
-		if (partnerId != null) {
-			filterDto.setPartnerId(partnerId.toLowerCase());
-		}
+		boolean isEqualSearch = false;
 		if (partnerIdSearchType != null) {
 			filterDto.setPartnerIdSearchType(partnerIdSearchType.toLowerCase());
+			if (partnerIdSearchType.equals("equals")) {
+				isEqualSearch = true;
+			}
+		}
+		if (partnerId != null) {
+			if (isEqualSearch) {
+				filterDto.setPartnerId(partnerId);
+			} else {
+				filterDto.setPartnerId(partnerId.toLowerCase());
+			}
 		}
 		if (partnerComment != null) {
 			filterDto.setPartnerComment(partnerComment.toLowerCase());
