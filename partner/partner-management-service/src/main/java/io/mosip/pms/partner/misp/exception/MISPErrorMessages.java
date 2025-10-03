@@ -31,7 +31,8 @@ public enum MISPErrorMessages {
 	INVALID_PARTNER_TYPE("PMS_MSP_431","Invalid Partner Type. The Partner Type should be 'MISP_Partner'."),
 	ERROR_DEACTIVATING_MISP_LICENSE("PMS_MSP_432","Error while deactivating MISP License key."),
 	DEACTIVATE_STATUS_CODE("PMS_MSP_433", "Request status should be De-Activate"),
-	MISP_LICENSE_ALREADY_DEACTIVATED("PMS_MSP_434","MISP License key is already deactivated.");
+	MISP_LICENSE_ALREADY_DEACTIVATED("PMS_MSP_434","MISP License key is already deactivated."),
+	ERROR_REGENERATING_MISP_LICENSE("PMS_MSP_435","Error while regenerating MISP License key.");
 
 	private final String errorCode;
 	private final String errorMessage;

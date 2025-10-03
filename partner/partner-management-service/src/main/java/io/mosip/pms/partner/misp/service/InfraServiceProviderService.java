@@ -17,6 +17,7 @@ import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
 import io.mosip.pms.partner.misp.dto.MISPDeactivateRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
+import io.mosip.pms.partner.misp.dto.MISPRegenerateRequestDto;
 
 public interface InfraServiceProviderService {
 
@@ -65,4 +66,6 @@ public interface InfraServiceProviderService {
 	public ResponseWrapperV2<MISPLicenseDetailsDto> getMISPLicenseDetails(String partnerId, String policyId, String mispLicenseKeyName);
 
 	public ResponseWrapperV2<MISPDeactivateResponseDto> deactivateMISPLicense(String partnerId, MISPDeactivateRequestDto request);
+
+	public ResponseWrapperV2<MISPLicenseResponseDtoV2> regenerateMISPLicense(String partnerId, MISPRegenerateRequestDto request);
 }
