@@ -29,6 +29,8 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
@@ -237,4 +239,6 @@ public interface PartnerService {
 	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 
 	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest);
+
+    ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request);
 }

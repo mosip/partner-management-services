@@ -54,6 +54,8 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -76,6 +78,9 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
+
+	@Value("${mosip.pms.api.id.partner.exists.post}")
+	private String postPartnerExistsId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -545,6 +550,21 @@ public class PartnerServiceController {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP, request.getRequest().getEmailId(), "email");
 		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PutMapping("/exists")
+	@Operation(summary = "This endpoint is used for verification of partner",
+			description = "Available since release 1.3.0-beta.3. This endpoint checks whether a partner already exists in PMS. It validates the partner by checking for duplicates based on the provided email and partner ID, and returns a conflict if either is already registered.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(
+			@RequestBody @Valid RequestWrapperV2<PartnerExistsRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<PartnerExistsResponseDto>> validationResponse = requestValidator.validate(postPartnerExistsId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerService.checkPartnerExists(requestWrapper.getRequest());
 	}
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerspolicymap())")
