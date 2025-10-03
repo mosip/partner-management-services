@@ -119,6 +119,8 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
@@ -273,6 +275,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
+
+	@Value("${mosip.pms.api.id.partner.exists.post}")
+	private String postPartnerExistsId;
 
 	@Autowired
 	AuditUtil auditUtil;
@@ -1981,6 +1986,83 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		responseWrapper.setId(postCreatePartnerId);
 		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request) {
+		ResponseWrapperV2<PartnerExistsResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		responseWrapper.setId(postPartnerExistsId);
+		responseWrapper.setVersion(VERSION);
+		PartnerExistsResponseDto response = new PartnerExistsResponseDto();
+
+		try {
+			String emailId = request.getEmailId();
+			String partnerId = request.getPartnerId();
+			PartnerType partnerTypeCode = validateAndGetPartnerType(request.getPartnerType());
+			String partnerType = partnerTypeCode.getCode();
+
+			LOGGER.info("Starting email verification for emailId: {}", emailId);
+
+			// Find partner by email (hash first, fallback to plain for backward compatibility)
+			String emailHash = PartnerUtil.generateSHA256Hash(emailId);
+			Partner partnerByEmail = partnerRepository.findByEmailIdHash(emailHash);
+			if (partnerByEmail == null) {
+				partnerByEmail = partnerRepository.findByEmailId(emailId);
+			}
+
+			response.setPartnerExists(false);
+
+			if (partnerByEmail != null) {
+				// Email exists
+				response.setPartnerExists(true);
+				// check if both partnerId and partnerType match existing record
+				if (!partnerByEmail.getId().equals(partnerId) || !partnerByEmail.getPartnerTypeCode().equals(partnerType)) {
+
+					LOGGER.error("Email conflict detected. Existing partnerId: {}, requested partnerId: {}, " +
+									"existing partnerType: {}, requested partnerType: {}",
+							partnerByEmail.getId(), partnerId,
+							partnerByEmail.getPartnerTypeCode(), partnerType);
+
+					response.setDuplicateExists(true);
+					response.setMessage(ErrorCode.EMAIL_PARTNER_CONFLICT.getErrorMessage());
+					responseWrapper.setResponse(response);
+					return responseWrapper;
+				}
+
+			} else {
+				// Email doesn't exist → check if partnerId already exists
+				LOGGER.info("Email does not exist. Checking if partnerId already exists: {}", partnerId);
+				if (partnerRepository.findById(partnerId).isPresent()) {
+					LOGGER.error("Partner ID conflict detected. PartnerId already exists: {}", partnerId);
+					response.setPartnerExists(true);
+					response.setDuplicateExists(true);
+					response.setMessage(ErrorCode.PARTNER_ALREADY_REGISTERED_EXCEPTION.getErrorMessage());
+					responseWrapper.setResponse(response);
+					return responseWrapper;
+				}
+			}
+
+			LOGGER.info("Email verification successful.");
+
+			// Collect policy required partner types
+			List<String> requiredPartnerTypes = getAllPartnerTypes().stream()
+					.filter(PartnerType::getIsPolicyRequired)
+					.map(pt -> pt.getCode().toUpperCase())
+					.collect(Collectors.toList());
+
+			response.setPolicyRequiredPartnerTypes(requiredPartnerTypes);
+
+			responseWrapper.setResponse(response);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In checkPartnerExists method of PartnerServiceImpl - {}", ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id", "In checkPartnerExists method of PartnerServiceImpl - {}", ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					ErrorCode.PARTNER_VERIFICATION_ERROR.getErrorCode(),
+					ErrorCode.PARTNER_VERIFICATION_ERROR.getErrorMessage()));
+		}
 		return responseWrapper;
 	}
 
