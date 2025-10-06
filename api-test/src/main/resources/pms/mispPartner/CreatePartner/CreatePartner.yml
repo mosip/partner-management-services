@@ -10,7 +10,7 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "misp@gmail.com",
+    "emailId": "oldmisp@gmail.com",
     "organizationName": "misp",
     "partnerId": "MISP-AUTOMATION",
     "partnerType": "MISP_Partner",

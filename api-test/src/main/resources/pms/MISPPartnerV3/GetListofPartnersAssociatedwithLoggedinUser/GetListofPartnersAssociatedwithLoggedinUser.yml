@@ -1,0 +1,160 @@
+GetListofPartnersAssociatedwithLoggedinUser:
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_01
+      description: Retrieve all MISP Partner records with status approved
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "true",
+      "partnerType": "MISP_Partner"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_status_InProgress:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_02
+      description: Retrieve all MISP Partner records with status InProgress
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "InProgress",
+      "policyGroupAvailable": "true",
+      "partnerType": "MISP_Partner"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_policyGroupAvailable_false:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_03
+      description: Retrieve all MISP Partner records with status InProgress
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "false",
+      "partnerType": "MISP_Partner"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_policyGroupAvailable_true:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_04
+      description: Retrieve all MISP Partner records with status true
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "true",
+      "partnerType": "MISP_Partner"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_policyGroupAvailable_Empty:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_05
+      description: Retrieve all MISP Partner records with policyGroupAvailable Empty
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "partnerType": "MISP_Partner"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_partnerType_Empty:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_06
+      description: Retrieve all MISP Partner records with partnerType Empty
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "true",
+      "partnerType": "$REMOVE$"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_only_Status:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_07
+      description: Retrieve all MISP Partner records with only query parameter kept as status
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "$REMOVE$",
+      "partnerType": "$REMOVE$"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_AuthToken:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_08
+      description: Retrieve all th ePartner Id's associated with Auth Partner token
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "true",
+      "partnerType": "Auth_Partner"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_DeviceToken:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_09
+      description: Retrieve all th ePartner Id's associated with Device Partner token
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "false",
+      "partnerType": "Device_Provider"
+}'
+      output: '{
+}'
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_FTMToken:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_10
+      description: Retrieve all th ePartner Id's associated with FTM Partner token
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      input: '{
+      "status": "approved",
+      "policyGroupAvailable": "false",
+      "partnerType": "FTM_Provider"
+}'
+      output: '{
+}'
