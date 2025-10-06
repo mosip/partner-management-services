@@ -1,0 +1,99 @@
+UploadMISPPartnerCertificate:
+   Pms_UploadMISPPartnerCertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_01
+      description: Upload MISP partner certificate for PMS-111555 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111555
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_valid_Empty_PolicyGroup:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_02
+      description: Upload MISP partner certificate for PMS-111556 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111556
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_without_PolicyGroup_Valid:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_03
+      description: Upload MISP partner certificate for PMS-111557 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111557
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_Valid_Max_AddressField:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_04
+      description: Upload MISP partner certificate for PMS-111558 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111558
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_Valid_Max_Contact_number:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_05
+      description: Upload MISP partner certificate for PMS-111559 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111559
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_Valid_Max_EmailID:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_06
+      description: Upload MISP partner certificate for PMS-111550 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111550
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_Valid_langcode_Arabic:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_07
+      description: Upload MISP partner certificate for PMS-111551 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111551
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'

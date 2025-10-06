@@ -2,7 +2,23 @@
 
 delete FROM keymgr.ca_cert_store where cert_subject ='CN=PMS_API_CA,OU=PMS_API_CA,O=PMS_API_CA,L=PN,ST=MH,C=IN';
 delete FROM keymgr.ca_cert_store where cert_subject ='CN=PMS_API_SUB_CA,OU=PMS_API_SUB_CA,O=PMS_API_SUB_CA,L=PN,ST=MH,C=IN';
+delete FROM keymgr.ca_cert_store where cert_subject ='CN=PMS_API_MISP_ORG,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete FROM keymgr.ca_cert_store where cert_subject ='CN=PMS_API_MISP_ORGInter,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
 delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_ABC_ORG,OU=PMS_API_ABC_ORG,O=PMS_API_ABC_ORG,L=PN,ST=MH,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111555,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111556,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111557,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111558,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111559,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111550,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
+delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_MISP_ORGpms-111551,OU=PMS_API_MISP_ORG,O=PMS_API_MISP_ORG,L=BA,ST=KA,C=IN';
 DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111999';
 DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111998';
 DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111888';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111555';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111556';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111557';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111558';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111559';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111550';
+DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111551';

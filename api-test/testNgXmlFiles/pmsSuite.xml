@@ -185,7 +185,53 @@
 			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
-
+	<test name="MISPPartnerV3">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="MISPPartnerV3NegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerNegativeScenarios.yml" />
+		<classes>
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadCertificateMISPCASUBCA">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/UploadCertificate/UploadCertificateMISPCASUBCA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadMISPPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUser">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUserNegSce">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserNegSce.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
@@ -661,7 +707,6 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-
 	<test name="CreatePartner_MISP_Provider">
 		<parameter name="ymlFile"
 			value="pms/mispPartner/CreatePartner/CreatePartner.yml" />
