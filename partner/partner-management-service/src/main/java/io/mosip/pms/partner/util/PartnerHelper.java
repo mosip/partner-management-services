@@ -157,6 +157,19 @@ public class PartnerHelper {
         trustCertificateAliasToColumnMap.put("uploadedDateTime", "createdtimes");
     }
 
+    public final Map<String, String> mispAliasToColumnMap = new HashMap<>();
+    {
+        mispAliasToColumnMap.put("partnerId", "id.mispId");
+        mispAliasToColumnMap.put("orgName", "p.name");
+        mispAliasToColumnMap.put("policyGroupName", "pg.name");
+        mispAliasToColumnMap.put("policyName", "ap.name");
+        mispAliasToColumnMap.put("mispLicenseKey", "id.licenseKey");
+        mispAliasToColumnMap.put("mispLicenseKeyName", "licenseKeyName");
+        mispAliasToColumnMap.put("expiryDateTime", "validToDate");
+        mispAliasToColumnMap.put("status", "isActive");
+        mispAliasToColumnMap.put("createdDateTime", "createdDateTime");
+    }
+
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
 

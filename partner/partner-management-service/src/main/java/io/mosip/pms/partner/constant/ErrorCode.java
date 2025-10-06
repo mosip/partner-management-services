@@ -101,6 +101,7 @@ public enum ErrorCode {
 	PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC("PMS_POLICY_ERROR_009", "The given partner ID does not belong to the user.So unable to create OIDC client"),
 	PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC("PMS_POLICY_ERROR_010", "The given partner ID does not belong to the user.So unable to update OIDC client details"),
 	PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC("PMS_POLICY_ERROR_011", "The given partner ID does not belong to the user.So unable to get OIDC client details"),
+	UNABLE_TO_FETCH_MISP_PARTNERS_LIST("PMS_POLICY_ERROR_012", "Unable to fetch MISP partners list. Only Partner Admin can get the MISP partners list."),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
@@ -185,8 +186,15 @@ public enum ErrorCode {
 	ROOT_AND_INTERMEDIATE_CERTS_DISABLED("PMS_FEATURE_001", "Root and Intermediate Certificates list is not available in the current deployment."),
 	OIDC_CLIENT_FEATURE_DISABLED("PMS_FEATURE_002", "OIDC client related features are not available in the current deployment."),
 	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment."),
-	INVALID_INPUT_FORMAT("PMS_PRT_099", "Invalid input for '%s'. Expected: %s.");
-
+	INVALID_INPUT_FORMAT("PMS_PRT_099", "Invalid input for '%s'. Expected: %s."),
+	UNABLE_TO_GENERATE_UNIQUE_ID("PMS_PRT_100", "Unable to generate a unique %s (field: '%s') for entity '%s' after %s attempts."),
+	DEVICE_DETAIL_ID_ALREADY_EXISTS("PMS_PRT_101", "A Device with the same Device Detail ID already exists"),
+	PARTNER_CREATE_ERROR("PMS_PRT_252", "Error while creating partner"),
+	POLICY_GROUP_LINK_ERROR("PMS_PRT_253", "Error while linking policy group to partner"),
+	INACTIVE_PARTNER_CANNOT_BE_MAPPED("PMS_PRT_254", "Inactive partner cannot be mapped to policy group"),
+	POLICY_GROUP_LINK_NOT_ALLOWED("PMS_PRT_255", "Only MISP partners can be linked to a policy group. Partner type '%s' is not allowed."),
+	EMAIL_PARTNER_CONFLICT("PMS_PRT_268", "Email already registered with a different partnerId"),
+	PARTNER_VERIFICATION_ERROR("PMS_PRT_269", "Error while verifying partner"),;
 	/**
 	 * The error code.
 	 */

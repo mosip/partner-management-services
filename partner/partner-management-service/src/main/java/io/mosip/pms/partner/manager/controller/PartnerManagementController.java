@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -81,6 +84,9 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.certificate.id.regex}")
 	private String certificateIdRegex;
+
+	@Value("${mosip.pms.api.id.link.policy.group.post}")
+	private String postLinkPolicyGroup;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -369,6 +375,12 @@ public class PartnerManagementController {
 			@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@Parameter(
+					description = "Search type for partnerId. Applicable only if 'partnerId' is provided. Default is 'contains'.",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"equals"})
+			)
+			@RequestParam(value = "partnerIdSearchType", required = false, defaultValue = "contains") String partnerIdSearchType,
 			@RequestParam(value = "partnerComment", required = false) String partnerComment,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@Parameter(
@@ -385,6 +397,7 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput(sortFieldName);
 		inputValidator.validateRequestInput(sortType);
 		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(partnerIdSearchType);
 		inputValidator.validateRequestInput(partnerComment);
 		inputValidator.validateRequestInput(orgName);
 		inputValidator.validateRequestInput(status);
@@ -393,8 +406,19 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput(policyGroupName);
 		inputValidator.validateRequestInput(partnerType);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
+		boolean isEqualSearch = false;
+		if (partnerIdSearchType != null) {
+			filterDto.setPartnerIdSearchType(partnerIdSearchType.toLowerCase());
+			if (partnerIdSearchType.equals("equals")) {
+				isEqualSearch = true;
+			}
+		}
 		if (partnerId != null) {
-			filterDto.setPartnerId(partnerId.toLowerCase());
+			if (isEqualSearch) {
+				filterDto.setPartnerId(partnerId);
+			} else {
+				filterDto.setPartnerId(partnerId.toLowerCase());
+			}
 		}
 		if (partnerComment != null) {
 			filterDto.setPartnerComment(partnerComment.toLowerCase());
@@ -602,5 +626,25 @@ public class PartnerManagementController {
 			);
 		}
 		return partnerManagementService.downloadTrustCertificates(certificateId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostlinkpolicygrouptopartner())")
+	@PostMapping(value = "/{partnerId}/policy-group")
+	@Operation(summary = "This endpoint is used for linking a policy group to a partner.",
+			description = "Available since release-1.3.0-beta.3. This endpoint is used for linking a policy group to a partner.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Policy group linked successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(
+			@PathVariable("partnerId") String partnerId,
+			@RequestBody @Valid RequestWrapperV2<LinkPolicyGroupRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<LinkPolicyGroupResponseDto>> validationResponse =
+				requestValidator.validate(postLinkPolicyGroup, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerManagementService.linkPolicyGroup(partnerId, requestWrapper.getRequest());
 	}
 }

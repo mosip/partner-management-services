@@ -3,8 +3,10 @@ package io.mosip.pms.partner.controller;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.List;
+import java.util.Optional;
 
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -20,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,6 +54,8 @@ import io.mosip.pms.partner.request.dto.PartnerRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
+import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
@@ -69,7 +74,13 @@ import io.swagger.v3.oas.annotations.Operation;
 @RestController
 @RequestMapping(value = "/partners")
 @Api(tags = { "Partner Service Controller" })
-public class PartnerServiceController {	
+public class PartnerServiceController {
+
+	@Value("${mosip.pms.api.id.create.partner.post}")
+	private String postCreatePartnerId;
+
+	@Value("${mosip.pms.api.id.partner.exists.post}")
+	private String postPartnerExistsId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -396,8 +407,8 @@ public class PartnerServiceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")
 	@GetMapping(value = "/v3")
-	@Operation(summary = "This endpoint retrieves a list of Partners associated with the logged in user, based on the query parameters",
-			description = "Available since release-1.2.2.0. It is configured for role any of the partner type or PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves a list of partners",
+			description = "Available since release-1.2.2.0. This endpoint retrieves a list of partners associated with the logged-in user based on the provided query parameters. If the partner type is MISP_Partner, it fetches all MISP partners instead of only those linked to the user. It is configured for role any of the partner type or PARTNER_ADMIN.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -540,6 +551,21 @@ public class PartnerServiceController {
 		response.setResponse(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId()));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@PutMapping("/exists")
+	@Operation(summary = "This endpoint is used for verification of partner",
+			description = "Available since release 1.3.0-beta.3. This endpoint checks whether a partner already exists in PMS. It validates the partner by checking for duplicates based on the provided email and partner ID, and returns a conflict if either is already registered.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(
+			@RequestBody @Valid RequestWrapperV2<PartnerExistsRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<PartnerExistsResponseDto>> validationResponse = requestValidator.validate(postPartnerExistsId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerService.checkPartnerExists(requestWrapper.getRequest());
+	}
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerspolicymap())")
 	@Operation(summary = "To request for policy mapping", description = "To request for policy mapping")
@@ -568,5 +594,22 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/v3")
+	@Operation(summary = "This endpoint is used for partner self registration",
+			description = "Available since release-1.3.0-beta.3. This endpoint is used for partner self registration.")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<PartnerResponse> createPartner(@RequestBody @Valid RequestWrapperV2<PartnerRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<PartnerResponse>> validationResponse = requestValidator.validate(postCreatePartnerId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER, requestWrapper.getRequest().getPartnerId(),
+				"partnerId");
+
+		return partnerService.createPartner(requestWrapper.getRequest());
 	}
 }

@@ -19,6 +19,7 @@
 CREATE TABLE pms.misp_license(
 	misp_id character varying(36) NOT NULL,
 	license_key character varying(128) NOT NULL,
+	license_key_name character varying(128),
 	policy_id character varying(36) NULL,
 	valid_from_date timestamp NOT NULL,
 	valid_to_date timestamp,
@@ -38,6 +39,8 @@ COMMENT ON TABLE pms.misp_license IS 'MISP License: License key issued to MISP, 
 COMMENT ON COLUMN pms.misp_license.misp_id IS 'MISP ID: MISP ID, refers to pmp.misp .id';
 -- ddl-end --
 COMMENT ON COLUMN pms.misp_license.license_key IS 'License Key: A system generated number assigned to MISP as License key. It will be used by MISP application to be appended to auth request which is received by partners.';
+-- ddl-end --
+COMMENT ON COLUMN pms.misp_license.license_key_name IS 'License Key Name: Name given to the license key.';
 -- ddl-end --
 COMMENT ON COLUMN pms.misp_license.valid_from_date IS 'Valid From Date: Datetime from when the license key is valid.';
 -- ddl-end --
