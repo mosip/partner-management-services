@@ -137,6 +137,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getadminpartners;
 
+	private List<String> postlinkpolicygrouptopartner;
+
 	//MISP License controller
 	
 	private List<String> postmisplicense;
@@ -150,6 +152,16 @@ public class AuthorizedRolesDto {
 	private List<String> postmispfiltervalues;
 	
 	private List<String> postmispsearch;
+
+	private List<String> getallmisplicenses;
+
+	private List<String> getmisplicensedetails;
+
+	private List<String> postgeneratemisplicense;
+
+	private List<String> patchdeactivatemisplicensekey;
+
+	private List<String> putregeneratemisplicensekey;
 
 	private List<String> getpartnercertificates;
 

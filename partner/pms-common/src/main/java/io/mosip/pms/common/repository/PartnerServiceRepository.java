@@ -53,6 +53,17 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
             @Param("userId") String userId,
             @Param("partnerType") String partnerType,
             @Param("policyGroupAvailable") Boolean policyGroupAvailable);
+
+    @Query("SELECT p FROM Partner p " +
+            "WHERE p.approvalStatus = :status " +
+            "AND (:partnerType IS NULL OR p.partnerTypeCode = :partnerType) " +
+            "AND ((:policyGroupAvailable IS NULL) " +
+            "OR (:policyGroupAvailable = TRUE AND p.policyGroupId IS NOT NULL) " +
+            "OR (:policyGroupAvailable = FALSE AND p.policyGroupId IS NULL))")
+    public List<Partner> findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(
+            @Param("status") String status,
+            @Param("partnerType") String partnerType,
+            @Param("policyGroupAvailable") Boolean policyGroupAvailable);
     
     @Query(value = "select * from partner ppr where (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true", nativeQuery = true)
     public List<Partner> findAllByIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue();

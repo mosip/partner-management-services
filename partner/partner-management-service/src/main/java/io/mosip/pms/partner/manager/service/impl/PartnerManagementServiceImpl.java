@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Objects;
 
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import jakarta.transaction.Transactional;
 
@@ -64,6 +65,8 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
@@ -79,6 +82,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public static final String FTM_PROVIDER = "FTM_Provider";
 	private static final String APPROVED = "approved";
 	public static final String BLANK_STRING = "";
+	private static final String MISP_PARTNER = "MISP_Partner";
+	private static final String EQUALS = "equals";
+	private static final String CONTAINS = "contains";
 
 	@Value("${mosip.pms.api.id.admin.partners.get}")
 	private String getAdminPartnersId;
@@ -94,6 +100,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.download.trust.certificates.get}")
 	private String getDownloadTrustCertificateId;
+
+	@Value("${mosip.pms.api.id.link.policy.group.post}")
+	private String postLinkPolicyGroup;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -163,6 +172,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.partner.details.get}")
 	private String getPartnerDetailsId;
+
+	@Value("${mosip.pms.id.generation.max.retries}")
+	private int maxRetries;
 
 	public static final String VERSION = "1.0";
 
@@ -676,7 +688,27 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		}
 		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		partnerPolicy.setPolicyApiKey(PartnerUtil.createPartnerApiKey());
+		// Generate an initial API key ID
+		String apiKeyId = PartnerUtil.createPartnerApiKey();
+
+		int attempts = 0;
+
+		// Keep generating new API key ID until a unique one is found or maxRetries is reached
+		while (partnerPolicyRepository.existsById(apiKeyId)) {
+			if (attempts >= maxRetries) {
+				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "API Key ID",
+						"policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries)
+				);
+			}
+			apiKeyId = PartnerUtil.createPartnerApiKey();
+			attempts++;
+		}
+
+		partnerPolicy.setPolicyApiKey(apiKeyId);
 		partnerPolicy.setPartner(approvedMappedPolicy.get(0).getPartner());
 		partnerPolicy.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
 		partnerPolicy.setIsActive(true);
@@ -819,6 +851,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
 			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
 					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
+					!partner.getPartnerTypeCode().equals(MISP_PARTNER) &&
 					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
 				LOGGER.info("sessionId", "idType", "id",
 						"Policy Group Id is empty for partner Id -" + partner.getId());
@@ -946,6 +979,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			PageResponseV2Dto<PartnerPolicyRequestSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.partnerPolicyMappingAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 
+			// partnerIdSearchType validation
+			if (Objects.nonNull(filterDto.getPartnerIdSearchType()) && !filterDto.getPartnerIdSearchType().equals(BLANK_STRING)) {
+				if (!filterDto.getPartnerIdSearchType().equals(CONTAINS) && !filterDto.getPartnerIdSearchType().equals(EQUALS)) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PARTNER_ID_SEARCH_TYPE.getErrorCode(),
+							ErrorCode.INVALID_PARTNER_ID_SEARCH_TYPE.getErrorMessage()
+					);
+				}
+				if (filterDto.getPartnerIdSearchType().equals(EQUALS) && Objects.isNull(filterDto.getPartnerId())) {
+					throw new PartnerServiceException(
+							ErrorCode.PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS.getErrorCode(),
+							ErrorCode.PARTNER_ID_MANDATORY_WHEN_SEARCH_TYPE_IS_EQUALS.getErrorMessage()
+					);
+				}
+			}
+
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<String> partnerIdList = null;
 			if (!isPartnerAdmin) {
@@ -982,7 +1031,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<PartnerPolicyRequestSummaryEntity> page = partnerPolicyMappingRequestRepository.
-					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerType(),
+					getSummaryOfAllPartnerPolicyRequests(filterDto.getPartnerId(), filterDto.getPartnerIdSearchType(), filterDto.getPartnerType(),
 							filterDto.getOrganizationName(), filterDto.getPolicyId(), filterDto.getPolicyName(),
 							filterDto.getStatus(), filterDto.getPartnerComment(),
 							filterDto.getPolicyGroupName(), partnerIdList, isPartnerAdmin, pageable);
@@ -1198,6 +1247,113 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return responseWrapper;
 	}
 
+	@Override
+	public ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, LinkPolicyGroupRequestDto request) {
+		ResponseWrapperV2<LinkPolicyGroupResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(partnerId) || partnerId.isBlank()) {
+				LOGGER.info("sessionId", "idType", "id", "Partner Id is null or empty");
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage()
+				);
+			}
+
+			if (Objects.isNull(request.getPolicyGroupId()) || request.getPolicyGroupId().isBlank()) {
+				LOGGER.info("sessionId", "idType", "id", "Policy Group Id is null or empty");
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
+				);
+			}
+
+			Optional<Partner> optionalPartner = partnerServiceRepository.findById(partnerId);
+			if (optionalPartner.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "Partner does not exists for the given partner id -" + partnerId);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
+				);
+			}
+			Partner partner = optionalPartner.get();
+
+			if (!partner.getPartnerTypeCode().equals(MISP_PARTNER)){
+				LOGGER.info("sessionId", "idType", "id", "Only MISP partners can be linked to a policy group.");
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_LINK_NOT_ALLOWED.getErrorCode(),
+						String.format(
+								io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_LINK_NOT_ALLOWED.getErrorMessage(),
+								partner.getPartnerTypeCode()
+						)
+				);
+			}
+
+			if (partner.getApprovalStatus().equals(APPROVED) && !partner.getIsActive()) {
+				LOGGER.info("sessionId", "idType", "id", "Inactive partner cannot be mapped to policy group for the given partner id -" + partnerId);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INACTIVE_PARTNER_CANNOT_BE_MAPPED.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INACTIVE_PARTNER_CANNOT_BE_MAPPED.getErrorMessage()
+				);
+			}
+
+			if (partner.getPolicyGroupId() != null) {
+				LOGGER.info("sessionId", "idType", "id", "Policy Group Id is already mapped to the partner for the given partner id -" + partnerId);
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ALREADY_MAPPED.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ALREADY_MAPPED.getErrorMessage()
+				);
+			}
+
+			PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(request.getPolicyGroupId());
+			if (policyGroup == null) {
+				LOGGER.error("Policy group not found for the provided ID: {}", request.getPolicyGroupId());
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_DOES_NOT_EXIST.getErrorMessage()
+				);
+			}
+
+			if (!policyGroup.getIsActive()) {
+				LOGGER.error("Policy group with ID: {} is not active", request.getPolicyGroupId());
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage()
+				);
+			}
+
+			partner.setPolicyGroupId(policyGroup.getId());
+			partner.setUpdBy(getUserId());
+			partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			partnerRepository.save(partner);
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_SUCCESS, partnerId, "partnerId");
+
+			LinkPolicyGroupResponseDto responseDto = new LinkPolicyGroupResponseDto();
+			responseDto.setPartnerId(partner.getId());
+			responseDto.setPolicyGroupId(partner.getPolicyGroupId());
+			responseDto.setPolicyGroupName(policyGroup.getName());
+
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In linkPolicyGroup method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In linkPolicyGroup method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_LINK_ERROR.getErrorCode();
+			String errorMessage = io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_LINK_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postLinkPolicyGroup);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
 		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
@@ -1211,4 +1367,3 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return userId;
 	}
 }
-
