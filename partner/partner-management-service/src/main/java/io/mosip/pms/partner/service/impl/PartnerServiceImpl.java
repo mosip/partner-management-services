@@ -1952,7 +1952,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest) {
+	public ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequest partnerRequest) {
 		ResponseWrapperV2<PartnerResponse> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
@@ -1972,7 +1972,7 @@ public class PartnerServiceImpl implements PartnerService {
 						ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 			}
 
-			PartnerResponse partnerResponse = validateAndSavePartner(partnerRequest);
+			PartnerResponse partnerResponse = validateAndSavePartner(mapToPartnerRequestDto(partnerRequest));
 			responseWrapper.setResponse(partnerResponse);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In createPartner method of PartnerServiceImpl - " + ex.getMessage());
@@ -1987,6 +1987,19 @@ public class PartnerServiceImpl implements PartnerService {
 		responseWrapper.setId(postCreatePartnerId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private PartnerRequestDto mapToPartnerRequestDto(PartnerRequest request) {
+		PartnerRequestDto dto = new PartnerRequestDto();
+		dto.setAddress(request.getAddress());
+		dto.setContactNumber(request.getContactNumber());
+		dto.setEmailId(request.getEmailId());
+		dto.setLangCode(request.getLangCode());
+		dto.setOrganizationName(request.getOrganizationName());
+		dto.setPartnerId(request.getPartnerId());
+		dto.setPartnerType(request.getPartnerType());
+		dto.setPolicyGroup(request.getPolicyGroup());
+		return dto;
 	}
 
 	@Override

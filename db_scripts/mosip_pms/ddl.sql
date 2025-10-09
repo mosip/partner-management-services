@@ -7,7 +7,6 @@
 \ir ddl/pms-ftp_chip_detail.sql
 \ir ddl/pms-misp.sql
 \ir ddl/pms-misp_license.sql
-\ir ddl/pms-otp_transaction.sql
 \ir ddl/pms-partner.sql
 \ir ddl/pms-partner_contact.sql
 \ir ddl/pms-partner_h.sql
