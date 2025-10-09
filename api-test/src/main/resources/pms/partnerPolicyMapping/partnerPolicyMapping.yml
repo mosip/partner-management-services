@@ -31,7 +31,22 @@ partnerPolicyMapping:
     }'
       output: '{
     }'
-    
+   Pms_partnerPolicyMapping_For_MISP_Policy_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/pms-111555/policy/map
+      description: Mapping Partner & Policy
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post 
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "requesttime": "$TIMESTAMP$",
+        "policyName": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$",
+        "useCaseDescription": "Liking the Partner and the Policy"
+    }'
+      output: '{
+    }'    
    Pms_partnerPolicyMapping_invalid_policyName_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       description: Mapping Partner & Policy when invalid policyname is given      

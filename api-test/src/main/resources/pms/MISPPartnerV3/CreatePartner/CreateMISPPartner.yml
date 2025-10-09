@@ -15,9 +15,9 @@ CreateMISPPartner:
         "organizationName": "PMS_API_MISP_ORG",
         "address": "Bangalore",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartner@gmail.com",
+        "emailId": "newmisppartnerapiauto@gmail.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group 19234",
+        "policyGroup": "mosip policy group MISP",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
