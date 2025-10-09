@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.util.PageUtils;
+import io.mosip.pms.partner.misp.dto.MISPFilterDto;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,26 +20,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.MISPLicenseEntity;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.MispLicenseRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.validator.FilterColumnValidator;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -64,6 +62,9 @@ public class InfraProviderServiceImplTest {
 
 	@Mock
 	MispLicenseRepository mispLicenseRepository;
+
+	@Mock
+	MISPLicenseSummaryRepository mispLicenseSummaryRepository;
 	
 	@Mock
 	SearchHelper searchHelper;
@@ -83,13 +84,13 @@ public class InfraProviderServiceImplTest {
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "searchHelper", searchHelper);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "filterColumnValidator", filterColumnValidator);
-		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.doNothing().when(webSubPublisher).notify(any(), any(), any());
 		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
-		Mockito.when(filterColumnValidator.validate(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+		Mockito.when(filterColumnValidator.validate(any(), any(), any())).thenReturn(true);
 		List<FilterData> filtersData = new ArrayList<>();
 		FilterData filterData = new FilterData("test","test");
 		filtersData.add(filterData);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		Mockito.when(filterHelper.filterValuesWithCode(any(), any(), any(), any())).thenReturn(filtersData);
 	}
 
 	@Test
@@ -339,7 +340,7 @@ public class InfraProviderServiceImplTest {
 		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
 		searchDtos.add(searchDto);
 		filterValueDto.setFilters(filterDtos);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		Mockito.when(filterHelper.filterValuesWithCode(any(), any(), any(), any())).thenReturn(filtersData);
 		infraProviderServiceImpl.filterValues(filterValueDto);
 	}
 	
@@ -359,7 +360,7 @@ public class InfraProviderServiceImplTest {
 		List<SearchFilter> searchDtos = new ArrayList<SearchFilter>();
 		searchDtos.add(searchDto);
 		filterValueDto.setFilters(filterDtos);
-		Mockito.when(filterHelper.filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(filtersData);
+		Mockito.when(filterHelper.filterValuesWithCode(any(), any(), any(), any())).thenReturn(filtersData);
 		infraProviderServiceImpl.filterValues(filterValueDto);
 	}
 
@@ -393,4 +394,34 @@ public class InfraProviderServiceImplTest {
 		assertEquals(entities.size(), result.getData().size());
 	}
 
+	@Test
+	public void getAllMISPLicensesTest() {
+		String sortFieldName = "status";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		MISPFilterDto filterDto = new MISPFilterDto();
+		filterDto.setPartnerId("partner1");
+		filterDto.setOrgName("abc");
+
+		MISPLicenseSummaryEntity entity = new MISPLicenseSummaryEntity();
+		entity.setPartnerId("partner1");
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<MISPLicenseSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+		when(mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		infraProviderServiceImpl.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getAllMISPLicenses_NullPointerExceptionTest() {
+		infraProviderServiceImpl.getAllMISPLicenses("status", "desc", 0, 8, null);
+	}
+
+	@Test
+	public void getAllMISPLicenses_PartnerServiceExceptionTest() {
+		MISPFilterDto filterDto = new MISPFilterDto();
+		filterDto.setPartnerId("partner1");
+		filterDto.setOrgName("abc");
+		infraProviderServiceImpl.getAllMISPLicenses("status", null, 0, 8, filterDto);
+	}
 }
