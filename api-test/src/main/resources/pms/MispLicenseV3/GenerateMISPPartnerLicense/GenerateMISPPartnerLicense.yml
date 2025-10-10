@@ -5,7 +5,6 @@ GenerateMISPPartnerLicense:
       description: Generate MISP Partner License
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true 		
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
       outputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseResult
       input: '{
@@ -27,7 +26,6 @@ GenerateMISPPartnerLicense:
       description: Generate MISP Partner License without PolicyID and user should be able to generate the license
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true 		
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
       outputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseResult
       input: '{

@@ -5,7 +5,6 @@ DefineMISPPolicy:
       role: partneradmin
       uniqueIdentifier: TC_PMS_DefineMISPPolicy_01
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/DefinePolicy/DefineMISPPolicy
       outputTemplate: pms/DefinePolicy/DefineMISPPolicyResult
       input: '{
@@ -18,5 +17,5 @@ DefineMISPPolicy:
 }'
       output: '{
         "policyGroupName": "mosip policy group MISP",
-        "is_Active": false,
+        "is_Active": false
 }'
