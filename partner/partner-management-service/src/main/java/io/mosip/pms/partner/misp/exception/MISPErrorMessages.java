@@ -19,10 +19,10 @@ public enum MISPErrorMessages {
 	MISP_POLICY_NOT_EXISTS("PMS_MSP_419", "Policy not exists."),
 	ERROR_FETCHING_MISP_DETAILS("PMS_MSP_420","Error while fetching all MISP Licence details."),
 	ERROR_GENERATING_MISP_LICENSE("PMS_MSP_421","Error while generating MISP license key."),
-	INVALID_LICENSE_KEY_NAME("PMS_MSP_422","Invalid license key name."),
-	INVALID_PARTNER_ID("PMS_MSP_423","Invalid Partner ID."),
+	INVALID_LICENSE_KEY_NAME("PMS_MSP_422","Invalid license key name provided."),
+	INVALID_PARTNER_ID("PMS_MSP_423","Invalid Partner ID provided."),
 	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_424","MISP License key name already exists."),
-	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","ExpiryDate should be greater than today."),
+	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","Expiry date cannot be the same or earlier than the current date."),
 	ERROR_FETCHING_INDIVIDUAL_MISP_DETAILS("PMS_MSP_426","Error while fetching MISP Licence details."),
 	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","No matching MISP License Key exists for the specified Partner ID, Policy ID, and MISP License Key Name."),
 	MULTIPLE_MISP_LICENSES_FOUND("PMS_MSP_428","Multiple MISP License key matches were found for the provided Partner ID, Policy ID, and MISP License Key Name. Please use the correct MISP License Key Name and Policy ID."),
@@ -32,7 +32,10 @@ public enum MISPErrorMessages {
 	ERROR_DEACTIVATING_MISP_LICENSE("PMS_MSP_432","Error while deactivating MISP License key."),
 	DEACTIVATE_STATUS_CODE("PMS_MSP_433", "Request status should be De-Activate"),
 	MISP_LICENSE_ALREADY_DEACTIVATED("PMS_MSP_434","MISP License key is already deactivated."),
-	ERROR_REGENERATING_MISP_LICENSE("PMS_MSP_435","Error while regenerating MISP License key.");
+	ERROR_REGENERATING_MISP_LICENSE("PMS_MSP_435","Error while regenerating MISP License key."),
+	INVALID_EXPIRY_DATE("PMS_MSP_436","Expiry date cannot be empty or null."),
+	POLICY_ID_NOT_EXISTS("PMS_MSP_437","The entered policy ID is invalid or does not exist in the database."),
+	PARTNER_POLICY_NOT_APPROVED("PMS_MSP_438","The policy ID provided has not been approved for partner policy linking.");
 
 	private final String errorCode;
 	private final String errorMessage;
