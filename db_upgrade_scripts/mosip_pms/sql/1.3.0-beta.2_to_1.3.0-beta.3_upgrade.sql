@@ -14,3 +14,6 @@ SET cr_by = 'superadmin';
 -- Update all records in pms.reg_device_type to set cr_by = 'superadmin'
 UPDATE pms.reg_device_type
 SET cr_by = 'superadmin';
+
+-- Drop the otp_transaction
+DROP TABLE IF EXISTS pms.otp_transaction CASCADE;
