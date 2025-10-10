@@ -238,7 +238,7 @@ public interface PartnerService {
 
 	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 
-	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest);
+	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequest partnerRequest);
 
     ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request);
 }
