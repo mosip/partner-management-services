@@ -508,6 +508,38 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		return aliasToColumnMap.getOrDefault(alias, alias); // Return alias if no match found
 	}
 
+	private void expiryDateInputValidation(LocalDate expiryDate) {
+		if(Objects.isNull(expiryDate) || expiryDate.toString().isBlank()) {
+			throw new MISPServiceException(MISPErrorMessages.INVALID_EXPIRY_DATE.getErrorCode(),
+					MISPErrorMessages.INVALID_EXPIRY_DATE.getErrorMessage());
+		}
+	}
+
+	private Optional<AuthPolicy> validatePolicy(String partnerId, String policyId) {
+		if (policyId == null || policyId.isBlank()) {
+			return Optional.empty();
+		}
+
+		Optional<AuthPolicy> mispPolicyFromDb = authPolicyRepository.findById(policyId);
+		if (mispPolicyFromDb.isEmpty()) {
+			throw new MISPServiceException(
+					MISPErrorMessages.POLICY_ID_NOT_EXISTS.getErrorCode(),
+					MISPErrorMessages.POLICY_ID_NOT_EXISTS.getErrorMessage()
+			);
+		}
+
+		List<PartnerPolicyRequest> approvedPartnerPolicyRequests =
+				partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, "approved");
+		if (approvedPartnerPolicyRequests.isEmpty()) {
+			throw new MISPServiceException(
+					MISPErrorMessages.PARTNER_POLICY_NOT_APPROVED.getErrorCode(),
+					MISPErrorMessages.PARTNER_POLICY_NOT_APPROVED.getErrorMessage()
+			);
+		}
+		return mispPolicyFromDb;
+	}
+
+
 	@Override
 	public ResponseWrapperV2<MISPLicenseResponseDtoV2> generateMISPLicense( MISPLicenseRequestDtoV2 request) {
 		ResponseWrapperV2<MISPLicenseResponseDtoV2> responseWrapper = new ResponseWrapperV2<>();
@@ -523,6 +555,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				throw new MISPServiceException(MISPErrorMessages.INVALID_LICENSE_KEY_NAME.getErrorCode(),
 						MISPErrorMessages.INVALID_LICENSE_KEY_NAME.getErrorMessage());
 			}
+			LocalDate expiryDate = request.getExpiryDate();
+			expiryDateInputValidation(expiryDate);
+
 			// partnerId validation
 			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 			if (partnerFromDb.isEmpty()) {
@@ -540,21 +575,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			}
 
 			// policyId validation
-			String policyId = request.getPolicyId();
-			Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
-			if (policyId != null && !policyId.isBlank()) {
-				List<PartnerPolicyRequest> approvedPartnerPolicyrequests = partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, "approved");
-				if (approvedPartnerPolicyrequests.isEmpty()) {
-					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
-							MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
-				}
-				mispPolicyFromDb = authPolicyRepository.findById(policyId);
-				if(mispPolicyFromDb.isEmpty()) {
-					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
-							MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
-				}
-			}
-			policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
+			Optional<AuthPolicy> mispPolicyFromDb = validatePolicy(partnerId, request.getPolicyId());
+			String policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
 
 			// licenseKeyName validation
 			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, licenseKeyName);
@@ -564,7 +586,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			}
 
 			// expiryDate validation
-			LocalDate expiryDate = request.getExpiryDate();
 			if(expiryDate.isBefore(LocalDate.now()) || expiryDate.isEqual(LocalDate.now())) {
 				throw new MISPServiceException(MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorCode(),
 						MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorMessage());
@@ -783,6 +804,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				throw new MISPServiceException(MISPErrorMessages.INVALID_LICENSE_KEY_NAME.getErrorCode(),
 						MISPErrorMessages.INVALID_LICENSE_KEY_NAME.getErrorMessage());
 			}
+			LocalDate expiryDate = request.getExpiryDate();
+			expiryDateInputValidation(expiryDate);
+
 			// partnerId validation
 			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 			if (partnerFromDb.isEmpty()) {
@@ -793,22 +817,10 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				throw new MISPServiceException(MISPErrorMessages.PARTNER_NOT_ACTIVE.getErrorCode(),
 						MISPErrorMessages.PARTNER_NOT_ACTIVE.getErrorMessage());
 			}
+
 			// policyId validation
-			String policyId = request.getPolicyId();
-			Optional<AuthPolicy> mispPolicyFromDb = Optional.empty();
-			if (policyId != null && !policyId.isBlank()) {
-				List<PartnerPolicyRequest> approvedPartnerPolicyrequests = partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, "approved");
-				if (approvedPartnerPolicyrequests.isEmpty()) {
-					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorCode(),
-							MISPErrorMessages.MISP_POLICY_NOT_APPROVED.getErrorMessage());
-				}
-				mispPolicyFromDb = authPolicyRepository.findById(policyId);
-				if(mispPolicyFromDb.isEmpty()) {
-					throw new MISPServiceException(MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorCode(),
-							MISPErrorMessages.MISP_POLICY_NOT_EXISTS.getErrorMessage());
-				}
-			}
-			policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
+			Optional<AuthPolicy> mispPolicyFromDb = validatePolicy(partnerId, request.getPolicyId());
+			String policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
 
 			// licenseKeyName validation
 			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, licenseKeyName);
@@ -818,7 +830,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			}
 
 			// expiryDate validation
-			LocalDate expiryDate = request.getExpiryDate();
 			if(expiryDate.isBefore(LocalDate.now()) || expiryDate.isEqual(LocalDate.now())) {
 				throw new MISPServiceException(MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorCode(),
 						MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorMessage());
