@@ -113,8 +113,9 @@ public class PartnerServiceController {
 	 *            this class contains partner details
 	 * @return response this class contains partner response
 	 */	
+	@Deprecated(since = "release-1.3.0-beta.3")
 	@PostMapping
-	@Operation(summary = "partner self registration", description = "Saves partner details")
+	@Operation(summary = "partner self registration - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /partners/v3 endpoint.")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
 		requestValidator.validateReqTime(request.getRequesttime());
@@ -131,8 +132,9 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@Deprecated(since = "release-1.3.0-beta.3")
 	@RequestMapping(value = "/v2", method = RequestMethod.POST)
-	@Operation(summary = "partner registration", description = "Registers partner details")
+	@Operation(summary = "partner registration - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /partners/v3 endpoint.")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequestDto> request) {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
@@ -602,7 +604,7 @@ public class PartnerServiceController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<PartnerResponse> createPartner(@RequestBody @Valid RequestWrapperV2<PartnerRequestDto> requestWrapper) {
+	public ResponseWrapperV2<PartnerResponse> createPartner(@RequestBody @Valid RequestWrapperV2<PartnerRequest> requestWrapper) {
 		Optional<ResponseWrapperV2<PartnerResponse>> validationResponse = requestValidator.validate(postCreatePartnerId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
