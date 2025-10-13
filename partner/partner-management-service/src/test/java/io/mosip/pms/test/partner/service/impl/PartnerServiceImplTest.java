@@ -13,7 +13,9 @@ import java.util.*;
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.dto.*;
+import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.exception.ApiAccessibleException;
+import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
@@ -22,6 +24,7 @@ import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.partner.util.PartnerUtil;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,28 +55,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.pms.common.entity.AuthPolicy;
-import io.mosip.pms.common.entity.BiometricExtractorProvider;
-import io.mosip.pms.common.entity.Partner;
-import io.mosip.pms.common.entity.PartnerContact;
-import io.mosip.pms.common.entity.PartnerPolicy;
-import io.mosip.pms.common.entity.PartnerPolicyCredentialType;
-import io.mosip.pms.common.entity.PartnerPolicyCredentialTypePK;
-import io.mosip.pms.common.entity.PartnerPolicyRequest;
-import io.mosip.pms.common.entity.PartnerType;
-import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
-import io.mosip.pms.common.repository.AuthPolicyRepository;
-import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
-import io.mosip.pms.common.repository.PartnerContactRepository;
-import io.mosip.pms.common.repository.PartnerPolicyCredentialTypeRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRepository;
-import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
-import io.mosip.pms.common.repository.PartnerServiceRepository;
-import io.mosip.pms.common.repository.PartnerTypeRepository;
-import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.util.PageUtils;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.common.util.UserDetailUtil;
@@ -120,6 +104,8 @@ public class PartnerServiceImplTest {
 	PolicyGroupRepository policyGroupRepository;
 	@MockBean
 	PartnerServiceRepository partnerRepository;
+	@MockBean
+	PartnerHRepository partnerHRepository;
 	@MockBean
 	AuthPolicyRepository authPolicyRepository;
 	@MockBean
@@ -175,6 +161,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
+		ReflectionTestUtils.setField(pserviceImpl, "partnerHRepository", partnerHRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerCredentialTypePolicyRepo", partnerCredentialTypePolicyRepo);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerContactRepository", partnerContactRepository);
@@ -1628,9 +1615,17 @@ public class PartnerServiceImplTest {
 	public void getPartnersV3Test() throws Exception{
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -1709,4 +1704,290 @@ public class PartnerServiceImplTest {
 		assertNotNull(responseWrapper);
 	}
 
+	@Test
+	public void getPartnersV3Test_UserNotExist() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
+	}
+
+	@Test
+	public void getPartnersV3Test_MISPPartnerException() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("MISP_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		pserviceImpl.getPartnersV3("approved", true, "MISP_Partner");
+	}
+
+	@Test
+	public void getPartnersV3Test_MISPPartner() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("MISP_Partner");
+		partner.setPolicyGroupId("abc");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(any(),any(),any())).thenReturn(partnerList);
+
+		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(null);
+		when(partnerHelper.validatePolicyGroup(any())).thenThrow(new PartnerServiceException());
+		pserviceImpl.getPartnersV3("approved", true, "MISP_Partner");
+	}
+
+	@Test
+	public void createPartnerTest_WithValidRequest() throws Exception {
+		PartnerRequest prequest = new PartnerRequest();
+		prequest.setAddress("blr");
+		prequest.setContactNumber("8273283283");
+		prequest.setEmailId("xyz@gmail.com");
+		prequest.setOrganizationName("ABC");
+		prequest.setPolicyGroup("policyGroup1");
+		prequest.setPartnerId("auth123");
+		prequest.setPartnerType("Auth");
+		prequest.setLangCode("eng");
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerRepository.findByEmailIdHash(anyString())).thenReturn(null);
+		when(partnerRepository.findByEmailId(anyString())).thenReturn(null);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("pg1");
+		policyGroup.setName("policyGroup1");
+		policyGroup.setIsActive(true);
+		when(policyGroupRepository.findByName(anyString())).thenReturn(policyGroup);
+
+		Partner partner = new Partner();
+		partner.setId("auth123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("ABC");
+		partner.setApprovalStatus("InProgress");
+		partner.setIsActive(false);
+		partner.setPolicyGroupId("pg1");
+		when(partnerRepository.save(any(Partner.class))).thenReturn(partner);
+
+		PartnerH partnerh = new PartnerH();
+		PartnerHPK partnerHPK = new PartnerHPK();
+		partnerHPK.setId("qwertyu");
+		partnerHPK.setEffDtimes(new Date());
+		partnerh.setId(partnerHPK);
+		partnerh.setPartnerTypeCode("Auth_Partner");
+		partnerh.setName("ABC");
+		partnerh.setApprovalStatus("InProgress");
+		partnerh.setIsActive(false);
+		partnerh.setPolicyGroupId("pg1");
+		when(partnerHRepository.save(any())).thenReturn(partnerh);
+
+		pserviceImpl.createPartner(prequest);
+	}
+
+	@Test
+	public void createPartnerTest_WithAlreadyExistEmail() throws Exception {
+		PartnerRequest prequest = new PartnerRequest();
+		prequest.setAddress("blr");
+		prequest.setContactNumber("8273283283");
+		prequest.setEmailId("xyz@gmail.com");
+		prequest.setOrganizationName("ABC");
+		prequest.setPolicyGroup("policyGroup1");
+		prequest.setPartnerId("auth123");
+		prequest.setPartnerType("Auth");
+		prequest.setLangCode("eng");
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		Partner partner = new Partner();
+		partner.setId("auth123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("ABC");
+		partner.setApprovalStatus("InProgress");
+		partner.setIsActive(false);
+		partner.setPolicyGroupId("pg1");
+		when(partnerRepository.findByEmailIdHash(anyString())).thenReturn(partner);
+		pserviceImpl.createPartner(prequest);
+	}
+
+	@Test
+	public void createPartnerTest_WithInvalidEmail() throws Exception {
+		PartnerRequest prequest = new PartnerRequest();
+		prequest.setAddress("blr");
+		prequest.setContactNumber("8273283283");
+		prequest.setEmailId("xyz");
+		prequest.setOrganizationName("ABC");
+		prequest.setPolicyGroup("policyGroup1");
+		prequest.setPartnerId("auth123");
+		prequest.setPartnerType("Auth");
+		prequest.setLangCode("eng");
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		pserviceImpl.createPartner(prequest);
+	}
+
+	@Test
+	public void createPartnerTest_WithNullRequest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		pserviceImpl.createPartner(new PartnerRequest());
+	}
+
+	@Test
+	public void checkPartnerExistsTest1() {
+		PartnerExistsRequestDto partnerExistsRequestDto = new PartnerExistsRequestDto();
+		partnerExistsRequestDto.setPartnerId("auth123");
+		partnerExistsRequestDto.setEmailId("xyz@gmail.com");
+		partnerExistsRequestDto.setPartnerType("Auth");
+
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+
+		Partner partner = new Partner();
+		partner.setId("auth123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("ABC");
+		partner.setApprovalStatus("InProgress");
+		partner.setIsActive(false);
+		partner.setPolicyGroupId("pg1");
+		when(partnerRepository.findByEmailIdHash(anyString())).thenReturn(partner);
+		pserviceImpl.checkPartnerExists(partnerExistsRequestDto);
+	}
+
+	@Test
+	public void checkPartnerExistsTest2() {
+		PartnerExistsRequestDto partnerExistsRequestDto = new PartnerExistsRequestDto();
+		partnerExistsRequestDto.setPartnerId("auth123");
+		partnerExistsRequestDto.setEmailId("xyz@gmail.com");
+		partnerExistsRequestDto.setPartnerType("Auth");
+
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+
+		Partner partner = new Partner();
+		partner.setId("auth123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("ABC");
+		partner.setApprovalStatus("InProgress");
+		partner.setIsActive(false);
+		partner.setPolicyGroupId("pg1");
+		when(partnerRepository.findByEmailIdHash(anyString())).thenReturn(null);
+		when(partnerRepository.findByEmailId(anyString())).thenReturn(null);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		pserviceImpl.checkPartnerExists(partnerExistsRequestDto);
+	}
+
+	@Test
+	public void checkPartnerExistsTest3() {
+		PartnerExistsRequestDto partnerExistsRequestDto = new PartnerExistsRequestDto();
+		partnerExistsRequestDto.setPartnerId("auth123");
+		partnerExistsRequestDto.setEmailId("xyz@gmail.com");
+		partnerExistsRequestDto.setPartnerType("Auth");
+
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+
+		when(partnerRepository.findByEmailIdHash(anyString())).thenReturn(null);
+		when(partnerRepository.findByEmailId(anyString())).thenReturn(null);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
+		pserviceImpl.checkPartnerExists(partnerExistsRequestDto);
+	}
+
+	@Test
+	public void checkPartnerExistsTest4() {
+		PartnerExistsRequestDto partnerExistsRequestDto = new PartnerExistsRequestDto();
+		partnerExistsRequestDto.setPartnerId("auth123");
+		partnerExistsRequestDto.setEmailId("xyz@gmail.com");
+		partnerExistsRequestDto.setPartnerType("invalid");
+
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+		pserviceImpl.checkPartnerExists(partnerExistsRequestDto);
+	}
+
+	@Test
+	public void checkPartnerExistsTest5() {
+		PartnerExistsRequestDto partnerExistsRequestDto = new PartnerExistsRequestDto();
+		pserviceImpl.checkPartnerExists(partnerExistsRequestDto);
+	}
 }
