@@ -374,3 +374,19 @@ definePolicyGroup:
         "desc": "$IGNORE$",
         "is_Active": true
     }'
+   Pms_DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Creating a PolicyGroup for MISP PolicyGroup
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_20
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "mosip policy group MISP",
+    "name": "mosip policy group MISP",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "is_Active": true
+}'

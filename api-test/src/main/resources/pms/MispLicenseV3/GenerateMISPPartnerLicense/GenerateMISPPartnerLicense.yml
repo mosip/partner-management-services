@@ -1,0 +1,43 @@
+GenerateMISPPartnerLicense:
+   Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_01
+      description: Generate MISP Partner License
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseResult
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111555",
+        "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "expiryDate": "2035-10-10"
+}'
+      output: '{
+        "partnerId": "pms-111555",
+        "licenseKeyStatus": "ACTIVE"
+}'
+   Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_02
+      description: Generate MISP Partner License without PolicyID and user should be able to generate the license
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseResult
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111555",
+        "policyId": "$REMOVE$",
+        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "expiryDate": "2035-10-10"
+}'
+      output: '{
+        "partnerId": "pms-111555",
+        "licenseKeyStatus": "ACTIVE"
+}'

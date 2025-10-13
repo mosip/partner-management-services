@@ -57,6 +57,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
+    <test name="DefineMISPPolicy">
+		<parameter name="ymlFile"
+			value="pms/DefinePolicy/DefineMISPPolicy.yml" />
+		<parameter name="idKeyName" value="id,name" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>	
 	<test name="DefineDataSharePolicy">
 		<parameter name="ymlFile"
 			value="pms/policy/DefineDataSharePolicy/DefineDataSharePolicy.yml" />
@@ -1337,6 +1346,24 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
+	<test name="GenerateMISPPartnerLicense">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense.yml" />
+		<parameter name="idKeyName" value="id,policyId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="GenerateMISPPartnerLicenseNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml" />
+		<parameter name="idKeyName" value="id,policyId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>	
 	<test name="GetMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/GetMispLicense/GetMispLicense.yml" />
