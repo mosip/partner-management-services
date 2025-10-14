@@ -111,21 +111,23 @@ public class MISPLicenseController {
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));
 		return response;
-	}	
-	
+	}
+
+	@Deprecated(since = "release-1.3.0-beta.3")
 	@PostMapping("/misps/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmispfiltervalues())")
-	@Operation(summary = "Service to filter misp details", description = "Service to filter misp details")
+	@Operation(summary = "Service to filter misp details - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the GET /misp-licenses endpoint.")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setResponse(infraProviderService.filterValues(request.getRequest()));
 		return responseWrapper;
-	}	
-	
+	}
+
+	@Deprecated(since = "release-1.3.0-beta.3")
 	@PostMapping("/misps/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmispsearch())")
-	@Operation(summary = "Service to search misp details", description = "Service to search misp details")
+	@Operation(summary = "Service to search misp details  - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the GET /misp-licenses endpoint.")
 	public ResponseWrapper<PageResponseDto<MISPLicenseEntity>> search(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<MISPLicenseEntity>> responseWrapper = new ResponseWrapper<>();		
