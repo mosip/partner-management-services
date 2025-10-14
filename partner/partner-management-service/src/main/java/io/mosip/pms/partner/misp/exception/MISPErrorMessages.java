@@ -35,7 +35,8 @@ public enum MISPErrorMessages {
 	ERROR_REGENERATING_MISP_LICENSE("PMS_MSP_435","Error while regenerating MISP License key."),
 	INVALID_EXPIRY_DATE("PMS_MSP_436","Expiry date cannot be empty or null."),
 	POLICY_ID_NOT_EXISTS("PMS_MSP_437","The entered policy ID is invalid or does not exist in the database."),
-	PARTNER_POLICY_NOT_APPROVED("PMS_MSP_438","The policy ID provided has not been approved for partner policy linking.");
+	PARTNER_POLICY_NOT_APPROVED("PMS_MSP_438","The policy ID provided has not been approved for partner policy linking."),
+	MISP_LICENSE_NOT_FOUND("PMS_MSP_439","No Active MISP License key found for the given Partner ID and Policy ID.");
 
 	private final String errorCode;
 	private final String errorMessage;
