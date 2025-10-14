@@ -807,6 +807,13 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			LocalDate expiryDate = request.getExpiryDate();
 			expiryDateInputValidation(expiryDate);
 
+			// check the license key exist for given partner id and policy id combination
+			List<MISPLicenseEntityV2> existingLicense = mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(partnerId, request.getPolicyId());
+			if(existingLicense.isEmpty()) {
+				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_FOUND.getErrorCode(),
+						MISPErrorMessages.MISP_LICENSE_NOT_FOUND.getErrorMessage());
+			}
+
 			// partnerId validation
 			Optional<Partner> partnerFromDb = partnerRepository.findById(partnerId);
 			if (partnerFromDb.isEmpty()) {
