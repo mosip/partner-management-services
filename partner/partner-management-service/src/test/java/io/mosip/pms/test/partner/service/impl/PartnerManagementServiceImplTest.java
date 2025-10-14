@@ -21,6 +21,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.json.simple.JSONObject;
@@ -1463,6 +1464,53 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
+	public void getAllApiKeyRequestsV2Test01() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPolicyGroupId("policyGroup123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setName("abc");
+		partner.setIsActive(true);
+		partnerList.add(partner);
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("policyGroup123");
+		policyGroup.setName("policyGrp");
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
+
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
+		apiKeyFilterDto.setPartnerId("123");
+		apiKeyFilterDto.setPolicyName("policy");
+		apiKeyFilterDto.setOrgName("ABC");
+		apiKeyFilterDto.setExpiryPeriod(30);
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		ApiKeyRequestsSummaryEntity apiKeyRequestsSummaryEntity = new ApiKeyRequestsSummaryEntity();
+		apiKeyRequestsSummaryEntity.setApiKeyId("12345");
+		Page<ApiKeyRequestsSummaryEntity> page = new PageImpl<>(List.of(apiKeyRequestsSummaryEntity), pageable, 1);
+
+		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any(), any(), any(), any())).thenReturn(page);
+		partnerManagementImpl.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto);
+	}
+
+	@Test
 	public void getAllApiKeyRequestsTest02() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
@@ -1611,6 +1659,7 @@ public class PartnerManagementServiceImplTest {
 		filterDto.setCertificateId("abc");
 		filterDto.setCaCertificateType("root");
 		filterDto.setPartnerDomain("Auth");
+		filterDto.setExpiryPeriod(30);
 
 		TrustCertificateSummaryDto trustCertificateSummaryDto = new TrustCertificateSummaryDto();
 		trustCertificateSummaryDto.setCaCertificateType("ROOT");
@@ -1738,6 +1787,24 @@ public class PartnerManagementServiceImplTest {
 		when(restUtil.postApi(anyString(), any(), eq(""), eq(""),
 				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
 		partnerManagementImpl.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getTrustCertificatesTest06() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String sortFieldName = "partnerDomain";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
+		filterDto.setCertificateId("abc");
+		filterDto.setCaCertificateType("root");
+		filterDto.setPartnerDomain("Auth");
+		partnerManagementImpl.getTrustCertificates(sortFieldName, null, pageNo, pageSize, filterDto);
 	}
 
 	@Test
@@ -1871,6 +1938,112 @@ public class PartnerManagementServiceImplTest {
 		when(environment.getProperty("pmp.download.trust.certificates.get.rest.uri")).thenReturn("uri");
 		when(restUtil.getApi(anyString(), any(), eq(Map.class))).thenReturn(apiResponse);
 		partnerManagementImpl.downloadTrustCertificates("123");
+	}
+
+	private LinkPolicyGroupRequestDto getLinkPolicyGroupRequestDto() {
+		LinkPolicyGroupRequestDto requestDto = new LinkPolicyGroupRequestDto();
+		requestDto.setPolicyGroupId("group1");
+		return requestDto;
+	}
+
+	private Optional<Partner> getPartnerForLinkPolicyGroup() {
+		Partner partner = new Partner();
+		partner.setId("partner1");
+		partner.setIsActive(true);
+		partner.setApprovalStatus("approved");
+		partner.setPartnerTypeCode("MISP_Partner");
+		return Optional.of(partner);
+	}
+
+	private PolicyGroup getPolicyGroup() {
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("group1");
+		policyGroup.setName("Group 1");
+		policyGroup.setDesc("description");
+		policyGroup.setIsActive(true);
+		return policyGroup;
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithValidRequests() {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerServiceRepository.findById(anyString())).thenReturn(getPartnerForLinkPolicyGroup());
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(getPolicyGroup());
+
+		Partner partner = getPartnerForLinkPolicyGroup().get();
+		partner.setPolicyGroupId(getPolicyGroup().getId());
+		when(partnerRepository.save(any())).thenReturn(partner);
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithNullPointerException() {
+		when(partnerServiceRepository.findById(anyString())).thenReturn(getPartnerForLinkPolicyGroup());
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(getPolicyGroup());
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithPolicygroupNotActive() {
+		when(partnerServiceRepository.findById(anyString())).thenReturn(getPartnerForLinkPolicyGroup());
+
+		PolicyGroup policyGroup = getPolicyGroup();
+		policyGroup.setIsActive(false);
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithPolicygroupNotExist() {
+		when(partnerServiceRepository.findById(anyString())).thenReturn(getPartnerForLinkPolicyGroup());
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(null);
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithPolicygroupAlreadyLinked() {
+		Partner partner = getPartnerForLinkPolicyGroup().get();
+		partner.setPolicyGroupId("group2");
+		when(partnerServiceRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithPartnerNotActive() {
+		Partner partner = getPartnerForLinkPolicyGroup().get();
+		partner.setIsActive(false);
+		when(partnerServiceRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithNotMISPPartner() {
+		Partner partner = getPartnerForLinkPolicyGroup().get();
+		partner.setPartnerTypeCode("Auth");
+		when(partnerServiceRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithPartnerNotExist() {
+		when(partnerServiceRepository.findById(anyString())).thenReturn(Optional.empty());
+		partnerManagementImpl.linkPolicyGroup("partner1", getLinkPolicyGroupRequestDto());
+	}
+
+	@Test
+	public void linkPolicyGroupTest_WithInvalidRequests() {
+		// null policy group id
+		LinkPolicyGroupRequestDto requestDto = new LinkPolicyGroupRequestDto();
+		requestDto.setPolicyGroupId(null);
+		partnerManagementImpl.linkPolicyGroup("partner1", requestDto);
+
+		// null partner id
+		partnerManagementImpl.linkPolicyGroup(null, requestDto);
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
