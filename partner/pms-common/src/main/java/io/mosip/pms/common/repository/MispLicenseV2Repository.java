@@ -16,4 +16,7 @@ public interface MispLicenseV2Repository extends JpaRepository<MISPLicenseEntity
 
     @Query(value = "select * from misp_license ml where (ml.is_deleted is null or ml.is_deleted = false) and ml.is_active = true and ml.valid_to_date < ?1", nativeQuery = true)
     List<MISPLicenseEntityV2> findAllExpiredActiveMISPLicenses(LocalDateTime currentDateTime);
+
+    @Query(value = "select * from misp_license ml where ml.misp_id=?1 and ((?2 IS NULL AND ml.policy_id IS NULL) OR ml.policy_id = ?2) and ml.is_active = true", nativeQuery = true)
+    List<MISPLicenseEntityV2> findActiveLicenseKeyByPartnerIdAndPolicyId(String partnerId, String policyId);
 }
