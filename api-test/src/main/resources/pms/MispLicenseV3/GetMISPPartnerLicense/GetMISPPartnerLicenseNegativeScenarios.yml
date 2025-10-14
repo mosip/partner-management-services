@@ -1,0 +1,374 @@
+GetMISPPartnerLicenseNegativeScenarios:
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_without_Access_Token:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_01
+    description: Get MISP Partner License without Access Token
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "KER-ATH-401",
+              "message": "Authentication Failed"
+          }
+      ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_PartnerId:
+    endPoint: /v1/partnermanager/misp-licenses?partnerId=invalid_partnerid
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_02
+    description: Get MISP Partner License with Invalid PartnerId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+      "response": {
+          "pageNo": "0",
+          "pageSize": "0"
+       },
+       "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Special_Char_PartnerId:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=Par@@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_03
+    description: Get MISP Partner License using OrgName with special characters in PartnerId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007",
+              "message": "Invalid input: \u0027Par@@!!$$.\u0027. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # \u0026 ( ) \\ - \u0027 ? _ ! \" : ; \u003d"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_OrgName:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=UnknownOrg
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_04
+    description: Get MISP Partner License with Invalid OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+       "response": {
+          "pageNo": "0",
+           "pageSize": "0"
+       },
+       "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Special_Char_OrgName:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=Org@@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_05
+    description: Get MISP Partner License using OrgName with special characters in OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007",
+              "message": "Invalid input: \u0027Par@@!!$$.\u0027. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # \u0026 ( ) \\ - \u0027 ? _ ! \" : ; \u003d"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_PolicyGroupName:
+    endPoint: /v1/partnermanager/misp-licenses?policyGroupName=Invalid_policygroupname
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_06
+    description: Get MISP Partner License with Invalid PolicyGroupName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+       "response": {
+          "pageNo": "0",
+           "pageSize": "0"
+       },
+       "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Special_Char_PolicyGroupName:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=Gr@Up@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_07
+    description: Get MISP Partner License using PolicyName with special characters in PolicyGroupName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007",
+              "message": "Invalid input: \u0027Par@@!!$$.\u0027. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # \u0026 ( ) \\ - \u0027 ? _ ! \" : ; \u003d"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_PolicyName:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=Invalid_Policy
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_08
+    description: Get MISP Partner License with Invalid PolicyName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+       "response": {
+          "pageNo": "0",
+           "pageSize": "0"
+       },
+       "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Special_Char_PolicyName:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=P@!!cY$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_09
+    description: Get MISP Partner License using PolicyName with special characters in PolicyName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007",
+              "message": "Invalid input: \u0027Par@@!!$$.\u0027. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # \u0026 ( ) \\ - \u0027 ? _ ! \" : ; \u003d"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_MispLicenseKeyName:
+    endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=INVALID_KEY
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_10
+    description: Get MISP Partner License with Invalid MispLicenseKeyName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+       "response": {
+          "pageNo": "0",
+           "pageSize": "0"
+       },
+       "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Special_Char_MispLicenseKeyName:
+    endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=Key@@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_11
+    description: Get MISP Partner License using MispLicenseKeyName with special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007",
+              "message": "Invalid input: \u0027Par@@!!$$.\u0027. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # \u0026 ( ) \\ - \u0027 ? _ ! \" : ; \u003d"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_PageNo:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=10089&pageSize=0
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_12
+    description: Get MISP Partner License with Invalid PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_361",
+              "message": "Invalid Page No"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Negative_PageNo:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=-1&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_13
+    description: Get MISP Partner License with Negative PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_360",
+              "message": "Invalid Page No"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_PageSize_Format:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=abc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_14
+    description: Get MISP Partner License with Invalid format of PageSize
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseBadRequestResult
+    input: '{}'
+    output: '{
+       "status": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Zero_PageSize:
+    endPoint: /v1/partnermanager/misp-licenses?pageSize=0
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_15
+    description: Get MISP Partner License with Zero PageSize
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_361",
+              "message": "Invalid Page Size"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Negative_PageSize:
+    endPoint: /v1/partnermanager/misp-licenses?pageSize=-5
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_16
+    description: Get MISP Partner License with Negative PageSize
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_361",
+              "message": "Invalid Page Size"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Invalid_PageNo_Format:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=abc&pageSize=2
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_17
+    description: Get MISP Partner License with Invalid format of PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseBadRequestResult
+    input: '{}'
+    output: '{
+       "status": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Valid_OrgName_and_Invalid_PolicyGroupName:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=Org_A&policyGroupName=InvalidGroup123
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_18
+    description: Get MISP Partner License with Valid OrgName and Invalid PolicyGroupName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+       "response": {
+          "pageNo": "0",
+           "pageSize": "0"
+       },
+       "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_SortType_Without_SortFieldName:
+    endPoint: /v1/partnermanager/misp-licenses?sortType=asc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_19
+    description: Get MISP Partner License with SortType without SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+		       "errorCode": "PMS_PS_ERROR_007",
+               "message": "Invalid Sorting request: \u0027sortType\u0027 and \u0027sortFieldName\u0027 must be specified together."
+           }
+       ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_SortFieldName_and_Invalid_SortType:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName&sortType=random
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_20
+    description: Get MISP Partner License with SortFieldName and Invalid SortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+		       "errorCode": "PMS_PRT_358",
+               "message": "Sort type random is not supported"
+           }
+       ]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Special_Char_SortFieldName:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=@#$%
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_21
+    description: Get MISP Partner License using with special characters in SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007",
+              "message": "Invalid input: \u0027Par@@!!$$.\u0027. Only letters, numbers, spaces, and the following special characters are allowed: . , @ # \u0026 ( ) \\ - \u0027 ? _ ! \" : ; \u003d"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Empty_String_PolicyGroupName:
+    endPoint: /v1/partnermanager/misp-licenses?policyGroupName=""
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_22
+    description: Get MISP Partner License with Empty String PolicyGroupName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+      "response": {
+          "pageNo": "0",
+          "pageSize": "0"
+      },
+	  "errors": []
+}'
+  Pms_GetMISPPartnerLicenseNegativeScenarios_smoke_with_Empty_String_PolicyName:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=""
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegativeScenarios_23
+    description: Get MISP Partner License with Empty String PolicyName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{}'
+    output: '{
+      "response": {
+          "pageNo": "0",
+          "pageSize": "0"
+      },
+      "errors": []
+}'

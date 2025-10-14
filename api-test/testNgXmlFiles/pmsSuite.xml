@@ -1363,6 +1363,24 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
+	</test>
+	<test name="GetMISPPartnerLicense">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense.yml" />
+		<parameter name="idKeyName" value="id,policyId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetMISPPartnerLicenseNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseNegativeScenarios.yml" />
+		<parameter name="idKeyName" value="id,policyId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
 	</test>	
 	<test name="GetMispLicense">
 		<parameter name="ymlFile"
