@@ -46,8 +46,7 @@ import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -1113,6 +1112,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithValidRequests() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		when(authPolicyRepository.findById(anyString())).thenReturn(getAuthPolicy());
 		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(anyString(), anyString(), anyString())).thenReturn(getApprovedPolicies());
@@ -1126,6 +1129,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithoutPolicyId() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), eq(null))).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 
 		List<MISPLicenseEntityV2> mispLicenseFromDb = new ArrayList<>();
@@ -1140,6 +1147,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithoutPolicyFileId() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		AuthPolicy authPolicy = getAuthPolicy().get();
 		authPolicy.setPolicyFileId(null);
@@ -1155,6 +1166,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithPastExpiryDate() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		when(authPolicyRepository.findById(anyString())).thenReturn(getAuthPolicy());
 		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(anyString(), anyString(), anyString())).thenReturn(getApprovedPolicies());
@@ -1168,7 +1183,11 @@ public class InfraProviderServiceImplTest {
 	}
 
 	@Test
-	public void regenerateMISPLicenseTest_WithExistingLicenseKey() {
+	public void regenerateMISPLicenseTest_WithExistingLicenseKeyName() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		when(authPolicyRepository.findById(anyString())).thenReturn(getAuthPolicy());
 		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(anyString(), anyString(), anyString())).thenReturn(getApprovedPolicies());
@@ -1182,6 +1201,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithPolicyNotApproved() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		when(authPolicyRepository.findById(anyString())).thenReturn(getAuthPolicy());
 
@@ -1193,6 +1216,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithPolicyNotExist() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
 
@@ -1201,6 +1228,10 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithPatnerNotActive() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		Partner partner = getPartner().get();
 		partner.setIsActive(false);
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
@@ -1210,7 +1241,18 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void regenerateMISPLicenseTest_WithPatnerNotExist() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		existingLicenses.add(getMISPLicenseEntityV2());
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
+
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
+		infraProviderServiceImpl.regenerateMISPLicense("partner1", mispRegenerateRequestDto());
+	}
+
+	@Test
+	public void regenerateMISPLicenseTest_WithLicenseKeyNotFound() {
+		List<MISPLicenseEntityV2> existingLicenses = new ArrayList<>();
+		when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(anyString(), anyString())).thenReturn(existingLicenses);
 		infraProviderServiceImpl.regenerateMISPLicense("partner1", mispRegenerateRequestDto());
 	}
 

@@ -13,9 +13,14 @@ import java.util.*;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
+import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -93,6 +98,9 @@ public class PartnerManagementControllerTest {
 	
 	@MockBean
 	private AuditUtil audit;
+
+	@MockBean
+	RequestValidator requestValidator;
 	
 	@Before
 	public void setUp() {
@@ -446,6 +454,52 @@ public class PartnerManagementControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequestsV2Test() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize))
+						.param("partnerId", "123")
+						.param("apiKeyLabel", "label")
+						.param("orgName", "ABC")
+						.param("status", "approved")
+						.param("policyName", "policy name")
+						.param("policyGroupName", "policy group"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequestsV2_NoFiltersTest() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
@@ -482,6 +536,17 @@ public class PartnerManagementControllerTest {
 						.param("policyGroupName", policyGroupName)
 						.param("partnerType", partnerType)
 						.param("partnerTypeCode", partnerTypeCode))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, partnerPolicyRequestFilterDto))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
+						.param("sortFieldName", sortFieldName)
+						.param("sortType", sortType)
+						.param("pageNo", String.valueOf(pageNo))
+						.param("pageSize", String.valueOf(pageSize))
+						.param("partnerId", partnerId)
+						.param("partnerIdSearchType", "equals"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -533,6 +598,7 @@ public class PartnerManagementControllerTest {
 						.param("caCertificateType", "root")
 						.param("certificateId", "123")
 						.param("partnerDomain", "FTM")
+						.param("expiryPeriod", "30")
 						.param("issuedTo", "CA")
 						.param("issuedBy", "CA"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
@@ -566,5 +632,60 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/trust-chain-certificates/{certificateId}/certificateFile", "123")
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void downloadRootCertificateTest_InvalidCertificateId() throws Exception {
+		ResponseWrapperV2<TrustCertificateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.downloadTrustCertificates(anyString())).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/trust-chain-certificates/{certificateId}/certificateFile", "123_invalid")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	private LinkPolicyGroupRequestDto getLinkPolicyGroupRequestDto() {
+		LinkPolicyGroupRequestDto requestDto = new LinkPolicyGroupRequestDto();
+		requestDto.setPolicyGroupId("group1");
+		return requestDto;
+	}
+
+	private RequestWrapperV2<LinkPolicyGroupRequestDto> getRequestWrapper() {
+		RequestWrapperV2<LinkPolicyGroupRequestDto> request = new RequestWrapperV2<>();
+		request.setId("mosip.pms.link.policy.group.post");
+		request.setVersion("1.0");
+		request.setRequest(getLinkPolicyGroupRequestDto());
+		return request;
+	}
+
+	private ResponseWrapperV2<LinkPolicyGroupResponseDto> getResponseWrapper() {
+		ResponseWrapperV2<LinkPolicyGroupResponseDto> response = new ResponseWrapperV2<>();
+		response.setId("mosip.pms.link.policy.group.post");
+		response.setVersion("1.0");
+		LinkPolicyGroupResponseDto responseDto = new LinkPolicyGroupResponseDto();
+		responseDto.setPartnerId("123");
+		responseDto.setPolicyGroupId("group1");
+		responseDto.setPolicyGroupName("Default Group");
+		response.setResponse(responseDto);
+		return response;
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void linkPolicyGroupTest() throws Exception {
+		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
+		Mockito.when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
+		Mockito.when(partnerManagementService.linkPolicyGroup(anyString(), any())).thenReturn(getResponseWrapper());
+		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(getRequestWrapper()))).andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void linkPolicyGroupTest_InvalidRequest() throws Exception {
+		Mockito.when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
+		Mockito.when(partnerManagementService.linkPolicyGroup(anyString(), any())).thenReturn(getResponseWrapper());
+		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(getRequestWrapper()))).andExpect(status().isOk());
 	}
 }
