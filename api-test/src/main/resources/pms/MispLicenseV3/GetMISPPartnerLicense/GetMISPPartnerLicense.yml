@@ -1,5 +1,5 @@
 GetMISPPartnerLicense:
-    Pms_GetMISPPartnerLicense_All_Valid_Smoke_sid:
+    Pms_GetMISPPartnerLicense_All_Valid_Smoke:
         endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=8
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_01
         description: Fetch MISP partner license using a valid access token
@@ -12,7 +12,7 @@ GetMISPPartnerLicense:
 }'
         output: '{
 }'
-    Pms_GetMISPPartnerLicense_with_Nofilter_Valid_Smoke_sid:
+    Pms_GetMISPPartnerLicense_with_Nofilter_Valid_Smoke:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_02
         description: Fetch all MISP license keys without passing any query parameters
