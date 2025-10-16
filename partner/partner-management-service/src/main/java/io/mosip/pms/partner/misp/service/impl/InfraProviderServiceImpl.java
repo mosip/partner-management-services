@@ -23,6 +23,7 @@ import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.partner.util.PartnerUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -579,7 +580,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			String policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
 
 			// licenseKeyName validation
-			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, licenseKeyName);
+			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, PartnerUtil.trimAndReplace(licenseKeyName));
 			if (!mispLicenseFromDb.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorCode(),
 						MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorMessage());
@@ -830,7 +831,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			String policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
 
 			// licenseKeyName validation
-			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, licenseKeyName);
+			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndPolicyIdAndLicenseKeyName(partnerId, policyId, PartnerUtil.trimAndReplace(licenseKeyName));
 			if (!mispLicenseFromDb.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorCode(),
 						MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorMessage());
