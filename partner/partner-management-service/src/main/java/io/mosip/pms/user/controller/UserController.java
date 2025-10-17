@@ -75,6 +75,12 @@ public class UserController {
 	@Value("${mosip.pms.supported.notification.languages}")
 	private String supportedNotificationLanguages;
 
+	@Value("${pmp.partner.partnerId.max.length}")
+	private String partnerIdMaxLength;
+
+	@Value("${pmp.partner.mobileNumbe.max.length}")
+	private String phoneNumberMaxLength;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -138,6 +144,8 @@ public class UserController {
 		configMap.put("isRootIntermediateCertAvailable", isRootIntermediateCertAvailable);
 		configMap.put("refreshNotificationsTime", refreshNotificationsTime);
 		configMap.put("supportedNotificationLanguages", supportedNotificationLanguages);
+		configMap.put("partnerIdMaxLength", partnerIdMaxLength);
+		configMap.put("phoneNumberMaxLength", phoneNumberMaxLength);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
