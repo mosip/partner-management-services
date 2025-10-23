@@ -135,7 +135,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	MispServiceRepository mispRepository;
 	
 	@Autowired
-	MispLicenseRepository mispLicenseRepository;
+	MispLicenseV2Repository mispLicenseV2Repository;
 
 	@Autowired
 	private WebSubPublisher webSubPublisher;
@@ -275,15 +275,15 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				partnerRepository.save(updatePartnerObject);
 				// if partner is misp, then de-activate all licenses.
 				if(updatePartnerObject.getPartnerTypeCode().equalsIgnoreCase(environment.getProperty(ConfigKeyConstants.MISP_PARTNER_TYPE, "MISP_Partner"))) {
-					List<MISPLicenseEntity> activeLicenses = mispLicenseRepository.findByMispIdAndIsActive(updatePartnerObject.getId());
+					List<MISPLicenseEntityV2> activeLicenses = mispLicenseV2Repository.findActiveLicenseKeyByPartnerId(updatePartnerObject.getId());
 					// assuming one misp partner will have only one active license key at any giving point of time
-					for(MISPLicenseEntity license : activeLicenses) {
+					for(MISPLicenseEntityV2 license : activeLicenses) {
 						license.setIsActive(false);
 						license.setUpdatedBy(getUser());
 						license.setUpdatedDateTime(LocalDateTime.now());
-						mispLicenseRepository.save(license);
+						mispLicenseV2Repository.save(license);
 						Map<String, Object> data = new HashMap<>();
-						data.put("mispLicenseData", MapperUtils.mapDataToPublishDto(license));
+						data.put("mispLicenseData", MapperUtils.mapDataToPublishDtoV2(license));
 						notify(data, EventType.MISP_LICENSE_UPDATED);
 					}
 				}

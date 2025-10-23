@@ -19,4 +19,10 @@ public interface MispLicenseV2Repository extends JpaRepository<MISPLicenseEntity
 
     @Query(value = "select * from misp_license ml where ml.misp_id=?1 and ((?2 IS NULL AND ml.policy_id IS NULL) OR ml.policy_id = ?2) and ml.is_active = true", nativeQuery = true)
     List<MISPLicenseEntityV2> findActiveLicenseKeyByPartnerIdAndPolicyId(String partnerId, String policyId);
+
+    @Query(value = "select * from misp_license ml where ml.misp_id=?1 and ml.is_active = true", nativeQuery = true)
+    List<MISPLicenseEntityV2> findActiveLicenseKeyByPartnerId(String partnerId);
+
+    @Query(value = "select * from misp_license ml where ml.misp_id=?1 and ml.license_key = ?2", nativeQuery = true)
+    MISPLicenseEntityV2 findByPartnerIdAndLicenseKey(String partnerId, String licenseKey);
 }

@@ -98,7 +98,7 @@ public class PartnerManagementServiceImplTest {
 	AuthPolicyRepository authPolicyRepository;
 	
 	@Mock	
-	MispLicenseRepository mispLicenseRepository;
+	MispLicenseV2Repository mispLicenseV2Repository;
 	
 	@Mock
 	BiometricExtractorProviderRepository extractorProviderRepository;
@@ -152,7 +152,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
-		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseRepository", mispLicenseRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);		
 //		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
@@ -592,13 +592,15 @@ public class PartnerManagementServiceImplTest {
 		req.setStatus("De-Active");
 		partner.get().setPartnerTypeCode("MISP_Partner");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
-		MISPLicenseEntity license = new MISPLicenseEntity();
-		license.setLicenseKey("qwertyhgfdsdfghb");
+		MISPLicenseEntityV2 license = new MISPLicenseEntityV2();
+		MISPLicenseEntityPK id = new MISPLicenseEntityPK();
+		id.setLicenseKey("qwertyhgfdsdfghb");
 		license.setIsActive(true);
-		license.setMispId("12345");
+		id.setMispId("12345");
+		license.setId(id);
 		license.setValidFromDate(LocalDateTime.now().minusDays(1));
 		license.setValidToDate(LocalDateTime.now().plusDays(5));
-		Mockito.when(mispLicenseRepository.findByMispIdAndIsActive("123456")).thenReturn(List.of(license));
+		Mockito.when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerId("123456")).thenReturn(List.of(license));
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
