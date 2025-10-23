@@ -78,7 +78,7 @@ public class UserController {
 	@Value("${pmp.partner.partnerId.max.length}")
 	private String partnerIdMaxLength;
 
-	@Value("${pmp.partner.mobileNumbe.max.length}")
+	@Value("${pmp.partner.mobileNumber.max.length}")
 	private String phoneNumberMaxLength;
 
 	public static final String VERSION = "1.0";
