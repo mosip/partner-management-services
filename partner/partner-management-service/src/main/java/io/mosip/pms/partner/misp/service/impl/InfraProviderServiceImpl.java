@@ -260,7 +260,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 					MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorMessage());
 		}
 
-		MISPLicenseEntity mispLicenseFromDb = mispLicenseRepository.findByIdAndKey(id, licenseKey);
+		MISPLicenseEntityV2 mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndLicenseKey(id, licenseKey);
 		if (mispLicenseFromDb == null) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorCode(),
 					MISPErrorMessages.MISP_LICENSE_KEY_NOT_ASSOCIATED_MISP_ID.getErrorMessage());
@@ -268,13 +268,13 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		mispLicenseFromDb.setUpdatedBy(getLoggedInUserId());
 		mispLicenseFromDb.setUpdatedDateTime(LocalDateTime.now());
 		mispLicenseFromDb.setIsActive(status.toLowerCase().equals(ACTIVE_STATUS) ? true : false);
-		mispLicenseRepository.save(mispLicenseFromDb);
+		mispLicenseV2Repository.save(mispLicenseFromDb);
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
-		response.setLicenseKey(mispLicenseFromDb.getLicenseKey());
+		response.setLicenseKey(mispLicenseFromDb.getId().getLicenseKey());
 		response.setLicenseKeyExpiry(mispLicenseFromDb.getValidToDate());
 		response.setLicenseKeyStatus(mispLicenseFromDb.getIsActive() ? ACTIVE_STATUS : NOTACTIVE_STATUS);
-		response.setProviderId(mispLicenseFromDb.getMispId());
-		notify(MapperUtils.mapDataToPublishDto(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
+		response.setProviderId(mispLicenseFromDb.getId().getMispId());
+		notify(MapperUtils.mapDataToPublishDtoV2(mispLicenseFromDb), EventType.MISP_LICENSE_UPDATED);
 		return response;
 
 	}

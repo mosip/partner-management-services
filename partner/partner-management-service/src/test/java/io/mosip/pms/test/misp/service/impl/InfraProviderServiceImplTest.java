@@ -1,14 +1,11 @@
 package io.mosip.pms.test.misp.service.impl;
 
-import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
@@ -21,7 +18,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -337,12 +328,14 @@ public class InfraProviderServiceImplTest {
 		String misp_id = "1234";
 		String licenseKey = "12345";
 		String status = "active";
-		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
-		mispLicenseEntity.setLicenseKey(licenseKey);
-		mispLicenseEntity.setMispId(misp_id);
+		MISPLicenseEntityV2 mispLicenseEntity = new MISPLicenseEntityV2();
+		MISPLicenseEntityPK mispLicenseEntityPK = new MISPLicenseEntityPK();
+		mispLicenseEntityPK.setLicenseKey(licenseKey);
+		mispLicenseEntityPK.setMispId(misp_id);
+		mispLicenseEntity.setId(mispLicenseEntityPK);
 		mispLicenseEntity.setIsActive(true);
 		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
-		Mockito.when(mispLicenseRepository.findByIdAndKey(id, licenseKey)).thenReturn(mispLicenseEntity);
+		Mockito.when(mispLicenseV2Repository.findByPartnerIdAndLicenseKey(id, licenseKey)).thenReturn(mispLicenseEntity);
 		infraProviderServiceImpl.updateInfraProvider(id, licenseKey, status);
 	}
 
@@ -352,12 +345,14 @@ public class InfraProviderServiceImplTest {
 		String misp_id = "1234";
 		String licenseKey = "12345";
 		String status = "abcdef";
-		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
-		mispLicenseEntity.setLicenseKey(licenseKey);
-		mispLicenseEntity.setMispId(misp_id);
+		MISPLicenseEntityV2 mispLicenseEntity = new MISPLicenseEntityV2();
+		MISPLicenseEntityPK mispLicenseEntityPK = new MISPLicenseEntityPK();
+		mispLicenseEntityPK.setLicenseKey(licenseKey);
+		mispLicenseEntityPK.setMispId(misp_id);
+		mispLicenseEntity.setId(mispLicenseEntityPK);
 		mispLicenseEntity.setIsActive(true);
 		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
-		Mockito.when(mispLicenseRepository.findByIdAndKey(id, licenseKey)).thenReturn(mispLicenseEntity);
+		Mockito.when(mispLicenseV2Repository.findByPartnerIdAndLicenseKey(id, licenseKey)).thenReturn(mispLicenseEntity);
 		infraProviderServiceImpl.updateInfraProvider(id, licenseKey, status);
 	}
 
@@ -367,9 +362,11 @@ public class InfraProviderServiceImplTest {
 		String misp_id = "1234";
 		String licenseKey = "12345";
 		String status = "active";
-		MISPLicenseEntity mispLicenseEntity = new MISPLicenseEntity();
-		mispLicenseEntity.setLicenseKey(licenseKey);
-		mispLicenseEntity.setMispId(misp_id);
+		MISPLicenseEntityV2 mispLicenseEntity = new MISPLicenseEntityV2();
+		MISPLicenseEntityPK mispLicenseEntityPK = new MISPLicenseEntityPK();
+		mispLicenseEntityPK.setLicenseKey(licenseKey);
+		mispLicenseEntityPK.setMispId(misp_id);
+		mispLicenseEntity.setId(mispLicenseEntityPK);
 		mispLicenseEntity.setIsActive(true);
 		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
 		infraProviderServiceImpl.updateInfraProvider(id, licenseKey, status);
