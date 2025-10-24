@@ -325,6 +325,12 @@ public class PartnerManagementController {
 					schema = @Schema(allowableValues = {"uploaded", "not_uploaded"})
 			)
 			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
+            @Parameter(
+					description = "Approval status of partner",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"active", "deactivated", "inactive"})
+			)   
+			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
 		inputValidator.validateRequestInput(sortFieldName);
@@ -356,6 +362,9 @@ public class PartnerManagementController {
 		}
 		if (isActive != null) {
 			partnerFilterDto.setIsActive(isActive);
+		}
+		if (status != null) {
+			partnerFilterDto.setStatus(status);
 		}
 		return partnerManagementService.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 	}
