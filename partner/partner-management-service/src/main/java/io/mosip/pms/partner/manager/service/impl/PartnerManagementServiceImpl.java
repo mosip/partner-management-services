@@ -21,6 +21,7 @@ import jakarta.transaction.Transactional;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.dto.*;
 import io.mosip.pms.common.entity.*;
+import io.mosip.pms.common.entity.PartnerSummaryEntity;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
@@ -923,27 +924,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
 				);
 			}
+
 			// Pagination
 			Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-			//Sorting
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				if (sortFieldName.equalsIgnoreCase("certificateUploadStatus") || sortFieldName.equalsIgnoreCase("isActive")) {
-					sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
-				}
-				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerAliasToColumnMap, sortFieldName), sortType);
-				pageable = PageRequest.of(pageNo, pageSize, sort);
-			}
-
-			String emailAddressHash = partnerFilterDto.getEmailAddress() != null
-					? PartnerUtil.generateSHA256Hash(partnerFilterDto.getEmailAddress().trim())
-					: null;
-
-			Page<PartnerSummaryEntity> page = partnerSummaryRepository.
-					getSummaryOfAllPartners(partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
-							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
-							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailAddressHash,
-							partnerFilterDto.getIsActive(), pageable);
+			// Fetch the partner details
+			Page<PartnerSummaryEntity> page = getPartnerDetails(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto, pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
 				// Decrypt email address for each partner summary
@@ -970,6 +956,45 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(getAdminPartnersId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private Page<PartnerSummaryEntity> getPartnerDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto, Pageable pageable) {
+		String emailAddressHash = partnerFilterDto.getEmailAddress() != null
+				? PartnerUtil.generateSHA256Hash(partnerFilterDto.getEmailAddress().trim())
+				: null;
+
+		// Sorting
+		if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			String sortKey = sortFieldName + "_" + sortType.toLowerCase();
+			switch (sortKey) {
+				case "status_asc":
+					return partnerSummaryRepository.getSummaryOfAllPartnersByStatusAsc(
+							partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
+							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailAddressHash,
+							partnerFilterDto.getIsActive(), partnerFilterDto.getStatus(), pageable);
+
+				case "status_desc":
+					return partnerSummaryRepository.getSummaryOfAllPartnersByStatusDesc(
+							partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
+							partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
+							partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailAddressHash,
+							partnerFilterDto.getIsActive(), partnerFilterDto.getStatus(), pageable);
+
+				default:
+					// generic sorting logic for other fields
+					if (sortFieldName.equalsIgnoreCase("certificateUploadStatus")) {
+						sortType = sortType.equalsIgnoreCase(PartnerConstants.ASC) ? PartnerConstants.DESC : PartnerConstants.ASC;
+					}
+					Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.partnerAliasToColumnMap, sortFieldName), sortType);
+					pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+		}
+		return partnerSummaryRepository.getSummaryOfAllPartners(
+				partnerFilterDto.getPartnerId(), partnerFilterDto.getPartnerTypeCode(),
+				partnerFilterDto.getOrganizationName(), partnerFilterDto.getPolicyGroupName(),
+				partnerFilterDto.getCertificateUploadStatus(), partnerFilterDto.getEmailAddress(), emailAddressHash,
+				partnerFilterDto.getIsActive(), partnerFilterDto.getStatus(), pageable);
 	}
 
 	@Override
