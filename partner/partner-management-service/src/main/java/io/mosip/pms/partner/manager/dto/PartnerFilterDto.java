@@ -11,4 +11,5 @@ public class PartnerFilterDto {
     private String certificateUploadStatus;
     private String emailAddress;
     private Boolean isActive;
+    private String status;
 }
