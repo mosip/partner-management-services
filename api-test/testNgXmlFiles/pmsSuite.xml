@@ -1371,7 +1371,9 @@
 		</classes>
 	</test>
 
-	<test name="CreateMispLicense">
+	<!-- POST /misps has been deprecated from release 1.3.x onwards, replaced by POST /misp-licenses with updated test cases.
+	added in POST /misp-licenses Ticket ID: MOSIP-43118
+	 <test name="CreateMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/CreateMispLicense/CreateMispLicense.yml" />
 		<parameter name="idKeyName" value="licenseKey" />
@@ -1379,12 +1381,12 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
-	</test>
+	</test> -->
 	<test name="GenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense.yml" />
 		<parameter name="idKeyName"
-			value="id,partnerId,policyId,licenseKeyName" />
+			value="id,partnerId,policyId,licenseKeyName,licenseKey" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1394,7 +1396,7 @@
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml" />
 		<parameter name="idKeyName"
-			value="id,partnerId,policyId,licenseKeyName" />
+			value="id,partnerId,policyId,licenseKeyName,licenseKey" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1416,42 +1418,6 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
-	<test name="RegenerateMISPPartnerLicense">
-		<parameter name="ymlFile"
-			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense.yml" />
-		<parameter name="pathParams" value="partnerId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
-		</classes>
-	</test>
-	<test name="RegenerateMISPPartnerLicenseNegTC">
-		<parameter name="ymlFile"
-			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseNegTC.yml" />
-		<parameter name="pathParams" value="partnerId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
-		</classes>
-	</test>
-	<test name="DeactivateMISPPartnerLicense">
-		<parameter name="ymlFile"
-			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense.yml" />
-		<parameter name="pathParams" value="partnerId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
-	<test name="DeactivateMISPPartnerLicenseNegTC">
-		<parameter name="ymlFile"
-			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicenseNegTC.yml" />
-		<parameter name="pathParams" value="partnerId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
-		</classes>
-	</test>
 	<test name="GetMISPPartnerLicenseByPartnerId">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId.yml" />
@@ -1470,6 +1436,8 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<!-- GET /misps has been deprecated from release 1.3.x onwards, replaced by GET /misp-licenses with updated test cases.
+	added in GET /misp-licenses Ticket ID: MOSIP-43118 
 	<test name="GetMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/GetMispLicense/GetMispLicense.yml" />
@@ -1477,22 +1445,26 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>
-	<test name="UpdateMispLicense">
+	</test> -->
+	<!-- PUT /misps has been deprecated from release 1.3.x onwards, replaced by PUT /misp-licenses/{partnerId} with updated test cases.
+	added in PUT /misp-licenses/{partnerId} Ticket ID: MOSIP-43118 
+	 <test name="UpdateMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/UpdateMispLicense/UpdateMispLicense.yml" />
 		<classes>
 			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
-	</test>
-	<test name="GetMISPLicenseByMispID">
+	</test> -->
+	<!-- GET /misps/{mispId}/licenseKey has been deprecated from release 1.3.x onwards, replaced by GET /misp-licenses/{partnerId} with updated test cases.
+	added in GET /misp-licenses/{partnerId} Ticket ID: MOSIP-43118 
+	 <test name="GetMISPLicenseByMispID">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/GetMISPLicenseByMispID/GetMISPLicenseByMispID.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>
+	</test> -->
 	<test name="SearchMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/SearchMispLicense/SearchMispLicense.yml" />
@@ -1639,11 +1611,47 @@
 	</test>
 
 	<test name="DBValidator">
+	<parameter name="ymlFile"
+		value="pms/DbValidatorTest/DbValidatorTest.yml" />
+	<classes>
+		<class
+			name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
+	</classes>
+</test>
+	<test name="RegenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
-			value="pms/DbValidatorTest/DbValidatorTest.yml" />
+			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense.yml" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="RegenerateMISPPartnerLicenseNegTC">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseNegTC.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateMISPPartnerLicense">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateMISPPartnerLicenseNegTC">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicenseNegTC.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
 

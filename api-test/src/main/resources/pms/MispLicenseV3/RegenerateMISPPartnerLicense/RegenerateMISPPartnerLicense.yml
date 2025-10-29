@@ -1,5 +1,5 @@
 RegenerateMISPPartnerLicense:
-  Pms_RegenerateMISPPartnerLicense_All_Valid_Smoke:
+  Pms_RegenerateMISPPartnerLicense_All_Valid_Smoke_sid:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_01
     description: Regenerating MISP Partner License with valid Access Token
