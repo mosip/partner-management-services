@@ -1,0 +1,14 @@
+GetMISPPartnerLicenseByPartnerId:
+  Pms_GetMISPPartnerLicenseByPartnerId_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/misp-licenses/$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerId_01
+    description: Fetching MISP partner license details by Partner ID using a valid access token
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerIdResult
+    input: '{
+}'
+    output: '{
+}'

@@ -1,0 +1,179 @@
+MISPPartnerExistsNegTC:
+  Pms_MISPPartnerExists_With_Invalid_Access_Token_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_01
+    description: Checking MISP Partner Exists with Invalid Access Token
+    role: invalidtoken
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": "MISP_Partner"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "KER-ATH-401"
+         }
+      ]
+}'
+  Pms_MISPPartnerExists_With_Invalid_Id_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_02
+    description: Checking MISP Partner Exists with Invalid Id
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/error
+    input: '{
+      "id": "invalid-id",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": "MISP_Partner"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_002"
+         }
+      ]
+}'
+  Pms_MISPPartnerExists_With_Invalid_Version_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_03
+    description: Checking MISP Partner Exists with Invalid Version
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "invalid-version",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": "MISP_Partner"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_003"
+         }
+      ]
+}'
+  Pms_MISPPartnerExists_With_Empty_PartnerType_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_04
+    description: Checking MISP Partner Exists with Empty Partner Type
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": ""
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_COR_001"
+         }
+      ]
+}'
+  Pms_MISPPartnerExists_With_Invalid_PartnerType_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_05
+    description: Checking MISP Partner Exists with Invalid Partner Type
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": "invalid-partner-type"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_PRT_010"
+         }
+      ]
+}'
+  Pms_MISPPartnerExists_With_Email_As_string_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_06
+    description: Checking MISP Partner Exists with Email ID as string
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExistsResult
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "string",
+      "partnerId": "pms-111555",
+      "partnerType": "MISP_Partner"
+}'
+    output: '{
+      "partnerExists": true,
+      "duplicateExists": true
+}'
+  Pms_MISPPartnerExists_With_PartnerId_As_string_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_07
+    description: Checking MISP Partner Exists with PartnerId As string
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExistsResult
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "string",
+      "partnerType": "MISP_Partner"
+}'
+    output: '{
+      "partnerExists": true,
+      "duplicateExists": true
+}'
+  Pms_MISPPartnerExists_With_PartnerType_As_String_Neg:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_08
+    description: Checking MISP Partner Exists with Partner Type as string
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": "string"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_PRT_010"
+         }
+      ]
+}'

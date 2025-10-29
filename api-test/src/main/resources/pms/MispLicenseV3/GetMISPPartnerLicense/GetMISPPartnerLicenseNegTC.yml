@@ -21,11 +21,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid PartnerId
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+        "pageNo": "0",
+        "pageSize": "0"
+   }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses?orgName=Par@@!!$$.
@@ -49,11 +52,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid OrgName
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?orgName=Org@@!!$$.
@@ -77,11 +83,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid PolicyGroupName
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyName=Gr@Up@!!$$.
@@ -105,11 +114,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid PolicyName
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyName=P@!!cY$$.
@@ -133,11 +145,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid MispLicenseKeyName
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_MispLicenseKeyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=Key@@!!$$.
@@ -193,11 +208,12 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid format of PageSize
     role: partneradmin
     restMethod: get
+    checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/statusCode
+    outputTemplate: pms/responseCode
     input: '{}'
     output: '{
-    "status": "400"
+    "responseCode": "400"
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Zero_PageSize_Neg:
     endPoint: /v1/partnermanager/misp-licenses?pageSize=0
@@ -237,11 +253,12 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Invalid format of PageNo
     role: partneradmin
     restMethod: get
+    checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/statusCode
+    outputTemplate: pms/responseCode
     input: '{}'
     output: '{
-    "status": "400"
+    "responseCode": "400"
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_OrgName_and_Invalid_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?orgName=Org_A&policyGroupName=InvalidGroup123
@@ -249,11 +266,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Valid OrgName and Invalid PolicyGroupName
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_SortType_Without_SortFieldName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?sortType=asc
@@ -309,11 +329,14 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License when PolicyGroupName is Empty
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+     }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Empty_String_PolicyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyName=""
@@ -321,9 +344,12 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License when PolicyName is Empty
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
     input: '{}'
     output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+       }
 }'

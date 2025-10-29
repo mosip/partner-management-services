@@ -427,7 +427,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
       output: '{
 	  "errors": [
       {
-       "errorCode": "PMS_MSP_421"
+       "errorCode": "PMS_MSP_436"
        }
        ]
 }'

@@ -225,6 +225,40 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
+	<test name="LinkPolicyGroupToMISPPartner">
+	<parameter name="ymlFile"
+		value="pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner.yml" />
+	<parameter name="pathParams" value="partnerId" />
+	<classes>
+		<class
+			name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+	</classes>
+</test>
+	<test name="LinkPolicyGroupToMISPPartnerNegTC">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartnerNegTC.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	<test name="MISPPartnerExists">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
+	<test name="MISPPartnerExistsNegTC">
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExistsNegTC.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+		</classes>
+	</test>
 	<test name="GetListofPartnersAssociatedwithLoggedinUser">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser.yml" />
@@ -1349,7 +1383,8 @@
 	<test name="GenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense.yml" />
-		<parameter name="idKeyName" value="id,policyId" />
+		<parameter name="idKeyName"
+			value="id,partnerId,policyId,licenseKeyName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1358,7 +1393,8 @@
 	<test name="GenerateMISPPartnerLicenseNegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml" />
-		<parameter name="idKeyName" value="id,policyId" />
+		<parameter name="idKeyName"
+			value="id,partnerId,policyId,licenseKeyName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1379,7 +1415,61 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
-	</test>	
+	</test>
+	<test name="RegenerateMISPPartnerLicense">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="RegenerateMISPPartnerLicenseNegTC">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseNegTC.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateMISPPartnerLicense">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateMISPPartnerLicenseNegTC">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicenseNegTC.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GetMISPPartnerLicenseByPartnerId">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetMISPPartnerLicenseByPartnerIdNegTC">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerIdNegTC.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	<test name="GetMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/GetMispLicense/GetMispLicense.yml" />

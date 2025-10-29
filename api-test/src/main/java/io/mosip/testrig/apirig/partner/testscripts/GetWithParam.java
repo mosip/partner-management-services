@@ -108,7 +108,12 @@ public class GetWithParam extends PMSUtil implements ITest {
 		}
 
 		else {
-			response = getWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+			String endpoint = ApplnURI + testCaseDTO.getEndPoint();
+			// only replace if $ID: placeholder exists
+			if (endpoint.contains("$ID:")) {
+			    endpoint = uriKeyWordHandelerUri(endpoint, testCaseDTO.getTestCaseName());
+			}
+			response = getWithPathParamAndCookie(endpoint,
 					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), auditLogCheck,
 					COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 			

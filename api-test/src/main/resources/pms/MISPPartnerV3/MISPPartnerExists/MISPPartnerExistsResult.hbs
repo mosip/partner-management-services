@@ -1,0 +1,11 @@
+{
+  "response": {
+  "partnerExists": {{partnerExists}},
+  "duplicateExists": {{duplicateExists}},
+  "policyRequiredPartnerTypes": [
+    {{#each policyRequiredPartnerTypes}}
+      "{{this}}"{{#unless @last}},{{/unless}}
+    {{/each}}
+  ]
+}
+}
