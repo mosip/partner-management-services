@@ -24,4 +24,6 @@ public class NotificationsFilterDto {
     private String policyName;
     private String sbiId;
     private String sbiVersion;
+    private String mispLicenseKeyName;
+    private String mispPartnerId;
 }

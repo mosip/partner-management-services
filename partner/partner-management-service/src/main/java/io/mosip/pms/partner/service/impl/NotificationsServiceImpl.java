@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,9 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.NotificationDetailsV2Dto;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
+import io.mosip.pms.common.dto.NotificationsResponseV2Dto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
@@ -78,15 +81,31 @@ public class NotificationsServiceImpl implements NotificationsService {
 	private ObjectMapper objectMapper;
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(Integer pageNo,
-			Integer pageSize, NotificationsFilterDto filterDto) {
-		ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
-		PageResponseV2Dto<NotificationsResponseDto> pageResponseV2Dto = new PageResponseV2Dto<>();
+	public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> getNotifications(
+			Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto) {
+		return getNotificationsCommon(pageNo, pageSize, filterDto, this::mapToResponseDto);
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseV2Dto>> getNotificationsV2(
+			Integer pageNo, Integer pageSize, NotificationsFilterDto filterDto) {
+		return getNotificationsCommon(pageNo, pageSize, filterDto, this::mapToResponseV2Dto);
+	}
+
+	private <T> ResponseWrapperV2<PageResponseV2Dto<T>> getNotificationsCommon(
+			Integer pageNo,
+			Integer pageSize,
+			NotificationsFilterDto filterDto,
+			Function<NotificationEntity, T> mapper
+	) {
+		ResponseWrapperV2<PageResponseV2Dto<T>> responseWrapper = new ResponseWrapperV2<>();
+		PageResponseV2Dto<T> pageResponseV2Dto = new PageResponseV2Dto<>();
 
 		try {
 			validatePaginationParams(pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			// Validate expiry date
+
+			// Validate dates
 			if (Objects.nonNull(filterDto.getExpiryDate())) {
 				validateDate(filterDto.getExpiryDate(), ErrorCode.INVALID_EXPIRY_DATE);
 			}
@@ -96,6 +115,8 @@ public class NotificationsServiceImpl implements NotificationsService {
 			if (Objects.nonNull(filterDto.getCreatedToDate())) {
 				validateDate(filterDto.getCreatedToDate(), ErrorCode.INVALID_CREATED_TO_DATE);
 			}
+
+			// validate filters
 			if (filterDto.getNotificationType() != null) {
 				validateNotificationsFilter(filterDto, isPartnerAdmin);
 			} else {
@@ -106,7 +127,8 @@ public class NotificationsServiceImpl implements NotificationsService {
 						|| Objects.nonNull(filterDto.getCreatedToDate()) || Objects.nonNull(filterDto.getFtmId())
 						|| Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel())
 						|| Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName())
-						|| Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) {
+						|| Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())
+						|| Objects.nonNull(filterDto.getMispLicenseKeyName()) || Objects.nonNull(filterDto.getMispPartnerId())) {
 					throw new PartnerServiceException(ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorCode(),
 							ErrorCode.NOTIFICATION_TYPE_NOT_SELECTED.getErrorMessage());
 				}
@@ -140,26 +162,26 @@ public class NotificationsServiceImpl implements NotificationsService {
 				pageResponseV2Dto.setPageSize(page.getSize());
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
 				pageResponseV2Dto
-						.setData(page.getContent().stream().map(this::mapToResponseDto).collect(Collectors.toList()));
+						.setData(page.getContent().stream().map(mapper).collect(Collectors.toList()));
 			}
 
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getNotifications method of NotificationsServiceImpl - {}",
-					ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getNotificationsCommon - {}", ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.error("sessionId", "idType", "id",
-					"Unexpected error in getNotifications method of NotificationsServiceImpl - {}", ex.getMessage(),
-					ex);
-			responseWrapper
-					.setErrors(MultiPartnerUtil.setErrorResponse(ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorCode(),
-							ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorMessage()));
+					"Unexpected error in getNotificationsCommon - {}", ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorCode(),
+					ErrorCode.FETCH_ALL_NOTIFICATIONS_ERROR.getErrorMessage()
+			));
 		}
 		responseWrapper.setId(getNotificationsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
+
 
 	private void validateNotificationsFilter(NotificationsFilterDto filterDto, boolean isPartnerAdmin) {
 		String notificationType = filterDto.getNotificationType();
@@ -186,8 +208,8 @@ public class NotificationsServiceImpl implements NotificationsService {
 			throw new PartnerServiceException(ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorCode(),
 					ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorMessage());
 		}
-		// validate apiKeyName and policyName
-		if ((Objects.nonNull(filterDto.getApiKeyName()) || Objects.nonNull(filterDto.getPolicyName())) && (!notificationType.equals(API_KEY))) {
+		// validate apiKeyName
+		if (Objects.nonNull(filterDto.getApiKeyName()) && (!notificationType.equals(API_KEY))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorMessage());
 		}
@@ -200,6 +222,16 @@ public class NotificationsServiceImpl implements NotificationsService {
 		if ((Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) && (!notificationType.equals(SBI))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorMessage());
+		}
+		// validate mispLicenseKeyName and mispPartnerId
+		if ((Objects.nonNull(filterDto.getMispLicenseKeyName()) || Objects.nonNull(filterDto.getMispPartnerId())) && (!notificationType.equals(MISP))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_MISP_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_MISP_FILTER.getErrorMessage());
+		}
+		// validate policyName
+		if (Objects.nonNull(filterDto.getPolicyName()) && (!notificationType.equals(MISP) && !notificationType.equals(API_KEY))) {
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_POLICYNAME_FILTER.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_POLICYNAME_FILTER.getErrorMessage());
 		}
 	}
 
@@ -214,6 +246,7 @@ public class NotificationsServiceImpl implements NotificationsService {
 			if (isPartnerAdmin) {
 				notificationTypeList.add(ROOT_CERT_EXPIRY);
 				notificationTypeList.add(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE);
+				notificationTypeList.add(MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE);
 				notificationTypeList.add(WEEKLY_SUMMARY_NOTIFICATION_TYPE);
 			} else {
 				notificationTypeList.add(PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE);
@@ -269,6 +302,11 @@ public class NotificationsServiceImpl implements NotificationsService {
 			return notificationsSummaryRepository.getSummaryOfAllApiKeyNotifications(filterDto.getApiKeyName(),
 					filterDto.getPolicyName(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					API_KEY_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
+
+		case MISP:
+			return notificationsSummaryRepository.getSummaryOfAllMispLicenseKeyNotifications(filterDto.getMispLicenseKeyName(),
+					filterDto.getMispPartnerId(), filterDto.getPolicyName(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
+					MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
 		default:
 			return Page.empty(pageable); // Return empty paginated response
@@ -418,7 +456,30 @@ public class NotificationsServiceImpl implements NotificationsService {
 	}
 
 	public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
-		NotificationsResponseDto responseDto = new NotificationsResponseDto();
+			NotificationsResponseDto responseDto = new NotificationsResponseDto();
+			responseDto.setNotificationId(notificationEntity.getId());
+			responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
+			responseDto.setNotificationType(notificationEntity.getNotificationType());
+			responseDto.setNotificationStatus(notificationEntity.getNotificationStatus());
+			responseDto.setCreatedDateTime(notificationEntity.getCreatedDatetime());
+
+			// Convert JSON string to NotificationDetailsDto
+			if (notificationEntity.getNotificationDetailsJson() != null) {
+				try {
+					NotificationDetailsDto detailsDto = objectMapper
+							.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
+					responseDto.setNotificationDetails(detailsDto);
+				} catch (JsonProcessingException e) {
+					throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
+							ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorMessage());
+				}
+			}
+
+			return responseDto;
+	}
+
+	public NotificationsResponseV2Dto mapToResponseV2Dto(NotificationEntity notificationEntity) {
+		NotificationsResponseV2Dto responseDto = new NotificationsResponseV2Dto();
 		responseDto.setNotificationId(notificationEntity.getId());
 		responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
 		responseDto.setNotificationType(notificationEntity.getNotificationType());
@@ -428,8 +489,8 @@ public class NotificationsServiceImpl implements NotificationsService {
 		// Convert JSON string to NotificationDetailsDto
 		if (notificationEntity.getNotificationDetailsJson() != null) {
 			try {
-				NotificationDetailsDto detailsDto = objectMapper
-						.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsDto.class);
+				NotificationDetailsV2Dto detailsDto = objectMapper
+						.readValue(notificationEntity.getNotificationDetailsJson(), NotificationDetailsV2Dto.class);
 				responseDto.setNotificationDetails(detailsDto);
 			} catch (JsonProcessingException e) {
 				throw new PartnerServiceException(ErrorCode.NOTIFICATION_DETAILS_JSON_ERROR.getErrorCode(),
