@@ -185,7 +185,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
             "AND (n.partner_id IN (:partnerIdList)) " +
             "AND (:mispLicenseKeyName IS NULL OR (CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'mispLicenseKeyName') ILIKE CONCAT('%', :mispLicenseKeyName, '%')) " +
             "AND (:mispPartnerId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'mispPartnerId') ILIKE CONCAT('%', :mispPartnerId, '%')) " +
-            "AND (:policyName IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'policyName') = LOWER(:policyName)) " +
+            "AND (:policyName IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'policyName') ILIKE CONCAT('%', :policyName, '%')) " +
             "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) " +
             "ORDER BY n.cr_dtimes DESC",
 
@@ -196,7 +196,7 @@ public interface NotificationsSummaryRepository extends BaseRepository<Notificat
                     "AND (n.partner_id IN (:partnerIdList)) " +
                     "AND (:mispLicenseKeyName IS NULL OR (CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'mispLicenseKeyName') ILIKE CONCAT('%', :mispLicenseKeyName, '%')) " +
                     "AND (:mispPartnerId IS NULL OR (CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'mispPartnerId') ILIKE CONCAT('%', :mispPartnerId, '%')) " +
-                    "AND (:policyName IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'policyName') = LOWER(:policyName)) " +
+                    "AND (:policyName IS NULL OR LOWER(CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'policyName') ILIKE CONCAT('%', :policyName, '%')) " +
                     "AND (:expiryDate IS NULL OR CAST(CAST(CAST(n.notification_details_json AS JSONB)->'mispLicenseKeyDetails'->0->>'expiryDateTime' AS TIMESTAMP) AS DATE) = CAST(:expiryDate AS DATE)) ",
             nativeQuery = true)
     Page<NotificationEntity> getSummaryOfAllMispLicenseKeyNotifications(

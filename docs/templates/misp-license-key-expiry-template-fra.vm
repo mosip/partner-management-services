@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+      <div style="padding: 20px 36px; line-height: 1.5; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>Cher/Chère ${partnerId},</strong></p>
+          <p>
+            Ceci est pour vous informer que la Clé de Licence MISP#if($mispLicenseKeyName) <strong>${mispLicenseKeyName}</strong>#end de l’ID Partenaire : <strong>${mispPartnerId}</strong> est prévue d’expirer le <strong>${expiryDateTime} UTC</strong>. Afin d’assurer une continuité de service, nous vous prions de renouveler la clé de licence avant la date d’expiration.
+          </p>
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">Détails de la Clé de Licence MISP</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Nom de la clé de licence<br /><span style="font-weight: 400;">#if($mispLicenseKeyName)${mispLicenseKeyName}#else -#end</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ID Partenaire<br /><span style="font-weight: 400;">${mispPartnerId}</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Groupe de politique<br /><span style="font-weight: 400;">#if($policyGroupName)${policyGroupName}#else -#end</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Nom de la politique<br /><span style="font-weight: 400;">#if($policyName)${policyName}#else -#end</span>
+            </p>
+            <p style="padding: 5px 0px; font-weight: 600;">
+              Date d’expiration<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+            <p><strong>Action requise :</strong></p>
+            <ol>
+              <li>Connectez-vous au Portail PMS.</li>
+              <li>Accédez à « MISP Services » dans le Tableau de bord Administrateur Partenaire.</li>
+              <li>Générez une nouvelle Clé de Licence MISP.</li>
+              <li>Conservez-la en toute sécurité, car elle sera masquée après la fermeture de la fenêtre.</li>
+            </ol>
+          </div>
+          <p>Le fait de ne pas régénérer la Clé de Licence MISP avant son expiration peut entraîner une interruption du service.</p>
+          <p>
+            Veuillez noter que la date et l’heure d’expiration sont fournies au format UTC. Pensez donc à toute différence de fuseau horaire lors de la planification de votre renouvellement.
+          </p>
+          <p>Merci pour votre attention rapide à ce sujet.</p>
+          <p>Cordialement,<br />MOSIP</p>
+          <p style="padding: 6px 0px;">
+            ** Ceci est un courriel automatique. Merci de ne pas y répondre. **
+          </p>
+          <p>
+            Site web :
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -162,7 +162,7 @@ public enum ErrorCode {
 	USER_DETAILS_NOT_EXIST("PMS_NOTIFICATION_ERROR_003", "User details does not exist for the user."),
 	GET_NOTIFICATIONS_SEEN_TIME_ERROR("PMS_NOTIFICATION_ERROR_004", "Error while fetching notifications seen date time"),
 	FETCH_ALL_NOTIFICATIONS_ERROR("PMS_NOTIFICATION_ERROR_005", "Error while fetching notifications"),
-	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_006", "Only partner admin will get notifications for root/intermediate certificate expiry and the weekly summary."),
+	UNABLE_TO_GET_NOTIFICATIONS("PMS_NOTIFICATION_ERROR_006", "Only partner admin will get notifications for root/intermediate certificate expiry, Weekly Summary and MISP License Key expiry."),
 	NOTIFICATION_DETAILS_JSON_ERROR("PMS_NOTIFICATION_ERROR_007", "Error parsing notification details JSON"),
 	NOTIFICATION_NOT_EXISTS("PMS_NOTIFICATION_ERROR_008", "Notification does not exist."),
 	NOTIFICATION_ALREADY_DISMISSED("PMS_NOTIFICATION_ERROR_009", "Notification has already been dismissed."),
