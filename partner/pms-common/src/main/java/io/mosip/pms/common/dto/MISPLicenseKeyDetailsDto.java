@@ -1,0 +1,14 @@
+package io.mosip.pms.common.dto;
+
+import lombok.Data;
+
+@Data
+public class MISPLicenseKeyDetailsDto {
+
+    private String mispLicenseKeyName;
+    private String mispPartnerId;
+    private String expiryDateTime;
+    private String expiryPeriod;
+    private String policyGroup;
+    private String policyName;
+}
