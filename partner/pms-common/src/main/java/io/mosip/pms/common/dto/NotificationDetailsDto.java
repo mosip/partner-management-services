@@ -10,4 +10,5 @@ public class NotificationDetailsDto {
     private List<FtmDetailsDto> ftmDetails;
     private List<SbiDetailsDto> sbiDetails;
     private List<ApiKeyDetailsDto> apiKeyDetails;
+    private List<MISPLicenseKeyDetailsDto> mispLicenseKeyDetails;
 }
