@@ -22,6 +22,7 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.MISPLicenseKeyDetailsDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
@@ -143,7 +144,7 @@ public class BatchJobHelper {
 
 	public NotificationEntity saveNotification(String notificationType, Partner partnerDetails,
 			List<CertificateDetailsDto> certificateDetailsList, List<FtmDetailsDto> ftmDetailsList,
-			List<SbiDetailsDto> sbiList, List<ApiKeyDetailsDto> apiKeyList, String decryptedEmailId)
+			List<SbiDetailsDto> sbiList, List<ApiKeyDetailsDto> apiKeyList, List<MISPLicenseKeyDetailsDto> mispLicenseKeyList, String decryptedEmailId)
 			throws BatchJobServiceException {
 		try {
 			NotificationDetailsDto notificationDetailsDto = new NotificationDetailsDto();
@@ -151,6 +152,7 @@ public class BatchJobHelper {
 			notificationDetailsDto.setFtmDetails(ftmDetailsList);
 			notificationDetailsDto.setSbiDetails(sbiList);
 			notificationDetailsDto.setApiKeyDetails(apiKeyList);
+			notificationDetailsDto.setMispLicenseKeyDetails(mispLicenseKeyList);
 
 			String id = UUID.randomUUID().toString();
 			NotificationEntity notification = new NotificationEntity();
@@ -202,6 +204,9 @@ public class BatchJobHelper {
 		case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_SUCCESS
 					: PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_FAILURE;
+			case PartnerConstants.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE:
+			return forSuccess ? PartnerServiceAuditEnum.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_SUCCESS
+					: PartnerServiceAuditEnum.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_FAILURE;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
@@ -232,6 +237,9 @@ public class BatchJobHelper {
 		case PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE:
 			return forSuccess ? PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
 					: PartnerServiceAuditEnum.API_KEY_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
+			case PartnerConstants.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE:
+			return forSuccess ? PartnerServiceAuditEnum.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_EMAIL_SUCCESS
+					: PartnerServiceAuditEnum.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_EMAIL_FAILURE;
 		default:
 			throw new BatchJobServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());

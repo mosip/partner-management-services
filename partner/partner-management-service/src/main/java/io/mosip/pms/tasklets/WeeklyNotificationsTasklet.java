@@ -352,7 +352,7 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 				String decryptedEmailId = keyManagerHelper.decryptData(pmsPartnerAdmin.getEmailId());
 				NotificationEntity savedNotification = batchJobHelper.saveNotification(
 						PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE, pmsPartnerAdmin, certificateDetailsList,
-						ftmDetailsList, sbiDetailsList, apiKeyDetailsList, decryptedEmailId);
+						ftmDetailsList, sbiDetailsList, apiKeyDetailsList, null ,decryptedEmailId);
 				// Step 6: send email notification
 				emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 				log.info("Created weekly summary notification with notification id " + savedNotification.getId());

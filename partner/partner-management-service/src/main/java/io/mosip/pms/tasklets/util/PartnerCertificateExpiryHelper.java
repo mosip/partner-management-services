@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,11 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.CertificateDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
+import io.mosip.pms.common.dto.MISPLicenseKeyDetailsDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.SbiDetailsDto;
 import io.mosip.pms.common.entity.AuthPolicy;
+import io.mosip.pms.common.entity.MISPLicenseEntityV2;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerPolicy;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -182,6 +185,29 @@ public class PartnerCertificateExpiryHelper {
 			apiKeyDetailsDto.setPolicyName(policyName);
 		}
 		return apiKeyDetailsDto;
+	}
+
+	public MISPLicenseKeyDetailsDto populateMispLicenseDetails(int expiryPeriod, MISPLicenseEntityV2 mispLicenseDetails) {
+		MISPLicenseKeyDetailsDto MISPLicenseKeyDetailsDto = new MISPLicenseKeyDetailsDto();
+		MISPLicenseKeyDetailsDto.setMispLicenseKeyName(mispLicenseDetails.getLicenseKeyName());
+		MISPLicenseKeyDetailsDto.setExpiryDateTime(mispLicenseDetails.getValidToDate().toString());
+		MISPLicenseKeyDetailsDto.setMispPartnerId(mispLicenseDetails.getId().getMispId());
+		MISPLicenseKeyDetailsDto.setExpiryPeriod(String.valueOf(expiryPeriod));
+
+		// Fetch the policy name and policy group name
+		if (mispLicenseDetails.getPolicyId() != null) {
+			Optional<AuthPolicy> optionalAuthPolicy = authPolicyRepository.findById(mispLicenseDetails.getPolicyId());
+			if (optionalAuthPolicy.isEmpty()) {
+				log.debug("No Auth Policy found for policy id {} linked to MISP Partner Id {}",
+						mispLicenseDetails.getPolicyId(),
+						mispLicenseDetails.getId().getMispId());
+				return MISPLicenseKeyDetailsDto;
+			}
+			AuthPolicy authPolicy = optionalAuthPolicy.get();
+			MISPLicenseKeyDetailsDto.setPolicyGroup(authPolicy.getPolicyGroup().getName());
+			MISPLicenseKeyDetailsDto.setPolicyName(authPolicy.getName());
+		}
+		return MISPLicenseKeyDetailsDto;
 	}
 
 }

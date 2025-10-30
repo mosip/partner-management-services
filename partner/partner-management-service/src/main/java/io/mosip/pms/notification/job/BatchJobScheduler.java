@@ -81,6 +81,10 @@ public class BatchJobScheduler {
 	@Autowired
 	private Job mispLicenseExpiryAutoDeactivationJob;
 
+	@Qualifier("mispLicenseExpiryNotificationsJob")
+	@Autowired
+	private Job mispLicenseExpiryNotificationsJob;
+
 	@Scheduled(cron = "${mosip.pms.batch.job.root.intermediate.cert.expiry.cron.schedule}")
 	public void rootCertificateExpiryScheduler() {
 
@@ -240,6 +244,19 @@ public class BatchJobScheduler {
 		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
 				| JobParametersInvalidException e) {
 			log.error(LOGDISPLAY, "MispLicenseExpiryAutoDeactivationJob failed", e.getMessage(), null);
+		}
+	}
+
+	@Scheduled(cron = "${mosip.pms.batch.job.misp.license.key.expiry.notifications.cron.schedule}")
+	public void mispLicenseExpiryNotificationsScheduler() {
+		JobParameters jobParam = new JobParametersBuilder().addLong("updateStatusTime", System.currentTimeMillis())
+				.toJobParameters();
+		try {
+			JobExecution jobExecution = jobLauncher.run(mispLicenseExpiryNotificationsJob, jobParam);
+			log.info(LOGDISPLAY, JOB_STATUS, jobExecution.getId().toString(), jobExecution.getStatus().toString());
+		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
+				| JobParametersInvalidException e) {
+			log.error(LOGDISPLAY, "MispLicenseExpiryNotificationsJob failed", e.getMessage(), null);
 		}
 	}
 

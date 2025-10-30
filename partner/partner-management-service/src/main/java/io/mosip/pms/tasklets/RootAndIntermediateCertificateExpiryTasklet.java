@@ -113,7 +113,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 											.decryptData(partnerAdminDetails.getEmailId());
 									NotificationEntity savedNotification = batchJobHelper.saveNotification(
 											getNotificationType(certificateType), partnerAdminDetails,
-											certificateDetailsList, null, null, null, decryptedEmailId);
+											certificateDetailsList, null, null, null, null, decryptedEmailId);
 									// Step 4: send email notification
 									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 									countPerCertTypeExpiryPeriod.add(savedNotification.getId());

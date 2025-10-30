@@ -118,7 +118,7 @@ public class SbiExpiryTasklet implements Tasklet {
 									String decryptedEmailId = keyManagerHelper.decryptData(deviceProvider.getEmailId());
 									NotificationEntity savedNotification = batchJobHelper.saveNotification(
 											PartnerConstants.SBI_EXPIRY_NOTIFICATION_TYPE, deviceProvider, null, null,
-											expiringSbiList, null, decryptedEmailId);
+											expiringSbiList, null, null, decryptedEmailId);
 									// Step 6: send email notification
 									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 									log.info("Created SBI expiry notification with notification id "
