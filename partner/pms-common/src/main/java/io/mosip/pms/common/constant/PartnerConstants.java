@@ -60,6 +60,8 @@ public final class PartnerConstants {
 
 	public static final String SBI_EXPIRY_NOTIFICATION_TYPE = "SBI_EXPIRY";
 
+	public static final String MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE = "MISP_LICENSE_KEY_EXPIRY";
+
 	public static final String STATUS_ACTIVE = "ACTIVE";
 
 	public static final String STATUS_DISMISSED = "DISMISSED";
@@ -81,6 +83,8 @@ public final class PartnerConstants {
 	public static final String PARTNER = "partner";
 
 	public static final String SBI = "sbi";
+
+	public static final String MISP = "misp";
 
 	public static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
 

@@ -4,16 +4,14 @@ import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.dto.NotificationsResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
-import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
-import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -47,10 +45,11 @@ public class NotificationsController {
     @Autowired
 	private InputValidator inputValidator;
 
+    @Deprecated(since = "release-1.3.0-beta.4")
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
-    @Operation(summary = "This endpoint retrieves a list of all notifications.",
-            description = "Available since release-1.2.1. This endpoint supports pagination, sorting, and filtering.")
+    @Operation(summary = "This endpoint retrieves a list of all notifications - deprecated since the release-1.3.0-beta.4.",
+            description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the GET /notifications/v2 endpoint")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -94,22 +93,97 @@ public class NotificationsController {
             @RequestParam(value = "sbiId", required = false) String sbiId,
             @RequestParam(value = "sbiVersion", required = false) String sbiVersion
     ) {
+        NotificationsFilterDto filterDto = populateNotificationsFilterDto(
+                notificationStatus, notificationType, certificateId, expiryDate, issuedBy, issuedTo,
+                partnerDomain, createdFromDate, createdToDate, ftmId, make, model, apiKeyName, policyName,
+                sbiId, sbiVersion, null, null
+        );
+        return notificationsService.getNotifications(pageNo, pageSize, filterDto);
+    }
+
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
+    @GetMapping(value = "/notifications/v2")
+    @Operation(summary = "This endpoint retrieves a list of all notifications.",
+            description = "Available since release-1.2.1. This endpoint supports pagination, sorting, and filtering.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+    })
+    public ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseV2Dto>> getNotificationsV2(
+            @Parameter(
+                    description = "Status of notifications",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"active", "dismissed"})
+            )
+            @RequestParam(value = "notificationStatus", required = false) String notificationStatus,
+            @Parameter(
+                    description = "Type of notifications",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"root", "intermediate", "partner", "weekly", "sbi", "ftm-chip", "apikey", "misp"})
+            )
+            @RequestParam(value = "notificationType", required = false) String notificationType,
+            @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
+            @RequestParam(value = "certificateId", required = false) String certificateId,
+            @RequestParam(value = "expiryDate", required = false)
+            @Parameter(description = "Expiry date in 'yyyy-MM-dd' format") String expiryDate,
+            @RequestParam(value = "issuedBy", required = false) String issuedBy,
+            @RequestParam(value = "issuedTo", required = false) String issuedTo,
+            @Parameter(
+                    description = "Type of partner domain",
+                    in = ParameterIn.QUERY,
+                    schema = @Schema(allowableValues = {"FTM", "DEVICE", "AUTH"})
+            )
+            @RequestParam(value = "partnerDomain", required = false) String partnerDomain,
+            @RequestParam(value = "createdFromDate", required = false)
+            @Parameter(description = "Created From Date in 'yyyy-MM-dd' format") String createdFromDate,
+            @RequestParam(value = "createdToDate", required = false)
+            @Parameter(description = "Created To Date in 'yyyy-MM-dd' format") String createdToDate,
+            @RequestParam(value = "ftmId", required = false) String ftmId,
+            @RequestParam(value = "make", required = false) String make,
+            @RequestParam(value = "model", required = false) String model,
+            @RequestParam(value = "apiKeyName", required = false) String apiKeyName,
+            @RequestParam(value = "policyName", required = false) String policyName,
+            @RequestParam(value = "sbiId", required = false) String sbiId,
+            @RequestParam(value = "sbiVersion", required = false) String sbiVersion,
+            @RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName,
+            @RequestParam(value = "mispPartnerId", required = false) String mispPartnerId
+    ) {
+        NotificationsFilterDto filterDto = populateNotificationsFilterDto(
+                notificationStatus, notificationType, certificateId, expiryDate, issuedBy, issuedTo,
+                partnerDomain, createdFromDate, createdToDate, ftmId, make, model, apiKeyName, policyName,
+                sbiId, sbiVersion, mispLicenseKeyName, mispPartnerId
+        );
+        return notificationsService.getNotificationsV2(pageNo, pageSize, filterDto);
+    }
+
+    private NotificationsFilterDto populateNotificationsFilterDto(String notificationStatus, String notificationType, String certificateId,
+            String expiryDate, String issuedBy, String issuedTo, String partnerDomain, String createdFromDate, String createdToDate,
+            String ftmId, String make, String model, String apiKeyName, String policyName, String sbiId, String sbiVersion,
+            String mispLicenseKeyName, String mispPartnerId
+    ) {
+        // Validate all inputs
         inputValidator.validateRequestInput(notificationStatus);
         inputValidator.validateRequestInput(notificationType);
         inputValidator.validateRequestInput(certificateId);
         inputValidator.validateRequestInput(expiryDate);
         inputValidator.validateRequestInput(issuedBy);
-        inputValidator.validateRequestInput(sbiVersion);
-        inputValidator.validateRequestInput(sbiId);
         inputValidator.validateRequestInput(issuedTo);
-        inputValidator.validateRequestInput(make);
-        inputValidator.validateRequestInput(model);
-        inputValidator.validateRequestInput(ftmId);
-        inputValidator.validateRequestInput(apiKeyName);
-        inputValidator.validateRequestInput(policyName);
         inputValidator.validateRequestInput(partnerDomain);
         inputValidator.validateRequestInput(createdFromDate);
         inputValidator.validateRequestInput(createdToDate);
+        inputValidator.validateRequestInput(ftmId);
+        inputValidator.validateRequestInput(make);
+        inputValidator.validateRequestInput(model);
+        inputValidator.validateRequestInput(apiKeyName);
+        inputValidator.validateRequestInput(policyName);
+        inputValidator.validateRequestInput(sbiId);
+        inputValidator.validateRequestInput(sbiVersion);
+        inputValidator.validateRequestInput(mispLicenseKeyName);
+        inputValidator.validateRequestInput(mispPartnerId);
+
+        // Populate filter DTO
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);
@@ -159,7 +233,13 @@ public class NotificationsController {
         if (sbiVersion != null) {
             filterDto.setSbiVersion(sbiVersion);
         }
-        return notificationsService.getNotifications(pageNo, pageSize, filterDto);
+        if (mispLicenseKeyName != null) {
+            filterDto.setMispLicenseKeyName(mispLicenseKeyName);
+        }
+        if (mispPartnerId != null) {
+            filterDto.setMispPartnerId(mispPartnerId);
+        }
+        return filterDto;
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdismissnotification())")
