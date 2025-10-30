@@ -1,6 +1,6 @@
 GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Invalid_Access_Token_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_01
     description: Fetching MISP partner license details by Partner ID using invalid access token
     role: invalidtoken
@@ -8,6 +8,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
     output: '{
       "errors": [
@@ -17,7 +20,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_PartnerId_Null_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/null?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_02
     description: Fetching MISP partner license details by giving Partner ID is null
     role: partneradmin
@@ -25,6 +28,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "null",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
     output: '{
       "errors": [
@@ -34,7 +40,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Invalid_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/@@invalid-partnerId?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_03
     description: Fetching MISP partner license details by Partner ID using invalid PartnerId
     role: partneradmin
@@ -42,6 +48,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "@@invalid-partnerId",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
     output: '{
       "errors": [
@@ -51,7 +60,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Auth_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/pms-111999?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_04
     description: Fetching MISP partner license details by using Auth Partner ID
     role: partneradmin
@@ -59,6 +68,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "pms-111999",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
     output: '{
       "errors": [
@@ -68,7 +80,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_PartnerId_And_Without_LicenseKeyName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/pms-111556?mispLicenseKeyName=&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_05
     description: Fetching MISP partner license details by Partner ID without LicenseKeyName
     role: partneradmin
@@ -76,6 +88,10 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "pms-111556",
+      "licenseKeyName": "",
+      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
+		
 }'
     output: '{
       "errors": [
@@ -85,7 +101,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_NotRegistered_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/pms-222222?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$&policyId=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_06
     description: Fetching MISP partner license details using Not Registered Partner ID
     role: partneradmin
@@ -93,6 +109,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "pms-222222",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
     output: '{
       "errors": [
@@ -102,7 +121,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_DiffOrg_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/pms-111998
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_07
     description: Fetching MISP partner license details using Different organisation Partner ID
     role: partneradmin
@@ -110,6 +129,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "pms-111998",
+      "licenseKeyName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
     output: '{
       "errors": [
@@ -119,7 +141,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     ]
 }'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_NotUploaded_Certificate_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/pms-111444
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_08
     description: Fetching MISP partner license details using Not uploaded certificate Partner ID
     role: partneradmin
@@ -127,6 +149,9 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
+      "partnerId": "pms-111444",
+      "licenseKeyName": "$REMOVE$",
+      "policyId": "$REMOVE$"
 }'
     output: '{
       "errors": [

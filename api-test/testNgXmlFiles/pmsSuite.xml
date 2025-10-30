@@ -7,7 +7,8 @@
 	<!-- Passing Group as parmeter unsing "testType" Possible Groups are: smoke 
 		regression smokeAndRegression -->
 	<listeners>
-		<listener class-name="io.mosip.testrig.apirig.report.EmailableReport" />
+		<listener
+			class-name="io.mosip.testrig.apirig.report.EmailableReport" />
 	</listeners>
 
 	<test name="CreatePolicyGroup">
@@ -57,7 +58,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
-    <test name="DefineMISPPolicy">
+	<test name="DefineMISPPolicy">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicy/DefineMISPPolicy.yml" />
 		<parameter name="idKeyName" value="id,name" />
@@ -65,7 +66,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
-	</test>	
+	</test>
 	<test name="DefineDataSharePolicy">
 		<parameter name="ymlFile"
 			value="pms/policy/DefineDataSharePolicy/DefineDataSharePolicy.yml" />
@@ -124,7 +125,8 @@
 		<parameter name="ymlFile"
 			value="pms/policy/Search/SearchPolicy.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -133,21 +135,24 @@
 		<parameter name="ymlFile"
 			value="pms/PrintPartner/CreatePartner/CreatePartner.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UploadCACertificatePrintPartner">
 		<parameter name="ymlFile"
 			value="pms/PrintPartner/UploadCertificate/UploadCertificate.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UploadPartnerCertificatePrintPartner">
 		<parameter name="ymlFile"
 			value="pms/PrintPartner/UploadCert/UploadCert.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UpdatePrintPartner">
@@ -191,7 +196,8 @@
 			value="pms/CreatePartner/CreatePartner.yml" />
 		<parameter name="idKeyName" value="id" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="MISPPartnerV3">
@@ -199,14 +205,16 @@
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
 		<parameter name="idKeyName" value="id" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="MISPPartnerV3NegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerNegativeScenarios.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UploadCertificateMISPCASUBCA">
@@ -226,14 +234,14 @@
 		</classes>
 	</test>
 	<test name="LinkPolicyGroupToMISPPartner">
-	<parameter name="ymlFile"
-		value="pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner.yml" />
-	<parameter name="pathParams" value="partnerId" />
-	<classes>
-		<class
-			name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
-	</classes>
-</test>
+		<parameter name="ymlFile"
+			value="pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
 	<test name="LinkPolicyGroupToMISPPartnerNegTC">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartnerNegTC.yml" />
@@ -279,7 +287,8 @@
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -296,23 +305,24 @@
 		<parameter name="ymlFile"
 			value="pms/VerifyPartnersEmail/VerifyPartnersEmail.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
 	<test name="GetPartnerExpiringCertificateBeforeCertificateUpload">
 		<parameter name="ymlFile"
-			value="pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUpload.yml"
-		/>
+			value="pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUpload.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>	
+	</test>
 	<test name="UploadCACertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadCACertificate/UploadCACertificate.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -327,8 +337,7 @@
 
 	<test name="GetOriginalPartnerCertificatesBeforeCertificateUpload">
 		<parameter name="ymlFile"
-			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesBeforeCertificateUpload.yml"
-		/>
+			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesBeforeCertificateUpload.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -339,7 +348,8 @@
 		<parameter name="ymlFile"
 			value="pms/UploadPartnerCert/UploadPartnerCert.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -365,7 +375,8 @@
 		<parameter name="ymlFile"
 			value="pms/UpdatePartner/UpdatePartner.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
 
@@ -373,14 +384,16 @@
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/UploadCertificate/UploadCertificate.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UploadPartnerCertificate_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/UploadCert/UploadCert.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="GetPartnerDetails_Online_Verification_Partner">
@@ -441,7 +454,8 @@
 		<parameter name="ymlFile"
 			value="pms/authPartner/AddContacts/AddContact.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -743,8 +757,7 @@
 	</test>
 	<test name="GetOriginalPartnerCertificates">
 		<parameter name="ymlFile"
-			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates.yml"
-		/>
+			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -754,21 +767,24 @@
 		<parameter name="ymlFile"
 			value="pms/mispPartner/CreatePartner/CreatePartner.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UploadCACertificate_MISP_Provider">
 		<parameter name="ymlFile"
 			value="pms/mispPartner/UploadCertificate/UploadCertificate.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="UploadPartnerCertificate_MISP_Provider">
 		<parameter name="ymlFile"
 			value="pms/mispPartner/UploadCert/UploadCert.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="GetPartnerDetails_MISP_Provider">
@@ -787,19 +803,17 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-<!--	POST /partners/search has been deprecated from release 1.2.2.0 onwards, replaced by GET /admin-partners with updated test cases.
-	<test name="SearchPartner">
-		<parameter name="ymlFile"
-			value="pms/SearchAPIs/SearchPartner/createSearchPartner.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
-		</classes>
-	</test>-->
+	<!-- POST /partners/search has been deprecated from release 1.2.2.0 onwards, 
+		replaced by GET /admin-partners with updated test cases. <test name="SearchPartner"> 
+		<parameter name="ymlFile" value="pms/SearchAPIs/SearchPartner/createSearchPartner.yml" 
+		/> <classes> <class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" 
+		/> </classes> </test> -->
 	<test name="CreateDeviceDetail">
 		<parameter name="ymlFile"
 			value="pms/device/makeAndModel/create/CreateDeviceDetail.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="RejectDeviceDetail">
@@ -822,28 +836,32 @@
 		<parameter name="ymlFile"
 			value="pms/device/makeAndModel/update/UpdateDeviceDetail.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
 	<test name="DeviceDetailsFilter">
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/DeviceDetailsFilter/DeviceDetailsFilter.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="createSearchDeviceType">
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchDeviceType/createSearchDeviceType.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="createSearchDeviceDetails">
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="GetListOfAllSBIBeforeAddingSBI">
@@ -894,14 +912,14 @@
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchSecureBiometric/createSearchSecureBiometric.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
 	<test name="GetAllApprovedDeviceProviderIds">
 		<parameter name="ymlFile"
-			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds.yml"
-		/>
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -909,8 +927,7 @@
 	</test>
 	<test name="GetAllApprovedDeviceProviderIdsNegativeScenarios">
 		<parameter name="ymlFile"
-			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsNegativeScenarios.yml"
-		/>
+			value="pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIdsNegativeScenarios.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -936,14 +953,16 @@
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="DeviceSubTypeFilter">
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -973,21 +992,24 @@
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/ServiceToFilterSBI/ServiceToFilterSBI.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="MapDeviceWithSBI">
 		<parameter name="ymlFile"
 			value="pms/device/SecureBiometricInterface/MapDeviceWithSBI/MapDeviceWithSBI.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
 	<test name="RemoveMapDeviceWithSBI">
 		<parameter name="ymlFile"
 			value="pms/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/RemoveMapDeviceWithSBI.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
 
@@ -1093,14 +1115,16 @@
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchPolicyGroup/createSearchPolicyGroup.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="PolicyGroupFilter">
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/PolicyGroupFilter/PolicyGroupFilter.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="GetValueForConfigKey">
@@ -1115,42 +1139,46 @@
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/PartnerFilter/PartnerFilter.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="SearchPartnerApiKey">
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchPartnerApiKey/SearchPartnerApiKey.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="SearchPartnerApiRequestKey">
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchPartnerApiRequestKey/SearchPartnerApiRequestKey.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="PartnerApiKeyRequestFilter">
 		<parameter name="ymlFile"
 			value="pms/FilterAPIs/PartnerApiKeyRequestFilter/PartnerApiKeyRequestFilter.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="CreateSearchPartnerType">
 		<parameter name="ymlFile"
 			value="pms/SearchAPIs/SearchPartnerType/createSearchPartnerType.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
 	<test name="GetAllApprovedFtmProvider">
 		<parameter name="ymlFile"
-			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider.yml"
-		/>
+			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1158,8 +1186,7 @@
 	</test>
 	<test name="GetAllApprovedFtmProviderNegativeScenarios">
 		<parameter name="ymlFile"
-			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderNegativeScenarios.yml"
-		/>
+			value="pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProviderNegativeScenarios.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1189,11 +1216,13 @@
 		<parameter name="ymlFile"
 			value="pms/UpdateFtpChipDetail/UpdateFtpChipDetail.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
 	</test>
 
-	<test name="GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert">
+	<test
+		name="GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalFtmCertifacte/GetOriginalFtmCertifacteNegativeScenariosBeforeUploadCert.yml" />
 		<parameter name="pathParams" value="ftmId" />
@@ -1328,7 +1357,8 @@
 	</test>
 
 	<test name="GetCountOfFtm">
-		<parameter name="ymlFile" value="pms/GetCountOfFtm/GetCountOfFtm.yml" />
+		<parameter name="ymlFile"
+			value="pms/GetCountOfFtm/GetCountOfFtm.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1356,7 +1386,8 @@
 	<test name="GetListOfApiKey">
 		<parameter name="ymlFile"
 			value="pms/GetListOfApiKey/GetListOfApiKey.yml" />
-		<parameter name="pathParams" value="sortType,sortFieldName,orgName" />
+		<parameter name="pathParams"
+			value="sortType,sortFieldName,orgName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1371,17 +1402,12 @@
 		</classes>
 	</test>
 
-	<!-- POST /misps has been deprecated from release 1.3.x onwards, replaced by POST /misp-licenses with updated test cases.
-	added in POST /misp-licenses Ticket ID: MOSIP-43118
-	 <test name="CreateMispLicense">
-		<parameter name="ymlFile"
-			value="pms/MispLicense/CreateMispLicense/CreateMispLicense.yml" />
-		<parameter name="idKeyName" value="licenseKey" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
-		</classes>
-	</test> -->
+	<!-- POST /misps has been deprecated from release 1.3.x onwards, replaced 
+		by POST /misp-licenses with updated test cases. added in POST /misp-licenses 
+		Ticket ID: MOSIP-43118 <test name="CreateMispLicense"> <parameter name="ymlFile" 
+		value="pms/MispLicense/CreateMispLicense/CreateMispLicense.yml" /> <parameter 
+		name="idKeyName" value="licenseKey" /> <classes> <class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" 
+		/> </classes> </test> -->
 	<test name="GenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense.yml" />
@@ -1436,47 +1462,38 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<!-- GET /misps has been deprecated from release 1.3.x onwards, replaced by GET /misp-licenses with updated test cases.
-	added in GET /misp-licenses Ticket ID: MOSIP-43118 
-	<test name="GetMispLicense">
-		<parameter name="ymlFile"
-			value="pms/MispLicense/GetMispLicense/GetMispLicense.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
-		</classes>
-	</test> -->
-	<!-- PUT /misps has been deprecated from release 1.3.x onwards, replaced by PUT /misp-licenses/{partnerId} with updated test cases.
-	added in PUT /misp-licenses/{partnerId} Ticket ID: MOSIP-43118 
-	 <test name="UpdateMispLicense">
-		<parameter name="ymlFile"
-			value="pms/MispLicense/UpdateMispLicense/UpdateMispLicense.yml" />
-		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
-		</classes>
-	</test> -->
-	<!-- GET /misps/{mispId}/licenseKey has been deprecated from release 1.3.x onwards, replaced by GET /misp-licenses/{partnerId} with updated test cases.
-	added in GET /misp-licenses/{partnerId} Ticket ID: MOSIP-43118 
-	 <test name="GetMISPLicenseByMispID">
-		<parameter name="ymlFile"
-			value="pms/MispLicense/GetMISPLicenseByMispID/GetMISPLicenseByMispID.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
-		</classes>
-	</test> -->
+	<!-- GET /misps has been deprecated from release 1.3.x onwards, replaced 
+		by GET /misp-licenses with updated test cases. added in GET /misp-licenses 
+		Ticket ID: MOSIP-43118 <test name="GetMispLicense"> <parameter name="ymlFile" 
+		value="pms/MispLicense/GetMispLicense/GetMispLicense.yml" /> <classes> <class 
+		name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" /> </classes> 
+		</test> -->
+	<!-- PUT /misps has been deprecated from release 1.3.x onwards, replaced 
+		by PUT /misp-licenses/{partnerId} with updated test cases. added in PUT /misp-licenses/{partnerId} 
+		Ticket ID: MOSIP-43118 <test name="UpdateMispLicense"> <parameter name="ymlFile" 
+		value="pms/MispLicense/UpdateMispLicense/UpdateMispLicense.yml" /> <classes> 
+		<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" /> </classes> 
+		</test> -->
+	<!-- GET /misps/{mispId}/licenseKey has been deprecated from release 1.3.x 
+		onwards, replaced by GET /misp-licenses/{partnerId} with updated test cases. 
+		added in GET /misp-licenses/{partnerId} Ticket ID: MOSIP-43118 <test name="GetMISPLicenseByMispID"> 
+		<parameter name="ymlFile" value="pms/MispLicense/GetMISPLicenseByMispID/GetMISPLicenseByMispID.yml" 
+		/> <classes> <class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" 
+		/> </classes> </test> -->
 	<test name="SearchMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/SearchMispLicense/SearchMispLicense.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 	<test name="FilterMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/FilterMispLicense/FilterMispLicense.yml" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
 	</test>
 
@@ -1523,23 +1540,17 @@
 		</classes>
 	</test>
 	<test name="GetRoles">
-		<parameter name="ymlFile"
-			value="pms/GetRoles/GetRoles.yml" />
+		<parameter name="ymlFile" value="pms/GetRoles/GetRoles.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-<!--	GET /partners has been deprecated from release 1.2.2.0 onwards, replaced by GET /admin-partners with updated test cases.
-	added in GET /admin-partners 
-	<test name="GetPartners">
-		<parameter name="ymlFile"
-			value="pms/GetPartners/GetPartners.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
-		</classes>
-	</test>-->
+	<!-- GET /partners has been deprecated from release 1.2.2.0 onwards, replaced 
+		by GET /admin-partners with updated test cases. added in GET /admin-partners 
+		<test name="GetPartners"> <parameter name="ymlFile" value="pms/GetPartners/GetPartners.yml" 
+		/> <classes> <class name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" 
+		/> </classes> </test> -->
 	<test name="ActivateDeactivatePartner">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartner/ActivateDeactivatePartner.yml" />
@@ -1559,8 +1570,7 @@
 	</test>
 
 	<test name="AuditLogGenerateApiKey">
-		<parameter name="ymlFile"
-			value="pms/AuditLog/AuditLog.yml" />
+		<parameter name="ymlFile" value="pms/AuditLog/AuditLog.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
@@ -1584,8 +1594,7 @@
 		</classes>
 	</test>
 	<test name="AuditLogPartnerApiKey_">
-		<parameter name="ymlFile"
-			value="pms/AuditLog/AuditLog.yml" />
+		<parameter name="ymlFile" value="pms/AuditLog/AuditLog.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
@@ -1594,7 +1603,8 @@
 	<test name="UpdatePolicyGroupForPartner">
 		<parameter name="ymlFile"
 			value="pms/UpdatePolicyGroupForPartner/UpdatePolicyGroupForPartner.yml" />
-		<parameter name="pathParams" value="partnerId,policygroupName" />
+		<parameter name="pathParams"
+			value="partnerId,policygroupName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
@@ -1602,8 +1612,7 @@
 	</test>
 
 	<test name="AuditLogUpdatePolicyGroupForPartner">
-		<parameter name="ymlFile"
-			value="pms/AuditLog/AuditLog.yml" />
+		<parameter name="ymlFile" value="pms/AuditLog/AuditLog.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator" />
@@ -1611,13 +1620,13 @@
 	</test>
 
 	<test name="DBValidator">
-	<parameter name="ymlFile"
-		value="pms/DbValidatorTest/DbValidatorTest.yml" />
-	<classes>
-		<class
-			name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
-	</classes>
-</test>
+		<parameter name="ymlFile"
+			value="pms/DbValidatorTest/DbValidatorTest.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
+		</classes>
+	</test>
 	<test name="RegenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense.yml" />
@@ -1781,7 +1790,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
 		</classes>
-	</test>	
+	</test>
 	<test name="GetNotificationsSeenTimestamp">
 		<parameter name="ymlFile"
 			value="pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp.yml" />
@@ -1822,7 +1831,8 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<test name="GetRootIntermediateExpiringCertificateNegativeScenarios">
+	<test
+		name="GetRootIntermediateExpiringCertificateNegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateNegativeScenarios.yml" />
 		<classes>
@@ -1830,7 +1840,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-		<test name="GetAllApiKeyForAuthPartnerV2">
+	<test name="GetAllApiKeyForAuthPartnerV2">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2.yml" />
 		<classes>
@@ -1838,7 +1848,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-		<test name="GetAllApiKeyForAuthPartnerV2NegativeScenarios">
+	<test name="GetAllApiKeyForAuthPartnerV2NegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2NegativeScenarios.yml" />
 		<classes>
