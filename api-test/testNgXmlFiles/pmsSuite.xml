@@ -1631,6 +1631,7 @@
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense.yml" />
 		<parameter name="pathParams" value="partnerId" />
+		<parameter name="idKeyName" value="licenseKeyName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
@@ -1640,6 +1641,7 @@
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseNegTC.yml" />
 		<parameter name="pathParams" value="partnerId" />
+		<parameter name="idKeyName" value="licenseKeyName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />

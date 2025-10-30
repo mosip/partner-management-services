@@ -13,7 +13,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key6",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": "2035-10-10"
 }'
     output: '{
@@ -37,7 +37,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms-invalid",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key7",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": "2035-10-10"
 }'
     output: '{
@@ -61,7 +61,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms-@@111555",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key8",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": "2035-10-10"
 }'
     output: '{
@@ -85,7 +85,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "notapproved-policyId",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key9",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": "2035-10-10"
 }'
     output: '{
@@ -109,7 +109,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "453@@677",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key10",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": "2035-10-10"
 }'
     output: '{
@@ -205,7 +205,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "expiryDate": "2035-10-10"
 }'
     output: '{
@@ -229,7 +229,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key12",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": "2025-09-08"
 }'
     output: '{
@@ -253,7 +253,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key13",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
       "expiryDate": ""
 }'
     output: '{
@@ -299,7 +299,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key14",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
     output: '{
@@ -322,7 +322,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key15",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "expiryDate": "2035-10-10"
 }'
@@ -346,7 +346,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key16",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "expiryDate": "2035-10-10"
 }'
@@ -370,7 +370,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "version": "invalid-version",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key17",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "expiryDate": "2035-10-10"
 }'
@@ -394,7 +394,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "version": "1.0",
       "requestTime": "",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key18",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "expiryDate": "2035-10-10"
 }'
@@ -419,7 +419,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "version": "1.0",
       "requestTime": "invalid-requesttime",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key19",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "expiryDate": "2035-10-10"
 }'
@@ -438,7 +438,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.regenerate.misp.license.put",
       "version": "1.0",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-	  "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key20",
+	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "expiryDate": "2035-10-10"
 }'

@@ -13,7 +13,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -37,7 +37,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -61,7 +61,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -85,7 +85,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -109,7 +109,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -133,7 +133,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -157,7 +157,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -181,7 +181,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -205,7 +205,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -229,7 +229,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -253,7 +253,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "2024-10-09T11:33:18.573Z",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -277,7 +277,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$REMOVE$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -301,7 +301,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pmsapiautomation123456",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -325,7 +325,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": " ",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -349,7 +349,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "null",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -421,7 +421,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key1010",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": " "
 }'
       output: '{
@@ -445,7 +445,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key0101",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2025-10-08"
 }'
       output: '{
@@ -469,7 +469,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
         "expiryDate": "2025-10-10"
 }'
       output: '{

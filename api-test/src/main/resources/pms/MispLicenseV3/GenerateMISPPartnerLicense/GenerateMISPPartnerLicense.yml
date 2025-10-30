@@ -13,7 +13,7 @@ GenerateMISPPartnerLicense:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
@@ -34,7 +34,7 @@ GenerateMISPPartnerLicense:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111557",
         "policyId": "$REMOVE$",
-        "licenseKeyName": "MISP_API_Automation_License_Key_NoPolicyID",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{

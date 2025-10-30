@@ -13,7 +13,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{
@@ -37,7 +37,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{
@@ -61,7 +61,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "invalid_status"
 }'
     output: '{
@@ -85,7 +85,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "invalid_policyId",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{
@@ -109,7 +109,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{
@@ -157,7 +157,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": ""
 }'
     output: '{
@@ -181,7 +181,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{
@@ -225,7 +225,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_License_Key",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{

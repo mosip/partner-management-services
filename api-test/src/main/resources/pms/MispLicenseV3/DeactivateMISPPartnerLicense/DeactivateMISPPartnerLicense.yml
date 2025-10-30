@@ -13,7 +13,7 @@ DeactivateMISPPartnerLicense:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "MISP_API_Automation_Regenerated_License_Key1",
+      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{   
