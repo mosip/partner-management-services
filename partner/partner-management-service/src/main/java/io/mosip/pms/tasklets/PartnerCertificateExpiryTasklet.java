@@ -2,7 +2,6 @@ package io.mosip.pms.tasklets;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +24,6 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeycloakHelper;
-import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create notifications for the Partner certificates
@@ -49,9 +47,6 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 
 	@Autowired
 	EmailNotificationService emailNotificationService;
-
-	@Autowired
-	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -79,15 +74,15 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 			while (activePartnersListIterator.hasNext()) {
 				Partner pmsPartner = activePartnersListIterator.next();
 				log.info("Fetching certificate for partner id {}", pmsPartner.getId());
-				X509Certificate decodedPartnerCertificate = partnerCertificateExpiryHelper
+				X509Certificate decodedPartnerCertificate = batchJobHelper
 						.getDecodedCertificate(pmsPartner);
 				if (decodedPartnerCertificate != null) {
 					log.info("Checking if certificate is expiring for partner id {}",
 							pmsPartner.getId() + " within next 30 days.");
-					LocalDateTime partnerCertificateExpiryDate = partnerCertificateExpiryHelper
+					LocalDateTime partnerCertificateExpiryDate = batchJobHelper
 							.getCertificateExpiryDateTime(decodedPartnerCertificate);
 					log.info("The certificate expiry date is {}", partnerCertificateExpiryDate);
-					boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(pmsPartner,
+					boolean isExpiringWithin30Days = batchJobHelper.checkIfExpiring(pmsPartner,
 							partnerCertificateExpiryDate, 30, true);
 					if (isExpiringWithin30Days) {
 						countOfCertsExpiringWithin30Days++;
@@ -99,12 +94,12 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 						while (expiryPeriodsIterator.hasNext()) {
 							Integer expiryPeriod = expiryPeriodsIterator.next();
 							log.info("Checking for certificate expiry after " + expiryPeriod + " days.");
-							boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
+							boolean isExpiringAfterExpiryPeriod = batchJobHelper
 									.checkIfExpiring(pmsPartner, partnerCertificateExpiryDate, expiryPeriod, false);
 							// Step 5: If yes, add the notification
 							if (isExpiringAfterExpiryPeriod) {
 								List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
-								CertificateDetailsDto certificateDetails = partnerCertificateExpiryHelper
+								CertificateDetailsDto certificateDetails = batchJobHelper
 										.populateCertificateDetails(expiryPeriod, pmsPartner,
 												decodedPartnerCertificate);
 								expiringCertificates.add(certificateDetails);

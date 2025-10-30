@@ -27,7 +27,6 @@ import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import io.mosip.pms.tasklets.util.KeycloakHelper;
-import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create notifications for the all FTM chip certificates
@@ -58,9 +57,6 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 
 	@Autowired
 	EmailNotificationService emailNotificationService;
-
-	@Autowired
-	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -102,15 +98,15 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 					// Step 3: For each FTM chip get the cerificate and check if it is expiring or
 					// not
 					if (ftpChipDetail.getCertificateAlias() != null) {
-						X509Certificate decodedFtmCert = partnerCertificateExpiryHelper
+						X509Certificate decodedFtmCert = batchJobHelper
 								.getDecodedFtmCertificate(ftpChipDetail);
 						if (decodedFtmCert != null) {
 							log.info("Checking if FTM chip certificate is expiring for FTM provider id {}",
 									ftmProviderId + " within next 30 days.");
-							LocalDateTime ftmChipCertificateExpiryDate = partnerCertificateExpiryHelper
+							LocalDateTime ftmChipCertificateExpiryDate = batchJobHelper
 									.getCertificateExpiryDateTime(decodedFtmCert);
 							log.info("The FTM chip certificate expiry date is {}", ftmChipCertificateExpiryDate);
-							boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(ftmProvider,
+							boolean isExpiringWithin30Days = batchJobHelper.checkIfExpiring(ftmProvider,
 									ftmChipCertificateExpiryDate, 30, true);
 							if (isExpiringWithin30Days) {
 								countOfCertsExpiringWithin30Days++;
@@ -123,13 +119,13 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 									Integer expiryPeriod = expiryPeriodsIterator.next();
 									log.info("Checking for FTM chip certificate expiry after " + expiryPeriod
 											+ " days.");
-									boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
+									boolean isExpiringAfterExpiryPeriod = batchJobHelper
 											.checkIfExpiring(ftmProvider, ftmChipCertificateExpiryDate, expiryPeriod,
 													false);
 									// Step 5: If yes, add the notification
 									if (isExpiringAfterExpiryPeriod) {
 										List<FtmDetailsDto> expiringFtmList = new ArrayList<FtmDetailsDto>();
-										FtmDetailsDto ftmDetailsDto = partnerCertificateExpiryHelper
+										FtmDetailsDto ftmDetailsDto = batchJobHelper
 												.populateFtmDetails(expiryPeriod, ftpChipDetail, decodedFtmCert);
 										expiringFtmList.add(ftmDetailsDto);
 										// Decrypt the email ID if it's already encrypted to avoid encrypting it again
@@ -137,7 +133,7 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 												.decryptData(ftmProvider.getEmailId());
 										NotificationEntity savedNotification = batchJobHelper.saveNotification(
 												PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE, ftmProvider,
-												null, expiringFtmList, null, null, null,  decryptedEmailId);
+												null, expiringFtmList, null, null, null, decryptedEmailId);
 										// Step 6: send email notification
 										emailNotificationService.sendEmailNotification(savedNotification,
 												decryptedEmailId);

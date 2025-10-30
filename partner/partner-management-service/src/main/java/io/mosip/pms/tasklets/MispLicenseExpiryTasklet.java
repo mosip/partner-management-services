@@ -27,7 +27,6 @@ import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import io.mosip.pms.tasklets.util.KeycloakHelper;
-import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create notifications for all MISP license keys
@@ -49,9 +48,6 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 
 	@Autowired
 	EmailNotificationService emailNotificationService;
-
-	@Autowired
-	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -101,7 +97,7 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 								mispPartnerId + " within next 30 days.");
 						LocalDateTime mispLicenseExpiryDateTime = mispLicenseDetails.getValidToDate();
 						log.info("The MISP License key expiry date is {}", mispLicenseExpiryDateTime);
-						boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(mispPartner,
+						boolean isExpiringWithin30Days = batchJobHelper.checkIfExpiring(mispPartner,
 								mispLicenseExpiryDateTime, 30, true);
 						if (isExpiringWithin30Days) {
 							countOfMispLicensesExpiringWithin30Days++;
@@ -113,12 +109,12 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 							while (expiryPeriodsIterator.hasNext()) {
 								Integer expiryPeriod = expiryPeriodsIterator.next();
 								log.info("Checking for MISP License key expiry after " + expiryPeriod + " days.");
-								boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
+								boolean isExpiringAfterExpiryPeriod = batchJobHelper
 										.checkIfExpiring(mispPartner, mispLicenseExpiryDateTime, expiryPeriod, false);
 								// Step 6: If yes, create notifications for all Partner Admins
 								if (isExpiringAfterExpiryPeriod) {
 									List<MISPLicenseKeyDetailsDto> expiringMispLicensesList = new ArrayList<MISPLicenseKeyDetailsDto>();
-									MISPLicenseKeyDetailsDto MISPLicenseKeyDetailsDto = partnerCertificateExpiryHelper
+									MISPLicenseKeyDetailsDto MISPLicenseKeyDetailsDto = batchJobHelper
 											.populateMispLicenseDetails(expiryPeriod, mispLicenseDetails);
 									expiringMispLicensesList.add(MISPLicenseKeyDetailsDto);
 									

@@ -26,7 +26,6 @@ import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import io.mosip.pms.tasklets.util.KeycloakHelper;
-import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create notifications for the all FTM chip certificates
@@ -54,9 +53,6 @@ public class SbiExpiryTasklet implements Tasklet {
 
 	@Autowired
 	EmailNotificationService emailNotificationService;
-
-	@Autowired
-	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -94,7 +90,7 @@ public class SbiExpiryTasklet implements Tasklet {
 								deviceProviderId + " within next 30 days.");
 						LocalDateTime sbiExpiryDateTime = sbiDetail.getSwExpiryDateTime();
 						log.info("The SBI expiry date is {}", sbiExpiryDateTime);
-						boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(deviceProvider,
+						boolean isExpiringWithin30Days = batchJobHelper.checkIfExpiring(deviceProvider,
 								sbiExpiryDateTime, 30, true);
 						if (isExpiringWithin30Days) {
 							countOfSbiExpiringWithin30Days++;
@@ -106,12 +102,12 @@ public class SbiExpiryTasklet implements Tasklet {
 							while (expiryPeriodsIterator.hasNext()) {
 								Integer expiryPeriod = expiryPeriodsIterator.next();
 								log.info("Checking for SBI expiry after " + expiryPeriod + " days.");
-								boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
+								boolean isExpiringAfterExpiryPeriod = batchJobHelper
 										.checkIfExpiring(deviceProvider, sbiExpiryDateTime, expiryPeriod, false);
 								// Step 5: If yes, add the notification
 								if (isExpiringAfterExpiryPeriod) {
 									List<SbiDetailsDto> expiringSbiList = new ArrayList<SbiDetailsDto>();
-									SbiDetailsDto sbiDetailsDto = partnerCertificateExpiryHelper
+									SbiDetailsDto sbiDetailsDto = batchJobHelper
 											.populateSbiDetails(expiryPeriod, sbiDetail);
 									expiringSbiList.add(sbiDetailsDto);
 									// Decrypt the email ID if it's already encrypted to avoid encrypting it again
