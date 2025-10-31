@@ -1,0 +1,355 @@
+GetMISPPartnerLicenseNegTC:
+  Pms_GetMISPPartnerLicenseNegTC_without_Access_Token_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_01
+    description: Fetching MISP Partner License without Access Token
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "KER-ATH-401"
+          }
+      ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PartnerId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?partnerId=invalid_partnerid
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_02
+    description: Fetching MISP Partner License with Invalid PartnerId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+        "pageNo": "0",
+        "pageSize": "0"
+   }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PartnerId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=Par@@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_03
+    description: Fetching MISP Partner License using OrgName when PartnerId has special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_OrgName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=UnknownOrg
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_04
+    description: Fetching MISP Partner License with Invalid OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_OrgName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=Org@@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_05
+    description: Fetching MISP Partner License using OrgName when OrgName has special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PolicyGroupName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyGroupName=Invalid_policygroupname
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_06
+    description: Fetching MISP Partner License with Invalid PolicyGroupName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyGroupName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=Gr@Up@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_07
+    description: Fetching MISP Partner License using PolicyName when PolicyGroupName has special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PolicyName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=Invalid_Policy
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_08
+    description: Fetching MISP Partner License with Invalid PolicyName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=P@!!cY$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_09
+    description: Fetching MISP Partner License using PolicyName when PolicyName has special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_MispLicenseKeyName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=INVALID_KEY
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_10
+    description: Fetching MISP Partner License with Invalid MispLicenseKeyName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_MispLicenseKeyName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=Key@@!!$$.
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_11
+    description: Fetching MISP Partner License using MispLicenseKeyName with special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=10089&pageSize=0
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_12
+    description: Fetching MISP Partner License with Invalid PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_361"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Negative_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=-1&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_13
+    description: Fetching MISP Partner License with Negative PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_360"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageSize_Format_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=abc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_14
+    description: Fetching MISP Partner License with Invalid format of PageSize
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Zero_PageSize_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageSize=0
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_15
+    description: Fetching MISP Partner License with Zero PageSize
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_361"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Negative_PageSize_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageSize=-5
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_16
+    description: Fetching MISP Partner License with Negative PageSize
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_361"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageNo_Format_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=abc&pageSize=2
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_17
+    description: Fetching MISP Partner License with Invalid format of PageNo
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Valid_OrgName_and_Invalid_PolicyGroupName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=Org_A&policyGroupName=InvalidGroup123
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_18
+    description: Fetching MISP Partner License with Valid OrgName and Invalid PolicyGroupName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_SortType_Without_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortType=asc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_19
+    description: Fetching MISP Partner License when SortType is provided without SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+		       "errorCode": "PMS_PS_ERROR_007"
+           }
+       ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_and_Invalid_SortType_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName&sortType=random
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_20
+    description: Fetching MISP Partner License when SortFieldName is used with an invalid SortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+		       "errorCode": "PMS_PRT_358"
+           }
+       ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=@#$%
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_21
+    description: Fetching MISP Partner License using when SortFieldName has special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Empty_String_PolicyGroupName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyGroupName=""
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_22
+    description: Fetching MISP Partner License when PolicyGroupName is Empty
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Empty_String_PolicyName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=""
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_23
+    description: Fetching MISP Partner License when PolicyName is Empty
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+       }
+}'

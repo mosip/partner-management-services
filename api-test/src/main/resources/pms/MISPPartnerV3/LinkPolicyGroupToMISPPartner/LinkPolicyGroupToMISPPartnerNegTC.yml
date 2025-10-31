@@ -1,0 +1,449 @@
+LinkPolicyGroupToMISPPartnerNegTC:
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_01
+    description: Linking Policy Group to MISP Partner using Invalid Access Token
+    role: invalidtoken
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "KER-ATH-401"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Valid_Request_And_Invalid_PartnerId_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_02
+    description: Linking Policy Group to MISP Partner using Invalid PartnerId
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "invalid-partnerid",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_PRT_005"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_InValid_Request_And_Valid_PartnerId_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_03
+    description: Linking Policy Group to MISP Partner using invalid Request and valid PartnerId
+    role: partneradmin
+    restMethod: post
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/responseCode
+    input: '{
+      "id": "invalid-id",
+      "version": "invalid-version",
+      "requestTime": "invalid-request-time",
+      "partnerId": "pms-111557",
+      "policyGroupId": "invalid-policygroupid"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Invalid_Id_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_04
+    description: Linking Policy Group to MISP Partner using invalid Id
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "invalid-id",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Auth_Partner_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_05
+    description: Linking Policy Group to MISP Partner using Auth partner
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_PRT_255"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Device_Partner_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_06
+    description: Linking Policy Group to MISP Partner using Device partner
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111998",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_PRT_255"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_FTM_Partner_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_07
+    description: Linking Policy Group to MISP Partner using FTM partner
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111888",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_PRT_255"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Invalid_Version_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_08
+    description: Linking Policy Group to MISP Partner using Invalid Version
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "invalid-version",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Invalid_RequestTime_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_09
+    description: Link Policy Group to MISP Partner using Invalid RequestTime
+    role: partneradmin
+    restMethod: post
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/responsecode
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "invalid-request-time",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_AlreadyLinked_PartnerId_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_10
+    description: Linking Policy Group to MISP Partner using already linked PartnerId
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_PRT_049"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_requestId_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_11
+    description: Linking Policy Group to MISP Partner without requestId
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+	  "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Empty_RequestId_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_12
+    description: Linking Policy Group to MISP Partner using Empty request ID
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_With_NULL_RequestId_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_13
+    description: Linking Policy Group to MISP Partner using NULL requst ID
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "NULL",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_Version_Field_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_14
+    description: Linking Policy Group to MISP Partner without Version field
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_With_NULL_Version_Parameter_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_15
+    description: Linking Policy Group to MISP Partner using NULL Version Parameter
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "NULL",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Version_Value_1_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_16
+    description: Linking Policy Group to MISP Partner using version value as 1
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Version_Value_0_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_17
+    description: Linking Policy Group to MISP Partner using version value as 0
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Empty_RequestTime_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_18
+    description: Linking Policy Group to MISP Partner using Empty RequestTime
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_004"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_RequestTime_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_19
+    description: Linking Policy Group to MISP Partner using without RequestTime
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_004"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_Partneradmin_role_Neg:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_20
+    description: Linking Policy Group to MISP Partner using without Partneradmin role
+    role: partnerauth
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "KER-ATH-403"
+          }
+     ]
+}'
+  Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_ObjectBody_Neg:
+    endPoint: /v1/partnermanager/pms-111557/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_21
+    description: Linking Policy Group to MISP Partner using without Object Body
+    role: partnerauth
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartnerWithoutBody
+    outputTemplate: pms/error
+    input: '{
+}'
+    output: '{
+       "errors": [
+          {
+             "errorCode": "PMS_COR_001"
+          }
+     ]
+}'

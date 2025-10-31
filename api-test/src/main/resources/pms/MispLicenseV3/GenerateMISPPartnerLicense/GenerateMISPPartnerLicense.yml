@@ -13,14 +13,14 @@ GenerateMISPPartnerLicense:
         "requestTime": "$TIMESTAMP$",
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
         "partnerId": "pms-111555",
         "licenseKeyStatus": "ACTIVE"
 }'
-   Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID:
+   Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_02
       description: Generate MISP Partner License without PolicyID and user should be able to generate the license
@@ -32,12 +32,12 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111555",
+        "partnerId": "pms-111557",
         "policyId": "$REMOVE$",
-        "licenseKeyName": "MISP_API_Automation_License_Key",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2035-10-10"
 }'
       output: '{
-        "partnerId": "pms-111555",
+        "partnerId": "pms-111557",
         "licenseKeyStatus": "ACTIVE"
 }'

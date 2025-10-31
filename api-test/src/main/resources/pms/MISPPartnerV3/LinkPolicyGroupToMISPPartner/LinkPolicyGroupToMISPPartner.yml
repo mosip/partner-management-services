@@ -1,0 +1,19 @@
+LinkPolicyGroupToMISPPartner:
+  Pms_LinkPolicyGroupToMISPPartner_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/{partnerId}/policy-group
+    uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartner_01
+    description: Linking Policy Group to MISP Partner using valid Access Token
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
+    outputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartnerResult
+    input: '{
+      "id": "mosip.pms.link.policy.group.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111557",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+       "policyGroupName": "mosip policy group MISP"
+}'
