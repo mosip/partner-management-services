@@ -10,4 +10,5 @@ public class MISPFilterDto {
     private String policyName;
     private String mispLicenseKeyName;
     private String status;
+    private Integer expiryPeriod;
 }
