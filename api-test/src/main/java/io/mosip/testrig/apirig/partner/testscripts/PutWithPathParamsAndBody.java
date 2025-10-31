@@ -95,12 +95,8 @@ public class PutWithPathParamsAndBody extends PMSUtil implements ITest {
 		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
 		
-		if (inputJson.contains("$LICENSE_KEY_NAME$")) {
-			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
-		    inputJson = inputJson.replace("$LICENSE_KEY_NAME$", licenseKeyName);
-		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
-		}
-
+		inputJson = PMSUtil.generateLicenseKeyName(inputJson, testCaseName);
+		
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
 			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);

@@ -96,13 +96,8 @@ public class SimplePostForAutoGenId extends PMSUtil implements ITest {
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
 
 		inputJson = PMSUtil.inputStringKeyWordHandeler(inputJson, testCaseName);
+		inputJson = PMSUtil.generateLicenseKeyName(inputJson, testCaseName);
 		
-		if (inputJson.contains("$LICENSE_KEY_NAME$")) {
-			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
-		    inputJson = inputJson.replace("$LICENSE_KEY_NAME$", licenseKeyName);
-		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
-		}
-
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
 			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);

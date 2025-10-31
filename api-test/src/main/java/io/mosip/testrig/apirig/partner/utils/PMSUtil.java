@@ -2,6 +2,7 @@ package io.mosip.testrig.apirig.partner.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -47,6 +48,15 @@ public class PMSUtil extends AdminTestUtil {
 		}
 		return testCaseName;
 	}
+	
+	public static String generateLicenseKeyName(String jsonString, String testCaseName) {
+		if (jsonString.contains("$LICENSE_KEY_NAME$")) {
+			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
+			jsonString = jsonString.replace("$LICENSE_KEY_NAME$", licenseKeyName);
+		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
+		}
+		return jsonString;
+    }
 	
 	public static String inputStringKeyWordHandeler(String jsonString, String testCaseName) {
 		if (jsonString.contains("$IDPREDIRECTURI$")) {
