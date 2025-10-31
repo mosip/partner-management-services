@@ -87,6 +87,7 @@
         <maven.jacoco.version>0.8.11</maven.jacoco.version>
         <jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
         <central.publishing.maven.plugin.version>0.7.0</central.publishing.maven.plugin.version>
+        <spring-boot-maven-plugin.version>3.2.3</spring-boot-maven-plugin.version>
     </properties>
 
     <modules>
@@ -165,7 +166,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>3.2.3</version>
+                    <version>${spring-boot-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
