@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -96,7 +95,6 @@ public class SimplePostForAutoGenId extends PMSUtil implements ITest {
 		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
 
 		inputJson = PMSUtil.inputStringKeyWordHandeler(inputJson, testCaseName);
-		inputJson = PMSUtil.generateLicenseKeyName(inputJson, testCaseName);
 		
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);

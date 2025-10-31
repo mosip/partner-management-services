@@ -49,19 +49,15 @@ public class PMSUtil extends AdminTestUtil {
 		return testCaseName;
 	}
 	
-	public static String generateLicenseKeyName(String jsonString, String testCaseName) {
-		if (jsonString.contains("$LICENSE_KEY_NAME$")) {
-			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
-			jsonString = jsonString.replace("$LICENSE_KEY_NAME$", licenseKeyName);
-		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
-		}
-		return jsonString;
-    }
-	
 	public static String inputStringKeyWordHandeler(String jsonString, String testCaseName) {
 		if (jsonString.contains("$IDPREDIRECTURI$")) {
 			jsonString = replaceKeywordValue(jsonString, "$IDPREDIRECTURI$",
 					ApplnURI.replace(GlobalConstants.API_INTERNAL, "healthservices") + "/userprofile");
+		}
+		if (jsonString.contains("$LICENSE_KEY_NAME$")) {
+			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
+			jsonString = jsonString.replace("$LICENSE_KEY_NAME$", licenseKeyName);
+		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
 		}
 		return jsonString;
 	}
