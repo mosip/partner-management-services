@@ -209,6 +209,7 @@ GetListOfAllSBI:
       "sbiVersion": "$REMOVE$",
       "policyId": "$REMOVE$",
       "expiryPeriod": "$REMOVE$"
+	  
 }'
       output: ' {
 }'
@@ -336,7 +337,7 @@ GetListOfAllSBI:
       "sortType": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "policyId": "$REMOVE$",
-      "expiryPeriod": "$REMOVE$"
+      "expiryPeriod": "10"
 }'
       output: ' {
 }'

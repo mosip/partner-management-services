@@ -1,0 +1,77 @@
+RegenerateMISPPartnerLicense:
+  Pms_RegenerateMISPPartnerLicense_All_Valid_Smoke_sid:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_01
+    description: Regenerating MISP Partner License with valid Access Token
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseResult
+    input: '{
+      "id": "mosip.pms.regenerate.misp.license.put",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+	  "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
+	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
+      "expiryDate": "2035-10-10"
+}'
+    output: '{   
+}'
+  Pms_RegenerateMISPPartnerLicense_Without_PolicyId:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_02
+    description: Regenerating MISP Partner License without PolicyId
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseResult
+    input: '{
+      "id": "mosip.pms.regenerate.misp.license.put",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_partnerId$",
+      "policyId": "$REMOVE$",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
+      "expiryDate": "2035-10-10"
+}'
+    output: '{   
+}'
+  Pms_RegenerateMISPPartnerLicense_with_valid_PolicyId:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_03
+    description: Regenerating MISP Partner License with valid PolicyId
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseResult
+    input: '{
+      "id": "mosip.pms.regenerate.misp.license.put",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+	  "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
+	  "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
+      "expiryDate": "2035-10-10"
+}'
+    output: '{   
+}'
+  Pms_RegenerateMISPPartnerLicense_with_valid_LicenseKeyName:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_04
+    description: Regenerating MISP Partner License with valid License Key Name
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseResult
+    input: '{
+      "id": "mosip.pms.regenerate.misp.license.put",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+	  "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
+	  "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
+      "expiryDate": "2035-10-10"
+}'
+    output: '{   
+}'

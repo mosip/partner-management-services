@@ -1,0 +1,21 @@
+DefineMISPPolicy:
+   Pms_DefineMISPPolicy_All_Valid_Smoke_pms_sid:
+      endPoint: /v1/policymanager/policies
+      description: Creating a Policy using PolicyGroup
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_DefineMISPPolicy_01
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/DefineMISPPolicy
+      outputTemplate: pms/DefinePolicy/DefineMISPPolicyResult
+      input: '{
+        "policyGroupName": "mosip policy group MISP",
+        "policyType": "MISP",
+        "name": "mosip policy MISP API Policy 12345",
+        "desc": "desc mosip policy MISP API Policy 12345",
+        "version": "1.0",
+        "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "mosip policy group MISP",
+        "is_Active": false
+}'

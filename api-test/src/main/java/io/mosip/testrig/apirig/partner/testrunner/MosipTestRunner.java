@@ -87,7 +87,7 @@ public class MosipTestRunner {
 			KeycloakUserManager.removeUser();
 			KeycloakUserManager.createUsers();
 			KeycloakUserManager.closeKeycloakInstance();
-
+			
 			startTestRunner();
 			PMSUtil.DbCleanRevamp();
 		} catch (Exception e) {
@@ -98,6 +98,7 @@ public class MosipTestRunner {
 		KeycloakUserManager.closeKeycloakInstance();
 		
 		HealthChecker.bTerminate = true;
+		
 		System.exit(0);
 
 	}

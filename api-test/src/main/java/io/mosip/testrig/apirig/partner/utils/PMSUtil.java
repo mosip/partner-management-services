@@ -1,5 +1,9 @@
 package io.mosip.testrig.apirig.partner.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.testng.SkipException;
@@ -16,6 +20,8 @@ public class PMSUtil extends AdminTestUtil {
 
 	private static final Logger logger = Logger.getLogger(PMSUtil.class);
 	
+	public static List<String> testCasesInRunScope = new ArrayList<>();
+	
 	public static void setLogLevel() {
 		if (PMSConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
@@ -26,6 +32,11 @@ public class PMSUtil extends AdminTestUtil {
 	public static String isTestCaseValidForExecution(TestCaseDTO testCaseDTO) {
 		String testCaseName = testCaseDTO.getTestCaseName();
 		
+		int indexof = testCaseName.indexOf("_");
+		String modifiedTestCaseName = testCaseName.substring(indexof + 1);
+
+		addTestCaseDetailsToMap(modifiedTestCaseName, testCaseDTO.getUniqueIdentifier());
+				
 		if (SkipTestCaseHandler.isTestCaseInSkippedList(testCaseName)) {
 			throw new SkipException(GlobalConstants.KNOWN_ISSUES);
 		}
@@ -36,6 +47,11 @@ public class PMSUtil extends AdminTestUtil {
 		if (jsonString.contains("$IDPREDIRECTURI$")) {
 			jsonString = replaceKeywordValue(jsonString, "$IDPREDIRECTURI$",
 					ApplnURI.replace(GlobalConstants.API_INTERNAL, "healthservices") + "/userprofile");
+		}
+		if (jsonString.contains("$LICENSE_KEY_NAME$")) {
+			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
+			jsonString = jsonString.replace("$LICENSE_KEY_NAME$", licenseKeyName);
+		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
 		}
 		return jsonString;
 	}
@@ -58,7 +74,7 @@ public class PMSUtil extends AdminTestUtil {
 		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
 				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
-
+				
 		DBManager.executeDBQueries(PMSConfigManger.getKeymangrDbUrl(), PMSConfigManger.getKeymangrDbUser(),
 				PMSConfigManger.getKeymangrDbPass(), PMSConfigManger.getKMDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
@@ -94,5 +110,4 @@ public class PMSUtil extends AdminTestUtil {
 	public void validateResponse(Response response, String testCaseName) {
 		validateResponse(response, testCaseName, null);
 	}
-	
 }

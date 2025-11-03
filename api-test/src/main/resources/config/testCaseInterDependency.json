@@ -1,0 +1,389 @@
+{
+    "TC_PMS_deactivate_policy_group_07": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_08": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_05": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_06": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_09": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "Pms_CreateOIDCClient_without_granttypes_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_RejectMappingDeviceToSbi_32": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_deactivate_policy_group_14": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_15": ["TC_PMS_definePolicyGroup_09"],
+    "TC_PMS_deactivate_policy_group_12": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_13": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_GetFTPChipDetail_01": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_PublishPolicy_All_Valid_ForInProgressPolicyMapping": [
+        "TC_PMS_definePolicy_31",
+        "TC_PMS_definePolicyGroup_01"
+    ],
+    "TC_PMS_RejectSecureBiometricInterface_01": ["TC_PMS_createSaveSecureBiometricInterface_08"],
+    "TC_PMS_RejectSecureBiometricInterface_04": ["Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid"],
+    "TC_PMS_deactivate_policy_group_03": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_04": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_01": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_deactivate_policy_group_02": ["Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid"],
+    "TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_01": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_CreateOIDCClient_all_Valid_Smoke_sid": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_07": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_02": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DBValidator_03": ["Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"],
+    "Pms_CreateOIDCClient_invalid_logoUri_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_DBValidator_04": ["TC_PMS_CreateMispLicense_02"],
+    "TC_PMS_UpdatePolicyStatus_07": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_UpdatePolicyStatus_08": [
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_definePolicyGroup_01"
+    ],
+    "TC_PMS_UpdatePolicyStatus_05": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_UpdatePolicyStatus_06": [
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_definePolicyGroup_01"
+    ],
+    "TC_PMS_UpdatePolicyStatus_03": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_deactivate_policy_group_16": ["TC_PMS_definePolicyGroup_10"],
+    "TC_PMS_UpdatePolicyStatus_04": [
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_definePolicyGroup_01"
+    ],
+    "TC_PMS_deactivate_policy_group_17": ["TC_PMS_definePolicyGroup_11"],
+    "TC_PMS_UpdatePolicyStatus_01": [
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_definePolicyGroup_01"
+    ],
+    "Pms_PublishPolicy_All_Valid_Smoke": [
+        "TC_PMS_definePolicyGroup_01",
+        "TC_PMS_definePolicy_01"
+    ],
+    "Pms_PublishPolicy_InValid_policyId_neg": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_RejectMappingDeviceToSbi_01": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_GetOriginalFtmCertifacteAfterDeactiveFtm_01": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_ApproveMappingKey_Reject_All_Valid": ["Pms_partnerPolicyMapping_ForRejecting_All_Valid_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_13": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_12": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_15": ["Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_14": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_11": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_10": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_09": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_GetOriginalFtmCertifacte_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_06": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_05": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_08": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_07": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_createUpdateSecureBiometricInterface_02": [
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid",
+        "TC_PMS_createSaveSecureBiometricInterface_08"
+    ],
+    "TC_PMS_DeactivateFtmNegativeScenarios_14": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_13": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_12": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_11": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_10": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_updatePolicyGroup_03": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_updatePolicyGroup_02": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_updatePolicyGroup_01": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_updatePolicyGroup_07": ["TC_PMS_definePolicyGroup_11"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_20": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_updatePolicyGroup_06": ["TC_PMS_definePolicyGroup_11"],
+    "TC_PMS_updatePolicyGroup_05": ["TC_PMS_definePolicyGroup_11"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_21": ["TC_PMS_createSaveSecureBiometricInterface_08"],
+    "Pms_ApproveMappingKey_Missing_Request_Time_Neg": ["Pms_partnerPolicyMapping_All_Valid_Smoke_sid"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_13": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_12": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_11": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_getPolicyGroup_01": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_10": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_SaveDeviceDetails_01": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_SaveDeviceDetails_02": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "Pms_CreateOIDCClient_invalid_publickey_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_SaveDeviceDetails_03": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_addBioExtractors_02": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_SaveDeviceDetails_04": ["Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid"],
+    "Partner_PublishDataSharePolicy_All_Valid_Smoke": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_RejectAPIKey_02": ["TC_PMS_RequestAPIKeyForAuthPartner_01"],
+    "TC_PMS_ApproveAPIKey_01": ["TC_PMS_RequestAPIKeyForAuthPartner_02"],
+    "Pms_CreateOIDCClient_invalid_RedirectUri_neg": ["TC_PMS_definePolicy_01"],
+    "Pms_PublishPolicy_invalid_auth_neg": [
+        "TC_PMS_definePolicyGroup_01",
+        "TC_PMS_definePolicy_01"
+    ],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_09": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_08": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_07": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "Pms_CreateOIDCClient_without_name_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_06": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "Pms_ApproveMappingKey_Missing_status_Neg": ["Pms_partnerPolicyMapping_All_Valid_Smoke_sid"],
+    "TC_PMS_ApproveMappingDevice_02": [
+        "Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid",
+        "TC_PMS_SaveDeviceDetails_04"
+    ],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_05": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_ApproveMappingDevice_01": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_04": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_03": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_02": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_01": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_UpdatePolicyAgainstApiKey_02": [
+        "TC_PMS_defineDataSharePolicy_01",
+        "TC_PMS_definePolicy_01",
+        "Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"
+    ],
+    "TC_PMS_UpdatePolicyAgainstApiKey_01": [
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_definePolicy_02",
+        "Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"
+    ],
+    "TC_PMS_DeactivateOIDCClient_02": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_02": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateOIDCClient_03": ["Pms_CreateOIDCClient_ForNeg_all_Valid_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_01": [
+        "Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_04": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateOIDCClient_05": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateSBIWithAssociatedDevices_03": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateOIDCClient_06": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateOIDCClient_07": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateOIDCClient_08": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateOIDCClient_09": ["Pms_CreateOIDCClient_ForNeg_all_Valid_sid"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_09": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_08": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_07": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_06": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateOIDCClient_01": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_05": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_ApproveMappingDevice_15": [
+        "Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid",
+        "TC_PMS_SaveDeviceDetails_01"
+    ],
+    "TC_PMS_DeactivateFtmNegativeScenarios_04": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_PublishPolicy_InValid_policygroupId_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_ApproveMappingDevice_14": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_DeactivateFtmNegativeScenarios_03": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_02": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_DeactivateFtmNegativeScenarios_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_UpdatePolicyAgainstApiKey_04": [
+        "TC_PMS_defineDataSharePolicy_01",
+        "Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"
+    ],
+    "TC_PMS_UpdatePolicyAgainstApiKey_03": [
+        "TC_PMS_defineDataSharePolicy_01",
+        "TC_PMS_definePolicy_01"
+    ],
+    "TC_PMS_UpdatePolicyAgainstApiKey_05": [
+        "TC_PMS_definePolicy_01",
+        "Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"
+    ],
+    "Pms_CreateOIDCClient_ForNeg_all_Valid_sid": ["TC_PMS_definePolicy_02"],
+    "TC_PMS_rejectFtpChipDetail_01": ["TC_PMS_CreateFTPChipDetail_01"],
+    "Pms_ApproveMappingKey_All_Valid_Smoke": ["Pms_partnerPolicyMapping_All_Valid_Smoke_sid"],
+    "Pms_PublishPolicy_All_Valid_forDeactivatePolicyGroup_ForNeg": [
+        "TC_PMS_definePolicyGroup_10",
+        "TC_PMS_definePolicy_28"
+    ],
+    "TC_PMS_RemoveMapDeviceWithSBI_01": ["Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_21": ["TC_PMS_SaveDeviceDetails_02"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_20": ["TC_PMS_SaveDeviceDetails_02"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_23": ["TC_PMS_SaveDeviceDetails_02"],
+    "TC_PMS_DeactivateOIDCClient_10": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_22": ["TC_PMS_SaveDeviceDetails_02"],
+    "TC_PMS_DeactivateOIDCClient_11": ["Pms_CreateOIDCClient_ForNeg_all_Valid_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_25": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_24": ["TC_PMS_SaveDeviceDetails_02"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_27": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_26": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_29": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_28": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "Pms_PublishPolicy_InValid_AlreadyPublished_neg": [
+        "TC_PMS_definePolicyGroup_01",
+        "TC_PMS_definePolicy_01"
+    ],
+    "TC_PMS_UploadCertificateOfFtpChip_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_30": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "Pms_UpdateSecureBiometricInterface_DeviceProvider_AllValid_Smoke": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_31": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_33": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "TC_PMS_SBI_List_15"
+    ],
+    "Pms_UpdateOIDCClient_all_Valid_Smoke_sid": ["Pms_CreateOIDCClient_all_Valid_Smoke_sid"],
+    "TC_PMS_MapPartnerAndPolicytoCredentialType_05": ["TC_PMS_definePolicy_02"],
+    "TC_PMS_deactivate_policy_03": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_deactivate_policy_02": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_deactivate_policy_01": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_01": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_03": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_02": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_05": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_04": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_07": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_06": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_09": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_08": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_DeactivatePolicyGroupBeforePolicyCreation_01": ["TC_PMS_definePolicyGroup_11"],
+    "TC_PMS_deactivate_policy_11": ["TC_PMS_definePolicy_30"],
+    "TC_PMS_deactivate_policy_10": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_deactivate_policy_13": ["TC_PMS_definePolicy_31"],
+    "Pms_CreateOIDCClient_without_publickey_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_deactivate_policy_12": ["TC_PMS_definePolicy_29"],
+    "TC_PMS_deactivate_policy_08": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_deactivate_policy_07": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_10": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_deactivate_policy_06": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_MapDeviceWithSBI_02": ["TC_PMS_createSaveSecureBiometricInterface_02"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_12": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_MapDeviceWithSBI_03": ["TC_PMS_createSaveSecureBiometricInterface_03"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_11": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_14": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_MapDeviceWithSBI_01": ["Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_13": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_deactivate_policy_09": ["TC_PMS_definePolicy_27"],
+    "TC_PMS_ApproveFTMchipDetail_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_15": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_MapDeviceWithSBI_04": ["TC_PMS_createSaveSecureBiometricInterface_02"],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_18": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_17": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_19": [
+        "TC_PMS_SaveDeviceDetails_02",
+        "Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"
+    ],
+    "Pms_CreateOIDCClient_invalid_granttypes_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_DeactivateFtm_19": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping": [
+        "TC_PMS_definePolicy_30",
+        "TC_PMS_definePolicyGroup_01"
+    ],
+    "Pms_PublishPolicy_ForDeactive_All_Valid_Smoke": [
+        "TC_PMS_definePolicyGroup_09",
+        "TC_PMS_definePolicy_27"
+    ],
+    "TC_PMS_GetAllDeviceListMappedwithSbi_01": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_GetPolicyForApiKey_02": ["Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"],
+    "Pms_ApproveMappingKey_Map_partner_toalready_mapped_policy_neg": ["TC_PMS_RequestAPIKeyForAuthPartner_01"],
+    "TC_PMS_GetPolicyForApiKey_01": ["Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid"],
+    "TC_PMS_createUpdatePolicy_08": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_createUpdatePolicy_07": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_createUpdatePolicy_05": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_createUpdatePolicy_04": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_createUpdatePolicy_03": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_DeactivateDevice_03": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_DeactivateDevice_01": [
+        "TC_PMS_SaveDeviceDetails_01",
+        "TC_PMS_SaveDeviceDetails_04"
+    ],
+    "Pms_PublishPolicy_All_Valid_Smoke_ForNeg": [
+        "TC_PMS_definePolicyGroup_01",
+        "TC_PMS_definePolicy_02"
+    ],
+    "TC_PMS_DeactivateFtm_01": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_ApproveMappingKey_PastDate_Request_Time_Neg": ["Pms_partnerPolicyMapping_All_Valid_Smoke_sid"],
+    "TC_PMS_getPolicy_01": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_ActivateDeactivatePartnerApiKey_03": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_ActivateDeactivatePartnerApiKey_01": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_UpdateMispLicense_02": ["TC_PMS_CreateMispLicense_02"],
+    "Pms_CreateOIDCClient_invalid_auth_neg": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_UpdateMispLicense_01": ["TC_PMS_CreateMispLicense_01"],
+    "TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_01": ["Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid"],
+    "TC_PMS_DeactivateDevice_07": ["TC_PMS_SaveDeviceDetails_04"],
+    "TC_PMS_DeactivateDevice_04": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_DeactivateDevice_05": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_UpdateFtpChipDetail_01": ["TC_PMS_CreateFTPChipDetail_01"],
+    "TC_PMS_DeactivateDevice_08": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_GetAllDeviceListMappedWithSbiNegativeScenarios_03": ["TC_PMS_SBI_List_15"],
+    "TC_PMS_DeactivateDevice_09": ["TC_PMS_SaveDeviceDetails_01"],
+    "TC_PMS_ApproveSecureBiometricInterface_01": [
+        "Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid",
+        "TC_PMS_createSaveSecureBiometricInterface_02",
+        "TC_PMS_createSaveSecureBiometricInterface_03"
+    ],
+    "TC_PMS_ApproveSecureBiometricInterface_02": ["Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid"],
+    "TC_PMS_DeactivateFtm_20": ["TC_PMS_createFtmChipDetails_01"],
+    "Pms_ApproveMappingKey_Rejected_All_Valid_Smoke": ["TC_PMS_RequestAPIKeyForAuthPartner_01"]
+}
