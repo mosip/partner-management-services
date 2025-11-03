@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -158,7 +160,11 @@ public class MISPLicenseController {
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"activated", "deactivated"})
 			)
-			@RequestParam(value = "status", required = false) String status
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "expiryPeriod", required = false)
+			@Min(value = 1, message = "Expiry period must be at least 1 day.")
+			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
+			Integer expiryPeriod
 	) {
 		inputValidator.validateRequestInput(sortFieldName);
 		inputValidator.validateRequestInput(sortType);
@@ -186,6 +192,9 @@ public class MISPLicenseController {
 		}
 		if (status != null) {
 			filterDto.setStatus(status);
+		}
+		if (expiryPeriod != null) {
+			filterDto.setExpiryPeriod(expiryPeriod);
 		}
 		return infraProviderService.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
