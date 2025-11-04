@@ -67,9 +67,9 @@ DBValidator:
     "partner_id": "$REMOVE$",
     "policy_name": "$REMOVE$",
     "api_key_id": "$REMOVE$",
-    "license_key": "$ID:CreateMispLicense_MispLicense_allValid_smoke_sid_licenseKey$"
+    "license_key": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKey$"
 }'
       output: '{
    "module_name": "partner service",
-   "cr_by": "partner-111997"
+   "cr_by": "pms-111555"
 }'

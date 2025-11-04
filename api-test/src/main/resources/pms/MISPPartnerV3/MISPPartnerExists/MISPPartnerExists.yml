@@ -1,0 +1,21 @@
+MISPPartnerExists:
+  Pms_MISPPartnerExists_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/partners/exists
+    uniqueIdentifier: TC_PMS_MISPPartnerExists_01
+    description: Checking MISP Partner Exists for given Partner ID and Email ID
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
+    outputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExistsResult
+    input: '{
+      "id": "mosip.pms.partner.exists.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "emailId": "newmisppartnerapiauto@gmail.com",
+      "partnerId": "pms-111555",
+      "partnerType": "MISP_Partner"
+}'
+    output: '{
+      "partnerExists": true,
+      "duplicateExists": false
+}'

@@ -20,6 +20,7 @@ uploadCert:
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
+      allowedErrorCodes: KER-CRY-003,KER-KMS-013 
       inputTemplate: pms/credentialPartner/UploadCertificate/uploadInvalidCertificate
       outputTemplate: pms/error
       input: '{

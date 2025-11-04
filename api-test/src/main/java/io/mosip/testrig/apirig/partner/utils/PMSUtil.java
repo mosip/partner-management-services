@@ -1,5 +1,9 @@
 package io.mosip.testrig.apirig.partner.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.testng.SkipException;
@@ -37,6 +41,11 @@ public class PMSUtil extends AdminTestUtil {
 			jsonString = replaceKeywordValue(jsonString, "$IDPREDIRECTURI$",
 					ApplnURI.replace(GlobalConstants.API_INTERNAL, "healthservices") + "/userprofile");
 		}
+		if (jsonString.contains("$LICENSE_KEY_NAME$")) {
+			String licenseKeyName = "MISP_API_Automation_" + UUID.randomUUID().toString().substring(0, 8);
+			jsonString = jsonString.replace("$LICENSE_KEY_NAME$", licenseKeyName);
+		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
+		}
 		return jsonString;
 	}
 	
@@ -58,7 +67,7 @@ public class PMSUtil extends AdminTestUtil {
 		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
 				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
-
+				
 		DBManager.executeDBQueries(PMSConfigManger.getKeymangrDbUrl(), PMSConfigManger.getKeymangrDbUser(),
 				PMSConfigManger.getKeymangrDbPass(), PMSConfigManger.getKMDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
@@ -94,5 +103,4 @@ public class PMSUtil extends AdminTestUtil {
 	public void validateResponse(Response response, String testCaseName) {
 		validateResponse(response, testCaseName, null);
 	}
-	
 }

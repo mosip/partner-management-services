@@ -27,8 +27,22 @@ createPublishPolicy:
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
-    
-   
+   Pms_PublishPolicy_MISPPolicy_All_Valid_Smoke:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      description: Publish MISP Policy created by PartnerAdmin
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyMISPResult
+      input: '{
+        "policygroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$",
+        "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+        "requesttime": "$TIMESTAMP$"
+	}'
+      output: '{
+        "policyGroupName": "mosip policy group MISP",
+        "is_Active": true
+    }'
    Pms_PublishPolicy_InValid_AlreadyPublished_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       description: Publish The Policy which is already published      

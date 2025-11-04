@@ -1,0 +1,955 @@
+CreateMISPPartnerNegativeScenarios:
+   Pms_MISPPartnerRegistration_without_Access_Token_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_01
+      description: Create MISP Partner Self Registration without Access Token
+      role: invalidtoken
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_PartnerID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_02
+      description: Create MISP Partner Self Registration with Empty Partner ID
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Missing_PartnerID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_03
+      description: Create MISP Partner Self Registration with Empty Partner ID
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$REMOVE$",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Invalid_PolicyGroup_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_04
+      description: Create MISP Partner Self Registration with Invalid Policy group
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner01@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "Automation-invalid-policy-group",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_002"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_SpecialCharacters_PolicyGroup_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_05
+      description: Create MISP Partner Self Registration with SpecialCharacters Policy group
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner02@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "^^!^(**%",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_002"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_OrganizationName_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_06
+      description: Create MISP Partner Self Registration with Empty OrganizationName
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": " ",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Missing_OrganizationName_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_07
+      description: Create MISP Partner Self Registration with Missing OrganizationName
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "$REMOVE$",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner11@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_Email_Address_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_08
+      description: Create MISP Partner Self Registration with Empty Email Address
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$REMOVE$",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Invalid_Email_Address_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_09
+      description: Create MISP Partner Self Registration with Invalid Email Address
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@@@@@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_012"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_Address_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_10
+      description: Create MISP Partner Self Registration with Missing Address
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Null_Address_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_11
+      description: Create MISP Partner Self Registration with Null Address
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",		
+        "address": null,
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+       "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_2000+_Words_Address_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_12
+      description: Create MISP Partner Self Registration with more than maximum 2000 words in Address field
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "The Modular Open Source Identity Platform was established in 2018 to support governments in providing its residents with an official form of the most important human asset identity.As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial first step. With a foundational national ID system in place, a government can build effective civil registries, and service delivery systems, serving the population in a myriad of ways. Among other benefits, robust systems like these enable faster disaster relief, climate resilience, ease of starting new businesses, and better access to financial inclusion, healthcare, and education. As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial first step. With a foundational national ID system in place, a government can build effective civil registries, and service delivery systems, serving the population in a myriad of ways. Among other benefits, robust systems like these enable faster disaster relief, climate resilience, ease of starting new businesses, and better access to financial inclusion, healthcare, and education.As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial first step. With a foundational national ID system in place, a government can build effective civil registries, and service delivery systems, serving the population in a myriad of ways. Among other benefits, robust systems like these enable faster disaster relief, climate resilience, ease of starting new businesses, and better access to financial inclusion, healthcare, and education.As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial fiestaaaTheMOSIPMOSIP",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_ContactNumber_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_13
+      description: Create MISP Partner Self Registration with Empty ContactNumber
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_maxlength_ContactNumber_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_14
+      description: Create MISP Partner Self Registration with more than expected values in ContactNumber
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461782919221434",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_maxlength_EmailID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_15
+      description: Create MISP Partner Self Registration with more than expected values in EmailID field
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461782919221434",
+        "emailId": "this.is.a.really.long.fake.email.address.created.only.for.testing.purposespurposespurposespurposespurpos.and.demonstration.so.please.do.not.try.to.use.it.in.real.life.situations.because.it.is.not.valid@verylongdomainexampleforvalidationtestingpurposeeseseseee.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_-1_EmailID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_16
+      description: Create MISP Partner Self Registration with less than expected values in EmailID field
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "-1",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_012"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_PartnerType_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_17
+      description: Create MISP Partner Self Registration with Empty PartnerType
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461782919221434",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Invalid_PartnerType_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_18
+      description: Create MISP Partner Self Registration with Invalid PartnerType
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner14@gmail.com",
+        "partnerType": "MISP",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"		
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_010"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_langcode_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_19
+      description: Create MISP Partner Self Registration with Empty lang code
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner13@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": " "
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_056"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Invalid_langcode_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_20
+      description: Create MISP Partner Self Registration with invalid lang code
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner15@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "engfrara"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_056"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_RequestTime_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_21
+      description: Create MISP Partner Self Registration with Empty requestTime
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": " ",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Invalid_RequestID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_22
+      description: Create MISP Partner Self Registration with Invalid requestID
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_without_RequestID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_23
+      description: Create MISP Partner Self Registration with Invalid requestID
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_null_RequestID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_24
+      description: Create MISP Partner Self Registration with null requestID
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": null,
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Empty_RequestID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_25
+      description: Create MISP Partner Self Registration with Empty requestID
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": " ",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_without_Version_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_26
+      description: Create MISP Partner Self Registration without Version
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_null_Version_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_27
+      description: Create MISP Partner Self Registration null Version
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "null",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Invalid_Version_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_28
+      description: Create MISP Partner Self Registration Invalid Version
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "version-1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Version_value1_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_29
+      description: Create MISP Partner Self Registration version value 1
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_Version_value0_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_30
+      description: Create MISP Partner Self Registration version value 0
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_without_RequestTime_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_31
+      description: Create MISP Partner Self Registration without requestTime
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_004"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_existing_EmailID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_32
+      description: Create MISP Partner Self Registration with already registered Email address
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111444",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_011"
+       }
+       ]
+}'
+   Pms_MISPPartnerRegistration_existing_PartnerID_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_33
+      description: Create MISP Partner Self Registration with already registered Partner
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111555",
+        "organizationName": "MISP",
+        "address": "Bangalore",
+        "contactNumber": "9876554461",
+        "emailId": "newmisppartner10@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group 19234",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_051"
+       }
+       ]
+}'
