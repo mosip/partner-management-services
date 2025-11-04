@@ -209,7 +209,6 @@ GetListOfAllSBI:
       "sbiVersion": "$REMOVE$",
       "policyId": "$REMOVE$",
       "expiryPeriod": "$REMOVE$"
-	  
 }'
       output: ' {
 }'

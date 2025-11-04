@@ -1,7 +1,7 @@
 GetAllApiKeyForAuthPartnerBeforePolicyMapping:
    Pms_GetAllApiKeyForAuthPartner_BeforePolicyMapping_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key Without Partner Register
+      description: Fetching all the API Key Before Policy Mapping
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerBeforePolicyMapping_01
       role: partnerauth
       checkErrorsOnlyInResponse: true

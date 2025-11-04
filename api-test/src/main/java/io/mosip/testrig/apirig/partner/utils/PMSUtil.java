@@ -20,8 +20,6 @@ public class PMSUtil extends AdminTestUtil {
 
 	private static final Logger logger = Logger.getLogger(PMSUtil.class);
 	
-	public static List<String> testCasesInRunScope = new ArrayList<>();
-	
 	public static void setLogLevel() {
 		if (PMSConfigManger.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
@@ -32,11 +30,6 @@ public class PMSUtil extends AdminTestUtil {
 	public static String isTestCaseValidForExecution(TestCaseDTO testCaseDTO) {
 		String testCaseName = testCaseDTO.getTestCaseName();
 		
-		int indexof = testCaseName.indexOf("_");
-		String modifiedTestCaseName = testCaseName.substring(indexof + 1);
-
-		addTestCaseDetailsToMap(modifiedTestCaseName, testCaseDTO.getUniqueIdentifier());
-				
 		if (SkipTestCaseHandler.isTestCaseInSkippedList(testCaseName)) {
 			throw new SkipException(GlobalConstants.KNOWN_ISSUES);
 		}

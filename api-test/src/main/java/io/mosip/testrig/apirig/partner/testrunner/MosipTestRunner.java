@@ -98,7 +98,6 @@ public class MosipTestRunner {
 		KeycloakUserManager.closeKeycloakInstance();
 		
 		HealthChecker.bTerminate = true;
-		
 		System.exit(0);
 
 	}
