@@ -21,7 +21,7 @@ public enum MISPErrorMessages {
 	ERROR_GENERATING_MISP_LICENSE("PMS_MSP_421","Error while generating MISP license key."),
 	INVALID_LICENSE_KEY_NAME("PMS_MSP_422","Invalid license key name provided."),
 	INVALID_PARTNER_ID("PMS_MSP_423","Invalid Partner ID provided."),
-	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_424","MISP License key name already exists."),
+	MISP_LICENSE_KEY_NAME_EXISTS("PMS_MSP_424","Entered MISP License Key name already exists. Provide a unique name and submit."),
 	EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE("PMS_MSP_425","Expiry date cannot be the same or earlier than the current date."),
 	ERROR_FETCHING_INDIVIDUAL_MISP_DETAILS("PMS_MSP_426","Error while fetching MISP Licence details."),
 	MISP_LICENSE_NOT_EXISTS("PMS_MSP_427","No matching MISP License Key exists for the specified Partner ID, Policy ID, and MISP License Key Name."),
