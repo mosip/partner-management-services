@@ -27,7 +27,7 @@ UploadMISPPartnerCertificate:
 }'
       output: ' {
 }'
-   Pms_UploadMISPPartnerCertificate_without_PolicyGroup_Valid:
+   Pms_UploadMISPPartnerCertificate_without_PolicyGroup_Smoke_Valid:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_03
       description: Upload MISP partner certificate for PMS-111557 partner id
