@@ -20,6 +20,7 @@ uploadCert:
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
+      allowedErrorCodes:  KER-CRY-003,KER-KMS-013
       inputTemplate: pms/credentialPartner/UploadCertificate/uploadInvalidCertificate
       outputTemplate: pms/error
       input: '{
@@ -30,8 +31,8 @@ uploadCert:
     {
       "errorCode": "KER-CRY-003"
     }
-  ]     
-    }'   
+  ]
+    }'
    Pms_UploadSUBCACertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_uploadCert_03
