@@ -180,11 +180,11 @@ LinkPolicyGroupToMISPPartnerNegTC:
     restMethod: post
     checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
-    outputTemplate: pms/responsecode
+    outputTemplate: pms/responseCode
     input: '{
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
-      "requestTime": "invalid-request-time",
+      "requestTime": "2025-13-99T25:61:61Z",
       "partnerId": "pms-111557",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
