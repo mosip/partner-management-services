@@ -4857,7 +4857,7 @@
 												},
 												"publicKey": {
 													"type": "object",
-													"description": "OAuth/OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OAuth/OIDC client. Format: JSON Web Key (JWK). \nFormat : Json Web Key (JWK).",
+													"description": "OAuth/OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OAuth/OIDC client. Format: JSON Web Key (JWK).",
 													"additionalProperties": {
 														"type": "string"
 													}
@@ -8536,7 +8536,7 @@
                 "x-stoplight": {
                     "id": "86rs9kczv4mw3"
                 },
-                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional paramter, `notificationType`. \r\nAllowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey` and `misp`. \r\nIf the `notificationType` is `root`, `intermediate`, `weekly` or `misp` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n",
+                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional parameter, `notificationType`. \r\nAllowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey` and `misp`. \r\nIf the `notificationType` is `root`, `intermediate`, `weekly` or `misp` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n",
                 "tags": [
                     "notifications-controller"
                 ]
