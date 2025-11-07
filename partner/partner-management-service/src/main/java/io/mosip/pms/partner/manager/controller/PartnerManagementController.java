@@ -9,8 +9,10 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
+import io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -87,6 +89,9 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.api.id.link.policy.group.post}")
 	private String postLinkPolicyGroup;
+
+	@Value("${mosip.pms.api.id.update.api.key.expiry.patch}")
+	private String patchUpdateApiKeyExpiry;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -284,6 +289,27 @@ public class PartnerManagementController {
 		response.setResponse(partnerManagementService.updateAPIKeyStatus(partnerId, policyId, request.getRequest()));
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersapikeyexpiry())")
+	@PatchMapping(value = "/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date")
+	@Operation(summary = "Service to update expiry date of API key", 
+			description = "Available since release-1.3.0-beta.4. This endpoint allows updating the expiry date of an active API key. It is configured for the role PARTNER_ADMIN only.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<APIKeyExpiryUpdateResponseDto> updateAPIKeyExpiry(@PathVariable String partnerId,
+			@PathVariable String policyId, @RequestBody @Valid RequestWrapperV2<APIKeyExpiryUpdateRequestDto> requestWrapper) {
+		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput(policyId);
+		Optional<ResponseWrapperV2<APIKeyExpiryUpdateResponseDto>> validationResponse =
+				requestValidator.validate(patchUpdateApiKeyExpiry, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		return partnerManagementService.updateAPIKeyExpiry(partnerId, policyId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
