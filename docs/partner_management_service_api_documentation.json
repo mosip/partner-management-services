@@ -124,11 +124,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values 1-30."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -1423,11 +1425,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given expiryPeriod. Value expected in days."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -1465,8 +1469,8 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get list of all the Partner Id's associated with logged in User and filtered by Query Parameters",
-                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThe query parameter `status` is mandatory. The endpoint will return all \r\nPartner Id's with corresponding status value and which are mapped \r\nto the logged in user. If there are no Partner Id's with corresponding status \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\nA Partner is auto approved by the PMS system, after the partner uploads\r\na valid CA signed certificate for the organisation.\r\n\r\n\r\nThe query parameter `policyGroupAvailable` is optional. If it is true, then this endpoint will return all \r\nPartner Id's which have a Policy Group associated with them and which are mapped \r\nto the logged in user. If there are no Partner Id's which have a Policy Group associated with them \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nThe query parameter `partnerType` is optional. If it is any of allowed partner types, then this endpoint will return all \r\nPartner Id's which have same partner type and which are mapped \r\nto the logged in user. If there are no Partner Id's which have same partner type\r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nAll these 3 query parameters will work together.If the partner type is provided as `MISP_Partner`, e.g., `/partners/v4?status=approved&partnerType=MISP_Partner`:\r\n- If the logged-in user is Admin, all MISP_Partner records are returned.\r\n- If the logged-in user is not Admin, only MISP_Partner records mapped to the logged-in user are returned.\r\n\r\nExample 1: `/partners/v4?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nthis will return list of all Device Provider ids which are in approved status and are associated \r\nwith logged in user and but the policy group attributes in the response will be null in this case.\r\n\r\nExample 2: `/partners/v4?status=approved&partnerType=Device_Provider&policyGroupAvailable=true`\r\nthis will return an empty list since policy group is not available for Device Providers\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,\r\nSDK_PARTNER,CREDENTIAL_PARTNER,PARTNER_ADMIN,ONLINE_VERIFICATION_PARTNER\r\n",
-                "operationId": "partner-ids-v4",
+                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThe query parameter `status` is mandatory. The endpoint will return all \r\nPartner Id's with corresponding status value and which are mapped \r\nto the logged in user. If there are no Partner Id's with corresponding status \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\nA Partner is auto approved by the PMS system, after the partner uploads\r\na valid CA signed certificate for the organisation.\r\n\r\n\r\nThe query parameter `policyGroupAvailable` is optional. If it is true, then this endpoint will return all \r\nPartner Id's which have a Policy Group associated with them and which are mapped \r\nto the logged in user. If there are no Partner Id's which have a Policy Group associated with them \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nThe query parameter `partnerType` is optional. If it is any of allowed partner types, then this endpoint will return all \r\nPartner Id's which have same partner type and which are mapped \r\nto the logged in user. If there are no Partner Id's which have same partner type\r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nAll these 3 query parameters will work together.If the partner type is provided as `MISP_Partner`, e.g., `/partners/v3?status=approved&partnerType=MISP_Partner`:\r\n- If the logged-in user is Admin, all MISP_Partner records are returned.\r\n- If the logged-in user is not Admin, only MISP_Partner records mapped to the logged-in user are returned.\r\n\r\nExample 1: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nthis will return list of all Device Provider ids which are in approved status and are associated \r\nwith logged in user and but the policy group attributes in the response will be null in this case.\r\n\r\nExample 2: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=true`\r\nthis will return an empty list since policy group is not available for Device Providers\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,\r\nSDK_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER\r\n",
+                "operationId": "partner-ids-v3",
                 "parameters": [
                     {
                         "name": "Cookie",
@@ -1599,14 +1603,6 @@
                                             "langCode": {
                                                 "type": "string",
                                                 "description": "Langcode of the Partner"
-                                            },
-                                            "logoUrl": {
-                                                "type": "string",
-                                                "description": "Logo URL of the Partner"
-                                            },
-                                            "additionalInfo": {
-                                                "type": "object",
-                                                "description": "Addtional information of the Partner"
                                             }
                                         },
                                         "required": [
@@ -1639,10 +1635,8 @@
                                             "address": "123 Street",
                                             "contactNumber": "9999999999",
                                             "emailId": "partner@email.com",
-                                            "partnerType": "Auth_partner",
-                                            "policyGroup": "policyGroup789",
-                                            "logoUrl": "https://example.com/logo.png",
-                                            "additionalInfo": {}
+                                            "partnerType": "Auth_Partner",
+                                            "policyGroup": "policyGroup789"
                                         }
                                     }
                                 }
@@ -1891,11 +1885,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values are between 1-30."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -2836,6 +2832,16 @@
                                 "activated",
                                 "deactivated"
                             ]
+                        }
+                    },
+                    {
+                        "name": "expiryPeriod",
+                        "in": "query",
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         }
                     }
                 ],
@@ -4124,6 +4130,7 @@
                         "description": "Partner Management Service"
                     }
                 ],
+				"deprecated": true,
                 "x-stoplight": {
                     "id": "9xoogg0jwkwpd"
                 }
@@ -4363,8 +4370,8 @@
                                                         "policyGroupDescription": "Security Policies",
                                                         "policyName": "Data Protection Policy",
                                                         "policyDescription": "Data Protection Policy",
-                                                        "oidcClientId": "oidcClient456",
-                                                        "oidcClientName": "MyOIDCClient",
+                                                        "clientId": "oidcClient456",
+                                                        "clientName": "MyOIDCClient",
                                                         "status": "active",
                                                         "createdDateTime": "2024-08-08T10:00:00Z"
                                                     }
@@ -4426,6 +4433,7 @@
                         }
                     }
                 },
+				"deprecated": true,
                 "x-stoplight": {
                     "id": "zjsigpv4196jp"
                 }
@@ -4468,12 +4476,1097 @@
                         }
                     }
                 },
+				"deprecated": true,
                 "x-stoplight": {
                     "id": "1o3dwv1kpatco"
                 }
             }
         },
-        "/logout/user": {
+        "/client": {
+			"post": {
+				"tags": [
+					"client-management-controller"
+				],
+				"summary": "NEW: Create a new OAuth or OpenID Connect (OIDC) client",
+				"description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to create a new OAuth or OpenID Connect (OIDC) client for a given Auth Partner.\n\nIt is an upgrade of the earlier POST /oauth/client endpoint.",
+				"operationId": "create-client",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string",
+										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.client.post`"
+									},
+									"version": {
+										"type": "string",
+										"description": "Version of this endpoint. \r\n`1.0`"
+									},
+									"requestTime": {
+										"type": "string",
+										"description": "Date time in ISO format, when request is being sent."
+									},
+									"metadata": {
+										"type": "object",
+										"description": "Optional metadata about the request"
+									},
+									"request": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string",
+												"description": "Name of OAuth/OIDC client."
+											},
+											"policyId": {
+												"type": "string",
+												"description": "Unique identifier of the Policy"
+											},
+											"publicKey": {
+												"type": "object",
+												"description": "OAuth/OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OAuth/OIDC client. Format: JSON Web Key (JWK).",
+												"additionalProperties": {
+													"type": "string"
+												}
+											},
+											"authPartnerId": {
+												"type": "string",
+												"description": "Unique identifier for the Auth partner"
+											},
+											"logoUri": {
+												"type": "string",
+												"description": "Relying party logo URI which will used to display logo in the login and consent pages."
+											},
+											"redirectUris": {
+												"type": "array",
+												"description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
+												"items": {
+													"type": "string"
+												}
+											},
+											"grantTypes": {
+												"type": "array",
+												"description": "Form of Authorization Grant presented to token endpoint",
+												"items": {
+													"type": "string"
+												}
+											},
+											"clientAuthMethods": {
+												"type": "array",
+												"description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
+												"items": {
+													"type": "string"
+												}
+											},
+											"clientNameLangMap": {
+												"type": "object",
+												"description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
+												"additionalProperties": {
+													"type": "string"
+												}
+											},
+											"additionalConfig": {
+												"type": "object",
+												"description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
+												"properties": {
+													"userinfo_response_type": {
+														"type": "string",
+														"enum": [
+															"JWS",
+															"JWE"
+														],
+														"description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
+													},
+													"purpose": {
+														"type": "object",
+														"description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
+														"properties": {
+															"type": {
+																"type": "string",
+																"enum": [
+																	"none",
+																	"verify",
+																	"link",
+																	"login"
+																]
+															},
+															"title": {
+																"type": "object",
+																"description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
+															},
+															"subTitle": {
+																"type": "object",
+																"description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
+															}
+														},
+														"required": [
+															"type"
+														]
+													},
+													"signup_banner_required": {
+														"type": "boolean",
+														"description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
+													},
+													"forgot_pwd_link_required": {
+														"type": "boolean",
+														"description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
+													},
+													"consent_expire_in_mins": {
+														"type": "number",
+														"description": "The number of minutes after which a user's given consent will expire."
+													}
+												}
+											}
+										},
+										"required": [
+											"name",
+											"policyId",
+											"publicKey",
+											"authPartnerId",
+											"logoUri",
+											"redirectUris",
+											"grantTypes",
+											"clientAuthMethods",
+											"clientNameLangMap"
+										]
+									}
+								},
+								"required": [
+									"id",
+									"version",
+									"requestTime",
+									"request"
+								]
+							},
+							"examples": {
+								"Example 1": {
+									"value": {
+										"id": "string",
+										"version": "1.0",
+										"requestTime": "2024-11-05T10:36:13.780Z",
+										"metadata": {},
+										"request": {
+											"name": "test",
+											"policyId": "12345",
+											"publicKey": {
+												"kty": "RSA",
+												"e": "AQAB",
+												"use": "sig",
+												"alg": "RS256",
+												"n": "g7KPXZdZ18H2JoW9FhYz8WrSbLeKA5mO8ROW5YQVyzYDfjbRA9sy0FwpF7pa7mBmU1_G0RvD0xbEhSaFtCL5hyNVVZCfgVqNl41C7-F2yUWhfVQPhT5YnT3eH3gV9ZczhP1trNjIzGuH-8D7EDJcoxuwdGaaY-wTmEtHykHRyab08qr62hfwLuSjHAGN6VgV-Na81XIdXmR7Dwnd1U4MxWJxzRvnVlHFCBaZIG6jNJ21vbzM-DBMq1d8tvtrGQx4w3niK_sctUZ5NP1BLkQhYSEGLr-e_mbmHFCnGtuKfnfIm-PVD-6ihfEwX3j_YQT3LhphBZj7AdXg6iyyQn9EJQ"
+											},
+											"authPartnerId": "partner1",
+											"logoUri": "https://partner1.com/partner1-logo.png",
+											"redirectUris": [
+												"https://partner1.com/homepage"
+											],
+											"grantTypes": [
+												"authorization_code"
+											],
+											"clientAuthMethods": [
+												"private_key_jwt"
+											],
+											"clientNameLangMap": {
+												"fra": "Service e-Sim de Fastlane",
+												"ara": "خدمة فاست لين e-SIM"
+											},
+											"additionalConfig": {
+												"userinfo_response_type": "JWS",
+												"purpose": {
+													"title": {
+														"@none": "Title"
+													},
+													"type": "verify",
+													"subTitle": {
+														"@none": "subTitle"
+													}
+												},
+												"signup_banner_required": true,
+												"forgot_pwd_link_required": true,
+												"consent_expire_in_mins": 30
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string",
+											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.client.post`"
+										},
+										"version": {
+											"type": "string",
+											"description": "Version of this endpoint. \r\n`1.0`"
+										},
+										"responseTime": {
+											"type": "string",
+											"description": "Date time in ISO format, when response is being sent."
+										},
+										"metadata": {
+											"type": "object",
+											"description": "Optional metadata about the response"
+										},
+										"response": {
+											"type": "object",
+											"properties": {
+												"clientId": {
+													"type": "string",
+													"description": "Unique identifier of the client."
+												},
+												"status": {
+													"type": "string",
+													"description": "Status of the Client.",
+													"enum": [
+														"ACTIVE",
+														"INACTIVE"
+													]
+												}
+											}
+										},
+										"errors": {
+											"type": "array",
+											"description": "Aray of error code and message indicating the error that has occured",
+											"items": {
+												"type": "object",
+												"properties": {
+													"errorCode": {
+														"type": "string",
+														"description": "Unique code of the error indicating the error that has occured"
+													},
+													"message": {
+														"type": "string",
+														"description": "Message indicating the error that has occured"
+													}
+												}
+											}
+										}
+									},
+									"x-examples": {
+										"Example 1": {
+											"id": "string",
+											"version": "1.0",
+											"responseTime": "2024-11-05T10:36:13.780Z",
+											"metadata": {},
+											"response": {
+												"clientId": "aaa-bb-cc",
+												"status": "ACTIVE"
+											},
+											"errors": []
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"parameters": [
+					{
+						"name": "Cookie",
+						"in": "header",
+						"description": "Authorization={jwt_token}",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"servers": [
+					{
+						"url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+						"description": "Partner Management Service"
+					}
+				]
+			}
+		},
+		"/client/{client_id}": {
+			"get": {
+				"tags": [
+					"client-management-controller"
+				],
+				"summary": "NEW: Get details of an existing OAuth or OpenID Connect (OIDC) client",
+				"description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to get details of an existing OAuth or OpenID Connect (OIDC) client for a given Auth Partner.\n\n It is an upgrade of the earlier GET /oauth/client/{client_id} endpoint.",
+				"operationId": "get-client-details",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string",
+											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.client.details.get`"
+										},
+										"version": {
+											"type": "string",
+											"description": "Version of this endpoint. \r\n`1.0`"
+										},
+										"responseTime": {
+											"type": "string",
+											"description": "Date time in ISO format, when response is being sent."
+										},
+										"metadata": {
+											"type": "object",
+											"description": "Optional metadata about the response"
+										},
+										"response": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string",
+													"description": "Unique identifier of the client."
+												},
+												"name": {
+													"type": "string",
+													"description": "Name of OAuth/OIDC client."
+												},
+												"policyId": {
+													"type": "string",
+													"description": "Unique identifier of the Policy"
+												},
+												"policyName": {
+													"type": "string",
+													"description": "Name of the policy"
+												},
+												"relyingPartyId": {
+													"type": "string",
+													"description": "Unique identifier for the Auth partner"
+												},
+												"logoUri": {
+													"type": "string",
+													"description": "Relying party logo URI which will used to display logo in the login and consent pages."
+												},
+												"redirectUris": {
+													"type": "array",
+													"description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
+													"items": {
+														"type": "string"
+													}
+												},
+												"publicKey": {
+													"type": "object",
+													"description": "OAuth/OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OAuth/OIDC client. Format: JSON Web Key (JWK).",
+													"additionalProperties": {
+														"type": "string"
+													}
+												},
+												"claims": {
+													"type": "array",
+													"description": "Allowed user info claims, that can be requested by OIDC client in the authorize API",
+													"items": {
+														"type": "string"
+													}
+												},
+												"acrValues": {
+													"type": "array",
+													"description": "The Authentication Context Class Reference is case-sensitive string specifying a list of Authentication Context Class values that identifies the Authentication Context Class. Values that the authentication performed satisfied implying a Level Of Assurance.",
+													"items": {
+														"type": "string"
+													}
+												},
+												"status": {
+													"type": "string",
+													"description": "Status of the Client.",
+													"enum": [
+														"ACTIVE",
+														"INACTIVE"
+													]
+												},
+												"grantTypes": {
+													"type": "array",
+													"description": "Form of Authorization Grant presented to token endpoint",
+													"items": {
+														"type": "string"
+													}
+												},
+												"clientAuthMethods": {
+													"type": "array",
+													"description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
+													"items": {
+														"type": "string"
+													}
+												},
+												"clientNameLangMap": {
+													"type": "object",
+													"description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
+													"additionalProperties": {
+														"type": "string"
+													}
+												},
+												"additionalConfig": {
+													"type": "object",
+													"description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
+													"properties": {
+														"userinfo_response_type": {
+															"type": "string",
+															"enum": [
+																"JWS",
+																"JWE"
+															],
+															"description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
+														},
+														"purpose": {
+															"type": "object",
+															"description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
+															"properties": {
+																"type": {
+																	"type": "string",
+																	"enum": [
+																		"none",
+																		"verify",
+																		"link",
+																		"login"
+																	]
+																},
+																"title": {
+																	"type": "object",
+																	"description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
+																},
+																"subTitle": {
+																	"type": "object",
+																	"description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
+																}
+															},
+															"required": [
+																"type"
+															]
+														},
+														"signup_banner_required": {
+															"type": "boolean",
+															"description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
+														},
+														"forgot_pwd_link_required": {
+															"type": "boolean",
+															"description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
+														},
+														"consent_expire_in_mins": {
+															"type": "number",
+															"description": "The number of minutes after which a user's given consent will expire."
+														}
+													}
+												}
+											}
+										},
+										"errors": {
+											"type": "array",
+											"description": "Aray of error code and message indicating the error that has occured",
+											"items": {
+												"type": "object",
+												"properties": {
+													"errorCode": {
+														"type": "string",
+														"description": "Unique code of the error indicating the error that has occured"
+													},
+													"message": {
+														"type": "string",
+														"description": "Message indicating the error that has occured"
+													}
+												}
+											}
+										}
+									},
+									"x-examples": {
+										"Example 1": {
+											"id": "string",
+											"version": "1.0",
+											"responseTime": "2024-11-05T10:36:13.780Z",
+											"metadata": {},
+											"response": {
+												"id": "WMX5pO6dYdCFR3iaVWGclVPNxTNSADDv",
+												"name": "Fastlane e-Sim Service",
+												"policyId": "12345",
+												"policyName": "policy1",
+												"relyingPartyId": "Fastlane",
+												"logoUri": "https://fastlane.com/fastlane-esim.png",
+												"redirectUris": [
+													"https://fastlane.com/homepage",
+													"io.mosip.residentapp://oauth"
+												],
+												"publicKey": {
+													"kty": "RSA",
+													"e": "AQAB",
+													"use": "sig",
+													"alg": "RS256",
+													"n": "g7KPXZdZ18H2JoW9FhYz8WrSbLeKA5mO8ROW5YQVyzYDfjbRA9sy0FwpF7pa7mBmU1_G0RvD0xbEhSaFtCL5hyNVVZCfgVqNl41C7-F2yUWhfVQPhT5YnT3eH3gV9ZczhP1trNjIzGuH-8D7EDJcoxuwdGaaY-wTmEtHykHRyab08qr62hfwLuSjHAGN6VgV-Na81XIdXmR7Dwnd1U4MxWJxzRvnVlHFCBaZIG6jNJ21vbzM-DBMq1d8tvtrGQx4w3niK_sctUZ5NP1BLkQhYSEGLr-e_mbmHFCnGtuKfnfIm-PVD-6ihfEwX3j_YQT3LhphBZj7AdXg6iyyQn9EJQ"
+												},
+												"claims": [
+													"name",
+													"email",
+													"phone_number",
+													"address"
+												],
+												"acrValues": [
+													"mosip:idp:acr:generated-code",
+													"mosip:idp:acr:biometrics",
+													"mosip:idp:acr:linked-wallet"
+												],
+												"status": "ACTIVE",
+												"grantTypes": [
+													"authorization_code"
+												],
+												"clientAuthMethods": [
+													"private_key_jwt"
+												],
+												"clientNameLangMap": {
+													"fra": "Service e-Sim de Fastlane",
+													"ara": "خدمة فاست لين e-SIM"
+												},
+												"additionalConfig": {
+													"userinfo_response_type": "JWS",
+													"purpose": {
+														"title": {
+															"@none": "Title"
+														},
+														"type": "verify",
+														"subTitle": {
+															"@none": "subTitle"
+														}
+													},
+													"signup_banner_required": true,
+													"forgot_pwd_link_required": true,
+													"consent_expire_in_mins": 30
+												}
+											},
+											"errors": []
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"parameters": [
+					{
+						"name": "Cookie",
+						"in": "header",
+						"description": "Authorization={jwt_token}",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "client_id",
+						"in": "path",
+						"description": "Unique identifier for the client",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"servers": [
+					{
+						"url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+						"description": "Partner Management Service"
+					}
+				]
+			},
+			"put": {
+				"tags": [
+					"client-management-controller"
+				],
+				"summary": "NEW: Update existing OAuth/OpenID Connect (OIDC) client",
+				"description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to update existing OAuth/OpenID Connect (OIDC) client for a given Auth Partner.\n\nIt is an upgrade of the earlier PUT /oauth/client/{client_id} endpoint.",
+				"operationId": "update-client",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string",
+										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.client.put`"
+									},
+									"version": {
+										"type": "string",
+										"description": "Version of this endpoint. \r\n`1.0`"
+									},
+									"requestTime": {
+										"type": "string",
+										"description": "Date time in ISO format, when request is being sent."
+									},
+									"metadata": {
+										"type": "object",
+										"description": "Optional metadata about the request"
+									},
+									"request": {
+										"type": "object",
+										"properties": {
+											"logoUri": {
+												"type": "string",
+												"description": "Relying party logo URI which will used to display logo in the login and consent pages."
+											},
+											"redirectUris": {
+												"type": "array",
+												"description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
+												"items": {
+													"type": "string"
+												}
+											},
+											"status": {
+												"type": "string",
+												"description": "Status of the Client.",
+												"enum": [
+													"ACTIVE",
+													"INACTIVE"
+												]
+											},
+											"grantTypes": {
+												"type": "array",
+												"description": "Form of Authorization Grant presented to token endpoint",
+												"items": {
+													"type": "string"
+												}
+											},
+											"clientName": {
+												"type": "string",
+												"description": "Name of OAuth/OIDC client."
+											},
+											"clientAuthMethods": {
+												"type": "array",
+												"description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
+												"items": {
+													"type": "string"
+												}
+											},
+											"clientNameLangMap": {
+												"type": "object",
+												"description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
+												"additionalProperties": {
+													"type": "string"
+												}
+											},
+											"additionalConfig": {
+												"type": "object",
+												"description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
+												"properties": {
+													"userinfo_response_type": {
+														"type": "string",
+														"enum": [
+															"JWS",
+															"JWE"
+														],
+														"description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
+													},
+													"purpose": {
+														"type": "object",
+														"description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
+														"properties": {
+															"type": {
+																"type": "string",
+																"enum": [
+																	"none",
+																	"verify",
+																	"link",
+																	"login"
+																]
+															},
+															"title": {
+																"type": "object",
+																"description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
+															},
+															"subTitle": {
+																"type": "object",
+																"description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
+															}
+														},
+														"required": [
+															"type"
+														]
+													},
+													"signup_banner_required": {
+														"type": "boolean",
+														"description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
+													},
+													"forgot_pwd_link_required": {
+														"type": "boolean",
+														"description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
+													},
+													"consent_expire_in_mins": {
+														"type": "number",
+														"description": "The number of minutes after which a user's given consent will expire."
+													}
+												}
+											}
+										},
+										"required": [
+											"logoUri",
+											"redirectUris",
+											"status",
+											"grantTypes",
+											"clientName",
+											"clientAuthMethods",
+											"clientNameLangMap"
+										]
+									}
+								},
+								"required": [
+									"id",
+									"version",
+									"requestTime",
+									"request"
+								]
+							},
+							"examples": {
+								"Example 1": {
+									"value": {
+										"id": "string",
+										"version": "1.0",
+										"requestTime": "2024-11-05T10:36:13.780Z",
+										"metadata": {},
+										"request": {
+											"logoUri": "https://partner1.com/partner1-logo.png",
+											"redirectUris": [
+												"https://partner1.com/homepage"
+											],
+											"status": "ACTIVE",
+											"grantTypes": [
+												"authorization_code"
+											],
+											"clientName": "updated name",
+											"clientAuthMethods": [
+												"private_key_jwt"
+											],
+											"clientNameLangMap": {
+												"fra": "Service e-Sim de Fastlane",
+												"ara": "خدمة فاست لين e-SIM"
+											},
+											"additionalConfig": {
+												"userinfo_response_type": "JWS",
+												"purpose": {
+													"title": {
+														"@none": "Title"
+													},
+													"type": "verify",
+													"subTitle": {
+														"@none": "subTitle"
+													}
+												},
+												"signup_banner_required": true,
+												"forgot_pwd_link_required": true,
+												"consent_expire_in_mins": 30
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string",
+											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.client.put`"
+										},
+										"version": {
+											"type": "string",
+											"description": "Version of this endpoint. \r\n`1.0`"
+										},
+										"responseTime": {
+											"type": "string",
+											"description": "Date time in ISO format, when response is being sent."
+										},
+										"metadata": {
+											"type": "object",
+											"description": "Optional metadata about the response"
+										},
+										"response": {
+											"type": "object",
+											"properties": {
+												"clientId": {
+													"type": "string",
+													"description": "Unique identifier of the client."
+												},
+												"status": {
+													"type": "string",
+													"description": "Status of the Client.",
+													"enum": [
+														"ACTIVE",
+														"INACTIVE"
+													]
+												}
+											}
+										},
+										"errors": {
+											"type": "array",
+											"description": "Aray of error code and message indicating the error that has occured",
+											"items": {
+												"type": "object",
+												"properties": {
+													"errorCode": {
+														"type": "string",
+														"description": "Unique code of the error indicating the error that has occured"
+													},
+													"message": {
+														"type": "string",
+														"description": "Message indicating the error that has occured"
+													}
+												}
+											}
+										}
+									},
+									"x-examples": {
+										"Example 1": {
+											"id": "string",
+											"version": "1.0",
+											"responseTime": "2024-11-05T10:36:13.780Z",
+											"metadata": {},
+											"response": {
+												"clientId": "aaa-bb-cc",
+												"status": "ACTIVE"
+											},
+											"errors": []
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"parameters": [
+					{
+						"name": "Cookie",
+						"in": "header",
+						"description": "Authorization={jwt_token}",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "client_id",
+						"in": "path",
+						"description": "Unique identifier for the client",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"servers": [
+					{
+						"url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+						"description": "Partner Management Service"
+					}
+				]
+			},
+            "patch": {
+                "tags": [
+                    "client-management-controller"
+                ],
+                "summary": "NEW: Deactivate OAuth/OpenID Connect (OIDC) client",
+                "description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to deactivate OAuth/OpenID Connect (OIDC) client for a given Auth Partner.\n\nIt is an upgrade of the earlier PUT /oauth/client/{client_id} endpoint.",
+                "operationId": "deactivate-client",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.client.patch`"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "description": "Version of this endpoint. \r\n`1.0`"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "description": "Date time in ISO format, when request is being sent."
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "description": "Optional metadata about the request"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {
+                                                "type": "string",
+                                                "description": "Set client status. ",
+                                                "enum": [
+                                                    "INACTIVE"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "status"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ]
+                            },
+                            "examples": {
+                                "Example 1": {
+                                    "value": {
+                                        "id": "mosip.pms.deactivate.client.patch",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "status": "INACTIVE"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.client.patch`"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of this endpoint. \r\n`1.0`"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "Date time in ISO format, when response is being sent."
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "properties": {
+                                                "clientId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier of the client."
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "description": "Status of the Client.",
+                                                    "enum": [
+                                                        "INACTIVE"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Message indicating the error that has occured"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "x-examples": {
+                                        "Example 1": {
+                                            "id": "mosip.pms.deactivate.client.patch",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "clientId": "aaa-bb-cc",
+                                                "status": "INACTIVE"
+                                            },
+                                            "errors": []
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "description": "Unique identifier for the client",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            }
+		},
+		"/logout/user": {
             "get": {
                 "tags": [
                     "login-controller"
@@ -4937,6 +6030,19 @@
                             "enum": [
                                 "uploaded",
                                 "not_uploaded"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Optional request parameter. Activation status of partner. Use to filter by active|deactivated|inactive.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "deactivated",
+                                "inactive"
                             ]
                         }
                     },
@@ -5799,10 +6905,12 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1, 
+                            "maximum": 30
                         },
                         "in": "query",
-                        "description": "Optional request parameter. This can be used to filter the response by the given expiryPeriod. Allowed values are between 1-30",
+                        "description": "Optional request parameter. Filter by expiry period in days (1–30).",
                         "name": "expiryPeriod"
                     }
                 ],
@@ -6632,11 +7740,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given expiryPeriod. Value expected in days."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -6949,7 +8059,7 @@
                     {
                         "name": "notificationType",
                         "in": "query",
-                        "description": "Optional request parameter. Based on this the type of notifications will be sent in the response. Allowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey`. ",
+                        "description": "Optional request parameter. Filter notifications by type. Allowed values: `root`, `intermediate`, `partner`, `weekly`, `sbi`, `ftm-chip`, `apikey`, `misp`.",
                         "schema": {
                             "type": "string"
                         }
@@ -7032,7 +8142,7 @@
                         },
                         "in": "query",
                         "name": "policyName",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `policyName`. To use this filter set `notificationType` as `apikey`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `policyName`. To use this filter set `notificationType` as `apikey` or `misp`."
                     },
                     {
                         "schema": {
@@ -7073,6 +8183,22 @@
                         "in": "query",
                         "name": "sbiVersion",
                         "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `sbiId`. To use this filter set `notificationType` as `sbi`."
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "mispLicenseKeyName",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `mispLicenseKeyName`. To use this filter set `notificationType` as `misp`."
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "mispPartnerId",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `mispPartnerId`. To use this filter set `notificationType` as `misp`."
                     }
                 ],
                 "responses": {
@@ -7110,7 +8236,7 @@
                                                 "pageNo",
                                                 "pageSize",
                                                 "totalResults",
-                                                "notifications"
+                                                "data"
                                             ],
                                             "properties": {
                                                 "pageNo": {
@@ -7155,7 +8281,8 @@
                                                                     "WEEKLY_SUMMARY",
                                                                     "SBI_EXPIRY",
                                                                     "API_KEY_EXPIRY",
-                                                                    "FTM_CHIP_CERT_EXPIRY"
+                                                                    "FTM_CHIP_CERT_EXPIRY",
+                                                                    "MISP_LICENSE_KEY_EXPIRY"
                                                                 ],
                                                                 "description": "Type of the notification"
                                                             },
@@ -7343,6 +8470,39 @@
                                                                                 }
                                                                             }
                                                                         }
+                                                                    },
+                                                                    "mispLicenseKeyDetails": {
+                                                                        "type": "array",
+                                                                        "description": "This will be null in case of Root, Intermediate, Partner, FTM chip certificate, SBI and API Key expiry notification.",
+                                                                        "items": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "mispLicenseKeyName": {
+                                                                                    "type": "string",
+                                                                                    "description": "Unique name of the MISP License Key."
+                                                                                },
+                                                                                "mispPartnerId": {
+                                                                                    "type": "string",
+                                                                                    "description": "Unique identifier of the partner to which the expiring MISP License Key belongs to."
+                                                                                },
+                                                                                "expiryDateTime": {
+                                                                                    "type": "string",
+                                                                                    "description": "Expiry date in ISO format"
+                                                                                },
+                                                                                "expiryPeriod": {
+                                                                                    "type": "string",
+                                                                                    "description": "Expiry period in days. Number of days in which the MISP License key is expiring. "
+                                                                                },
+                                                                                "policyGroup": {
+                                                                                    "type": "string",
+                                                                                    "description": "Name of the Policy Group associated with the MISP License Key"
+                                                                                },
+                                                                                "policyName": {
+                                                                                    "type": "string",
+                                                                                    "description": "Name of the Policy associated with the MISP License Key."
+                                                                                }
+                                                                            }
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -7384,7 +8544,7 @@
                 "x-stoplight": {
                     "id": "86rs9kczv4mw3"
                 },
-                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional paramter, `notificationType`. \r\nAllowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey`. \r\nIf the `notificationType` is `root`, `intermediate` or `weekly` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n",
+                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional parameter, `notificationType`. \r\nAllowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey` and `misp`. \r\nIf the `notificationType` is `root`, `intermediate`, `weekly` or `misp` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n",
                 "tags": [
                     "notifications-controller"
                 ]
