@@ -882,8 +882,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In updateAPIKeyExpiry method of PartnerManagementServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.AP_KEY_EXPIRY_DATE_UPDATE_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.AP_KEY_EXPIRY_DATE_UPDATE_ERROR.getErrorMessage();
+			String errorCode = ErrorCode.API_KEY_EXPIRY_DATE_UPDATE_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.API_KEY_EXPIRY_DATE_UPDATE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(patchUpdateApiKeyExpiry);
