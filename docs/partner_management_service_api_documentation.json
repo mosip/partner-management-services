@@ -124,11 +124,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values 1-30."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -1423,11 +1425,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given expiryPeriod. Value expected in days."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -1881,11 +1885,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values are between 1-30."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
@@ -5417,9 +5423,9 @@
                                         "properties": {
                                             "status": {
                                                 "type": "string",
-                                                "description": "Status of the Client.",
+                                                "description": "Set client status. ",
                                                 "enum": [
-                                                    "De-Activate"
+                                                    "INACTIVE"
                                                 ]
                                             }
                                         },
@@ -5443,7 +5449,7 @@
                                         "requestTime": "2024-11-05T10:36:13.780Z",
                                         "metadata": {},
                                         "request": {
-                                            "status": "De-Activate"
+                                            "status": "INACTIVE"
                                         }
                                     }
                                 }
@@ -7734,11 +7740,13 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         },
                         "in": "query",
                         "name": "expiryPeriod",
-                        "description": "Optional request parameter. Can be used to filter the response by the given expiryPeriod. Value expected in days."
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30."
                     }
                 ],
                 "responses": {
