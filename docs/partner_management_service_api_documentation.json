@@ -1465,8 +1465,8 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get list of all the Partner Id's associated with logged in User and filtered by Query Parameters",
-                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThe query parameter `status` is mandatory. The endpoint will return all \r\nPartner Id's with corresponding status value and which are mapped \r\nto the logged in user. If there are no Partner Id's with corresponding status \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\nA Partner is auto approved by the PMS system, after the partner uploads\r\na valid CA signed certificate for the organisation.\r\n\r\n\r\nThe query parameter `policyGroupAvailable` is optional. If it is true, then this endpoint will return all \r\nPartner Id's which have a Policy Group associated with them and which are mapped \r\nto the logged in user. If there are no Partner Id's which have a Policy Group associated with them \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nThe query parameter `partnerType` is optional. If it is any of allowed partner types, then this endpoint will return all \r\nPartner Id's which have same partner type and which are mapped \r\nto the logged in user. If there are no Partner Id's which have same partner type\r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nAll these 3 query parameters will work together.If the partner type is provided as `MISP_Partner`, e.g., `/partners/v4?status=approved&partnerType=MISP_Partner`:\r\n- If the logged-in user is Admin, all MISP_Partner records are returned.\r\n- If the logged-in user is not Admin, only MISP_Partner records mapped to the logged-in user are returned.\r\n\r\nExample 1: `/partners/v4?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nthis will return list of all Device Provider ids which are in approved status and are associated \r\nwith logged in user and but the policy group attributes in the response will be null in this case.\r\n\r\nExample 2: `/partners/v4?status=approved&partnerType=Device_Provider&policyGroupAvailable=true`\r\nthis will return an empty list since policy group is not available for Device Providers\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,\r\nSDK_PARTNER,CREDENTIAL_PARTNER,PARTNER_ADMIN,ONLINE_VERIFICATION_PARTNER\r\n",
-                "operationId": "partner-ids-v4",
+                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThe query parameter `status` is mandatory. The endpoint will return all \r\nPartner Id's with corresponding status value and which are mapped \r\nto the logged in user. If there are no Partner Id's with corresponding status \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\nA Partner is auto approved by the PMS system, after the partner uploads\r\na valid CA signed certificate for the organisation.\r\n\r\n\r\nThe query parameter `policyGroupAvailable` is optional. If it is true, then this endpoint will return all \r\nPartner Id's which have a Policy Group associated with them and which are mapped \r\nto the logged in user. If there are no Partner Id's which have a Policy Group associated with them \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nThe query parameter `partnerType` is optional. If it is any of allowed partner types, then this endpoint will return all \r\nPartner Id's which have same partner type and which are mapped \r\nto the logged in user. If there are no Partner Id's which have same partner type\r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nAll these 3 query parameters will work together.If the partner type is provided as `MISP_Partner`, e.g., `/partners/v3?status=approved&partnerType=MISP_Partner`:\r\n- If the logged-in user is Admin, all MISP_Partner records are returned.\r\n- If the logged-in user is not Admin, only MISP_Partner records mapped to the logged-in user are returned.\r\n\r\nExample 1: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nthis will return list of all Device Provider ids which are in approved status and are associated \r\nwith logged in user and but the policy group attributes in the response will be null in this case.\r\n\r\nExample 2: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=true`\r\nthis will return an empty list since policy group is not available for Device Providers\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,\r\nSDK_PARTNER,CREDENTIAL_PARTNER,PARTNER_ADMIN,ONLINE_VERIFICATION_PARTNER\r\n",
+                "operationId": "partner-ids-v3",
                 "parameters": [
                     {
                         "name": "Cookie",
@@ -2831,9 +2831,11 @@
                     {
                         "name": "expiryPeriod",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `expiryPeriod`. Allowed values 1-30.",
+                        "description": "Optional request parameter. Filter by expiry period (days). Allowed values 1–30.",
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
                         }
                     }
                 ],
@@ -4362,8 +4364,8 @@
                                                         "policyGroupDescription": "Security Policies",
                                                         "policyName": "Data Protection Policy",
                                                         "policyDescription": "Data Protection Policy",
-                                                        "oidcClientId": "oidcClient456",
-                                                        "oidcClientName": "MyOIDCClient",
+                                                        "clientId": "oidcClient456",
+                                                        "clientName": "MyOIDCClient",
                                                         "status": "active",
                                                         "createdDateTime": "2024-08-08T10:00:00Z"
                                                     }
@@ -4518,7 +4520,7 @@
 											},
 											"publicKey": {
 												"type": "object",
-												"description": "OAuth/OIDC client's public key used to verify the client's private_key_jwt when token endpoint is invoked. This field will not be allowed to udpate later, if the private key is compromised, then new OAuth/OIDC client to be created. \nFormat : Json Web Key (JWK).",
+												"description": "OAuth/OIDC client's public key used to verify the client's private_key_jwt when token endpoint is invoked. This field will not be allowed to update later, if the private key is compromised, then new OAuth/OIDC client to be created. \nFormat : Json Web Key (JWK).",
 												"additionalProperties": {
 													"type": "object"
 												}
@@ -4607,7 +4609,7 @@
 													},
 													"consent_expire_in_mins": {
 														"type": "number",
-														"description": "The number of minuets after which a user's given consent will expire."
+														"description": "The number of minutes after which a user's given consent will expire."
 													}
 												}
 											}
@@ -4670,7 +4672,7 @@
 													"title": {
 														"@none": "Title"
 													},
-													"type": "Verify",
+													"type": "verify",
 													"subTitle": {
 														"@none": "subTitle"
 													}
@@ -4855,7 +4857,7 @@
 												},
 												"publicKey": {
 													"type": "object",
-													"description": "OAuth/OIDC client's public key used to verify the client's private_key_jwt when token endpoint is invoked. This field will not be allowed to udpate later, if the private key is compromised, then new OAuth/OIDC client to be created. \nFormat : Json Web Key (JWK).",
+													"description": "OAuth/OIDC client's public key used to verify the client's private_key_jwt when token endpoint is invoked. This field will not be allowed to update later, if the private key is compromised, then new OAuth/OIDC client to be created. \nFormat : Json Web Key (JWK).",
 													"additionalProperties": {
 														"type": "object"
 													}
@@ -4951,7 +4953,7 @@
 														},
 														"consent_expire_in_mins": {
 															"type": "number",
-															"description": "The number of minuets after which a user's given consent will expire."
+															"description": "The number of minutes after which a user's given consent will expire."
 														}
 													}
 												}
@@ -5202,7 +5204,7 @@
 													},
 													"consent_expire_in_mins": {
 														"type": "number",
-														"description": "The number of minuets after which a user's given consent will expire."
+														"description": "The number of minutes after which a user's given consent will expire."
 													}
 												}
 											}
@@ -5255,7 +5257,7 @@
 													"title": {
 														"@none": "Title"
 													},
-													"type": "Verify",
+													"type": "verify",
 													"subTitle": {
 														"@none": "subTitle"
 													}
@@ -5851,7 +5853,7 @@
                     {
                         "name": "status",
                         "in": "query",
-                        "description": "Optional request parameter. Approval status of partner. Can be used to filter the response by the given status.",
+                        "description": "Optional request parameter. Activation status of partner. Use to filter by active|deactivated|inactive.",
                         "schema": {
                             "type": "string",
                             "enum": [
@@ -6720,10 +6722,12 @@
                     },
                     {
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1, 
+                            "maximum": 30
                         },
                         "in": "query",
-                        "description": "Optional request parameter. This can be used to filter the response by the given expiryPeriod. Allowed values are between 1-30",
+                        "description": "Optional request parameter. Filter by expiry period in days (1–30).",
                         "name": "expiryPeriod"
                     }
                 ],
@@ -7870,7 +7874,7 @@
                     {
                         "name": "notificationType",
                         "in": "query",
-                        "description": "Optional request parameter. Based on this the type of notifications will be sent in the response. Allowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey`. ",
+                        "description": "Optional request parameter. Filter notifications by type. Allowed values: `root`, `intermediate`, `partner`, `weekly`, `sbi`, `ftm-chip`, `apikey`, `misp`.",
                         "schema": {
                             "type": "string"
                         }
@@ -8047,7 +8051,7 @@
                                                 "pageNo",
                                                 "pageSize",
                                                 "totalResults",
-                                                "notifications"
+                                                "data"
                                             ],
                                             "properties": {
                                                 "pageNo": {
