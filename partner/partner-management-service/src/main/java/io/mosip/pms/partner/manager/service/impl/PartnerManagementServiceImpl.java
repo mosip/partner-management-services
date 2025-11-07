@@ -5,6 +5,8 @@ import java.security.cert.X509Certificate;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -853,15 +855,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 						ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 			}
-			// Validate that the new expiry date is in the future
-			if (request.getApiKeyExpiryDateTime().isBefore(LocalDateTime.now())) {
+			// Validate that the new expiry date is in the future (compare in UTC to honor timezone offsets)
+			if (request.getApiKeyExpiryDateTime().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
 				LOGGER.error("Expiry date cannot be in the past, for partner: " + partnerId);
 				throw new PartnerManagerServiceException(ErrorCode.API_KEY_EXPIRY_DATE_CANNOT_BE_IN_PAST.getErrorCode(),
 						ErrorCode.API_KEY_EXPIRY_DATE_CANNOT_BE_IN_PAST.getErrorMessage());
 			}
 			partnerPolicy.setUpdBy(getUser());
 			partnerPolicy.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			partnerPolicy.setValidToDatetime(Timestamp.valueOf(request.getApiKeyExpiryDateTime()));
+			// Convert OffsetDateTime to Timestamp preserving UTC offset
+			partnerPolicy.setValidToDatetime(Timestamp.from(request.getApiKeyExpiryDateTime().toInstant()));
 			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_UPDATED);
 			partnerPolicyRepository.save(partnerPolicy);
 			sendNotifications(EventType.APIKEY_STATUS_UPDATED, partnerPolicy.getPartner(), partnerPolicy);
