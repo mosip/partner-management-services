@@ -858,6 +858,195 @@
                 }
             }
         },
+        "/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date": {
+            "patch": {
+                "tags": [
+                    "partner-management-controller"
+                ],
+                "summary": "NEW: Service to update expiry date of API key",
+                "description": "Available since release-1.3.0-beta.4. This endpoint allows updating the expiry date of an active API key. It is configured for the role PARTNER_ADMIN only.",
+                "operationId": "updateAPIKeyExpiry",
+                "parameters": [
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "type": "string"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "description": "Current date time in ISO format, when request is being sent.",
+                                        "format": "date-time"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "description": "Optional metadata about the request"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "apiKeyName": {
+                                                "type": "string",
+                                                "description": "Name/label of the API key",
+                                                "example": "Sample API Key"
+                                            },
+                                            "apiKeyExpiryDateTime": {
+                                                "type": "string",
+                                                "description": "Expiry date and time for the API key",
+                                                "format": "date-time",
+                                                "example": "2024-12-31T23:59:59.000Z"
+                                            }
+                                        },
+                                        "required": [
+                                            "apiKeyName",
+                                            "apiKeyExpiryDateTime"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ]
+                            },
+                            "examples": {
+                                "Example 1": {
+                                    "value": {
+                                        "id": "string",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "apiKeyName": "Sample API Key",
+                                            "apiKeyExpiryDateTime": "2024-12-31T23:59:59.000Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "The date time of the response in ISO format",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "properties": {
+                                                "partnerId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier for the partner",
+                                                    "example": "partner123"
+                                                },
+                                                "policyId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier for the policy",
+                                                    "example": "policy456"
+                                                },
+                                                "apiKeyName": {
+                                                    "type": "string",
+                                                    "description": "Label of the API key",
+                                                    "example": "Sample API Key"
+                                                },
+                                                "apiKeyExpiryDateTime": {
+                                                    "type": "string",
+                                                    "description": "Updated expiry date and time for the API key",
+                                                    "format": "date-time",
+                                                    "example": "2024-12-31T23:59:59.000Z"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ErrorResponse"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "response"
+                                    ]
+                                },
+                                "x-examples": {
+                                    "Example 1": {
+                                        "id": "string",
+                                        "version": "1.0",
+                                        "responseTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "response": {
+                                            "partnerId": "partner123",
+                                            "policyId": "policy456",
+                                            "apiKeyName": "Sample API Key",
+                                            "apiKeyExpiryDateTime": "2024-12-31T23:59:59.000Z"
+                                        },
+                                        "errors": []
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "k8m2n9p4q5r6s"
+                }
+            }
+        },
         "/partners/{partnerId}/certificate-data": {
             "get": {
                 "tags": [
