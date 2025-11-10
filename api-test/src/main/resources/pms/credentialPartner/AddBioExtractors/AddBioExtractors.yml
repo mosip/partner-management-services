@@ -50,23 +50,23 @@ AddBioExtractors:
   ]
 }'
 
-#   Pms_AddBioExtractors_invalid_partnerId:
-#      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
-#      uniqueIdentifier: TC_PMS_addBioExtractors_04
-#      description: Add BioExtractors for invalid PartnerID
-#      role: partner
-#      restMethod: post
-#      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
-#      outputTemplate: pms/error
-#      input: '{
-#  "partnerId":"abcd",
-#  "policyId":"MDSP",
-#  "requesttime": "$TIMESTAMP$"
-#  }'
-#      output: '{
-#   "errors": [
-#    {
-#      "errorCode": "PMS_PRT_061"
-#    }
-#  ]
-#}'    
+   Pms_AddBioExtractors_invalid_partnerId:
+      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      uniqueIdentifier: TC_PMS_addBioExtractors_04
+      description: Add BioExtractors for invalid PartnerID
+      role: partner
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+  "partnerId":"abcd",
+  "policyId":"MDSP",
+  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_061"
+    }
+  ]
+}'    
