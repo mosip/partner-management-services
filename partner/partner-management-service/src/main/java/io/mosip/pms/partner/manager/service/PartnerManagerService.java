@@ -9,9 +9,11 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
+import io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
+import io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -88,7 +90,7 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public String updateAPIKeyStatus(String partnerId, String policyId, APIkeyStatusUpdateRequestDto request);
-	
+
 	/**
 	 * 
 	 * @param partnerType
@@ -111,4 +113,6 @@ public interface PartnerManagerService {
 	public ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(String certificateId);
 
     ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, @NotNull @Valid LinkPolicyGroupRequestDto request);
+
+	ResponseWrapperV2<APIKeyExpiryUpdateResponseDto> updateAPIKeyExpiry(String partnerId, String policyId, @NotNull @Valid APIKeyExpiryUpdateRequestDto request);
 }

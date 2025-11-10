@@ -135,6 +135,8 @@ public class AuthorizedRolesDto {
 	
 	private List<String> patchpartnerspolicyapikeystatus;
 
+	private List<String> patchpartnersapikeyexpiry;
+
 	private List<String> getadminpartners;
 
 	private List<String> postlinkpolicygrouptopartner;
