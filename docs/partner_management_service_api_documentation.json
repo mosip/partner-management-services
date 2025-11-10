@@ -4293,401 +4293,14 @@
                 }
             }
         },
-        "/oauth/client": {
-            "post": {
-                "tags": [
-                    "client-management-controller"
-                ],
-                "summary": "EXISTING: Create a new OAuth Client",
-                "operationId": "createOAUTHClient",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RequestWrapperClientDetailCreateRequestV2"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ResponseWrapperClientDetailResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
-				"deprecated": true,
-                "x-stoplight": {
-                    "id": "9xoogg0jwkwpd"
-                }
-            },
-            "get": {
-                "summary": "NEW: Endpoint to get the list of all the OAuth clients created by the Auth Partners",
-                "tags": [
-                    "client-management-controller"
-                ],
-                "operationId": "get-all-oauth-clients",
-                "description": "This endpoint is for both the regular Auth Partner user and Partner Admin user.\r\n\r\nOAuth client can be used by the partner, to faciltate use of Esignet system of Mosip.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters. \r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, \r\nthen it will fetch all the OAuth Clients created by all the Auth Partners, associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, \r\nthen it will fetch all the OAuth Clients created by all the Auth Partners across all users.\r\n\r\nAn Auth Partner is auto approved by the PMS system, after the partner uploads a valid CA signed certificate for the organisation.\r\n\r\nA Policy is approved by Partner Admin. Once a Policy is approved multiple OAuth clients can be created on it. By default, this OAuth client is in Active status.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nIf there are no OAuth cliens available, then it will return an empty array as the response along with the id, version, responsetime and metadata (optional) attributes.\r\n\r\nThis endpoint should be configured for the Roles: AUTH_PARTNER,PARTNER_ADMIN",
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sortFieldName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to sort the response by the sortFieldName. Both sorting and pagination request parameters should be given together.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sortType",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to sort the response with this sort order. Default is asc order.",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "pageNo",
-                        "in": "query",
-                        "description": "Page Number for the pagination. Starts with 0.",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page Size for the pagination. Both pageNo and pageSize should be given in the request together. ",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "partnerId",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given partnerId.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "orgName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given orgName.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyGroupName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given policyGroupName.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given policyName.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "clientName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given clientName.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given status of OAuth client. Allowed values as ACTIVE or INACTIVE.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "Unique id required to access this endpoint `mosip.pms.oauth.partners.clients.get`"
-                                        },
-                                        "version": {
-                                            "type": "string",
-                                            "description": "Version of this endpoint. \r\n`1.0`"
-                                        },
-                                        "responseTime": {
-                                            "type": "string",
-                                            "description": "Date in ISO format indicating date time when response was sent",
-                                            "format": "date-time"
-                                        },
-                                        "metadata": {
-                                            "type": "object",
-                                            "description": "Optional metadata about the response"
-                                        },
-                                        "response": {
-                                            "type": "object",
-                                            "properties": {
-                                                "pageNo": {
-                                                    "type": "integer",
-                                                    "description": "Page Number of the data in the response"
-                                                },
-                                                "pageSize": {
-                                                    "type": "integer",
-                                                    "description": "Page Size of the data in the response"
-                                                },
-                                                "totalResults": {
-                                                    "type": "integer",
-                                                    "description": "Total number of records across all the pages in the response"
-                                                },
-                                                "data": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "partnerId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier of the Partner"
-                                                            },
-                                                            "orgName": {
-                                                                "type": "string",
-                                                                "description": "Organisation name of the Partner"
-                                                            },
-                                                            "policyGroupId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier of the Policy Group associated with the Partner"
-                                                            },
-                                                            "policyGroupName": {
-                                                                "type": "string",
-                                                                "description": "Name of the Policy Group associated with the Partner"
-                                                            },
-                                                            "policyGroupDescription": {
-                                                                "type": "string",
-                                                                "description": "Description of the Policy Group associated with the Partner"
-                                                            },
-                                                            "policyName": {
-                                                                "type": "string",
-                                                                "description": "Name of the Policy"
-                                                            },
-                                                            "policyDescription": {
-                                                                "type": "string",
-                                                                "description": "Description of the Policy"
-                                                            },
-                                                            "clientId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier of the Oauth client"
-                                                            },
-                                                            "clientName": {
-                                                                "type": "string",
-                                                                "description": "Oauth client name in JSON format. This JSON will give client name in Multi Language."
-                                                            },
-                                                            "status": {
-                                                                "type": "string",
-                                                                "description": "Status of the Oauth client"
-                                                            },
-                                                            "createdDateTime": {
-                                                                "type": "string",
-                                                                "description": "Created date in ISO format"
-                                                            },
-                                                            "updatedDateTime": {
-                                                                "type": "string",
-                                                                "description": "Updated date in ISO format"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
-                                                "properties": {
-                                                    "errorCode": {
-                                                        "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
-                                                    },
-                                                    "message": {
-                                                        "type": "string",
-                                                        "description": "Message indicating the error that has occured"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "x-examples": {
-                                        "Example 1": {
-                                            "id": "string",
-                                            "version": "string",
-                                            "responseTime": "2024-11-22T13:32:49.185Z",
-                                            "metadata": {},
-                                            "response": {
-                                                "pageNo": 0,
-                                                "pageSize": 0,
-                                                "totalResults": 0,
-                                                "data": [
-                                                    {
-                                                        "partnerId": "partner123",
-                                                        "orgName": "abc",
-                                                        "policyGroupName": "Security Policies",
-                                                        "policyGroupDescription": "Security Policies",
-                                                        "policyName": "Data Protection Policy",
-                                                        "policyDescription": "Data Protection Policy",
-                                                        "clientId": "oidcClient456",
-                                                        "clientName": "MyOIDCClient",
-                                                        "status": "active",
-                                                        "createdDateTime": "2024-08-08T10:00:00Z"
-                                                    }
-                                                ]
-                                            },
-                                            "errors": [
-                                                {
-                                                    "errorCode": "string",
-                                                    "message": "string"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ]
-            }
-        },
-        "/oauth/client/{client_id}": {
-            "get": {
-                "tags": [
-                    "client-management-controller"
-                ],
-                "summary": "EXISTING: Get details of an existing OAuth Client",
-                "operationId": "getOAuthClient",
-                "parameters": [
-                    {
-                        "name": "client_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ResponseWrapperClientDetail"
-                                }
-                            }
-                        }
-                    }
-                },
-				"deprecated": true,
-                "x-stoplight": {
-                    "id": "zjsigpv4196jp"
-                }
-            },
-            "put": {
-                "tags": [
-                    "client-management-controller"
-                ],
-                "summary": "EXISTING: Update an existing OAuth Client",
-                "operationId": "updateOAUTHClient",
-                "parameters": [
-                    {
-                        "name": "client_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RequestWrapperClientDetailUpdateRequestV2"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ResponseWrapperClientDetailResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-				"deprecated": true,
-                "x-stoplight": {
-                    "id": "1o3dwv1kpatco"
-                }
-            }
-        },
-        "/client": {
+        "/oidc-clients": {
 			"post": {
 				"tags": [
 					"client-management-controller"
 				],
-				"summary": "NEW: Create a new OAuth or OpenID Connect (OIDC) client",
-				"description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to create a new OAuth or OpenID Connect (OIDC) client for a given Auth Partner.\n\nIt is an upgrade of the earlier POST /oauth/client endpoint.",
-				"operationId": "create-client",
+				"summary": "NEW: Create new OIDC client",
+				"description": "Creates a new OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new `additionalConfig` field in the request.",
+				"operationId": "create-oidc-clients",
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -4697,7 +4310,7 @@
 								"properties": {
 									"id": {
 										"type": "string",
-										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.client.post`"
+										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.oidc.client.post`"
 									},
 									"version": {
 										"type": "string",
@@ -4716,7 +4329,7 @@
 										"properties": {
 											"name": {
 												"type": "string",
-												"description": "Name of OAuth/OIDC client."
+												"description": "Name of OIDC client."
 											},
 											"policyId": {
 												"type": "string",
@@ -4724,7 +4337,7 @@
 											},
 											"publicKey": {
 												"type": "object",
-												"description": "OAuth/OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OAuth/OIDC client. Format: JSON Web Key (JWK).",
+												"description": "OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OIDC client. Format: JSON Web Key (JWK).",
 												"additionalProperties": {
 													"type": "string"
 												}
@@ -4841,7 +4454,7 @@
 							"examples": {
 								"Example 1": {
 									"value": {
-										"id": "string",
+										"id": "mosip.pms.create.oidc.client.post",
 										"version": "1.0",
 										"requestTime": "2024-11-05T10:36:13.780Z",
 										"metadata": {},
@@ -4902,7 +4515,7 @@
 									"properties": {
 										"id": {
 											"type": "string",
-											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.client.post`"
+											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.oidc.client.post`"
 										},
 										"version": {
 											"type": "string",
@@ -4921,11 +4534,11 @@
 											"properties": {
 												"clientId": {
 													"type": "string",
-													"description": "Unique identifier of the client."
+													"description": "Unique identifier of the OIDC client."
 												},
 												"status": {
 													"type": "string",
-													"description": "Status of the Client.",
+													"description": "Status of the OIDC Client.",
 													"enum": [
 														"ACTIVE",
 														"INACTIVE"
@@ -4953,7 +4566,7 @@
 									},
 									"x-examples": {
 										"Example 1": {
-											"id": "string",
+											"id": "mosip.pms.create.oidc.client.post",
 											"version": "1.0",
 											"responseTime": "2024-11-05T10:36:13.780Z",
 											"metadata": {},
@@ -4991,16 +4604,284 @@
 						"description": "Partner Management Service"
 					}
 				]
-			}
+			},
+			"get": {
+                "summary": "NEW: Endpoint to get the list of all the OIDC clients created by the Auth Partners",
+                "tags": [
+                    "client-management-controller"
+                ],
+                "operationId": "get-all-oidc-clients",
+                "description": "This endpoint is for both the regular Auth Partner user and Partner Admin user.\r\n\r\nOIDC client can be used by the partner, to faciltate use of Esignet system of Mosip.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters. \r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, \r\nthen it will fetch all the OIDC Clients created by all the Auth Partners, associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, \r\nthen it will fetch all the OIDC Clients created by all the Auth Partners across all users.\r\n\r\nAn Auth Partner is auto approved by the PMS system, after the partner uploads a valid CA signed certificate for the organisation.\r\n\r\nA Policy is approved by Partner Admin. Once a Policy is approved multiple OIDC clients can be created on it. By default, this OIDC client is in `ACTIVE` status.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nIf there are no OIDC clients available, then it will return an empty array as the response along with the id, version, responsetime and metadata (optional) attributes.\r\n\r\nThis endpoint should be configured for the Roles: AUTH_PARTNER,PARTNER_ADMIN",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortFieldName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to sort the response by the sortFieldName. Both sorting and pagination request parameters should be given together.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortType",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to sort the response with this sort order. Default is asc order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "pageNo",
+                        "in": "query",
+                        "description": "Page Number for the pagination. Starts with 0.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page Size for the pagination. Both pageNo and pageSize should be given in the request together. ",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "partnerId",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given partnerId.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "orgName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given orgName.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyGroupName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given policyGroupName.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given policyName.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "clientName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given clientName.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given status of OIDC client. Allowed values as ACTIVE or INACTIVE.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique id required to access this endpoint `mosip.pms.oidc.clients.get`"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of this endpoint. \r\n`1.0`"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "Date in ISO format indicating date time when response was sent",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "properties": {
+                                                "pageNo": {
+                                                    "type": "integer",
+                                                    "description": "Page Number of the data in the response"
+                                                },
+                                                "pageSize": {
+                                                    "type": "integer",
+                                                    "description": "Page Size of the data in the response"
+                                                },
+                                                "totalResults": {
+                                                    "type": "integer",
+                                                    "description": "Total number of records across all the pages in the response"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "partnerId": {
+                                                                "type": "string",
+                                                                "description": "Unique identifier of the Partner"
+                                                            },
+                                                            "orgName": {
+                                                                "type": "string",
+                                                                "description": "Organisation name of the Partner"
+                                                            },
+                                                            "policyGroupId": {
+                                                                "type": "string",
+                                                                "description": "Unique identifier of the Policy Group associated with the Partner"
+                                                            },
+                                                            "policyGroupName": {
+                                                                "type": "string",
+                                                                "description": "Name of the Policy Group associated with the Partner"
+                                                            },
+                                                            "policyGroupDescription": {
+                                                                "type": "string",
+                                                                "description": "Description of the Policy Group associated with the Partner"
+                                                            },
+                                                            "policyName": {
+                                                                "type": "string",
+                                                                "description": "Name of the Policy"
+                                                            },
+                                                            "policyDescription": {
+                                                                "type": "string",
+                                                                "description": "Description of the Policy"
+                                                            },
+                                                            "clientId": {
+                                                                "type": "string",
+                                                                "description": "Unique identifier of the OIDC client"
+                                                            },
+                                                            "clientName": {
+                                                                "type": "string",
+                                                                "description": "OIDC client name in JSON format. This JSON will give client name in Multi Language."
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "description": "Status of the OIDC client"
+                                                            },
+                                                            "createdDateTime": {
+                                                                "type": "string",
+                                                                "description": "Created date in ISO format"
+                                                            },
+                                                            "updatedDateTime": {
+                                                                "type": "string",
+                                                                "description": "Updated date in ISO format"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Message indicating the error that has occured"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "x-examples": {
+                                        "Example 1": {
+                                            "id": "mosip.pms.oidc.clients.get",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-22T13:32:49.185Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "pageNo": 0,
+                                                "pageSize": 0,
+                                                "totalResults": 0,
+                                                "data": [
+                                                    {
+                                                        "partnerId": "partner123",
+                                                        "orgName": "abc",
+                                                        "policyGroupName": "Security Policies",
+                                                        "policyGroupDescription": "Security Policies",
+                                                        "policyName": "Data Protection Policy",
+                                                        "policyDescription": "Data Protection Policy",
+                                                        "clientId": "oidcClient456",
+                                                        "clientName": "MyOIDCClient",
+                                                        "status": "active",
+                                                        "createdDateTime": "2024-08-08T10:00:00Z"
+                                                    }
+                                                ]
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            }
 		},
-		"/client/{client_id}": {
+		"/oidc-clients/{clientId}": {
 			"get": {
 				"tags": [
 					"client-management-controller"
 				],
-				"summary": "NEW: Get details of an existing OAuth or OpenID Connect (OIDC) client",
-				"description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to get details of an existing OAuth or OpenID Connect (OIDC) client for a given Auth Partner.\n\n It is an upgrade of the earlier GET /oauth/client/{client_id} endpoint.",
-				"operationId": "get-client-details",
+				"summary": "NEW: Get details of an existing OIDC client",
+				"description": "Retrieves details of an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the response.",
+				"operationId": "get-oidc-client-details",
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -5011,7 +4892,7 @@
 									"properties": {
 										"id": {
 											"type": "string",
-											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.client.details.get`"
+											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.oidc.client.details.get`"
 										},
 										"version": {
 											"type": "string",
@@ -5030,11 +4911,11 @@
 											"properties": {
 												"id": {
 													"type": "string",
-													"description": "Unique identifier of the client."
+													"description": "Unique identifier of the OIDC client."
 												},
 												"name": {
 													"type": "string",
-													"description": "Name of OAuth/OIDC client."
+													"description": "Name of OIDC client."
 												},
 												"policyId": {
 													"type": "string",
@@ -5061,7 +4942,7 @@
 												},
 												"publicKey": {
 													"type": "object",
-													"description": "OAuth/OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OAuth/OIDC client. Format: JSON Web Key (JWK).",
+													"description": "OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OIDC client. Format: JSON Web Key (JWK).",
 													"additionalProperties": {
 														"type": "string"
 													}
@@ -5082,7 +4963,7 @@
 												},
 												"status": {
 													"type": "string",
-													"description": "Status of the Client.",
+													"description": "Status of the OIDC Client.",
 													"enum": [
 														"ACTIVE",
 														"INACTIVE"
@@ -5183,7 +5064,7 @@
 									},
 									"x-examples": {
 										"Example 1": {
-											"id": "string",
+											"id": "mosip.pms.oidc.client.details.get",
 											"version": "1.0",
 											"responseTime": "2024-11-05T10:36:13.780Z",
 											"metadata": {},
@@ -5267,9 +5148,9 @@
 						}
 					},
 					{
-						"name": "client_id",
+						"name": "clientId",
 						"in": "path",
-						"description": "Unique identifier for the client",
+						"description": "Unique identifier for the OIDC client",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -5287,9 +5168,9 @@
 				"tags": [
 					"client-management-controller"
 				],
-				"summary": "NEW: Update existing OAuth/OpenID Connect (OIDC) client",
-				"description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to update existing OAuth/OpenID Connect (OIDC) client for a given Auth Partner.\n\nIt is an upgrade of the earlier PUT /oauth/client/{client_id} endpoint.",
-				"operationId": "update-client",
+				"summary": "NEW: Update existing OIDC client",
+				"description": "Updates an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the request.",
+				"operationId": "update-oidc-clients",
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -5299,7 +5180,7 @@
 								"properties": {
 									"id": {
 										"type": "string",
-										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.client.put`"
+										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.oidc.client.put`"
 									},
 									"version": {
 										"type": "string",
@@ -5327,14 +5208,6 @@
 													"type": "string"
 												}
 											},
-											"status": {
-												"type": "string",
-												"description": "Status of the Client.",
-												"enum": [
-													"ACTIVE",
-													"INACTIVE"
-												]
-											},
 											"grantTypes": {
 												"type": "array",
 												"description": "Form of Authorization Grant presented to token endpoint",
@@ -5344,7 +5217,7 @@
 											},
 											"clientName": {
 												"type": "string",
-												"description": "Name of OAuth/OIDC client."
+												"description": "Name of OIDC client."
 											},
 											"clientAuthMethods": {
 												"type": "array",
@@ -5434,7 +5307,7 @@
 							"examples": {
 								"Example 1": {
 									"value": {
-										"id": "string",
+										"id": "mosip.pms.update.oidc.client.put",
 										"version": "1.0",
 										"requestTime": "2024-11-05T10:36:13.780Z",
 										"metadata": {},
@@ -5487,7 +5360,7 @@
 									"properties": {
 										"id": {
 											"type": "string",
-											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.client.put`"
+											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.oidc.client.put`"
 										},
 										"version": {
 											"type": "string",
@@ -5538,7 +5411,7 @@
 									},
 									"x-examples": {
 										"Example 1": {
-											"id": "string",
+											"id": "mosip.pms.update.oidc.client.put",
 											"version": "1.0",
 											"responseTime": "2024-11-05T10:36:13.780Z",
 											"metadata": {},
@@ -5570,9 +5443,9 @@
 						}
 					},
 					{
-						"name": "client_id",
+						"name": "clientId",
 						"in": "path",
-						"description": "Unique identifier for the client",
+						"description": "Unique identifier for the OIDC client",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -5590,9 +5463,9 @@
                 "tags": [
                     "client-management-controller"
                 ],
-                "summary": "NEW: Deactivate OAuth/OpenID Connect (OIDC) client",
-                "description": "Available since release-1.3.0-beta.4.\n\nThis endpoint is used to deactivate OAuth/OpenID Connect (OIDC) client for a given Auth Partner.\n\nIt is an upgrade of the earlier PUT /oauth/client/{client_id} endpoint.",
-                "operationId": "deactivate-client",
+                "summary": "NEW: Deactivate OIDC client",
+                "description": "Deactivates an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and can only deactivate clients that are currently in `ACTIVE` status.",
+                "operationId": "deactivate-oidc-clients",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -5602,7 +5475,7 @@
                                 "properties": {
                                     "id": {
                                         "type": "string",
-                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.client.patch`"
+                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.oidc.client.patch`"
                                     },
                                     "version": {
                                         "type": "string",
@@ -5642,7 +5515,7 @@
                             "examples": {
                                 "Example 1": {
                                     "value": {
-                                        "id": "mosip.pms.deactivate.client.patch",
+                                        "id": "mosip.pms.deactivate.oidc.client.patch",
                                         "version": "1.0",
                                         "requestTime": "2024-11-05T10:36:13.780Z",
                                         "metadata": {},
@@ -5665,7 +5538,7 @@
                                     "properties": {
                                         "id": {
                                             "type": "string",
-                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.client.patch`"
+                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.oidc.client.patch`"
                                         },
                                         "version": {
                                             "type": "string",
@@ -5715,7 +5588,7 @@
                                     },
                                     "x-examples": {
                                         "Example 1": {
-                                            "id": "mosip.pms.deactivate.client.patch",
+                                            "id": "mosip.pms.deactivate.oidc.client.patch",
                                             "version": "1.0",
                                             "responseTime": "2024-11-05T10:36:13.780Z",
                                             "metadata": {},
@@ -5747,9 +5620,9 @@
                         }
                     },
                     {
-                        "name": "client_id",
+                        "name": "clientId",
                         "in": "path",
-                        "description": "Unique identifier for the client",
+                        "description": "Unique identifier for the OIDC client",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -8305,7 +8178,7 @@
                     {
                         "name": "expiryDate",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner` / `sbi` / `ftm-chip` / `apikey`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner` / `sbi` / `ftm-chip` / `apikey` / `misp`",
                         "schema": {
                             "type": "string"
                         }
