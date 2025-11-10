@@ -5010,14 +5010,6 @@
 													"type": "string"
 												}
 											},
-											"status": {
-												"type": "string",
-												"description": "Status of the OIDC Client.",
-												"enum": [
-													"ACTIVE",
-													"INACTIVE"
-												]
-											},
 											"grantTypes": {
 												"type": "array",
 												"description": "Form of Authorization Grant presented to token endpoint",
@@ -7988,7 +7980,7 @@
                     {
                         "name": "expiryDate",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner` / `sbi` / `ftm-chip` / `apikey`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner` / `sbi` / `ftm-chip` / `apikey` / `misp`",
                         "schema": {
                             "type": "string"
                         }
