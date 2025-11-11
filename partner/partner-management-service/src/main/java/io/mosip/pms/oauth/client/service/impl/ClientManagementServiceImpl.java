@@ -87,6 +87,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Value("${mosip.pms.api.id.oauth.partners.clients.get}")
 	private String getPartnersClientsId;
 
+	@Value("${mosip.pms.api.id.create.oidc.client.post}")
+	private String postCreateOidcClientId;
+
+	@Value("#{'${mosip.pms.allowed.oidc.client.userinfo.response.types}'.split(',')}")
+	private List<String> allowedUserInfoResponseTypes;
+
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -351,29 +357,41 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private ClientDetailResponse callEsignetService(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+
+		CreateClientRequestDto dto = buildClientRequestDto(request);
+
+		if (Boolean.TRUE.equals(isOAuthClient) && clientNameLangMap.length > 0) {
+			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto, clientNameLangMap[0]);
+			createRequestwrapper.setRequest(dtoV2);
+		}
+		createRequestwrapper.setRequest(dto);
+
+		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+	}
+
+	private CreateClientRequestDto buildClientRequestDto(ClientDetail request) {
 		CreateClientRequestDto dto = new CreateClientRequestDto();
+		setCommonRequestFields(request, dto);
+		return dto;
+	}
+
+	private void setCommonRequestFields(ClientDetail request, CreateClientRequestDto dto) {
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
 		dto.setRelyingPartyId(request.getRpId());
 		dto.setLogoUri(request.getLogoUri());
+
 		try {
 			dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error processing public key JSON: {}", e.getMessage());
 		}
+
 		dto.setUserClaims(convertStringToList(request.getClaims()));
 		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));
 		dto.setRedirectUris(convertStringToList(request.getRedirectUris()));
 		dto.setGrantTypes(convertStringToList(request.getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		if(Boolean.TRUE.equals(isOAuthClient) &&  clientNameLangMap.length>0) {
-			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto,clientNameLangMap[0]);
-			createRequestwrapper.setRequest(dtoV2);
-		}
-		else createRequestwrapper.setRequest(dto);
-		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
-		
-
 	}
 	
 	
@@ -816,6 +834,110 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	@Override
+	public ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(ClientDetailCreateRequestV3 request) {
+		ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			ProcessedClientDetail processedClientDetail = processCreateOIDCClientV2(request);
+			ClientDetail clientDetail = processedClientDetail.getClientDetail();
+			callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.create.url"), true, request.getClientNameLangMap());
+			String clientName=getClientNameLanguageMapAsJsonString(
+					request.getClientNameLangMap(),
+					request.getName()
+			);
+			clientDetail.setName(clientName);
+			publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
+			clientDetailRepository.save(clientDetail);
+
+			ClientDetailResponse response = new ClientDetailResponse();
+			response.setClientId(clientDetail.getId());
+			response.setStatus(clientDetail.getStatus());
+			responseWrapper.setResponse(response);
+
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In createOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In createOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In createOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.CREATE_OIDC_CLIENT_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.CREATE_OIDC_CLIENT_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postCreateOidcClientId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private ProcessedClientDetail processCreateOIDCClientV2(ClientDetailCreateRequestV3 createRequest) throws Exception {
+		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
+		if (createRequest.getAdditionalConfig() != null) {
+			ClientDetail clientDetail = processedClientDetail.getClientDetail();
+
+			// validate additional config fields
+			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
+
+			// convert additional config as String and set to client detail
+			ObjectMapper mapper = new ObjectMapper();
+			String additionalConfig = mapper.writeValueAsString(createRequest.getAdditionalConfig());
+			clientDetail.setAdditionalConfig(additionalConfig);
+
+			processedClientDetail.setClientDetail(clientDetail);
+		}
+		return processedClientDetail;
+	}
+
+	private void validateAdditionalConfigFields(AdditionalConfigDto additionalConfigDto, String clientId, String clientName) {
+		if(additionalConfigDto.getUserinfoResponseType() != null) {
+			if(!allowedUserInfoResponseTypes.contains(additionalConfigDto.getUserinfoResponseType())) {
+				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}",
+						additionalConfigDto.getUserinfoResponseType());
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+						clientId);
+				throw new PartnerServiceException(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(), String
+						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
+								additionalConfigDto.getUserinfoResponseType()));
+			}
+		}
+		if(additionalConfigDto.getConsentExpireInMins() != null) {
+			if(additionalConfigDto.getConsentExpireInMins() < 10) {
+				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
+						additionalConfigDto.getConsentExpireInMins());
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+						clientId);
+				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
+						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
+								additionalConfigDto.getConsentExpireInMins()));
+			}
+		}
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("unchecked")
+	private ClientDetailResponse callEsignetServiceV2(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) throws JsonProcessingException {
+		RequestWrapper<CreateClientRequestDtoV3> createRequestwrapper = new RequestWrapper<>();
+		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+
+		CreateClientRequestDtoV3 dto = new CreateClientRequestDtoV3();
+		setCommonRequestFields(request, dto);
+
+		if (Boolean.TRUE.equals(isOAuthClient)) {
+			if (clientNameLangMap.length > 0) {
+				dto.setClientNameLangMap(clientNameLangMap[0]);
+			}
+			if (Objects.nonNull(request.getAdditionalConfig())) {
+				dto.setAdditionalConfig(objectMapper.readValue(request.getAdditionalConfig(), Map.class));
+			}
+		}
+		createRequestwrapper.setRequest(dto);
+
+		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
 	}
 
 	/**

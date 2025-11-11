@@ -1,5 +1,6 @@
 package io.mosip.pms.oauth.client.controller;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
@@ -31,11 +32,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class ClientManagementController {
 
 	@Value("${mosip.pms.client.id.regex}")
 	private String clientIdRegex;
+
+	@Value("${mosip.pms.api.id.create.oidc.client.post}")
+	private String postCreateOidcClientId;
 
 	@Autowired
 	ClientManagementService clientManagementService;
@@ -55,7 +61,9 @@ public class ClientManagementController {
 	@Autowired
 	private InputValidator inputValidator;
 
+	@Deprecated(since = "release-1.3.0-beta.4")
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Service to create OAuth client  - deprecated since release-1.3.0-beta.4", description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the POST /oidc-clients endpoint.")
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
@@ -64,6 +72,7 @@ public class ClientManagementController {
 		response.setResponse(clientRespDto);
 		return response;
 	}
+
 
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
@@ -192,6 +201,27 @@ public class ClientManagementController {
 			filterDto.setStatus(status);
 		}
 		return clientManagementService.getPartnersClients(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@RequestMapping(value = "/oidc-clients", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostcreateoidcclient())")
+	@Operation(summary = "Creates a new OIDC client for a given Auth Partner.",
+			description = " Available since release 1.3.0-beta.4. This endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new additionalConfig field in the request.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<ClientDetailResponse> createOIDCClient(
+			@Valid @RequestBody RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper) {
+		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(postCreateOidcClientId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getName());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getAuthPartnerId());
+		return clientManagementService.createOIDCClientV2(requestWrapper.getRequest());
 	}
 
 }
