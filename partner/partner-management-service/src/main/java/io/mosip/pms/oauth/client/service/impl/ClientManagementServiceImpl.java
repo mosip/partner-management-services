@@ -881,7 +881,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (createRequest.getAdditionalConfig() != null) {
 			ClientDetail clientDetail = processedClientDetail.getClientDetail();
 
-			// validate additional config fields
+			// validate additional config fields 
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
 			// convert additional config as String and set to client detail
