@@ -363,8 +363,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (Boolean.TRUE.equals(isOAuthClient) && clientNameLangMap.length > 0) {
 			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto, clientNameLangMap[0]);
 			createRequestwrapper.setRequest(dtoV2);
+		} else {
+			createRequestwrapper.setRequest(dto);
 		}
-		createRequestwrapper.setRequest(dto);
 
 		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
 	}
