@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM eclipse-temurin:11-jre
 
 ARG SOURCE
 ARG COMMIT_HASH
@@ -48,7 +48,9 @@ ARG container_user_gid=1001
 RUN apt-get -y update \
 && apt-get install -y unzip \
 && groupadd -g ${container_user_gid} ${container_user_group} \
-&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user}
+&& useradd -u ${container_user_uid} -g ${container_user_group} -s /bin/sh -m ${container_user} \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
 
 # set working directory for the user
 WORKDIR /home/${container_user}
