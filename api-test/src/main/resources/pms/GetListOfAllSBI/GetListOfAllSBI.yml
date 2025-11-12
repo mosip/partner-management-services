@@ -150,7 +150,7 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
-   Pms_GetListOfAllSBI_orgName_valid:
+   Pms_GetListOfAllSBI_orgName_valid_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_14      
       description: Fetching all the active SBI with orgName contains '1'
@@ -196,7 +196,6 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
-
    Pms_GetListOfAllSBI_sortType_ASC:
       endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_15      
