@@ -32,7 +32,7 @@ public class PMSRevampUtil extends AdminTestUtil {
 }
 	
 	public static void DbCleanRevamp() {
-		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
+		BaseTestCase.currentModule = PMSRevampConstants.PARTNERNEW;
 		DBManager.executeDBQueries(PMSRevampConfigManger.getPMSDbUrl(), PMSRevampConfigManger.getPMSDbUser(),
 				PMSRevampConfigManger.getPMSDbPass(), PMSRevampConfigManger.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
