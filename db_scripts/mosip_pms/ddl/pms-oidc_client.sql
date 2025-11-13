@@ -28,6 +28,7 @@ CREATE TABLE pms.oidc_client(
 	grant_types character varying(256) NOT NULL,
 	auth_methods character varying(256) NOT NULL,
 	status character varying(20) NOT NULL,
+	additional_config character varying,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -51,6 +52,8 @@ COMMENT ON COLUMN pms.oidc_client.rp_id IS 'Relaying Party Id: Id of the partner
 COMMENT ON COLUMN pms.oidc_client.policy_id IS 'Policy Id: Id of the policy ';
 -- ddl-end --
 COMMENT ON COLUMN pms.oidc_client.status IS 'Client status: Allowed values - ACTIVE / INACTIVE.';
+-- ddl-end --
+COMMENT ON COLUMN pms.oidc_client.additional_config IS 'Additional Config: Additional configuration parameters for the OIDC client in JSON format.';
 -- ddl-end --
 COMMENT ON COLUMN pms.oidc_client.public_key IS 'Public key: JWK data.';
 -- ddl-end --

@@ -21,6 +21,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getoidcclient;
 
+	private List<String> postcreateoidcclient;
+
 	//Device Detail controller
 	private List<String> postdevicedetail;
 	
