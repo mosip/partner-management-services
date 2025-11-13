@@ -17,8 +17,7 @@ SaveSecureBiometricInterfaceCreateDto:
       output: '{
           
 }'
-
-   Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
+   Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -26,11 +25,11 @@ SaveSecureBiometricInterfaceCreateDto:
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
       outputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDtoResult
       input: '{
-      	"swBinaryHash": "devicehaadsassh",
-      	"swVersion": "deviceswasdasd",
+      	"swBinaryHash": "sbi_ftmpartner_hash",
+      	"swVersion": "sbi_ftmpartner_version",
       	"swCreateDateTime": "$TIMESTAMP$",
       	"swExpiryDateTime": "2033-08-22T12:51:07.794Z",
-      	"providerId": "pms-111998"
+      	"providerId": "pms-111888"
 
 }'
       output: '{

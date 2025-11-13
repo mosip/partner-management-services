@@ -24,6 +24,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSRevampConstants;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.ExtractResource;
@@ -79,13 +80,11 @@ public class MosipTestRunner {
 			GlobalMethods.setModuleNameAndReCompilePattern(PMSRevampConfigManger.getproperty("moduleNamePattern"));
 			setLogLevels();
 
-			// For now we are not doing health check for qa-115.
-			if (BaseTestCase.isTargetEnvLTS()) {
-				HealthChecker healthcheck = new HealthChecker();
-				healthcheck.setCurrentRunningModule(BaseTestCase.currentModule);
-				Thread trigger = new Thread(healthcheck);
-				trigger.start();
-			}
+			HealthChecker healthcheck = new HealthChecker();
+			healthcheck.setCurrentRunningModule(BaseTestCase.currentModule);
+			Thread trigger = new Thread(healthcheck);
+			trigger.start();
+			
 			KeycloakUserManager.removeUser();
 			KeycloakUserManager.createUsers();
 			KeycloakUserManager.closeKeycloakInstance();
@@ -96,8 +95,7 @@ public class MosipTestRunner {
 			LOGGER.error("Exception " + e.getMessage());
 		}
 
-		if (BaseTestCase.isTargetEnvLTS())
-			HealthChecker.bTerminate = true;
+		HealthChecker.bTerminate = true;
 
 		System.exit(0);
 
@@ -117,8 +115,7 @@ public class MosipTestRunner {
 	
 		PMSRevampUtil.DbCleanRevamp();
 
-		BaseTestCase.currentModule = GlobalConstants.PARTNERNEW;
-		AdminTestUtil.copyPmsNewTestResource();
+		AdminTestUtil.copyPmsTestResource();
 	}
 
 	private static void setLogLevels() {
@@ -155,7 +152,7 @@ public class MosipTestRunner {
 				TestNG runner = new TestNG();
 				List<String> suitefiles = new ArrayList<>();
 				if (file.getName().toLowerCase().contains("mastertestsuite")) {
-					BaseTestCase.setReportName(GlobalConstants.PARTNERNEW);
+					BaseTestCase.setReportName(PMSRevampConstants.PARTNERNEW);
 					suitefiles.add(file.getAbsolutePath());
 					runner.setTestSuites(suitefiles);
 					System.getProperties().setProperty("testng.outpur.dir", "testng-report");

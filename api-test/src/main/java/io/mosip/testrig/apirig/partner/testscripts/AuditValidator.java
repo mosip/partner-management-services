@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 import org.testng.internal.BaseTestMethod;
 import org.testng.internal.TestResult;
 
-import io.mosip.testrig.apirig.dbaccess.AuditDBManager;
+import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSRevampConfigManger;
@@ -84,7 +84,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 		
 		
 		logger.info(query);
-		Map<String, Object> response = AuditDBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
+		Map<String, Object> response = DBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
 		
 		
 		Map<String, List<OutputValidationDto>> objMap = new HashMap<>();
@@ -116,7 +116,7 @@ public class AuditValidator extends AdminTestUtil implements ITest {
 		
 		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"+props.getProperty("partner_userName")+"'";
 		logger.info(deleteQuery);
-		AuditDBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
+		DBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
 		try {
 			Field method = TestResult.class.getDeclaredField("m_method");
 			method.setAccessible(true);
