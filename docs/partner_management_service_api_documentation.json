@@ -5208,6 +5208,14 @@
 													"type": "string"
 												}
 											},
+                                            "status": {
+                                                "type": "string",
+                                                "description": "Status of the OIDC Client.",
+                                                "enum": [
+                                                    "ACTIVE",
+                                                    "INACTIVE"
+                                                ]
+                                            },
 											"grantTypes": {
 												"type": "array",
 												"description": "Form of Authorization Grant presented to token endpoint",
