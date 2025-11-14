@@ -211,3 +211,21 @@ SaveSecureBiometricInterfaceCreateDto:
     }
   ]
     }'
+   Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_08
+      description: Create SaveSecureBiometricInterface Using FTM Partner
+      role: partnerdevice
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
+      outputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDtoResult
+      input: '{
+    "swBinaryHash": "sbi_ftmpartner_hash",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2033-08-22T12:51:07.794Z",
+    "swVersion": "sbi_ftmpartner_version",
+    "providerId": "pms-111888"
+  }'
+      output: '{      
+    }'
