@@ -105,6 +105,7 @@ public enum ErrorCode {
 	CREATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_013", "Error while creating OIDC client."),
 	INVALID_USERINFO_RESPONSE_TYPE("PMS_POLICY_ERROR_014", "Invalid userinfo response type. Allowed values are JWS and JWE."),
 	INVALID_CONSENT_EXPIRE_TIME("PMS_POLICY_ERROR_015", "Invalid consent expire time. It should be more than or equal to 10 minutes."),
+	UPDATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_016", "Error while updating OIDC client."),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
