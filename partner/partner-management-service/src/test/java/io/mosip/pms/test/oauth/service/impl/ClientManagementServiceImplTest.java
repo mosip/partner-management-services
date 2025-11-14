@@ -1499,7 +1499,7 @@ public class ClientManagementServiceImplTest {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
+				new SimpleGrantedAuthority("AUTH_PARTNER")
 		);
 		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
 		addAuthoritiesMethod.setAccessible(true);
@@ -1566,7 +1566,7 @@ public class ClientManagementServiceImplTest {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
+				new SimpleGrantedAuthority("AUTH_PARTNER")
 		);
 		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
 		addAuthoritiesMethod.setAccessible(true);
