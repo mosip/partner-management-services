@@ -58,4 +58,6 @@ public interface ClientManagementService {
 	ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto);
 
 	ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(ClientDetailCreateRequestV3 createRequest);
+
+	ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest);
 }

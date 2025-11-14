@@ -495,6 +495,18 @@ public class ClientManagementServiceImplTest {
 	public void testUpdateOIDCClient_WithFailure() throws Exception {
 		doNothing().when(auditUtil).setAuditRequestDto((ClientServiceAuditEnum) any());
 
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
 		ClientDetail clientDetail = new ClientDetail();
 		clientDetail.setAcrValues("value");
 		clientDetail.setClaims("Claims");
@@ -1070,6 +1082,19 @@ public class ClientManagementServiceImplTest {
 	@Test (expected = PartnerServiceException.class)
 	public void testUpdateOAuthClient_WhenClientNotFound() throws Exception {
 		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
 		serviceImpl.updateOAuthClient("clientId", new ClientDetailUpdateRequestV2());
 		verify(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
@@ -1079,6 +1104,18 @@ public class ClientManagementServiceImplTest {
 	@Test (expected = PartnerServiceException.class)
 	public void testUpdateOAuthClientWhenNotificationFails() throws Exception {
 		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		ClientDetail clientDetail = new ClientDetail();
 		clientDetail.setAcrValues("Value");
@@ -1142,6 +1179,18 @@ public class ClientManagementServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void testUpdateOAuthClientWhenClientIdThrowsException() throws Exception {
 		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		ClientDetail clientDetail = mock(ClientDetail.class);
 		when(clientDetail.getId()).thenThrow(new PartnerServiceException("An error occurred", "An error occurred"));
@@ -1450,7 +1499,7 @@ public class ClientManagementServiceImplTest {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
+				new SimpleGrantedAuthority("AUTH_PARTNER")
 		);
 		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
 		addAuthoritiesMethod.setAccessible(true);
@@ -1517,7 +1566,7 @@ public class ClientManagementServiceImplTest {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
+				new SimpleGrantedAuthority("AUTH_PARTNER")
 		);
 		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
 		addAuthoritiesMethod.setAccessible(true);

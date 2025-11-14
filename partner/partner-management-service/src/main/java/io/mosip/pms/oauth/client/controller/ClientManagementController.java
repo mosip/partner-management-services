@@ -43,6 +43,9 @@ public class ClientManagementController {
 	@Value("${mosip.pms.api.id.create.oidc.client.post}")
 	private String postCreateOidcClientId;
 
+	@Value("${mosip.pms.api.id.update.oidc.client.put}")
+	private String putUpdateOidcClientId;
+
 	@Autowired
 	ClientManagementService clientManagementService;
 
@@ -73,8 +76,9 @@ public class ClientManagementController {
 		return response;
 	}
 
-
+	@Deprecated(since = "release-1.3.0-beta.4")
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Service to update OAuth client  - deprecated since release-1.3.0-beta.4", description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the PUT /oidc-clients/{clientId} endpoint.")
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
@@ -211,7 +215,7 @@ public class ClientManagementController {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<ClientDetailResponse> createOIDCClient(
+	public ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(
 			@Valid @RequestBody RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
 		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(postCreateOidcClientId, requestWrapper);
@@ -222,6 +226,29 @@ public class ClientManagementController {
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getAuthPartnerId());
 		return clientManagementService.createOIDCClientV2(requestWrapper.getRequest());
+	}
+
+	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutupdateoidcclient())")
+	@Operation(summary = "Update existing OIDC client by Client ID.",
+			description = " Available since release 1.3.0-beta.4. This endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the request.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2( @PathVariable("clientId") String clientId,
+			@Valid @RequestBody RequestWrapperV2<ClientDetailUpdateRequestV3> requestWrapper) {
+		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(putUpdateOidcClientId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		if (!clientId.matches(clientIdRegex)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "clientId", "Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"));
+		}
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getClientName());
+		return clientManagementService.updateOIDCClientV2(clientId, requestWrapper.getRequest());
 	}
 
 }

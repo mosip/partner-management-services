@@ -90,6 +90,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Value("${mosip.pms.api.id.create.oidc.client.post}")
 	private String postCreateOidcClientId;
 
+    @Value("${mosip.pms.api.id.update.oidc.client.put}")
+    private String putUpdateOidcClientId;
+
 	@Value("#{'${mosip.pms.allowed.oidc.client.userinfo.response.types}'.split(',')}")
 	private List<String> allowedUserInfoResponseTypes;
 
@@ -421,14 +424,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	private UpdateClientRequestDto mapUpdateClientRequestDto(ClientDetail request) {
 		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
-		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		updateRequest.setClientName(request.getName());
-		updateRequest.setGrantTypes(convertStringToList(request.getGrantTypes()));
-		updateRequest.setLogoUri(request.getLogoUri());
-		updateRequest.setRedirectUris(convertStringToList(request.getRedirectUris()));
-		updateRequest.setStatus(request.getStatus());
-		updateRequest.setUserClaims(convertStringToList(request.getClaims()));
-		updateRequest.setAuthContextRefs(convertStringToList(request.getAcrValues()));
+		setUpdateClientRequest(request, updateRequest);
 		return updateRequest;
 	}
 	
@@ -557,6 +553,33 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	
 	public ClientDetail processUpdateOIDCClient(String clientId, ClientDetailUpdateRequest updateRequest) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// validate client details and partner
+		ProcessedUpdateClientDetail processedUpdateClientDetail = validateClientDetailsAndPartner(clientId, isAdmin);
+		ClientDetail clientDetail = processedUpdateClientDetail.getClientDetail();
+		Partner partner = processedUpdateClientDetail.getPartner();
+
+		if ( !isAdmin || (isAdmin && clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
+			//check if Partner is Active or not
+			if (!partner.getIsActive()) {
+				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
+		}
+
+		if (!clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
+			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			clientDetail.setUpdatedBy(getLoggedInUserId());
+			return clientDetail;
+		}
+		setCommonUpdateFields(clientDetail, updateRequest);
+		return clientDetail;
+	}
+
+	private ProcessedUpdateClientDetail validateClientDetailsAndPartner(String clientId, boolean isAdmin) {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("updateOIDCClient::Client not exists with id {}", clientId);
@@ -580,8 +603,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
-
-		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		// Skip the below checks if the user is logged in as a partner_admin
 		if (!isAdmin) {
 			// Validate the logged-in user ID and fetch the list of partners associated to it
@@ -601,22 +622,13 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
 			}
 		}
-		if ( !isAdmin || (isAdmin && result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
-			//check if Partner is Active or not
-			if (!partner.get().getIsActive()) {
-				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
-		}
-		ClientDetail clientDetail = result.get();
-		if (!result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
-			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
-			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
-			clientDetail.setUpdatedBy(getLoggedInUserId());
-			return clientDetail;
-		}
+		ProcessedUpdateClientDetail processedUpdateClientDetail = new ProcessedUpdateClientDetail();
+		processedUpdateClientDetail.setClientDetail(result.get());
+		processedUpdateClientDetail.setPartner(partner.get());
+		return processedUpdateClientDetail;
+	}
+
+	private void setCommonUpdateFields(ClientDetail clientDetail, ClientDetailUpdateRequest updateRequest) {
 		clientDetail.setName(updateRequest.getClientName());
 		clientDetail.setLogoUri(updateRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
@@ -624,7 +636,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
-		return clientDetail;
 	}
 	
 	/**
@@ -939,6 +950,108 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		createRequestwrapper.setRequest(dto);
 
 		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+	}
+
+    @Override
+    public ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest) {
+        ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+        try {
+            ClientDetail clientDetail = processUpdateOIDCClientV2(clientId,updateRequest);
+            makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), updateRequest.getClientNameLangMap());
+            String clientName=getClientNameLanguageMapAsJsonString(
+                    updateRequest.getClientNameLangMap(),
+                    updateRequest.getClientName()
+            );
+            clientDetail.setName(clientName);
+            clientDetail = clientDetailRepository.save(clientDetail);
+
+			ClientDetailResponse response = new ClientDetailResponse();
+			response.setClientId(clientDetail.getId());
+			response.setStatus(clientDetail.getStatus());
+			notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
+			responseWrapper.setResponse(response);
+
+        } catch (ApiAccessibleException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.UPDATE_OIDC_CLIENT_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.UPDATE_OIDC_CLIENT_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+        }
+        responseWrapper.setId(putUpdateOidcClientId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
+    }
+
+    public ClientDetail processUpdateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest) throws Exception {
+		// validate client details and partner
+        ProcessedUpdateClientDetail processedUpdateClientDetail = validateClientDetailsAndPartner(clientId, false);
+		ClientDetail clientDetail = processedUpdateClientDetail.getClientDetail();
+		Partner partner = processedUpdateClientDetail.getPartner();
+
+        //check if Partner is Active or not
+        if (!partner.getIsActive()) {
+            LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+            auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+            throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                    ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+        }
+        setCommonUpdateFields(clientDetail, updateRequest);
+        if (updateRequest.getAdditionalConfig() != null) {
+            // validate additional config fields
+            validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
+
+            // convert additional config as String and set to client detail
+            ObjectMapper mapper = new ObjectMapper();
+            String additionalConfig = mapper.writeValueAsString(updateRequest.getAdditionalConfig());
+            clientDetail.setAdditionalConfig(additionalConfig);
+        }
+        return clientDetail;
+    }
+
+    @SafeVarargs
+    private void makeUpdateEsignetServiceCallV2(ClientDetail request, String calleeApi, Map<String,String>... clientNameLangMap) throws Exception {
+        RequestWrapper<UpdateClientRequestDtoV3> updateRequestwrapper = new RequestWrapper<>();
+        updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+
+        UpdateClientRequestDtoV3 updateRequest = new UpdateClientRequestDtoV3();
+		setUpdateClientRequest(request, updateRequest);
+
+		if (clientNameLangMap.length > 0) {
+			updateRequest.setClientNameLangMap(clientNameLangMap[0]);
+		}
+		if (Objects.nonNull(request.getAdditionalConfig())) {
+			updateRequest.setAdditionalConfig(objectMapper.readValue(request.getAdditionalConfig(), Map.class));
+		}
+        updateRequestwrapper.setRequest(updateRequest);
+
+        List<String> pathsegments = new ArrayList<>();
+        pathsegments.add(request.getId());
+        try {
+            restUtil.putApi(calleeApi, pathsegments, null, null, MediaType.APPLICATION_JSON, updateRequestwrapper, Map.class);
+        }catch (Exception e) {
+            LOGGER.error("callIdpService::Error from idp service {} ", e.getMessage(), e);
+            throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+                    ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
+        }
+    }
+
+	private void setUpdateClientRequest(ClientDetail clientDetail, UpdateClientRequestDto updateRequest) {
+		updateRequest.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
+		updateRequest.setClientName(clientDetail.getName());
+		updateRequest.setLogoUri(clientDetail.getLogoUri());
+		updateRequest.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
+		updateRequest.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+		updateRequest.setStatus(clientDetail.getStatus());
+		updateRequest.setUserClaims(convertStringToList(clientDetail.getClaims()));
+		updateRequest.setAuthContextRefs(convertStringToList(clientDetail.getAcrValues()));
 	}
 
 	/**
