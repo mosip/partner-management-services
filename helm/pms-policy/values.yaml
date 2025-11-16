@@ -114,7 +114,7 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 500m
-    memory: 3000Mi
+    memory: 3500Mi
   requests:
     cpu: 100m
     memory: 1000Mi
@@ -191,7 +191,17 @@ podAnnotations: {}
 
 ## lifecycleHooks for the  container to automate configuration before or after startup.
 ##
-lifecycleHooks: {}
+lifecycleHooks:
+  preStop:
+    exec:
+      command:
+        - sh
+        - -c
+        - sleep 30
+
+## Termination grace periods : the maximum amount of time (in seconds) Kubernetes will wait for a container to gracefully shut down
+terminationGracePeriodSeconds: 60
+
 ## Custom Liveness probes for
 ##
 customLivenessProbe: {}
@@ -277,8 +287,8 @@ volumePermissions:
   enabled: false
   image:
     registry: docker.io
-    repository: bitnami/bitnami-shell
-    tag: "10"
+    repository: mosipid/os-shell
+    tag: "12-debian-12-r46"
     pullPolicy: Always
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
