@@ -23,30 +23,6 @@ createSearchPolicy:
       }
     ]
 }'
-#   Pms_SearchPolicy_Valid_Smoke:
-#      endPoint: /v1/policymanager/policies/search
-#      uniqueIdentifier: TC_PMS_createSearchPartner_02
-#      description: Create Search Policy with valid details
-#      role: partner
-#      checkErrorsOnlyInResponse: true
-#      restMethod: post
-#      inputTemplate: pms/policy/Search/searchPolicy
-#      outputTemplate: pms/policy/Search/searchPolicyResult
-#      input: '{
-#  "policyType": "DataShare",
-#  "pageFetch": "$REMOVE$",
-#  "pageStart": "0",
-#  "requesttime": "$TIMESTAMP$",
-#  "version": "v1"
-#}'
-#      output: '{
-#      "data": [
-#     {
-#        "policyType": "DataShare",
-#        "schema": "$IGNORE$"
-#      }
-#    ]
-#}'
    Pms_SearchPolicy_Only_FilterCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_03
