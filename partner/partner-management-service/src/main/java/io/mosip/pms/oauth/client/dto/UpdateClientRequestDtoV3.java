@@ -14,21 +14,25 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateClientRequestDtoV3 extends UpdateClientRequestDtoV2{
+public class UpdateClientRequestDtoV3 extends UpdateClientRequestDto{
+
+    private Map<String, String> clientNameLangMap;
 
     private Map<String, Object> additionalConfig;
 
     public UpdateClientRequestDtoV3(String logoUri, @NotNull List<@NotBlank String> redirectUris, String status,
                                     @NotNull List<String> grantTypes, String clientName, List<String> userClaims, List<String> authContextRefs,
                                     @NotNull List<String> clientAuthMethods, Map<String, String> clientNameLangMap, Map<String, Object> additionalConfig) {
-        super(logoUri, redirectUris, status, grantTypes, clientName, userClaims, authContextRefs, clientAuthMethods, clientNameLangMap);
+        super(logoUri, redirectUris, status, grantTypes, clientName, userClaims, authContextRefs, clientAuthMethods);
+        this.clientNameLangMap = clientNameLangMap;
         this.additionalConfig = additionalConfig;
     }
 
-    public UpdateClientRequestDtoV3(UpdateClientRequestDtoV2 updateRequest, Map<String, Object> additionalConfig) {
+    public UpdateClientRequestDtoV3(UpdateClientRequestDto updateRequest, Map<String, String> clientNameLangMap, Map<String, Object> additionalConfig) {
         super(updateRequest.getLogoUri(), updateRequest.getRedirectUris(), updateRequest.getStatus(), updateRequest.getGrantTypes(),
                 updateRequest.getClientName(), updateRequest.getUserClaims(), updateRequest.getAuthContextRefs(),
-                updateRequest.getClientAuthMethods(), updateRequest.getClientNameLangMap());
+                updateRequest.getClientAuthMethods());
+        this.clientNameLangMap = clientNameLangMap;
         this.additionalConfig = additionalConfig;
     }
 
