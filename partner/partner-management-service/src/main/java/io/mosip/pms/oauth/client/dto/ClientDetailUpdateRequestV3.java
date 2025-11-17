@@ -12,14 +12,17 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientDetailUpdateRequestV3 extends ClientDetailUpdateRequestV2 {
+public class ClientDetailUpdateRequestV3 extends ClientDetailUpdateRequest {
+
+    private Map<String, String> clientNameLangMap;
 
     private AdditionalConfigDto additionalConfig;
 
     public ClientDetailUpdateRequestV3(String logoUri, List<String> redirectUris, String status, List<String> grantTypes, String clientName, List<String> clientAuthMethods,
                                        Map<String, String> clientNameLangMap,
                                        AdditionalConfigDto additionalConfig) {
-        super(logoUri, redirectUris, status, grantTypes, clientName, clientAuthMethods, clientNameLangMap);
+        super(logoUri, redirectUris, status, grantTypes, clientName, clientAuthMethods);
+        this.clientNameLangMap = clientNameLangMap;
         this.additionalConfig = additionalConfig;
     }
 }
