@@ -95,8 +95,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
     @Value("${mosip.pms.api.id.update.oidc.client.put}")
     private String putUpdateOidcClientId;
 
-	@Value("#{'${mosip.pms.supported.oidc.client.name.languages}'.split(',')}")
-	private List<String> supportedOIDCClientNameLanguages;
+	@Value("#{'${mosip.pms.supported.oidc.languages}'.split(',')}")
+	private List<String> supportedOidcLanguages;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -855,7 +855,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			ProcessedClientDetail processedClientDetail = processCreateOIDCClientV2(request);
-			validateLanguageKeys(request.getClientNameLangMap(), "clientNameLangMap",  false, false);
+			validateLanguageKeys(request.getClientNameLangMap(), "clientNameLangMap",  false);
 			ClientDetail clientDetail = processedClientDetail.getClientDetail();
 			callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.create.url"), true, request.getClientNameLangMap());
 			String clientName=getClientNameLanguageMapAsJsonString(
@@ -976,21 +976,21 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			}
 
 			// 3. Validate title keys (@none mandatory)
-			validateLanguageKeys(title, "purpose.title", true, true);
+			validateLanguageKeys(title, "purpose.title", true);
 
 			// 4. Validate subtitle keys (@none mandatory)
-			validateLanguageKeys(subtitle, "purpose.subTitle", true, true);
+			validateLanguageKeys(subtitle, "purpose.subTitle", true);
 		}
 	}
 
-	private void validateLanguageKeys(Map<String, ?> langMap, String fieldName, boolean isNoneMandatory, boolean isNoneAllowed) {
+	private void validateLanguageKeys(Map<String, ?> langMap, String fieldName, boolean isNoneMandatory) {
 		if (langMap == null || langMap.isEmpty()) {
 			return;
 		}
 
 		// If @none is allowed, add it to the allowed keys
-		Set<String> validKeys = new HashSet<>(supportedOIDCClientNameLanguages);
-		if (isNoneAllowed) {
+		Set<String> validKeys = new HashSet<>(supportedOidcLanguages);
+		if (isNoneMandatory) {
 			validKeys.add(NONE_LANG_KEY);
 		}
 
@@ -1045,7 +1045,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
         ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
         try {
             ClientDetail clientDetail = processUpdateOIDCClientV2(clientId,updateRequest);
-			validateLanguageKeys(updateRequest.getClientNameLangMap(), "clientNameLangMap",  false, false);
+			validateLanguageKeys(updateRequest.getClientNameLangMap(), "clientNameLangMap",  false);
             makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), updateRequest.getClientNameLangMap());
             String clientName=getClientNameLanguageMapAsJsonString(
                     updateRequest.getClientNameLangMap(),
