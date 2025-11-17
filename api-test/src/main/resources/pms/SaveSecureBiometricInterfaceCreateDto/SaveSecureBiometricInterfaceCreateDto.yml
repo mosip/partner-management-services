@@ -213,7 +213,7 @@ SaveSecureBiometricInterfaceCreateDto:
     }'
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
-      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_08
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_09
       description: Create SaveSecureBiometricInterface Using FTM Partner
       role: partnerdevice
       checkErrorsOnlyInResponse: true
