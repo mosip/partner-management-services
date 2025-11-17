@@ -935,8 +935,25 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// Extract individual fields
 			String type = purpose.get("type") != null ? purpose.get("type").toString() : null;
-			Map<String, Object> title = (Map<String, Object>) purpose.get("title");
-			Map<String, Object> subtitle = (Map<String, Object>) purpose.get("subTitle");
+			Map<String, Object> title = null;
+			Map<String, Object> subtitle = null;
+
+			Object titleObj = purpose.get("title");
+			if (titleObj instanceof Map) {
+				title = (Map<String, Object>) titleObj;
+			} else if (titleObj != null) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.title must be a map");
+			}
+			Object subtitleObj = purpose.get("subTitle");
+			if (subtitleObj instanceof Map) {
+				subtitle = (Map<String, Object>) subtitleObj;
+			} else if (subtitleObj != null) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.subTitle must be a map");
+			}
 
 			// 1. purpose.type only allow login / link / verify (case insensitive)
 			if (type != null) {
