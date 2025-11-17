@@ -80,6 +80,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public static final String VERSION = "1.0";
 	public static final String NONE_LANG_KEY = "@none";
 	public static final String ENG_KEY = "eng";
+	public static final Set<String> VALID_USER_INFO_RESPONSE_TYPES = Set.of("JWS", "JWE");
+	public static final Set<String> VALID_PURPOSE_TYPES = Set.of("verify", "link", "login");
 
 	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
@@ -93,8 +95,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
     @Value("${mosip.pms.api.id.update.oidc.client.put}")
     private String putUpdateOidcClientId;
 
-	@Value("#{'${mosip.pms.allowed.oidc.client.userinfo.response.types}'.split(',')}")
-	private List<String> allowedUserInfoResponseTypes;
+	@Value("#{'${mosip.pms.supported.oidc.client.name.languages}'.split(',')}")
+	private List<String> supportedOIDCClientNameLanguages;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -853,6 +855,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			ProcessedClientDetail processedClientDetail = processCreateOIDCClientV2(request);
+			validateLanguageKeys(request.getClientNameLangMap(), "clientNameLangMap",  false, false);
 			ClientDetail clientDetail = processedClientDetail.getClientDetail();
 			callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.create.url"), true, request.getClientNameLangMap());
 			String clientName=getClientNameLanguageMapAsJsonString(
@@ -906,8 +909,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	private void validateAdditionalConfigFields(AdditionalConfigDto additionalConfigDto, String clientId, String clientName) {
-		if(additionalConfigDto.getUserinfoResponseType() != null) {
-			if(!allowedUserInfoResponseTypes.contains(additionalConfigDto.getUserinfoResponseType())) {
+		if(additionalConfigDto.getUserinfoResponseType() != null &&
+				!VALID_USER_INFO_RESPONSE_TYPES.contains(additionalConfigDto.getUserinfoResponseType())) {
 				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}",
 						additionalConfigDto.getUserinfoResponseType());
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
@@ -915,10 +918,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(), String
 						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
 								additionalConfigDto.getUserinfoResponseType()));
-			}
 		}
-		if(additionalConfigDto.getConsentExpireInMins() != null) {
-			if(additionalConfigDto.getConsentExpireInMins() < 10) {
+		if(additionalConfigDto.getConsentExpireInMins() != null &&
+				additionalConfigDto.getConsentExpireInMins() < 10) {
 				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
 						additionalConfigDto.getConsentExpireInMins());
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
@@ -926,9 +928,78 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
 						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
 								additionalConfigDto.getConsentExpireInMins()));
+		}
+		// PURPOSE VALIDATION
+		Map<String, Object> purpose = additionalConfigDto.getPurpose();
+		if (purpose != null && !purpose.isEmpty()) {
+
+			// Extract individual fields
+			String type = purpose.get("type") != null ? purpose.get("type").toString() : null;
+			Map<String, Object> title = (Map<String, Object>) purpose.get("title");
+			Map<String, Object> subtitle = (Map<String, Object>) purpose.get("subTitle");
+
+			// 1. purpose.type only allow login / link / verify (case insensitive)
+			if (type != null) {
+				if (!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
+							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type)
+					);
+				}
 			}
+
+			// 2. title/subtitle allowed ONLY if type is not null
+			if (type == null && ((title != null && !title.isEmpty()) ||
+					(subtitle != null && !subtitle.isEmpty()))) {
+
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage()
+				);
+			}
+
+			// 3. Validate title keys (@none mandatory)
+			validateLanguageKeys(title, "purpose.title", true, true);
+
+			// 4. Validate subtitle keys (@none mandatory)
+			validateLanguageKeys(subtitle, "purpose.subTitle", true, true);
 		}
 	}
+
+	private void validateLanguageKeys(Map<String, ?> langMap, String fieldName, boolean isNoneMandatory, boolean isNoneAllowed) {
+		if (langMap == null || langMap.isEmpty()) {
+			return;
+		}
+
+		// If @none is allowed, add it to the allowed keys
+		Set<String> validKeys = new HashSet<>(supportedOIDCClientNameLanguages);
+		if (isNoneAllowed) {
+			validKeys.add(NONE_LANG_KEY);
+		}
+
+		// Validate invalid keys
+		for (String key : langMap.keySet()) {
+			if (!validKeys.contains(key)) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_LANGUAGE_KEY.getErrorCode(),
+						String.format(
+								ErrorCode.INVALID_LANGUAGE_KEY.getErrorMessage(), fieldName, key
+						)
+				);
+			}
+		}
+
+		// Validate mandatory @none
+		if (isNoneMandatory && !langMap.containsKey(NONE_LANG_KEY)) {
+			throw new PartnerServiceException(
+					ErrorCode.MISSING_MANDATORY_LANGUAGE_KEY.getErrorCode(),
+					String.format(
+							ErrorCode.MISSING_MANDATORY_LANGUAGE_KEY.getErrorMessage(), fieldName
+					)
+			);
+		}
+	}
+
 
 	@SafeVarargs
 	@SuppressWarnings("unchecked")
@@ -957,6 +1028,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
         ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
         try {
             ClientDetail clientDetail = processUpdateOIDCClientV2(clientId,updateRequest);
+			validateLanguageKeys(updateRequest.getClientNameLangMap(), "clientNameLangMap",  false, false);
             makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), updateRequest.getClientNameLangMap());
             String clientName=getClientNameLanguageMapAsJsonString(
                     updateRequest.getClientNameLangMap(),

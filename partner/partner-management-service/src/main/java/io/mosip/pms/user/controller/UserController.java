@@ -81,6 +81,9 @@ public class UserController {
 	@Value("${pmp.partner.mobileNumber.max.length}")
 	private String phoneNumberMaxLength;
 
+	@Value("${mosip.pms.supported.oidc.client.name.languages}")
+	private String supportedOidcClientNameLanguages;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -146,6 +149,7 @@ public class UserController {
 		configMap.put("supportedNotificationLanguages", supportedNotificationLanguages);
 		configMap.put("partnerIdMaxLength", partnerIdMaxLength);
 		configMap.put("phoneNumberMaxLength", phoneNumberMaxLength);
+		configMap.put("supportedOidcClientNameLanguages", supportedOidcClientNameLanguages);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
