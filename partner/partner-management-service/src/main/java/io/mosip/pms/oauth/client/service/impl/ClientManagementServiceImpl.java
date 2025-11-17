@@ -80,12 +80,23 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public static final String VERSION = "1.0";
 	public static final String NONE_LANG_KEY = "@none";
 	public static final String ENG_KEY = "eng";
+	public static final Set<String> VALID_USER_INFO_RESPONSE_TYPES = Set.of("JWS", "JWE");
+	public static final Set<String> VALID_PURPOSE_TYPES = Set.of("verify", "link", "login");
 
 	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
 
 	@Value("${mosip.pms.api.id.oauth.partners.clients.get}")
 	private String getPartnersClientsId;
+
+	@Value("${mosip.pms.api.id.create.oidc.client.post}")
+	private String postCreateOidcClientId;
+
+    @Value("${mosip.pms.api.id.update.oidc.client.put}")
+    private String putUpdateOidcClientId;
+
+	@Value("#{'${mosip.pms.supported.oidc.languages}'.split(',')}")
+	private List<String> supportedOidcLanguages;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -351,29 +362,42 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private ClientDetailResponse callEsignetService(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+
+		CreateClientRequestDto dto = buildClientRequestDto(request);
+
+		if (Boolean.TRUE.equals(isOAuthClient) && clientNameLangMap.length > 0) {
+			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto, clientNameLangMap[0]);
+			createRequestwrapper.setRequest(dtoV2);
+		} else {
+			createRequestwrapper.setRequest(dto);
+		}
+
+		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+	}
+
+	private CreateClientRequestDto buildClientRequestDto(ClientDetail request) {
 		CreateClientRequestDto dto = new CreateClientRequestDto();
+		setCommonRequestFields(request, dto);
+		return dto;
+	}
+
+	private void setCommonRequestFields(ClientDetail request, CreateClientRequestDto dto) {
 		dto.setClientId(request.getId());
 		dto.setClientName(request.getName());
 		dto.setRelyingPartyId(request.getRpId());
 		dto.setLogoUri(request.getLogoUri());
+
 		try {
 			dto.setPublicKey(objectMapper.readValue(request.getPublicKey(), Map.class));
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error processing public key JSON: {}", e.getMessage());
 		}
+
 		dto.setUserClaims(convertStringToList(request.getClaims()));
 		dto.setAuthContextRefs(convertStringToList(request.getAcrValues()));
 		dto.setRedirectUris(convertStringToList(request.getRedirectUris()));
 		dto.setGrantTypes(convertStringToList(request.getGrantTypes()));
 		dto.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		if(Boolean.TRUE.equals(isOAuthClient) &&  clientNameLangMap.length>0) {
-			CreateClientRequestDtoV2 dtoV2 = new CreateClientRequestDtoV2(dto,clientNameLangMap[0]);
-			createRequestwrapper.setRequest(dtoV2);
-		}
-		else createRequestwrapper.setRequest(dto);
-		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
-		
-
 	}
 	
 	
@@ -402,14 +426,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	private UpdateClientRequestDto mapUpdateClientRequestDto(ClientDetail request) {
 		UpdateClientRequestDto updateRequest = new UpdateClientRequestDto();
-		updateRequest.setClientAuthMethods(convertStringToList(request.getClientAuthMethods()));
-		updateRequest.setClientName(request.getName());
-		updateRequest.setGrantTypes(convertStringToList(request.getGrantTypes()));
-		updateRequest.setLogoUri(request.getLogoUri());
-		updateRequest.setRedirectUris(convertStringToList(request.getRedirectUris()));
-		updateRequest.setStatus(request.getStatus());
-		updateRequest.setUserClaims(convertStringToList(request.getClaims()));
-		updateRequest.setAuthContextRefs(convertStringToList(request.getAcrValues()));
+		setUpdateClientRequest(request, updateRequest);
 		return updateRequest;
 	}
 	
@@ -538,6 +555,33 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	
 	
 	public ClientDetail processUpdateOIDCClient(String clientId, ClientDetailUpdateRequest updateRequest) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		// validate client details and partner
+		ProcessedUpdateClientDetail processedUpdateClientDetail = validateClientDetailsAndPartner(clientId, isAdmin);
+		ClientDetail clientDetail = processedUpdateClientDetail.getClientDetail();
+		Partner partner = processedUpdateClientDetail.getPartner();
+
+		if ( !isAdmin || (isAdmin && clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
+			//check if Partner is Active or not
+			if (!partner.getIsActive()) {
+				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+			}
+		}
+
+		if (!clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
+			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
+			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			clientDetail.setUpdatedBy(getLoggedInUserId());
+			return clientDetail;
+		}
+		setCommonUpdateFields(clientDetail, updateRequest);
+		return clientDetail;
+	}
+
+	private ProcessedUpdateClientDetail validateClientDetailsAndPartner(String clientId, boolean isAdmin) {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("updateOIDCClient::Client not exists with id {}", clientId);
@@ -561,8 +605,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNERID.getErrorCode(),
 					String.format(ErrorCode.INVALID_PARTNERID.getErrorMessage(), partnerId));
 		}
-
-		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		// Skip the below checks if the user is logged in as a partner_admin
 		if (!isAdmin) {
 			// Validate the logged-in user ID and fetch the list of partners associated to it
@@ -582,22 +624,13 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
 			}
 		}
-		if ( !isAdmin || (isAdmin && result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
-			//check if Partner is Active or not
-			if (!partner.get().getIsActive()) {
-				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
-		}
-		ClientDetail clientDetail = result.get();
-		if (!result.get().getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
-			clientDetail.setStatus(updateRequest.getStatus().toUpperCase());
-			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
-			clientDetail.setUpdatedBy(getLoggedInUserId());
-			return clientDetail;
-		}
+		ProcessedUpdateClientDetail processedUpdateClientDetail = new ProcessedUpdateClientDetail();
+		processedUpdateClientDetail.setClientDetail(result.get());
+		processedUpdateClientDetail.setPartner(partner.get());
+		return processedUpdateClientDetail;
+	}
+
+	private void setCommonUpdateFields(ClientDetail clientDetail, ClientDetailUpdateRequest updateRequest) {
 		clientDetail.setName(updateRequest.getClientName());
 		clientDetail.setLogoUri(updateRequest.getLogoUri());
 		clientDetail.setRedirectUris(String.join(",", updateRequest.getRedirectUris()));
@@ -605,7 +638,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		clientDetail.setClientAuthMethods(String.join(",", updateRequest.getClientAuthMethods()));
 		clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 		clientDetail.setUpdatedBy(getLoggedInUserId());
-		return clientDetail;
 	}
 	
 	/**
@@ -816,6 +848,299 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	@Override
+	public ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(ClientDetailCreateRequestV3 request) {
+		ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			ProcessedClientDetail processedClientDetail = processCreateOIDCClientV2(request);
+			validateLanguageKeys(request.getClientNameLangMap(), "clientNameLangMap",  false);
+			ClientDetail clientDetail = processedClientDetail.getClientDetail();
+			callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.create.url"), true, request.getClientNameLangMap());
+			String clientName=getClientNameLanguageMapAsJsonString(
+					request.getClientNameLangMap(),
+					request.getName()
+			);
+			clientDetail.setName(clientName);
+			publishClientData(processedClientDetail.getPartner(), processedClientDetail.getPolicy(), clientDetail);
+			clientDetailRepository.save(clientDetail);
+
+			ClientDetailResponse response = new ClientDetailResponse();
+			response.setClientId(clientDetail.getId());
+			response.setStatus(clientDetail.getStatus());
+			responseWrapper.setResponse(response);
+
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In createOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In createOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In createOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.CREATE_OIDC_CLIENT_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.CREATE_OIDC_CLIENT_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postCreateOidcClientId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private ProcessedClientDetail processCreateOIDCClientV2(ClientDetailCreateRequestV3 createRequest) throws Exception {
+		ProcessedClientDetail processedClientDetail = processCreateOIDCClient(createRequest);
+		if (createRequest.getAdditionalConfig() != null) {
+			ClientDetail clientDetail = processedClientDetail.getClientDetail();
+
+			// validate additional config fields 
+			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
+
+			// convert additional config as String and set to client detail
+			ObjectMapper mapper = new ObjectMapper();
+			String additionalConfig = mapper.writeValueAsString(createRequest.getAdditionalConfig());
+			clientDetail.setAdditionalConfig(additionalConfig);
+
+			processedClientDetail.setClientDetail(clientDetail);
+		}
+		return processedClientDetail;
+	}
+
+	private void validateAdditionalConfigFields(AdditionalConfigDto additionalConfigDto, String clientId, String clientName) {
+		if(additionalConfigDto.getUserinfoResponseType() != null &&
+				!VALID_USER_INFO_RESPONSE_TYPES.contains(additionalConfigDto.getUserinfoResponseType())) {
+				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}",
+						additionalConfigDto.getUserinfoResponseType());
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+						clientId);
+				throw new PartnerServiceException(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(), String
+						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
+								additionalConfigDto.getUserinfoResponseType()));
+		}
+		if(additionalConfigDto.getConsentExpireInMins() != null &&
+				additionalConfigDto.getConsentExpireInMins() < 10) {
+				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
+						additionalConfigDto.getConsentExpireInMins());
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+						clientId);
+				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
+						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
+								additionalConfigDto.getConsentExpireInMins()));
+		}
+		// PURPOSE VALIDATION
+		Map<String, Object> purpose = additionalConfigDto.getPurpose();
+		if (purpose != null && !purpose.isEmpty()) {
+
+			// Extract individual fields
+			String type = purpose.get("type") != null ? purpose.get("type").toString() : null;
+			Map<String, Object> title = null;
+			Map<String, Object> subtitle = null;
+
+			Object titleObj = purpose.get("title");
+			if (titleObj instanceof Map) {
+				title = (Map<String, Object>) titleObj;
+			} else if (titleObj != null) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.title must be a map");
+			}
+			Object subtitleObj = purpose.get("subTitle");
+			if (subtitleObj instanceof Map) {
+				subtitle = (Map<String, Object>) subtitleObj;
+			} else if (subtitleObj != null) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.subTitle must be a map");
+			}
+
+			// 1. purpose.type only allow login / link / verify (case insensitive)
+			if (type != null) {
+				if (!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
+							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type)
+					);
+				}
+			}
+
+			// 2. title/subtitle allowed ONLY if type is not null
+			if (type == null && ((title != null && !title.isEmpty()) ||
+					(subtitle != null && !subtitle.isEmpty()))) {
+
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage()
+				);
+			}
+
+			// 3. Validate title keys (@none mandatory)
+			validateLanguageKeys(title, "purpose.title", true);
+
+			// 4. Validate subtitle keys (@none mandatory)
+			validateLanguageKeys(subtitle, "purpose.subTitle", true);
+		}
+	}
+
+	private void validateLanguageKeys(Map<String, ?> langMap, String fieldName, boolean isNoneMandatory) {
+		if (langMap == null || langMap.isEmpty()) {
+			return;
+		}
+
+		// If @none is allowed, add it to the allowed keys
+		Set<String> validKeys = new HashSet<>(supportedOidcLanguages);
+		if (isNoneMandatory) {
+			validKeys.add(NONE_LANG_KEY);
+		}
+
+		// Validate invalid keys
+		for (String key : langMap.keySet()) {
+			if (!validKeys.contains(key)) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_LANGUAGE_KEY.getErrorCode(),
+						String.format(
+								ErrorCode.INVALID_LANGUAGE_KEY.getErrorMessage(), fieldName, key
+						)
+				);
+			}
+		}
+
+		// Validate mandatory @none
+		if (isNoneMandatory && !langMap.containsKey(NONE_LANG_KEY)) {
+			throw new PartnerServiceException(
+					ErrorCode.MISSING_MANDATORY_LANGUAGE_KEY.getErrorCode(),
+					String.format(
+							ErrorCode.MISSING_MANDATORY_LANGUAGE_KEY.getErrorMessage(), fieldName
+					)
+			);
+		}
+	}
+
+
+	@SafeVarargs
+	@SuppressWarnings("unchecked")
+	private ClientDetailResponse callEsignetServiceV2(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) throws JsonProcessingException {
+		RequestWrapper<CreateClientRequestDtoV3> createRequestwrapper = new RequestWrapper<>();
+		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+
+		CreateClientRequestDtoV3 dto = new CreateClientRequestDtoV3();
+		setCommonRequestFields(request, dto);
+
+		if (Boolean.TRUE.equals(isOAuthClient)) {
+			if (clientNameLangMap.length > 0) {
+				dto.setClientNameLangMap(clientNameLangMap[0]);
+			}
+			if (Objects.nonNull(request.getAdditionalConfig())) {
+				dto.setAdditionalConfig(objectMapper.readValue(request.getAdditionalConfig(), Map.class));
+			}
+		}
+		createRequestwrapper.setRequest(dto);
+
+		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+	}
+
+    @Override
+    public ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest) {
+        ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+        try {
+            ClientDetail clientDetail = processUpdateOIDCClientV2(clientId,updateRequest);
+			validateLanguageKeys(updateRequest.getClientNameLangMap(), "clientNameLangMap",  false);
+            makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), updateRequest.getClientNameLangMap());
+            String clientName=getClientNameLanguageMapAsJsonString(
+                    updateRequest.getClientNameLangMap(),
+                    updateRequest.getClientName()
+            );
+            clientDetail.setName(clientName);
+            clientDetail = clientDetailRepository.save(clientDetail);
+
+			ClientDetailResponse response = new ClientDetailResponse();
+			response.setClientId(clientDetail.getId());
+			response.setStatus(clientDetail.getStatus());
+			notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
+			responseWrapper.setResponse(response);
+
+        } catch (ApiAccessibleException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (PartnerServiceException ex) {
+            LOGGER.info("sessionId", "idType", "id", "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+        } catch (Exception ex) {
+            LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+            LOGGER.error("sessionId", "idType", "id",
+                    "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+            String errorCode = ErrorCode.UPDATE_OIDC_CLIENT_ERROR.getErrorCode();
+            String errorMessage = ErrorCode.UPDATE_OIDC_CLIENT_ERROR.getErrorMessage();
+            responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+        }
+        responseWrapper.setId(putUpdateOidcClientId);
+        responseWrapper.setVersion(VERSION);
+        return responseWrapper;
+    }
+
+    public ClientDetail processUpdateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest) throws Exception {
+		// validate client details and partner
+        ProcessedUpdateClientDetail processedUpdateClientDetail = validateClientDetailsAndPartner(clientId, false);
+		ClientDetail clientDetail = processedUpdateClientDetail.getClientDetail();
+		Partner partner = processedUpdateClientDetail.getPartner();
+
+        //check if Partner is Active or not
+        if (!partner.getIsActive()) {
+            LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
+            auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+            throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                    ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+        }
+        setCommonUpdateFields(clientDetail, updateRequest);
+        if (updateRequest.getAdditionalConfig() != null) {
+            // validate additional config fields
+            validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
+
+            // convert additional config as String and set to client detail
+            ObjectMapper mapper = new ObjectMapper();
+            String additionalConfig = mapper.writeValueAsString(updateRequest.getAdditionalConfig());
+            clientDetail.setAdditionalConfig(additionalConfig);
+        }
+        return clientDetail;
+    }
+
+    @SafeVarargs
+    private void makeUpdateEsignetServiceCallV2(ClientDetail request, String calleeApi, Map<String,String>... clientNameLangMap) throws Exception {
+        RequestWrapper<UpdateClientRequestDtoV3> updateRequestwrapper = new RequestWrapper<>();
+        updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+
+        UpdateClientRequestDtoV3 updateRequest = new UpdateClientRequestDtoV3();
+		setUpdateClientRequest(request, updateRequest);
+
+		if (clientNameLangMap.length > 0) {
+			updateRequest.setClientNameLangMap(clientNameLangMap[0]);
+		}
+		if (Objects.nonNull(request.getAdditionalConfig())) {
+			updateRequest.setAdditionalConfig(objectMapper.readValue(request.getAdditionalConfig(), Map.class));
+		}
+        updateRequestwrapper.setRequest(updateRequest);
+
+        List<String> pathsegments = new ArrayList<>();
+        pathsegments.add(request.getId());
+        try {
+            restUtil.putApi(calleeApi, pathsegments, null, null, MediaType.APPLICATION_JSON, updateRequestwrapper, Map.class);
+        }catch (Exception e) {
+            LOGGER.error("callIdpService::Error from idp service {} ", e.getMessage(), e);
+            throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+                    ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
+        }
+    }
+
+	private void setUpdateClientRequest(ClientDetail clientDetail, UpdateClientRequestDto updateRequest) {
+		updateRequest.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
+		updateRequest.setClientName(clientDetail.getName());
+		updateRequest.setLogoUri(clientDetail.getLogoUri());
+		updateRequest.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
+		updateRequest.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+		updateRequest.setStatus(clientDetail.getStatus());
+		updateRequest.setUserClaims(convertStringToList(clientDetail.getClaims()));
+		updateRequest.setAuthContextRefs(convertStringToList(clientDetail.getAcrValues()));
 	}
 
 	/**

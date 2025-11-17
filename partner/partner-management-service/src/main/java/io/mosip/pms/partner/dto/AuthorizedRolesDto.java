@@ -21,6 +21,10 @@ public class AuthorizedRolesDto {
 
 	private List<String> getoidcclient;
 
+	private List<String> postcreateoidcclient;
+
+	private List<String> putupdateoidcclient;
+
 	//Device Detail controller
 	private List<String> postdevicedetail;
 	
@@ -134,6 +138,8 @@ public class AuthorizedRolesDto {
 	private List<String> putpartnerspolicymapping;
 	
 	private List<String> patchpartnerspolicyapikeystatus;
+
+	private List<String> patchpartnersapikeyexpiry;
 
 	private List<String> getadminpartners;
 
