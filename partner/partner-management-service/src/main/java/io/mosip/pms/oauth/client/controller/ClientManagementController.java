@@ -99,7 +99,9 @@ public class ClientManagementController {
 		return response;
 	}
 
+	@Deprecated(since = "release-1.3.0-beta.4")
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Service to get OAuth client details  - deprecated since release-1.3.0-beta.4", description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the GET /oidc-clients/{clientId} endpoint.")
 	public ResponseWrapper<ClientDetail> getOAuthClient(@PathVariable("client_id") String clientId)
 			throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
@@ -249,6 +251,23 @@ public class ClientManagementController {
 		}
 		inputValidator.validateRequestInput(requestWrapper.getRequest().getClientName());
 		return clientManagementService.updateOIDCClientV2(clientId, requestWrapper.getRequest());
+	}
+
+	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoidcclientdetails())")
+	@Operation(summary = "Get details of an existing OIDC client",
+			description = " Available since release 1.3.0-beta.4. This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the request.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<ClientDetailV2> getOIDCClientV2( @PathVariable("clientId") String clientId) {
+		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		if (!clientId.matches(clientIdRegex)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "clientId", "Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"));
+		}
+		return clientManagementService.getOIDCClientV2(clientId);
 	}
 
 }

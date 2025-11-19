@@ -110,6 +110,8 @@ public enum ErrorCode {
 	INVALID_PURPOSE_TITLE_OR_SUBTITLE("PMS_POLICY_ERROR_018", "purpose.title and purpose.subtitle are allowed only when purpose.type is provided"),
 	INVALID_LANGUAGE_KEY("PMS_POLICY_ERROR_019", "%s contains invalid language key '%s'."),
 	MISSING_MANDATORY_LANGUAGE_KEY("PMS_POLICY_ERROR_020", "%s must contain mandatory '@none' key"),
+	GET_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_021", "Error while fetching OIDC client details."),
+	INVALID_CLIENT_ID("PMS_POLICY_ERROR_022", "Invalid client id provided."),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),

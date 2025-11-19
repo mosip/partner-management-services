@@ -60,4 +60,6 @@ public interface ClientManagementService {
 	ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(ClientDetailCreateRequestV3 createRequest);
 
 	ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest);
+
+	ResponseWrapperV2<ClientDetailV2> getOIDCClientV2(String clientId);
 }

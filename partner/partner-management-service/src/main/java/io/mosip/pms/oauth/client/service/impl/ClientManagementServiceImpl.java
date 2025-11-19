@@ -15,6 +15,7 @@ import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.dto.*;
+import io.mosip.pms.oauth.client.dto.ClientDetailV2;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
 import io.mosip.pms.partner.util.PartnerHelper;
@@ -50,7 +51,7 @@ import io.mosip.pms.oauth.client.service.ClientManagementService;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -94,6 +95,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
     @Value("${mosip.pms.api.id.update.oidc.client.put}")
     private String putUpdateOidcClientId;
+
+	@Value("${mosip.pms.api.id.oidc.client.details.get}")
+	private String getOidcClientDetailsId;
 
 	@Value("#{'${mosip.pms.supported.oidc.languages}'.split(',')}")
 	private List<String> supportedOidcLanguages;
@@ -720,12 +724,28 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Override
 	public io.mosip.pms.oauth.client.dto.ClientDetail getClientDetails(String clientId) {
+		ClientDetail client = fetchAndValidateClient(clientId);
+
+		io.mosip.pms.oauth.client.dto.ClientDetail dto =
+				new io.mosip.pms.oauth.client.dto.ClientDetail();
+
+		populateCommonClientFields(client, dto);
+
+		// Name is plain string here
+		dto.setName(client.getName());
+
+		return dto;
+	}
+
+	private ClientDetail fetchAndValidateClient(String clientId) {
 		Optional<ClientDetail> result = clientDetailRepository.findById(clientId);
 		if (!result.isPresent()) {
 			LOGGER.error("getClientDetails::Client not exists with id {}", clientId);
 			throw new PartnerServiceException(ErrorCode.CLIENT_NOT_EXISTS.getErrorCode(),
 					ErrorCode.CLIENT_NOT_EXISTS.getErrorMessage());
 		}
+
+		ClientDetail client = result.get();
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		// Skip the below checks if the user is logged in as a partner_admin
 		if (!isAdmin) {
@@ -746,22 +766,25 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC.getErrorMessage());
 			}
 		}
-		io.mosip.pms.oauth.client.dto.ClientDetail dto = new io.mosip.pms.oauth.client.dto.ClientDetail();
-		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(result.get().getPolicyId());
-		dto.setId(result.get().getId());
-		dto.setName(result.get().getName());
-		dto.setPolicyId(result.get().getPolicyId());
+
+		return client;
+	}
+
+	private void populateCommonClientFields(ClientDetail clientDetail, io.mosip.pms.oauth.client.dto.ClientDetail dto) {
+		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(clientDetail.getPolicyId());
+
+		dto.setId(clientDetail.getId());
+		dto.setPolicyId(clientDetail.getPolicyId());
 		dto.setPolicyName(policyFromDb.isEmpty() ? "" : policyFromDb.get().getName());
-		dto.setRelyingPartyId(result.get().getRpId());
-		dto.setLogoUri(result.get().getLogoUri());
-		dto.setStatus(result.get().getStatus());
-		dto.setPublicKey(result.get().getPublicKey());
-		dto.setClaims(convertStringToList(result.get().getClaims()));
-		dto.setAcrValues(convertStringToList(result.get().getAcrValues()));
-		dto.setRedirectUris(convertStringToList(result.get().getRedirectUris()));
-		dto.setGrantTypes(convertStringToList(result.get().getGrantTypes()));
-		dto.setClientAuthMethods(convertStringToList(result.get().getClientAuthMethods()));
-		return dto;
+		dto.setRelyingPartyId(clientDetail.getRpId());
+		dto.setLogoUri(clientDetail.getLogoUri());
+		dto.setStatus(clientDetail.getStatus());
+		dto.setPublicKey(clientDetail.getPublicKey());
+		dto.setClaims(convertStringToList(clientDetail.getClaims()));
+		dto.setAcrValues(convertStringToList(clientDetail.getAcrValues()));
+		dto.setRedirectUris(convertStringToList(clientDetail.getRedirectUris()));
+		dto.setGrantTypes(convertStringToList(clientDetail.getGrantTypes()));
+		dto.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
 	}
 	
     private String getClientNameLanguageMapAsJsonString(Map<String, String> clientNameMap, String clientName) {
@@ -1141,6 +1164,72 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		updateRequest.setStatus(clientDetail.getStatus());
 		updateRequest.setUserClaims(convertStringToList(clientDetail.getClaims()));
 		updateRequest.setAuthContextRefs(convertStringToList(clientDetail.getAcrValues()));
+	}
+
+	@Override
+	public ResponseWrapperV2<ClientDetailV2> getOIDCClientV2(String clientId) {
+		ResponseWrapperV2<ClientDetailV2> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(clientId) || clientId.isEmpty()) {
+				throw new PartnerServiceException(ErrorCode.INVALID_CLIENT_ID.getErrorCode(),
+						ErrorCode.INVALID_CLIENT_ID.getErrorMessage());
+			}
+			ClientDetail client = fetchAndValidateClient(clientId);
+
+			ClientDetailV2 dto = new ClientDetailV2();
+			populateCommonClientFields(client, dto);
+
+			// set client name and client name lang map
+			String clientNameStr = client.getName();
+			String nameValue;
+			Map<String, String> clientNameLangMap = new HashMap<>();
+			try {
+				JSONObject json = (JSONObject) new JSONParser().parse(clientNameStr);
+
+				// JSON → handle @none and other langs
+				String noneValue = (String) json.get("@none");
+				if (noneValue != null) {
+					nameValue = noneValue; // set name from @none
+
+					// Add other language keys except @none
+					for (Object key : json.keySet()) {
+						String keyStr = (String) key;
+						if (!"@none".equals(keyStr)) {
+							clientNameLangMap.put(keyStr, (String) json.get(keyStr));
+						}
+					}
+				} else {
+					nameValue = clientNameStr;
+				}
+			} catch (ParseException e) {
+				// Not JSON → fallback
+				nameValue = clientNameStr;
+			}
+
+			dto.setName(nameValue);
+			dto.setClientNameLangMap(clientNameLangMap);
+
+			// set additional config
+			if (client.getAdditionalConfig() != null) {
+				dto.setAdditionalConfig(
+						objectMapper.readValue(client.getAdditionalConfig(), AdditionalConfigDto.class)
+				);
+			}
+			responseWrapper.setResponse(dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.GET_OIDC_CLIENT_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.GET_OIDC_CLIENT_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getOidcClientDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
 	}
 
 	/**
