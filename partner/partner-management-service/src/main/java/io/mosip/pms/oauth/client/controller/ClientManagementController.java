@@ -256,7 +256,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoidcclientdetails())")
 	@Operation(summary = "Get details of an existing OIDC client",
-			description = " Available since release 1.3.0-beta.4. This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the request.")
+			description = " Available since release 1.3.0-beta.4. This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the response.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
