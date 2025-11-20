@@ -113,6 +113,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
+
+	@Autowired
+	PolicyGroupRepository policyGroupRepository;
 	
 	@Autowired
 	PartnerRepository partnerRepository;
@@ -730,6 +733,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				new io.mosip.pms.oauth.client.dto.ClientDetail();
 
 		populateCommonClientFields(client, dto);
+		// set policy name
+		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(client.getPolicyId());
+		dto.setPolicyName(policyFromDb.isEmpty() ? "" : policyFromDb.get().getName());
 
 		// Name is plain string here
 		dto.setName(client.getName());
@@ -771,11 +777,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	private void populateCommonClientFields(ClientDetail clientDetail, io.mosip.pms.oauth.client.dto.ClientDetail dto) {
-		Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(clientDetail.getPolicyId());
-
 		dto.setId(clientDetail.getId());
 		dto.setPolicyId(clientDetail.getPolicyId());
-		dto.setPolicyName(policyFromDb.isEmpty() ? "" : policyFromDb.get().getName());
 		dto.setRelyingPartyId(clientDetail.getRpId());
 		dto.setLogoUri(clientDetail.getLogoUri());
 		dto.setStatus(clientDetail.getStatus());
@@ -1178,6 +1181,19 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			ClientDetailV2 dto = new ClientDetailV2();
 			populateCommonClientFields(client, dto);
+			// set policy name and description
+			Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(client.getPolicyId());
+			if (policyFromDb.isPresent()) {
+				dto.setPolicyName(policyFromDb.get().getName());
+				dto.setPolicyDescription(policyFromDb.get().getDescr());
+
+				// set policy group name and description
+				PolicyGroup policyGroup = policyFromDb.get().getPolicyGroup();
+				if (policyGroup != null) {
+					dto.setPolicyGroupName(policyGroup.getName());
+					dto.setPolicyGroupDescription(policyGroup.getDesc());
+				}
+			}
 
 			// set client name and client name lang map
 			String clientNameStr = client.getName();
