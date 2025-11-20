@@ -112,11 +112,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	ClientSummaryRepository clientSummaryRepository;
 
 	@Autowired
-	AuthPolicyRepository authPolicyRepository;
-
-	@Autowired
-	PolicyGroupRepository policyGroupRepository;
-	
+	AuthPolicyRepository authPolicyRepository;	
 	@Autowired
 	PartnerRepository partnerRepository;
 
@@ -1188,11 +1184,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				dto.setPolicyDescription(policyFromDb.get().getDescr());
 
 				// set policy group name and description
-				PolicyGroup policyGroup = policyFromDb.get().getPolicyGroup();
-				if (policyGroup != null) {
-					dto.setPolicyGroupName(policyGroup.getName());
-					dto.setPolicyGroupDescription(policyGroup.getDesc());
-				}
+				dto.setPolicyGroupName(policyFromDb.get().getPolicyGroup().getName());
+				dto.setPolicyGroupDescription(policyFromDb.get().getPolicyGroup().getDesc());
 			}
 
 			// set client name and client name lang map
