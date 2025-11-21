@@ -4925,6 +4925,18 @@
 													"type": "string",
 													"description": "Name of the policy"
 												},
+												"policyDescription": {
+													"type": "string",
+													"description": "Description of the policy"
+												},
+												"policyGroupName": {
+													"type": "string",
+													"description": "Name of the policy group"
+												},
+												"policyGroupDescription": {
+													"type": "string",
+													"description": "Description of the policy group"
+												},
 												"relyingPartyId": {
 													"type": "string",
 													"description": "Unique identifier for the Auth partner"
@@ -5073,6 +5085,9 @@
 												"name": "Fastlane e-Sim Service",
 												"policyId": "12345",
 												"policyName": "policy1",
+												"policyDescription": "descr",
+												"policyGroupName": "group1",
+												"policyGroupDescription": "descr",
 												"relyingPartyId": "Fastlane",
 												"logoUri": "https://fastlane.com/fastlane-esim.png",
 												"redirectUris": [
