@@ -14,7 +14,7 @@ GenerateApiKey:
 }'
       output: '{
    "partnerId": "pms-111999",
-    "label": "string"    
+    "label": "string"  
 }'
 
    Pms_GenerateApiKey_Regenerate_Same_Key_Neg:
@@ -150,10 +150,10 @@ GenerateApiKey:
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
     "policyName": "mosip policy",
-    "label": "string",
+    "label": "Pms19234",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "partnerId": "pms-111999",
-    "label": "string"    
+    "label": "Pms19234"    
 }'

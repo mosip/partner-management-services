@@ -1,0 +1,515 @@
+UpdateApiKeyExpiryDateNegTC:
+  Pms_UpdateApiKeyExpiryDateNegTC_With_PartnerAuth_Role_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with PartnerAuth Role
+    role: partnerauth
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_01
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "KER-ATH-403"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Invalid_Token_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with invalid token
+    role: invalidtoken
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_02
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "KER-ATH-401"
+          }
+      ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Missing_ApiKeyName_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key without apiKeyName field
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_03
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PM_068"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Missing_ApiKeyExpiryDateTime_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key without ExpiryDate field
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_04
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PM_068"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_NotValid_ISOFormat_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with not valid ISO format ExpiryDate
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_05
+    restMethod: patch
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/responseCode
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "33-2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Past_ExpiryDate_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with past ExpiryDate
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_06
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2024-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PM_067"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Empty_ApiKeyName_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with empty apiKeyName
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_07
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PM_068"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Empty_ApiKeyExpiryDateTime_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with empty ExpiryDate
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_08
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": ""
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PM_068"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Special_Character_As%_partnerId_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with % special character in PartnerId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_09
+    restMethod: patch
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/responseCode
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "@pms%1234",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Special_Character_partnerId_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with special character in PartnerId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_10
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms*1234",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2025-12-06T12:31:47.000Z"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_007"
+          }
+    ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_partnerId_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key without existing PartnerId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_11
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-abcde",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PRT_111"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Special_Character_PolicyID_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with special character in PolicyId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_12
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "3456*12",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2025-12-06T12:31:47.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_007"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Special_Character_AS%_PolicyID_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with % special character in PolicyId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_13
+    restMethod: patch
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/responseCode
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "3456%",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+      "responseCode": "400"     
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_PolicyID_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key for without existing PolicyId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_14
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "abc145",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PRT_111"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Invalid_Request_ID_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with invalid request ID
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_15
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "invalid",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Without_Request_ID_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key without request ID
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_16
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Null_Request_ID_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with null request ID
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_17
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "Null",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_002"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Without_Version_Parameter_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key without Version Parameter
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_18
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Invalid_Version_Parameter_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with invalid Version Parameter
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_19
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "invalid",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_With_Null_Version_Parameter_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key with null Version Parameter
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_20
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "Null",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_003"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Without_RequestTime_Parameter_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an API Key without RequestTime Parameter
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_21
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_004"
+          }
+     ]
+}'
+  Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_ApiKeyName_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating the expiry date without an existing API key for the given PartnerId and PolicyId
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_22
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+       "errors": [
+         {
+            "errorCode": "PMS_PRT_111"
+          }
+      ]
+}'
