@@ -90,6 +90,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	@Value("${mosip.pms.api.id.oauth.partners.clients.get}")
 	private String getPartnersClientsId;
 
+	@Value("${mosip.pms.api.id.oidc.clients.get}")
+	private String getPartnersClientsV2Id;
+
 	@Value("${mosip.pms.api.id.create.oidc.client.post}")
 	private String postCreateOidcClientId;
 
@@ -795,6 +798,15 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto) {
+		return getClientsList(sortFieldName, sortType, pageNo, pageSize, filterDto, getPartnersClientsId);
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClientsV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto) {
+		return getClientsList(sortFieldName, sortType, pageNo, pageSize, filterDto, getPartnersClientsV2Id);
+	}
+
+	private ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getClientsList(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto, String responseId) {
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<ClientSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
@@ -845,17 +857,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			responseWrapper.setResponse(pageResponseV2Dto);
 
 		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In getClientsList method of ClientManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In getAllPartnersClients method of ClientManagementServiceImpl - " + ex.getMessage());
+					"In getClientsList method of ClientManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.OIDC_CLIENTS_FETCH_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getPartnersClientsId);
+		responseWrapper.setId(responseId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
