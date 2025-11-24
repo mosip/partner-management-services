@@ -113,7 +113,7 @@ public enum ErrorCode {
 	GET_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_021", "Error while fetching OIDC client details."),
 	INVALID_CLIENT_ID("PMS_POLICY_ERROR_022", "Invalid client id provided."),
 	DEACTIVATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_023", "Error while deactivating OIDC client."),
-	INVALID_STATUS_CODE("PMS_POLICY_ERROR_025", "Request status should be INACTIVE"),
+	INVALID_STATUS_CODE("PMS_POLICY_ERROR_024", "Request status should be INACTIVE"),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),
 	CLIENT_ALREADY_DEACTIVATED("PMS_ESI_008", "Client already deactivated."),
