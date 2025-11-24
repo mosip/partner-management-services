@@ -1116,9 +1116,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		Partner partner = processedUpdateClientDetail.getPartner();
 
         //check if Partner is Active or not
-        if (!partner.getIsActive()) {
-            checkPartnerActiveStatus(partner, clientId);
-        }
+		checkPartnerActiveStatus(partner, clientId);
+
         setCommonUpdateFields(clientDetail, updateRequest);
         if (updateRequest.getAdditionalConfig() != null) {
             // validate additional config fields
@@ -1265,7 +1264,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), langMap);
 			String clientName=getClientNameLanguageMapAsJsonString(langMap, name);
 			clientDetail.setName(clientName);
-			clientDetail.setStatus(INACTIVE);
 			clientDetail.setUpdatedBy(getLoggedInUserId());
 			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 			clientDetail = clientDetailRepository.save(clientDetail);
