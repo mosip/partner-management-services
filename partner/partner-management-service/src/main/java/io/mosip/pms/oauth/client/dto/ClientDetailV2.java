@@ -15,5 +15,5 @@ public class ClientDetailV2 extends ClientDetail {
     private String policyDescription;
     private Map<String, String> clientNameLangMap;
     private AdditionalConfigDto additionalConfig;
-    public LocalDateTime createdDateTime;
+    private LocalDateTime createdDateTime;
 }

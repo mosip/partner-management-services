@@ -574,7 +574,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 		if ( !isAdmin || (isAdmin && clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
 			//check if Partner is Active or not
-			checkPartnerActiveStatus(partner, clientId, ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+			checkPartnerActiveStatus(partner, clientId);
 		}
 
 		if (!clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
@@ -1117,7 +1117,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
         //check if Partner is Active or not
         if (!partner.getIsActive()) {
-            checkPartnerActiveStatus(partner, clientId, ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+            checkPartnerActiveStatus(partner, clientId);
         }
         setCommonUpdateFields(clientDetail, updateRequest);
         if (updateRequest.getAdditionalConfig() != null) {
@@ -1252,7 +1252,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			//check if Partner is Active or not
 			if (!isPartnerAdmin) {
-				checkPartnerActiveStatus(partner, clientId, ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				checkPartnerActiveStatus(partner, clientId);
 			}
 
 			// populate client name and client name lang map
@@ -1296,11 +1296,11 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return response;
 	}
 
-	private void checkPartnerActiveStatus(Partner partner, String clientId, ClientServiceAuditEnum auditEnum) {
+	private void checkPartnerActiveStatus(Partner partner, String clientId) {
 		//check if Partner is Active or not
 		if (!partner.getIsActive()) {
 			LOGGER.error("Partner is not Active with id {}", clientId);
-			auditUtil.setAuditRequestDto(auditEnum);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
