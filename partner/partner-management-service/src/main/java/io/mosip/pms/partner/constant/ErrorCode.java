@@ -99,7 +99,7 @@ public enum ErrorCode {
 	API_KEY_REQUESTS_FETCH_ERROR("PMS_POLICY_ERROR_007", "Error while fetching API Key requests"),
 	MATCHING_POLICY_GROUP_NOT_EXISTS("PMS_POLICY_ERROR_008", "No matching policy group was found for the provided partner"),
 	PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC("PMS_POLICY_ERROR_009", "The given partner ID does not belong to the user.So unable to create OIDC client"),
-	PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC("PMS_POLICY_ERROR_010", "The given partner ID does not belong to the user."),
+	PARTNER_NOT_BELONGS_TO_THE_USER("PMS_POLICY_ERROR_010", "The given partner ID does not belong to the user."),
 	PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC("PMS_POLICY_ERROR_011", "The given partner ID does not belong to the user.So unable to get OIDC client details"),
 	UNABLE_TO_FETCH_MISP_PARTNERS_LIST("PMS_POLICY_ERROR_012", "Unable to fetch MISP partners list. Only Partner Admin can get the MISP partners list."),
 	CREATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_013", "Error while creating OIDC client."),

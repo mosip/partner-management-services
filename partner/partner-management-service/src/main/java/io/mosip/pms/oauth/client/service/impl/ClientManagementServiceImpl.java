@@ -626,8 +626,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			if (!isValidPartner) {
 				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorCode(),
-						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorMessage());
 			}
 		}
 		ProcessedUpdateClientDetail processedUpdateClientDetail = new ProcessedUpdateClientDetail();
