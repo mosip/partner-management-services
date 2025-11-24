@@ -27,6 +27,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getoidcclientdetails;
 
+	private List<String> patchdeactivateoidcclient;
+
 	//Device Detail controller
 	private List<String> postdevicedetail;
 	

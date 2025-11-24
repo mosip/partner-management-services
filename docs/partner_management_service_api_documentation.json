@@ -5053,6 +5053,10 @@
 															"description": "The number of minutes after which a user's given consent will expire."
 														}
 													}
+												},
+												"createdDateTime": {
+													"type": "string",
+													"description": "Created date in ISO format"
 												}
 											}
 										},
@@ -5137,7 +5141,8 @@
 													"signup_banner_required": true,
 													"forgot_pwd_link_required": true,
 													"consent_expire_in_mins": 30
-												}
+												},
+												"createdDateTime": "2025-11-24T14:15:22Z"
 											},
 											"errors": []
 										}

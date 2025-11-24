@@ -77,6 +77,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 	private static final String ERROR_MESSAGE = "errorMessage";
 	public static final String ACTIVE = "ACTIVE";
+	public static final String INACTIVE = "INACTIVE";
 	public static final String BLANK_STRING = "";
 	public static final String VERSION = "1.0";
 	public static final String NONE_LANG_KEY = "@none";
@@ -101,6 +102,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@Value("${mosip.pms.api.id.oidc.client.details.get}")
 	private String getOidcClientDetailsId;
+
+	@Value("${mosip.pms.api.id.deactivate.oidc.client.patch}")
+	private String patchDeactivateOidcClientId;
 
 	@Value("#{'${mosip.pms.supported.oidc.languages}'.split(',')}")
 	private List<String> supportedOidcLanguages;
@@ -570,12 +574,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 		if ( !isAdmin || (isAdmin && clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus()))) {
 			//check if Partner is Active or not
-			if (!partner.getIsActive()) {
-				LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
+			checkPartnerActiveStatus(partner, clientId);
 		}
 
 		if (!clientDetail.getStatus().equalsIgnoreCase(updateRequest.getStatus())) {
@@ -627,8 +626,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			if (!isValidPartner) {
 				LOGGER.error("sessionId", "idType", "id", "The given partner ID does not belong to the user.");
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorCode(),
-						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER_UPDATE_OIDC.getErrorMessage());
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorMessage());
 			}
 		}
 		ProcessedUpdateClientDetail processedUpdateClientDetail = new ProcessedUpdateClientDetail();
@@ -1089,11 +1088,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             clientDetail.setName(clientName);
             clientDetail = clientDetailRepository.save(clientDetail);
 
-			ClientDetailResponse response = new ClientDetailResponse();
-			response.setClientId(clientDetail.getId());
-			response.setStatus(clientDetail.getStatus());
-			notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
-			responseWrapper.setResponse(response);
+			responseWrapper.setResponse(getResponseDto(clientDetail));
 
         } catch (ApiAccessibleException ex) {
             LOGGER.info("sessionId", "idType", "id", "In updateOIDCClientV2 method of ClientManagementServiceImpl - " + ex.getMessage());
@@ -1121,12 +1116,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		Partner partner = processedUpdateClientDetail.getPartner();
 
         //check if Partner is Active or not
-        if (!partner.getIsActive()) {
-            LOGGER.error("updateOIDCClient::Partner is not Active with id {}", clientId);
-            auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
-            throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-                    ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-        }
+		checkPartnerActiveStatus(partner, clientId);
+
         setCommonUpdateFields(clientDetail, updateRequest);
         if (updateRequest.getAdditionalConfig() != null) {
             // validate additional config fields
@@ -1190,6 +1181,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			ClientDetailV2 dto = new ClientDetailV2();
 			populateCommonClientFields(client, dto);
+			dto.setCreatedDateTime(client.getCreatedDateTime());
 			// set policy name and description
 			Optional<AuthPolicy> policyFromDb = authPolicyRepository.findById(client.getPolicyId());
 			if (policyFromDb.isPresent()) {
@@ -1205,34 +1197,11 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			}
 
 			// set client name and client name lang map
-			String clientNameStr = client.getName();
-			String nameValue;
-			Map<String, String> clientNameLangMap = new HashMap<>();
-			try {
-				JSONObject json = (JSONObject) new JSONParser().parse(clientNameStr);
-
-				// JSON → handle @none and other langs
-				String noneValue = (String) json.get("@none");
-				if (noneValue != null) {
-					nameValue = noneValue; // set name from @none
-
-					// Add other language keys except @none
-					for (Object key : json.keySet()) {
-						String keyStr = (String) key;
-						if (!"@none".equals(keyStr)) {
-							clientNameLangMap.put(keyStr, (String) json.get(keyStr));
-						}
-					}
-				} else {
-					nameValue = clientNameStr;
-				}
-			} catch (ParseException e) {
-				// Not JSON → fallback
-				nameValue = clientNameStr;
-			}
-
-			dto.setName(nameValue);
-			dto.setClientNameLangMap(clientNameLangMap);
+			ClientNameAndLangMap clientNameAndLangMap = extractClientNameAndLangMap(client.getName());
+			String name = clientNameAndLangMap.getName();
+			Map<String, String> langMap = clientNameAndLangMap.getLangMap();
+			dto.setName(name);
+			dto.setClientNameLangMap(langMap);
 
 			// set additional config
 			if (client.getAdditionalConfig() != null) {
@@ -1255,6 +1224,115 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		responseWrapper.setId(getOidcClientDetailsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<ClientDetailResponse> deactivateOIDCClient(String clientId, DeactivateOidcClientRequestDto requestDto) {
+		ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(clientId) || clientId.isEmpty()) {
+				LOGGER.error("updateOIDCClient::Invalid client id {}", clientId);
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.INVALID_CLIENT_ID.getErrorCode(),
+						ErrorCode.INVALID_CLIENT_ID.getErrorMessage());
+			}
+			String status = requestDto.getStatus();
+			if (Objects.isNull(status) || !status.equalsIgnoreCase(INACTIVE)) {
+				LOGGER.info(status + " : is Invalid Input Parameter, it should be (INACTIVE)");
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+				throw new PartnerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
+						ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
+			}
+			// validate client and partner details
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			ProcessedUpdateClientDetail processedUpdateClientDetail = validateClientDetailsAndPartner(clientId, isPartnerAdmin);
+			ClientDetail clientDetail = processedUpdateClientDetail.getClientDetail();
+			Partner partner = processedUpdateClientDetail.getPartner();
+
+			//check if Partner is Active or not
+			if (!isPartnerAdmin) {
+				checkPartnerActiveStatus(partner, clientId);
+			}
+
+			// populate client name and client name lang map
+			ClientNameAndLangMap clientNameAndLangMap = extractClientNameAndLangMap(clientDetail.getName());
+			String name = clientNameAndLangMap.getName();
+			Map<String, String> langMap = clientNameAndLangMap.getLangMap();
+			clientDetail.setName(name);
+			clientDetail.setStatus(INACTIVE);
+
+			makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), langMap);
+			String clientName=getClientNameLanguageMapAsJsonString(langMap, name);
+			clientDetail.setName(clientName);
+			clientDetail.setUpdatedBy(getLoggedInUserId());
+			clientDetail.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+			clientDetail = clientDetailRepository.save(clientDetail);
+
+			responseWrapper.setResponse(getResponseDto(clientDetail));
+
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In deactivateOIDCClient method of ClientManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In deactivateOIDCClient method of ClientManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.DEACTIVATE_OIDC_CLIENT_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.DEACTIVATE_OIDC_CLIENT_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(patchDeactivateOidcClientId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private ClientDetailResponse getResponseDto(ClientDetail clientDetail) {
+		notify(MapperUtils.mapClientDataToPublishDto(clientDetail), EventType.OIDC_CLIENT_UPDATED);
+		ClientDetailResponse response = new ClientDetailResponse();
+		response.setClientId(clientDetail.getId());
+		response.setStatus(clientDetail.getStatus());
+		return response;
+	}
+
+	private void checkPartnerActiveStatus(Partner partner, String clientId) {
+		//check if Partner is Active or not
+		if (!partner.getIsActive()) {
+			LOGGER.error("Partner is not Active with id {}", clientId);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.UPDATE_CLIENT_FAILURE);
+			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+		}
+	}
+
+	private ClientNameAndLangMap extractClientNameAndLangMap(String clientNameStr) {
+		String nameValue;
+		Map<String, String> clientNameLangMap = new HashMap<>();
+
+		try {
+			JSONObject json = (JSONObject) new JSONParser().parse(clientNameStr);
+
+			String noneValue = (String) json.get("@none");
+			if (noneValue != null) {
+				nameValue = noneValue;
+
+				// Add other language keys except @none
+				for (Object key : json.keySet()) {
+					String keyStr = (String) key;
+					if (!"@none".equals(keyStr)) {
+						clientNameLangMap.put(keyStr, (String) json.get(keyStr));
+					}
+				}
+
+			} else {
+				nameValue = clientNameStr;
+			}
+
+		} catch (Exception ex) {
+			// Not JSON → fallback
+			nameValue = clientNameStr;
+		}
+
+		return new ClientNameAndLangMap(nameValue, clientNameLangMap);
 	}
 
 	/**
