@@ -46,6 +46,9 @@ public class ClientManagementController {
 	@Value("${mosip.pms.api.id.update.oidc.client.put}")
 	private String putUpdateOidcClientId;
 
+	@Value("${mosip.pms.api.id.deactivate.oidc.client.patch}")
+	private String patchDeactivateOidcClientId;
+
 	@Autowired
 	ClientManagementService clientManagementService;
 
@@ -297,6 +300,29 @@ public class ClientManagementController {
 					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "clientId", "Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"));
 		}
 		return clientManagementService.getOIDCClientV2(clientId);
+	}
+
+	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivateoidcclient())")
+	@Operation(summary = "Deactivate OIDC client by Client ID.",
+			description = " Available since release 1.3.0-beta.4. This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
+	public ResponseWrapperV2<ClientDetailResponse> deactivateOIDCClient( @PathVariable("clientId") String clientId,
+																	   @Valid @RequestBody RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper) {
+		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(patchDeactivateOidcClientId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		if (!clientId.matches(clientIdRegex)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "clientId", "Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"));
+		}
+		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		return clientManagementService.deactivateOIDCClient(clientId, requestWrapper.getRequest());
 	}
 
 }
