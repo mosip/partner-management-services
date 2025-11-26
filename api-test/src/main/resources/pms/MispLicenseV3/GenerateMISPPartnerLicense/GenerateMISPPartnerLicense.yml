@@ -41,3 +41,45 @@ GenerateMISPPartnerLicense:
         "partnerId": "pms-111557",
         "licenseKeyStatus": "ACTIVE"
 }'
+   Pms_GenerateMISPPartnerLicense_Smoke_without_PolicyGroup_AND_Status_Deactivated_Smoke_sid:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_03
+      description: Generate MISP Partner License without PolicyGroup AND Status Deactivated
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseResult
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111556",
+        "policyId": "$REMOVE$",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
+        "expiryDate": "2035-10-10"
+}'
+      output: '{
+        "partnerId": "pms-111556",
+        "licenseKeyStatus": "ACTIVE"
+}'
+   Pms_GenerateMISPPartnerLicense_Smoke_with_Numeric_MisplicenseKeyName_Smoke_sid:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_04
+      description: Generate MISP Partner License without PolicyGroup AND Status Deactivated
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseResult
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111558",
+        "policyId": "$REMOVE$",
+        "licenseKeyName": "1234",
+        "expiryDate": "2035-10-10"
+}'
+      output: '{
+        "partnerId": "pms-111558",
+        "licenseKeyStatus": "ACTIVE"
+}'

@@ -353,3 +353,255 @@ GetMISPPartnerLicenseNegTC:
          "pageSize": "0"
        }
 }'
+  Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_Without_SortType_Neg:
+        endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_24
+        description: Fetch MISP partner licenses sorted by sortFieldName without passing sortType
+        role: partneradmin
+        restMethod: get
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/error
+        input: '{}'
+        output: '{
+        "errors": [
+           {
+              "errorCode": "PMS_PS_ERROR_007"
+           }
+        ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Negative_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?	expiryPeriod=-10
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_25
+    description: Fetching MISP Partner License By providing Negative ExpiryPeriod
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Exceeding_Maximum_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=31
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_26
+    description: Fetching MISP Partner License with exceeding Maximum Allowed ExpiryPeriod
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Decimal_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=15.5
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_27
+    description: Fetching MISP Partner License By providing Decimal Value for ExpiryPeriod
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Deactivate_PartnerId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?partnerId=pms-111545
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_28
+    description: Fetching MISP Partner License using Deactivated PartnerId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_MSP_429"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=invalidFieldName&sortType=asc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_29
+    description: Fetching MISP Partner License using invalid SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_357"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Numeric_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=1234&sortType=asc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_30
+    description: Fetching MISP Partner License using Numeric SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_357"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Unsupported_SortType_Value_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName&sortType=ascending
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_31
+    description: Fetching MISP Partner License using Unsupported SortType Value
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_358"
+          }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_SpecialCharacter_In_SortType_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName&sortType=as@
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_32
+    description: Fetching MISP Partner License using Special Character in SortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_358"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=abc&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_33
+    description: Fetching MISP Partner License with Non Integer PageNo
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Decimal_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=1.2&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_34
+    description: Fetching MISP Partner License with Decimal PageNo
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_VeryLarge_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageNo=9999&pageSize=8
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_35
+    description: Fetching MISP Partner License with Very Large PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+    "response": {
+       "pageNo": "0",
+       "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_No_Status_Selected_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?status=
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_36
+    description: Fetching MISP Partner License with No Status Selected
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+    "response": {
+       "pageNo": "0",
+       "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Null_OrgName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?orgName=null
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_38
+    description: Fetching MISP Partner License with Null OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+    "response": {
+        "pageNo": "0",
+        "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Valid_PolicyName_And_Invalid_OrgName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?policyName=mosip policy MISP API Policy 12345&orgName=UnknownOrg
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_39
+    description: Fetching MISP Partner License with valid PolicyName and Invalid OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+    "response": {
+        "pageNo": "0",
+        "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Large_PageSizeNumber_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageSize=500
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_40
+    description: Fetching MISP Partner License with Large PageSize Number
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+    "response": {
+       "pageNo": "0",
+       "pageSize": "500"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageSizeNumber_Neg:
+    endPoint: /v1/partnermanager/misp-licenses?pageSize=abc
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_41
+    description: Fetching MISP Partner License with Non Integer PageSize Number
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{}'
+    output: '{
+    "response": {
+       "pageNo": "0",
+       "pageSize": "0"
+     }
+}'
