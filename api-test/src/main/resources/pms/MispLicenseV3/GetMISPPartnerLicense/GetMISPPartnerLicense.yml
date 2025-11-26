@@ -39,9 +39,9 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_Status_Activated:
-        endPoint: /v1/partnermanager/misp-licenses?status=ACTIVE
+        endPoint: /v1/partnermanager/misp-licenses?status=activated
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_04
-        description: Fetch MISP partner license with status set to ACTIVE
+        description: Fetch MISP partner license with status set to activated
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -65,7 +65,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_ORGName:
-        endPoint: /v1/partnermanager/misp-licenses?orgName=ORGName
+        endPoint: /v1/partnermanager/misp-licenses?orgName=PMS_API_MISP_ORG
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_06
         description: Fetch MISP partner license using a valid OrgName
         role: partneradmin
@@ -78,7 +78,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_PolicyGroupName:
-        endPoint: /v1/partnermanager/misp-licenses?policyGroupName=Group_A
+        endPoint: /v1/partnermanager/misp-licenses?policyGroupName=mosip policy group MISP
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_07
         description: Fetch MISP partner license using a valid PolicyGroupName
         role: partneradmin
@@ -91,7 +91,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_PolicyName:
-        endPoint: /v1/partnermanager/misp-licenses?policyName=Policy_X
+        endPoint: /v1/partnermanager/misp-licenses?policyName=mosip policy MISP API Policy 12345
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_08
         description: Fetch MISP partner license using a valid PolicyName
         role: partneradmin
@@ -104,7 +104,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_MispLicenseKeyName:
-        endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=License_A
+        endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_09
         description: Fetch MISP partner license using a valid MispLicenseKeyName
         role: partneradmin
@@ -159,6 +159,214 @@ GetMISPPartnerLicense:
         endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName&sortType=desc
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_13
         description: Fetch MISP partner licenses sorted by mispLicenseKeyName in descending order
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_ExpiryPeriod_NotPassing_Any_Value:
+        endPoint: /v1/partnermanager/misp-licenses?expiryPeriod
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_14
+        description: Fetch MISP partner licenses sorted by expiryPeriod without passing any value
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_ExpiryPeriod_Passing_Valid_Value:
+        endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=15
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_15
+        description: Fetch MISP partner licenses sorted by expiryPeriod with passing valid value
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_Minimum_ExpiryPeriod:
+        endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=1
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_16
+        description: Fetch MISP partner licenses sorted by minimum expiryPeriod
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_Maximum_ExpiryPeriod:
+        endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=30
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_17
+        description: Fetch MISP partner licenses sorted by maximum expiryPeriod
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_ByValidPartnerId_And_Status_Activated:
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=pms-111555&status=activated
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_18
+        description: Fetch MISP partner license using a valid partnerId and status activated
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_ByValidPartnerId_And_Status_Deactivated:
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=pms-111556&status=deactivated
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_19
+        description: Fetch MISP partner license using a valid partnerId and status deactivated
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_Pagination_And_Valid_PartnerId:
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=pms-111555&pageNo=0&pageSize=2
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_20
+        description: Fetch MISP partner license using pagination and valid partnerId
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_PartnerId_And_PolicyName:
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=pms-111555&policyName=mosip policy MISP API Policy 12345
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_21
+        description: Fetch MISP partner license using partnerId and PolicyName
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_SortField_As_ExpiryDateTime_And_Ascending_Order:
+        endPoint: /v1/partnermanager/misp-licenses?sortFieldName=expiryDateTime&sortType=asc
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_22
+        description: Fetch MISP partner licenses sorted by expiryDate in ascending order
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_SortField_As_ExpiryDateTime_And_Descending_Order:
+        endPoint: /v1/partnermanager/misp-licenses?sortFieldName=expiryDateTime&sortType=desc
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_23
+        description: Fetch MISP partner licenses sorted by expiryDate in descending order
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_PageSize_Without_PageNumber:
+        endPoint: /v1/partnermanager/misp-licenses?pageSize=5
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_24
+        description: Fetch MISP partner license using pageSize without passing pageNumber
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_Numeric_LicenseKeyName:
+        endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=1234
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_25
+        description: Fetch MISP partner license using numeric LicenseKeyName
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_with_SortField_As_PartnerId_And_Ascending_Order:
+        endPoint: /v1/partnermanager/misp-licenses?sortFieldName=partnerId&sortType=asc
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_26
+        description: Fetch MISP partner licenses sorted by partnerId in ascending order
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_PolicyName_And_Pagination:
+        endPoint: /v1/partnermanager/misp-licenses?policyName=mosip policy MISP API Policy 12345&pageNo=0&pageSize=2
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_27
+        description: Fetch MISP partner license using PolicyName and pagination
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_PolicyName_And_Valid_OrgName:
+        endPoint: /v1/partnermanager/misp-licenses?policyName=mosip policy MISP API Policy 12345&orgName=PMS_API_MISP_ORG
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_28
+        description: Fetch MISP partner license using PolicyName and valid OrgName
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_PolicyGroupName_And_Status_Activated:
+        endPoint: /v1/partnermanager/misp-licenses?policyGroupName=mosip policy group MISP&status=activated
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_29
+        description: Fetch MISP partner license using PolicyGroupName and status activated
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true

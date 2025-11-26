@@ -10,6 +10,7 @@ delete from pms.partner_contact where cr_by='pms-111997';
 delete from partner_policy_bioextract where cr_by='pms-111997';
 delete from pms.misp_license where cr_by='pms-111997';
 delete from pms.misp_license where license_key_name like 'MISP_API_Automation%';
+delete from pms.misp_license where license_key_name='1234';
 
 delete from partner_policy_credential_type where cr_by='pms-111777';
 delete from pms.auth_policy where cr_by='pms-111777';

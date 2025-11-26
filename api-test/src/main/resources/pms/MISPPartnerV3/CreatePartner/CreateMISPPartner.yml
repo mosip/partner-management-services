@@ -180,3 +180,29 @@ CreateMISPPartner:
         "partnerId": "pms-111551",
         "status": "InProgress"
 }'
+   Pms_MISPPartnerRegistration_With_Not_Uploading_Certificate_Smoke:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_08
+      description: Create MISP Partner Self Registration Without Uploading Certificate
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-111545",
+        "organizationName": "PMS_API_MISP_ORG",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartnerapiauto@gmail.com",
+        "partnerType": "MISP_Partner",
+        "policyGroup": "mosip policy group MISP",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "pms-111545",
+        "status": "InProgress"
+}'
