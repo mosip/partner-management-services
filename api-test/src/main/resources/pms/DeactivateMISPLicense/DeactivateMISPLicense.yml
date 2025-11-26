@@ -1,5 +1,5 @@
 DeactivateMISPLicense:
-  Pms_DeactivateMISPLicense_All_Valid_Smoke:
+  Pms_DeactivateMISPLicense:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicense_01
     description: Deactivating the MISP Partner License using a valid access token.

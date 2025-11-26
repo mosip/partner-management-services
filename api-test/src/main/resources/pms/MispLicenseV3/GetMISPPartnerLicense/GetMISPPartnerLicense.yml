@@ -104,7 +104,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_MispLicenseKeyName:
-        endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$
+        endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=1234
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_09
         description: Fetch MISP partner license using a valid MispLicenseKeyName
         role: partneradmin
