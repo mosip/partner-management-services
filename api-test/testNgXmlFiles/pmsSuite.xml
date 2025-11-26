@@ -1447,6 +1447,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	<test name="DeactivateMISPPartner">
+		<parameter name="ymlFile"
+			value="pms/DeactivateMISPPartner/DeactivateMISPPartner.yml" />
+		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
 	<test name="GetMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense.yml" />
