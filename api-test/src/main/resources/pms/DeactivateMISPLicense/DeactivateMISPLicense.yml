@@ -1,7 +1,7 @@
 DeactivateMISPLicense:
   Pms_DeactivateMISPLicense:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicense_01
+    uniqueIdentifier: TC_PMS_DeactivateMISPLicense_01
     description: Deactivating the MISP Partner License using a valid access token.
     role: partneradmin
     restMethod: patch
@@ -11,9 +11,9 @@ DeactivateMISPLicense:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_Smoke_without_PolicyGroup_AND_Status_Deactivated_Smoke_sid_partnerId$",
+      "partnerId": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_AND_Status_Deactivated_sid_partnerId$",
       "policyId": "$REMOVE$",
-      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_Smoke_without_PolicyGroup_AND_Status_Deactivated_Smoke_sid_licenseKeyName$",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_AND_Status_Deactivated_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{   
