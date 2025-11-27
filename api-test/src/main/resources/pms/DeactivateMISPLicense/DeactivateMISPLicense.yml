@@ -11,9 +11,9 @@ DeactivateMISPLicense:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_AND_Status_Deactivated_sid_partnerId$",
+      "partnerId": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_sid_partnerId$",
       "policyId": "$REMOVE$",
-      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_AND_Status_Deactivated_sid_licenseKeyName$",
+      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_sid_licenseKeyName$",
       "status": "De-Activate"
 }'
     output: '{   
