@@ -65,7 +65,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_with_Numeric_MisplicenseKeyName_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_04
-      description: Generate MISP Partner License without PolicyGroup AND Status Deactivated
+      description: Generate MISP Partner License with numeric licenseKeyName
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -86,7 +86,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_with_MisplicenseKeyName_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_05
-      description: Generate MISP Partner License without PolicyGroup AND Status Deactivated
+      description: Generate MISP Partner License
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense

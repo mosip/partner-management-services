@@ -370,7 +370,7 @@ GetMISPPartnerLicenseNegTC:
         ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_ExpiryPeriod_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?	expiryPeriod=-10
+    endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=-10
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_25
     description: Fetching MISP Partner License By providing Negative ExpiryPeriod
     role: partneradmin
@@ -579,6 +579,7 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License with Large PageSize Number
     role: partneradmin
     restMethod: get
+    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
     input: '{}'
@@ -603,6 +604,7 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License using Deactivated PartnerId
     role: partneradmin
     restMethod: get
+    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
     input: '{}'
