@@ -41,10 +41,10 @@ GenerateMISPPartnerLicense:
         "partnerId": "pms-111557",
         "licenseKeyStatus": "ACTIVE"
 }'
-   Pms_GenerateMISPPartnerLicense_without_PolicyGroup_AND_Status_Deactivated_sid:
+   Pms_GenerateMISPPartnerLicense_without_PolicyGroup_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_03
-      description: Generate MISP Partner License without PolicyGroup AND Status Deactivated
+      description: Generate MISP Partner License without PolicyGroup
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
