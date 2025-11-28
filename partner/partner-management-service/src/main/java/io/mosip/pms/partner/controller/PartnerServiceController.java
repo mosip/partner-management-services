@@ -464,7 +464,7 @@ public class PartnerServiceController {
 	@Deprecated(since = "release-1.2.2.0")
 	@ResponseFilter
 	@PostMapping("/filtervalues")	
-	@Operation(summary = "Service to filter partner details", description = "Service to filter partner details")
+	@Operation(summary = "Service to filter partner details", description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the GET /admin-partners endpoint")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -600,7 +600,7 @@ public class PartnerServiceController {
 
 	@PostMapping(value = "/v3")
 	@Operation(summary = "This endpoint is used for partner self registration",
-			description = "Available since release-1.3.0-beta.3. This endpoint is used for partner self registration.")
+			description = "Available since release-1.3.0-beta.3. Available for all partner roles. If the role is PARTNER_ADMIN, the email provided in the request body will be used for registration. For all other partner roles, the email from the logged-in user’s token will be used for registration.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
