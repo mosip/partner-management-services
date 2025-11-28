@@ -88,6 +88,8 @@ public class PatchWithPathParamsAndBody extends PMSUtil implements ITest {
 
 		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
 		String inputJson = filterInputHbs(testCaseDTO);
+		
+		inputJson = PMSUtil.inputStringKeyWordHandeler(inputJson, testCaseName);
 
 		response = patchWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 				testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
