@@ -323,7 +323,7 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicygroups())")
 	@GetMapping(value = "/policy-groups")
 	@Operation(summary = "This endpoint retrieves details about all active Policy Groups",
-	description = "Available since release-1.2.2.0.")
+	description = "Available since release-1.2.2.0- This endpoint should be setup for all the roles: AUTH_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER,ABIS_PARTNER,MANUAL_ADJUDICATION,PARTNER_ADMIN,POLICYMANAGER.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -334,7 +334,7 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
 	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves the list of all Policies",
-	description = "Available since release-1.2.2.0. It is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier POST endpoint /policies/search by adding features like pagination, filtering and sorting. It is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
