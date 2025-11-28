@@ -315,7 +315,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
 	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Available since release-1.2.2.0. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoint /partners/{partnerId} by adding new features like Policy Group Details in Response and Certificate Details in Response. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -329,7 +329,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
 	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoints /partners and /partners/v2 by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -666,7 +666,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostlinkpolicygrouptopartner())")
 	@PostMapping(value = "/{partnerId}/policy-group")
 	@Operation(summary = "This endpoint is used for linking a policy group to a partner.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is used for linking a policy group to a partner.")
+			description = "Available since release-1.3.0-beta.3. This endpoint is available for users with the PARTNER_ADMIN role. It is used to link a policy group to a partner with the MISP_PARTNER role, if not already linked.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Policy group linked successfully"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

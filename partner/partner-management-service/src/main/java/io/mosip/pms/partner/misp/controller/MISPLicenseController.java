@@ -140,7 +140,7 @@ public class MISPLicenseController {
 	@GetMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallmisplicenses())")
 	@Operation(summary = "This endpoint retrieves a list of all MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. It is configured for PARTNER_ADMIN role.")
+			description = "Available since release-1.3.0-beta.3. This endpoint upgrades the earlier GET endpoint /misps by adding new features like pagination, sorting, and and filtering based on optional query parameters. It is configured for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -201,8 +201,8 @@ public class MISPLicenseController {
 
 	@PostMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratemisplicense())")
-	@Operation(summary = "This endpoint generates MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint generates MISP Licence Key for given MISP partner. It is configured for PARTNER_ADMIN role.")
+	@Operation(summary = "This endpoint is used to generate a MISP License Key for a given MISP partner.",
+			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -239,7 +239,7 @@ public class MISPLicenseController {
 	@PatchMapping("/misp-licenses/{partnerId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatemisplicensekey())")
 	@Operation(summary = "This endpoint deactivates the MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint deactivates the MISP Licence Key based on Partner Id and request parameters. It is configured for PARTNER_ADMIN role.")
+			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier PUT /misps endpoint.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -259,8 +259,8 @@ public class MISPLicenseController {
 
 	@PutMapping("/misp-licenses/{partnerId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutregeneratemisplicensekey())")
-	@Operation(summary = "This endpoint regenerates the MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint regenerates the MISP Licence Key based on Partner Id and request parameters. It is configured for PARTNER_ADMIN role.")
+	@Operation(summary = "This endpoint is used to re-generate a MISP License Key for a given MISP partner.",
+			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier GET /misps/{mispId}/licenseKey endpoint.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
