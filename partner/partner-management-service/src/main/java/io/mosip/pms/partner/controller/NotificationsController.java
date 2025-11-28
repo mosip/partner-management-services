@@ -46,7 +46,7 @@ public class NotificationsController {
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
     @Operation(summary = "This endpoint retrieves a list of all notifications.",
-            description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and filtering.")
+            description = "Available since release-1.3.0-beta.1. The notifications fetched will be for all the partner ids which are linked to the logged in user id, which is sent as a Header in the Authorization token. This endpoint supports pagination, sorting, and filtering.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -175,7 +175,7 @@ public class NotificationsController {
     @PatchMapping("/notifications/{notificationId}")
     @Operation(
             summary = "This endpoint dismisses a notification.",
-            description = "This endpoint is available since release-1.3.x and is used to dismiss a notification."
+            description = "This endpoint is available since release-1.3.0-beta.1 and is used to dismiss a notification."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),

@@ -314,7 +314,7 @@ public class FTPChipDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
 	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers.",
-	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoint /ftpchipdetail/search by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
