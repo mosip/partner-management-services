@@ -84,7 +84,19 @@ public class PMSUtil extends AdminTestUtil {
 	        int end = json.indexOf("$", start);
 
 	        String numberStr = json.substring(start, end);
-	        int number = Integer.parseInt(numberStr);
+	        
+	        if (end == -1) {
+	            throw new IllegalArgumentException(
+	                "Invalid token format: missing closing '$' for token: " + token);
+	        }
+	        
+	        int number;
+	        try {
+	        	number = Integer.parseInt(numberStr);
+	        } catch (NumberFormatException e) {
+	            throw new IllegalArgumentException(
+	                "Invalid number inside token: " + token + numberStr + "$", e);
+	        }
 
 	        // Always convert to UTC, end of day, with .000Z
 	        OffsetDateTime newDate = OffsetDateTime.now(ZoneOffset.UTC)
