@@ -270,7 +270,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
 	@PostMapping(value = "/{sbiId}/devices")
 	@Operation(summary = "This endpoint adds a new Device and creates an inactive mapping between the device and the given SBI.", 
-	description = "Available since release-1.2.2.0. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. Whenever a device is created, this endpoint will first add a new device in DB and also add an in active mapping between device and SBI. Later when Partner Admin will approve the Device, the mapping will also be activated. If any error occurs while adding the inactive mapping between a device and SBI, instead of leaving the orphaned device in DB, this endpoint will delete it. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
