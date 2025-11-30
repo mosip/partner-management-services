@@ -15,7 +15,7 @@ UpdateApiKeyExpiryDate:
       "partnerId": "pms-111999",
       "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+      "apiKeyExpiryDateTime": "$FUTUREDATE:365$"
 }'
     output: '{
 }'
