@@ -101,7 +101,7 @@ public enum ErrorCode {
 	PARTNER_NOT_BELONGS_TO_THE_USER_CREATE_OIDC("PMS_POLICY_ERROR_009", "The given partner ID does not belong to the user.So unable to create OIDC client"),
 	PARTNER_NOT_BELONGS_TO_THE_USER("PMS_POLICY_ERROR_010", "The given partner ID does not belong to the user."),
 	PARTNER_NOT_BELONGS_TO_THE_USER_GET_OIDC("PMS_POLICY_ERROR_011", "The given partner ID does not belong to the user.So unable to get OIDC client details"),
-	UNABLE_TO_FETCH_PARTNERS_LIST("PMS_POLICY_ERROR_012", "Unable to fetch partners list. Only Partner Admin can get the partners list for provided partner type."),
+	UNABLE_TO_FETCH_MISP_PARTNERS_LIST("PMS_POLICY_ERROR_012", "Unable to fetch MISP partners list. Only Partner Admin can get the MISP partners list."),
 	CREATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_013", "Error while creating OIDC client."),
 	INVALID_USERINFO_RESPONSE_TYPE("PMS_POLICY_ERROR_014", "Invalid userinfo response type. Allowed values are JWS and JWE."),
 	INVALID_CONSENT_EXPIRE_TIME("PMS_POLICY_ERROR_015", "Invalid consent expire time. It should be more than or equal to 10 minutes."),

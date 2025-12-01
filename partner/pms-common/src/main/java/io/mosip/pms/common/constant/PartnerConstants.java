@@ -99,8 +99,6 @@ public final class PartnerConstants {
 	public static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 
 	public static final String MISP_PARTNER_TYPE = "MISP_Partner";
-
-	public static final String ABIS_PARTNER_TYPE = "ABIS_Partner";
 	
 	public static final String PARTNER_DOMAIN_AUTH = "AUTH";
 
