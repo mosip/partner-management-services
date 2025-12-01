@@ -261,7 +261,7 @@ GetMISPPartnerLicenseNegTC:
     "responseCode": "400"
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_OrgName_and_Invalid_PolicyGroupName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?orgName=Org_A&policyGroupName=InvalidGroup123
+    endPoint: /v1/partnermanager/misp-licenses?orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_organizationName$&policyGroupName=InvalidGroup123
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_18
     description: Fetching MISP Partner License with Valid OrgName and Invalid PolicyGroupName
     role: partneradmin
@@ -559,7 +559,7 @@ GetMISPPartnerLicenseNegTC:
      }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_PolicyName_And_Invalid_OrgName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?policyName=mosip policy MISP API Policy 12345&orgName=UnknownOrg
+    endPoint: /v1/partnermanager/misp-licenses?policyName=$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$&orgName=UnknownOrg
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_39
     description: Fetching MISP Partner License with valid PolicyName and Invalid OrgName
     role: partneradmin

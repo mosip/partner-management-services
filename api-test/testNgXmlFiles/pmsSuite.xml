@@ -61,7 +61,7 @@
 	<test name="DefineMISPPolicy">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicy/DefineMISPPolicy.yml" />
-		<parameter name="idKeyName" value="id,name" />
+		<parameter name="idKeyName" value="id,name,policyGroupName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -203,7 +203,8 @@
 	<test name="MISPPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="reqKeyName" value="organizationName" />
+		<parameter name="idKeyName" value="id,partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
