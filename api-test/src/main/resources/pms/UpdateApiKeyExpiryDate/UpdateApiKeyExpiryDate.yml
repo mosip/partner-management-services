@@ -1,0 +1,61 @@
+UpdateApiKeyExpiryDate:
+  Pms_UpdateApiKeyExpiryDate_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDate_01
+    checkErrorsOnlyInResponse: true
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDateResult
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+}'
+    output: '{
+}'
+  Pms_UpdateApiKeyExpiryDate_With_Alphanumeric_ApiKeyName_Smoke:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with alphanumeric apiKeyName
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDate_02
+    checkErrorsOnlyInResponse: true
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDateResult
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "$FUTUREDATE:365$"
+}'
+    output: '{
+}'
+  Pms_UpdateApiKeyExpiryDate_With_After_10yrs_Expiry_Date_Smoke:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
+    description: Updating expiry date of an existing Partner API Key with expiry date after 10 years
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDate_03
+    checkErrorsOnlyInResponse: true
+    restMethod: patch
+    inputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate
+    outputTemplate: pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDateResult
+    input: '{
+      "id": "mosip.pms.update.api.key.expiry.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111999",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "apiKeyExpiryDateTime": "$FUTUREDATE_YEARS:10$"
+}'
+    output: '{
+}'
