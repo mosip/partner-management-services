@@ -1,5 +1,5 @@
 CreateMISPPartner:
-   Pms_MISPPartnerRegistration_All_Valid_Smoke:
+   Pms_MISPPartnerRegistration_All_Valid_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_01
       description: Create MISP Partner Self Registration
@@ -25,7 +25,7 @@ CreateMISPPartner:
         "partnerId": "pms-111555",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Empty_PolicyGroup:
+   Pms_MISPPartnerRegistration_Empty_PolicyGroup_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_02
       description: Create MISP Partner Self Registration Empty Policy group
