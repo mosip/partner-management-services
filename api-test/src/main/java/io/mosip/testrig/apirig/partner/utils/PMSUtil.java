@@ -83,12 +83,11 @@ public class PMSUtil extends AdminTestUtil {
 	        int start = json.indexOf(token) + token.length();
 	        int end = json.indexOf("$", start);
 
-	        String numberStr = json.substring(start, end);
-	        
 	        if (end == -1) {
 	            throw new IllegalArgumentException(
 	                "Invalid token format: missing closing '$' for token: " + token);
 	        }
+	        String numberStr = json.substring(start, end);
 	        
 	        int number;
 	        try {
