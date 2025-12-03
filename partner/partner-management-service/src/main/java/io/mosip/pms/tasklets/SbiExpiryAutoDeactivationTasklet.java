@@ -54,6 +54,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
         int countOfSbiDeactivated = 0;
         int countOfSbiRejected = 0;
         try {
+            log.info("As per configuration, skip the SBIs which created by partner ids: {}", skipPartnerIds);
             // Step 1: get all the SBI's which are approved and pending_approval
             List<SecureBiometricInterface> sbiList = sbiRepository.findAllApprovedAndPendingSBI();
             int sbiCount = sbiList.size();
@@ -61,7 +62,6 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
             for (SecureBiometricInterface sbiDetail : sbiList) {
                 // Step 2: For each SBI check if it is expired or not
                 try {
-                    log.info("As per configuration, skip the SBIs which created by partner ids: {}", skipPartnerIds);
                     if (!skipPartnerIds.contains(sbiDetail.getProviderId())) {
                         String sbiId = sbiDetail.getId();
                         String sbiStatus = sbiDetail.getApprovalStatus();
@@ -75,7 +75,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                         for (DeviceDetail deviceDetail : approvedDevices) {
                                             deviceDetail.setIsActive(false);
                                             deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                            deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
+                                            deviceDetail.setUpdBy(this.getClass().getName());
                                             deviceDetailRepository.save(deviceDetail);
                                             auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                         }
@@ -87,7 +87,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                         for (DeviceDetail deviceDetail : pendingApprovalDevices) {
                                             deviceDetail.setApprovalStatus(PartnerConstants.REJECTED);
                                             deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                            deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
+                                            deviceDetail.setUpdBy(this.getClass().getName());
                                             deviceDetailRepository.save(deviceDetail);
                                             auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                         }

@@ -53,10 +53,10 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
         int deactivatedCount = 0;
         try {
             // Fetch all active API keys
+            log.info("As per configuration, skip the API keys which created by partner ids: {}", skipPartnerIds);
             List<PartnerPolicy> apiKeyList = partnerPolicyRepository.findAllActiveApiKeys();
             for (PartnerPolicy apiKeyDetails : apiKeyList) {
                 try {
-                    log.info("As per configuration, skip the API keys which created by partner ids: {}", skipPartnerIds);
                     if(!skipPartnerIds.contains(apiKeyDetails.getPartner().getId())) {
                         if (apiKeyDetails.getValidToDatetime() != null &&
                                 apiKeyDetails.getValidToDatetime().toLocalDateTime().isBefore(LocalDateTime.now())) {
