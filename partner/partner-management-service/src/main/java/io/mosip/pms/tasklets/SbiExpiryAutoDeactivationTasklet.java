@@ -75,7 +75,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                         for (DeviceDetail deviceDetail : approvedDevices) {
                                             deviceDetail.setIsActive(false);
                                             deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                            deviceDetail.setUpdBy(this.getClass().getName());
+                                            deviceDetail.setUpdBy(this.getClass().getSimpleName());
                                             deviceDetailRepository.save(deviceDetail);
                                             auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                         }
@@ -87,7 +87,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                         for (DeviceDetail deviceDetail : pendingApprovalDevices) {
                                             deviceDetail.setApprovalStatus(PartnerConstants.REJECTED);
                                             deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                            deviceDetail.setUpdBy(this.getClass().getName());
+                                            deviceDetail.setUpdBy(this.getClass().getSimpleName());
                                             deviceDetailRepository.save(deviceDetail);
                                             auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
                                         }
@@ -104,7 +104,7 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
                                     log.info("SBI with id {} has been rejected for Partner id : {}", sbiId, sbiDetail.getProviderId());
                                 }
                                 sbiDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                sbiDetail.setUpdBy(this.getClass().getName());
+                                sbiDetail.setUpdBy(this.getClass().getSimpleName());
                                 SecureBiometricInterface updatedSbi = sbiRepository.save(sbiDetail);
                                 SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
                                 secureBiometricInterfaceServiceImpl.getUpdateHistoryMapping(history, updatedSbi);
