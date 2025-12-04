@@ -9,12 +9,12 @@ GenerateApiKey:
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
     "policyName": "mosip policy 19234",
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "partnerId": "pms-111999",
-    "label": "string"    
+    "label": "pmsAutomation"
 }'
 
    Pms_GenerateApiKey_Regenerate_Same_Key_Neg:
@@ -27,7 +27,7 @@ GenerateApiKey:
       outputTemplate: pms/error
       input: '{
     "policyName": "mosip policy 19234",
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -48,7 +48,7 @@ GenerateApiKey:
       outputTemplate: pms/error
       input: '{
     "policyName": "mosip policy 19234",
-    "label": "String"
+    "label": "pmsAutomation"
 }'
       output: '{
    "errors": [
@@ -68,7 +68,7 @@ GenerateApiKey:
       outputTemplate: pms/error
       input: '{
     "policyName": "mosip policy 19234",
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "1111-07-22T08:21:17.665Z"
     
 }'
@@ -109,7 +109,7 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -130,7 +130,7 @@ GenerateApiKey:
       outputTemplate: pms/error
       input: '{
     "policyName": "dfbgafb",
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -150,10 +150,10 @@ GenerateApiKey:
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
     "policyName": "mosip policy",
-    "label": "string",
+    "label": "pmsAutomation-19234",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "partnerId": "pms-111999",
-    "label": "string"    
+    "label": "pmsAutomation-19234"    
 }'

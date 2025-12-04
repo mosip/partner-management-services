@@ -1,5 +1,8 @@
 package io.mosip.testrig.apirig.partner.utils;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -59,7 +62,56 @@ public class PMSUtil extends AdminTestUtil {
 			jsonString = jsonString.replace("$LICENSE_KEY_NAME$", licenseKeyName);
 		    logger.info("Generated dynamic licenseKeyName: " + licenseKeyName);
 		}
+		if (jsonString.contains("$FUTUREDATE:") || jsonString.contains("$FUTUREDATE_YEARS:")) {
+			jsonString = replaceFutureDates(jsonString);
+		}
 		return jsonString;
+	}
+	
+	public static String replaceFutureDates(String json) {
+
+	    json = processFutureDate(json, "$FUTUREDATE:", true);     // days
+	    json = processFutureDate(json, "$FUTUREDATE_YEARS:", false); // years
+
+	    return json;
+	}
+
+	public static String processFutureDate(String json, String token, boolean isDays) {
+
+	    while (json.contains(token)) {
+
+	        int start = json.indexOf(token) + token.length();
+	        int end = json.indexOf("$", start);
+
+	        if (end == -1) {
+	            throw new IllegalArgumentException(
+	                "Invalid token format: missing closing '$' for token: " + token);
+	        }
+	        String numberStr = json.substring(start, end);
+	        
+	        int number;
+	        try {
+	        	number = Integer.parseInt(numberStr);
+	        } catch (NumberFormatException e) {
+	            throw new IllegalArgumentException(
+	                "Invalid number inside token: " + token + numberStr + "$", e);
+	        }
+
+	        // Always convert to UTC, end of day, with .000Z
+	        OffsetDateTime newDate = OffsetDateTime.now(ZoneOffset.UTC)
+	                .withHour(23).withMinute(59).withSecond(59).withNano(0);
+
+	        newDate = isDays ? newDate.plusDays(number) : newDate.plusYears(number);
+
+	        // Format in ISO UTC with milliseconds and Z
+	        DateTimeFormatter formatter =
+	                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+	        String isoUtc = newDate.format(formatter);
+
+	        json = json.replace(token + numberStr + "$", isoUtc);
+	    }
+	    return json;
 	}
 	
 	public static String replaceKeywordValue(String jsonString, String keyword, String value) {
