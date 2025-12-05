@@ -166,14 +166,14 @@ public class MISPLicenseController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(policyGroupName);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(mispLicenseKeyName);
-		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
+		inputValidator.validateRequestInput("status", status);
 		MISPFilterDto filterDto = new MISPFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());
@@ -212,9 +212,9 @@ public class MISPLicenseController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPartnerId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getLicenseKeyName());
+		inputValidator.validateRequestInput("partnerId", requestWrapper.getRequest().getPartnerId());
+		inputValidator.validateRequestInput("policyId", requestWrapper.getRequest().getPolicyId());
+		inputValidator.validateRequestInput("licenseKeyName", requestWrapper.getRequest().getLicenseKeyName());
 		return infraProviderService.generateMISPLicense(requestWrapper.getRequest());
 	}
 
@@ -230,9 +230,9 @@ public class MISPLicenseController {
 			@RequestParam(value = "policyId", required = false) String policyId,
 			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName
 	) {
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(mispLicenseKeyName);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
 		return infraProviderService.getMISPLicenseDetails(partnerId, policyId, mispLicenseKeyName);
 	}
 
@@ -250,10 +250,10 @@ public class MISPLicenseController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getLicenseKeyName());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("policyId", requestWrapper.getRequest().getPolicyId());
+		inputValidator.validateRequestInput("licenseKeyName", requestWrapper.getRequest().getLicenseKeyName());
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return infraProviderService.deactivateMISPLicense(partnerId, requestWrapper.getRequest());
 	}
 
@@ -271,9 +271,9 @@ public class MISPLicenseController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getLicenseKeyName());
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("policyId", requestWrapper.getRequest().getPolicyId());
+		inputValidator.validateRequestInput("licenseKeyName", requestWrapper.getRequest().getLicenseKeyName());
 		return infraProviderService.regenerateMISPLicense(partnerId, requestWrapper.getRequest());
 	}
 }

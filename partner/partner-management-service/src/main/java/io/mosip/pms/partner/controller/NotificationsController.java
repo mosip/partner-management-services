@@ -93,21 +93,21 @@ public class NotificationsController {
             @RequestParam(value = "mispPartnerId", required = false) String mispPartnerId
     ) {
         // Validate all inputs
-        inputValidator.validateRequestInput(notificationStatus);
-        inputValidator.validateRequestInput(notificationType);
-        inputValidator.validateRequestInput(certificateId);
-        inputValidator.validateRequestInput(issuedBy);
-        inputValidator.validateRequestInput(issuedTo);
-        inputValidator.validateRequestInput(partnerDomain);
-        inputValidator.validateRequestInput(ftmId);
-        inputValidator.validateRequestInput(make);
-        inputValidator.validateRequestInput(model);
-        inputValidator.validateRequestInput(apiKeyName);
-        inputValidator.validateRequestInput(policyName);
-        inputValidator.validateRequestInput(sbiId);
-        inputValidator.validateRequestInput(sbiVersion);
-        inputValidator.validateRequestInput(mispLicenseKeyName);
-        inputValidator.validateRequestInput(mispPartnerId);
+        inputValidator.validateRequestInput("notificationStatus", notificationStatus);
+        inputValidator.validateRequestInput("notificationType", notificationType);
+        inputValidator.validateRequestInput("certificateId", certificateId);
+        inputValidator.validateRequestInput("issuedBy", issuedBy);
+        inputValidator.validateRequestInput("issuedTo", issuedTo);
+        inputValidator.validateRequestInput("partnerDomain", partnerDomain);
+        inputValidator.validateRequestInput("ftmId", ftmId);
+        inputValidator.validateRequestInput("make", make);
+        inputValidator.validateRequestInput("model", model);
+        inputValidator.validateRequestInput("apiKeyName", apiKeyName);
+        inputValidator.validateRequestInput("policyName", policyName);
+        inputValidator.validateRequestInput("sbiId", sbiId);
+        inputValidator.validateRequestInput("sbiVersion", sbiVersion);
+        inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
+        inputValidator.validateRequestInput("mispPartnerId", mispPartnerId);
 
         // Populate filter DTO
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
@@ -186,8 +186,8 @@ public class NotificationsController {
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
-        inputValidator.validateRequestInput(notificationId);
-        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
+        inputValidator.validateRequestInput("notificationId", notificationId);
+        inputValidator.validateRequestInput("status", requestWrapper.getRequest().getNotificationStatus());
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
     }
 }
