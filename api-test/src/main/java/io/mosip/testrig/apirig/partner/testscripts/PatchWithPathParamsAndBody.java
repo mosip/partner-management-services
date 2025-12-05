@@ -81,6 +81,9 @@ public class PatchWithPathParamsAndBody extends PMSUtil implements ITest {
 	public void test(TestCaseDTO testCaseDTO) throws AdminTestException, SecurityXSSException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
+		if(testCaseDTO.getUniqueIdentifier().contains("TC_PMS_UpdateApiKeyExpiryDate_01")) {
+			System.out.println("Debug point");
+		}
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
@@ -89,8 +92,6 @@ public class PatchWithPathParamsAndBody extends PMSUtil implements ITest {
 		testCaseDTO = AdminTestUtil.filterHbs(testCaseDTO);
 		String inputJson = filterInputHbs(testCaseDTO);
 		
-		inputJson = PMSUtil.inputStringKeyWordHandeler(inputJson, testCaseName);
-
 		response = patchWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 				testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
 		

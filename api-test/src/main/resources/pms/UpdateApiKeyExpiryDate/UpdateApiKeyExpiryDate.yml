@@ -15,7 +15,7 @@ UpdateApiKeyExpiryDate:
       "partnerId": "pms-111999",
       "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "2026-01-18T23:59:59.000Z"
+      "apiKeyExpiryDateTime": "$EXPIRYDATE:365$"
 }'
     output: '{
 }'
@@ -35,7 +35,7 @@ UpdateApiKeyExpiryDate:
       "partnerId": "pms-111999",
       "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$FUTUREDATE:365$"
+      "apiKeyExpiryDateTime": "$EXPIRYDATE:365$"
 }'
     output: '{
 }'
@@ -55,7 +55,7 @@ UpdateApiKeyExpiryDate:
       "partnerId": "pms-111999",
       "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$FUTUREDATE_YEARS:10$"
+      "apiKeyExpiryDateTime": "$EXPIRYDATE_YEARS:10$"
 }'
     output: '{
 }'

@@ -348,9 +348,10 @@
 	<test name="UploadPartnerCertificate">
 		<parameter name="ymlFile"
 			value="pms/UploadPartnerCert/UploadPartnerCert.yml" />
+		<parameter name="idKeyName" value="certificateId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 
@@ -1834,7 +1835,7 @@
 			value="pms/GetAllNotifications/GetAllNotifications.yml" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 	<test name="DismissNotificationNegativeScenarios">
