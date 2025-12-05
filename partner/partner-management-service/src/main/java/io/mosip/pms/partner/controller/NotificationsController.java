@@ -96,12 +96,9 @@ public class NotificationsController {
         inputValidator.validateRequestInput(notificationStatus);
         inputValidator.validateRequestInput(notificationType);
         inputValidator.validateRequestInput(certificateId);
-        inputValidator.validateRequestInput(expiryDate);
         inputValidator.validateRequestInput(issuedBy);
         inputValidator.validateRequestInput(issuedTo);
         inputValidator.validateRequestInput(partnerDomain);
-        inputValidator.validateRequestInput(createdFromDate);
-        inputValidator.validateRequestInput(createdToDate);
         inputValidator.validateRequestInput(ftmId);
         inputValidator.validateRequestInput(make);
         inputValidator.validateRequestInput(model);
