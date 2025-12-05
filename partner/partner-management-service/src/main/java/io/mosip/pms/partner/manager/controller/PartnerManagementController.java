@@ -367,6 +367,7 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("emailAddress", emailAddress);
 		inputValidator.validateRequestInput("certificateUploadStatus", certificateUploadStatus);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("status", status);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
 			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
