@@ -298,7 +298,7 @@ UpdateApiKeyExpiryDateNegTC:
       "apiKeyExpiryDateTime": "$EXPIRYDATE:365$"
 }'
     output: '{
-      "responseCode": "400"     
+      "responseCode": "400"
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_PolicyID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date

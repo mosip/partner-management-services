@@ -203,8 +203,6 @@
 	<test name="MISPPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
-		<parameter name="reqKeyName" value="organizationName" />
-		<parameter name="idKeyName" value="id,partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />

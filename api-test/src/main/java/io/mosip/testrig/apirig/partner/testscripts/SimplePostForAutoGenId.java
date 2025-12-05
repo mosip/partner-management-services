@@ -86,9 +86,6 @@ public class SimplePostForAutoGenId extends PMSUtil implements ITest {
 			throws AuthenticationTestException, AdminTestException, NoSuchAlgorithmException, SecurityXSSException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
-		if(testCaseDTO.getTestCaseName().contains("UploadPartnerCert_All_Valid_Smoke")) {
-			System.out.println("Debug Point");
-		}
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
