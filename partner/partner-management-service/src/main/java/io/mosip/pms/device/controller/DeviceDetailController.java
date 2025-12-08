@@ -265,8 +265,8 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(deviceId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("deviceId", deviceId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return deviceDetaillService.deactivateDevice(deviceId, requestWrapper.getRequest());
 	}
 
@@ -284,10 +284,10 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(deviceId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getSbiId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPartnerId());
+		inputValidator.validateRequestInput("id", deviceId);
+		inputValidator.validateRequestInput("sbiId", requestWrapper.getRequest().getSbiId());
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("partnerId", requestWrapper.getRequest().getPartnerId());
 		return deviceDetaillService.approveOrRejectMappingDeviceToSbi(deviceId, requestWrapper.getRequest());
 	}
 
@@ -321,18 +321,18 @@ public class DeviceDetailController {
 			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
 			@RequestParam(value = "deviceId", required = false) String deviceId
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(deviceType);
-		inputValidator.validateRequestInput(deviceSubType);
-		inputValidator.validateRequestInput(status);
-		inputValidator.validateRequestInput(sbiVersion);
-		inputValidator.validateRequestInput(sbiId);
-		inputValidator.validateRequestInput(deviceId);
-		inputValidator.validateRequestInput(make);
-		inputValidator.validateRequestInput(model);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("deviceType", deviceType);
+		inputValidator.validateRequestInput("deviceSubType", deviceSubType);
+		inputValidator.validateRequestInput("status", status);
+		inputValidator.validateRequestInput("sbiVersion", sbiVersion);
+		inputValidator.validateRequestInput("sbiId", sbiId);
+		inputValidator.validateRequestInput("deviceId", deviceId);
+		inputValidator.validateRequestInput("make", make);
+		inputValidator.validateRequestInput("model", model);
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

@@ -356,14 +356,14 @@ public class PolicyManagementController {
 					schema = @Schema(allowableValues = {"activated", "deactivated", "draft"})
 			)
 			@RequestParam(value = "status", required = false) String status) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(policyType);
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(policyDescription);
-		inputValidator.validateRequestInput(policyGroupName);
-		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("policyType", policyType);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("policyDescription", policyDescription);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("status", status);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
 		if (policyType != null) {
 			filterDto.setPolicyType(policyType.toLowerCase());
@@ -400,8 +400,8 @@ public class PolicyManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
@@ -420,8 +420,8 @@ public class PolicyManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(policyGroupId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("policyGroupId", policyGroupId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicyGroup(policyGroupId, requestWrapper.getRequest());
 	}
 }
