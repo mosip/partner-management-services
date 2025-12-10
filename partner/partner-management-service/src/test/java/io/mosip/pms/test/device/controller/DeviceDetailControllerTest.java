@@ -48,8 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -118,7 +117,7 @@ public class DeviceDetailControllerTest {
         when(deviceDetaillService.deviceFilterValues(Mockito.any())).thenReturn(filterResponse);
         when(deviceDetaillService.deviceTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
         when(deviceDetaillService.deviceSubTypeFilterValues(Mockito.any())).thenReturn(filterResponse);
-        doNothing().when(inputValidator).validateRequestInput(any());
+        doNothing().when(inputValidator).validateRequestInput(anyString(), any());
     }
     
     @WithMockUser(roles = {"PARTNER_ADMIN"})

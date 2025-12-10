@@ -15,12 +15,12 @@ public class InputValidator {
     @Value("${mosip.pms.request.input.validation.regex}")
     private String requestInputValidationRegex;
 
-    public void validateRequestInput(String input) {
+    public void validateRequestInput(String fieldName, String input) {
         if (input != null && !input.isBlank()) {
             if (!Pattern.compile(requestInputValidationRegex).matcher(input).matches()) {
                 throw new RequestException(
                         ValidationErrorCode.INVALID_INPUT_VALUE.getErrorCode(),
-                        String.format(ValidationErrorCode.INVALID_INPUT_VALUE.getErrorMessage(), input)
+                        String.format(ValidationErrorCode.INVALID_INPUT_VALUE.getErrorMessage(), fieldName)
                 );
             }
         }

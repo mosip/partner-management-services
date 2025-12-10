@@ -220,14 +220,14 @@ public class ClientManagementController {
 			String orgName, String policyGroupName, String policyName, String clientName, String status) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
 		// validate input fields
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(policyGroupName);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(clientName);
-		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("clientName", clientName);
+		inputValidator.validateRequestInput("status", status);
 
 		// build filter dto
 		ClientFilterDto filterDto = new ClientFilterDto();
@@ -256,9 +256,9 @@ public class ClientManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getName());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPolicyId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getAuthPartnerId());
+		inputValidator.validateRequestInput("name", requestWrapper.getRequest().getName());
+		inputValidator.validateRequestInput("policyId", requestWrapper.getRequest().getPolicyId());
+		inputValidator.validateRequestInput("authPartnerId", requestWrapper.getRequest().getAuthPartnerId());
 		return clientManagementService.createOIDCClientV2(requestWrapper.getRequest());
 	}
 
@@ -281,7 +281,7 @@ public class ClientManagementController {
 			throw new PartnerServiceException(ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
 					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "clientId", "Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"));
 		}
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getClientName());
+		inputValidator.validateRequestInput("clientName", requestWrapper.getRequest().getClientName());
 		return clientManagementService.updateOIDCClientV2(clientId, requestWrapper.getRequest());
 	}
 
@@ -321,7 +321,7 @@ public class ClientManagementController {
 			throw new PartnerServiceException(ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
 					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "clientId", "Only alphanumeric characters (A–Z, a–z, 0–9), hyphens (-), and underscores (_) are allowed, with a maximum length of 100 characters"));
 		}
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return clientManagementService.deactivateOIDCClient(clientId, requestWrapper.getRequest());
 	}
 
