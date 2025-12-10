@@ -789,7 +789,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_with_Partner_NotificationType_And_MispPartnerId_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner&mispPartnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_partnerId$
+      endPoint: /v1/partnermanager/notifications?notificationType=partner&mispPartnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$
       role: partneradmin
       description: Get All Notifications with Partner Notification Type and MISP Partner ID
       uniqueIdentifier: TC_PMS_GetAllNotifications_52

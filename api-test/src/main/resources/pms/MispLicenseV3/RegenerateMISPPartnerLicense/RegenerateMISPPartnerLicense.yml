@@ -71,7 +71,26 @@ RegenerateMISPPartnerLicense:
 	  "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_YEARS:10$"
+}'
+    output: '{   
+}'
+  Pms_RegenerateMISPPartnerLicense_With_Empty_PolicyId:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_05
+    description: Regenerating MISP Partner License with empty PolicyId 
+    role: partneradmin
+    restMethod: put
+    inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicenseResult
+    input: '{
+      "id": "mosip.pms.regenerate.misp.license.put",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+	  "partnerId": "$ID:GenerateMISPPartnerLicense_with_Empty_PolicyId_sid_partnerId$",
+	  "policyId": "",
+      "licenseKeyName": "$LICENSE_KEY_NAME$",
+      "expiryDate": "$EXPIRYDATE_YEARS:10$"
 }'
     output: '{   
 }'

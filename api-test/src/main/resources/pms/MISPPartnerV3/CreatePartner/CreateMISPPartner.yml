@@ -1,5 +1,5 @@
 CreateMISPPartner:
-   Pms_MISPPartnerRegistration_All_Valid_Smoke_Sid:
+   Pms_MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_01
       description: Create MISP Partner Self Registration
@@ -204,5 +204,30 @@ CreateMISPPartner:
 }'
       output: ' {
         "partnerId": "pms-111545",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_Without_PolicyId_Smoke:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_09
+      description: Create MISP Partner Self Registration Without Policy Id
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "pms-112211",
+        "organizationName": "PMS_API_MISP_ORG",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newmisppartner03@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "pms-112211",
         "status": "InProgress"
 }'

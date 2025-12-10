@@ -261,7 +261,7 @@ GetMISPPartnerLicenseNegTC:
     "responseCode": "400"
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_OrgName_and_Invalid_PolicyGroupName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_organizationName$&policyGroupName=InvalidGroup123
+    endPoint: /v1/partnermanager/misp-licenses?orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_organizationName$&policyGroupName=InvalidGroup123
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_18
     description: Fetching MISP Partner License with Valid OrgName and Invalid PolicyGroupName
     role: partneradmin

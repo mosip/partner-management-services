@@ -26,7 +26,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_ByValidPartnerId:
-        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_partnerId$
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_03
         description: Fetch MISP partner license using a valid partnerId
         role: partneradmin
@@ -65,7 +65,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_ORGName:
-        endPoint: /v1/partnermanager/misp-licenses?orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_organizationName$
+        endPoint: /v1/partnermanager/misp-licenses?orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_organizationName$
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_06
         description: Fetch MISP partner license using a valid OrgName
         role: partneradmin
@@ -221,7 +221,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_ByValidPartnerId_And_Status_Activated:
-        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_partnerId$&status=activated
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$&status=activated
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_18
         description: Fetch MISP partner license using a valid partnerId and status activated
         role: partneradmin
@@ -247,7 +247,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_With_Pagination_And_Valid_PartnerId:
-        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_partnerId$&pageNo=0&pageSize=2
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$&pageNo=0&pageSize=2
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_20
         description: Fetch MISP partner license using pagination and valid partnerId
         role: partneradmin
@@ -260,7 +260,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_With_PartnerId_And_PolicyName:
-        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_partnerId$&policyName=$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$&policyName=$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_21
         description: Fetch MISP partner license using partnerId and PolicyName
         role: partneradmin
@@ -351,7 +351,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_With_PolicyName_And_Valid_OrgName:
-        endPoint: /v1/partnermanager/misp-licenses?policyName=$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$&orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_Sid_organizationName$
+        endPoint: /v1/partnermanager/misp-licenses?policyName=$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$&orgName=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_organizationName$
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_28
         description: Fetch MISP partner license using PolicyName and valid OrgName
         role: partneradmin
