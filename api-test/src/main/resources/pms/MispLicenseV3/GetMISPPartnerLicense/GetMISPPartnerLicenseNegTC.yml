@@ -354,20 +354,20 @@ GetMISPPartnerLicenseNegTC:
        }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_Without_SortType_Neg:
-        endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName
-        uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_24
-        description: Fetch MISP partner licenses sorted by sortFieldName without passing sortType
-        role: partneradmin
-        restMethod: get
-        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
-        outputTemplate: pms/error
-        input: '{}'
-        output: '{
-        "errors": [
-           {
-              "errorCode": "PMS_PS_ERROR_007"
-           }
-        ]
+    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_24
+    description: Fetch MISP partner licenses sorted by sortFieldName without passing sortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_PS_ERROR_007"
+         }
+      ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_ExpiryPeriod_Neg:
     endPoint: /v1/partnermanager/misp-licenses?expiryPeriod=-10
