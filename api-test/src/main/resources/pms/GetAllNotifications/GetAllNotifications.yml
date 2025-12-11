@@ -338,10 +338,10 @@ GetAllNotifications:
 }'
       output: ' {
 }'
-   Pms_GetAllNotifications_For_IntermediateType_Notifications:
+   Pms_GetAllNotifications_For_WeeklyType_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only IntermediateType certificate notifications
+      description: Get All Notifications by filtering only WeeklyType certificate notifications
       uniqueIdentifier: TC_PMS_GetAllNotifications_23
       checkErrorsOnlyInResponse: true
       restMethod: get

@@ -545,7 +545,7 @@ GetMISPPartnerLicenseNegTC:
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Null_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?orgName=null
-    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_38
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_37
     description: Fetching MISP Partner License with Null OrgName
     role: partneradmin
     restMethod: get
@@ -560,7 +560,7 @@ GetMISPPartnerLicenseNegTC:
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_PolicyName_And_Invalid_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyName=$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$&orgName=UnknownOrg
-    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_39
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_38
     description: Fetching MISP Partner License with valid PolicyName and Invalid OrgName
     role: partneradmin
     restMethod: get
@@ -575,7 +575,7 @@ GetMISPPartnerLicenseNegTC:
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Large_PageSizeNumber_Neg:
     endPoint: /v1/partnermanager/misp-licenses?pageSize=500
-    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_40
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_39
     description: Fetching MISP Partner License with Large PageSize Number
     role: partneradmin
     restMethod: get
@@ -587,7 +587,7 @@ GetMISPPartnerLicenseNegTC:
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageSizeNumber_Neg:
     endPoint: /v1/partnermanager/misp-licenses?pageSize=abc
-    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_41
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_40
     description: Fetching MISP Partner License with Non Integer PageSize Number
     role: partneradmin
     restMethod: get
@@ -600,7 +600,7 @@ GetMISPPartnerLicenseNegTC:
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Deactivated_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses?partnerId=pms-111551
-    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_42
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_41
     description: Fetching MISP Partner License using Deactivated PartnerId
     role: partneradmin
     restMethod: get
