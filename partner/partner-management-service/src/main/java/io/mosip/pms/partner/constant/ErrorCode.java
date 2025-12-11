@@ -200,6 +200,7 @@ public enum ErrorCode {
 	ROOT_AND_INTERMEDIATE_CERTS_DISABLED("PMS_FEATURE_001", "Root and Intermediate Certificates list is not available in the current deployment."),
 	OIDC_CLIENT_FEATURE_DISABLED("PMS_FEATURE_002", "OIDC client related features are not available in the current deployment."),
 	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment."),
+	OIDC_CLIENT_WITH_ADDITIONAL_INFO_FEATURE_DISABLED("PMS_FEATURE_004", "OIDC client feature with additional information is not available in the current deployment."),
 	INVALID_INPUT_FORMAT("PMS_PRT_099", "Invalid input for '%s'. Expected: %s."),
 	UNABLE_TO_GENERATE_UNIQUE_ID("PMS_PRT_100", "Unable to generate a unique %s (field: '%s') for entity '%s' after %s attempts."),
 	DEVICE_DETAIL_ID_ALREADY_EXISTS("PMS_PRT_101", "A Device with the same Device Detail ID already exists"),

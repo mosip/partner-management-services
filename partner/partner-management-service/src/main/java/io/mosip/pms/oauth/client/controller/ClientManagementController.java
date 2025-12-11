@@ -252,6 +252,7 @@ public class ClientManagementController {
 	public ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(
 			@Valid @RequestBody RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		featureAvailabilityUtil.validateOidcClientAdditionalInfoFeatureAvailable();
 		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(postCreateOidcClientId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -273,6 +274,7 @@ public class ClientManagementController {
 	public ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2( @PathVariable("clientId") String clientId,
 			@Valid @RequestBody RequestWrapperV2<ClientDetailUpdateRequestV3> requestWrapper) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		featureAvailabilityUtil.validateOidcClientAdditionalInfoFeatureAvailable();
 		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(putUpdateOidcClientId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
@@ -313,6 +315,7 @@ public class ClientManagementController {
 	public ResponseWrapperV2<ClientDetailResponse> deactivateOIDCClient( @PathVariable("clientId") String clientId,
 																	   @Valid @RequestBody RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper) {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
+		featureAvailabilityUtil.validateOidcClientAdditionalInfoFeatureAvailable();
 		Optional<ResponseWrapperV2<ClientDetailResponse>> validationResponse = requestValidator.validate(patchDeactivateOidcClientId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
