@@ -84,6 +84,9 @@ public class UserController {
 	@Value("${mosip.pms.supported.oidc.languages}")
 	private String supportedOidcLanguages;
 
+	@Value("${mosip.pms.oidc.client.additional.info.required}")
+	private String isOidcClientAdditionalInfoRequired;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -150,6 +153,7 @@ public class UserController {
 		configMap.put("partnerIdMaxLength", partnerIdMaxLength);
 		configMap.put("phoneNumberMaxLength", phoneNumberMaxLength);
 		configMap.put("supportedOidcLanguages", supportedOidcLanguages);
+		configMap.put("isOidcClientAdditionalInfoRequired", isOidcClientAdditionalInfoRequired);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
