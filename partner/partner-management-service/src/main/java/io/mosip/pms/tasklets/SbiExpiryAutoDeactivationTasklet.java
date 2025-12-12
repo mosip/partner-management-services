@@ -18,6 +18,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -44,12 +45,16 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
     @Autowired
     AuditUtil auditUtil;
 
+    @Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
+    private List<String> skipPartnerIds;
+
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         log.info("SbiExpiryAutoDeactivationTasklet: START");
         int countOfSbiDeactivated = 0;
         int countOfSbiRejected = 0;
         try {
+            log.info("As per configuration, skip the SBIs which created by partner ids: {}", skipPartnerIds);
             // Step 1: get all the SBI's which are approved and pending_approval
             List<SecureBiometricInterface> sbiList = sbiRepository.findAllApprovedAndPendingSBI();
             int sbiCount = sbiList.size();
@@ -57,53 +62,55 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
             for (SecureBiometricInterface sbiDetail : sbiList) {
                 // Step 2: For each SBI check if it is expired or not
                 try {
-                    String sbiId = sbiDetail.getId();
-                    String sbiStatus = sbiDetail.getApprovalStatus();
-                    if (sbiDetail.getSwExpiryDateTime() != null) {
-                        LocalDateTime sbiExpiryDateTime = sbiDetail.getSwExpiryDateTime();
-                        if (sbiExpiryDateTime.isBefore(LocalDateTime.now())) {
-                            if (sbiStatus.equals(PartnerConstants.APPROVED) && sbiDetail.isActive()) {
-                                // Step 3: Deactivate approved devices
-                                List<DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
-                                if (!approvedDevices.isEmpty()) {
-                                    for (DeviceDetail deviceDetail : approvedDevices) {
-                                        deviceDetail.setIsActive(false);
-                                        deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                        deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
-                                        deviceDetailRepository.save(deviceDetail);
-                                        auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
+                    if (!skipPartnerIds.contains(sbiDetail.getProviderId())) {
+                        String sbiId = sbiDetail.getId();
+                        String sbiStatus = sbiDetail.getApprovalStatus();
+                        if (sbiDetail.getSwExpiryDateTime() != null) {
+                            LocalDateTime sbiExpiryDateTime = sbiDetail.getSwExpiryDateTime();
+                            if (sbiExpiryDateTime.isBefore(LocalDateTime.now())) {
+                                if (sbiStatus.equals(PartnerConstants.APPROVED) && sbiDetail.isActive()) {
+                                    // Step 3: Deactivate approved devices
+                                    List<DeviceDetail> approvedDevices = deviceDetailRepository.findApprovedDevicesBySbiId(sbiId);
+                                    if (!approvedDevices.isEmpty()) {
+                                        for (DeviceDetail deviceDetail : approvedDevices) {
+                                            deviceDetail.setIsActive(false);
+                                            deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+                                            deviceDetail.setUpdBy(this.getClass().getSimpleName());
+                                            deviceDetailRepository.save(deviceDetail);
+                                            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
+                                        }
+                                        log.info("{} approved devices have been deactivated for SBI id: {}", approvedDevices.size(), sbiId);
                                     }
-                                    log.info("{} approved devices have been deactivated for SBI id: {}", approvedDevices.size(), sbiId);
-                                }
-                                // Step 4: Reject pending_approval devices
-                                List<DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
-                                if (!pendingApprovalDevices.isEmpty()) {
-                                    for (DeviceDetail deviceDetail : pendingApprovalDevices) {
-                                        deviceDetail.setApprovalStatus(PartnerConstants.REJECTED);
-                                        deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                                        deviceDetail.setUpdBy(PartnerConstants.SYSTEM_USER);
-                                        deviceDetailRepository.save(deviceDetail);
-                                        auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
+                                    // Step 4: Reject pending_approval devices
+                                    List<DeviceDetail> pendingApprovalDevices = deviceDetailRepository.findPendingApprovalDevicesBySbiId(sbiId);
+                                    if (!pendingApprovalDevices.isEmpty()) {
+                                        for (DeviceDetail deviceDetail : pendingApprovalDevices) {
+                                            deviceDetail.setApprovalStatus(PartnerConstants.REJECTED);
+                                            deviceDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+                                            deviceDetail.setUpdBy(this.getClass().getSimpleName());
+                                            deviceDetailRepository.save(deviceDetail);
+                                            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REJECT_DEVICE_WITH_EXPIRED_SBI_SUCCESS, deviceDetail.getId(), "deviceDetailId", AuditConstant.AUDIT_SYSTEM);
+                                        }
+                                        log.info("{} pending approval devices have been rejected for SBI id: {}", pendingApprovalDevices.size(), sbiId);
                                     }
-                                    log.info("{} pending approval devices have been rejected for SBI id: {}", pendingApprovalDevices.size(), sbiId);
+                                    // Step 5: deactivate SBI if it is approved
+                                    sbiDetail.setActive(false);
+                                    countOfSbiDeactivated++;
+                                    log.info("SBI with id {} has been deactivated for Partner id: {}", sbiId, sbiDetail.getProviderId());
+                                } else {
+                                    // Step 6: reject SBI if it is pending_approval
+                                    sbiDetail.setApprovalStatus(PartnerConstants.REJECTED);
+                                    countOfSbiRejected++;
+                                    log.info("SBI with id {} has been rejected for Partner id : {}", sbiId, sbiDetail.getProviderId());
                                 }
-                                // Step 5: deactivate SBI if it is approved
-                                sbiDetail.setActive(false);
-                                countOfSbiDeactivated++;
-                                log.info("SBI with id {} has been deactivated for Partner id: {}", sbiId, sbiDetail.getProviderId());
-                            } else {
-                                // Step 6: reject SBI if it is pending_approval
-                                sbiDetail.setApprovalStatus(PartnerConstants.REJECTED);
-                                countOfSbiRejected++;
-                                log.info("SBI with id {} has been rejected for Partner id : {}", sbiId, sbiDetail.getProviderId());
+                                sbiDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
+                                sbiDetail.setUpdBy(this.getClass().getSimpleName());
+                                SecureBiometricInterface updatedSbi = sbiRepository.save(sbiDetail);
+                                SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
+                                secureBiometricInterfaceServiceImpl.getUpdateHistoryMapping(history, updatedSbi);
+                                sbiHistoryRepository.save(history);
+                                auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_SBI_SUCCESS, sbiId, "sbiId", AuditConstant.AUDIT_SYSTEM);
                             }
-                            sbiDetail.setUpdDtimes(LocalDateTime.now(ZoneId.of("UTC")));
-                            sbiDetail.setUpdBy(this.getClass().getName());
-                            SecureBiometricInterface updatedSbi = sbiRepository.save(sbiDetail);
-                            SecureBiometricInterfaceHistory history = new SecureBiometricInterfaceHistory();
-                            secureBiometricInterfaceServiceImpl.getUpdateHistoryMapping(history, updatedSbi);
-                            sbiHistoryRepository.save(history);
-                            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_SBI_SUCCESS, sbiId, "sbiId", AuditConstant.AUDIT_SYSTEM);
                         }
                     }
                 } catch (Exception e) {
