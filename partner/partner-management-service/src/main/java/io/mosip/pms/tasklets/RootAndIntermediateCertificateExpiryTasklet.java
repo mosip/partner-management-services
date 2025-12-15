@@ -132,8 +132,7 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 
 				});
 			} else {
-				log.info("There are no " + partnerAdminsCount
-						+ " partner admin users in Keycloak. Hence skipping creation of notifications.");
+				log.info("There are no partner admin users in Keycloak. Hence skipping creation of notifications.");
 			}
 		} catch (Exception e) {
 			log.error("Error occurred while running RootAndIntermediateCertificateExpiryTasklet: {}", e.getMessage(),
