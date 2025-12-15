@@ -895,13 +895,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId) {
 		ResponseWrapperV2<PartnerDetailsV3Dto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
 			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
 				throw new PartnerServiceException(
 						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),

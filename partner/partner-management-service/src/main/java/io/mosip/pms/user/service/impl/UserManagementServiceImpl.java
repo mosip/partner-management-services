@@ -14,6 +14,7 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.UserDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.util.PartnerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import io.mosip.pms.user.service.UserManagementService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -58,6 +60,9 @@ public class UserManagementServiceImpl implements UserManagementService{
 
 	@Autowired
 	PartnerServiceRepository partnerRepository;
+
+	@Autowired
+	PartnerHelper partnerHelper;
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -173,11 +178,15 @@ public class UserManagementServiceImpl implements UserManagementService{
 	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(String userId, NotificationsSeenRequestDto requestDto) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<Partner> partnerList = new ArrayList<>();
+			if (!isAdmin) {
+				partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
 			LOGGER.info("sessionId", "idType", "id", "updating notification seen timestamp for user :", userId);
 			Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
@@ -217,11 +226,15 @@ public class UserManagementServiceImpl implements UserManagementService{
 	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp(String userId) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<Partner> partnerList = new ArrayList<>();
+			if (!isAdmin) {
+				partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
 			LOGGER.info("sessionId", "idType", "id", "fetching notification seen timestamp for user :", userId);
 			Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
