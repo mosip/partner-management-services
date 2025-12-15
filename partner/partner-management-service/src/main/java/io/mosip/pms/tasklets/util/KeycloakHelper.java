@@ -31,8 +31,9 @@ public class KeycloakHelper {
 	private static final String USER_ROLE = "userRole";
 	private static final String USER_NAME = "username";
 	private static final String EMAIL = "email";
-	private static final String FIRST_NAME = "firstName";
-	private static final String LAST_NAME = "lastName";
+	private static final String ATTRIBUTES = "attributes";
+	private static final String LANG_CODE = "LangCode";
+	private static final String LOCALE = "locale";
 
 	@Value("${mosip.iam.role-users-url}")
 	private String roleUsersUrl;
@@ -71,12 +72,12 @@ public class KeycloakHelper {
 								adminDetailsDto.setUserName(String.valueOf(userMap.get(USER_NAME)));
 								adminDetailsDto.setEmailId(email);
 								String langCode = "eng";
-								if (userMap.containsKey("attributes")) {
-									Object attributesObj = userMap.get("attributes");
+								if (userMap.containsKey(ATTRIBUTES)) {
+									Object attributesObj = userMap.get(ATTRIBUTES);
 									if (attributesObj instanceof Map<?, ?> attributesMap) {
 
-										Object langCodeObj = attributesMap.get("langCode");
-										Object localeObj = attributesMap.get("locale");
+										Object langCodeObj = attributesMap.get(LANG_CODE);
+										Object localeObj = attributesMap.get(LOCALE);
 
 										if (langCodeObj instanceof List<?> langList && !langList.isEmpty()) {
 											langCode = String.valueOf(langList.get(0));
