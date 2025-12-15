@@ -3,6 +3,7 @@ UpdateOIDCClient:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
       role: partnerauth
       checkErrorsOnlyInResponse: true
+	  uniqueIdentifier: TC_PMS_UpdateOIDCClient_01
       restMethod: put
       inputTemplate: pms/OIDCClient/oIDCClientUpdate
       outputTemplate: pms/OIDCClient/oIDCClientResult

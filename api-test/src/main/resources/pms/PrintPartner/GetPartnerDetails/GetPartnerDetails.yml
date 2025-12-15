@@ -1,7 +1,7 @@
 GetPartnerDetails:
    Pms_GetPartnerDetails_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v2
-      uniqueIdentifier: TC_PMS_GetPartnerDetails_01
+      uniqueIdentifier: TC_PMS_GetPrintPartnerDetails_01
       description: Retrieve Print Partner Details
       role: partner
       checkErrorsOnlyInResponse: true
@@ -9,7 +9,7 @@ GetPartnerDetails:
       inputTemplate: pms/PrintPartner/GetPartnerDetails/GetPartnerDetails
       outputTemplate: pms/PrintPartner/GetPartnerDetails/GetPartnerDetailsResult
       input: '{
-		"partnerType":"Print_Partner"
+		"partnerType":"Print_Partner",
 }'
       output: '{
 }'

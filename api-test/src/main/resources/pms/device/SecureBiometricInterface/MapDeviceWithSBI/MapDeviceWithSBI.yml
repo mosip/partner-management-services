@@ -6,6 +6,7 @@ MapDeviceWithSBI:
       role: partner
       restMethod: put
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       inputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
       input: '{
@@ -21,6 +22,7 @@ MapDeviceWithSBI:
       role: partner
       restMethod: put
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       inputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
       input: '{
@@ -37,6 +39,7 @@ MapDeviceWithSBI:
       role: partner
       restMethod: put
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       inputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
       input: '{

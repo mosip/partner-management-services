@@ -9,7 +9,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
-	"partnerId":"MOVP-AUTOMATION",
+	"partnerId":"$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"MDSP",
 	"requesttime": "$TIMESTAMP$"
   }'
@@ -24,7 +24,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
-	"partnerId":"pms-111999",
+	"partnerId":"$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
 	"requesttime": "$TIMESTAMP$"
   }'
@@ -38,7 +38,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
-  "partnerId":"MOVP-AUTOMATION",
+  "partnerId":"$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
   "policyId":"abcd",
   "requesttime": "$TIMESTAMP$"
   }'

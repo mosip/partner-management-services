@@ -5,6 +5,7 @@ DeviceDetailsFilter:
       description: Create Device Details Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
       outputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilterResult
@@ -46,6 +47,7 @@ DeviceDetailsFilter:
       description: Create Device Details Filter with valid values
       role: partner
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
       outputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilterResult

@@ -1,7 +1,7 @@
 createPartnerSelfRegistration:
-   Pms_PartnerSelfRegistration_PrintPartner_AllValid_Smoke:
+   Pms_PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/v2
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_printpartner_01
       description: Create Print Partner Self Registration with valid details
       role: partner
       restMethod: post
@@ -22,7 +22,7 @@ createPartnerSelfRegistration:
      "status": "InProgress"
     }'
     
-   Pms_PartnerSelfRegistration_PrintPartner_DublicateEmail_Neg:
+   Pms_PartnerSelfRegistration_PrintPartner_DuplicateEmail_Neg:
       endPoint: /v1/partnermanager/partners/v2
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
       description: Create Print Partner Self Registration with duplicate Email

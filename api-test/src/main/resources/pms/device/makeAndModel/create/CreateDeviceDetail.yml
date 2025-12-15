@@ -9,7 +9,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/device/makeAndModel/create/createDeviceDetailResult
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Slap",
     "deviceTypeCode": "Finger",
     "id": "device-id-123",
@@ -32,7 +32,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/device/makeAndModel/create/createDeviceDetailResult
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Single",
     "deviceTypeCode": "Finger",
     "id": "device-id-124",
@@ -54,7 +54,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/device/makeAndModel/create/createDeviceDetailResult
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Single",
     "deviceTypeCode": "Iris",
     "id": "$REMOVE$",
@@ -76,7 +76,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/device/makeAndModel/create/createDeviceDetailResult
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Slap",
     "deviceTypeCode": "Finger",
     "id": "$REMOVE$",
@@ -97,7 +97,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/error
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Slap",
     "deviceTypeCode": "Finger",
     "id": "$REMOVE$",
@@ -123,7 +123,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/error
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Slab",
     "deviceTypeCode": "test",
     "id": "$REMOVE$",
@@ -177,7 +177,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/error
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "$REMOVE$",
     "deviceTypeCode": "Finger",
     "id": "device-id-123",
@@ -204,7 +204,7 @@ CreateDeviceDetail:
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
       outputTemplate: pms/error
       input: '{
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "deviceSubTypeCode": "Slab",
     "deviceTypeCode": "$REMOVE$",
     "id": "device-id-123",

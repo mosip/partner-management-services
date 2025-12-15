@@ -11,7 +11,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",		
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "34242"
 }'
@@ -32,7 +32,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       outputTemplate: pms/error
       input: '{
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -55,7 +55,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "$REMOVE$",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -78,7 +78,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "$REMOVE$",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -147,7 +147,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$REMOVE$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -170,7 +170,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$REMOVE$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -193,7 +193,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -216,7 +216,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "$7372882$"
 }'
@@ -239,7 +239,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "84838772",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -262,7 +262,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
@@ -285,7 +285,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
       "id": "mosip.pms.approval.mapping.device.to.sbi.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
 }'

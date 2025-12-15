@@ -1,9 +1,10 @@
 uploadPartnerCert:
    Pms_UploadCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
-      uniqueIdentifier: TC_PMS_uploadPartnerCert_01
+      uniqueIdentifier: TC_PMS_uploadcredentialPartnerCert_01
       description: Upload valid Partner certificate for Partner
       role: partner
+	  additionalDependencies: TC_PMS_uploadCert_01,TC_PMS_uploadCert_03	  
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/credentialPartner/UploadCert/uploadCert

@@ -8,7 +8,7 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",
@@ -28,7 +28,7 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",
@@ -48,7 +48,7 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/error
       input: '{
-   "partnerId": "Tech-1233",
+   "partnerId": "$ID:PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid_partnerId$",
    "policyId": "policyid",
    "label": "string",
    "requesttime": "$TIMESTAMP$",
@@ -72,7 +72,7 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",

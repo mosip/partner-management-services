@@ -20,7 +20,7 @@ ApproveSecureBiometricInterface:
     
    Pms_ApproveSecureBiometricInterface_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
-      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_01
+      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_03
       description: Approvr Secure Biometric Interface with valid details
       role: partner
       checkErrorsOnlyInResponse: true
@@ -39,7 +39,7 @@ ApproveSecureBiometricInterface:
 
    Pms_ApproveSecureBiometricInterface_ToMap_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
-      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_01
+      uniqueIdentifier: TC_PMS_ApproveSecureBiometricInterface_04
       description: Approvr Secure Biometric Interface with valid details
       role: partner
       checkErrorsOnlyInResponse: true

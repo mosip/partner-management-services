@@ -5,6 +5,7 @@ UpdateDeviceDetail:
       description: Create Service To Update DeviceDetail with valid details
       role: partner
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: put
       inputTemplate: pms/device/makeAndModel/update/updateDeviceDetail
       outputTemplate: pms/device/makeAndModel/update/updateDeviceDetailResult

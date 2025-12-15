@@ -5,6 +5,7 @@ RejectDeviceDetail:
       description: Reject Device Details with valid details
       role: partner
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: patch
       inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
       outputTemplate: pms/device/makeAndModel/approve/approveDeviceDetailResult
@@ -22,6 +23,7 @@ RejectDeviceDetail:
       description: Reject Device Details with valid details
       role: partner
       checkErrorsOnlyInResponse: true
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_02
       restMethod: patch
       inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
       outputTemplate: pms/device/makeAndModel/approve/approveDeviceDetailResult
@@ -39,6 +41,7 @@ RejectDeviceDetail:
       description: Reject Device Details while keeping approvalStatus as empty
       role: partner
       restMethod: patch
+	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
       outputTemplate: pms/error
       input: '{

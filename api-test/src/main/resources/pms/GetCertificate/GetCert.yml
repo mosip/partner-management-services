@@ -2,13 +2,14 @@ GetPartnerCert:
    Pms_GetPartnerCert_AuthPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
+	  uniqueIdentifier: TC_PMS_GetPartnerCert_01  
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "pms-111999"
+	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'
@@ -34,13 +35,14 @@ GetPartnerCert:
    Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
+      uniqueIdentifier: TC_PMS_GetPartnerCert_04	  
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "pms-111998"
+	"partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'
@@ -48,13 +50,14 @@ GetPartnerCert:
    Pms_GetPartnerCert_FtmProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
+	  uniqueIdentifier: TC_PMS_GetPartnerCert_02	  
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetCertificate/getCert
       outputTemplate: pms/GetCertificate/getCertResult
       input: '{
-	"partnerId": "pms-111888"
+	"partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'

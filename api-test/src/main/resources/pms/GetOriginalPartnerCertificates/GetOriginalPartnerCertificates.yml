@@ -9,7 +9,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
      
@@ -25,7 +25,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "pms-111998"
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
      
@@ -41,7 +41,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "pms-111888"
+      "partnerId": "$ID:PartnerSelfRegistration_FTM_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
      
@@ -55,7 +55,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
@@ -112,7 +112,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
