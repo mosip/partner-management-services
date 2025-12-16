@@ -132,7 +132,7 @@ public class FTMChipCertificateExpiryTasklet implements Tasklet {
 										String decryptedEmailId = keyManagerHelper
 												.decryptData(ftmProvider.getEmailId());
 										NotificationEntity savedNotification = batchJobHelper.saveNotification(
-												PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE, ftmProvider,
+												PartnerConstants.FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE, ftmProvider.getId(), ftmProvider.getLangCode(),
 												null, expiringFtmList, null, null, null, decryptedEmailId);
 										// Step 6: send email notification
 										emailNotificationService.sendEmailNotification(savedNotification,

@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -72,19 +73,18 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 		}
 
 		List<String> totalNotificationsCreated = new ArrayList<String>();
-		int pmsPartnerAdminsCount = 0;
+		int partnerAdminsCount = 0;
 		try {
 			List<String> certificateTypes = new ArrayList<String>();
 			certificateTypes.add(PartnerConstants.ROOT);
 			certificateTypes.add(PartnerConstants.INTERMEDIATE);
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
-			// in PMS
-			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
-			pmsPartnerAdmins.forEach(admin -> {
-				log.info("PMS Active Partner Admin Id: {}", admin.getId());
+			// Step 1: Fetch Partner Admin User IDs from Keycloak
+			List<AdminDetailsDto> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			partnerAdminsCount = partnerAdmins.size();
+			partnerAdmins.forEach(admin -> {
+				log.info("Keycloak Partner Admin Id: {}", admin.getUserName());
 			});
-			if (pmsPartnerAdminsCount > 0) {
+			if (partnerAdminsCount > 0) {
 				// Step 2: get all Root certificates expiring after 30 days, 15 days, 10 days, 9
 				// days and so on
 				rootIntermediateExpiryPeriods.forEach(expiryPeriod -> {
@@ -101,21 +101,19 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 						if (response.getAllPartnerCertificates().size() > 0) {
 							log.info("Count of " + certificateType + " certificates expiring after " + expiryPeriod
 									+ " days, {}", response.getAllPartnerCertificates().size());
-							pmsPartnerAdmins.forEach(partnerAdminDetails -> {
+							partnerAdmins.forEach(partnerAdminDetails -> {
 								// Step 3: add the notification
 								response.getAllPartnerCertificates().forEach(expiringCertificate -> {
 									// certificatePartnerId is null, since Root/Intermediate Certificate is not
 									// associated with any partner
 									List<CertificateDetailsDto> certificateDetailsList = populateCertificateDetails(
 											certificateType, expiryPeriod, null, expiringCertificate);
-									// Decrypt the email ID if it's already encrypted to avoid encrypting it again
-									String decryptedEmailId = keyManagerHelper
-											.decryptData(partnerAdminDetails.getEmailId());
+									String emailId = partnerAdminDetails.getEmailId();
 									NotificationEntity savedNotification = batchJobHelper.saveNotification(
-											getNotificationType(certificateType), partnerAdminDetails,
-											certificateDetailsList, null, null, null, null, decryptedEmailId);
+											getNotificationType(certificateType), partnerAdminDetails.getUserName(), partnerAdminDetails.getLangCode(),
+											certificateDetailsList, null, null, null, null, emailId);
 									// Step 4: send email notification
-									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
+									emailNotificationService.sendEmailNotification(savedNotification, emailId);
 									countPerCertTypeExpiryPeriod.add(savedNotification.getId());
 									totalNotificationsCreated.add(savedNotification.getId());
 								});
@@ -134,15 +132,14 @@ public class RootAndIntermediateCertificateExpiryTasklet implements Tasklet {
 
 				});
 			} else {
-				log.info("There are no " + pmsPartnerAdminsCount
-						+ " partner admin users in PMS. Hence skipping creation of notifications.");
+				log.info("There are no partner admin users in Keycloak. Hence skipping creation of notifications.");
 			}
 		} catch (Exception e) {
 			log.error("Error occurred while running RootAndIntermediateCertificateExpiryTasklet: {}", e.getMessage(),
 					e);
 		}
 		log.info("RootAndIntermediateCertificateExpiryTasklet: DONE, created {}",
-				totalNotificationsCreated.size() + " notifications, for " + pmsPartnerAdminsCount + " partner admins.");
+				totalNotificationsCreated.size() + " notifications, for " + partnerAdminsCount + " partner admins.");
 		totalNotificationsCreated.forEach(notificationId -> {
 			log.info(notificationId);
 		});

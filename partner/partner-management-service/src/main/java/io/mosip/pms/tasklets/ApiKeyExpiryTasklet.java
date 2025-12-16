@@ -112,7 +112,7 @@ public class ApiKeyExpiryTasklet implements Tasklet {
 									// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 									String decryptedEmailId = keyManagerHelper.decryptData(authPartner.getEmailId());
 									NotificationEntity savedNotification = batchJobHelper.saveNotification(
-											PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE, authPartner, null, null,
+											PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE, authPartner.getId(), authPartner.getLangCode(), null, null,
 											null, expiringApiKeysList, null, decryptedEmailId);
 									// Step 6: send email notification
 									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
