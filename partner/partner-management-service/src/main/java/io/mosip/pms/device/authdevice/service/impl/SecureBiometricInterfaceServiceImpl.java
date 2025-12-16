@@ -955,15 +955,19 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 				throw new PartnerServiceException(ErrorCode.DEACTIVATE_STATUS_CODE.getErrorCode(),
 						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
 			}
-			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+		String userId = getUserId();
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		List<Partner> partnerList = new ArrayList<>();
+		if (!isAdmin) {
+			partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
 				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
+		}
 
-			if (Objects.isNull(sbiId)) {
+		if (Objects.isNull(sbiId)) {
 				LOGGER.info("sessionId", "idType", "id", "SBI id is null.");
 				throw new PartnerServiceException(ErrorCode.INVALID_SBI_ID.getErrorCode(),
 						ErrorCode.INVALID_SBI_ID.getErrorMessage());
@@ -976,7 +980,6 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			}
 			SecureBiometricInterface sbi = secureBiometricInterface.get();
 
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if (!isAdmin) {
 				Partner partnerDetails = getAssociatedPartner(partnerList, sbi.getProviderId(), userId);
 				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
