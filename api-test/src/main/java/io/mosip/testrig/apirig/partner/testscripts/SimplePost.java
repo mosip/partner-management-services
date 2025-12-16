@@ -114,7 +114,6 @@ public class SimplePost extends PMSUtil implements ITest {
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
 		validateResponse(response, testCaseName);
-		
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
