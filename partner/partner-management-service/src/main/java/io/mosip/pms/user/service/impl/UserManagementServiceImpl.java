@@ -83,7 +83,8 @@ public class UserManagementServiceImpl implements UserManagementService{
 		try {
 			String userId = getUserId();
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			if (!isAdmin) {
+			boolean isPolicyManager = partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
+			if (!isAdmin && !isPolicyManager) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
 					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
@@ -144,7 +145,8 @@ public class UserManagementServiceImpl implements UserManagementService{
 		try {
 			String userId = getUserId();
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			if (!isAdmin) {
+			boolean isPolicyManager = partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
+			if (!isAdmin && !isPolicyManager) {
 				List<Partner> partnerList = partnerRepository.findByUserId(userId);
 				if (partnerList.isEmpty()) {
 					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
