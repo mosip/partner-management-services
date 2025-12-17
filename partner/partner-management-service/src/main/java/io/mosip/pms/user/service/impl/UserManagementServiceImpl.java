@@ -82,44 +82,47 @@ public class UserManagementServiceImpl implements UserManagementService{
 		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty()) {
-				UserDetails userDetails = new UserDetails();
-
-				LocalDateTime nowDate = LocalDateTime.now();
-				userDetails.setConsentGiven(YES);
-				userDetails.setConsentGivenDtimes(nowDate);
-
-				Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
-				if (optionalEntity.isPresent()) {
-					UserDetails entity = optionalEntity.get();
-					userDetails.setId(entity.getId());
-					userDetails.setUpdBy(this.getUserId());
-					userDetails.setUpdDtimes(nowDate);
-					userDetails.setCrBy(entity.getCrBy());
-					userDetails.setCrDtimes(entity.getCrDtimes());
-					userDetails.setUserId(entity.getUserId());
-				} else {
-					userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
-					userDetails.setCrBy(this.getUserId());
-					userDetails.setCrDtimes(nowDate);
-					userDetails.setUserId(userId);
-					userDetails.setNotificationsSeenDtimes(null);
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin) {
+				List<Partner> partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
-				UserDetails respEntity = userDetailsRepository.save(userDetails);
-				LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
-
-				UserDetailsDto userDetailsDto = new UserDetailsDto();
-				userDetailsDto.setConsentGiven(true);
-				userDetailsDto.setUserId(respEntity.getUserId());
-				userDetailsDto.setConsentGivenDateTime(respEntity.getConsentGivenDtimes());
-
-				responseWrapper.setResponse(userDetailsDto);
-			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
+
+            UserDetails userDetails = new UserDetails();
+
+            LocalDateTime nowDate = LocalDateTime.now();
+            userDetails.setConsentGiven(YES);
+            userDetails.setConsentGivenDtimes(nowDate);
+
+            Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+            if (optionalEntity.isPresent()) {
+                UserDetails entity = optionalEntity.get();
+                userDetails.setId(entity.getId());
+                userDetails.setUpdBy(this.getUserId());
+                userDetails.setUpdDtimes(nowDate);
+                userDetails.setCrBy(entity.getCrBy());
+                userDetails.setCrDtimes(entity.getCrDtimes());
+                userDetails.setUserId(entity.getUserId());
+            } else {
+                userDetails.setId(PartnerUtil.generateUUID("id", "", 36));
+                userDetails.setCrBy(this.getUserId());
+                userDetails.setCrDtimes(nowDate);
+                userDetails.setUserId(userId);
+                userDetails.setNotificationsSeenDtimes(null);
+            }
+            UserDetails respEntity = userDetailsRepository.save(userDetails);
+            LOGGER.info("sessionId", "idType", "id", "saving user consent data for user id : ", userId);
+
+            UserDetailsDto userDetailsDto = new UserDetailsDto();
+            userDetailsDto.setConsentGiven(true);
+            userDetailsDto.setUserId(respEntity.getUserId());
+            userDetailsDto.setConsentGivenDateTime(respEntity.getConsentGivenDtimes());
+
+            responseWrapper.setResponse(userDetailsDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In saveUserConsentGiven method of UserManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
@@ -140,25 +143,27 @@ public class UserManagementServiceImpl implements UserManagementService{
 		ResponseWrapperV2<UserDetailsDto> responseWrapper =  new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty()) {
-				UserDetailsDto userDetailsDto = new UserDetailsDto();
-				userDetailsDto.setUserId(userId);
-				LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
-				Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
-				if (optionalEntity.isPresent()) {
-					UserDetails entity = optionalEntity.get();
-					if (entity.getConsentGiven().equals(YES)) {
-						userDetailsDto.setConsentGiven(true);
-						userDetailsDto.setConsentGivenDateTime(entity.getConsentGivenDtimes());
-					}
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin) {
+				List<Partner> partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
-				responseWrapper.setResponse(userDetailsDto);
-			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 			}
+            UserDetailsDto userDetailsDto = new UserDetailsDto();
+            userDetailsDto.setUserId(userId);
+            LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
+            Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
+            if (optionalEntity.isPresent()) {
+                UserDetails entity = optionalEntity.get();
+                if (entity.getConsentGiven().equals(YES)) {
+                    userDetailsDto.setConsentGiven(true);
+                    userDetailsDto.setConsentGivenDateTime(entity.getConsentGivenDtimes());
+                }
+            }
+            responseWrapper.setResponse(userDetailsDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In isUserConsentGiven method of UserManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
