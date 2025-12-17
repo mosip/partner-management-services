@@ -125,7 +125,7 @@ public class KeycloakHelper {
 					}
 				}
 			} else {
-				log.error("Unexpected API response format while fetching Partner Admin user IDs. {}");
+				log.error("Unexpected API response format while fetching Partner Admin user IDs.");
 				throw new BatchJobServiceException(ErrorCode.FETCH_PARTNER_ADMIN_USER_IDS_ERROR.getErrorCode(),
 						"Invalid response format received from API.");
 			}
