@@ -16,7 +16,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.exception.BatchJobServiceException;
@@ -31,6 +30,7 @@ public class KeycloakHelper {
 	private static final String USER_ROLE = "userRole";
 	private static final String USER_NAME = "username";
 	private static final String EMAIL = "email";
+	private static final String ENABLED = "enabled";
 	private static final String ATTRIBUTES = "attributes";
 	private static final String LANG_CODE = "LangCode";
 	private static final String LOCALE = "locale";
@@ -62,45 +62,77 @@ public class KeycloakHelper {
 			Object response = restUtil.getApiWithContentType(roleUsersUrl, pathSegments, Object.class,
 					MediaType.APPLICATION_JSON);
 
+			// List to track all skipped users with their reason
+			List<String> skippedUsers = new ArrayList<>();
+
 			if (response instanceof List<?> usersList) {
 				for (Object userObj : usersList) {
 					if (userObj instanceof LinkedHashMap<?, ?> userMap) {
-						if (userMap.containsKey(EMAIL)) {
-							String email = String.valueOf(userMap.get(EMAIL));
-							if (email != null && !email.trim().isEmpty()) {
-								AdminDetailsDto adminDetailsDto = new AdminDetailsDto();
-								adminDetailsDto.setUserName(String.valueOf(userMap.get(USER_NAME)));
-								adminDetailsDto.setEmailId(email);
-								String langCode = "eng";
-								if (userMap.containsKey(ATTRIBUTES)) {
-									Object attributesObj = userMap.get(ATTRIBUTES);
-									if (attributesObj instanceof Map<?, ?> attributesMap) {
-
-										Object langCodeObj = attributesMap.get(LANG_CODE);
-										Object localeObj = attributesMap.get(LOCALE);
-
-										if (langCodeObj instanceof List<?> langList && !langList.isEmpty()) {
-											langCode = String.valueOf(langList.get(0));
-										} else if (localeObj instanceof List<?> localeList && !localeList.isEmpty()) {
-											langCode = String.valueOf(localeList.get(0));
-										}
-									}
-								}
-								adminDetailsDto.setLangCode(langCode);
-								keycloakPartnerAdmins.add(adminDetailsDto);
-							} else {
-								log.info("Skipping user with missing or empty email: {}", String.valueOf(userMap.get(USER_NAME)));
-							}
-						} else {
-							log.info("Skipping user with no email field: {}", String.valueOf(userMap.get(USER_NAME)));
+						// Username is mandatory in Keycloak, so it will always be present
+						String username = userMap.get(USER_NAME).toString();
+						
+						// Check if user is enabled
+						boolean isEnabled = Boolean.TRUE.equals(userMap.get(ENABLED));
+						
+						// If user is not enabled, log and continue to next iteration
+						if (!isEnabled) {
+							log.debug("Skipping disabled user: {}", username);
+							skippedUsers.add(username + " (disabled)");
+							continue;
 						}
+						
+						// Check if email field exists
+						if (!userMap.containsKey(EMAIL)) {
+							log.debug("Skipping user with no email field: {}", username);
+							skippedUsers.add(username + " (no email field)");
+							continue;
+						}
+						
+						Object emailObj = userMap.get(EMAIL);
+						if (emailObj == null) {
+							log.debug("Skipping user with null email: {}", username);
+							skippedUsers.add(username + " (null email)");
+							continue;
+						}
+						
+						String email = emailObj.toString().trim();
+						if (email.isEmpty()) {
+							log.debug("Skipping user with missing or empty email: {}", username);
+							skippedUsers.add(username + " (empty email)");
+							continue;
+						}
+						
+						AdminDetailsDto adminDetailsDto = new AdminDetailsDto();
+						adminDetailsDto.setUserName(username);
+						adminDetailsDto.setEmailId(email);
+						String langCode = "eng";
+						if (userMap.containsKey(ATTRIBUTES)) {
+							Object attributesObj = userMap.get(ATTRIBUTES);
+							if (attributesObj instanceof Map<?, ?> attributesMap) {
+
+								Object langCodeObj = attributesMap.get(LANG_CODE);
+								Object localeObj = attributesMap.get(LOCALE);
+
+								if (langCodeObj instanceof List<?> langList && !langList.isEmpty()) {
+									langCode = String.valueOf(langList.get(0));
+								} else if (localeObj instanceof List<?> localeList && !localeList.isEmpty()) {
+									langCode = String.valueOf(localeList.get(0));
+								}
+							}
+						}
+						adminDetailsDto.setLangCode(langCode);
+						keycloakPartnerAdmins.add(adminDetailsDto);
 					}
 				}
 			} else {
-				log.error("Unexpected API response format while fetching Partner Admin user IDs. {}");
+				log.error("Unexpected API response format while fetching Partner Admin user IDs.");
 				throw new BatchJobServiceException(ErrorCode.FETCH_PARTNER_ADMIN_USER_IDS_ERROR.getErrorCode(),
 						"Invalid response format received from API.");
 			}
+			
+			// Log summary of skipped users
+			log.info("Summary of skipped users - Total count: {}, Skipped users: {}", skippedUsers.size(), skippedUsers);
+			
 			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
 			validPartnerAdmins = batchJobHelper.getValidPartnerAdmins(keycloakPartnerAdmins);
 			log.info("Keycloak has {} Partner Admin users.", validPartnerAdmins.size());
