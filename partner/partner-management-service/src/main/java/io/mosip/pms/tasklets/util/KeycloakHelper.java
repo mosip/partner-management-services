@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,6 +30,10 @@ public class KeycloakHelper {
 	private static final String PARTNER_ADMIN = "PARTNER_ADMIN";
 	private static final String USER_ROLE = "userRole";
 	private static final String USER_NAME = "username";
+	private static final String EMAIL = "email";
+	private static final String ATTRIBUTES = "attributes";
+	private static final String LANG_CODE = "LangCode";
+	private static final String LOCALE = "locale";
 
 	@Value("${mosip.iam.role-users-url}")
 	private String roleUsersUrl;
@@ -40,9 +45,9 @@ public class KeycloakHelper {
 	BatchJobHelper batchJobHelper;
 	
 	@Cacheable(value = "partnerAdminIdsCache", key = "'partnerAdminIds'", unless = "#result.isEmpty()")
-	public List<Partner> getPartnerIdsWithPartnerAdminRole() {
-		List<String> keycloakPartnerAdmins = new ArrayList<>();
-		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
+	public List<AdminDetailsDto> getPartnerIdsWithPartnerAdminRole() {
+		List<AdminDetailsDto> keycloakPartnerAdmins = new ArrayList<>();
+		List<AdminDetailsDto> validPartnerAdmins = new ArrayList<AdminDetailsDto>();
 
 		try {
 			Map<String, String> pathSegments = Map.of(USER_ROLE, PARTNER_ADMIN);
@@ -60,7 +65,35 @@ public class KeycloakHelper {
 			if (response instanceof List<?> usersList) {
 				for (Object userObj : usersList) {
 					if (userObj instanceof LinkedHashMap<?, ?> userMap) {
-						keycloakPartnerAdmins.add(String.valueOf(userMap.get(USER_NAME)));	
+						if (userMap.containsKey(EMAIL)) {
+							String email = String.valueOf(userMap.get(EMAIL));
+							if (email != null && !email.trim().isEmpty()) {
+								AdminDetailsDto adminDetailsDto = new AdminDetailsDto();
+								adminDetailsDto.setUserName(String.valueOf(userMap.get(USER_NAME)));
+								adminDetailsDto.setEmailId(email);
+								String langCode = "eng";
+								if (userMap.containsKey(ATTRIBUTES)) {
+									Object attributesObj = userMap.get(ATTRIBUTES);
+									if (attributesObj instanceof Map<?, ?> attributesMap) {
+
+										Object langCodeObj = attributesMap.get(LANG_CODE);
+										Object localeObj = attributesMap.get(LOCALE);
+
+										if (langCodeObj instanceof List<?> langList && !langList.isEmpty()) {
+											langCode = String.valueOf(langList.get(0));
+										} else if (localeObj instanceof List<?> localeList && !localeList.isEmpty()) {
+											langCode = String.valueOf(localeList.get(0));
+										}
+									}
+								}
+								adminDetailsDto.setLangCode(langCode);
+								keycloakPartnerAdmins.add(adminDetailsDto);
+							} else {
+								log.info("Skipping user with missing or empty email: {}", String.valueOf(userMap.get(USER_NAME)));
+							}
+						} else {
+							log.info("Skipping user with no email field: {}", String.valueOf(userMap.get(USER_NAME)));
+						}
 					}
 				}
 			} else {
@@ -69,8 +102,8 @@ public class KeycloakHelper {
 						"Invalid response format received from API.");
 			}
 			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
-			pmsPartnerAdmins = batchJobHelper.getValidPartnerAdminsInPms(keycloakPartnerAdmins);
-			log.info("PMS has {} Partner Admin users.", pmsPartnerAdmins.size());
+			validPartnerAdmins = batchJobHelper.getValidPartnerAdmins(keycloakPartnerAdmins);
+			log.info("Keycloak has {} Partner Admin users.", validPartnerAdmins.size());
 		} catch (HttpStatusCodeException e) {
 			log.debug("API request failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString(), e);
 			throw new BatchJobServiceException(ErrorCode.API_NOT_ACCESSIBLE.getErrorCode(),
@@ -80,7 +113,7 @@ public class KeycloakHelper {
 		} catch (Exception e) {
 			log.debug("Error occurred while fetching Partner Admin user IDs: {}", e.getMessage(), e);
 		}
-		return pmsPartnerAdmins;
+		return validPartnerAdmins;
 	}
 
 }

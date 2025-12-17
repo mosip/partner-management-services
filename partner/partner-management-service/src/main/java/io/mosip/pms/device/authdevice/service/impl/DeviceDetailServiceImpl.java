@@ -428,11 +428,15 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
 			}
 			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<Partner> partnerList = new ArrayList<>();
+			if (!isAdmin) {
+				partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
 			if (Objects.isNull(deviceDetailId)) {
 				LOGGER.info("sessionId", "idType", "id", "Device id is null.");
@@ -446,7 +450,6 @@ public class DeviceDetailServiceImpl implements DeviceDetailService {
 						ErrorCode.DEVICE_NOT_EXISTS.getErrorMessage());
 			}
 			DeviceDetail device = deviceDetail.get();
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if (!isAdmin) {
 				Partner partnerDetails = getAssociatedPartner(partnerList, device.getDeviceProviderId(), userId);
 				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
