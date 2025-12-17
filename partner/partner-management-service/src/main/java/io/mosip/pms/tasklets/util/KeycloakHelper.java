@@ -62,6 +62,9 @@ public class KeycloakHelper {
 			Object response = restUtil.getApiWithContentType(roleUsersUrl, pathSegments, Object.class,
 					MediaType.APPLICATION_JSON);
 
+			// List to track all skipped users with their reason
+			List<String> skippedUsers = new ArrayList<>();
+
 			if (response instanceof List<?> usersList) {
 				for (Object userObj : usersList) {
 					if (userObj instanceof LinkedHashMap<?, ?> userMap) {
@@ -73,25 +76,29 @@ public class KeycloakHelper {
 						
 						// If user is not enabled, log and continue to next iteration
 						if (!isEnabled) {
-							log.info("Skipping disabled user: {}", username);
+							log.debug("Skipping disabled user: {}", username);
+							skippedUsers.add(username + " (disabled)");
 							continue;
 						}
 						
 						// Check if email field exists
 						if (!userMap.containsKey(EMAIL)) {
-							log.info("Skipping user with no email field: {}", username);
+							log.debug("Skipping user with no email field: {}", username);
+							skippedUsers.add(username + " (no email field)");
 							continue;
 						}
 						
 						Object emailObj = userMap.get(EMAIL);
 						if (emailObj == null) {
-							log.info("Skipping user with null email: {}", username);
+							log.debug("Skipping user with null email: {}", username);
+							skippedUsers.add(username + " (null email)");
 							continue;
 						}
 						
 						String email = emailObj.toString().trim();
 						if (email.isEmpty()) {
-							log.info("Skipping user with missing or empty email: {}", username);
+							log.debug("Skipping user with missing or empty email: {}", username);
+							skippedUsers.add(username + " (empty email)");
 							continue;
 						}
 						
@@ -122,6 +129,10 @@ public class KeycloakHelper {
 				throw new BatchJobServiceException(ErrorCode.FETCH_PARTNER_ADMIN_USER_IDS_ERROR.getErrorCode(),
 						"Invalid response format received from API.");
 			}
+			
+			// Log summary of skipped users
+			log.info("Summary of skipped users - Total count: {}, Skipped users: {}", skippedUsers.size(), skippedUsers);
+			
 			log.info("KeyCloak returned {} Partner Admin users.", keycloakPartnerAdmins.size());
 			validPartnerAdmins = batchJobHelper.getValidPartnerAdmins(keycloakPartnerAdmins);
 			log.info("Keycloak has {} Partner Admin users.", validPartnerAdmins.size());
