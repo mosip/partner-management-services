@@ -336,6 +336,13 @@ public class PartnerHelper {
         return false;
     }
 
+    public boolean isPolicyManager(String roles) {
+        if (roles.contains(PartnerConstants.POLICYMANAGER)) {
+            return true;
+        }
+        return false;
+    }
+
     public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
         // Validate sortFieldName and sortType
         if ((Objects.nonNull(sortFieldName) && Objects.isNull(sortType)) || (Objects.isNull(sortFieldName) && Objects.nonNull(sortType))) {
