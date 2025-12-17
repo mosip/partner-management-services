@@ -65,18 +65,11 @@ public class KeycloakHelper {
 			if (response instanceof List<?> usersList) {
 				for (Object userObj : usersList) {
 					if (userObj instanceof LinkedHashMap<?, ?> userMap) {
-						String username = String.valueOf(userMap.get(USER_NAME));
-						boolean isEnabled = false;
+						// Username is mandatory in Keycloak, so it will always be present
+						String username = userMap.get(USER_NAME).toString();
 						
 						// Check if user is enabled
-						if (userMap.containsKey(ENABLED)) {
-							Object enabledObj = userMap.get(ENABLED);
-							if (enabledObj instanceof Boolean) {
-								isEnabled = (Boolean) enabledObj;
-							} else if (enabledObj != null) {
-								isEnabled = Boolean.parseBoolean(String.valueOf(enabledObj));
-							}
-						}
+						boolean isEnabled = Boolean.TRUE.equals(userMap.get(ENABLED));
 						
 						// If user is not enabled, log and continue to next iteration
 						if (!isEnabled) {
@@ -90,8 +83,14 @@ public class KeycloakHelper {
 							continue;
 						}
 						
-						String email = String.valueOf(userMap.get(EMAIL));
-						if (email == null || email.trim().isEmpty()) {
+						Object emailObj = userMap.get(EMAIL);
+						if (emailObj == null) {
+							log.info("Skipping user with null email: {}", username);
+							continue;
+						}
+						
+						String email = emailObj.toString().trim();
+						if (email.isEmpty()) {
 							log.info("Skipping user with missing or empty email: {}", username);
 							continue;
 						}
