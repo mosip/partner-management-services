@@ -9,7 +9,7 @@ GetPartnerDetails:
       inputTemplate: pms/PrintPartner/GetPartnerDetails/GetPartnerDetails
       outputTemplate: pms/PrintPartner/GetPartnerDetails/GetPartnerDetailsResult
       input: '{
-		"partnerType":"Print_Partner",
+		"partnerType":"Print_Partner"
 }'
       output: '{
 }'

@@ -1,5 +1,5 @@
 createPartnerSelfRegistration:
-   Pms_PartnerSelfRegistration_All_Valid_Smoke_sid:
+   Pms_PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp__01
       description: Create MISP Partner Self Registration

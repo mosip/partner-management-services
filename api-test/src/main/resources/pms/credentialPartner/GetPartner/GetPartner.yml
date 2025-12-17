@@ -8,7 +8,7 @@ GetPartnerCert:
       inputTemplate: pms/credentialPartner/GetPartner/getPartner
       outputTemplate: pms/credentialPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
+	"partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '  {
     "partnerID": "MOVP-AUTOMATION",

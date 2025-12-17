@@ -2,7 +2,7 @@ GetAllApiKeyForAuthPartnerWithoutPartnerRegister:
    Pms_GetAllApiKeyForAuthPartner_withoutuploadCert_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
       description: Fetching all the API Key Without Partner Register
-	  uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerWithoutcertupload_01	  
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerWithoutcertupload_01	  
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get

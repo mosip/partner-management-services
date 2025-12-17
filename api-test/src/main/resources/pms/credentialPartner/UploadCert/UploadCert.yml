@@ -4,7 +4,7 @@ uploadPartnerCert:
       uniqueIdentifier: TC_PMS_uploadcredentialPartnerCert_01
       description: Upload valid Partner certificate for Partner
       role: partner
-	  additionalDependencies: TC_PMS_uploadCert_01,TC_PMS_uploadCert_03	  
+      additionalDependencies: TC_PMS_uploadCert_01,TC_PMS_uploadCert_03	  
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/credentialPartner/UploadCert/uploadCert

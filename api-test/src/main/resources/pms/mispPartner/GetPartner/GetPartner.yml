@@ -8,7 +8,7 @@ GetPartnerCert:
       inputTemplate: pms/mispPartner/GetPartner/getPartner
       outputTemplate: pms/mispPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
+	"partnerId": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '  {
  	"partnerID": "MISP-AUTOMATION"
@@ -23,7 +23,7 @@ GetPartnerCert:
       inputTemplate: pms/mispPartner/GetPartner/getPartner
       outputTemplate: pms/mispPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_spartnerId$"
+	"partnerId": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_partnerId$"
 }'
       output: '  {
  	"partnerID": "MISP3"

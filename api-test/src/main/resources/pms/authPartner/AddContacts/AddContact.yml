@@ -6,7 +6,7 @@ AddContact:
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/authPartner/AddContacts/addContactResult
       input: '{
@@ -24,7 +24,7 @@ AddContact:
       description: Create contact details for the Partner while keeping the address parameter as missing
       role: partner
       restMethod: post
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/error
       input: '{
@@ -49,7 +49,7 @@ AddContact:
       description: Create contact details for the Partner while keeping the contactNumber parameter as missing
       role: partner
       restMethod: post
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/error
       input: '{
@@ -72,7 +72,7 @@ AddContact:
       description: Create contact details for the Partner while keeping the emailID parameter as missing
       role: partner
       restMethod: post
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/error
       input: '{

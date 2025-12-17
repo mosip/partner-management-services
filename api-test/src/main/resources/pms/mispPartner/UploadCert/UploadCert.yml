@@ -5,12 +5,12 @@ UploadPartnerCert:
       description: Upload valid certificate for Misp Partner
       role: partner
       checkErrorsOnlyInResponse: true
-	  additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
+      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
       restMethod: put
       inputTemplate: pms/mispPartner/UploadCert/uploadCert
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
-  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+  "partnerId": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
@@ -21,7 +21,7 @@ UploadPartnerCert:
       description: Upload valid certificate for Misp License
       role: partner
       checkErrorsOnlyInResponse: true
-	  additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
+      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
       restMethod: put
       inputTemplate: pms/mispPartner/UploadCert/uploadCert2
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
@@ -38,7 +38,7 @@ UploadPartnerCert:
       description: Upload valid certificate for Misp License with valid PartnerID
       role: partner
       checkErrorsOnlyInResponse: true
-	  additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
+      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
       restMethod: put
       inputTemplate: pms/mispPartner/UploadCert/uploadCert2
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult

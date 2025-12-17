@@ -1,7 +1,7 @@
 ApproveMappingKey:
    Pms_ApproveMappingKey_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_02	  
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_02	  
       description: Approve the Mapping Key
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -36,7 +36,7 @@ ApproveMappingKey:
     }'
    Pms_ApproveMappingKey_For_MISP_Policy_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_03
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_03
       description: Approve the Mapping Key
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -53,7 +53,7 @@ ApproveMappingKey:
     }'
    Pms_ApproveMappingKey_PastDate_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_04
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_04
       description: Approve the Mapping Key
       role: partneradmin
       restMethod: put
@@ -74,7 +74,7 @@ ApproveMappingKey:
 
    Pms_ApproveMappingKey_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_05
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_05
       description: Approve the Mapping Key
       role: partneradmin
       restMethod: put
@@ -94,7 +94,7 @@ ApproveMappingKey:
 
    Pms_ApproveMappingKey_SpaceIn_mapping_key_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_06
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_06
       description: Approve the Mapping Key
       role: partneradmin
       restMethod: put
@@ -115,7 +115,7 @@ ApproveMappingKey:
 
    Pms_ApproveMappingKey_Missing_status_Neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_07
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_07
       description: Approve the Mapping Key
       role: partneradmin
       restMethod: put
@@ -136,7 +136,7 @@ ApproveMappingKey:
 
    Pms_ApproveMappingKey_Rejected_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_08
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_08
       description: Approve the Mapping Key
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -154,7 +154,7 @@ ApproveMappingKey:
     
    Pms_ApproveMappingKey_Map_partner_toalready_mapped_policy_neg:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_09
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_09
       description: Approve the Mapping Key
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -176,7 +176,7 @@ ApproveMappingKey:
     
    Pms_ApproveMappingKey_Reject_All_Valid:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
-	  uniqueIdentifier: TC_PMS_ApproveAPIKey_10
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_10
       description: Reject the Mapping Key
       role: partneradmin
       checkErrorsOnlyInResponse: true

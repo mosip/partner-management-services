@@ -229,7 +229,7 @@ createPublishPolicy:
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
 		"policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
-		"policyId": "MDSP",
+		"policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
 		"requesttime": "$TIMESTAMP$"
 }'
       output: '{

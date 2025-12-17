@@ -819,9 +819,10 @@
 	<test name="CreateDeviceDetail">
 		<parameter name="ymlFile"
 			value="pms/device/makeAndModel/create/CreateDeviceDetail.yml" />
+			<parameter name="idKeyName" value="id" />			
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 	<test name="RejectDeviceDetail">

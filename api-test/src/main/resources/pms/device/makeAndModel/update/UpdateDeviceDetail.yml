@@ -5,7 +5,6 @@ UpdateDeviceDetail:
       description: Create Service To Update DeviceDetail with valid details
       role: partner
       checkErrorsOnlyInResponse: true
-	  additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: put
       inputTemplate: pms/device/makeAndModel/update/updateDeviceDetail
       outputTemplate: pms/device/makeAndModel/update/updateDeviceDetailResult
@@ -13,7 +12,7 @@ UpdateDeviceDetail:
     "deviceProviderId": "Tech-123",
     "deviceSubTypeCode": "Slap",
     "deviceTypeCode": "Finger",
-    "id": "device-id-123",
+    "id": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "isActive": true,
     "isItForRegistrationDevice": true,
     "make": "abcdef",
@@ -37,7 +36,7 @@ UpdateDeviceDetail:
     "deviceProviderId": "Tech-123",
     "deviceSubTypeCode": "Single",
     "deviceTypeCode": "Finger",
-    "id": "device-id-124",
+    "id": "$ID:ServiceToSaveDeviceDetail_sameMakeModelType_All_Valid_Smoke_sid_id$",
     "isActive": true,
     "isItForRegistrationDevice": true,
     "make": "abcdef",
@@ -90,7 +89,7 @@ UpdateDeviceDetail:
     "deviceProviderId": "$REMOVE$",
     "deviceSubTypeCode": "Slab",
     "deviceTypeCode": "Finger",
-    "id": "device-id-123",
+    "id": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "isActive": true,
     "isItForRegistrationDevice": true,
     "make": "abcde",
@@ -119,7 +118,7 @@ UpdateDeviceDetail:
     "deviceProviderId": "Tech-123",
     "deviceSubTypeCode": "$REMOVE$",
     "deviceTypeCode": "Finger",
-    "id": "device-id-123",
+    "id": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "isActive": true,
     "isItForRegistrationDevice": true,
     "make": "abcde",
@@ -147,7 +146,7 @@ UpdateDeviceDetail:
     "deviceProviderId": "Tech-123",
     "deviceSubTypeCode": "Slab",
     "deviceTypeCode": "$REMOVE$",
-    "id": "device-id-123",
+    "id": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "isActive": true,
     "isItForRegistrationDevice": true,
     "make": "abcde",

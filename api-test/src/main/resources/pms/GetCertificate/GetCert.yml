@@ -2,7 +2,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_AuthPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-	  uniqueIdentifier: TC_PMS_GetPartnerCert_01  
+      uniqueIdentifier: TC_PMS_GetPartnerCert_01  
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -50,7 +50,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_FtmProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Fetching all the certificate for the Partner Id
-	  uniqueIdentifier: TC_PMS_GetPartnerCert_02	  
+      uniqueIdentifier: TC_PMS_GetPartnerCert_02	  
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get

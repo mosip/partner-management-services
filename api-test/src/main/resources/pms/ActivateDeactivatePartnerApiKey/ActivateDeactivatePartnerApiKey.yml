@@ -91,7 +91,7 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "asdfgrwg",
-   "policyId": "MDSP",
+   "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
@@ -135,7 +135,7 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "partner-111997",
-   "policyId": "MDSP",
+   "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
    "label": "asdfsad",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
@@ -181,7 +181,7 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "partner-111997",
-   "policyId": "MDSP",
+   "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
    "label": "$REMOVE$",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"

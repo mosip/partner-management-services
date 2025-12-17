@@ -5,7 +5,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_01
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
@@ -24,7 +24,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_02
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -46,7 +46,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_03
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -67,7 +67,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_04
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -90,7 +90,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_05
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -111,7 +111,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_06
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -132,7 +132,7 @@ GenerateApiKey:
       description: Generate Api Keys for Approved Policies with invalid policy
       role: partnerauth
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -151,10 +151,10 @@ GenerateApiKey:
 
    Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-	  uniqueIdentifier: TC_PMS_GenerateApikey_08
+      uniqueIdentifier: TC_PMS_GenerateApikey_08
       role: partnerauth
       restMethod: patch
-	  additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{

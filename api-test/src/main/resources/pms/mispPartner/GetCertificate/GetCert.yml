@@ -9,7 +9,7 @@ getPartnerCert:
       inputTemplate: pms/mispPartner/GetCertificate/getCert
       outputTemplate: pms/mispPartner/GetCertificate/getCertResult
       input: '{
-  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
+  "partnerId": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'
