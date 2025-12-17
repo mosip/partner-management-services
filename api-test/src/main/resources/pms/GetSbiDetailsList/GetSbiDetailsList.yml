@@ -1,5 +1,5 @@
 GetSbiDetailsList:
-   Pms_GetSbiDetailsList_All_Valid_Smoke:
+   Pms_GetSbiDetailsList_All_Valid_Smoke_Sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_pms_GetSbiDetailsList_01
       description: Retrieve the PMS GetSbiDetails List for All Valid Inputs

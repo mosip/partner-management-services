@@ -33,7 +33,7 @@ RegenerateMISPPartnerLicense:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_partnerId$",
       "policyId": "$REMOVE$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{   
 }'
@@ -52,7 +52,7 @@ RegenerateMISPPartnerLicense:
 	  "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{   
 }'
@@ -71,7 +71,7 @@ RegenerateMISPPartnerLicense:
 	  "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "$EXPIRYDATE_YEARS:10$"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{   
 }'
@@ -90,7 +90,7 @@ RegenerateMISPPartnerLicense:
 	  "partnerId": "$ID:GenerateMISPPartnerLicense_with_Empty_PolicyId_sid_partnerId$",
 	  "policyId": "",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "$EXPIRYDATE_YEARS:10$"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{   
 }'

@@ -870,7 +870,7 @@ GetAllNotifications:
      ]
 }'
    Pms_GetAllNotifications_with_Sbi_NotificationType_And_ExpiryDate:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&expiryDate=2033-08-22
+      endPoint: /v1/partnermanager/notifications?notificationType=sbi&expiryDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Smoke_Sid_sbiExpiryDateTime$
       role: partneradmin
       description: Get All Notifications with Sbi Notification Type and Expiry Date
       uniqueIdentifier: TC_PMS_GetAllNotifications_57
@@ -882,10 +882,10 @@ GetAllNotifications:
 }'
       output: '{
 }'
-   Pms_GetAllNotifications_with_Partner_NotificationType_And_ExpiryDate:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner&expiryDate=2027-04-01
+   Pms_GetAllNotifications_with_Weekly_NotificationType_And_createdFromDate_And_createdToDate:
+      endPoint: /v1/partnermanager/notifications?notificationType=weekly&createdFromDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Smoke_Sid_sbiCreatedDateTime$&createdToDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Smoke_Sid_sbiExpiryDateTime$
       role: partneradmin
-      description: Get All Notifications with Partner Notification Type and Expiry Date
+      description: Get All Notifications with Weekly Notification Type and created From Date and created To Date
       uniqueIdentifier: TC_PMS_GetAllNotifications_58
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -895,24 +895,11 @@ GetAllNotifications:
 }'
       output: '{
 }'
-   Pms_GetAllNotifications_with_Weekly_NotificationType_And_createdFromDate_And_createdToDate:
-      endPoint: /v1/partnermanager/notifications?notificationType=weekly&createdFromDate=2024-01-01&createdToDate=2027-04-01
-      role: partneradmin
-      description: Get All Notifications with Weekly Notification Type and created From Date and created To Date
-      uniqueIdentifier: TC_PMS_GetAllNotifications_59
-      restMethod: get
-      checkErrorsOnlyInResponse: true
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
-      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
-      input: '{
-}'
-      output: '{
-}'
    Pms_GetAllNotifications_with_Partner_NotificationType_And_createdToDate_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner&createdToDate=2027-04-01
+      endPoint: /v1/partnermanager/notifications?notificationType=partner&createdToDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Smoke_Sid_sbiExpiryDateTime$
       role: partneradmin
       description: Get All Notifications with Partner Notification Type and created To Date
-      uniqueIdentifier: TC_PMS_GetAllNotifications_60
+      uniqueIdentifier: TC_PMS_GetAllNotifications_59
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
       outputTemplate: pms/error

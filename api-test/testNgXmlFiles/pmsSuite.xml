@@ -203,7 +203,8 @@
 	<test name="MISPPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
-			<parameter name="idKeyName" value="id,partnerId,name,organizationName" />
+			<parameter name="idKeyName" value="id,partnerId,name" />
+			<parameter name="reqKeyName" value="organizationName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1005,7 +1006,7 @@
 			value="pms/GetListOfAllSBI/GetListOfAllSBI.yml" />
 		<parameter name="pathParams"
 			value="partnerId,sortFieldName,sortType,status,sbiVersion" />
-		<parameter name="idKeyName" value="sbiId" />
+		<parameter name="idKeyName" value="sbiId,sbiCreatedDateTime,sbiExpiryDateTime" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParamForAutoGenId" />

@@ -14,7 +14,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -38,7 +38,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -62,7 +62,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -86,7 +86,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -110,7 +110,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -134,7 +134,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -158,7 +158,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -182,7 +182,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -206,7 +206,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -230,7 +230,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -254,7 +254,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -278,7 +278,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -302,7 +302,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pmsapiautomation123456",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -326,7 +326,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": " ",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -350,7 +350,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "null",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -374,7 +374,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "&^%$$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -398,7 +398,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": " ",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
@@ -470,7 +470,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "partnerId": "pms-111555",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-        "expiryDate": "$EXPIRYDATE:365$"
+        "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
 	  "errors": [
