@@ -713,7 +713,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Ftm-chip_NotificationType:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip
       role: partneradmin
-      description: Get All Notifications with SBI Notification Type
+      description: Get All Notifications with ftm-chip Notification Type
       uniqueIdentifier: TC_PMS_GetAllNotifications_47
       restMethod: get
       checkErrorsOnlyInResponse: true
