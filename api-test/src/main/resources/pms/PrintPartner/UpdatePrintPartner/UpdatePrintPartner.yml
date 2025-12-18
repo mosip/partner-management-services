@@ -5,7 +5,7 @@ UpdatePrintPartner:
       description: Update Print Partner with valid details
       role: partner
       restMethod: put
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_printpartner_01	  
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_printpartner_01  
       inputTemplate: pms/PrintPartner/UpdatePrintPartner/UpdatePrintPartner
       outputTemplate: pms/PrintPartner/UpdatePrintPartner/UpdatePrintPartnerResult
       input: '{

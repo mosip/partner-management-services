@@ -22,7 +22,7 @@ definePolicyGroup:
       description: Creating a PolicyGroup
       role: partneradmin
       restMethod: post
-      uniqueIdentifier: TC_PMS_definePolicyGroup_21	  
+      uniqueIdentifier: TC_PMS_definePolicyGroup_21
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
@@ -40,7 +40,7 @@ definePolicyGroup:
       description: Creating a PolicyGroup
       role: partneradmin
       restMethod: post
-      uniqueIdentifier: TC_PMS_definePolicyGroup_22	  
+      uniqueIdentifier: TC_PMS_definePolicyGroup_22 
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
