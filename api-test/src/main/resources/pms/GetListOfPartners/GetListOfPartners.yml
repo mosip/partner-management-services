@@ -494,7 +494,7 @@ GetListOfPartners:
 }'
    Pms_GetListOfPartners_certificateUploadStatus_asc_without_sortFieldName_Neg:
       endPoint: /v1/partnermanager/admin-partners?sortType=asc&certificateUploadStatus=uploaded
-      description: Retrieving all partners filtered by certificateUploadStatus in ascending order and without sortFieldName
+      description: Retrieving all partners by certificateUploadStatus in ascending order and without sortFieldName
       uniqueIdentifier: TC_PMS_GetListOfPartners_33
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -515,7 +515,6 @@ GetListOfPartners:
       description: Retrieving all partners filtered with invalid sortType
       uniqueIdentifier: TC_PMS_GetListOfPartners_34
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
       outputTemplate: pms/error
@@ -527,4 +526,226 @@ GetListOfPartners:
        "errorCode": "PMS_PRT_358"		
       }
       ]	  	
+}'
+   Pms_GetListOfPartners_With_Status_Active:
+      endPoint: /v1/partnermanager/admin-partners?status=active
+      description: Retrieve all partners with active status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_35
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_With_Status_Inactive:
+      endPoint: /v1/partnermanager/admin-partners?status=inactive
+      description: Retrieve all partners with inactive status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_36
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_With_Status_Deactivated:
+      endPoint: /v1/partnermanager/admin-partners?status=deactivated
+      description: Retrieve all partners with deactivated status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_37
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_With_Status_Active_And_Pagination:
+      endPoint: /v1/partnermanager/admin-partners?pageNo=1&pageSize=5&status=active
+      description: Retrieve paginated active partners
+      uniqueIdentifier: TC_PMS_GetListOfPartners_38
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersOutputResult
+      input: '{
+}'
+      output: '{
+}'
+   Pms_GetListOfPartners_Status_Active_With_Sort_Asc:
+      endPoint: /v1/partnermanager/admin-partners?status=active&sortFieldName=orgName&sortType=asc
+      description: Retrieve active partners sorted by orgName ascending
+      uniqueIdentifier: TC_PMS_GetListOfPartners_39
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_Active_With_Certificate_uploaded:
+      endPoint: /v1/partnermanager/admin-partners?status=active&certificateUploadStatus=uploaded
+      description: Retrieve active partners with uploaded certificates
+      uniqueIdentifier: TC_PMS_GetListOfPartners_40
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_Active_With_Certificate_Notuploaded:
+      endPoint: /v1/partnermanager/admin-partners?status=active&certificateUploadStatus=not_uploaded
+      description: Retrieve active partners with Not uploaded certificates
+      uniqueIdentifier: TC_PMS_GetListOfPartners_41
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_Active_With_PolicyGroupName:
+      endPoint: /v1/partnermanager/admin-partners?status=active&policyGroupName=$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$
+      description: Retrieve active partners with policyGroupName
+      uniqueIdentifier: TC_PMS_GetListOfPartners_42
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_Active_With_PartnerType:
+      endPoint: /v1/partnermanager/admin-partners?status=active&partnerType=AUTH_PARTNER
+      description: Retrieve active partners with Auth Partner
+      uniqueIdentifier: TC_PMS_GetListOfPartners_43
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_Active_With_PartnerId:
+      endPoint: /v1/partnermanager/admin-partners?status=active&partnerId=$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$
+      description: Retrieve active partners with PartnerID
+      uniqueIdentifier: TC_PMS_GetListOfPartners_44
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_InActive_With_PartnerId:
+      endPoint: /v1/partnermanager/admin-partners?status=inactive&partnerId=$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$
+      description: Retrieve inactive partners with PartnerId
+      uniqueIdentifier: TC_PMS_GetListOfPartners_45
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_Status_DeActivate_With_PartnerId:
+      endPoint: /v1/partnermanager/admin-partners?status=deactivated&partnerId=$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$
+      description: Retrieve deactivated partners with PartnerId
+      uniqueIdentifier: TC_PMS_GetListOfPartners_46
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_status_invalid_Neg:
+      endPoint: /v1/partnermanager/admin-partners?status=invalid
+      description: Retrieve partners with invalid status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_47
+      role: partneradmin
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_With_Empty_Status_Neg:
+      endPoint: /v1/partnermanager/admin-partners?status=
+      description: Retrieve partners with empty status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_48
+      role: partneradmin
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_With_Numeric_Status_Neg:
+      endPoint: /v1/partnermanager/admin-partners?status=1
+      description: Retrieve partners with numeric status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_49
+      role: partneradmin
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
+}'
+   Pms_GetListOfPartners_With_Status_special_chars_Neg:
+      endPoint: /v1/partnermanager/admin-partners?status=%active
+      description: Retrieve partners with special character status
+      uniqueIdentifier: TC_PMS_GetListOfPartners_50
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      input: '{
+}'
+      output: '{
+      "pageNo": "0"
 }'
