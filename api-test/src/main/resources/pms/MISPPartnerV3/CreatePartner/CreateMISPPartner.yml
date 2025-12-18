@@ -76,7 +76,7 @@ CreateMISPPartner:
         "partnerId": "pms-111557",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Max_AddressField_Smoke:
+   Pms_MISPPartnerRegistration_Max_AddressField:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_04
       description: Create MISP Partner Self Registration with maximum 2000 words in Address field
