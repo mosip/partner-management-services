@@ -34,7 +34,7 @@ RejectMappingDeviceToSbiNegativeScenarios:
       "id": "$REMOVE$",
       "version": "1.0",	
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
 }'
