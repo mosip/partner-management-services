@@ -1596,4 +1596,154 @@ public class ClientManagementServiceImplTest {
 		return mosipUserDto;
 	}
 
+	@Test
+	public void testCreateOIDCClientV2InvalidPartnerId() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy-123");
+		request.setAuthPartnerId("authPartnerId");
+		request.setName("OIDCClientV2Name");
+		List<String> clientAuthMethods = new ArrayList<>();
+		clientAuthMethods.add("private_key_jwt");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(Arrays.asList("authorization_code", "refresh_token"));
+		request.setLogoUri("https://example.com/logo.png");
+		request.setRedirectUris(Arrays.asList("https://example.com/redirect1"));
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setUserinfoResponseType("JSON");
+		request.setAdditionalConfig(additionalConfig);
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+		try {
+			serviceImpl.createOIDCClientV2(request);
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+		}
+	}
+
+	@Test
+	public void testCreateOIDCClientV2InvalidPolicyId() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+		request.setPublicKey(public_key);
+		request.setPolicyId("");
+		request.setAuthPartnerId("authPartnerId");
+		request.setName("InvalidPolicy");
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+		try {
+			serviceImpl.createOIDCClientV2(request);
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.POLICY_NOT_EXIST.getErrorCode()));
+		}
+	}
+
+	@Test
+	public void testCreateOIDCClientV2NullPublicKey() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+		request.setPublicKey(null);
+		request.setPolicyId("policy-123");
+		request.setAuthPartnerId("authPartnerId");
+		request.setName("NullKeyClient");
+		try {
+			serviceImpl.createOIDCClientV2(request);
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+		}
+	}
+
+	@Test
+	public void testCreateOIDCClientV2EmptyPublicKey() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+		request.setPublicKey(new HashMap<>());
+		request.setPolicyId("policy-123");
+		request.setAuthPartnerId("authPartnerId");
+		request.setName("EmptyKeyClient");
+		try {
+			serviceImpl.createOIDCClientV2(request);
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+		}
+	}
+
+	@Test
+	public void testCreateOIDCClientV2InvalidAuthPartner() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy-123");
+		request.setAuthPartnerId("invalidPartnerId");
+		request.setName("InvalidPartnerClient");
+		List<String> clientAuthMethods = new ArrayList<>();
+		clientAuthMethods.add("private_key_jwt");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(Arrays.asList("authorization_code"));
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setSignupBannerRequired(true);
+		request.setAdditionalConfig(additionalConfig);
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+		when(partnerRepository.findById("invalidPartnerId")).thenReturn(Optional.empty());
+		try {
+			serviceImpl.createOIDCClientV2(request);
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+		}
+	}
+
 }
