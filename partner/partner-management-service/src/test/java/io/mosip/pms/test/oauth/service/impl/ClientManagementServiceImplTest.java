@@ -1661,6 +1661,18 @@ public class ClientManagementServiceImplTest {
 
 	@Test
 	public void testCreateOIDCClientV2NullPublicKey() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
 		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
 		request.setPublicKey(null);
 		request.setPolicyId("policy-123");
@@ -1675,6 +1687,18 @@ public class ClientManagementServiceImplTest {
 
 	@Test
 	public void testCreateOIDCClientV2EmptyPublicKey() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
 		ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
 		request.setPublicKey(new HashMap<>());
 		request.setPolicyId("policy-123");
