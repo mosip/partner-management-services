@@ -494,7 +494,7 @@ GetListOfPartners:
 }'
    Pms_GetListOfPartners_certificateUploadStatus_asc_without_sortFieldName_Neg:
       endPoint: /v1/partnermanager/admin-partners?sortType=asc&certificateUploadStatus=uploaded
-      description: Retrieving all partners by certificateUploadStatus in ascending order and without sortFieldName
+      description: Retrieving all partners filtered by certificateUploadStatus in ascending order and without sortFieldName
       uniqueIdentifier: TC_PMS_GetListOfPartners_33
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -626,15 +626,18 @@ GetListOfPartners:
       "pageNo": "0"
 }'
    Pms_GetListOfPartners_Status_Active_With_PolicyGroupName:
-      endPoint: /v1/partnermanager/admin-partners?status=active&policyGroupName=$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$
+      endPoint: /v1/partnermanager/admin-partners
       description: Retrieve active partners with policyGroupName
       uniqueIdentifier: TC_PMS_GetListOfPartners_42
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
-      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
+      "partnerId": "$REMOVE$",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+      "status": "active"
 }'
       output: '{
       "pageNo": "0"
@@ -654,43 +657,52 @@ GetListOfPartners:
       "pageNo": "0"
 }'
    Pms_GetListOfPartners_Status_Active_With_PartnerId:
-      endPoint: /v1/partnermanager/admin-partners?status=active&partnerId=$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$
+      endPoint: /v1/partnermanager/admin-partners
       description: Retrieve active partners with PartnerID
       uniqueIdentifier: TC_PMS_GetListOfPartners_44
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
-      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$",
+      "policyGroupName": "$REMOVE$",
+      "status": "active"
 }'
       output: '{
       "pageNo": "0"
 }'
    Pms_GetListOfPartners_Status_InActive_With_PartnerId:
-      endPoint: /v1/partnermanager/admin-partners?status=inactive&partnerId=$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$
+      endPoint: /v1/partnermanager/admin-partners
       description: Retrieve inactive partners with PartnerId
       uniqueIdentifier: TC_PMS_GetListOfPartners_45
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
-      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$",
+      "policyGroupName": "$REMOVE$",
+      "status": "inactive"
 }'
       output: '{
       "pageNo": "0"
 }'
    Pms_GetListOfPartners_Status_DeActivate_With_PartnerId:
-      endPoint: /v1/partnermanager/admin-partners?status=deactivated&partnerId=$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$
+      endPoint: /v1/partnermanager/admin-partners
       description: Retrieve deactivated partners with PartnerId
       uniqueIdentifier: TC_PMS_GetListOfPartners_46
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
-      inputTemplate: pms/GetListOfPartners/getListOfPartners
+      inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$",
+      "policyGroupName": "$REMOVE$",
+      "status": "deactivated"
 }'
       output: '{
       "pageNo": "0"
