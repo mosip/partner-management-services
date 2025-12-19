@@ -92,7 +92,7 @@ public class PMSUtil extends AdminTestUtil {
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
 
 		DBManager.executeDBQueries(PMSConfigManager.getIdaDbUrl(), PMSConfigManager.getIdaDbUser(),
-				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getIdaDbSchema(),
+				PMSConfigManager.getIdaDbPass(), PMSConfigManager.getIdaDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
 		
 		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
