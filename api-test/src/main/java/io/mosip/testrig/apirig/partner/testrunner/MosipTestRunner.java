@@ -23,7 +23,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 
 import io.mosip.testrig.apirig.dataprovider.BiometricDataProvider;
 import io.mosip.testrig.apirig.dbaccess.DBManager;
-import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.ExtractResource;
@@ -52,6 +52,7 @@ import io.mosip.testrig.apirig.utils.SkipTestCaseHandler;
 public class MosipTestRunner {
 	private static final Logger LOGGER = Logger.getLogger(MosipTestRunner.class);
 	private static String cachedPath = null;
+	private static String generateDependency;
 
 	public static String jarUrl = MosipTestRunner.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 	public static List<String> languageList = new ArrayList<>();
@@ -74,10 +75,10 @@ public class MosipTestRunner {
 				ExtractResource.copyCommonResources();
 			}
 			AdminTestUtil.init();
-			PMSConfigManger.init();
+			PMSConfigManager.init();
 			suiteSetup(getRunType());
 			SkipTestCaseHandler.loadTestcaseToBeSkippedList("testCaseSkippedList.txt");
-			GlobalMethods.setModuleNameAndReCompilePattern(PMSConfigManger.getproperty("moduleNamePattern"));
+			GlobalMethods.setModuleNameAndReCompilePattern(PMSConfigManager.getproperty("moduleNamePattern"));
 			setLogLevels();
 
 			HealthChecker healthcheck = new HealthChecker();
@@ -89,11 +90,19 @@ public class MosipTestRunner {
 			KeycloakUserManager.createUsers();
 			KeycloakUserManager.closeKeycloakInstance();
 			
-			String testCasesToExecuteString = PMSConfigManger.getproperty("testCasesToExecute");
+			generateDependency = PMSConfigManager.getproperty("generateDependencyJson");
 
-			DependencyResolver.loadDependencies(getGlobalResourcePath() + "/" + "config/testCaseInterDependency.json");
-			if (!testCasesToExecuteString.isBlank()) {
-				PMSUtil.testCasesInRunScope = DependencyResolver.getDependencies(testCasesToExecuteString);
+			if (!"yes".equalsIgnoreCase(generateDependency)) {
+
+				String testCasesToExecute = PMSConfigManager.getproperty("testCasesToExecute");
+				LOGGER.info("Testcases to execute as per config: " + testCasesToExecute);
+
+				if (testCasesToExecute != null && !testCasesToExecute.isBlank()) {
+					DependencyResolver
+							.loadDependencies(getGlobalResourcePath() + "/config/testCaseInterDependency.json");
+
+					PMSUtil.testCasesInRunScope = DependencyResolver.getDependencies(testCasesToExecute);
+				}
 			}
 
 			startTestRunner();
@@ -108,14 +117,19 @@ public class MosipTestRunner {
 		HealthChecker.bTerminate = true;
 		
 		// Used for generating the test case interdependency JSON file
-		//AdminTestUtil.generateTestCaseInterDependencies(getGlobalResourcePath() + "/config/testCaseInterDependency.json");
+		if ("yes".equalsIgnoreCase(generateDependency)) {
+			LOGGER.info("Generating test case inter-dependencies");
+			AdminTestUtil.generateTestCaseInterDependencies(BaseTestCase.testCaseInterDependencyPath);
+		} else {
+			LOGGER.info("Skipping dependency generation");
+		}
 		
 		System.exit(0);
 
 	}
 
 	public static void suiteSetup(String runType) {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSConfigManager.IsDebugEnabled())
 			LOGGER.setLevel(Level.ALL);
 		else
 			LOGGER.info("Test Framework for Mosip api Initialized");
