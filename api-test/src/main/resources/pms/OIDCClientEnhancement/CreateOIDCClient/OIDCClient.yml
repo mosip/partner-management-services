@@ -995,7 +995,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Empty_GrantTypes_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with empty grant types
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_27
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_28
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1032,7 +1032,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_GrantTypes_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with invalid grant types
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_28
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_29
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1069,7 +1069,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_GrantTypes_Special_Character_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with grant types having special characters
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_29
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_30
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1106,7 +1106,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Valid_ClientAuthMethods_Containing_Only_Private_key_jwt_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with grant types having valid clientAuthMethods containing only private_key_jwt
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_30
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_31
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1143,7 +1143,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Without_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with grant types having without clientAuthMethods
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_31
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_32
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1180,7 +1180,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Empty_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having empty clientAuthMethods
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_32
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_33
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1217,7 +1217,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having invalid clientAuthMethods
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_33
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_34
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1254,7 +1254,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Empty_ClientNameLangMap_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having empty clientNameLangMap
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_34
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_35
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1291,7 +1291,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_UserResponceType_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having invalid userinfoResponseType
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_35
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_36
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1328,7 +1328,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Empty_UserResponceType_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having empty userinfoResponseType
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_36
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_37
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1365,7 +1365,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_type_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having invalid type
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_37
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_38
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1402,7 +1402,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_type_link_Smoke:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having valid type as link
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_38
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_39
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1437,7 +1437,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_type_login_Smoke:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having valid type as login
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_39
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_40
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1472,7 +1472,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_empty_type_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having empty type
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_40
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_41
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1509,7 +1509,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_SignupBannerRequired_False_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client signupBannerRequired as false
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_41
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_42
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1544,7 +1544,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_forgotPwdLinkRequired_False_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client forgotPwdLinkRequired as false
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_42
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_43
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1579,7 +1579,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having invalid consentExpireInMins
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_43
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_44
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1616,7 +1616,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_String_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having invalid consentExpireInMins as string
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_44
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_45
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1653,7 +1653,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Without_ConsentExpireInMins_smoke:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client without consentExpireInMins
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_45
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_46
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1687,7 +1687,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Invalid_id_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having invalid id
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_46
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_47
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1724,7 +1724,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Without_id_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client without id
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_47
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_48
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1761,7 +1761,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_with_null_id_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with null id
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_48
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_49
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1798,7 +1798,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Without_Version_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client without version
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_49
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_50
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1835,7 +1835,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_With_null_Version_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with null version
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_50
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_51
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1872,7 +1872,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_With_invalid_Version_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with invalid version
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_51
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_52
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1909,7 +1909,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_With_invalid_Version_integer_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with invalid version as integer
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_52
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_53
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -1946,7 +1946,7 @@ CreateOIDCClient:
    Pms_CreateOIDCClient_Without_RequestTime_neg:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client without requestTime
-      uniqueIdentifier: TC_PMS_CreateOIDCClient_53
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_54
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post
