@@ -474,4 +474,62 @@ public class ClientManagementControllerTest {
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getPartnersClientsV2TestwithFilters() throws Exception {
+        String sortFieldName = "createdDateTime";
+        String sortType = "desc";
+        Integer pageNo = 0;
+        Integer pageSize = 10;
+        String partnerId = "partner-1";
+        String orgName = "org-1";
+        String policyGroupName = "policy-group-1";
+        String policyName = "policy-1";
+        String clientName = "client-1";
+        String status = "ACTIVE";
+
+        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+        PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+        responseWrapper.setResponse(pageResponse);
+
+        when(clientManagementService.getPartnersClientsV2(eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize), any(ClientFilterDto.class)))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients")
+                        .param("sortFieldName", sortFieldName)
+                        .param("sortType", sortType)
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize))
+                        .param("partnerId", partnerId)
+                        .param("orgName", orgName)
+                        .param("policyGroupName", policyGroupName)
+                        .param("policyName", policyName)
+                        .param("clientName", clientName)
+                        .param("status", status))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getPartnersClientsV2TestwithoutFilters() throws Exception {
+        String sortFieldName = "createdDateTime";
+        String sortType = "desc";
+        Integer pageNo = 0;
+        Integer pageSize = 10;
+
+        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+        PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+        responseWrapper.setResponse(pageResponse);
+
+        when(clientManagementService.getPartnersClientsV2(eq(sortFieldName), eq(sortType), eq(pageNo), eq(pageSize), any(ClientFilterDto.class)))
+                .thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients")
+                        .param("sortFieldName", sortFieldName)
+                        .param("sortType", sortType)
+                        .param("pageNo", String.valueOf(pageNo))
+                        .param("pageSize", String.valueOf(pageSize)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
