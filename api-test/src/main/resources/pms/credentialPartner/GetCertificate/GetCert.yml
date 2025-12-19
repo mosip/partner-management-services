@@ -1,15 +1,16 @@
 GetPartnerCert:
    Pms_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
-      uniqueIdentifier: TC_PMS_getPartnerCert_01
+      uniqueIdentifier: TC_PMS_getOnlineVerificationPartnerCert_01
       description: Retreive Partner certificate
       role: partner
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_uploadcredentialPartnerCert_01
       restMethod: get
       inputTemplate: pms/credentialPartner/GetCertificate/getCert
       outputTemplate: pms/credentialPartner/GetCertificate/getCertResult
       input: '{
-	"partnerId": "MOVP-AUTOMATION"
+	"partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'

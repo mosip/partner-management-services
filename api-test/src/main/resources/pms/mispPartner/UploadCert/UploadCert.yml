@@ -1,30 +1,32 @@
 UploadPartnerCert:
    Pms_UploadCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
-      uniqueIdentifier: TC_PMS_UploadPartnerCert_01
+      uniqueIdentifier: TC_PMS_UploadMispPartnerCert_01
       description: Upload valid certificate for Misp Partner
       role: partner
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
       restMethod: put
       inputTemplate: pms/mispPartner/UploadCert/uploadCert
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
-  "partnerId": "MISP-AUTOMATION",
+  "partnerId": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
 }'  
    Pms_UploadCert_MispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
-      uniqueIdentifier: TC_PMS_UploadPartnerCert_02
+      uniqueIdentifier: TC_PMS_UploadMispPartnerCert_02
       description: Upload valid certificate for Misp License
       role: partner
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
       restMethod: put
       inputTemplate: pms/mispPartner/UploadCert/uploadCert2
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
-  "partnerId": "MISP2-AUTOMATION",
+  "partnerId": "$ID:PartnerSelfRegistration_MispLicense_All_Valid_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
@@ -32,15 +34,16 @@ UploadPartnerCert:
 
    Pms_UploadCert_MispLicense_MISP3_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
-      uniqueIdentifier: TC_PMS_UploadPartnerCert_03
+      uniqueIdentifier: TC_PMS_UploadMispPartnerCert_03
       description: Upload valid certificate for Misp License with valid PartnerID
       role: partner
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
       restMethod: put
       inputTemplate: pms/mispPartner/UploadCert/uploadCert2
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
-  "partnerId": "MISP3",
+  "partnerId": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'
       output: ' {

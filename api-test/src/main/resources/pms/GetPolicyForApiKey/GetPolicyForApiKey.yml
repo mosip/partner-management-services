@@ -8,7 +8,7 @@ GetPolicyForApiKey:
       inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey
       outputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKeyResult
       input: '{
-    "partnerId": "pms-111999",
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$"
 }'
       output: '{

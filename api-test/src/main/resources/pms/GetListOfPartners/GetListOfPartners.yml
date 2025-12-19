@@ -666,7 +666,7 @@ GetListOfPartners:
       inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
-      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policyGroupName": "$REMOVE$",
       "status": "active"
 }'
@@ -683,7 +683,7 @@ GetListOfPartners:
       inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
-      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policyGroupName": "$REMOVE$",
       "status": "inactive"
 }'
@@ -700,7 +700,7 @@ GetListOfPartners:
       inputTemplate: pms/GetListOfPartners/getListOfPartnersInput
       outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
       input: '{
-      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_Sid_partnerId$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policyGroupName": "$REMOVE$",
       "status": "deactivated"
 }'
