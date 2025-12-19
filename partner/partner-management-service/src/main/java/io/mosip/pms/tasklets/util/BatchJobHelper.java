@@ -19,6 +19,7 @@ import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.device.authdevice.entity.FTPChipDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import io.mosip.pms.partner.util.MultiPartnerUtil;
@@ -98,16 +99,16 @@ public class BatchJobHelper {
 		return partnerById;
 	}
 
-	public List<Partner> getAllActiveNonAdminPartners(List<Partner> pmsPartnerAdmins) {
+	public List<Partner> getAllActiveNonAdminPartners(List<AdminDetailsDto> partnerAdmins) {
 		log.info("As per configuration, number of partners for which notifications are to be skipped is {}",
 				skipPartnerIds.size());
 		List<Partner> partnersList = partnerRepository.findAllByIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue();
 		List<Partner> nonAdminPartnersList = new ArrayList<Partner>();
 		partnersList.forEach(partner -> {
 			List<String> foundList = new ArrayList<String>();
-			pmsPartnerAdmins.forEach(pmsPartnerAdmin -> {
-				if (pmsPartnerAdmin.getId().equals(partner.getId())) {
-					foundList.add(pmsPartnerAdmin.getId());
+			partnerAdmins.forEach(partnerAdmin -> {
+				if (partnerAdmin.getUserName().equals(partner.getId())) {
+					foundList.add(partnerAdmin.getUserName());
 				}
 			});
 			if (foundList.size() == 0 && !skipPartnerIds.contains(partner.getId())) {
@@ -132,21 +133,16 @@ public class BatchJobHelper {
 		return partnersList;
 	}
 
-	public List<Partner> getValidPartnerAdminsInPms(List<String> keycloakPartnerAdmins) {
+	public List<AdminDetailsDto> getValidPartnerAdmins(List<AdminDetailsDto> keycloakPartnerAdmins) {
 		log.info("As per configuration, number of partners for which notifications are to be skipped is {}",
 				skipPartnerIds.size());
-		List<Partner> pmsPartnerAdmins = new ArrayList<Partner>();
-		keycloakPartnerAdmins.forEach(keycloakPartnerAdminId -> {
-			Optional<Partner> partnerAdminDetails = getPartnerById(keycloakPartnerAdminId);
-			if (validatePartnerId(partnerAdminDetails)) {
-				if (!skipPartnerIds.contains(partnerAdminDetails.get().getId())) {
-					pmsPartnerAdmins.add(partnerAdminDetails.get());
-				}
-			} else {
-				log.debug("this partner admin is not a valid user in PMS, {}", keycloakPartnerAdminId);
+		List<AdminDetailsDto> validPartnerAdmins = new ArrayList<AdminDetailsDto>();
+		keycloakPartnerAdmins.forEach(keycloakPartnerAdmin -> {
+			if (!skipPartnerIds.contains(keycloakPartnerAdmin.getUserName())) {
+				validPartnerAdmins.add(keycloakPartnerAdmin);
 			}
 		});
-		return pmsPartnerAdmins;
+		return validPartnerAdmins;
 	}
 
 	public X509Certificate decodeCertificateData(String certificateData) {
@@ -167,7 +163,7 @@ public class BatchJobHelper {
 		return cert;
 	}
 
-	public NotificationEntity saveNotification(String notificationType, Partner partnerDetails,
+	public NotificationEntity saveNotification(String notificationType, String partnerId, String emailLangCode,
 			List<CertificateDetailsDto> certificateDetailsList, List<FtmDetailsDto> ftmDetailsList,
 			List<SbiDetailsDto> sbiList, List<ApiKeyDetailsDto> apiKeyList, List<MISPLicenseKeyDetailsDto> mispLicenseKeyList, String decryptedEmailId)
 			throws BatchJobServiceException {
@@ -182,11 +178,11 @@ public class BatchJobHelper {
 			String id = UUID.randomUUID().toString();
 			NotificationEntity notification = new NotificationEntity();
 			notification.setId(id);
-			notification.setPartnerId(partnerDetails.getId());
+			notification.setPartnerId(partnerId);
 			notification.setNotificationType(notificationType);
 			notification.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
 			notification.setEmailId(keyManagerHelper.encryptData(decryptedEmailId));
-			notification.setEmailLangCode(partnerDetails.getLangCode());
+			notification.setEmailLangCode(emailLangCode);
 			notification.setEmailSent(false);
 			notification.setCreatedBy(PartnerConstants.SYSTEM_USER);
 			notification.setCreatedDatetime(LocalDateTime.now(ZoneId.of("UTC")));

@@ -11,7 +11,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -56,7 +56,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "invalid-id",
       "version": "invalid-version",
       "requestTime": "invalid-request-time",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "invalid-policygroupid"
 }'
     output: '{
@@ -74,7 +74,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "invalid-id",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -162,7 +162,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "invalid-version",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -185,7 +185,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "2025-13-99T25:61:61Z",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -203,7 +203,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -224,7 +224,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
     input: '{
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
 	  "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -246,7 +246,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -268,7 +268,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "NULL",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -289,7 +289,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
     input: '{
       "id": "mosip.pms.link.policy.group.post",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -311,7 +311,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "NULL",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -333,7 +333,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -355,7 +355,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -377,7 +377,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -398,7 +398,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
     input: '{
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -420,7 +420,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{

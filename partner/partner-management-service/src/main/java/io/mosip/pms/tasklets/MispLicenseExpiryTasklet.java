@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -63,17 +64,17 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 		log.info("MispLicenseExpiryTasklet: START");
 		List<String> totalNotificationsCreated = new ArrayList<String>();
 		int countOfMispLicensesExpiringWithin30Days = 0;
-		int pmsPartnerAdminsCount = 0;
+		int partnerAdminsCount = 0;
 		List<MISPLicenseEntityV2> allActiveMispLicenses = new ArrayList<>();
 		try {
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners in PMS
-			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			pmsPartnerAdminsCount = pmsPartnerAdmins.size();
-			pmsPartnerAdmins.forEach(admin -> {
-				log.info("PMS Active Partner Admin Id: {}", admin.getId());
+			// Step 1: Fetch Partner Admin User IDs from Keycloak
+			List<AdminDetailsDto> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			partnerAdminsCount = partnerAdmins.size();
+			partnerAdmins.forEach(admin -> {
+				log.info("Keycloak Partner Admin Id: {}", admin.getUserName());
 			});
 			
-			if (pmsPartnerAdminsCount > 0) {
+			if (partnerAdminsCount > 0) {
 				// Step 2: Get all Active MISP License Keys
 				allActiveMispLicenses = mispLicenseRepository.findAllActiveMISPLicenses();
 				log.info("Found {} Active MISP License Keys.", allActiveMispLicenses.size());
@@ -119,16 +120,15 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 									expiringMispLicensesList.add(MISPLicenseKeyDetailsDto);
 									
 									// Step 7: Send notification to all Partner Admins
-									pmsPartnerAdmins.forEach(partnerAdminDetails -> {
-										// Decrypt the email ID if it's already encrypted to avoid encrypting it again
-										String decryptedEmailId = keyManagerHelper.decryptData(partnerAdminDetails.getEmailId());
+									partnerAdmins.forEach(partnerAdminDetails -> {
+										String emailId = partnerAdminDetails.getEmailId();
 										NotificationEntity savedNotification = batchJobHelper.saveNotification(
-												PartnerConstants.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE, partnerAdminDetails, null, null,
-												null, null, expiringMispLicensesList, decryptedEmailId);
+												PartnerConstants.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE, partnerAdminDetails.getUserName(), partnerAdminDetails.getLangCode(), null, null,
+												null, null, expiringMispLicensesList, emailId);
 										// Step 8: send email notification
-										emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
+										emailNotificationService.sendEmailNotification(savedNotification, emailId);
 										log.info("Created MISP License expiry notification with notification id {} for Partner Admin {}",
-												savedNotification.getId(), partnerAdminDetails.getId());
+												savedNotification.getId(), partnerAdminDetails.getUserName());
 										totalNotificationsCreated.add(savedNotification.getId());
 									});
 									break;
@@ -144,7 +144,7 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 					}
 				}
 			} else {
-				log.info("There are no {} partner admin users in PMS. Hence skipping creation of notifications.", pmsPartnerAdminsCount);
+				log.info("There are no {} partner admin users in Keycloak. Hence skipping creation of notifications.", partnerAdminsCount);
 			}
 		} catch (Exception e) {
 			log.error("Error occurred while running MispLicenseExpiryTasklet: {}", e.getMessage(), e);
@@ -152,7 +152,7 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 		log.info("Overall found " + countOfMispLicensesExpiringWithin30Days
 				+ " MISP License keys which are expiring during the next 30 days. But notifications will only be created as per the configured expiry days.");
 		log.info("MispLicenseExpiryTasklet: DONE, created {} notifications for {} partner admins."
-				+ " Checked {} active MISP License keys.", totalNotificationsCreated.size(), pmsPartnerAdminsCount, allActiveMispLicenses.size());
+				+ " Checked {} active MISP License keys.", totalNotificationsCreated.size(), partnerAdminsCount, allActiveMispLicenses.size());
 		totalNotificationsCreated.forEach(notificationId -> {
 			log.info(notificationId);
 		});

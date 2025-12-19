@@ -12,7 +12,7 @@ MISPPartnerExists:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "MISP_Partner"
 }'
     output: '{

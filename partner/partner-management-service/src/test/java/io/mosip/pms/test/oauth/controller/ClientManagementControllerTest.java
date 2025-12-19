@@ -3,8 +3,11 @@ package io.mosip.pms.test.oauth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.util.RequestValidator;
+import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.oauth.client.controller.ClientManagementController;
 import io.mosip.pms.oauth.client.dto.*;
@@ -53,6 +56,12 @@ public class ClientManagementControllerTest {
 
     @MockBean
     AuditUtil auditUtil;
+
+    @MockBean
+    private RequestValidator requestValidator;
+
+    @MockBean
+    private InputValidator inputValidator;
 
     Map<String, Object> public_key;
 
@@ -385,5 +394,84 @@ public class ClientManagementControllerTest {
                         .param("pageNo", String.valueOf(pageNo))
                         .param("pageSize", String.valueOf(pageSize)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testCreateOIDCClientV2Valid() throws Exception {
+        RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper = new RequestWrapperV2<>();
+        ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+        Map<String, String> clientNameLangMap = new HashMap<>();
+        clientNameLangMap.put("eng", "OIDC Client V2");
+        request.setClientNameLangMap(clientNameLangMap);
+        request.setName("OIDC Client V2 Name");
+        request.setPolicyId("policy-123");
+        request.setPublicKey(public_key);
+        request.setAuthPartnerId("auth-partner-123");
+        request.setLogoUri("https://example.com/logo.png");
+        request.setRedirectUris(List.of("https://example.com/redirect1"));
+        request.setGrantTypes(List.of("authorization_code"));
+        request.setClientAuthMethods(List.of("private_key_jwt"));
+        AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+        additionalConfig.setUserinfoResponseType("JSON");
+        request.setAdditionalConfig(additionalConfig);
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+        ClientDetailResponse mockResponse = new ClientDetailResponse();
+        mockResponse.setClientId("oidc-client-v2-123");
+        mockResponse.setStatus("ACTIVE");
+        ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(mockResponse);
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        Mockito.when(requestValidator.validate(anyString(), any())).thenReturn(Optional.empty());
+        Mockito.doNothing().when(inputValidator).validateRequestInput(anyString(), anyString());
+        Mockito.when(clientManagementService.createOIDCClientV2(any(ClientDetailCreateRequestV3.class)))
+                .thenReturn(responseWrapper);
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        verify(clientManagementService, times(1)).createOIDCClientV2(any(ClientDetailCreateRequestV3.class));
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testCreateOIDCClientV2InvalidPolicyId() throws Exception {
+        RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper = new RequestWrapperV2<>();
+        ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+        request.setName("OIDC Client Invalid Policy");
+        request.setPolicyId("");
+        request.setPublicKey(public_key);
+        request.setAuthPartnerId("auth-partner-789");
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        Mockito.when(requestValidator.validate(anyString(), any())).thenReturn(Optional.empty());
+        Mockito.doThrow(new PartnerServiceException("INVALID_INPUT", "policyId cannot be empty"))
+                .when(inputValidator).validateRequestInput(anyString(), eq(""));
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testCreateOIDCClientV2NullRequest() throws Exception {
+        RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setRequest(null);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 }

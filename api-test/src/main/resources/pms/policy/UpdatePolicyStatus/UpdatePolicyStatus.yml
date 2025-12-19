@@ -26,7 +26,7 @@ UpdatePolicyStatus:
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatusResult
       input: '{		
-		"policyId": "MDSP",
+		"policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
 		"policygroupId":"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
 		"status":"De-Active",
 		"requesttime": "$TIMESTAMP$"

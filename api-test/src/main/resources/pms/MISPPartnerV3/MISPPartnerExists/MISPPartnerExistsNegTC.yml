@@ -12,7 +12,7 @@ MISPPartnerExistsNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "MISP_Partner"
 }'
     output: '{
@@ -35,7 +35,7 @@ MISPPartnerExistsNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "MISP_Partner"
 }'
     output: '{
@@ -58,7 +58,7 @@ MISPPartnerExistsNegTC:
       "version": "invalid-version",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "MISP_Partner"
 }'
     output: '{
@@ -81,7 +81,7 @@ MISPPartnerExistsNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": ""
 }'
     output: '{
@@ -104,7 +104,7 @@ MISPPartnerExistsNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "invalid-partner-type"
 }'
     output: '{
@@ -127,7 +127,7 @@ MISPPartnerExistsNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "string",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "MISP_Partner"
 }'
     output: '{
@@ -167,7 +167,7 @@ MISPPartnerExistsNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "emailId": "newmisppartnerapiauto@gmail.com",
-      "partnerId": "pms-111555",
+      "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "string"
 }'
     output: '{

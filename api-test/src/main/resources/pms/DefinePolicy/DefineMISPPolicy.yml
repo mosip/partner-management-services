@@ -8,7 +8,7 @@ DefineMISPPolicy:
       inputTemplate: pms/DefinePolicy/DefineMISPPolicy
       outputTemplate: pms/DefinePolicy/DefineMISPPolicyResult
       input: '{
-        "policyGroupName": "mosip policy group MISP",
+        "policyGroupName": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "policyType": "MISP",
         "name": "mosip policy MISP API Policy 12345",
         "desc": "desc mosip policy MISP API Policy 12345",

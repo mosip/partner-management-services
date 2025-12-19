@@ -5,6 +5,7 @@ UpdatePartnerDetails:
       description: Update Partner Details for Partner with valid data
       role: partner
       restMethod: put
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/UpdatePartner/updatePartner
       outputTemplate: pms/UpdatePartner/updatePartnerResult
       input: '{

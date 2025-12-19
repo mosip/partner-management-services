@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -59,14 +60,13 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		int countOfCertsExpiringWithin30Days = 0;
 		int countOfPartnersWithInvalidCerts = 0;
 		try {
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
-			// in PMS
-			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			pmsPartnerAdmins.forEach(admin -> {
-				log.info("PMS Partner Admin Id: {}", admin.getId());
+			// Step 1: Fetch Partner Admin User IDs from Keycloak
+			List<AdminDetailsDto> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			partnerAdmins.forEach(admin -> {
+				log.info("Partner Admin Id: {}", admin.getUserName());
 			});
 			// Step 2: Get all PMS partners which are ACTIVE and NOT partner admins
-			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(pmsPartnerAdmins);
+			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(partnerAdmins);
 			activePartnersCount = activePartnersList.size();
 			log.info("PMS has {} Active Partner (Non Admin) users.", activePartnersCount);
 			// Step 3: For each partner get the certificate and check if it is expiring
@@ -106,7 +106,7 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 								// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 								String decryptedEmailId = keyManagerHelper.decryptData(pmsPartner.getEmailId());
 								NotificationEntity savedNotification = batchJobHelper.saveNotification(
-										PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, pmsPartner, expiringCertificates, null,
+										PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, pmsPartner.getId(), pmsPartner.getLangCode(), expiringCertificates, null,
 										null, null, null, decryptedEmailId);
 								// Step 6: send email notification
 								emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);

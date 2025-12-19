@@ -986,19 +986,20 @@ public class PartnerServiceImpl implements PartnerService {
 	private void validateUser(PartnerCertDownloadRequestDto certDownloadRequestDto) {
 		String userId = getUserId();
 
-		// Check if user ID exists in pms
-		List<Partner> partnerList = partnerRepository.findByUserId(userId);
-		if (partnerList.isEmpty()) {
-			LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
-			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-		}
-
 		// Check if the user is an admin
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 
-		// If not admin, check if the partner belongs to the user
+		// Check if user ID exists in pms and validate partner ownership (skip for partner admin)
+		List<Partner> partnerList = new ArrayList<>();
 		if (!isAdmin) {
+			partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+
+			// Check if the partner belongs to the user
 			boolean isPartnerBelongsToUser = false;
 			for (Partner partner : partnerList) {
 				if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {

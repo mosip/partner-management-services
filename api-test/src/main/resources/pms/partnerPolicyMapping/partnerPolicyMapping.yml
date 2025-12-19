@@ -1,14 +1,16 @@
 partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_05	  
       description: Mapping Partner & Policy
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01  
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
-        "policyName": "mosip policy 19234",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -21,11 +23,12 @@ partnerPolicyMapping:
       description: Mapping Partner & Policy
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
-        "policyName": "mosip policy",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -34,9 +37,10 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_For_MISP_Policy_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111555/policy/map
       description: Mapping Partner & Policy
-      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_06
       role: partneradmin
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_CreateMISPPartnerRegistration_01
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
@@ -49,9 +53,11 @@ partnerPolicyMapping:
     }'    
    Pms_partnerPolicyMapping_invalid_policyName_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_07
       description: Mapping Partner & Policy when invalid policyname is given      
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
@@ -69,6 +75,7 @@ partnerPolicyMapping:
     }'
    Pms_partnerPolicyMapping_invalid_partnerId_neg:
       endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_08
       description: Mapping Partner & Policy when invalid partnerId is given      
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -76,7 +83,7 @@ partnerPolicyMapping:
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
-        "policyName": "mosip policy 19234",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -89,9 +96,11 @@ partnerPolicyMapping:
     }'
    Pms_partnerPolicyMapping_missing_policyName_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_09
       description: Mapping Partner & Policy when policyname is removed from request      
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
@@ -110,14 +119,16 @@ partnerPolicyMapping:
     
    Pms_partnerPolicyMapping_missing_useCaseDescription_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_10
       description: Mapping Partner & Policy when usecaseDescription is removed from request      
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
-        "policyName": "mosip policy 19234",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
         "useCaseDescription":"$REMOVE$",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -135,11 +146,12 @@ partnerPolicyMapping:
       description: Create Partner API Key Request for Partner with valid data
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
-        "policyName": "mosip data share policy",
+        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -152,11 +164,12 @@ partnerPolicyMapping:
       description: Create Partner API Key Request for Partner with Deactivated Policy
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_10
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
-        "policyName": "mosip data share policy ApiKey",
+        "policyName": "$ID:DefineDataSharePolicy_All_for_req_ApiKey_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -173,11 +186,12 @@ partnerPolicyMapping:
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_04
       description: Create Partner API Key Request for Partner and mapping the Partner with Inprogress Policy
       role: partnerauth
-      restMethod: post 
+      restMethod: post
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
-        "policyName": "mosip policy",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -195,6 +209,7 @@ partnerPolicyMapping:
       description: Create Partner API Key Request for Credential Partner with invalid use case description
       role: partner
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
@@ -216,6 +231,7 @@ partnerPolicyMapping:
       description: Create Partner API Key Request for Credential Partner with invalid Policy Name use case description
       role: partner
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
@@ -234,14 +250,16 @@ partnerPolicyMapping:
 
    Pms_partnerPolicyMapping_ForRejecting_All_Valid_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyauthPartner_11
       description: Mapping Partner & Policy
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
-        "policyName": "mosip reject policy 19234",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_name$",
         "useCaseDescription": "Need to submit for Rejecting",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -250,14 +268,16 @@ partnerPolicyMapping:
     
    Pms_partnerPolicyMapping_ForPending_All_Valid_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyauthPartner_12
       description: Mapping Partner & Policy
       role: partnerauth
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
-        "policyName": "mosip in progress mapping policy 19234",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_name$",
         "useCaseDescription": "Need to submit for Pending",
 		"requesttime": "$TIMESTAMP$"
     }'

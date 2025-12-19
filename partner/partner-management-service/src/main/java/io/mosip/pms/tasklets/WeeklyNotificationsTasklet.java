@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -76,15 +77,14 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 		log.info("WeeklyNotificationsTasklet: START");
 		List<String> createdNotificationIds = new ArrayList<String>();
 		try {
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
-			// in PMS
-			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			pmsPartnerAdmins.forEach(admin -> {
-				log.info("PMS Partner Admin Id: {}", admin.getId());
+			// Step 1: Fetch Partner Admin User IDs from Keycloak
+			List<AdminDetailsDto> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			partnerAdmins.forEach(admin -> {
+				log.info("Keycloak Partner Admin Id: {}", admin.getUserName());
 			});
 			// Step 2: Get the list of all partner certificates expiring this week
 			Map<Partner, X509Certificate> expiringPartnerCertificates = getListOfExpiringPartnerCertificates(
-					pmsPartnerAdmins);
+					partnerAdmins);
 			// Step 3: Get the list of all FTM chip certificates expiring this week
 			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates = getListofExpiringFtmCertificates();
 			// Step 4: Get the list of all SBI details expiring this week
@@ -93,7 +93,7 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 			List<PartnerPolicy> expiringApiKeys = getListofExpiringApiKeys();
 			// Step 6: Create a weekly notification for all the partner admin users
 			log.info("Creating weekly summary notifications");
-			createdNotificationIds = createWeeklySummaryNotifications(pmsPartnerAdmins, expiringPartnerCertificates,
+			createdNotificationIds = createWeeklySummaryNotifications(partnerAdmins, expiringPartnerCertificates,
 					expiringFtmCertificates, expiringSbiDetails, expiringApiKeys);
 
 		} catch (Exception e) {
@@ -108,7 +108,7 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 		return RepeatStatus.FINISHED;
 	}
 
-	private Map<Partner, X509Certificate> getListOfExpiringPartnerCertificates(List<Partner> pmsPartnerAdmins) {
+	private Map<Partner, X509Certificate> getListOfExpiringPartnerCertificates(List<AdminDetailsDto> partnerAdmins) {
 
 		log.info("WeeklyNotificationsTasklet: getListOfExpiringPartnerCertificates(): START");
 
@@ -116,7 +116,7 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 
 		// Step 1: Get all PMS partners which are ACTIVE and NOT partner admins
 		int countOfPartnersWithInvalidCerts = 0;
-		List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(pmsPartnerAdmins);
+		List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(partnerAdmins);
 		int activePartnersCount = activePartnersList.size();
 		log.info("PMS has {} Active Partner (Non Admin) users.", activePartnersCount);
 		// Step 2: For each partner get the certificate and check if it is expiring
@@ -290,7 +290,7 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 	 * Weekly summary notification is to be created even when there are zero partner
 	 * certificates / API keys / SBI / FTM chip certificates expiring.
 	 */
-	private List<String> createWeeklySummaryNotifications(List<Partner> pmsPartnerAdmins,
+	private List<String> createWeeklySummaryNotifications(List<AdminDetailsDto> partnerAdmins,
 			Map<Partner, X509Certificate> expiringPartnerCertificates,
 			Map<FTPChipDetail, X509Certificate> expiringFtmCertificates, List<SecureBiometricInterface> expiringSbi,
 			List<PartnerPolicy> expiringApiKeys) {
@@ -341,16 +341,15 @@ public class WeeklyNotificationsTasklet implements Tasklet {
 
 		if (certificateDetailsList.size() > 0 || ftmDetailsList.size() > 0 || sbiDetailsList.size() > 0
 				|| expiringApiKeys.size() > 0) {
-			Iterator<Partner> pmsPartnerAdminsIterator = pmsPartnerAdmins.iterator();
-			while (pmsPartnerAdminsIterator.hasNext()) {
-				Partner pmsPartnerAdmin = pmsPartnerAdminsIterator.next();
-				// Decrypt the email ID if it's already encrypted to avoid encrypting it again
-				String decryptedEmailId = keyManagerHelper.decryptData(pmsPartnerAdmin.getEmailId());
+			Iterator<AdminDetailsDto> partnerAdminsIterator = partnerAdmins.iterator();
+			while (partnerAdminsIterator.hasNext()) {
+				AdminDetailsDto adminDetails = partnerAdminsIterator.next();
+				String emailId = adminDetails.getEmailId();
 				NotificationEntity savedNotification = batchJobHelper.saveNotification(
-						PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE, pmsPartnerAdmin, certificateDetailsList,
-						ftmDetailsList, sbiDetailsList, apiKeyDetailsList, null ,decryptedEmailId);
+						PartnerConstants.WEEKLY_SUMMARY_NOTIFICATION_TYPE, adminDetails.getUserName(), adminDetails.getLangCode(), certificateDetailsList,
+						ftmDetailsList, sbiDetailsList, apiKeyDetailsList, null ,emailId);
 				// Step 6: send email notification
-				emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
+				emailNotificationService.sendEmailNotification(savedNotification, emailId);
 				log.info("Created weekly summary notification with notification id " + savedNotification.getId());
 				createdNotificationIds.add(savedNotification.getId());
 			}

@@ -22,6 +22,7 @@ definePolicyGroup:
       description: Creating a PolicyGroup
       role: partneradmin
       restMethod: post
+      uniqueIdentifier: TC_PMS_definePolicyGroup_21
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
@@ -39,6 +40,7 @@ definePolicyGroup:
       description: Creating a PolicyGroup
       role: partneradmin
       restMethod: post
+      uniqueIdentifier: TC_PMS_definePolicyGroup_22 
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
@@ -265,7 +267,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup for draft policy
       role: partneradmin
-      uniqueIdentifier: TC_PMS_definePolicyGroup_11
+      uniqueIdentifier: TC_PMS_definePolicyGroup_12
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -284,7 +286,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
-      uniqueIdentifier: TC_PMS_definePolicyGroup_01
+      uniqueIdentifier: TC_PMS_definePolicyGroup_13
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -303,7 +305,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
-      uniqueIdentifier: TC_PMS_definePolicyGroup_01
+      uniqueIdentifier: TC_PMS_definePolicyGroup_14
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -322,7 +324,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
-      uniqueIdentifier: TC_PMS_definePolicyGroup_01
+      uniqueIdentifier: TC_PMS_definePolicyGroup_15
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -341,7 +343,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
-      uniqueIdentifier: TC_PMS_definePolicyGroup_01
+      uniqueIdentifier: TC_PMS_definePolicyGroup_16
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
@@ -360,7 +362,7 @@ definePolicyGroup:
       endPoint: /v1/policymanager/policies/group/new
       description: Creating a PolicyGroup
       role: partneradmin
-      uniqueIdentifier: TC_PMS_definePolicyGroup_01
+      uniqueIdentifier: TC_PMS_definePolicyGroup_17
       restMethod: post
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult

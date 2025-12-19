@@ -14,7 +14,7 @@ public class ExtendedDBManager extends DBManager {
 	private static Logger logger = Logger.getLogger(ExtendedDBManager.class);
 	
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSConfigManager.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);

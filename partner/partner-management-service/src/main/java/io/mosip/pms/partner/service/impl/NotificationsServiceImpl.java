@@ -116,19 +116,23 @@ public class NotificationsServiceImpl implements NotificationsService {
 
 			// Fetch and validate partner list
 			String userId = getUserId();
-			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User ID does not exist.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-
-			// Filter active partners
 			List<String> partnerIdList = new ArrayList<>();
-			for (Partner partner : partnerList) {
-				partnerHelper.validatePartnerId(partner, userId);
-				if (isPartnerAdmin || partner.getIsActive()) {
-					partnerIdList.add(partner.getId());
+			if (isPartnerAdmin) {
+				// For Partner Admin, use userId as Partner Id without validation
+				partnerIdList.add(userId);
+			} else {
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User ID does not exist.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+				// Filter active partners
+				for (Partner partner : partnerList) {
+					partnerHelper.validatePartnerId(partner, userId);
+					if (partner.getIsActive()) {
+						partnerIdList.add(partner.getId());
+					}
 				}
 			}
 
@@ -373,34 +377,34 @@ public class NotificationsServiceImpl implements NotificationsService {
 			}
 
 			String userId = getUserId();
-			List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
-
-			if (partnerList.isEmpty()) {
-				LOGGER.info("User ID does not exist: {}", userId);
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-
-			String notificationPartnerId = notificationEntity.getPartnerId();
-			boolean partnerIdExists = false;
-
-			// check if partnerId is associated with user
-			for (Partner partner : partnerList) {
-				partnerHelper.validatePartnerId(partner, userId);
-				if (partner.getId().equals(notificationPartnerId)) {
-					// check if partner is active or not
-					if (!isPartnerAdmin) {
-						partnerHelper.checkIfPartnerIsNotActive(partner);
-					}
-					partnerIdExists = true;
-					break;
+			List<Partner> partnerList = new ArrayList<>();
+			if (!isPartnerAdmin) {
+				partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("User ID does not exist: {}", userId);
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
-			}
 
-			if (!partnerIdExists) {
-				LOGGER.info("Notification does not belong to the partner: {}", notificationId);
-				throw new PartnerServiceException(ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorCode(),
-						ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorMessage());
+				String notificationPartnerId = notificationEntity.getPartnerId();
+				boolean partnerIdExists = false;
+
+				// check if partnerId is associated with user
+				for (Partner partner : partnerList) {
+					partnerHelper.validatePartnerId(partner, userId);
+					if (partner.getId().equals(notificationPartnerId)) {
+						// check if partner is active or not
+						partnerHelper.checkIfPartnerIsNotActive(partner);
+						partnerIdExists = true;
+						break;
+					}
+				}
+
+				if (!partnerIdExists) {
+					LOGGER.info("Notification does not belong to the partner: {}", notificationId);
+					throw new PartnerServiceException(ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorCode(),
+							ErrorCode.NOTIFICATION_NOT_BELONGS_TO_PARTNER.getErrorMessage());
+				}
 			}
 
 			if (PartnerConstants.STATUS_DISMISSED.equals(notificationEntity.getNotificationStatus())) {
