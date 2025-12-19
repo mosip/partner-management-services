@@ -4,7 +4,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client
       uniqueIdentifier: TC_PMS_CreateOIDCClient_01
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -31,7 +30,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_invalid_auth_neg:
@@ -39,7 +37,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid auth token
       uniqueIdentifier: TC_PMS_CreateOIDCClient_02
       role: invalidtoken
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -76,7 +73,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with valid name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_03
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -103,7 +99,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_invalid_Name_neg:
@@ -111,7 +106,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_04
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -148,7 +142,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with empty name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_05
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -185,7 +178,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_06
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -222,7 +214,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client
       uniqueIdentifier: TC_PMS_CreateOIDCClient_07
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -249,7 +240,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_invalid_Name_with_tab_Characters_neg:
@@ -257,7 +247,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with name contains newline or tab characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_08
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -294,7 +283,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid policyid
       uniqueIdentifier: TC_PMS_CreateOIDCClient_09
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -331,7 +319,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with special character policyid
       uniqueIdentifier: TC_PMS_CreateOIDCClient_10
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -368,7 +355,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with empty policyid
       uniqueIdentifier: TC_PMS_CreateOIDCClient_11
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -405,7 +391,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with Without policyid
       uniqueIdentifier: TC_PMS_CreateOIDCClient_12
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -442,7 +427,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid public key
       uniqueIdentifier: TC_PMS_CreateOIDCClient_13
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -479,7 +463,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with without public key
       uniqueIdentifier: TC_PMS_CreateOIDCClient_14
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -516,7 +499,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with Empty public key
       uniqueIdentifier: TC_PMS_CreateOIDCClient_15
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -553,7 +535,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid authPartnerId
       uniqueIdentifier: TC_PMS_CreateOIDCClient_16
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -590,7 +571,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without AuthPartnerId
       uniqueIdentifier: TC_PMS_CreateOIDCClient_17
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -627,7 +607,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with special character authPartnerId
       uniqueIdentifier: TC_PMS_CreateOIDCClient_18
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -664,7 +643,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid LogoUri
       uniqueIdentifier: TC_PMS_CreateOIDCClient_19
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -701,7 +679,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without LogoUri
       uniqueIdentifier: TC_PMS_CreateOIDCClient_20
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -738,7 +715,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with LogoUri as special characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_21
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -775,7 +751,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid RedirectURLs
       uniqueIdentifier: TC_PMS_CreateOIDCClient_22
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -812,7 +787,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without RedirectURLs
       uniqueIdentifier: TC_PMS_CreateOIDCClient_23
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -849,7 +823,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with empty RedirectURLs
       uniqueIdentifier: TC_PMS_CreateOIDCClient_24
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -886,7 +859,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with grant types having extra spaces
       uniqueIdentifier: TC_PMS_CreateOIDCClient_25
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -923,7 +895,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with multiple grant types
       uniqueIdentifier: TC_PMS_CreateOIDCClient_26
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -960,7 +931,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without grant types
       uniqueIdentifier: TC_PMS_CreateOIDCClient_27
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -997,7 +967,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with empty grant types
       uniqueIdentifier: TC_PMS_CreateOIDCClient_28
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1034,7 +1003,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid grant types
       uniqueIdentifier: TC_PMS_CreateOIDCClient_29
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1071,7 +1039,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with grant types having special characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_30
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1108,7 +1075,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with grant types having valid clientAuthMethods containing only private_key_jwt
       uniqueIdentifier: TC_PMS_CreateOIDCClient_31
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1145,7 +1111,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with grant types having without clientAuthMethods
       uniqueIdentifier: TC_PMS_CreateOIDCClient_32
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1182,7 +1147,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having empty clientAuthMethods
       uniqueIdentifier: TC_PMS_CreateOIDCClient_33
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1219,7 +1183,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having invalid clientAuthMethods
       uniqueIdentifier: TC_PMS_CreateOIDCClient_34
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1256,7 +1219,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having empty clientNameLangMap
       uniqueIdentifier: TC_PMS_CreateOIDCClient_35
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1293,7 +1255,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having invalid userinfoResponseType
       uniqueIdentifier: TC_PMS_CreateOIDCClient_36
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1330,7 +1291,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having empty userinfoResponseType
       uniqueIdentifier: TC_PMS_CreateOIDCClient_37
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1367,7 +1327,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having invalid type
       uniqueIdentifier: TC_PMS_CreateOIDCClient_38
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1404,7 +1363,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having valid type as link
       uniqueIdentifier: TC_PMS_CreateOIDCClient_39
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -1431,7 +1389,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_all_Valid_type_login_Smoke:
@@ -1439,7 +1396,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having valid type as login
       uniqueIdentifier: TC_PMS_CreateOIDCClient_40
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -1466,7 +1422,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_empty_type_neg:
@@ -1474,7 +1429,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having empty type
       uniqueIdentifier: TC_PMS_CreateOIDCClient_41
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1511,7 +1465,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client signupBannerRequired as false
       uniqueIdentifier: TC_PMS_CreateOIDCClient_42
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -1538,7 +1491,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_forgotPwdLinkRequired_False_Smoke_sid:
@@ -1546,7 +1498,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client forgotPwdLinkRequired as false
       uniqueIdentifier: TC_PMS_CreateOIDCClient_43
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
@@ -1573,7 +1524,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_neg:
@@ -1581,7 +1531,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having invalid consentExpireInMins
       uniqueIdentifier: TC_PMS_CreateOIDCClient_44
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1618,7 +1567,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having invalid consentExpireInMins as string
       uniqueIdentifier: TC_PMS_CreateOIDCClient_45
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1655,7 +1603,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without consentExpireInMins
       uniqueIdentifier: TC_PMS_CreateOIDCClient_46
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
@@ -1681,7 +1628,6 @@ CreateOIDCClient:
       	"consentExpireInMins": "$REMOVE$"
 }'
       output: '{
-        "clientId": "$IGNORE$",
         "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_Invalid_id_neg:
@@ -1689,7 +1635,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client having invalid id
       uniqueIdentifier: TC_PMS_CreateOIDCClient_47
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1726,7 +1671,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without id
       uniqueIdentifier: TC_PMS_CreateOIDCClient_48
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1763,7 +1707,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with null id
       uniqueIdentifier: TC_PMS_CreateOIDCClient_49
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1800,7 +1743,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without version
       uniqueIdentifier: TC_PMS_CreateOIDCClient_50
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1837,7 +1779,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with null version
       uniqueIdentifier: TC_PMS_CreateOIDCClient_51
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1874,7 +1815,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid version
       uniqueIdentifier: TC_PMS_CreateOIDCClient_52
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1911,7 +1851,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client with invalid version as integer
       uniqueIdentifier: TC_PMS_CreateOIDCClient_53
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
@@ -1948,7 +1887,6 @@ CreateOIDCClient:
       description: Creating OAUTH Client without requestTime
       uniqueIdentifier: TC_PMS_CreateOIDCClient_54
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error

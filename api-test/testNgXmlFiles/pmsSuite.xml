@@ -679,6 +679,7 @@
 	<test name="CreateOIDCClient">
 		<parameter name="ymlFile"
 			value="pms/OIDCClientEnhancement/CreateOIDCClient/OIDCClient.yml" />
+			<parameter name="idKeyName" value="clientId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
