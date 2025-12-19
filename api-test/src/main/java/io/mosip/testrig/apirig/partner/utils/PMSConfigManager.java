@@ -10,8 +10,8 @@ import org.apache.log4j.Logger;
 import io.mosip.testrig.apirig.partner.testrunner.MosipTestRunner;
 import io.mosip.testrig.apirig.utils.ConfigManager;
 
-public class PMSConfigManger extends ConfigManager{
-	private static final Logger LOGGER = Logger.getLogger(PMSConfigManger.class);
+public class PMSConfigManager extends ConfigManager{
+	private static final Logger LOGGER = Logger.getLogger(PMSConfigManager.class);
 	
 	public static void init() {
 		Logger configManagerLogger = Logger.getLogger(ConfigManager.class);

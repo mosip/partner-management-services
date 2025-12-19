@@ -234,7 +234,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_ByValidPartnerId_And_Status_Deactivated:
-        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_Empty_PolicyGroup_Sid_partnerId$&status=deactivated
+        endPoint: /v1/partnermanager/misp-licenses?partnerId=$ID:MISPPartnerRegistration_Empty_PolicyGroup_sid_partnerId$&status=deactivated
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_19
         description: Fetch MISP partner license using a valid partnerId and status deactivated
         role: partneradmin

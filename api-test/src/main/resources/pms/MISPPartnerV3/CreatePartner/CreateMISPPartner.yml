@@ -17,7 +17,7 @@ CreateMISPPartner:
         "contactNumber": "8553967572",
         "emailId": "newmisppartnerapiauto@gmail.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group MISP",
+        "policyGroup": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
@@ -25,7 +25,7 @@ CreateMISPPartner:
         "partnerId": "pms-111555",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Empty_PolicyGroup_Sid:
+   Pms_MISPPartnerRegistration_Empty_PolicyGroup_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_02
       description: Create MISP Partner Self Registration Empty Policy group
@@ -51,7 +51,7 @@ CreateMISPPartner:
         "partnerId": "pms-111556",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Without_PolicyGroup_Smoke:
+   Pms_MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_03
       description: Create MISP Partner Self Registration without Policy group
@@ -76,7 +76,7 @@ CreateMISPPartner:
         "partnerId": "pms-111557",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Max_AddressField:
+   Pms_MISPPartnerRegistration_Max_AddressField_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_04
       description: Create MISP Partner Self Registration with maximum 2000 words in Address field
@@ -94,7 +94,7 @@ CreateMISPPartner:
         "contactNumber": "8553967572",
         "emailId": "newmisppartner3@gmail.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group 19234",		
+        "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",		
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
@@ -102,7 +102,7 @@ CreateMISPPartner:
         "partnerId": "pms-111558",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Max_Contact_number:
+   Pms_MISPPartnerRegistration_Max_Contact_number_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_05
       description: Create MISP Partner Self Registration with maximum 16 numbers in contactNumber field
@@ -120,7 +120,7 @@ CreateMISPPartner:
         "contactNumber": "8553967572918818",
         "emailId": "newmisppartner4@gmail.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group 19234",
+        "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
@@ -128,7 +128,7 @@ CreateMISPPartner:
         "partnerId": "pms-111559",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_Max_EmailID:
+   Pms_MISPPartnerRegistration_Max_EmailID_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_06
       description: Create MISP Partner Self Registration with maximum 254 email id
@@ -146,7 +146,7 @@ CreateMISPPartner:
         "contactNumber": "8553967572918818",
         "emailId": "this.is.a.really.long.fake.email.address.created.only.for.testing.purposespurposespurposespurposespurpos.and.demonstration.so.please.do.not.try.to.use.it.in.real.life.situations.because.it.is.not.valid@verylongdomainexampleforvalidationtestingpurpos1.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group 19234",
+        "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
@@ -154,7 +154,7 @@ CreateMISPPartner:
         "partnerId": "pms-111550",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_valid_langcode_Arabic:
+   Pms_MISPPartnerRegistration_valid_langcode_Arabic_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_07
       description: Create MISP Partner Self Registration with lang code arabic
@@ -172,7 +172,7 @@ CreateMISPPartner:
         "contactNumber": "8553967571",
         "emailId": "newmisppartner5@gmail.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group 19234",
+        "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "ara"
 }'

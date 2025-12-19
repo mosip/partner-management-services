@@ -1,14 +1,14 @@
 GetPartnerCert:
    Pms_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
-      uniqueIdentifier: TC_PMS_getPartnerCert_01
+      uniqueIdentifier: TC_PMS_getOnlineVerificationPartner_01
       description: Retreive Partner details
       role: partner
       restMethod: get
       inputTemplate: pms/credentialPartner/GetPartner/getPartner
       outputTemplate: pms/credentialPartner/GetPartner/getPartnerResult
       input: '{
-	"partnerId": "MOVP-AUTOMATION"
+	"partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '  {
     "partnerID": "MOVP-AUTOMATION",
@@ -17,7 +17,7 @@ GetPartnerCert:
   
    Pms_GetPartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
-      uniqueIdentifier: TC_PMS_getPartnerCert_02
+      uniqueIdentifier: TC_PMS_getOnlineVerificationPartner_02
       description: Retreive Partner details with invalid PartnerID
       role: partner
       restMethod: get

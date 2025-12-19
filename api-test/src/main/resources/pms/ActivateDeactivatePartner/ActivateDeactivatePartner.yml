@@ -9,7 +9,7 @@ ActivateDeactivatePartner:
       inputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "MOVP-AUTOMATION",
+   "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -26,7 +26,7 @@ ActivateDeactivatePartner:
       inputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "MISP3",
+   "partnerId": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_partnerId$",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -43,7 +43,7 @@ ActivateDeactivatePartner:
       inputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "Tech-1233",
+   "partnerId": "$ID:PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid_partnerId$",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -61,7 +61,7 @@ ActivateDeactivatePartner:
       inputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "Tech-321",
+   "partnerId": "$ID:PartnerSelfRegistration_Deactive_Partner_sid_partnerId$",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -77,7 +77,7 @@ ActivateDeactivatePartner:
       inputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "MISP-AUTOMATION",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'

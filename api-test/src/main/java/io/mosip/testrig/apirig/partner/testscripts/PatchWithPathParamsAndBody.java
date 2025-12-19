@@ -20,7 +20,7 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -41,7 +41,7 @@ public class PatchWithPathParamsAndBody extends PMSUtil implements ITest {
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSConfigManager.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);

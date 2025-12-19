@@ -11,7 +11,7 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111555",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"
@@ -32,7 +32,7 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111557",
+        "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
         "policyId": "$REMOVE$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"

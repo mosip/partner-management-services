@@ -14,7 +14,7 @@
 	<test name="CreatePolicyGroup">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicyGroup/DefinePolicyGroup.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="id,name" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -52,7 +52,7 @@
 	<test name="DefinePolicy">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicy/DefinePolicy.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="id,name" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -70,7 +70,7 @@
 	<test name="DefineDataSharePolicy">
 		<parameter name="ymlFile"
 			value="pms/policy/DefineDataSharePolicy/DefineDataSharePolicy.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="id,name" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -134,9 +134,10 @@
 	<test name="PrintPartner">
 		<parameter name="ymlFile"
 			value="pms/PrintPartner/CreatePartner/CreatePartner.yml" />
+			<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 	<test name="UploadCACertificatePrintPartner">
@@ -194,10 +195,10 @@
 	<test name="CreatePartner">
 		<parameter name="ymlFile"
 			value="pms/CreatePartner/CreatePartner.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 	<test name="MISPPartnerV3">
@@ -287,9 +288,10 @@
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
+			<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 
@@ -786,9 +788,10 @@
 	<test name="CreatePartner_MISP_Provider">
 		<parameter name="ymlFile"
 			value="pms/mispPartner/CreatePartner/CreatePartner.yml" />
+			<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 	<test name="UploadCACertificate_MISP_Provider">
@@ -836,9 +839,10 @@
 	<test name="CreateDeviceDetail">
 		<parameter name="ymlFile"
 			value="pms/device/makeAndModel/create/CreateDeviceDetail.yml" />
+			<parameter name="idKeyName" value="id" />			
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 	<test name="RejectDeviceDetail">
