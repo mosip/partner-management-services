@@ -1,5 +1,5 @@
 createPartnerSelfRegistration:
-   Pms_PartnerSelfRegistration_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth

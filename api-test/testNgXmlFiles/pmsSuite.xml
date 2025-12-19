@@ -14,7 +14,7 @@
 	<test name="CreatePolicyGroup">
 		<parameter name="ymlFile"
 			value="pms/DefinePolicyGroup/DefinePolicyGroup.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="id,name" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -194,7 +194,7 @@
 	<test name="CreatePartner">
 		<parameter name="ymlFile"
 			value="pms/CreatePartner/CreatePartner.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
@@ -671,6 +671,15 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	
+	<test name="CreateOIDCClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/CreateOIDCClient/OIDCClient.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 

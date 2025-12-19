@@ -12,7 +12,7 @@ definePolicy:
       "name": "mosip policy 19234",
       "attributeName": "fullName",
       "authTokenType": "policy",
-      "policyGroupName": "mosip policy group 19234",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
