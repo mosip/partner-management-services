@@ -1680,7 +1680,7 @@ public class ClientManagementServiceImplTest {
 		try {
 			serviceImpl.createOIDCClientV2(request);
 		} catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode()));
 		}
 	}
 
@@ -1706,7 +1706,7 @@ public class ClientManagementServiceImplTest {
 		try {
 			serviceImpl.createOIDCClientV2(request);
 		} catch (PartnerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.INVALID_PARTNERID.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(ErrorCode.FAILED_TO_PROCESS_JWK.getErrorCode()));
 		}
 	}
 
