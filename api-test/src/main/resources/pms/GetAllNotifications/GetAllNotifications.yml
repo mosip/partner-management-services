@@ -754,15 +754,23 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_with_Apikey_NotificationType_And_CertificateId_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=apikey&certificateId=$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with API Key Notification Type and Certificate ID
       uniqueIdentifier: TC_PMS_GetAllNotifications_50
       restMethod: get
       checkErrorsOnlyInResponse: true
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "apikey"
 }'
       output: '{
       "errors": [
@@ -772,14 +780,22 @@ GetAllNotifications:
      ]
 }'
    Pms_GetAllNotifications_with_None_NotificationType_And_CertificateId_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=none&certificateId=$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with None Notification Type and Certificate ID
       uniqueIdentifier: TC_PMS_GetAllNotifications_51
       restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "none"
 }'
       output: '{
       "errors": [
@@ -789,14 +805,22 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_with_Partner_NotificationType_And_MispPartnerId_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner&mispPartnerId=$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with Partner Notification Type and MISP Partner ID
       uniqueIdentifier: TC_PMS_GetAllNotifications_52
       restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "partner"
 }'
       output: '{
       "errors": [
@@ -806,14 +830,22 @@ GetAllNotifications:
       ]
 }'
    Pms_GetAllNotifications_with_Apikey_NotificationType_And_LicenseKeyName_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=apikey&mispLicenseKeyName=$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with API Key Notification Type and License Key Name
       uniqueIdentifier: TC_PMS_GetAllNotifications_53
       restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "notificationType": "apikey"
 }'
       output: '{
       "errors": [
@@ -823,27 +855,43 @@ GetAllNotifications:
       ]
 }'
    Pms_GetAllNotifications_with_Apikey_NotificationType_And_apiKeyName:
-      endPoint: /v1/partnermanager/notifications?notificationType=apikey&apiKeyName=$ID:GenerateApiKey_AllValid_smoke_sid_label$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with API Key Notification Type and API Key Name
       uniqueIdentifier: TC_PMS_GetAllNotifications_54
       restMethod: get
       checkErrorsOnlyInResponse: true
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
       input: '{
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "apikey"
 }'
       output: '{
 }'
    Pms_GetAllNotifications_with_Root_NotificationType_And_apiKeyName_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=root&apiKeyName=$ID:GenerateApiKey_AllValid_smoke_sid_label$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with Root Notification Type and API Key Name
       uniqueIdentifier: TC_PMS_GetAllNotifications_55
       restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "root"
 }'
       output: '{
       "errors": [
@@ -853,14 +901,22 @@ GetAllNotifications:
       ]
 }'
    Pms_GetAllNotifications_with_Partner_NotificationType_And_apiKeyName_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner&apiKeyName=$ID:GenerateApiKey_AllValid_smoke_sid_label$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with Partner Notification Type and API Key Name
       uniqueIdentifier: TC_PMS_GetAllNotifications_56
       restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "partner"
 }'
       output: '{
       "errors": [
@@ -870,40 +926,64 @@ GetAllNotifications:
      ]
 }'
    Pms_GetAllNotifications_with_Sbi_NotificationType_And_ExpiryDate:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&expiryDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiExpiryDateTime$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with Sbi Notification Type and Expiry Date
       uniqueIdentifier: TC_PMS_GetAllNotifications_57
       restMethod: get
       checkErrorsOnlyInResponse: true
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiExpiryDateTime$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "sbi"
 }'
       output: '{
 }'
    Pms_GetAllNotifications_with_Weekly_NotificationType_And_createdFromDate_And_createdToDate:
-      endPoint: /v1/partnermanager/notifications?notificationType=weekly&createdFromDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiCreatedDateTime$&createdToDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Smoke_Sid_sbiExpiryDateTime$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with Weekly Notification Type and created From Date and created To Date
       uniqueIdentifier: TC_PMS_GetAllNotifications_58
       restMethod: get
       checkErrorsOnlyInResponse: true
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiCreatedDateTime$",
+      "createdToDate": "$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiExpiryDateTime$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "weekly"
 }'
       output: '{
 }'
    Pms_GetAllNotifications_with_Partner_NotificationType_And_createdToDate_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner&createdToDate=$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiExpiryDateTime$
+      endPoint: /v1/partnermanager/notifications
       role: partneradmin
       description: Get All Notifications with Partner Notification Type and created To Date
       uniqueIdentifier: TC_PMS_GetAllNotifications_59
       restMethod: get
-      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiExpiryDateTime$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "partner"
 }'
       output: '{
       "errors": [

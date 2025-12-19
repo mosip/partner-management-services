@@ -91,7 +91,6 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "asdfgrwg",
-   "label": "pmsAutomation",
    "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
    "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",

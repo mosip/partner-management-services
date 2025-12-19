@@ -11,7 +11,7 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_sid_partnerId$",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"
