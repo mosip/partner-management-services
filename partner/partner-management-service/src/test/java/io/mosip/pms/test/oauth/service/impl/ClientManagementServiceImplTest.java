@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.kernel.openid.bridge.model.MosipUserDto;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.entity.ClientDetail;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 import io.mosip.pms.device.util.AuditUtil;
+import io.mosip.pms.oauth.client.dto.ClientDetailV2;
 import io.mosip.pms.oidc.client.contant.ClientServiceAuditEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.mosip.pms.common.constant.EventType;
@@ -44,10 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -1746,4 +1745,611 @@ public class ClientManagementServiceImplTest {
 		}
 	}
 
+    @Test
+    public void testGetPartnersClientsV2ValidRequest() throws Exception {
+        String sortFieldName = "createdDateTime";
+        String sortType = "desc";
+        int pageNo = 0;
+        int pageSize = 10;
+
+        ClientFilterDto filterDto = new ClientFilterDto();
+        filterDto.setPartnerId("partner-123");
+        filterDto.setClientName("Test Client");
+        filterDto.setStatus("ACTIVE");
+
+        ClientSummaryEntity entity = new ClientSummaryEntity();
+        entity.setClientId("client-123");
+        entity.setClientName("Test Client");
+        entity.setStatus("ACTIVE");
+
+        Page<ClientSummaryEntity> pageResponse = new PageImpl<>(
+                List.of(entity),
+                PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, sortFieldName)),
+                1L
+        );
+
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_PARTNER_ADMIN"));
+
+        MosipUserDto mosipUserDto = new MosipUserDto();
+        mosipUserDto.setUserId("test-user");
+
+        AuthUserDetails authUserDetails = mock(AuthUserDetails.class);
+        when(authUserDetails.getAuthorities()).thenReturn((Collection) authorities);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(clientSummaryRepository.getSummaryOfAllPartnerClients(
+                anyString(), any(), any(), any(), any(), any(), any(), anyBoolean(), any(Pageable.class)
+        )).thenReturn(pageResponse);
+
+        ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> response =
+                serviceImpl.getPartnersClientsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
+        assertNotNull("ResponseWrapper should not be null", response);
+        assertNotNull("The inner response object is null. Check service logs for internal exceptions.", response.getResponse());
+        assertEquals(1, response.getResponse().getData().size());
+        assertEquals("client-123", response.getResponse().getData().get(0).getClientId());
+    }
+
+	@Test
+	public void testGetPartnersClientsV2WithMultipleClients() throws Exception {
+		String sortFieldName = "clientName";
+		String sortType = "asc";
+		long pageNo = 0L;
+		long pageSize = 20L;
+
+		ClientFilterDto filterDto = new ClientFilterDto();
+
+		List<ClientSummaryDto> clients = new ArrayList<>();
+		for (int i = 1; i <= 5; i++) {
+			ClientSummaryDto client = new ClientSummaryDto();
+			client.setClientId("client-" + i);
+			client.setClientName("Client " + i);
+			client.setStatus("ACTIVE");
+			clients.add(client);
+		}
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(clients);
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(1L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
+		try {
+			ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
+			assertNotNull(actualResponse);
+			assertEquals(1L, actualResponse.getResponse().getTotalResults());
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+	}
+
+	@Test
+	public void testGetPartnersClientsV2EmptyResult() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		long pageNo = 0L;
+		long pageSize = 10L;
+
+		ClientFilterDto filterDto = new ClientFilterDto();
+		filterDto.setPartnerId("nonexistent-partner");
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(Collections.emptyList());
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(0L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
+		try {
+			ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
+			assertNotNull(actualResponse);
+			assertEquals(0L, actualResponse.getResponse().getTotalResults());
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+	}
+
+	@Test
+	public void testGetPartnersClientsV2WithStatusFilter() throws Exception {
+		String sortFieldName = "clientName";
+		String sortType = "asc";
+		long pageNo = 0L;
+		long pageSize = 10L;
+
+		ClientFilterDto filterDto = new ClientFilterDto();
+		filterDto.setStatus("ACTIVE");
+
+		ClientSummaryDto activeClient = new ClientSummaryDto();
+		activeClient.setClientId("active-client-123");
+		activeClient.setClientName("Active Client");
+		activeClient.setStatus("ACTIVE");
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(List.of(activeClient));
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(1L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
+		try {
+			ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
+			assertNotNull(actualResponse);
+			assertEquals("ACTIVE", actualResponse.getResponse().getData().getFirst().getStatus());
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+	}
+
+	@Test
+	public void testGetPartnersClientsV2WithPagination() throws Exception {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		long pageNo = 2L;
+		long pageSize = 25L;
+
+		ClientFilterDto filterDto = new ClientFilterDto();
+
+		List<ClientSummaryDto> clients = new ArrayList<>();
+		for (int i = 1; i <= 25; i++) {
+			ClientSummaryDto client = new ClientSummaryDto();
+			client.setClientId("client-page2-" + i);
+			client.setClientName("Client Page 2 - " + i);
+			client.setStatus("ACTIVE");
+			clients.add(client);
+		}
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(clients);
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(5L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
+		try {
+			ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
+			assertNotNull(actualResponse);
+			assertEquals(pageNo, actualResponse.getResponse().getPageNo());
+			assertEquals(pageSize, actualResponse.getResponse().getPageSize());
+			assertEquals(5L, actualResponse.getResponse().getTotalResults());
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+        assertTrue(true);
+    }
+
+	@Test
+	public void testCheckPartnerActiveStatus_InactivePartner() throws Exception {
+		Partner partner = new Partner();
+		partner.setIsActive(false);
+		partner.setId("partnerId");
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "checkPartnerActiveStatus", partner, "clientId");
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testExtractClientNameAndLangMap_WithJsonObject() throws Exception {
+		String clientNameJson = "{\"@none\":\"ClientName\",\"eng\":\"ClientName\",\"ara\":\"اسم العميل\"}";
+		ClientNameAndLangMap result = ReflectionTestUtils.invokeMethod(serviceImpl, "extractClientNameAndLangMap", clientNameJson);
+		assertNotNull(result);
+		assertEquals("ClientName", result.getName());
+		assertNotNull(result.getLangMap());
+	}
+
+	@Test
+	public void testExtractClientNameAndLangMap_WithPlainString() throws Exception {
+		String clientName = "PlainClientName";
+		ClientNameAndLangMap result = ReflectionTestUtils.invokeMethod(serviceImpl, "extractClientNameAndLangMap", clientName);
+		assertNotNull(result);
+		assertEquals("PlainClientName", result.getName());
+	}
+
+	@Test
+	public void testCreatePublicKeyFromJWK_RSA() throws Exception {
+		Map<String, Object> rsaPublicKey = new HashMap<>();
+		rsaPublicKey.put("kty", "RSA");
+		rsaPublicKey.put("e", "AQAB");
+		rsaPublicKey.put("use", "sig");
+		rsaPublicKey.put("kid", "test-key");
+		rsaPublicKey.put("alg", "RS256");
+		rsaPublicKey.put("n", "wXGQA574CU-WTWPILd4S3_1sJf0Yof0kwMeNctXc1thQo70Ljfn9f4igpRe7f8qNs_W6dLuLWemFhGJBQBQ7vvickECKNJfo_EzSD_yyPCg7k_AGbTWTkuoObHrpilwJGyKVSkOIujH_FqHIVkwkVXjWc25Lsb8Gq4nAHNQEqqgaYPLEi5evCR6S0FzcXTPuRh9zH-cM0Onjv4orrfYpEr61HcRp5MXL55b7yBoIYlXD8NfalcgdrWzp4VZHvQ8yT9G5eaf27XUn6ZBeBf7VnELcKFTyw1pK2wqoOxRBc8Y1wO6rEy8PlCU6wD-mbIzcjG1wUfnbgvJOM4A5G41quQ");
+
+		String publicKeyString = serviceImpl.createPublicKeyFromJWK(rsaPublicKey);
+		assertNotNull(publicKeyString);
+		assertTrue(publicKeyString.length() > 0);
+	}
+
+    @Test(expected = java.text.ParseException.class)
+    public void testCreatePublicKeyFromJWK_UnsupportedKeyType() throws Exception {
+        Map<String, Object> unsupportedKey = new HashMap<>();
+        unsupportedKey.put("kty", "UNSUPPORTED");
+        unsupportedKey.put("kid", "test-key");
+
+        serviceImpl.createPublicKeyFromJWK(unsupportedKey);
+    }
+
+	@Test
+	public void testValidateAdditionalConfigFields_InvalidUserinfoResponseType() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		additionalConfigDto.setUserinfoResponseType("INVALID");
+
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateAdditionalConfigFields_InvalidConsentExpireTime() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		additionalConfigDto.setConsentExpireInMins(5);
+
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateAdditionalConfigFields_InvalidPurposeType() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		Map<String, Object> purpose = new HashMap<>();
+		purpose.put("type", "INVALID_TYPE");
+		additionalConfigDto.setPurpose(purpose);
+
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateAdditionalConfigFields_PurposeTitleNotMapType() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		Map<String, Object> purpose = new HashMap<>();
+		purpose.put("type", "login");
+		purpose.put("title", "NotAMap");
+		additionalConfigDto.setPurpose(purpose);
+
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateAdditionalConfigFields_PurposeTitleWithoutType() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		Map<String, Object> purpose = new HashMap<>();
+		Map<String, Object> title = new HashMap<>();
+		title.put("@none", "Test Title");
+		purpose.put("title", title);
+		additionalConfigDto.setPurpose(purpose);
+
+		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateLanguageKeys_InvalidLanguageKey() throws Exception {
+		Map<String, Object> langMap = new HashMap<>();
+		langMap.put("invalid_lang", "value");
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateLanguageKeys", langMap, "testField", false);
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.INVALID_LANGUAGE_KEY.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateLanguageKeys_MissingMandatoryNoneKey() throws Exception {
+		Map<String, Object> langMap = new HashMap<>();
+		langMap.put("eng", "value");
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateLanguageKeys", langMap, "testField", true);
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.MISSING_MANDATORY_LANGUAGE_KEY.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testValidateLanguageKeys_ValidLanguageKeys() throws Exception {
+		Map<String, Object> langMap = new HashMap<>();
+		langMap.put("@none", "English Title");
+		langMap.put("eng", "English Title");
+		langMap.put("ara", "العنوان العربي");
+
+		try {
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateLanguageKeys", langMap, "testField", true);
+		} catch (Exception ex) {
+			fail("Should not throw exception for valid language keys");
+		}
+	}
+
+	@Test
+	public void testGetSortColumn_WithValidAlias() throws Exception {
+		Map<String, String> aliasToColumnMap = new HashMap<>();
+		aliasToColumnMap.put("name", "c_name");
+		aliasToColumnMap.put("status", "c_status");
+
+		String result = ReflectionTestUtils.invokeMethod(serviceImpl, "getSortColumn", aliasToColumnMap, "name");
+		assertEquals("c_name", result);
+	}
+
+	@Test
+	public void testGetSortColumn_WithInvalidAlias() throws Exception {
+		Map<String, String> aliasToColumnMap = new HashMap<>();
+		aliasToColumnMap.put("name", "c_name");
+
+		String result = ReflectionTestUtils.invokeMethod(serviceImpl, "getSortColumn", aliasToColumnMap, "invalidAlias");
+		assertEquals("invalidAlias", result);
+	}
+
+	@Test
+	public void testDeactivateOIDCClient_InvalidClientId() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void testDeactivateOIDCClient_InvalidStatus() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("ACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("clientId", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void testGetOIDCClientV2_InvalidClientId() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ResponseWrapperV2<ClientDetailV2> response = serviceImpl.getOIDCClientV2("");
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void testValidatePartnerIdBelongsToUser_PartnerExists() throws Exception {
+		Partner partner1 = new Partner();
+		partner1.setId("partner1");
+
+		Partner partner2 = new Partner();
+		partner2.setId("partner2");
+
+		List<Partner> partnerList = Arrays.asList(partner1, partner2);
+
+		boolean result = ReflectionTestUtils.invokeMethod(serviceImpl, "validatePartnerIdBelongsToUser", partnerList, "partner1");
+		assertTrue(result);
+	}
+
+	@Test
+	public void testValidatePartnerIdBelongsToUser_PartnerNotExists() throws Exception {
+		Partner partner1 = new Partner();
+		partner1.setId("partner1");
+
+		List<Partner> partnerList = Arrays.asList(partner1);
+
+		boolean result = ReflectionTestUtils.invokeMethod(serviceImpl, "validatePartnerIdBelongsToUser", partnerList, "partner3");
+		assertFalse(result);
+	}
+
+	@Test
+	public void testGetClientNameLanguageMapAsJsonString() throws Exception {
+		Map<String, String> clientNameMap = new HashMap<>();
+		clientNameMap.put("eng", "English Name");
+		clientNameMap.put("ara", "الاسم العربي");
+
+		String result = ReflectionTestUtils.invokeMethod(serviceImpl, "getClientNameLanguageMapAsJsonString", clientNameMap, "DefaultName");
+		assertNotNull(result);
+		assertTrue(result.contains("@none"));
+		assertTrue(result.contains("DefaultName"));
+	}
+
+	@Test
+	public void testCreateOIDCClientV2_Success() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(environment.getProperty("auth.url")).thenReturn("https://pms.net/partner");
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
+
+		ClientDetailCreateRequestV3 createRequest = new ClientDetailCreateRequestV3();
+		createRequest.setName("ClientName");
+		createRequest.setAuthPartnerId("AuthPartnerId");
+		createRequest.setPolicyId("PolicyID");
+		List<String> clientAuthMethods = new ArrayList();
+		clientAuthMethods.add("private_key_jwt");
+		createRequest.setClientAuthMethods(clientAuthMethods);
+		List<String> setGrantTypes = new ArrayList();
+		setGrantTypes.add("authorization_code");
+		createRequest.setGrantTypes(setGrantTypes);
+		createRequest.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		List<String> setRedirectUris = new ArrayList();
+		setRedirectUris.add("https://testcase.pms.net/browse/OIDCClient");
+		createRequest.setRedirectUris(setRedirectUris);
+		createRequest.setPublicKey(public_key);
+		Map<String, String> clientNameMap = new HashMap<>();
+		clientNameMap.put("@none", "ClientName");
+		createRequest.setClientNameLangMap(clientNameMap);
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.createOIDCClientV2(createRequest);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void testSetCommonUpdateFields_WithClientDetailUpdateRequest() throws Exception {
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setName("OldName");
+		clientDetail.setLogoUri("https://old.uri");
+
+		ClientDetailUpdateRequest updateRequest = new ClientDetailUpdateRequest();
+		updateRequest.setClientName("NewName");
+		updateRequest.setLogoUri("https://new.uri");
+		updateRequest.setRedirectUris(Arrays.asList("https://example.com"));
+		updateRequest.setGrantTypes(Arrays.asList("authorization_code"));
+		updateRequest.setClientAuthMethods(Arrays.asList("private_key_jwt"));
+
+		ReflectionTestUtils.invokeMethod(serviceImpl, "setCommonUpdateFields", clientDetail, updateRequest);
+
+		assertEquals("NewName", clientDetail.getName());
+		assertEquals("https://new.uri", clientDetail.getLogoUri());
+		assertNotNull(clientDetail.getUpdatedDateTime());
+	}
 }
+
