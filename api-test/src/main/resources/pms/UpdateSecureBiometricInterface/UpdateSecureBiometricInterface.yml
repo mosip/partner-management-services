@@ -1,6 +1,7 @@
 UpdateSecureBiometricInterface:
    Pms_UpdateSecureBiometricInterface_DeviceProvider_AllValid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_01
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -37,7 +38,7 @@ UpdateSecureBiometricInterface:
 
    Pms_UpdateSecureBiometricInterface_AfterReject_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
-      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_02
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_04
       description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
       role: partner
       restMethod: put
@@ -75,7 +76,7 @@ UpdateSecureBiometricInterface:
 }'
    Pms_UpdateSecureBiometricInterface_for_FTMPartner_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
-      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_04
+      uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_05
       description: Activate UpdateSecureBiometricInterface for FTM Partner
       role: partneradmin
       checkErrorsOnlyInResponse: true

@@ -1,6 +1,7 @@
 createPublishPolicy:
    Pms_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_01	  
       description: Publish The Policy
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -29,6 +30,7 @@ createPublishPolicy:
     }'
    Pms_PublishPolicy_MISPPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishMISPPolicy_02
       description: Publish MISP Policy created by PartnerAdmin
       role: partneradmin
       restMethod: post
@@ -45,6 +47,7 @@ createPublishPolicy:
     }'
    Pms_PublishPolicy_InValid_AlreadyPublished_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_03
       description: Publish The Policy which is already published      
       role: partneradmin
       restMethod: post
@@ -65,6 +68,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_InValid_policygroupId_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_04
       description: Publish The Policy with invalid policygroupid      
       role: partneradmin
       restMethod: post
@@ -85,6 +89,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_InValid_policyId_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_05
       description: Publish The Policy with invalid policyid      
       role: partneradmin
       restMethod: post
@@ -105,6 +110,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_invalid_auth_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_06
       description: Publish The Policy without access token      
       role: invalidtoken
       restMethod: post
@@ -125,6 +131,7 @@ createPublishPolicy:
                           
    Pms_PublishPolicy_ForDeactive_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_07
       description: Publish The Policy
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -154,6 +161,7 @@ createPublishPolicy:
 
    Pms_PublishPolicy_All_Valid_Smoke_ForNeg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_08
       description: Publish The Policy
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -183,6 +191,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_All_Valid_forDeactivatePolicyGroup_ForNeg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_09
       description: Publish The Policy for deactivate policy group with published policy
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -212,6 +221,7 @@ createPublishPolicy:
     
    Partner_PublishDataSharePolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_10
       role: partneradmin
       restMethod: post
       checkErrorsOnlyInResponse: true
@@ -219,7 +229,7 @@ createPublishPolicy:
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
 		"policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
-		"policyId": "MDSP",
+		"policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
 		"requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -240,6 +250,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_11
       description: Publish The Policy for rejecting partner policy mapping request
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -269,6 +280,7 @@ createPublishPolicy:
     
    Pms_PublishPolicy_All_Valid_ForInProgressPolicyMapping:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_12
       description: Publish The Policy for rejecting partner policy mapping request
       role: partneradmin
       checkErrorsOnlyInResponse: true

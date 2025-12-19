@@ -23,7 +23,7 @@ public class PMSUtil extends AdminTestUtil {
 	public static List<String> testCasesInRunScope = new ArrayList<>();
 	
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSConfigManager.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -41,6 +41,12 @@ public class PMSUtil extends AdminTestUtil {
 		if (!testCasesInRunScope.isEmpty()
 				&& testCasesInRunScope.contains(testCaseDTO.getUniqueIdentifier()) == false) {
 			throw new SkipException(GlobalConstants.NOT_IN_RUN_SCOPE_MESSAGE);
+		}
+		
+		// Handle extra workflow dependencies
+		if (testCaseDTO != null && testCaseDTO.getAdditionalDependencies() != null
+				&& AdminTestUtil.generateDependency == true) {
+			addAdditionalDependencies(testCaseDTO);
 		}
 		
 		if (SkipTestCaseHandler.isTestCaseInSkippedList(testCaseName)) {
@@ -77,24 +83,24 @@ public class PMSUtil extends AdminTestUtil {
 	
 	public static void DbCleanRevamp() {
 		BaseTestCase.currentModule = GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
-		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
+		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
+				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
 				
-		DBManager.executeDBQueries(PMSConfigManger.getKeymangrDbUrl(), PMSConfigManger.getKeymangrDbUser(),
-				PMSConfigManger.getKeymangrDbPass(), PMSConfigManger.getKMDbSchema(),
+		DBManager.executeDBQueries(PMSConfigManager.getKeymangrDbUrl(), PMSConfigManager.getKeymangrDbUser(),
+				PMSConfigManager.getKeymangrDbPass(), PMSConfigManager.getKMDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForKeyMgr.txt");
 
-		DBManager.executeDBQueries(PMSConfigManger.getIdaDbUrl(), PMSConfigManger.getIdaDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getIdaDbSchema(),
+		DBManager.executeDBQueries(PMSConfigManager.getIdaDbUrl(), PMSConfigManager.getIdaDbUser(),
+				PMSConfigManager.getIdaDbPass(), PMSConfigManager.getIdaDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
 		
-		DBManager.executeDBQueries(PMSConfigManger.getPMSDbUrl(), PMSConfigManger.getPMSDbUser(),
-				PMSConfigManger.getPMSDbPass(), PMSConfigManger.getPMSDbSchema(),
+		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
+				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
 		
-		DBManager.executeDBQueries(PMSConfigManger.getKMDbUrl(), PMSConfigManger.getKMDbUser(),
-				PMSConfigManger.getKMDbPass(), PMSConfigManger.getKMDbSchema(),
+		DBManager.executeDBQueries(PMSConfigManager.getKMDbUrl(), PMSConfigManager.getKMDbUser(),
+				PMSConfigManager.getKMDbPass(), PMSConfigManager.getKMDbSchema(),
 				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 	}
 	

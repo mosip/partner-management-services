@@ -5,10 +5,11 @@ UpdatePrintPartner:
       description: Update Print Partner with valid details
       role: partner
       restMethod: put
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_printpartner_01  
       inputTemplate: pms/PrintPartner/UpdatePrintPartner/UpdatePrintPartner
       outputTemplate: pms/PrintPartner/UpdatePrintPartner/UpdatePrintPartnerResult
       input: '{
-		 "partnerId": "mosipprint",
+		 "partnerId": "$ID:PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid_partnerId$",
 		 "address": "Benglore",
 		 "contactNumber": "9876453210",
 	     "requesttime": "$TIMESTAMP$"
