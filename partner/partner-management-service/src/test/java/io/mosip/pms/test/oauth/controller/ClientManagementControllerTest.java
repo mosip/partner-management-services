@@ -532,4 +532,49 @@ public class ClientManagementControllerTest {
                         .param("pageSize", String.valueOf(pageSize)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testGetOIDCClientV2Success() throws Exception {
+        String clientId = "test-client-123";
+        ResponseWrapperV2<ClientDetailV2> responseWrapper = new ResponseWrapperV2<>();
+        ClientDetailV2 clientDetailV2 = new ClientDetailV2();
+        clientDetailV2.setId(clientId);
+        clientDetailV2.setName("Test Client");
+        responseWrapper.setResponse(clientDetailV2);
+
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        when(clientManagementService.getOIDCClientV2(clientId)).thenReturn(responseWrapper);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", clientId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(clientManagementService, times(1)).getOIDCClientV2(clientId);
+    }
+
+    @Test(expected = Exception.class)
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testGetOIDCClientV2invalidClientId() throws Exception {
+        String invalidClientId = "invalid~client~id";
+
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", invalidClientId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test(expected = Exception.class)
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testGetOIDCClientV2featureDisabled() throws Exception {
+        String clientId = "test-client-123";
+
+        doThrow(new PartnerServiceException("PMS_OIDC_001", "OIDC client feature is not enabled"))
+                .when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", clientId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

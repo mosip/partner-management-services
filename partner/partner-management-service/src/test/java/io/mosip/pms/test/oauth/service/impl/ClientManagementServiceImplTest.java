@@ -1933,7 +1933,7 @@ public class ClientManagementServiceImplTest {
     }
 
 	@Test
-	public void testCheckPartnerActiveStatus_InactivePartner() throws Exception {
+	public void testCheckPartnerActiveStatusInactivePartner() throws Exception {
 		Partner partner = new Partner();
 		partner.setIsActive(false);
 		partner.setId("partnerId");
@@ -1947,7 +1947,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testExtractClientNameAndLangMap_WithJsonObject() throws Exception {
+	public void testExtractClientNameAndLangMapWithJsonObject() throws Exception {
 		String clientNameJson = "{\"@none\":\"ClientName\",\"eng\":\"ClientName\",\"ara\":\"اسم العميل\"}";
 		ClientNameAndLangMap result = ReflectionTestUtils.invokeMethod(serviceImpl, "extractClientNameAndLangMap", clientNameJson);
 		assertNotNull(result);
@@ -1956,7 +1956,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testExtractClientNameAndLangMap_WithPlainString() throws Exception {
+	public void testExtractClientNameAndLangMapWithPlainString() throws Exception {
 		String clientName = "PlainClientName";
 		ClientNameAndLangMap result = ReflectionTestUtils.invokeMethod(serviceImpl, "extractClientNameAndLangMap", clientName);
 		assertNotNull(result);
@@ -1964,7 +1964,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testCreatePublicKeyFromJWK_RSA() throws Exception {
+	public void testCreatePublicKeyFromJWKRSA() throws Exception {
 		Map<String, Object> rsaPublicKey = new HashMap<>();
 		rsaPublicKey.put("kty", "RSA");
 		rsaPublicKey.put("e", "AQAB");
@@ -1979,7 +1979,7 @@ public class ClientManagementServiceImplTest {
 	}
 
     @Test(expected = java.text.ParseException.class)
-    public void testCreatePublicKeyFromJWK_UnsupportedKeyType() throws Exception {
+    public void testCreatePublicKeyFromJWKUnsupportedKeyType() throws Exception {
         Map<String, Object> unsupportedKey = new HashMap<>();
         unsupportedKey.put("kty", "UNSUPPORTED");
         unsupportedKey.put("kid", "test-key");
@@ -1988,7 +1988,7 @@ public class ClientManagementServiceImplTest {
     }
 
 	@Test
-	public void testValidateAdditionalConfigFields_InvalidUserinfoResponseType() throws Exception {
+	public void testValidateAdditionalConfigFieldsInvalidUserinfoResponseType() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2015,7 +2015,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateAdditionalConfigFields_InvalidConsentExpireTime() throws Exception {
+	public void testValidateAdditionalConfigFieldsInvalidConsentExpireTime() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2042,7 +2042,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateAdditionalConfigFields_InvalidPurposeType() throws Exception {
+	public void testValidateAdditionalConfigFieldsInvalidPurposeType() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2071,7 +2071,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateAdditionalConfigFields_PurposeTitleNotMapType() throws Exception {
+	public void testValidateAdditionalConfigFieldsPurposeTitleNotMapType() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2101,7 +2101,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateAdditionalConfigFields_PurposeTitleWithoutType() throws Exception {
+	public void testValidateAdditionalConfigFieldsPurposeTitleWithoutType() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2132,7 +2132,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateLanguageKeys_InvalidLanguageKey() throws Exception {
+	public void testValidateLanguageKeysInvalidLanguageKey() throws Exception {
 		Map<String, Object> langMap = new HashMap<>();
 		langMap.put("invalid_lang", "value");
 
@@ -2145,7 +2145,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateLanguageKeys_MissingMandatoryNoneKey() throws Exception {
+	public void testValidateLanguageKeysMissingMandatoryNoneKey() throws Exception {
 		Map<String, Object> langMap = new HashMap<>();
 		langMap.put("eng", "value");
 
@@ -2158,7 +2158,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidateLanguageKeys_ValidLanguageKeys() throws Exception {
+	public void testValidateLanguageKeysValidLanguageKeys() throws Exception {
 		Map<String, Object> langMap = new HashMap<>();
 		langMap.put("@none", "English Title");
 		langMap.put("eng", "English Title");
@@ -2172,7 +2172,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testGetSortColumn_WithValidAlias() throws Exception {
+	public void testGetSortColumnWithValidAlias() throws Exception {
 		Map<String, String> aliasToColumnMap = new HashMap<>();
 		aliasToColumnMap.put("name", "c_name");
 		aliasToColumnMap.put("status", "c_status");
@@ -2182,7 +2182,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testGetSortColumn_WithInvalidAlias() throws Exception {
+	public void testGetSortColumnWithInvalidAlias() throws Exception {
 		Map<String, String> aliasToColumnMap = new HashMap<>();
 		aliasToColumnMap.put("name", "c_name");
 
@@ -2191,7 +2191,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testDeactivateOIDCClient_InvalidClientId() throws Exception {
+	public void testDeactivateOIDCClientInvalidClientId() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2213,7 +2213,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testDeactivateOIDCClient_InvalidStatus() throws Exception {
+	public void testDeactivateOIDCClientInvalidStatus() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2235,7 +2235,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testGetOIDCClientV2_InvalidClientId() throws Exception {
+	public void testGetOIDCClientV2InvalidClientId() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2254,7 +2254,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidatePartnerIdBelongsToUser_PartnerExists() throws Exception {
+	public void testValidatePartnerIdBelongsToUserPartnerExists() throws Exception {
 		Partner partner1 = new Partner();
 		partner1.setId("partner1");
 
@@ -2268,7 +2268,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testValidatePartnerIdBelongsToUser_PartnerNotExists() throws Exception {
+	public void testValidatePartnerIdBelongsToUserPartnerNotExists() throws Exception {
 		Partner partner1 = new Partner();
 		partner1.setId("partner1");
 
@@ -2291,7 +2291,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testCreateOIDCClientV2_Success() throws Exception {
+	public void testCreateOIDCClientV2Success() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
@@ -2333,7 +2333,7 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testSetCommonUpdateFields_WithClientDetailUpdateRequest() throws Exception {
+	public void testSetCommonUpdateFieldsWithClientDetailUpdateRequest() throws Exception {
 		ClientDetail clientDetail = new ClientDetail();
 		clientDetail.setName("OldName");
 		clientDetail.setLogoUri("https://old.uri");
@@ -2351,5 +2351,189 @@ public class ClientManagementServiceImplTest {
 		assertEquals("https://new.uri", clientDetail.getLogoUri());
 		assertNotNull(clientDetail.getUpdatedDateTime());
 	}
-}
 
+	@Test
+	public void testGetOIDCClientV2successWithAllFields() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("client-123");
+		clientDetail.setName("{\"@none\":\"Test Client\",\"eng\":\"Test Client English\"}");
+		clientDetail.setPolicyId("policy-123");
+		clientDetail.setStatus("ACTIVE");
+		clientDetail.setClaims("name,email");
+		clientDetail.setAcrValues("otp");
+		clientDetail.setRedirectUris("https://example.com/redirect");
+		clientDetail.setGrantTypes("authorization_code");
+		clientDetail.setClientAuthMethods("private_key_jwt");
+		clientDetail.setCreatedDateTime(LocalDateTime.now());
+		clientDetail.setRpId("partner-123");
+		clientDetail.setLogoUri("https://example.com/logo.png");
+		clientDetail.setPublicKey("public-key");
+		clientDetail.setAdditionalConfig("{\"userinfoResponseType\":\"JWS\"}");
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(clientDetail));
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setName("Test Policy Group");
+		policyGroup.setDesc("Policy Group Description");
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("policy-123");
+		authPolicy.setName("Test Policy");
+		authPolicy.setDescr("Test Policy Description");
+		authPolicy.setPolicyGroup(policyGroup);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("client-123");
+
+		assertNotNull(result);
+		assertNotNull(result.getResponse());
+		assertEquals("Test Client", result.getResponse().getName());
+		assertEquals("Test Policy", result.getResponse().getPolicyName());
+		assertEquals("Test Policy Group", result.getResponse().getPolicyGroupName());
+		assertNotNull(result.getResponse().getAdditionalConfig());
+	}
+
+	@Test
+	public void testGetOIDCClientV2nullClientId() {
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2(null);
+
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+		assertFalse(result.getErrors().isEmpty());
+	}
+
+	@Test
+	public void testGetOIDCClientV2emptyClientId() {
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("");
+
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+		assertFalse(result.getErrors().isEmpty());
+	}
+
+	@Test
+	public void testGetOIDCClientV2clientNotFound() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("non-existent-client");
+
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+		assertFalse(result.getErrors().isEmpty());
+	}
+
+	@Test
+	public void testGetOIDCClientV2withoutPolicyGroup() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("client-123");
+		clientDetail.setName("Test Client");
+		clientDetail.setPolicyId("policy-123");
+		clientDetail.setStatus("ACTIVE");
+		clientDetail.setClaims("name");
+		clientDetail.setAcrValues("otp");
+		clientDetail.setRedirectUris("https://example.com");
+		clientDetail.setGrantTypes("authorization_code");
+		clientDetail.setClientAuthMethods("private_key_jwt");
+		clientDetail.setCreatedDateTime(LocalDateTime.now());
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(clientDetail));
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("policy-123");
+		authPolicy.setName("Test Policy");
+		authPolicy.setDescr("Test Description");
+		authPolicy.setPolicyGroup(null);
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("client-123");
+
+		assertNotNull(result);
+		assertNotNull(result.getResponse());
+		assertNull(result.getResponse().getPolicyGroupName());
+	}
+
+	@Test
+	public void testGetOIDCClientV2withoutAdditionalConfig() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("client-123");
+		clientDetail.setName("Test Client");
+		clientDetail.setPolicyId("policy-123");
+		clientDetail.setStatus("ACTIVE");
+		clientDetail.setClaims("name");
+		clientDetail.setAcrValues("otp");
+		clientDetail.setRedirectUris("https://example.com");
+		clientDetail.setGrantTypes("authorization_code");
+		clientDetail.setClientAuthMethods("private_key_jwt");
+		clientDetail.setCreatedDateTime(LocalDateTime.now());
+		clientDetail.setAdditionalConfig(null);
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(clientDetail));
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("policy-123");
+		authPolicy.setName("Test Policy");
+		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
+
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("client-123");
+
+		assertNotNull(result);
+		assertNotNull(result.getResponse());
+		assertNull(result.getResponse().getAdditionalConfig());
+	}
+
+	@Test
+	public void testGetOIDCClientV2exceptionHandling() {
+		when(clientDetailRepository.findById(anyString())).thenThrow(new RuntimeException("Database error"));
+
+		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("client-123");
+
+		assertNotNull(result);
+		assertNotNull(result.getErrors());
+		assertFalse(result.getErrors().isEmpty());
+	}
+}
