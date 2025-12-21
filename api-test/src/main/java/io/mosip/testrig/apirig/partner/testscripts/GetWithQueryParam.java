@@ -80,6 +80,9 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException, SecurityXSSException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
+		if(testCaseDTO.getUniqueIdentifier().contains("TC_PMS_GetAllNotifications_57")) {
+			System.out.println("Debug");
+			}
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
