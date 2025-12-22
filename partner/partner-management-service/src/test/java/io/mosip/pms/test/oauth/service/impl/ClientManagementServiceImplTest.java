@@ -97,7 +97,7 @@ public class ClientManagementServiceImplTest {
 	@MockBean
 	PartnerPolicyRequestRepository partnerPolicyRequestRepository;
 
-	@Mock
+	@MockBean
 	private RestUtil restUtil;
 	
 	@MockBean
@@ -106,7 +106,7 @@ public class ClientManagementServiceImplTest {
 	@Mock
 	private ObjectMapper objectMapper;
 
-	@Mock
+	@MockBean
 	private WebSubPublisher webSubPublisher;
 
 	@Mock
@@ -2466,7 +2466,7 @@ public class ClientManagementServiceImplTest {
 		when(partnerRepository.findById("partner-123")).thenReturn(Optional.of(partner));
 		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(List.of(partner));
 		when(clientDetailRepository.save(any(ClientDetail.class))).thenReturn(clientDetail);
-		doNothing().when(restUtil).putApi(anyString(), anyList(), any(), any(), any(), any(), any());
+		doNothing().when(restUtil).putApi(anyString(), anyList(), Mockito.nullable(String.class), Mockito.nullable(String.class), any(MediaType.class), any(), any());
 		doNothing().when(webSubPublisher).notify(any(), any(), any());
 
 		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.updateOIDCClientV2(clientId, updateRequest);
@@ -2620,6 +2620,45 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(response);
 		assertNotNull(response.getErrors());
 		assertTrue(response.getErrors().size() > 0);
+	}
+
+	@Test
+	public void testDeactivateOIDCClient_NullClientId() throws Exception {
+		setupPartnerAdmin();
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient(null, requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.INVALID_CLIENT_ID.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivateOIDCClient_NullStatus() throws Exception {
+		setupPartnerAdmin();
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus(null);
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.INVALID_STATUS_CODE.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivateOIDCClient_StatusPending() throws Exception {
+		setupPartnerAdmin();
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("PENDING");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.INVALID_STATUS_CODE.getErrorCode(), response.getErrors().get(0).getErrorCode());
 	}
 
 	@Test
@@ -2792,7 +2831,7 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(result.getErrors());
 		assertFalse(result.getErrors().isEmpty());
 	}
-}
+
 	@Test
 	public void testUpdateOIDCClientV2UserNotBelongsToPartner() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
@@ -2831,5 +2870,182 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(response);
 		assertNotNull(response.getErrors());
 		assertTrue(response.getErrors().size() > 0);
+	}
+
+	@Test
+	public void testDeactivateOIDCClientInactivePartnerNonAdmin() throws Exception {
+		setupNonPartnerAdmin();
+		setupInactivePartner();
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivateOIDCClientValidationException() throws Exception {
+		setupPartnerAdmin();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void testDeactivateOIDCClientEsignetServiceCallException() throws Exception {
+		setupPartnerAdmin();
+		setupClientAndPartner();
+		doThrow(new RuntimeException("eSignet service error")).when(restUtil).putApi(anyString(), anyList(), anyString(), anyString(), any(), any(), any());
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.DEACTIVATE_OIDC_CLIENT_ERROR.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivateOIDCClientRepositorySaveException() throws Exception {
+		setupPartnerAdmin();
+		setupClientAndPartner();
+		doNothing().when(restUtil).putApi(anyString(), anyList(), anyString(), anyString(), any(), any(), any());
+		when(clientDetailRepository.save(any(ClientDetail.class))).thenThrow(new RuntimeException("DB error"));
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.DEACTIVATE_OIDC_CLIENT_ERROR.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivateOIDCClientResponseWrapperFieldsSet() throws Exception {
+		setupPartnerAdmin();
+		setupSuccessfulDeactivation();
+		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
+		requestDto.setStatus("INACTIVE");
+
+		ResponseWrapperV2<ClientDetailResponse> response = serviceImpl.deactivateOIDCClient("client-123", requestDto);
+
+		assertNotNull(response);
+		assertNotNull(response.getId());
+		assertNotNull(response.getVersion());
+	}
+
+	// Helper methods for deactivateOIDCClient tests
+	private void setupPartnerAdmin() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, authorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+	}
+
+	private void setupNonPartnerAdmin() throws Exception {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("AUTH_PARTNER"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, authorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+	}
+
+	private void setupSuccessfulDeactivation() throws Exception {
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createActivePartner();
+		when(clientDetailRepository.findById("client-123")).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(clientDetailRepository.save(any(ClientDetail.class))).thenReturn(clientDetail);
+		when(environment.getProperty("mosip.pms.esignet.oidc.client.update.url")).thenReturn("http://esignet/update");
+		doNothing().when(restUtil).putApi(anyString(), anyList(), Mockito.nullable(String.class), Mockito.nullable(String.class), any(MediaType.class), any(), any());
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+	}
+
+	private void setupSuccessfulDeactivationWithActivePartner() throws Exception {
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createActivePartner();
+		when(clientDetailRepository.findById("client-123")).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(List.of(partner));
+		when(clientDetailRepository.save(any(ClientDetail.class))).thenReturn(clientDetail);
+		when(environment.getProperty("mosip.pms.esignet.oidc.client.update.url")).thenReturn("http://esignet/update");
+		doNothing().when(restUtil).putApi(anyString(), anyList(), Mockito.nullable(String.class), Mockito.nullable(String.class), any(MediaType.class), any(), any());
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+	}
+
+	private void setupInactivePartner() {
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createInactivePartner();
+		when(clientDetailRepository.findById("client-123")).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(List.of(partner));
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+	}
+
+	private void setupClientAndPartner() {
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createActivePartner();
+		when(clientDetailRepository.findById("client-123")).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(environment.getProperty("mosip.pms.esignet.oidc.client.update.url")).thenReturn("http://esignet/update");
+	}
+
+	private ClientDetail createClientDetail() {
+		ClientDetail clientDetail = new ClientDetail();
+		clientDetail.setId("client-123");
+		clientDetail.setName("{\"@none\":\"TestClient\"}");
+		clientDetail.setRpId("partner-123");
+		clientDetail.setStatus("ACTIVE");
+		clientDetail.setPolicyId("policy-123");
+		clientDetail.setLogoUri("https://example.com/logo.png");
+		clientDetail.setRedirectUris("https://example.com/callback");
+		clientDetail.setGrantTypes("authorization_code");
+		clientDetail.setClientAuthMethods("private_key_jwt");
+		clientDetail.setClaims("email,name");
+		clientDetail.setAcrValues("mosip:idp:acr:static-code");
+		clientDetail.setPublicKey("public-key");
+		clientDetail.setCreatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
+		clientDetail.setCreatedBy("test-user");
+		return clientDetail;
+	}
+
+	private Partner createActivePartner() {
+		Partner partner = new Partner();
+		partner.setId("partner-123");
+		partner.setIsActive(true);
+		partner.setName("Test Partner");
+		partner.setPartnerTypeCode("Auth_Partner");
+		return partner;
+	}
+
+	private Partner createInactivePartner() {
+		Partner partner = new Partner();
+		partner.setId("partner-123");
+		partner.setIsActive(false);
+		partner.setName("Test Partner");
+		partner.setPartnerTypeCode("Auth_Partner");
+		return partner;
 	}
 }

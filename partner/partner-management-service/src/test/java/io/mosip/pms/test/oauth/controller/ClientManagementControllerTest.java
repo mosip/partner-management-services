@@ -715,46 +715,124 @@ public class ClientManagementControllerTest {
 
     @Test
     @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void testGetOIDCClientV2Success() throws Exception {
+    public void testDeactivateOIDCClientSuccess() throws Exception {
         String clientId = "test-client-123";
-        ResponseWrapperV2<ClientDetailV2> responseWrapper = new ResponseWrapperV2<>();
-        ClientDetailV2 clientDetailV2 = new ClientDetailV2();
-        clientDetailV2.setId(clientId);
-        clientDetailV2.setName("Test Client");
-        responseWrapper.setResponse(clientDetailV2);
+        RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateOidcClientRequestDto request = new DeactivateOidcClientRequestDto();
+        request.setStatus("INACTIVE");
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+
+        ClientDetailResponse mockResponse = new ClientDetailResponse();
+        mockResponse.setClientId(clientId);
+        mockResponse.setStatus("INACTIVE");
+        ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
+        responseWrapper.setResponse(mockResponse);
 
         doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
-        when(clientManagementService.getOIDCClientV2(clientId)).thenReturn(responseWrapper);
+        doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        when(requestValidator.validate(anyString(), any())).thenReturn(Optional.empty());
+        doNothing().when(inputValidator).validateRequestInput(eq("status"), eq("INACTIVE"));
+        when(clientManagementService.deactivateOIDCClient(eq(clientId), any(DeactivateOidcClientRequestDto.class)))
+                .thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", clientId)
-                        .accept(MediaType.APPLICATION_JSON))
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        verify(clientManagementService, times(1)).getOIDCClientV2(clientId);
+        verify(clientManagementService, times(1)).deactivateOIDCClient(eq(clientId), any(DeactivateOidcClientRequestDto.class));
     }
 
     @Test(expected = Exception.class)
     @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void testGetOIDCClientV2invalidClientId() throws Exception {
+    public void testDeactivateOIDCClientInvalidClientId() throws Exception {
         String invalidClientId = "invalid~client~id";
+        RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateOidcClientRequestDto request = new DeactivateOidcClientRequestDto();
+        request.setStatus("INACTIVE");
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
 
         doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", invalidClientId)
-                        .accept(MediaType.APPLICATION_JSON))
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", invalidClientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson));
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testDeactivateOIDCClientValidationFails() throws Exception {
+        String clientId = "test-client-123";
+        RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateOidcClientRequestDto request = new DeactivateOidcClientRequestDto();
+        request.setStatus("INACTIVE");
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+
+        ResponseWrapperV2<ClientDetailResponse> validationErrorResponse = new ResponseWrapperV2<>();
+        validationErrorResponse.setErrors(List.of());
+
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        doReturn(Optional.of(validationErrorResponse)).when(requestValidator).validate(anyString(), any());
+
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(clientManagementService, times(0)).deactivateOIDCClient(anyString(), any());
     }
 
     @Test(expected = Exception.class)
     @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void testGetOIDCClientV2featureDisabled() throws Exception {
+    public void testDeactivateOIDCClientInvalidStatus() throws Exception {
         String clientId = "test-client-123";
+        RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateOidcClientRequestDto request = new DeactivateOidcClientRequestDto();
+        request.setStatus("");
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+
+        doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        when(requestValidator.validate(anyString(), any())).thenReturn(Optional.empty());
+        doThrow(new PartnerServiceException("INVALID_INPUT", "status cannot be empty"))
+                .when(inputValidator).validateRequestInput(eq("status"), eq(""));
+
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson));
+    }
+
+    @Test(expected = Exception.class)
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testDeactivateOIDCClientFeatureDisabled() throws Exception {
+        String clientId = "test-client-123";
+        RequestWrapperV2<DeactivateOidcClientRequestDto> requestWrapper = new RequestWrapperV2<>();
+        DeactivateOidcClientRequestDto request = new DeactivateOidcClientRequestDto();
+        request.setStatus("INACTIVE");
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
 
         doThrow(new PartnerServiceException("PMS_OIDC_001", "OIDC client feature is not enabled"))
                 .when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", clientId)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson));
     }
 }
