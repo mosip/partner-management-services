@@ -13,7 +13,7 @@ GetOIDCClientByClientIdV2:
 }'
     output: '{
 }'
-  Pms_GetOIDCClientByClientIdV2_With_Parner_Admin_Role:
+  Pms_GetOIDCClientByClientIdV2_With_Partner_Admin_Role:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2_02
     description: Fetching OIDC client details by Client ID using a valid access token of partner admin role

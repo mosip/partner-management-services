@@ -347,7 +347,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_PageNo_Without_PageSize_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_14
-    description: Fetching OIDC Client details using invalid Status
+    description: Fetching OIDC Client details using Page No and without Page Size
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient

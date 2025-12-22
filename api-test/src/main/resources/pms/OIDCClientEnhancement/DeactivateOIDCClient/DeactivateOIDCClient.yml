@@ -18,7 +18,7 @@ DeactivateOIDCClientV2:
 }'
   Pms_DeactivateOIDCClientV2_With_Partner_Admin_Role:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
-    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2_01
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2_02
     description: Deactivating the OIDC Client using clientId having partneradmin role
     role: partneradmin
     restMethod: patch
