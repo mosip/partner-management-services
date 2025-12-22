@@ -1,0 +1,1920 @@
+CreateOIDCClient:
+   Pms_CreateOIDCClient_all_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_01
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_invalid_auth_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid auth token
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_02
+      role: invalidtoken
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_all_Valid_Name_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with valid name
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_03
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "Test",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_invalid_Name_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid name
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_04
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "@#$%^&*",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_Name_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with empty name
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_05
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_Name_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without name
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_06
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "$REMOVE$",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_all_ValidName_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_07
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "@Client",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_invalid_Name_with_tab_Characters_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with name contains newline or tab characters
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_08
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "Client\nTest",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_invalid_PolicyID_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid policyid
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_09
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "INVALID-999",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_073"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Special_Character_PolicyID_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with special character policyid
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_10
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "@#$%^&*",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_073"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_PolicyID_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with empty policyid
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_11
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_PolicyID_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with Without policyid
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_12
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$REMOVE$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_PublicKey_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid public key
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_13
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$INVALIDJWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_ESI_007"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_PublicKey_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with without public key
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_14
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+        "publicKey": "$REMOVE$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+        "consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_PublicKey_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with Empty public key
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_15
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+        "publicKey": "{}",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+        "clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+        "consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_authPartnerId_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid authPartnerId
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_16
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "INVALID-999",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_009"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_authPartnerId_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without AuthPartnerId
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_17
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$REMOVE$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Special_Character_authPartnerId_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with special character authPartnerId
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_18
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "@$ab*&",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_LogoUri_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid LogoUri
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_19
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "RTTS://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_LogoUri_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without LogoUri
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_20
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "$REMOVE$",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_LogoUri_As_Special_Character_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with LogoUri as special characters
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_21
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "%!!p:))l@g@.c0^@!mg.!n",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_RedirectURLs_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid RedirectURLs
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_22
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "invalid-redirect-uri",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_redirect_uri"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_RedirectURLs_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without RedirectURLs
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_23
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$REMOVE$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_RedirectURLs_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with empty RedirectURLs
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_24
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_redirect_uri"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_GrantTypes_Extra_Spaces_Trimmed_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with grant types having extra spaces
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_25
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": " authorization_code ",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_grant_type"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Multiple_GrantTypes_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with multiple grant types
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_26
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code and refresh_token",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_GrantTypes_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without grant types
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_27
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "$REMOVE$",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_GrantTypes_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with empty grant types
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_28
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_grant_type"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_GrantTypes_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid grant types
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_29
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "invalid_grant_type",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_grant_type"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_GrantTypes_Special_Character_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with grant types having special characters
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_30
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "@#$4321",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_grant_type"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Valid_ClientAuthMethods_Containing_Only_Private_key_jwt_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with grant types having valid clientAuthMethods containing only private_key_jwt
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_31
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_client_auth"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_ClientAuthMethods_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with grant types having without clientAuthMethods
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_32
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "$REMOVE$",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_ClientAuthMethods_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having empty clientAuthMethods
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_33
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_ClientAuthMethods_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having invalid clientAuthMethods
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_34
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "1234",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_client_auth"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_ClientNameLangMap_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having empty clientNameLangMap
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_35
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "$REMOVE$",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "invalid_client_name_value"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_UserResponceType_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having invalid userinfoResponseType
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_36
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS_INVALID",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_014"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Empty_UserResponceType_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having empty userinfoResponseType
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_37
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_014"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_type_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having invalid type
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_38
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "none",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_017"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_all_Valid_type_link_Smoke:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having valid type as link
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_39
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "link",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_all_Valid_type_login_Smoke:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having valid type as login
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_40
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "login",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_empty_type_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having empty type
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_41
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_017"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_SignupBannerRequired_False_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client signupBannerRequired as false
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_42
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": false,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_forgotPwdLinkRequired_False_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client forgotPwdLinkRequired as false
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_43
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": false,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having invalid consentExpireInMins
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_44
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "1440"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_015"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_String_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having invalid consentExpireInMins as string
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_45
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "StringValue"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_015"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_ConsentExpireInMins_smoke:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without consentExpireInMins
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_46
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "$REMOVE$"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_Invalid_id_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client having invalid id
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_47
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "invalid.id.value",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_id_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without id
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_48
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "$REMOVE$",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+        "clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_with_null_id_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with null id
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_49
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "null",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_002"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_Version_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without version
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_50
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "$REMOVE$",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_With_null_Version_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with null version
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_51
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "null",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_With_invalid_Version_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid version
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_52
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "2.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_With_invalid_Version_integer_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client with invalid version as integer
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_53
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "2",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+        "clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_003"
+       }
+       ]
+}'
+   Pms_CreateOIDCClient_Without_RequestTime_neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Creating OAUTH Client without requestTime
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_54
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$REMOVE$",
+      	"name": "OIDC TEST CLIENT 89766",
+        "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+        "consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_006"
+       }
+       ]
+}'
