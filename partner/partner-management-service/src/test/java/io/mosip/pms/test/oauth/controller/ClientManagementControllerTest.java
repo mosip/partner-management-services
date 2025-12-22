@@ -564,7 +564,7 @@ public class ClientManagementControllerTest {
                         .accept(MediaType.APPLICATION_JSON));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     @WithMockUser(roles = {"AUTH_PARTNER"})
     public void testGetOIDCClientV2featureDisabled() throws Exception {
         String clientId = "test-client-123";
@@ -573,6 +573,6 @@ public class ClientManagementControllerTest {
                 .when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", clientId)
-                        .accept(MediaType.APPLICATION_JSON));
+                        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 }
