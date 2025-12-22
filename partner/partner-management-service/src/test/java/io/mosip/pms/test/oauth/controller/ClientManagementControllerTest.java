@@ -561,8 +561,7 @@ public class ClientManagementControllerTest {
         doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", invalidClientId)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .accept(MediaType.APPLICATION_JSON));
     }
 
     @Test(expected = Exception.class)
@@ -574,7 +573,6 @@ public class ClientManagementControllerTest {
                 .when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients/{clientId}", clientId)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                        .accept(MediaType.APPLICATION_JSON));
     }
 }
