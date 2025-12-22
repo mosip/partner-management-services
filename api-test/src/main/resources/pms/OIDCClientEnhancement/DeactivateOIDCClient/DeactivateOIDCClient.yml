@@ -1,0 +1,35 @@
+DeactivateOIDCClientV2:
+  Pms_DeactivateOIDCClientV2_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2_01
+    description: Deactivating the OIDC Client using clientId with a valid access token
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClientResult
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+}'
+  Pms_DeactivateOIDCClientV2_With_Partner_Admin_Role:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2_01
+    description: Deactivating the OIDC Client using clientId having partneradmin role
+    role: partneradmin
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClientResult
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_Valid_Name_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+}'

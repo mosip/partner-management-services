@@ -1,0 +1,162 @@
+GetOIDCClientV2:
+  Pms_GetOIDCClientV2_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_01
+    description: Fetching OIDC Client details using a valid access token
+    role: partnerauth
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetOIDCClientV2_LoggedIn_Users_With_Partner_Admin_Role:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_02
+    description: Fetching OIDC Client details using a valid access token of partner admin role
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetOIDCClientV2_Using_PartnerId:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_03
+    description: Fetching OIDC Client details using a valid access token and partnerId
+    role: partnerauth
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetOIDCClientV2_Using_PolicyId:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_04
+    description: Fetching OIDC Client details using a valid access token and policyId
+    role: partnerauth
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetOIDCClientV2_Using_ClientName_And_SortType_Asc:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_05
+    description: Fetching OIDC Client details using ClientName and SortType as ASC
+    role: partnerauth
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "0",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "clientName",
+    "sortType": "asc",
+    "status": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetOIDCClientV2_With_Status_Active:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_06
+    description: Fetching OIDC Client details With Active Status
+    role: partnerauth
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "ACTIVE"
+}'
+    output: '{
+}'
+  Pms_GetOIDCClientV2_With_Status_Inactive:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2_07
+    description: Fetching OIDC Client details With Inactive Status
+    role: partnerauth
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "INACTIVE"
+}'
+    output: '{
+}'

@@ -1,0 +1,373 @@
+GetOIDCClientV2NegTC:
+  Pms_GetOIDCClientV2NegTC_With_Invalid_Access_Token_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_01
+    description: Fetching OIDC Client details using a invalid access token
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-401"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Different_Partner's_Access_Token_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_02
+    description: Fetching OIDC Client details using a different partner's access token
+    role: partnerdevice
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_ClientName_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_03
+    description: Fetching OIDC Client details using invalid clientName
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "/%invalidClientName%",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_orgName_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_04
+    description: Fetching OIDC Client details using invalid Organization Name
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "/%invalidOrgName%",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_PageNo_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_05
+    description: Fetching OIDC Client details using invalid Page Number
+    role: partnerauth
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/responseCode
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "abc",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_PageSize_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_06
+    description: Fetching OIDC Client details using invalid Page Size
+    role: partnerauth
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/responseCode
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "%abc/",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_PartnerId_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_07
+    description: Fetching OIDC Client details using invalid PartnerID
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "%/invalidPartnerId<>",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_PolicyGroupName_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_08
+    description: Fetching OIDC Client details using invalid Policy Group Name
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "%/invalidPolicyGroupName{}",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_PolicyName_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_09
+    description: Fetching OIDC Client details using invalid Policy Name
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "/%invalidPolicyName[]",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_10
+    description: Fetching OIDC Client details using invalid Sort Field Name
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "/%invalidSortFieldName*",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Valid_SortType_And_Without_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_11
+    description: Fetching OIDC Client details using Valid Sort Type and without Sort Field Name
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "asc",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PS_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_SortType_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_12
+    description: Fetching OIDC Client details using invalid Sort Type
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "partnerId",
+    "sortType": "%123invalid/",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_Invalid_Status_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_13
+    description: Fetching OIDC Client details using invalid Status
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "%invalid/"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetOIDCClientV2NegTC_With_PageNo_Without_PageSize_Neg:
+    endPoint: /v1/partnermanager/oidc-clients
+    uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_14
+    description: Fetching OIDC Client details using invalid Status
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "clientName": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "pageNo": "0",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PS_ERROR_006"
+        }
+    ]
+}'

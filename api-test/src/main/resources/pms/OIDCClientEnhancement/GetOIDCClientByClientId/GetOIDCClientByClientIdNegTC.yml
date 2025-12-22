@@ -1,0 +1,91 @@
+GetOIDCClientByClientIdNegTCV2:
+  Pms_GetOIDCClientByClientIdNegTCV2_With_Invalid_Access_Token_Neg:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdNegTCV2_01
+    description: Fetching OIDC client details by Client ID using invalid access token
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
+    outputTemplate: pms/error
+    input: '{
+      "clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-401"
+        }
+    ]
+}'
+  Pms_GetOIDCClientByClientIdNegTCV2_With_ClientId_Null_Neg:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdNegTCV2_02
+    description: Fetching OIDC client details by giving Client ID is null
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
+    outputTemplate: pms/error
+    input: '{
+      "clientId": "null"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_ESI_004"
+        }
+    ]
+}'
+  Pms_GetOIDCClientByClientIdNegTCV2_With_Different_Partner_Role_Neg:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdNegTCV2_03
+    description: Fetching OIDC client details by Client ID using access token of different partner role
+    role: partnerdevice
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
+    outputTemplate: pms/error
+    input: '{
+      "clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+    ]
+}'
+  Pms_GetOIDCClientByClientIdNegTCV2_With_Invalid_ClientId_Neg:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdNegTCV2_04
+    description: Fetching OIDC client details by invalid Client ID
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
+    outputTemplate: pms/error
+    input: '{
+      "clientId": "invalidclientId"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_ESI_004"
+        }
+    ]
+}'
+  Pms_GetOIDCClientByClientIdNegTCV2_With_SpecialCharacter_ClientId_Neg:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdNegTCV2_05
+    description: Fetching OIDC client details by Client ID having special characters
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
+    outputTemplate: pms/error
+    input: '{
+      "clientId": "@ClientId"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+    ]
+}'

@@ -1,0 +1,265 @@
+DeactivateOIDCClientV2NegTC:
+  Pms_DeactivateOIDCClientV2NegTC_With_Invalid_Access_Token:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_01
+    description: Deactivating the OIDC Client using clientId with invalid access token
+    role: invalidtoken
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "KER-ATH-401"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Invalid_ID:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_02
+    description: Deactivating the OIDC Client using clientId with invalid ID
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "@invalid_id",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_002"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Empty_ID:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_03
+    description: Deactivating the OIDC Client using clientId with Empty ID
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_002"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Invalid_Version:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_04
+    description: Deactivating the OIDC Client using clientId with Invalid Version
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "@invalid-version",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_003"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Empty_Version:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_05
+    description: Deactivating the OIDC Client using clientId with Empty Version
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_003"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Past_RequestTime:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_06
+    description: Deactivating the OIDC Client using clientId with Past Requesttime
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "2025-12-21T19:36:22.309Z",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_006"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Empty_RequestTime:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_07
+    description: Deactivating the OIDC Client using clientId with Empty Requesttime
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_REQUEST_ERROR_004"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Invalid_Status:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_08
+    description: Deactivating the OIDC Client using clientId with Invalid Status
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "REJECTED"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_POLICY_ERROR_024"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Empty_Status:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_09
+    description: Deactivating the OIDC Client using clientId with Empty Status
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": ""
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_POLICY_ERROR_024"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Invalid_ClientId:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_10
+    description: Deactivating the OIDC Client using invalid ClientId
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "invalid_clientId",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_ESI_004"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_SpecialCharacter_In_ClientId:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_11
+    description: Deactivating the OIDC Client using Special Character in ClientId
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "@clientId",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_PRT_099"
+         }
+       ]
+}'
+  Pms_DeactivateOIDCClientV2NegTC_With_Deactivated_ClientId:
+    endPoint: /v1/partnermanager/oidc-clients/{clientId}
+    uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_12
+    description: Deactivating the OIDC Client using Deactivated ClientId
+    role: partnerauth
+    restMethod: patch
+    inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
+    outputTemplate: pms/error
+    input: '{
+    "id": "mosip.pms.deactivate.oidc.client.patch",
+    "version": "1.0",
+    "requestTime": "$TIMESTAMP$",
+    "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
+    "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_ESI_008"
+         }
+       ]
+}'
