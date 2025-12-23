@@ -685,6 +685,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
+	<test name="UpdateOIDCAuthClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateOIDCClient.yml" />
+		<parameter name="pathParams" value="clientId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
 
 	<test name="UpdateOAuthClient">
 		<parameter name="ymlFile"
