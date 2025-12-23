@@ -5,7 +5,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_01
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
       input: '{
@@ -29,7 +28,6 @@ UpdateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
     	"status": "ACTIVE"
 }'
    Pms_UpdateOIDCClient_all_InValid_Auth_Neg:
@@ -38,7 +36,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_02
       role: invalidtoken
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -74,7 +71,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_03
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
       input: '{
@@ -98,7 +94,6 @@ UpdateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
     	"status": "ACTIVE"
 }'
    Pms_UpdateOIDCClient_Update_ClientName_Smoke_sid:
@@ -107,7 +102,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_04
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
       input: '{
@@ -131,7 +125,6 @@ UpdateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-        "clientId": "$IGNORE$",
     	"status": "ACTIVE"
 }'
    Pms_UpdateOIDCClient_With_Empty_ClientID_Neg:
@@ -140,7 +133,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_05
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -176,7 +168,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_06
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -212,7 +203,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_07
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -248,7 +238,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_08
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -284,7 +273,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_09
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -320,7 +308,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_10
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -356,7 +343,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_11
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -392,7 +378,6 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_12
       role: partnerauth
       restMethod: put
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/error 
       input: '{
@@ -429,7 +414,6 @@ UpdateOIDCClient:
       role: partnerauth
       restMethod: put
       checkOnlyStatusCodeInResponse: true
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/responseCode 
       input: '{
@@ -462,7 +446,6 @@ UpdateOIDCClient:
       role: partnerauth
       restMethod: put
       checkOnlyStatusCodeInResponse: true
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/responseCode 
       input: '{
@@ -495,7 +478,6 @@ UpdateOIDCClient:
       role: partnerauth
       restMethod: put
       checkOnlyStatusCodeInResponse: true
-      additionalDependencies: 
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
       outputTemplate: pms/responseCode 
       input: '{

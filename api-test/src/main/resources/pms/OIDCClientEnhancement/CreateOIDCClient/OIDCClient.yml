@@ -428,7 +428,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_13
       role: partnerauth
       restMethod: post
-      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient2
       outputTemplate: pms/error
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
@@ -436,7 +436,7 @@ CreateOIDCClient:
       	"requestTime": "$TIMESTAMP$",
       	"name": "OIDC TEST CLIENT 89766",
       	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-      	"publicKey": "$INVALIDJWKKEY$",
+      	"publicKey": "invalid-public-key",
       	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
