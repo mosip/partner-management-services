@@ -532,4 +532,93 @@ public class ClientManagementControllerTest {
                         .param("pageSize", String.valueOf(pageSize)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testCreateOIDCClientV2WithValidationError() throws Exception {
+        RequestWrapperV2<ClientDetailCreateRequestV3> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setId("mosip.pms.oidc.client.create");
+        ClientDetailCreateRequestV3 request = new ClientDetailCreateRequestV3();
+        request.setName("Test Client");
+        request.setPolicyId("policy-123");
+        request.setAuthPartnerId("auth-partner-123");
+        request.setPublicKey(public_key);
+        request.setLogoUri("https://example.com/logo.png");
+        request.setRedirectUris(List.of("https://example.com/redirect"));
+        request.setGrantTypes(List.of("authorization_code"));
+        request.setClientAuthMethods(List.of("private_key_jwt"));
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+
+        ResponseWrapperV2<ClientDetailResponse> errorResponse = new ResponseWrapperV2<>();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
+
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testUpdateOIDCClientV2WithValidationError() throws Exception {
+        RequestWrapperV2<ClientDetailUpdateRequestV3> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setId("mosip.pms.oidc.client.update");
+        ClientDetailUpdateRequestV3 request = new ClientDetailUpdateRequestV3();
+        request.setClientName("Updated Client");
+        request.setLogoUri("https://example.com/logo.png");
+        request.setRedirectUris(List.of("https://example.com/redirect"));
+        request.setStatus("ACTIVE");
+        request.setGrantTypes(List.of("authorization_code"));
+        request.setClientAuthMethods(List.of("private_key_jwt"));
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+
+        ResponseWrapperV2<ClientDetailResponse> errorResponse = new ResponseWrapperV2<>();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
+
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/test-client-123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void testUpdateOIDCClientV2InvalidClientId() throws Exception {
+        RequestWrapperV2<ClientDetailUpdateRequestV3> requestWrapper = new RequestWrapperV2<>();
+        requestWrapper.setId("mosip.pms.oidc.client.update");
+        ClientDetailUpdateRequestV3 request = new ClientDetailUpdateRequestV3();
+        request.setClientName("Updated Client");
+        request.setLogoUri("https://example.com/logo.png");
+        request.setRedirectUris(List.of("https://example.com/redirect"));
+        request.setStatus("ACTIVE");
+        request.setGrantTypes(List.of("authorization_code"));
+        request.setClientAuthMethods(List.of("private_key_jwt"));
+        requestWrapper.setRequest(request);
+        requestWrapper.setRequestTime(LocalDateTime.now());
+        requestWrapper.setVersion("1.0");
+
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
+        Mockito.doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
+        Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
+
+        String requestJson = objectMapper.writeValueAsString(requestWrapper);
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/invalid~client@id")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson));
+        } catch (Exception e) {
+            assert e.getCause() instanceof PartnerServiceException;
+            assert e.getCause().getMessage().contains("Invalid input for 'clientId'");
+        }
+    }
 }

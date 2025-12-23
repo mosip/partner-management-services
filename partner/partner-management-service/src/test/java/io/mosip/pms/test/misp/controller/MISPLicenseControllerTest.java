@@ -129,6 +129,21 @@ public class MISPLicenseControllerTest {
                 .content(objectMapper.writeValueAsString(searchRequest()))).andExpect(status().isOk());
 	}
 
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void searchMISPWithValidData() throws Exception{
+		PageResponseDto<MISPLicenseEntity> pageResponse = new PageResponseDto<>();
+		List<MISPLicenseEntity> data = new ArrayList<>();
+		MISPLicenseEntity entity = new MISPLicenseEntity();
+		data.add(entity);
+		pageResponse.setData(data);
+		Mockito.when(infraProvidertService.search(any(SearchDto.class))).thenReturn(pageResponse);
+		mockMvc.perform(post("/misps/search")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(searchRequest())))
+				.andExpect(status().isOk());
+	}
+
     private RequestWrapper<FilterValueDto> createFilterRequest(){
     	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
     	request.setId("mosip.partnermanagement.sbi.filtervalues");
@@ -275,6 +290,19 @@ public class MISPLicenseControllerTest {
 						.param("sortType", sortType)
 						.param("pageNo", String.valueOf(pageNo))
 						.param("pageSize", String.valueOf(pageSize)))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllMispLicensesTestWithExpiryPeriod() throws Exception {
+		Integer expiryPeriod = 15;
+		ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		when(infraProvidertService.getAllMISPLicenses(any(), any(), any(), any(), any(MISPFilterDto.class)))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/misp-licenses")
+						.param("expiryPeriod", String.valueOf(expiryPeriod)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
