@@ -721,7 +721,6 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void testIsUserConsentGivenWithNonAdminNonPolicyManager() {
-	public void testSaveUserConsentWithEmptyUserDetails() {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
@@ -739,12 +738,6 @@ public class UserManagementServiceImplTest {
 		userDetails.setConsentGivenDtimes(LocalDateTime.now());
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
 		userManagementServiceImpl.isUserConsentGiven();
-		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
-
-		UserDetails userDetails = new UserDetails();
-		userDetails.setUserId("123");
-		when(userDetailsRepository.save(any())).thenReturn(userDetails);
-		userManagementServiceImpl.saveUserConsent();
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
