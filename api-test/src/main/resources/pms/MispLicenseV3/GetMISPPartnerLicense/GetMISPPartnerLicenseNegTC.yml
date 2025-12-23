@@ -63,17 +63,17 @@ GetMISPPartnerLicenseNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
     input: '{
-		"pageNo": "$REMOVE$",
-		"pageSize": "$REMOVE$",
-		"partnerId": "$REMOVE$",
-		"orgName": "Par@@!!$$.",
-		"policyGroupName": "$REMOVE$",
-		"policyName": "$REMOVE$",
-		"mispLicenseKeyName": "$REMOVE$",
-		"sortFieldName": "$REMOVE$",
-		"sortType": "$REMOVE$",
-		"status": "$REMOVE$",
-		"expiryPeriod": "$REMOVE$"
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "Par@@!!$$.",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
 	}'
     output: '{
       "errors": [
