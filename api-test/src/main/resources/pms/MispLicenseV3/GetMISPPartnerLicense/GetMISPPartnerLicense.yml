@@ -30,20 +30,9 @@ GetMISPPartnerLicense:
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
-        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseInput
         outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
         input: '{
-        "pageNo": "$REMOVE$",
-        "pageSize": "$REMOVE$",
-        "partnerId": "$REMOVE$",
-        "orgName": "$REMOVE$",
-        "policyGroupName": "$REMOVE$",
-        "policyName": "$REMOVE$",
-        "mispLicenseKeyName": "$REMOVE$",
-        "sortFieldName": "$REMOVE$",
-        "sortType": "$REMOVE$",
-        "status": "$REMOVE$",
-        "expiryPeriod": "$REMOVE$"
 }'
         output: '{
 }'
@@ -246,20 +235,9 @@ GetMISPPartnerLicense:
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
-        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseInput
         outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
         input: '{
-        "pageNo": "$REMOVE$",
-        "pageSize": "$REMOVE$",
-        "partnerId": "$REMOVE$",
-        "orgName": "$REMOVE$",
-        "policyGroupName": "$REMOVE$",
-        "policyName": "$REMOVE$",
-        "mispLicenseKeyName": "$REMOVE$",
-        "sortFieldName": "$REMOVE$",
-        "sortType": "$REMOVE$",
-        "status": "$REMOVE$",
-        "expiryPeriod": "$REMOVE$"
 }'
         output: '{
 }'

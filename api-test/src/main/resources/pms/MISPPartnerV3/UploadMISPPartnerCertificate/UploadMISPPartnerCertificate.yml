@@ -111,6 +111,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_09
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate112211
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
