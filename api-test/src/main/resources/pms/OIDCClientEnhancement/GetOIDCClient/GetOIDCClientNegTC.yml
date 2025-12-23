@@ -5,19 +5,9 @@ GetOIDCClientV2NegTC:
     description: Fetching OIDC Client details using a invalid access token
     role: invalidtoken
     restMethod: get
-    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientInput
     outputTemplate: pms/error
     input: '{
-    "clientName": "$REMOVE$",
-    "orgName": "$REMOVE$",
-    "pageNo": "$REMOVE$",
-    "pageSize": "$REMOVE$",
-    "partnerId": "$REMOVE$",
-    "policyGroupName": "$REMOVE$",
-    "policyName": "$REMOVE$",
-    "sortFieldName": "$REMOVE$",
-    "sortType": "$REMOVE$",
-    "status": "$REMOVE$"
 }'
     output: '{
       "errors": [
@@ -32,19 +22,9 @@ GetOIDCClientV2NegTC:
     description: Fetching OIDC Client details using a different partner's access token
     role: partnerdevice
     restMethod: get
-    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientInput
     outputTemplate: pms/error
     input: '{
-    "clientName": "$REMOVE$",
-    "orgName": "$REMOVE$",
-    "pageNo": "$REMOVE$",
-    "pageSize": "$REMOVE$",
-    "partnerId": "$REMOVE$",
-    "policyGroupName": "$REMOVE$",
-    "policyName": "$REMOVE$",
-    "sortFieldName": "$REMOVE$",
-    "sortType": "$REMOVE$",
-    "status": "$REMOVE$"
 }'
     output: '{
       "errors": [

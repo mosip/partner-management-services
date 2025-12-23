@@ -6,19 +6,9 @@ GetOIDCClientV2:
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
-    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientInput
     outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
     input: '{
-    "clientName": "$REMOVE$",
-    "orgName": "$REMOVE$",
-    "pageNo": "$REMOVE$",
-    "pageSize": "$REMOVE$",
-    "partnerId": "$REMOVE$",
-    "policyGroupName": "$REMOVE$",
-    "policyName": "$REMOVE$",
-    "sortFieldName": "$REMOVE$",
-    "sortType": "$REMOVE$",
-    "status": "$REMOVE$"
 }'
     output: '{
 }'
@@ -29,19 +19,9 @@ GetOIDCClientV2:
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
-    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
+    inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientInput
     outputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientResult
     input: '{
-    "clientName": "$REMOVE$",
-    "orgName": "$REMOVE$",
-    "pageNo": "$REMOVE$",
-    "pageSize": "$REMOVE$",
-    "partnerId": "$REMOVE$",
-    "policyGroupName": "$REMOVE$",
-    "policyName": "$REMOVE$",
-    "sortFieldName": "$REMOVE$",
-    "sortType": "$REMOVE$",
-    "status": "$REMOVE$"
 }'
     output: '{
 }'
