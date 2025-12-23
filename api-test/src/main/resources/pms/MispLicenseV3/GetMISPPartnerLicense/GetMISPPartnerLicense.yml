@@ -292,7 +292,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_ExpiryPeriod_NotPassing_Any_Value:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_14
-        description: Fetch MISP partner licenses sorted by expiryPeriod without passing any value
+        description: Fetch MISP partner licenses with expiryPeriod without passing any value
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
