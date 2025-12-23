@@ -17,6 +17,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -894,6 +895,21 @@ public class PolicyManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestWithValidationError() throws Exception {
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> errorResponse = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
+
+		policyManagementController.deactivatePolicyGroup("12345", requestWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
 }

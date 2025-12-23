@@ -466,7 +466,7 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(response);
 	}
 
-	@Test(expected = PartnerServiceException.class)
+	@Test (expected = PartnerServiceException.class)
 	public void createClientDetailCreateRequest() throws Exception {
 
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(new ClientDetail()));
@@ -488,6 +488,94 @@ public class ClientManagementServiceImplTest {
 		createRequest.setPublicKey(public_key);
 
 		serviceImpl.createOIDCClient(createRequest);
+	}
+
+	@Test
+	public void testCreateOIDCClientSuccessfulCreation() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("authPartnerId");
+		List<String> clientAuthMethods = new ArrayList<>();
+		clientAuthMethods.add("private_key_jwt");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(clientAuthMethods);
+		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		request.setRedirectUris(clientAuthMethods);
+		request.setName("ClientName");
+
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(true);
+		partner.setUserId("123");
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setPolicy_type("Auth");
+		authPolicy.setId("policy");
+		authPolicy.setIsActive(true);
+		authPolicy.setPolicyFileId("{\"allowedKycAttributes\":[{\"attributeName\":\"name\"}],\"allowedAuthTypes\":[{\"authType\":\"otp\",\"mandatory\":false}]}");
+		when(authPolicyRepository.findById(any())).thenReturn(Optional.of(authPolicy));
+
+		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest.setPartner(partner);
+		partnerPolicyRequestList.add(partnerPolicyRequest);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(any(), any())).thenReturn(partnerPolicyRequestList);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(any(), any(), any())).thenReturn(partnerPolicyRequestList);
+
+		Set<String> supportedClaims = new HashSet<>();
+		supportedClaims.add("name");
+		when(authenticationContextClassRefUtil.getPolicySupportedClaims(any())).thenReturn(supportedClaims);
+
+		Set<String> acrValues = new HashSet<>();
+		acrValues.add("mosip:idp:acr:static-code");
+		when(authenticationContextClassRefUtil.getAuthFactors(any())).thenReturn(acrValues);
+
+		Map<String, Object> esignetResponse = new HashMap<>();
+		ClientDetailResponse clientDetailResponse = new ClientDetailResponse();
+		clientDetailResponse.setClientId("clientId");
+		clientDetailResponse.setStatus("ACTIVE");
+		esignetResponse.put("response", clientDetailResponse);
+		when(restUtil.postApi(anyString(), any(), anyString(), anyString(), any(), any(), any())).thenReturn(esignetResponse);
+
+		when(environment.getProperty("mosip.pms.esignet.oidc-client-create-url")).thenReturn("http://esignet/create");
+		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("http://cert/get");
+
+		Map<String, Object> certResponse = new HashMap<>();
+		PartnerCertDownloadResponeDto certDto = new PartnerCertDownloadResponeDto();
+		certDto.setCertificateData("certData");
+		certResponse.put("response", certDto);
+		when(restUtil.getApi(anyString(), any(), any())).thenReturn(certResponse);
+
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		ClientDetail savedClient = new ClientDetail();
+		savedClient.setId("clientId");
+		savedClient.setStatus("ACTIVE");
+		when(clientDetailRepository.save(any())).thenReturn(savedClient);
+
+		ClientDetailResponse response = serviceImpl.createOIDCClient(request);
+
+		assertNotNull(response);
+		assertNotNull(response.getClientId());
+		assertEquals("ACTIVE", response.getStatus());
 	}
 
 	@Test (expected = PartnerServiceException.class)
