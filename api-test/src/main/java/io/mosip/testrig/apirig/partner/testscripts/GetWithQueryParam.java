@@ -89,7 +89,7 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 		}
 
 		String[] templateFields = testCaseDTO.getTemplateFields();
-		
+
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
 			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);

@@ -1068,7 +1068,7 @@ GetMISPPartnerLicenseNegTC:
     input: '{
     "pageNo": "$REMOVE$",
     "pageSize": "$REMOVE$",
-    "partnerId": "pms-111551",
+    "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$",
     "orgName": "$REMOVE$",
     "policyGroupName": "$REMOVE$",
     "policyName": "$REMOVE$",
