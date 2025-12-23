@@ -688,4 +688,70 @@ public class PartnerManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(getRequestWrapper()))).andExpect(status().isOk());
 	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void updateAPIKeyExpiryTestValidationPresent() throws Exception {
+		RequestWrapperV2<io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto();
+		requestDto.setApiKeyExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto> errorResponse = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policy/policy456/apiKey/expiry-date")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper)))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void updateAPIKeyExpiryTestSuccess() throws Exception {
+		RequestWrapperV2<io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto();
+		requestDto.setApiKeyExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto> response = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
+		Mockito.when(partnerManagementService.updateAPIKeyExpiry(anyString(), anyString(), any())).thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policy/policy456/apiKey/expiry-date")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper)))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
+	public void getPartnersDeatilsTest() throws Exception {
+		PartnerDetailsResponse partnerDetailsResponse = new PartnerDetailsResponse();
+		Mockito.when(partnerManagementService.getPartners(any())).thenReturn(partnerDetailsResponse);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/v2")
+				.param("partnerType", "Auth_Partner"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
+	public void getPartnersDeatilsTestWithoutPartnerType() throws Exception {
+		PartnerDetailsResponse partnerDetailsResponse = new PartnerDetailsResponse();
+		Mockito.when(partnerManagementService.getPartners(Optional.empty())).thenReturn(partnerDetailsResponse);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/v2"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
+	public void getPartnersDeatilsTestResponseValidation() throws Exception {
+		PartnerDetailsResponse partnerDetailsResponse = new PartnerDetailsResponse();
+		Mockito.when(partnerManagementService.getPartners(Optional.of("Auth_Partner"))).thenReturn(partnerDetailsResponse);
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/v2")
+				.param("partnerType", "Auth_Partner"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value("mosip.partnermanagement.partners.retrieve"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.version").value("1.0"));
+	}
 }
