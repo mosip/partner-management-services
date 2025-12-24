@@ -206,7 +206,7 @@ CreateMISPPartner:
         "partnerId": "pms-111545",
         "status": "InProgress"
 }'
-   Pms_MISPPartnerRegistration_For_Without_PolicyId_Smoke:
+   Pms_MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_09
       description: Create MISP Partner Self Registration Without Policy Id

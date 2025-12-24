@@ -759,7 +759,6 @@ GetAllNotifications:
       description: Get All Notifications with API Key Notification Type and Certificate ID
       uniqueIdentifier: TC_PMS_GetAllNotifications_50
       restMethod: get
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
       outputTemplate: pms/error
       input: '{

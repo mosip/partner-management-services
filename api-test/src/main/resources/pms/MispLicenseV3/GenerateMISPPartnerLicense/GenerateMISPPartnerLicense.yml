@@ -116,12 +116,12 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-112211",
+        "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid$",
         "policyId": "",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "pms-112211",
+        "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid$",
         "licenseKeyStatus": "ACTIVE"
 }'
