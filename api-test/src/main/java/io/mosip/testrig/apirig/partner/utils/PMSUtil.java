@@ -1,11 +1,15 @@
 package io.mosip.testrig.apirig.partner.utils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.testng.SkipException;
 
 import io.mosip.testrig.apirig.dbaccess.DBManager;
@@ -122,6 +126,30 @@ public class PMSUtil extends AdminTestUtil {
 		validateResponse(response, testCaseName, null);
 	}
 	
+	public static String normalizeDateFields(String jsonString) {
+
+        List<String> DATE_FIELDS = List.of(
+                "createdFromDate",
+                "createdToDate",
+                "expiryDate"
+        );
+
+        JSONObject json = new JSONObject(jsonString);
+
+        for (String field : DATE_FIELDS) {
+            if (json.has(field) && !json.isNull(field)) {
+
+                String value = json.optString(field);
+
+                if (!value.isBlank() && value.contains("T")) {
+                    LocalDate dateOnly = LocalDateTime.parse(value).toLocalDate();
+                    json.put(field, dateOnly.toString());
+                }
+            }
+        }
+
+        return json.toString();
+    }
 	private void handleIdKeys(String testCaseName, String idKeyName) {
 	    if (idKeyName != null) {
 	        String[] fieldNames = idKeyName.split(",");

@@ -10,7 +10,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'
@@ -30,7 +30,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -50,7 +50,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "$ID:PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid_partnerId$",
    "policyId": "policyid",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -74,7 +74,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'
@@ -92,7 +92,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "asdfgrwg",
    "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -114,7 +114,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "partner-111997",
    "policyId": "asfv",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -159,7 +159,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "partner-111997",
    "policyId": "MDSPK",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'

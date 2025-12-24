@@ -354,7 +354,7 @@ GetListOfAllSBI:
 }'
       output: ' {
 }'
-   Pms_GetListOfAllSBI_Filter_Expiry_Period_30_days:
+   Pms_GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid:
       endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
       uniqueIdentifier: TC_PMS_SBI_List_22
       description: Fetching all the SBI details filter by Expiry period 30 days

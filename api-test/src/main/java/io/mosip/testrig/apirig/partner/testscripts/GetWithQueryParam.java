@@ -89,6 +89,9 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 		}
 
 		String[] templateFields = testCaseDTO.getTemplateFields();
+		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
+		inputJson = inputJsonKeyWordHandeler(inputJson, testCaseName);
+		inputJson = normalizeDateFields(inputJson);
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
@@ -110,8 +113,7 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 		}
 
 		else {
-			response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
+			response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
 		validateResponse(response, testCaseName);
