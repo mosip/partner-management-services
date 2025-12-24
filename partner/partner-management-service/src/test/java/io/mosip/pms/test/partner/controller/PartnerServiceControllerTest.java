@@ -19,6 +19,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
+import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -687,6 +688,63 @@ public class PartnerServiceControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/v3?status=approved")).andExpect(MockMvcResultMatchers.status().isOk());
 
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void updatePartnerInfoTest() throws Exception {
+        PartnerResponse response = new PartnerResponse();
+        response.setPartnerId("12345");
+        response.setStatus("Active");
+
+        Mockito.when(partnerService.updatePartnerDetails(any(), anyString())).thenReturn(response);
+
+        RequestWrapper<PartnerUpdateDto> request = new RequestWrapper<>();
+        PartnerUpdateDto updateDto = new PartnerUpdateDto();
+        updateDto.setAddress("New Address");
+        updateDto.setContactNumber("9876543210");
+        request.setRequest(updateDto);
+        request.setId("test-id");
+        request.setVersion("1.0");
+
+        mockMvc.perform(put("/partners/v2/12345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void updatePartnerInfoTestWithServiceException() throws Exception {
+        Mockito.when(partnerService.updatePartnerDetails(any(), anyString()))
+                .thenThrow(new RuntimeException("Service error"));
+
+        RequestWrapper<PartnerUpdateDto> request = new RequestWrapper<>();
+        PartnerUpdateDto updateDto = new PartnerUpdateDto();
+        updateDto.setAddress("New Address");
+        updateDto.setContactNumber("9876543210");
+        request.setRequest(updateDto);
+        request.setId("test-id");
+        request.setVersion("1.0");
+
+        mockMvc.perform(put("/partners/v2/12345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"AUTH_PARTNER"})
+    public void updatePartnerInfoTestWithNullRequest() throws Exception {
+        RequestWrapper<PartnerUpdateDto> request = new RequestWrapper<>();
+        request.setRequest(null);
+        request.setId("test-id");
+        request.setVersion("1.0");
+
+        mockMvc.perform(put("/partners/v2/12345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError());
     }
 
 }
