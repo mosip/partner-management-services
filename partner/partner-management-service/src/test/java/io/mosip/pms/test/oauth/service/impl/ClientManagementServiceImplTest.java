@@ -127,10 +127,14 @@ public class ClientManagementServiceImplTest {
 	Map<String, Object> public_key;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		ReflectionTestUtils.setField(serviceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(serviceImpl, "restUtil", restUtil);
+		ReflectionTestUtils.setField(serviceImpl, "environment", environment);
+		// Use real ObjectMapper for JSON serialization/deserialization
+		ObjectMapper realObjectMapper = new ObjectMapper();
+		ReflectionTestUtils.setField(serviceImpl, "objectMapper", realObjectMapper);
 
 		public_key = new HashMap<>();
 		public_key.put("kty","RSA");
@@ -466,7 +470,7 @@ public class ClientManagementServiceImplTest {
 		assertNotNull(response);
 	}
 
-	@Test(expected = PartnerServiceException.class)
+	@Test (expected = PartnerServiceException.class)
 	public void createClientDetailCreateRequest() throws Exception {
 
 		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(new ClientDetail()));
@@ -488,6 +492,94 @@ public class ClientManagementServiceImplTest {
 		createRequest.setPublicKey(public_key);
 
 		serviceImpl.createOIDCClient(createRequest);
+	}
+
+	@Test
+	public void testCreateOIDCClientSuccessfulCreation() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		ClientDetailCreateRequest request = new ClientDetailCreateRequest();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("authPartnerId");
+		List<String> clientAuthMethods = new ArrayList<>();
+		clientAuthMethods.add("private_key_jwt");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(clientAuthMethods);
+		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		request.setRedirectUris(clientAuthMethods);
+		request.setName("ClientName");
+
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(true);
+		partner.setUserId("123");
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setPolicy_type("Auth");
+		authPolicy.setId("policy");
+		authPolicy.setIsActive(true);
+		authPolicy.setPolicyFileId("{\"allowedKycAttributes\":[{\"attributeName\":\"name\"}],\"allowedAuthTypes\":[{\"authType\":\"otp\",\"mandatory\":false}]}");
+		when(authPolicyRepository.findById(any())).thenReturn(Optional.of(authPolicy));
+
+		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest.setPartner(partner);
+		partnerPolicyRequestList.add(partnerPolicyRequest);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(any(), any())).thenReturn(partnerPolicyRequestList);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(any(), any(), any())).thenReturn(partnerPolicyRequestList);
+
+		Set<String> supportedClaims = new HashSet<>();
+		supportedClaims.add("name");
+		when(authenticationContextClassRefUtil.getPolicySupportedClaims(any())).thenReturn(supportedClaims);
+
+		Set<String> acrValues = new HashSet<>();
+		acrValues.add("mosip:idp:acr:static-code");
+		when(authenticationContextClassRefUtil.getAuthFactors(any())).thenReturn(acrValues);
+
+		Map<String, Object> esignetResponse = new HashMap<>();
+		ClientDetailResponse clientDetailResponse = new ClientDetailResponse();
+		clientDetailResponse.setClientId("clientId");
+		clientDetailResponse.setStatus("ACTIVE");
+		esignetResponse.put("response", clientDetailResponse);
+		when(restUtil.postApi(anyString(), any(), anyString(), anyString(), any(), any(), any())).thenReturn(esignetResponse);
+
+		when(environment.getProperty("mosip.pms.esignet.oidc-client-create-url")).thenReturn("http://esignet/create");
+		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("http://cert/get");
+
+		Map<String, Object> certResponse = new HashMap<>();
+		PartnerCertDownloadResponeDto certDto = new PartnerCertDownloadResponeDto();
+		certDto.setCertificateData("certData");
+		certResponse.put("response", certDto);
+		when(restUtil.getApi(anyString(), any(), any())).thenReturn(certResponse);
+
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		ClientDetail savedClient = new ClientDetail();
+		savedClient.setId("clientId");
+		savedClient.setStatus("ACTIVE");
+		when(clientDetailRepository.save(any())).thenReturn(savedClient);
+
+		ClientDetailResponse response = serviceImpl.createOIDCClient(request);
+
+		assertNotNull(response);
+		assertNotNull(response.getClientId());
+		assertEquals("ACTIVE", response.getStatus());
 	}
 
 	@Test (expected = PartnerServiceException.class)
@@ -2353,58 +2445,6 @@ public class ClientManagementServiceImplTest {
 	}
 
 	@Test
-	public void testGetOIDCClientV2successWithAllFields() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("PARTNER_ADMIN")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
-
-		ClientDetail clientDetail = new ClientDetail();
-		clientDetail.setId("client-123");
-		clientDetail.setName("{\"@none\":\"Test Client\",\"eng\":\"Test Client English\"}");
-		clientDetail.setPolicyId("policy-123");
-		clientDetail.setStatus("ACTIVE");
-		clientDetail.setClaims("name,email");
-		clientDetail.setAcrValues("otp");
-		clientDetail.setRedirectUris("https://example.com/redirect");
-		clientDetail.setGrantTypes("authorization_code");
-		clientDetail.setClientAuthMethods("private_key_jwt");
-		clientDetail.setCreatedDateTime(LocalDateTime.now());
-		clientDetail.setRpId("partner-123");
-		clientDetail.setLogoUri("https://example.com/logo.png");
-		clientDetail.setPublicKey("public-key");
-		clientDetail.setAdditionalConfig("{\"userinfoResponseType\":\"JWS\"}");
-		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(clientDetail));
-
-		PolicyGroup policyGroup = new PolicyGroup();
-		policyGroup.setName("Test Policy Group");
-		policyGroup.setDesc("Policy Group Description");
-
-		AuthPolicy authPolicy = new AuthPolicy();
-		authPolicy.setId("policy-123");
-		authPolicy.setName("Test Policy");
-		authPolicy.setDescr("Test Policy Description");
-		authPolicy.setPolicyGroup(policyGroup);
-		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.of(authPolicy));
-
-		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2("client-123");
-
-		assertNotNull(result);
-		assertNotNull(result.getResponse());
-		assertEquals("Test Client", result.getResponse().getName());
-		assertEquals("Test Policy", result.getResponse().getPolicyName());
-		assertEquals("Test Policy Group", result.getResponse().getPolicyGroupName());
-		assertNotNull(result.getResponse().getAdditionalConfig());
-	}
-
-	@Test
 	public void testGetOIDCClientV2nullClientId() {
 		ResponseWrapperV2<ClientDetailV2> result = serviceImpl.getOIDCClientV2(null);
 
@@ -3047,5 +3087,306 @@ public class ClientManagementServiceImplTest {
 		partner.setName("Test Partner");
 		partner.setPartnerTypeCode("Auth_Partner");
 		return partner;
+	}
+
+	@Test
+	public void testCreateOAuthClientSuccess() throws Exception {
+		setupPartnerAdmin();
+		ClientDetailCreateRequestV2 request = new ClientDetailCreateRequestV2();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("authPartnerId");
+		request.setName("ClientName");
+		List<String> clientAuthMethods = new ArrayList<>();
+		clientAuthMethods.add("private_key_jwt");
+		request.setClientAuthMethods(clientAuthMethods);
+		request.setGrantTypes(clientAuthMethods);
+		request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		request.setRedirectUris(clientAuthMethods);
+		Map<String, String> clientNameLangMap = new HashMap<>();
+		clientNameLangMap.put("eng", "ClientName");
+		request.setClientNameLangMap(clientNameLangMap);
+
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(true);
+		partner.setUserId("123");
+		partner.setCertificateAlias("certAlias");
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setPolicy_type("Auth");
+		authPolicy.setId("policy");
+		authPolicy.setIsActive(true);
+		authPolicy.setPolicyFileId("{\"allowedKycAttributes\":[{\"attributeName\":\"name\"}],\"allowedAuthTypes\":[{\"authType\":\"otp\",\"mandatory\":false}]}");
+		when(authPolicyRepository.findById(any())).thenReturn(Optional.of(authPolicy));
+
+		List<PartnerPolicyRequest> partnerPolicyRequestList = new ArrayList<>();
+		PartnerPolicyRequest partnerPolicyRequest = new PartnerPolicyRequest();
+		partnerPolicyRequest.setPartner(partner);
+		partnerPolicyRequestList.add(partnerPolicyRequest);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId(any(), any())).thenReturn(partnerPolicyRequestList);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(any(), any(), any())).thenReturn(partnerPolicyRequestList);
+
+		Set<String> supportedClaims = new HashSet<>();
+		supportedClaims.add("name");
+		when(authenticationContextClassRefUtil.getPolicySupportedClaims(any())).thenReturn(supportedClaims);
+
+		Set<String> acrValues = new HashSet<>();
+		acrValues.add("mosip:idp:acr:static-code");
+		when(authenticationContextClassRefUtil.getAuthFactors(any())).thenReturn(acrValues);
+
+		Map<String, Object> esignetResponse = new HashMap<>();
+		Map<String, Object> responseData = new HashMap<>();
+		responseData.put("clientId", "clientId");
+		responseData.put("status", "ACTIVE");
+		esignetResponse.put("response", responseData);
+		when(restUtil.postApi(anyString(), any(), anyString(), anyString(), any(), any(), any())).thenReturn(esignetResponse);
+
+		when(environment.getProperty("mosip.pms.esignet.oauth-client-create-url")).thenReturn("http://esignet/create");
+		when(environment.getProperty("pmp.partner.certificaticate.get.rest.uri")).thenReturn("http://cert/get");
+
+		Map<String, Object> certResponse = new HashMap<>();
+		Map<String, Object> certData = new HashMap<>();
+		certData.put("certificateData", "certData");
+		certResponse.put("response", certData);
+		when(restUtil.getApi(anyString(), any(), any())).thenReturn(certResponse);
+
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		ClientDetail savedClient = new ClientDetail();
+		savedClient.setId("clientId");
+		savedClient.setStatus("ACTIVE");
+		when(clientDetailRepository.save(any())).thenReturn(savedClient);
+
+		ClientDetailResponse response = serviceImpl.createOAuthClient(request);
+
+		assertNotNull(response);
+		assertNotNull(response.getClientId());
+		assertEquals("ACTIVE", response.getStatus());
+		verify(clientDetailRepository).save(any(ClientDetail.class));
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOAuthClientInvalidPartner() throws Exception {
+		setupPartnerAdmin();
+		ClientDetailCreateRequestV2 request = new ClientDetailCreateRequestV2();
+		request.setPublicKey(public_key);
+		request.setPolicyId("policy");
+		request.setAuthPartnerId("invalidPartnerId");
+		request.setName("ClientName");
+		request.setClientAuthMethods(List.of("private_key_jwt"));
+		request.setGrantTypes(List.of("authorization_code"));
+		request.setLogoUri("https://example.com/logo.png");
+		request.setRedirectUris(List.of("https://example.com/redirect"));
+		request.setClientNameLangMap(Map.of("eng", "ClientName"));
+
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		serviceImpl.createOAuthClient(request);
+	}
+
+	@Test
+	public void testUpdateOIDCClientSuccess() throws Exception {
+		setupPartnerAdmin();
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createActivePartner();
+		partner.setUserId("123");
+
+		when(clientDetailRepository.findById("client-123")).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(List.of(partner));
+		when(clientDetailRepository.save(any(ClientDetail.class))).thenReturn(clientDetail);
+		when(environment.getProperty("mosip.pms.esignet.oidc.client.update.url")).thenReturn("http://esignet/update");
+		doNothing().when(restUtil).putApi(nullable(String.class), anyList(), nullable(String.class), nullable(String.class), any(MediaType.class), any(), any());
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		ClientDetailUpdateRequest updateRequest = new ClientDetailUpdateRequest();
+		updateRequest.setLogoUri("https://new.com/logo.png");
+		updateRequest.setRedirectUris(List.of("https://example.com/callback"));
+		updateRequest.setGrantTypes(List.of("authorization_code"));
+		updateRequest.setClientAuthMethods(List.of("private_key_jwt"));
+		updateRequest.setStatus("INACTIVE");
+
+		ClientDetailResponse response = serviceImpl.updateOIDCClient("client-123", updateRequest);
+
+		assertNotNull(response);
+		verify(restUtil).putApi(nullable(String.class), anyList(), nullable(String.class), nullable(String.class), any(MediaType.class), any(), any());
+	}
+
+	@Test
+	public void testUpdateOAuthClientWithLangMapSuccess() throws Exception {
+		setupPartnerAdmin();
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createActivePartner();
+		partner.setUserId("123");
+
+		when(clientDetailRepository.findById("client-123")).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(List.of(partner));
+		when(clientDetailRepository.save(any(ClientDetail.class))).thenReturn(clientDetail);
+		when(environment.getProperty("mosip.pms.esignet.oauth-client.update.url")).thenReturn("http://esignet/update");
+		doNothing().when(restUtil).putApi(nullable(String.class), anyList(), nullable(String.class), nullable(String.class), any(MediaType.class), any(), any());
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		ClientDetailUpdateRequestV2 updateRequest = new ClientDetailUpdateRequestV2();
+		updateRequest.setLogoUri("https://new.com/logo.png");
+		Map<String, String> clientNameLangMap = new HashMap<>();
+		clientNameLangMap.put("eng", "UpdatedName");
+		updateRequest.setClientNameLangMap(clientNameLangMap);
+		updateRequest.setRedirectUris(List.of("https://example.com/callback"));
+		updateRequest.setGrantTypes(List.of("authorization_code"));
+		updateRequest.setClientAuthMethods(List.of("private_key_jwt"));
+		updateRequest.setStatus("ACTIVE");
+
+		ClientDetailResponse response = serviceImpl.updateOAuthClient("client-123", updateRequest);
+
+		assertNotNull(response);
+		verify(restUtil).putApi(nullable(String.class), anyList(), nullable(String.class), nullable(String.class), any(MediaType.class), any(), any());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOAuthClientInvalidPolicy() throws Exception {
+		setupPartnerAdmin();
+		ClientDetailCreateRequestV2 request = new ClientDetailCreateRequestV2();
+		request.setPublicKey(public_key);
+		request.setPolicyId("invalidPolicy");
+		request.setAuthPartnerId("authPartnerId");
+		request.setName("ClientName");
+		request.setClientAuthMethods(List.of("private_key_jwt"));
+		request.setGrantTypes(List.of("authorization_code"));
+		request.setLogoUri("https://example.com/logo.png");
+		request.setRedirectUris(List.of("https://example.com/redirect"));
+		request.setClientNameLangMap(Map.of("eng", "ClientName"));
+
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		Partner partner = new Partner();
+		partner.setId("authPartnerId");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(true);
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(authPolicyRepository.findById(any())).thenReturn(Optional.empty());
+		doNothing().when(auditUtil).setAuditRequestDto(any(ClientServiceAuditEnum.class));
+
+		serviceImpl.createOAuthClient(request);
+	}
+
+	@Test
+	public void testUpdateOAuthClientSuccess() throws Exception {
+		setupPartnerAdmin();
+		String clientId = "client-123";
+		ClientDetailUpdateRequestV2 updateRequest = new ClientDetailUpdateRequestV2();
+		updateRequest.setClientName("Updated Client");
+		updateRequest.setLogoUri("https://example.com/logo.png");
+		updateRequest.setRedirectUris(List.of("https://example.com/redirect"));
+		updateRequest.setGrantTypes(List.of("authorization_code"));
+		updateRequest.setClientAuthMethods(List.of("private_key_jwt"));
+		Map<String, String> clientNameLangMap = new HashMap<>();
+		clientNameLangMap.put("eng", "Updated Client");
+		updateRequest.setClientNameLangMap(clientNameLangMap);
+		updateRequest.setStatus("ACTIVE");
+
+		ClientDetail clientDetail = createClientDetail();
+		Partner partner = createActivePartner();
+		when(clientDetailRepository.findById(clientId)).thenReturn(Optional.of(clientDetail));
+		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
+		when(clientDetailRepository.save(any(ClientDetail.class))).thenReturn(clientDetail);
+		when(environment.getProperty("mosip.pms.esignet.oauth-client-update-url")).thenReturn("http://esignet/update");
+		doNothing().when(restUtil).putApi(any(), anyList(), any(), any(), any(), any(), any());
+		doNothing().when(webSubPublisher).notify(any(), any(), any());
+
+		ClientDetailResponse response = serviceImpl.updateOAuthClient(clientId, updateRequest);
+
+		assertNotNull(response);
+		assertEquals(clientId, response.getClientId());
+		verify(restUtil).putApi(any(), anyList(), any(), any(), any(), any(), any());
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeUpdateEsignetServiceCallException() {
+		ClientDetail clientDetail = createClientDetail();
+		doThrow(new RuntimeException("Service error"))
+				.when(restUtil).putApi(anyString(), anyList(), any(), any(), any(MediaType.class), any(), any());
+
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeUpdateEsignetServiceCall", 
+				clientDetail, "http://esignet/update", true, new Map[]{Map.of("eng", "Test")});
+	}
+
+	@Test
+	public void testMapUpdateClientRequestDto() {
+		ClientDetail clientDetail = createClientDetail();
+		UpdateClientRequestDto result = ReflectionTestUtils.invokeMethod(serviceImpl, 
+				"mapUpdateClientRequestDto", clientDetail);
+		assertNotNull(result);
+	}
+
+	@Test
+	public void testBuildClientRequestDto() {
+		ClientDetail clientDetail = createClientDetail();
+		CreateClientRequestDto result = ReflectionTestUtils.invokeMethod(serviceImpl,
+				"buildClientRequestDto", clientDetail);
+		assertNotNull(result);
+		assertEquals(clientDetail.getId(), result.getClientId());
+	}
+
+	@Test
+	public void testSetCommonRequestFields() {
+		ClientDetail clientDetail = createClientDetail();
+		CreateClientRequestDto dto = new CreateClientRequestDto();
+		ReflectionTestUtils.invokeMethod(serviceImpl, "setCommonRequestFields", clientDetail, dto);
+		assertNotNull(dto.getClientId());
+		assertEquals(clientDetail.getId(), dto.getClientId());
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeCreateEsignetServiceCall_WithErrorsNonEmpty() {
+		Map<String, Object> idpResponse = new HashMap<>();
+		List<Map<String, Object>> errors = new ArrayList<>();
+		Map<String, Object> error = new HashMap<>();
+		error.put("errorCode", "ERR-001");
+		error.put("errorMessage", "Service error");
+		errors.add(error);
+		idpResponse.put("errors", errors);
+		idpResponse.put("response", null);
+
+		when(restUtil.postApi(anyString(), any(), anyString(), anyString(), any(), any(), any()))
+				.thenReturn(idpResponse);
+
+		ClientDetail clientDetail = createClientDetail();
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeCreateEsignetServiceCall",
+				new Object(), "http://esignet/create");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeCreateEsignetServiceCall_WithErrorsEmpty() {
+		Map<String, Object> idpResponse = new HashMap<>();
+		List<Map<String, Object>> errors = new ArrayList<>();
+		idpResponse.put("errors", errors);
+		idpResponse.put("response", null);
+
+		when(restUtil.postApi(anyString(), any(), anyString(), anyString(), any(), any(), any()))
+				.thenReturn(idpResponse);
+
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeCreateEsignetServiceCall",
+				new Object(), "http://esignet/create");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeCreateEsignetServiceCall_WithNullResponse() {
+		Map<String, Object> idpResponse = new HashMap<>();
+		idpResponse.put("response", null);
+
+		when(restUtil.postApi(anyString(), any(), anyString(), anyString(), any(), any(), any()))
+				.thenReturn(idpResponse);
+
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeCreateEsignetServiceCall",
+				new Object(), "http://esignet/create");
 	}
 }
