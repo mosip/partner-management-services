@@ -705,7 +705,56 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
-
+	<test name="DeactivateOIDCClientV2">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient.yml" />
+		<parameter name="pathParams" value="clientId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="DeactivateOIDCClientNegTC">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClientNegTC.yml" />
+		<parameter name="pathParams" value="clientId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GetOIDCClient">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetOIDCClientNegTC">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientNegTC.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetOIDCClientByClientId">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetOIDCClientByClientIdNegTC">
+		<parameter name="ymlFile"
+			value="pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientIdNegTC.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
 	<test name="UpdateOAuthClient">
 		<parameter name="ymlFile"
 			value="pms/OIDCClient/UpdateOIDCClient.yml" />
