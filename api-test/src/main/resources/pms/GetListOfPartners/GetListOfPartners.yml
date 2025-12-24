@@ -715,11 +715,11 @@ GetListOfPartners:
       restMethod: get
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersOutputResult
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "totalResults": "0"
 }'
    Pms_GetListOfPartners_With_Empty_Status_Neg:
       endPoint: /v1/partnermanager/admin-partners?status=
@@ -729,11 +729,11 @@ GetListOfPartners:
       restMethod: get
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersOutputResult
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "totalResults": "0"
 }'
    Pms_GetListOfPartners_With_Numeric_Status_Neg:
       endPoint: /v1/partnermanager/admin-partners?status=1
@@ -743,11 +743,11 @@ GetListOfPartners:
       restMethod: get
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      outputTemplate: pms/GetListOfPartners/GetListOfPartnersOutputResult
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "totalResults": "0"
 }'
    Pms_GetListOfPartners_With_Status_special_chars_Neg:
       endPoint: /v1/partnermanager/admin-partners?status=%active
@@ -756,9 +756,13 @@ GetListOfPartners:
       role: partneradmin
       restMethod: get
       inputTemplate: pms/GetListOfPartners/getListOfPartners
-      outputTemplate: pms/GetListOfPartners/GetListOfPartnersResult
+      outputTemplate: pms/error
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"		
+        }
+      ]	 
 }'
