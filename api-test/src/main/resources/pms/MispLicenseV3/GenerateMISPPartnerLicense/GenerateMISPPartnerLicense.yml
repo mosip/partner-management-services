@@ -17,7 +17,7 @@ GenerateMISPPartnerLicense:
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "pms-111555",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
         "licenseKeyStatus": "ACTIVE"
 }'
    Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid:
@@ -38,7 +38,7 @@ GenerateMISPPartnerLicense:
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "pms-111557",
+        "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
         "licenseKeyStatus": "ACTIVE"
 }'
    Pms_GenerateMISPPartnerLicense_without_PolicyGroup_sid:
@@ -53,13 +53,13 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111556",
+        "partnerId": "$ID:MISPPartnerRegistration_Empty_PolicyGroup_sid_partnerId$",
         "policyId": "$REMOVE$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "pms-111556",
+        "partnerId": "$ID:MISPPartnerRegistration_Empty_PolicyGroup_sid_partnerId$",
         "licenseKeyStatus": "ACTIVE"
 }'
    Pms_GenerateMISPPartnerLicense_with_Numeric_MisplicenseKeyName_sid:
@@ -74,13 +74,13 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111558",
+        "partnerId": "$ID:MISPPartnerRegistration_Max_AddressField_sid_partnerId$",
         "policyId": "$REMOVE$",
         "licenseKeyName": "1234",
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "pms-111558",
+        "partnerId": "$ID:MISPPartnerRegistration_Max_AddressField_sid_partnerId$",
         "licenseKeyStatus": "ACTIVE"
 }'
    Pms_GenerateMISPPartnerLicense_with_MisplicenseKeyName_sid:
@@ -95,13 +95,13 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111551",
+        "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$",
         "policyId": "$REMOVE$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "pms-111551",
+        "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$",
         "licenseKeyStatus": "ACTIVE"
 }'
    Pms_GenerateMISPPartnerLicense_with_Empty_PolicyId_sid:
@@ -116,12 +116,12 @@ GenerateMISPPartnerLicense:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid$",
+        "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid_partnerId$",
         "policyId": "",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "$EXPIRYDATE$"
 }'
       output: '{
-        "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid$",
+        "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid_partnerId$",
         "licenseKeyStatus": "ACTIVE"
 }'
