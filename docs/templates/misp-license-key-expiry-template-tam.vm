@@ -47,6 +47,7 @@
               காலாவதி தேதி<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
             </p>
             <p><strong>தேவையான செயல்பாடு:</strong></p>
+            <p><strong>MISP Services</strong> இல் புதிய MISP உரிமக் கோப்பை உருவாக்கவும்.</p>
             <ol>
               <li>PMS போர்டலில் உள்நுழைக.</li>
               <li>Partner Admin Dashboard-ல் உள்ள "எம்.ஐ.எஸ்.பி சேவைகள்" என்பதைத் திறக்கவும்.</li>
