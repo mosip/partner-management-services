@@ -34,7 +34,7 @@ public enum ErrorCode {
 	CREDENTIAL_NOT_ALLOWED_PARTNERS("PMS_PRT_070","Credential mapping allowed only for :"),
 	POLICY_PARSING_ERROR("PMS_PRT_071","Error occured while parsing policy string to json object"),
 	CREDENTIAL_TYPE_NOT_ALLOWED("PMS_PRT_072","Given credential type is not allowed. Allowed credential types : "),
-	POLICY_NOT_EXIST("PMS_PRT_073","Policy not exists."),
+	POLICY_NOT_EXIST("PMS_PRT_073","Policy does not exists."),
 	PARTNER_POLICY_TYPE_MISMATCH("PMS_PRT_057","Policy Type Mismatch. Only Auth policy can be used to create OIDC Client."),	
 	EMAIL_EXISTS_IN_KEYCLOAK("PMS_PRT_074","User exists with same email(keycloak)"),
 	PARTNER_DOES_NOT_EXIST_EXCEPTION("PMS_PRT_005","Partner does not exist"),
