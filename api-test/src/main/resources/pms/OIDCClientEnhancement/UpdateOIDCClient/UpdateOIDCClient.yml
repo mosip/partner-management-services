@@ -28,6 +28,7 @@ UpdateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
     	"status": "ACTIVE"
 }'
    Pms_UpdateOIDCClient_all_InValid_Auth_Neg:
@@ -94,6 +95,7 @@ UpdateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
     	"status": "ACTIVE"
 }'
    Pms_UpdateOIDCClient_Update_ClientName_Smoke_sid:
@@ -125,6 +127,7 @@ UpdateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
     	"status": "ACTIVE"
 }'
    Pms_UpdateOIDCClient_With_Empty_ClientID_Neg:
