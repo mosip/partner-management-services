@@ -809,10 +809,10 @@
                 "operationId": "updateAPIKey",
                 "parameters": [
                     {
-                        "name": "Authorization",
+                        "name": "Cookie",
                         "in": "header",
                         "required": true,
-                        "description": "Cookie-based Authorization header",
+                        "description": "Authorization={jwt_token}",
                         "schema": {
                             "type": "string"
                         }
