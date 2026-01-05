@@ -9,11 +9,11 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
-import io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
-import io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto;
+import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -114,5 +114,5 @@ public interface PartnerManagerService {
 
     ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, @NotNull @Valid LinkPolicyGroupRequestDto request);
 
-	ResponseWrapperV2<APIKeyExpiryUpdateResponseDto> updateAPIKeyExpiry(String partnerId, String policyId, @NotNull @Valid APIKeyExpiryUpdateRequestDto request);
+	ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, @NotNull @Valid APIKeyUpdateRequestDto request);
 }

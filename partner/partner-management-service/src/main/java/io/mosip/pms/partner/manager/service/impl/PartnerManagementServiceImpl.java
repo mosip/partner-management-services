@@ -67,11 +67,11 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
-import io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
-import io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto;
+import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
@@ -109,8 +109,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.link.policy.group.post}")
 	private String postLinkPolicyGroup;
 
-	@Value("${mosip.pms.api.id.update.api.key.expiry.patch}")
-	private String patchUpdateApiKeyExpiry;
+	@Value("${mosip.pms.api.id.update.api.key.patch}")
+	private String patchUpdateApiKey;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -820,8 +820,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<APIKeyExpiryUpdateResponseDto> updateAPIKeyExpiry(String partnerId, String policyId, APIKeyExpiryUpdateRequestDto request) {
-		ResponseWrapperV2<APIKeyExpiryUpdateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, APIKeyUpdateRequestDto request) {
+		ResponseWrapperV2<APIKeyUpdateResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(partnerId) || partnerId.isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "Partner Id is null or empty");
@@ -833,60 +833,95 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
 						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "policyId"));
 			}
-			if (Objects.isNull(request.getApiKeyName()) || request.getApiKeyName().isBlank()) {
+			if (Objects.isNull(apiKeyName) || apiKeyName.isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "API key name is null or empty");
 				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
 						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "apiKeyName"));
 			}
-			if (Objects.isNull(request.getApiKeyExpiryDateTime())) {
-				LOGGER.info("sessionId", "idType", "id", "API key expiry date time is null");
-				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
-						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "apiKeyExpiryDateTime"));
-			}
 
-			PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, request.getApiKeyName());
+            // Validate that at least one field (status or expiryDateTime) is provided
+            boolean hasStatus = Objects.nonNull(request.getStatus()) && !request.getStatus().isBlank();
+            boolean hasExpiryDateTime = Objects.nonNull(request.getExpiryDateTime());
+            if (!hasStatus && !hasExpiryDateTime) {
+                LOGGER.info("sessionId", "idType", "id", "Both status and expiryDateTime are null or empty. At least one field must be provided.");
+                throw new PartnerManagerServiceException(ErrorCode.AT_LEAST_ONE_FIELD_REQUIRED.getErrorCode(),
+                        ErrorCode.AT_LEAST_ONE_FIELD_REQUIRED.getErrorMessage());
+            }
+
+			PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName);
 			if (partnerPolicy == null) {
 				throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
 						ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorMessage());
 			}
-			// check if API key is active - only active API keys can have expiry date updated
-			if (!partnerPolicy.getIsActive()) {
-				LOGGER.error("API key is deactivated, hence expiry date cannot be updated, for partner: " + partnerId);
-				throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+
+			//check if logged in user is admin
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			if (!isAdmin){
+				// check if Partner is Active or not.
+				if (partnerPolicy.getPartner() != null && !partnerPolicy.getPartner().getIsActive()) {
+					LOGGER.error("Partner is not Active, hence status of API key cannot be updated, for partner: " + partnerId);
+					throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+							ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				}
 			}
-			// Validate that the new expiry date is in the future (compare in UTC to honor timezone offsets)
-			if (request.getApiKeyExpiryDateTime().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
-				LOGGER.error("Expiry date cannot be in the past, for partner: " + partnerId);
-				throw new PartnerManagerServiceException(ErrorCode.API_KEY_EXPIRY_DATE_CANNOT_BE_IN_PAST.getErrorCode(),
-						ErrorCode.API_KEY_EXPIRY_DATE_CANNOT_BE_IN_PAST.getErrorMessage());
-			}
+
+            if (!partnerPolicy.getIsActive()) {
+                LOGGER.warn("API key is inactive for partnerId={}", partnerId);
+                throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+            }
+
 			partnerPolicy.setUpdBy(getUser());
 			partnerPolicy.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			// Convert OffsetDateTime to Timestamp preserving UTC offset
-			partnerPolicy.setValidToDatetime(Timestamp.from(request.getApiKeyExpiryDateTime().toInstant()));
-			notify(null, null, MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_UPDATED);
-			partnerPolicyRepository.save(partnerPolicy);
-			sendNotifications(EventType.APIKEY_STATUS_UPDATED, partnerPolicy.getPartner(), partnerPolicy);
 
-			APIKeyExpiryUpdateResponseDto response = new APIKeyExpiryUpdateResponseDto();
-			response.setPartnerId(partnerId);
-			response.setPolicyId(policyId);
-			response.setApiKeyName(partnerPolicy.getLabel());
-			response.setApiKeyExpiryDateTime(request.getApiKeyExpiryDateTime());
+			// Handle expiry date update if provided
+			if (Objects.nonNull(request.getExpiryDateTime())) {
+
+				// Validate that the new expiry date is in the future (compare in UTC to honor timezone offsets)
+				if (request.getExpiryDateTime().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
+					LOGGER.error("Expiry date cannot be in the past, for partner: " + partnerId);
+					throw new PartnerManagerServiceException(ErrorCode.API_KEY_EXPIRY_DATE_CANNOT_BE_IN_PAST.getErrorCode(),
+							ErrorCode.API_KEY_EXPIRY_DATE_CANNOT_BE_IN_PAST.getErrorMessage());
+				}
+				// Convert OffsetDateTime to Timestamp preserving UTC offset
+				partnerPolicy.setValidToDatetime(Timestamp.from(request.getExpiryDateTime().toInstant()));
+			}
+
+            // Handle status update if provided - only supports deactivation
+            if (Objects.nonNull(request.getStatus()) && !request.getStatus().isBlank()) {
+                if (request.getStatus().equalsIgnoreCase(PartnerConstants.STATUS_INACTIVE)) {
+                    partnerPolicy.setIsActive(false);
+                } else {
+                    LOGGER.info("Invalid status '{}' received. Only 'INACTIVE' status is supported for API key deactivation.", request.getStatus());
+                    throw new PartnerManagerServiceException(ErrorCode.INVALID_API_KEY_STATUS_FOR_DEACTIVATION.getErrorCode(),
+                            ErrorCode.INVALID_API_KEY_STATUS_FOR_DEACTIVATION.getErrorMessage());
+                }
+            }
+
+            PartnerPolicy savedPartnerPolicy = partnerPolicyRepository.save(partnerPolicy);
+            notify(null, null, MapperUtils.mapKeyDataToPublishDto(savedPartnerPolicy), EventType.APIKEY_UPDATED);
+			sendNotifications(EventType.APIKEY_STATUS_UPDATED, savedPartnerPolicy.getPartner(), savedPartnerPolicy);
+
+			APIKeyUpdateResponseDto response = new APIKeyUpdateResponseDto();
+			response.setPartnerId(savedPartnerPolicy.getPartner().getId());
+			response.setPolicyId(savedPartnerPolicy.getPolicyId());
+			response.setApiKeyName(savedPartnerPolicy.getLabel());
+			response.setApiKeyExpiryDateTime(savedPartnerPolicy.getValidToDatetime().toInstant().atOffset(ZoneOffset.UTC));
+			response.setStatus(savedPartnerPolicy.getIsActive() ? PartnerConstants.STATUS_ACTIVE : PartnerConstants.STATUS_INACTIVE);
+
 			responseWrapper.setResponse(response);
 		} catch (PartnerManagerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id", "In updateAPIKeyExpiry method of PartnerManagementServiceImpl - " + ex.getMessage());
+			LOGGER.info("sessionId", "idType", "id", "In updateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
-					"In updateAPIKeyExpiry method of PartnerManagementServiceImpl - " + ex.getMessage());
-			String errorCode = ErrorCode.API_KEY_EXPIRY_DATE_UPDATE_ERROR.getErrorCode();
-			String errorMessage = ErrorCode.API_KEY_EXPIRY_DATE_UPDATE_ERROR.getErrorMessage();
+					"In updateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.API_KEY_UPDATE_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.API_KEY_UPDATE_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(patchUpdateApiKeyExpiry);
+        responseWrapper.setId(patchUpdateApiKey);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

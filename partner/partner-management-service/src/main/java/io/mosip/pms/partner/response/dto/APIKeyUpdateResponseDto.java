@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.OffsetDateTime;
 
 @Data
-public class APIKeyExpiryUpdateResponseDto {
+public class APIKeyUpdateResponseDto {
 
 	@Schema(description = "Unique identifier for the partner", example = "partner123")
 	private String partnerId;
@@ -21,6 +21,9 @@ public class APIKeyExpiryUpdateResponseDto {
 	@Schema(description = "Updated expiry date and time for the API key", example = "2024-12-31T23:59:59.000Z")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 	private OffsetDateTime apiKeyExpiryDateTime;
+
+	@Schema(description = "Status of the API key", example = "ACTIVE", allowableValues = {"ACTIVE", "INACTIVE"})
+	private String status;
 
 }
 
