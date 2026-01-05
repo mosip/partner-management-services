@@ -61,7 +61,7 @@
             </p>
 
             <p><strong>الإجراء المطلوب:</strong></p>
-            <p>يرجى إنشاء مفتاح ترخيص جديد لخدمة <strong>MISP</strong> من خلال <strong>MISP Services</strong>.</p>
+            <p>يرجى إنشاء مفتاح ترخيص جديد لخدمة <strong>MISP</strong> من خلال <strong>'MISP Services'</strong>.</p>
             <ol style="padding-right: 20px;">
               <li>تسجيل الدخول إلى بوابة PMS.</li>
               <li>الانتقال إلى "خدمات MISP" ضمن لوحة إدارة الشركاء.</li>

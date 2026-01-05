@@ -44,7 +44,7 @@
               Date d’expiration<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
             </p>
             <p><strong>Action requise :</strong></p>
-            <p>Veuillez générer une nouvelle clé de licence dans <strong>MISP Services</strong>.</p>
+            <p>Veuillez générer une nouvelle clé de licence dans <strong>'MISP Services'</strong>.</p>
             <ol>
               <li>Connectez-vous au Portail PMS.</li>
               <li>Accédez à « MISP Services » dans le Tableau de bord Administrateur Partenaire.</li>
