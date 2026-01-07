@@ -24,7 +24,7 @@ GetPartnerCert:
       inputTemplate: pms/credentialPartner/GetPartner/getPartner
       outputTemplate: pms/error
       input: '{
-    "partnerId": "abcd"
+    "partnerId": "abcd_dxxxxxyz"
 }'
       output: '{
    "errors": [

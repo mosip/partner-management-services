@@ -34,7 +34,7 @@ GetUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_03
       description: Retrieve the PMS GetUserConsent Status for invalid User and Expecting an Error in The Response
-      role: regproc
+      role: partnerauthexternal
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent
       outputTemplate: pms/error
