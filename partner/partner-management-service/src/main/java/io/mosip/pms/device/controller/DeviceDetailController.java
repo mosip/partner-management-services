@@ -156,7 +156,7 @@ public class DeviceDetailController {
 	@ResponseFilter
 	@PatchMapping
 	@Operation(summary = "Service to approve/reject DeviceDetail - deprecated since release-1.2.2.0.",
-			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the PATCH /devicedetail/{id}/approval endpoint.")
+			description = "This endpoint has been deprecated since the release-1.2.2.0 and replaced by the POST /devicedetail/{id}/approval endpoint.")
 	@ApiResponses({ @ApiResponse(code = 201, message = "When DeviceDetail successfully approved/rejected"),
 			@ApiResponse(code = 400, message = "When Request body passed  is null or invalid"),
 			@ApiResponse(code = 500, message = "While approving/rejecting DeviceDetail any error occured") })
@@ -265,8 +265,8 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(deviceId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("deviceId", deviceId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return deviceDetaillService.deactivateDevice(deviceId, requestWrapper.getRequest());
 	}
 
@@ -284,17 +284,17 @@ public class DeviceDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(deviceId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getSbiId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getPartnerId());
+		inputValidator.validateRequestInput("id", deviceId);
+		inputValidator.validateRequestInput("sbiId", requestWrapper.getRequest().getSbiId());
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("partnerId", requestWrapper.getRequest().getPartnerId());
 		return deviceDetaillService.approveOrRejectMappingDeviceToSbi(deviceId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetalldevicedetails())")
 	@GetMapping
 	@Operation(summary = "This endpoint retrieves a list of all the Devices.",
-	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoint /devicedetail/search by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -321,18 +321,18 @@ public class DeviceDetailController {
 			@RequestParam(value = "sbiVersion", required = false) String sbiVersion,
 			@RequestParam(value = "deviceId", required = false) String deviceId
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(deviceType);
-		inputValidator.validateRequestInput(deviceSubType);
-		inputValidator.validateRequestInput(status);
-		inputValidator.validateRequestInput(sbiVersion);
-		inputValidator.validateRequestInput(sbiId);
-		inputValidator.validateRequestInput(deviceId);
-		inputValidator.validateRequestInput(make);
-		inputValidator.validateRequestInput(model);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("deviceType", deviceType);
+		inputValidator.validateRequestInput("deviceSubType", deviceSubType);
+		inputValidator.validateRequestInput("status", status);
+		inputValidator.validateRequestInput("sbiVersion", sbiVersion);
+		inputValidator.validateRequestInput("sbiId", sbiId);
+		inputValidator.validateRequestInput("deviceId", deviceId);
+		inputValidator.validateRequestInput("make", make);
+		inputValidator.validateRequestInput("model", model);
 		DeviceDetailFilterDto filterDto = new DeviceDetailFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

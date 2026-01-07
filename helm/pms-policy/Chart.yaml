@@ -3,6 +3,7 @@ name: pms-policy
 description: A Helm chart for MOSIP Packetmanager module
 type: application
 version: 1.3.0-develop
+appVersion: ""
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami

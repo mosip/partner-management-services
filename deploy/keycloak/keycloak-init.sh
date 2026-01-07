@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=pms
-CHART_VERSION=12.0.1
+CHART_VERSION=1.3.0-develop
 COPY_UTIL=../copy_cm_func.sh
 
 helm repo add mosip https://mosip.github.io/mosip-helm

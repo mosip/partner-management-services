@@ -9,11 +9,8 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
-import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
-import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
-import io.mosip.pms.common.dto.ExpiryCertCountResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -50,7 +46,7 @@ public class NotificationsController {
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
     @Operation(summary = "This endpoint retrieves a list of all notifications.",
-            description = "Available since release-1.2.1. This endpoint supports pagination, sorting, and filtering.")
+            description = "Available since release-1.3.0-beta.1. The notifications fetched will be for all the partner ids which are linked to the logged in user id, which is sent as a Header in the Authorization token. This endpoint supports pagination, sorting, and filtering.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -66,7 +62,7 @@ public class NotificationsController {
             @Parameter(
                     description = "Type of notifications",
                     in = ParameterIn.QUERY,
-                    schema = @Schema(allowableValues = {"root", "intermediate", "partner", "weekly", "sbi", "ftm-chip", "apikey"})
+                    schema = @Schema(allowableValues = {"root", "intermediate", "partner", "weekly", "sbi", "ftm-chip", "apikey", "misp"})
             )
             @RequestParam(value = "notificationType", required = false) String notificationType,
             @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
@@ -92,24 +88,28 @@ public class NotificationsController {
             @RequestParam(value = "apiKeyName", required = false) String apiKeyName,
             @RequestParam(value = "policyName", required = false) String policyName,
             @RequestParam(value = "sbiId", required = false) String sbiId,
-            @RequestParam(value = "sbiVersion", required = false) String sbiVersion
+            @RequestParam(value = "sbiVersion", required = false) String sbiVersion,
+            @RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName,
+            @RequestParam(value = "mispPartnerId", required = false) String mispPartnerId
     ) {
-        inputValidator.validateRequestInput(notificationStatus);
-        inputValidator.validateRequestInput(notificationType);
-        inputValidator.validateRequestInput(certificateId);
-        inputValidator.validateRequestInput(expiryDate);
-        inputValidator.validateRequestInput(issuedBy);
-        inputValidator.validateRequestInput(sbiVersion);
-        inputValidator.validateRequestInput(sbiId);
-        inputValidator.validateRequestInput(issuedTo);
-        inputValidator.validateRequestInput(make);
-        inputValidator.validateRequestInput(model);
-        inputValidator.validateRequestInput(ftmId);
-        inputValidator.validateRequestInput(apiKeyName);
-        inputValidator.validateRequestInput(policyName);
-        inputValidator.validateRequestInput(partnerDomain);
-        inputValidator.validateRequestInput(createdFromDate);
-        inputValidator.validateRequestInput(createdToDate);
+        // Validate all inputs
+        inputValidator.validateRequestInput("notificationStatus", notificationStatus);
+        inputValidator.validateRequestInput("notificationType", notificationType);
+        inputValidator.validateRequestInput("certificateId", certificateId);
+        inputValidator.validateRequestInput("issuedBy", issuedBy);
+        inputValidator.validateRequestInput("issuedTo", issuedTo);
+        inputValidator.validateRequestInput("partnerDomain", partnerDomain);
+        inputValidator.validateRequestInput("ftmId", ftmId);
+        inputValidator.validateRequestInput("make", make);
+        inputValidator.validateRequestInput("model", model);
+        inputValidator.validateRequestInput("apiKeyName", apiKeyName);
+        inputValidator.validateRequestInput("policyName", policyName);
+        inputValidator.validateRequestInput("sbiId", sbiId);
+        inputValidator.validateRequestInput("sbiVersion", sbiVersion);
+        inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
+        inputValidator.validateRequestInput("mispPartnerId", mispPartnerId);
+
+        // Populate filter DTO
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
         if (certificateId != null) {
             filterDto.setCertificateId(certificateId);
@@ -159,6 +159,12 @@ public class NotificationsController {
         if (sbiVersion != null) {
             filterDto.setSbiVersion(sbiVersion);
         }
+        if (mispLicenseKeyName != null) {
+            filterDto.setMispLicenseKeyName(mispLicenseKeyName);
+        }
+        if (mispPartnerId != null) {
+            filterDto.setMispPartnerId(mispPartnerId);
+        }
         return notificationsService.getNotifications(pageNo, pageSize, filterDto);
     }
 
@@ -166,7 +172,7 @@ public class NotificationsController {
     @PatchMapping("/notifications/{notificationId}")
     @Operation(
             summary = "This endpoint dismisses a notification.",
-            description = "This endpoint is available since release-1.3.x and is used to dismiss a notification."
+            description = "This endpoint is available since release-1.3.0-beta.1 and is used to dismiss a notification."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -180,8 +186,8 @@ public class NotificationsController {
         if (validationResponse.isPresent()) {
             return validationResponse.get();
         }
-        inputValidator.validateRequestInput(notificationId);
-        inputValidator.validateRequestInput(requestWrapper.getRequest().getNotificationStatus());
+        inputValidator.validateRequestInput("notificationId", notificationId);
+        inputValidator.validateRequestInput("status", requestWrapper.getRequest().getNotificationStatus());
         return notificationsService.dismissNotification(notificationId, requestWrapper.getRequest());
     }
 }

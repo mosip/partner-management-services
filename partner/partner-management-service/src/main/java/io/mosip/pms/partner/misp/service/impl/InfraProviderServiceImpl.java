@@ -478,8 +478,17 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 				Sort sort = partnerHelper.getSortingRequest(getSortColumn(partnerHelper.mispAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
+
+			LocalDateTime expiryStartDate = null;
+			LocalDateTime expiryEndDate = null;
+
+			if (filterDto.getExpiryPeriod() != null) {
+				expiryStartDate = LocalDateTime.now();
+				expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
+			}
+
 			Page<MISPLicenseSummaryEntity> page = mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getPolicyGroupName(),
-					filterDto.getPolicyName(), filterDto.getMispLicenseKeyName(), filterDto.getStatus(), pageable);
+					filterDto.getPolicyName(), filterDto.getMispLicenseKeyName(), filterDto.getStatus(), expiryStartDate, expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<MISPLicenseSummaryDto> mispLicenseSummaryDtoList = MapperUtils.mapAll(page.getContent(), MISPLicenseSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -808,8 +817,13 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			LocalDate expiryDate = request.getExpiryDate();
 			expiryDateInputValidation(expiryDate);
 
+			String requestPolicyId = request.getPolicyId();
+			if (Objects.isNull(requestPolicyId) || requestPolicyId.isBlank()) {
+				requestPolicyId = null;
+			}
+
 			// check the license key exist for given partner id and policy id combination
-			List<MISPLicenseEntityV2> existingLicense = mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(partnerId, request.getPolicyId());
+			List<MISPLicenseEntityV2> existingLicense = mispLicenseV2Repository.findActiveLicenseKeyByPartnerIdAndPolicyId(partnerId, requestPolicyId);
 			if(existingLicense.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_FOUND.getErrorCode(),
 						MISPErrorMessages.MISP_LICENSE_NOT_FOUND.getErrorMessage());

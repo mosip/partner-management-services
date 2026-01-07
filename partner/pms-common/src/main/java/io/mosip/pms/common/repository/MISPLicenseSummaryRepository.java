@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository("MISPLicenseSummaryRepository")
 public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicenseSummaryEntity, String> {
 
@@ -33,7 +35,8 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             "(" +
             "  (:status = 'activated' AND m.isActive = true) " +
             "  OR (:status = 'deactivated' AND m.isActive = false) " +
-            ")) "
+            ")) " +
+            "AND ((:expiryPeriod IS NULL) OR (m.validToDate BETWEEN :expiryStartDate AND :expiryEndDate)) "
     )
     Page<MISPLicenseSummaryEntity> getSummaryOfAllMispLicenseDetails(
             @Param("partnerId") String partnerId,
@@ -42,6 +45,9 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             @Param("policyName") String policyName,
             @Param("mispLicenseKeyName") String mispLicenseKeyName,
             @Param("status") String status,
+            @Param("expiryStartDate") LocalDateTime expiryStartDate,
+            @Param("expiryEndDate") LocalDateTime expiryEndDate,
+            @Param("expiryPeriod") Integer expiryPeriod,
             Pageable pageable
     );
 }

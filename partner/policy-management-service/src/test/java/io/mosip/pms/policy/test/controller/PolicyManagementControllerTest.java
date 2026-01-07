@@ -17,6 +17,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -832,7 +833,7 @@ public class PolicyManagementControllerTest {
 		filterDto.setPolicyGroupName("default");
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
-		doNothing().when(inputValidator).validateRequestInput(any());
+		doNothing().when(inputValidator).validateRequestInput(anyString(), any());
 		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(sortFieldName, sortType, pageNo, pageSize,"Auth","123", "abc", "desc", "default", "activated");
@@ -852,7 +853,7 @@ public class PolicyManagementControllerTest {
 		filterDto.setPolicyGroupName("default");
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
-		doNothing().when(inputValidator).validateRequestInput(any());
+		doNothing().when(inputValidator).validateRequestInput(anyString(), any());
 		Mockito.when(policyManagementService.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto))
 				.thenReturn(responseWrapper);
 		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response = policyManagementController.getAllPolicies(null, null, pageNo, pageSize, null, null, null, null, null, null);
@@ -894,6 +895,21 @@ public class PolicyManagementControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 
+	}
+
+	@Test
+	public void deactivatePolicyGroupTestWithValidationError() throws Exception {
+		RequestWrapperV2<DeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		requestWrapper.setRequest(requestDto);
+
+		ResponseWrapperV2<DeactivatePolicyGroupResponseDto> errorResponse = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
+
+		policyManagementController.deactivatePolicyGroup("12345", requestWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
 }

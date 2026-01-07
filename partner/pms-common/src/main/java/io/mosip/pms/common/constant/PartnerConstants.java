@@ -42,6 +42,8 @@ public final class PartnerConstants {
 
 	public static final String PARTNER_ADMIN = "PARTNER_ADMIN";
 
+	public static final String POLICYMANAGER = "POLICYMANAGER";
+
 	public static final String DEACTIVATE = "De-Activate";
 
 	public static final String VERSION = "1.0";
@@ -59,6 +61,8 @@ public final class PartnerConstants {
 	public static final String API_KEY_EXPIRY_NOTIFICATION_TYPE = "API_KEY_EXPIRY";
 
 	public static final String SBI_EXPIRY_NOTIFICATION_TYPE = "SBI_EXPIRY";
+
+	public static final String MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE = "MISP_LICENSE_KEY_EXPIRY";
 
 	public static final String STATUS_ACTIVE = "ACTIVE";
 
@@ -82,6 +86,8 @@ public final class PartnerConstants {
 
 	public static final String SBI = "sbi";
 
+	public static final String MISP = "misp";
+
 	public static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
 
 	public static final String END_CERTIFICATE = "-----END CERTIFICATE-----";
@@ -95,6 +101,8 @@ public final class PartnerConstants {
 	public static final String AUTH_PARTNER_TYPE = "Auth_Partner";
 
 	public static final String MISP_PARTNER_TYPE = "MISP_Partner";
+
+	public static final String ABIS_PARTNER_TYPE = "ABIS_Partner";
 	
 	public static final String PARTNER_DOMAIN_AUTH = "AUTH";
 

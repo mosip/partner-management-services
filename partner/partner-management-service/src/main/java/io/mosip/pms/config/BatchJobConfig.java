@@ -18,6 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import io.mosip.pms.tasklets.ApiKeyExpiryTasklet;
 import io.mosip.pms.tasklets.DeletePastNotificationsTasklet;
 import io.mosip.pms.tasklets.FTMChipCertificateExpiryTasklet;
+import io.mosip.pms.tasklets.MispLicenseExpiryTasklet;
 import io.mosip.pms.tasklets.PartnerCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.RootAndIntermediateCertificateExpiryTasklet;
 import io.mosip.pms.tasklets.SbiExpiryTasklet;
@@ -58,6 +59,9 @@ public class BatchJobConfig {
 
 	@Autowired
 	private MispLicenseExpiryAutoDeactivationTasklet mispLicenseExpiryAutoDeactivationTasklet;
+
+	@Autowired
+	private MispLicenseExpiryTasklet mispLicenseExpiryTasklet;
 
 	@Bean
 	public Step rootAndIntermediateCertificateExpiryStep(JobRepository jobRepository,
@@ -123,6 +127,13 @@ public class BatchJobConfig {
 	public Step mispLicenseExpiryAutoDeactivationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
 		return new StepBuilder("mispLicenseExpiryAutoDeactivationStep", jobRepository)
 				.tasklet(mispLicenseExpiryAutoDeactivationTasklet, transactionManager).build();
+	}
+
+	@Bean
+	public Step mispLicenseExpiryNotificationsStep(JobRepository jobRepository,
+			PlatformTransactionManager transactionManager) {
+		return new StepBuilder("mispLicenseExpiryNotificationsStep", jobRepository)
+				.tasklet(mispLicenseExpiryTasklet, transactionManager).build();
 	}
 
 	@Bean
@@ -196,6 +207,15 @@ public class BatchJobConfig {
 		return new JobBuilder("mispLicenseExpiryAutoDeactivationJob", jobRepository)
 				.incrementer(new RunIdIncrementer())
 				.start(mispLicenseExpiryAutoDeactivationStep)
+				.build();
+	}
+
+	@Bean
+	public Job mispLicenseExpiryNotificationsJob(JobRepository jobRepository,
+			@Qualifier("mispLicenseExpiryNotificationsStep") Step mispLicenseExpiryNotificationsStep) {
+		return new JobBuilder("mispLicenseExpiryNotificationsJob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.start(mispLicenseExpiryNotificationsStep)
 				.build();
 	}
 }

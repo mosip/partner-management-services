@@ -111,7 +111,7 @@ public class SecureBiometricInterfaceControllerTest {
         Mockito.when(secureBiometricInterfaceService.searchSecureBiometricInterface(Mockito.any(), Mockito.any())).thenReturn(searchresponse);
         Mockito.when(secureBiometricInterfaceService.updateSecureBiometricInterface(Mockito.any())).thenReturn(response);
         Mockito.when(secureBiometricInterfaceService.createSecureBiometricInterface(Mockito.any())).thenReturn(response);
-		doNothing().when(inputValidator).validateRequestInput(any());
+		doNothing().when(inputValidator).validateRequestInput(anyString(), any());
         createRequest = createRequest(false);
         updateRequest=updateRequest(false);
     }

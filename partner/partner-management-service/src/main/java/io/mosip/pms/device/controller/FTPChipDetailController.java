@@ -286,8 +286,13 @@ public class FTPChipDetailController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(ftmId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		if (!ftmId.matches(ftmIdRegex)) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "ftmId", "Only digits (0-9), with a maximum length of 36 characters")
+			);
+		}
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return ftpChipDetaillService.deactivateFtm(ftmId, requestWrapper.getRequest());
 	}
 
@@ -301,7 +306,6 @@ public class FTPChipDetailController {
 	public ResponseWrapperV2<FtmCertificateDownloadResponseDto> getFtmCertificateData(
 			@ApiParam("To download original FTM certificate.")  @PathVariable("ftmId") @NotNull String ftmId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException, CertificateException {
 		featureAvailabilityUtil.validateCaSignedPartnerCertificateFeatureEnabled();
-		inputValidator.validateRequestInput(ftmId);
 		if (!ftmId.matches(ftmIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
@@ -314,7 +318,7 @@ public class FTPChipDetailController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersftmchipdetails())")
 	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves a list of all FTM Chip details created by all the FTM Providers.",
-	description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier POST endpoint /ftpchipdetail/search by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -337,14 +341,14 @@ public class FTPChipDetailController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(ftmId);
-		inputValidator.validateRequestInput(make);
-		inputValidator.validateRequestInput(model);
-		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("ftmId", ftmId);
+		inputValidator.validateRequestInput("make", make);
+		inputValidator.validateRequestInput("model", model);
+		inputValidator.validateRequestInput("status", status);
 		FtmChipFilterDto filterDto = new FtmChipFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

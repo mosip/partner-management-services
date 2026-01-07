@@ -2,11 +2,11 @@ package io.mosip.pms.tasklets;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.mosip.pms.partner.dto.AdminDetailsDto;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -25,7 +25,6 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeycloakHelper;
-import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create notifications for the Partner certificates
@@ -51,9 +50,6 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 	EmailNotificationService emailNotificationService;
 
 	@Autowired
-	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
-
-	@Autowired
 	KeyManagerHelper keyManagerHelper;
 
 	@Override
@@ -64,14 +60,13 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 		int countOfCertsExpiringWithin30Days = 0;
 		int countOfPartnersWithInvalidCerts = 0;
 		try {
-			// Step 1: Fetch Partner Admin User IDs from Keycloak, which are Valid Partners
-			// in PMS
-			List<Partner> pmsPartnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
-			pmsPartnerAdmins.forEach(admin -> {
-				log.info("PMS Partner Admin Id: {}", admin.getId());
+			// Step 1: Fetch Partner Admin User IDs from Keycloak
+			List<AdminDetailsDto> partnerAdmins = keycloakHelper.getPartnerIdsWithPartnerAdminRole();
+			partnerAdmins.forEach(admin -> {
+				log.info("Partner Admin Id: {}", admin.getUserName());
 			});
 			// Step 2: Get all PMS partners which are ACTIVE and NOT partner admins
-			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(pmsPartnerAdmins);
+			List<Partner> activePartnersList = batchJobHelper.getAllActiveNonAdminPartners(partnerAdmins);
 			activePartnersCount = activePartnersList.size();
 			log.info("PMS has {} Active Partner (Non Admin) users.", activePartnersCount);
 			// Step 3: For each partner get the certificate and check if it is expiring
@@ -79,15 +74,15 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 			while (activePartnersListIterator.hasNext()) {
 				Partner pmsPartner = activePartnersListIterator.next();
 				log.info("Fetching certificate for partner id {}", pmsPartner.getId());
-				X509Certificate decodedPartnerCertificate = partnerCertificateExpiryHelper
+				X509Certificate decodedPartnerCertificate = batchJobHelper
 						.getDecodedCertificate(pmsPartner);
 				if (decodedPartnerCertificate != null) {
 					log.info("Checking if certificate is expiring for partner id {}",
 							pmsPartner.getId() + " within next 30 days.");
-					LocalDateTime partnerCertificateExpiryDate = partnerCertificateExpiryHelper
+					LocalDateTime partnerCertificateExpiryDate = batchJobHelper
 							.getCertificateExpiryDateTime(decodedPartnerCertificate);
 					log.info("The certificate expiry date is {}", partnerCertificateExpiryDate);
-					boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(pmsPartner,
+					boolean isExpiringWithin30Days = batchJobHelper.checkIfExpiring(pmsPartner,
 							partnerCertificateExpiryDate, 30, true);
 					if (isExpiringWithin30Days) {
 						countOfCertsExpiringWithin30Days++;
@@ -99,20 +94,20 @@ public class PartnerCertificateExpiryTasklet implements Tasklet {
 						while (expiryPeriodsIterator.hasNext()) {
 							Integer expiryPeriod = expiryPeriodsIterator.next();
 							log.info("Checking for certificate expiry after " + expiryPeriod + " days.");
-							boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
+							boolean isExpiringAfterExpiryPeriod = batchJobHelper
 									.checkIfExpiring(pmsPartner, partnerCertificateExpiryDate, expiryPeriod, false);
 							// Step 5: If yes, add the notification
 							if (isExpiringAfterExpiryPeriod) {
 								List<CertificateDetailsDto> expiringCertificates = new ArrayList<CertificateDetailsDto>();
-								CertificateDetailsDto certificateDetails = partnerCertificateExpiryHelper
+								CertificateDetailsDto certificateDetails = batchJobHelper
 										.populateCertificateDetails(expiryPeriod, pmsPartner,
 												decodedPartnerCertificate);
 								expiringCertificates.add(certificateDetails);
 								// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 								String decryptedEmailId = keyManagerHelper.decryptData(pmsPartner.getEmailId());
 								NotificationEntity savedNotification = batchJobHelper.saveNotification(
-										PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, pmsPartner, expiringCertificates, null,
-										null, null, decryptedEmailId);
+										PartnerConstants.PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, pmsPartner.getId(), pmsPartner.getLangCode(), expiringCertificates, null,
+										null, null, null, decryptedEmailId);
 								// Step 6: send email notification
 								emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 								log.info("Created partner certificate expiry notification with notification id "
