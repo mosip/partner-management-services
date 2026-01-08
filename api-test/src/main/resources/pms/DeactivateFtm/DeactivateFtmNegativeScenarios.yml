@@ -374,7 +374,7 @@ DeactivateFtmNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_FTM_ERROR_005"
+       "errorCode": "PMS_PRT_099"
        }
        ]
 }'
@@ -397,7 +397,7 @@ DeactivateFtmNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_FTM_ERROR_005"
+       "errorCode": "PMS_PRT_099"
        }
        ]
 }'
