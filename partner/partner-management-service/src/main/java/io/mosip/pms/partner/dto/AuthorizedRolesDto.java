@@ -143,7 +143,7 @@ public class AuthorizedRolesDto {
 	
 	private List<String> patchpartnerspolicyapikeystatus;
 
-	private List<String> patchpartnersapikeyexpiry;
+	private List<String> patchupdatepartnerapikey;
 
 	private List<String> getadminpartners;
 
