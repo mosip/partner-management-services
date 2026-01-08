@@ -1,0 +1,613 @@
+UpdateOIDCClient:
+   Pms_UpdateOIDCClient_all_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_01
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+    	"status": "ACTIVE"
+}'
+   Pms_UpdateOIDCClient_all_InValid_Auth_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid token
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_02
+      role: invalidtoken
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_all_Valid_Update_Logourl_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client updating logo url
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_03
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logoo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+    	"status": "ACTIVE"
+}'
+   Pms_UpdateOIDCClient_Update_ClientName_Smoke_sid:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client updating client name
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_04
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 897669876",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+    	"status": "ACTIVE"
+}'
+   Pms_UpdateOIDCClient_With_Empty_ClientID_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with empty client id
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_05
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": " ",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_099"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_UserInfoResponceType_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid userinfo response type
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_06
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWES",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_014"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_Status_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid status
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_07
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "INACTIVEINVALID",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Empty_ClientName_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client empty client name
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_08
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_ClientAuthMethod_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid client authentication method
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_09
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "invalid_auth_method",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_COR_001"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_UserResponceType_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid userinfo response type format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_10
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWExc",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_014"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_Type_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid type format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_11
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "logout",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_017"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_Subtitle_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid subtitle format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_12
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "invalid_subtitle_@123",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_019"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_SignupBannerRequired_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid signup banner required format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_13
+      role: partnerauth
+      restMethod: put
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/responseCode 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": "false9",
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+       "responseCode": "400"
+}'
+   Pms_UpdateOIDCClient_Invalid_ForgotPwdLinkRequired_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid forgot password link required format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_14
+      role: partnerauth
+      restMethod: put
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/responseCode 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": "false9",
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+       "responseCode": "400"
+}'
+   Pms_UpdateOIDCClient_Invalid_ConsentExpireInMins_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid consent expire in mins format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_15
+      role: partnerauth
+      restMethod: put
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/responseCode 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "*"
+}'
+      output: '{
+       "responseCode": "400"
+}'
+   Pms_UpdateOIDCClient_Invalid_GrantType_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid grant type format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_16
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "invalid_grant_type",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_019"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Invalid_ClientNameLangMap_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client with invalid client name lang map format
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_17
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient2
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_019"
+       }
+       ]
+}'
+   Pms_UpdateOIDCClient_Without_AdditionalConfig_Neg:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client without additional config request
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_18
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient3
+      outputTemplate: pms/error 
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_019"
+       }
+       ]
+}'
