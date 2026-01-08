@@ -802,10 +802,11 @@
         "/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}": {
             "patch": {
                 "tags": [
-                    "partner-management-controller"
+                    "partner-management-controller",
+                    "NEW"
                 ],
                 "summary": "Service to deactivate API key and/or update expiry date",
-                "description": "This endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'INACTIVE' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated.",
+                "description": "This endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated.",
                 "operationId": "updateAPIKey",
                 "parameters": [
                     {
@@ -869,9 +870,9 @@
                                         "properties": {
                                             "status": {
                                                 "type": "string",
-                                                "description": "Status of the API key. Use 'INACTIVE' to deactivate the API key",
-                                                "example": "INACTIVE",
-                                                "enum": ["INACTIVE"]
+                                                "description": "Status of the API key. Use 'De-active' to deactivate the API key",
+                                                "example": "De-active",
+                                                "enum": ["De-active"]
                                             },
                                             "expiryDateTime": {
                                                 "type": "string",
@@ -897,7 +898,7 @@
                                         "requestTime": "2024-11-05T10:36:13.780Z",
                                         "metadata": {},
                                         "request": {
-                                            "status": "INACTIVE"
+                                            "status": "De-active"
                                         }
                                     }
                                 },
@@ -966,8 +967,8 @@
                                                 "status": {
                                                     "type": "string",
                                                     "description": "Status of the API key",
-                                                    "example": "ACTIVE",
-                                                    "enum": ["ACTIVE", "INACTIVE"]
+                                                    "example": "active",
+                                                    "enum": ["active", "De-active"]
                                                 }
                                             }
                                         },
@@ -993,7 +994,7 @@
                                             "policyId": "policy456",
                                             "apiKeyName": "Sample API Key",
                                             "apiKeyExpiryDateTime": "2024-12-31T23:59:59.000Z",
-                                            "status": "ACTIVE"
+                                            "status": "active"
                                         },
                                         "errors": []
                                     }

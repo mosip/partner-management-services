@@ -22,7 +22,7 @@ public class APIKeyUpdateResponseDto {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 	private OffsetDateTime apiKeyExpiryDateTime;
 
-	@Schema(description = "Status of the API key", example = "ACTIVE", allowableValues = {"ACTIVE", "INACTIVE"})
+	@Schema(description = "Status of the API key", example = "active", allowableValues = {"active", "De-active"})
 	private String status;
 
 }

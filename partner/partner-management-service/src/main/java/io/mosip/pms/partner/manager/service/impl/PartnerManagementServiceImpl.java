@@ -889,10 +889,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
             // Handle status update if provided - only supports deactivation
             if (Objects.nonNull(request.getStatus()) && !request.getStatus().isBlank()) {
-                if (request.getStatus().equalsIgnoreCase(PartnerConstants.STATUS_INACTIVE)) {
+                if (request.getStatus().equalsIgnoreCase(PartnerConstants.DEACTIVE)) {
                     partnerPolicy.setIsActive(false);
                 } else {
-                    LOGGER.info("Invalid status '{}' received. Only 'INACTIVE' status is supported for API key deactivation.", request.getStatus());
+                    LOGGER.info("Invalid status '{}' received. Only 'De-active' status is supported for API key deactivation.", request.getStatus());
                     throw new PartnerManagerServiceException(ErrorCode.INVALID_API_KEY_STATUS_FOR_DEACTIVATION.getErrorCode(),
                             ErrorCode.INVALID_API_KEY_STATUS_FOR_DEACTIVATION.getErrorMessage());
                 }
@@ -907,7 +907,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			response.setPolicyId(savedPartnerPolicy.getPolicyId());
 			response.setApiKeyName(savedPartnerPolicy.getLabel());
 			response.setApiKeyExpiryDateTime(savedPartnerPolicy.getValidToDatetime().toInstant().atOffset(ZoneOffset.UTC));
-			response.setStatus(savedPartnerPolicy.getIsActive() ? PartnerConstants.STATUS_ACTIVE : PartnerConstants.STATUS_INACTIVE);
+			response.setStatus(savedPartnerPolicy.getIsActive() ? PartnerConstants.ACTIVE : PartnerConstants.DEACTIVE);
 
 			responseWrapper.setResponse(response);
 		} catch (PartnerManagerServiceException ex) {
