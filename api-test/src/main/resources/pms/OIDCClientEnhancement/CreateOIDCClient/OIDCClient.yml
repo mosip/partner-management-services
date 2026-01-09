@@ -248,8 +248,9 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_08
       role: partnerauth
       restMethod: post
+      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
       	"version": "1.0",
@@ -272,11 +273,7 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_REQUEST_ERROR_007"
-       }
-       ]
+        "responseCode": "400"
 }'
    Pms_CreateOIDCClient_invalid_PolicyID_neg:
       endPoint: /v1/partnermanager/oidc-clients
@@ -346,7 +343,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PRT_073"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
@@ -428,8 +425,9 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_13
       role: partnerauth
       restMethod: post
+      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient2
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
       	"version": "1.0",
@@ -452,11 +450,7 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_ESI_007"
-       }
-       ]
+        "responseCode": "400"
 }'
    Pms_CreateOIDCClient_Without_PublicKey_neg:
       endPoint: /v1/partnermanager/oidc-clients
@@ -634,7 +628,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_COR_001"
+       "errorCode": "PMS_REQUEST_ERROR_007"
        }
        ]
 }'
@@ -922,7 +916,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_COR_001"
+       "errorCode": "invalid_grant_type"
        }
        ]
 }'
@@ -1070,14 +1064,14 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_Valid_ClientAuthMethods_Containing_Only_Private_key_jwt_neg:
+   Pms_CreateOIDCClient_Valid_ClientAuthMethods_Containing_Only_Private_key_jwt:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client with grant types having valid clientAuthMethods containing only private_key_jwt
       uniqueIdentifier: TC_PMS_CreateOIDCClient_31
       role: partnerauth
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
-      outputTemplate: pms/error
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
       	"version": "1.0",
@@ -1100,11 +1094,7 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "invalid_client_auth"
-       }
-       ]
+        "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_Without_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
@@ -1174,7 +1164,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_COR_001"
+       "errorCode": "invalid_client_auth"
        }
        ]
 }'
@@ -1214,14 +1204,14 @@ CreateOIDCClient:
        }
        ]
 }'
-   Pms_CreateOIDCClient_Empty_ClientNameLangMap_neg:
+   Pms_CreateOIDCClient_Empty_ClientNameLangMap:
       endPoint: /v1/partnermanager/oidc-clients
       description: Creating OAUTH Client having empty clientNameLangMap
       uniqueIdentifier: TC_PMS_CreateOIDCClient_35
       role: partnerauth
       restMethod: post
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
-      outputTemplate: pms/error
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
       	"version": "1.0",
@@ -1244,11 +1234,7 @@ CreateOIDCClient:
       	"consentExpireInMins": "30"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "invalid_client_name_value"
-       }
-       ]
+        "status": "ACTIVE"
 }'
    Pms_CreateOIDCClient_Invalid_UserResponceType_neg:
       endPoint: /v1/partnermanager/oidc-clients
@@ -1553,7 +1539,7 @@ CreateOIDCClient:
       	"subTitle": "subTitle",
       	"signupBannerRequired": true,
       	"forgotPwdLinkRequired": true,
-      	"consentExpireInMins": "1440"
+      	"consentExpireInMins": "0"
 }'
       output: '{
       "errors": [
@@ -1568,8 +1554,9 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_45
       role: partnerauth
       restMethod: post
+      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
       	"version": "1.0",
@@ -1592,11 +1579,7 @@ CreateOIDCClient:
       	"consentExpireInMins": "StringValue"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_POLICY_ERROR_015"
-       }
-       ]
+        "responseCode": "400"
 }'
    Pms_CreateOIDCClient_Without_ConsentExpireInMins_smoke:
       endPoint: /v1/partnermanager/oidc-clients
@@ -1914,7 +1897,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_REQUEST_ERROR_006"
+       "errorCode": "PMS_REQUEST_ERROR_004"
        }
        ]
 }'
