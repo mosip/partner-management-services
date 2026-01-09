@@ -1900,11 +1900,13 @@ public class PartnerServiceImpl implements PartnerService {
 			List<Partner> partners = new ArrayList<>();
 			// if not MISP_Partner and ABIS_Partner type, fetch partners for logged in user
 			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType)) {
-				List<Partner> partnerList = partnerRepository.findByUserId(userId);
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				if (!isPartnerAdmin) {
+					List<Partner> partnerList = partnerRepository.findByUserId(userId);
+					if (partnerList.isEmpty()) {
+						LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+						throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+								ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+					}
 				}
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			}

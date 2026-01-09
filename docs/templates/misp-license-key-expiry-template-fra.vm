@@ -44,9 +44,11 @@
               Date d’expiration<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
             </p>
             <p><strong>Action requise :</strong></p>
+            <p>Veuillez générer une nouvelle clé de licence dans <strong>'MISP Services'</strong>.</p>
+            <p>Pour procéder à la génération de la clé de licence MISP, veuillez suivre les étapes ci-dessous&nbsp;:</p>
             <ol>
               <li>Connectez-vous au Portail PMS.</li>
-              <li>Accédez à « MISP Services » dans le Tableau de bord Administrateur Partenaire.</li>
+              <li>Accédez à "MISP Services" dans le Tableau de bord Administrateur Partenaire.</li>
               <li>Générez une nouvelle Clé de Licence MISP.</li>
               <li>Conservez-la en toute sécurité, car elle sera masquée après la fermeture de la fenêtre.</li>
             </ol>
