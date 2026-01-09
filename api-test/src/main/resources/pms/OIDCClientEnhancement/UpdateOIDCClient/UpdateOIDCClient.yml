@@ -381,7 +381,7 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_12
       role: partnerauth
       restMethod: put
-      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient4
       outputTemplate: pms/error 
       input: '{
       	"id": "mosip.pms.update.oidc.client.put",
