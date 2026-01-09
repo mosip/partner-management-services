@@ -692,15 +692,15 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void updateAPIKeyExpiryTestValidationPresent() throws Exception {
-		RequestWrapperV2<io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto> requestWrapper = new RequestWrapperV2<>();
-		io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto();
-		requestDto.setApiKeyExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+		RequestWrapperV2<io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
 		requestWrapper.setRequest(requestDto);
 
-		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto> errorResponse = new ResponseWrapperV2<>();
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> errorResponse = new ResponseWrapperV2<>();
 		Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policy/policy456/apiKey/expiry-date")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());
@@ -709,16 +709,16 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void updateAPIKeyExpiryTestSuccess() throws Exception {
-		RequestWrapperV2<io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto> requestWrapper = new RequestWrapperV2<>();
-		io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto();
-		requestDto.setApiKeyExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+		RequestWrapperV2<io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto> requestWrapper = new RequestWrapperV2<>();
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
 		requestWrapper.setRequest(requestDto);
 
-		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto> response = new ResponseWrapperV2<>();
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response = new ResponseWrapperV2<>();
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
-		Mockito.when(partnerManagementService.updateAPIKeyExpiry(anyString(), anyString(), any())).thenReturn(response);
+		Mockito.when(partnerManagementService.updateAPIKey(anyString(), anyString(), anyString(), any())).thenReturn(response);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policy/policy456/apiKey/expiry-date")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());

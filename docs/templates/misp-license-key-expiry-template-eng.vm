@@ -44,6 +44,8 @@
               Expiration Date<br /><span style="font-weight: 400;">${expiryDateTime} UTC</span>
             </p>
             <p><strong>Action Required:</strong></p>
+            <p>Generate a new MISP license key in <strong>'MISP Services'</strong>.</p>
+            <p>To Proceed with MISP license key generate please follow the steps below:</p>
             <ol>
               <li>Log in to PMS Portal.</li>
               <li>Navigate to "MISP Services" in the Partner Admin Dashboard.</li>

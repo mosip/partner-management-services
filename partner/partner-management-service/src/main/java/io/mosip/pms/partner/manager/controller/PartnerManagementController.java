@@ -9,10 +9,10 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.request.dto.APIKeyExpiryUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
+import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
-import io.mosip.pms.partner.response.dto.APIKeyExpiryUpdateResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -90,8 +90,8 @@ public class PartnerManagementController {
 	@Value("${mosip.pms.api.id.link.policy.group.post}")
 	private String postLinkPolicyGroup;
 
-	@Value("${mosip.pms.api.id.update.api.key.expiry.patch}")
-	private String patchUpdateApiKeyExpiry;
+    @Value("${mosip.pms.api.id.update.api.key.patch}")
+    private String patchUpdateApiKey;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -277,9 +277,16 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/*
+	 * This endpoint has been deprecated since the release-1.3.0-beta.4
+	 * It has been replaced by the new PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0-beta.4")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnerspolicyapikeystatus())")
 	@PatchMapping(value = "/partners/{partnerId}/policy/{policyId}/apiKey/status")
-	@Operation(summary = "Service to activate/de-activate partner API key", description = "Service to activate/de-activate partner API key")
+	@Operation(summary = "Service to activate/de-activate partner API key - deprecated since release-1.3.0-beta.4",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,
 			@PathVariable String policyId, @RequestBody @Valid RequestWrapper<APIkeyStatusUpdateRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
@@ -289,27 +296,6 @@ public class PartnerManagementController {
 		response.setResponse(partnerManagementService.updateAPIKeyStatus(partnerId, policyId, request.getRequest()));
 		auditUtil.setAuditRequestDto(PartnerManageEnum.ACTIVATE_DEACTIVATE_API_PARTNERS_SUCCESS);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersapikeyexpiry())")
-	@PatchMapping(value = "/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date")
-	@Operation(summary = "Service to update expiry date of API key", 
-			description = "Available since release-1.3.0-beta.4. This endpoint allows updating the expiry date of an active API key. It is configured for the role PARTNER_ADMIN only.")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<APIKeyExpiryUpdateResponseDto> updateAPIKeyExpiry(@PathVariable String partnerId,
-			@PathVariable String policyId, @RequestBody @Valid RequestWrapperV2<APIKeyExpiryUpdateRequestDto> requestWrapper) {
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		Optional<ResponseWrapperV2<APIKeyExpiryUpdateResponseDto>> validationResponse =
-				requestValidator.validate(patchUpdateApiKeyExpiry, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		return partnerManagementService.updateAPIKeyExpiry(partnerId, policyId, requestWrapper.getRequest());
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
@@ -681,5 +667,29 @@ public class PartnerManagementController {
 			return validationResponse.get();
 		}
 		return partnerManagementService.linkPolicyGroup(partnerId, requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchupdatepartnerapikey())")
+	@PatchMapping(value = "/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}")
+	@Operation(summary = "Service to deactivate API key and/or update expiry date",
+            description = "This endpoint is used to deactivate an API key or update its expiry date and time.")
+    @ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@PathVariable String apiKeyName,
+			@RequestBody @Valid RequestWrapperV2<APIKeyUpdateRequestDto> requestWrapper) {
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("apiKeyName", apiKeyName);
+        Optional<ResponseWrapperV2<APIKeyUpdateResponseDto>> validationResponse = requestValidator.validate(patchUpdateApiKey, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+		return partnerManagementService.updateAPIKey(partnerId, policyId, apiKeyName, requestWrapper.getRequest());
 	}
 }
