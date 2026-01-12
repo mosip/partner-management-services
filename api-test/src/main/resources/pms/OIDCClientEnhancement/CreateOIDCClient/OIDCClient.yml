@@ -1554,7 +1554,6 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_45
       role: partnerauth
       restMethod: post
-      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1579,10 +1578,10 @@ CreateOIDCClient:
       	"consentExpireInMins": "StringValue"
 }'
       output: '{
-        "errors": [
-         {
-            "errorCode": "PMS_POLICY_ERROR_015"
-         }
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_015"
+       }
        ]
 }'
    Pms_CreateOIDCClient_Without_ConsentExpireInMins_smoke:
