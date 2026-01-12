@@ -1966,6 +1966,11 @@ public class PartnerServiceImpl implements PartnerService {
 						ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorMessage());
 			}
 
+			if (!validatePartnerByEmail(partnerEmail) && !validatePartnerId(partnerRequest.getPartnerId())) {
+				throw new PartnerServiceException(ErrorCode.EMAIL_AND_PARTNERID_ALREADY_EXISTS.getErrorCode(),
+						ErrorCode.EMAIL_AND_PARTNERID_ALREADY_EXISTS.getErrorMessage());
+			}
+
 			if (!validatePartnerByEmail(partnerEmail)) {
 				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.REGISTER_PARTNER_FAILURE, partnerRequest.getPartnerId(),
 						"partnerId");

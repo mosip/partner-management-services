@@ -44,6 +44,7 @@ public enum ErrorCode {
 	PARTNER_ALREADY_REG_WITH_SAME_PLICYGROUP("PMS_PRT_001","Partner is already registered with Same policy Group"),
 	INVALID_PARTNER_INPUT_PARAMETER("PMS_COR_002","Invalid Input Parameter - for all attributes not as per defined data definition"),
 	EMAIL_ALREADY_EXISTS_EXCEPTION("PMS_PRT_011", "Email is already exists."),
+	EMAIL_AND_PARTNERID_ALREADY_EXISTS("PMS_PRT_014","Email and Partner ID already exist."),
 	INVALID_EMAIL_ID_EXCEPTION("PMS_PRT_012", "Invalid emailId."),
 	INVALID_MOBILE_NUMBER_EXCEPTION("PMS_PRT_013", "Invalid mobile number.Length should be less than ."),
 	AUTHENTICATION_FAILED("PMS-ATH-401","Authentication Failed"),
