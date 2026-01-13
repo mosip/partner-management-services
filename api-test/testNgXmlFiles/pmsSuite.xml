@@ -557,9 +557,9 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePatchForAutoGenId" />
 		</classes>
 	</test>
-	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has been deprecated and replaced
-	by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}.
-	Ticket ID: MOSIP-43700, Story ID: MOSIP-44155 -->
+	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has 
+		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
+		Ticket ID: MOSIP-43700, Story ID: MOSIP-44155 -->
 	<!-- <test name="UpdateApiKeyExpiryDate">
 		<parameter name="ymlFile"
 			value="pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate.yml" />
