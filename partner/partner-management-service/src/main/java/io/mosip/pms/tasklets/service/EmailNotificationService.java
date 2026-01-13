@@ -222,7 +222,8 @@ public class EmailNotificationService {
 				addWeeklySummaryContext(context, notificationDetails);
 				break;
 			case PartnerConstants.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE:
-				MISPLicenseKeyDetailsDto misp = notificationDetails.getMispLicenseKeyDetails().stream().findFirst().orElse(null);
+				MISPLicenseKeyDetailsDto misp = Optional.ofNullable(notificationDetails.getMispLicenseKeyDetails())
+						.orElse(Collections.emptyList()).stream().findFirst().orElse(null);
 				if (misp != null) {
 					context.put("partnerId", notificationEntity.getPartnerId());
 					context.put("mispPartnerId", misp.getMispPartnerId());
