@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +34,7 @@ import io.mosip.pms.common.dto.NotificationDetailsDto;
 import io.mosip.pms.common.dto.ApiKeyDetailsDto;
 import io.mosip.pms.common.dto.FtmDetailsDto;
 import io.mosip.pms.common.dto.SbiDetailsDto;
+import io.mosip.pms.common.dto.MISPLicenseKeyDetailsDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
 import io.mosip.pms.common.util.PMSLogger;
@@ -220,6 +220,18 @@ public class EmailNotificationService {
 				context.put("toDate", createdDate.plusDays(7).format(formatter));
 
 				addWeeklySummaryContext(context, notificationDetails);
+				break;
+			case PartnerConstants.MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE:
+				MISPLicenseKeyDetailsDto misp = Optional.ofNullable(notificationDetails.getMispLicenseKeyDetails())
+						.orElse(Collections.emptyList()).stream().findFirst().orElse(null);
+				if (misp != null) {
+					context.put("partnerId", notificationEntity.getPartnerId());
+					context.put("mispPartnerId", misp.getMispPartnerId());
+					context.put("mispLicenseKeyName", misp.getMispLicenseKeyName());
+					context.put("policyGroupName", misp.getPolicyGroup());
+					context.put("policyName", misp.getPolicyName());
+					context.put("expiryDateTime", formatDateTime(misp.getExpiryDateTime()));
+				}
 				break;
 
 			default:

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; direction: rtl; text-align: right; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: right; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-left: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+
+      <div style="padding: 20px 36px; line-height: 1.8; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>عزيزنا الشريك ${partnerId}</strong></p>
+
+          <p>
+            نود إبلاغكم بأن مفتاح ترخيص منصة مزود خدمات الهوية
+            #if($mispLicenseKeyName) <strong>${mispLicenseKeyName}</strong> #end
+            الخاص بمعرف الشريك: <strong>${mispPartnerId}</strong> من المقرر أن تنتهي صلاحيته بتاريخ <strong>${expiryDateTime} بتوقيت UTC</strong>.
+            لضمان عدم انقطاع الخدمات، نرجو منكم تجديد مفتاح الترخيص قبل موعد انتهاء الصلاحية.
+          </p>
+
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">تفاصيل مفتاح ترخيص MISP</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              اسم مفتاح الترخيص<br />
+              <span style="font-weight: 400;">#if($mispLicenseKeyName)${mispLicenseKeyName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              معرف الشريك<br />
+              <span style="font-weight: 400;">${mispPartnerId}</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              مجموعة السياسة<br />
+              <span style="font-weight: 400;">#if($policyGroupName)${policyGroupName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              اسم السياسة<br />
+              <span style="font-weight: 400;">#if($policyName)${policyName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              تاريخ انتهاء الصلاحية<br />
+              <span style="font-weight: 400;">${expiryDateTime} بتوقيت UTC</span>
+            </p>
+
+            <p><strong>الإجراء المطلوب:</strong></p>
+            <p>يرجى إنشاء مفتاح ترخيص جديد لخدمة <strong>MISP</strong> من خلال <strong>'MISP Services'</strong>.</p>
+            <p>للمتابعة في إنشاء مفتاح ترخيص MISP، يُرجى اتباع الخطوات أدناه:</p>
+            <ol style="padding-right: 20px;">
+              <li>تسجيل الدخول إلى بوابة PMS.</li>
+              <li>الانتقال إلى "خدمات MISP" ضمن لوحة إدارة الشركاء.</li>
+              <li>إعادة توليد مفتاح ترخيص MISP جديد.</li>
+              <li>الاحتفاظ به بشكل آمن، لأنه سيتم إخفاؤه بعد إغلاق النافذة.</li>
+            </ol>
+          </div>
+          <p>قد يؤدي عدم تجديد مفتاح الترخيص قبل موعد انتهاء الصلاحية إلى انقطاع الخدمات.</p>
+
+          <p>
+            يُرجى الانتباه إلى أن وقت وتاريخ الانتهاء محددان بتوقيت UTC، لذا نوصي بأخذ فروق التوقيت بعين الاعتبار عند التخطيط للتجديد.
+          </p>
+
+          <p>شكرًا لاهتمامكم السريع بهذا الأمر.</p>
+
+          <p>مع أطيب التحيات،<br />فريق MOSIP</p>
+
+          <p style="padding: 6px 0px;">
+            ** هذا البريد الإلكتروني مُرسل تلقائيًا. الرجاء عدم الرد على هذه الرسالة. **
+          </p>
+
+          <p>
+            الموقع الإلكتروني:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

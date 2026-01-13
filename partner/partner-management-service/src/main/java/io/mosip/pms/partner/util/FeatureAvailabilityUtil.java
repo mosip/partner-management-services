@@ -17,6 +17,9 @@ public class FeatureAvailabilityUtil {
     @Value("${mosip.pms.ca.signed.partner.certificate.available}")
     private boolean caSignedCertAvailable;
 
+    @Value("${mosip.pms.oidc.client.additional.info.required}")
+    private boolean oidcClientAdditionalInfoRequired;
+
     public void validateRootAndIntermediateCertificatesFeatureEnabled() {
         if (!rootAndIntermediateCertsAvailable) {
             throw new PartnerServiceException(
@@ -40,6 +43,15 @@ public class FeatureAvailabilityUtil {
             throw new PartnerServiceException(
                     ErrorCode.CA_SIGNED_CERT_DISABLED.getErrorCode(),
                     ErrorCode.CA_SIGNED_CERT_DISABLED.getErrorMessage()
+            );
+        }
+    }
+
+    public void validateOidcClientAdditionalInfoFeatureAvailable() {
+        if (!oidcClientAdditionalInfoRequired) {
+            throw new PartnerServiceException(
+                    ErrorCode.OIDC_CLIENT_WITH_ADDITIONAL_INFO_FEATURE_DISABLED.getErrorCode(),
+                    ErrorCode.OIDC_CLIENT_WITH_ADDITIONAL_INFO_FEATURE_DISABLED.getErrorMessage()
             );
         }
     }

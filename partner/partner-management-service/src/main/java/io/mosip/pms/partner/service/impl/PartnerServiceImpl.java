@@ -986,19 +986,20 @@ public class PartnerServiceImpl implements PartnerService {
 	private void validateUser(PartnerCertDownloadRequestDto certDownloadRequestDto) {
 		String userId = getUserId();
 
-		// Check if user ID exists in pms
-		List<Partner> partnerList = partnerRepository.findByUserId(userId);
-		if (partnerList.isEmpty()) {
-			LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
-			throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-					ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-		}
-
 		// Check if the user is an admin
 		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 
-		// If not admin, check if the partner belongs to the user
+		// Check if user ID exists in pms and validate partner ownership (skip for partner admin)
+		List<Partner> partnerList = new ArrayList<>();
 		if (!isAdmin) {
+			partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+
+			// Check if the partner belongs to the user
 			boolean isPartnerBelongsToUser = false;
 			for (Partner partner : partnerList) {
 				if (partner.getId().equals(certDownloadRequestDto.getPartnerId())) {
@@ -1897,22 +1898,24 @@ public class PartnerServiceImpl implements PartnerService {
 			String userId = getUserId();
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<Partner> partners = new ArrayList<>();
-			// if not MISP_Partner type, fetch partners for logged in user
-			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType)) {
-				List<Partner> partnerList = partnerRepository.findByUserId(userId);
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			// if not MISP_Partner and ABIS_Partner type, fetch partners for logged in user
+			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType)) {
+				if (!isPartnerAdmin) {
+					List<Partner> partnerList = partnerRepository.findByUserId(userId);
+					if (partnerList.isEmpty()) {
+						LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+						throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+								ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+					}
 				}
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			}
-			// if MISP_Partner type and Partner_Admin, fetch all MISP partners
+			// if MISP_Partner/ABIS_Partner type and Partner_Admin, fetch all partners
 			else {
 				if (!isPartnerAdmin) {
-					LOGGER.info("sessionId", "idType", "id", "Only Partner Admin can fetch all MISP partners.");
-					throw new PartnerServiceException(ErrorCode.UNABLE_TO_FETCH_MISP_PARTNERS_LIST.getErrorCode(),
-							ErrorCode.UNABLE_TO_FETCH_MISP_PARTNERS_LIST.getErrorMessage());
+					LOGGER.info("sessionId", "idType", "id", "Only Partner Admin can fetch all partners for partner type: " + partnerType);
+					throw new PartnerServiceException(ErrorCode.UNABLE_TO_FETCH_PARTNERS_LIST.getErrorCode(),
+							ErrorCode.UNABLE_TO_FETCH_PARTNERS_LIST.getErrorMessage());
 				}
 				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
 			}

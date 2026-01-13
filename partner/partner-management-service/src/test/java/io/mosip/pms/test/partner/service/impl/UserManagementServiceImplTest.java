@@ -2,10 +2,12 @@ package io.mosip.pms.test.partner.service.impl;
 
 import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.dto.NotificationsSeenRequestDto;
+import io.mosip.pms.common.dto.NotificationsSeenResponseDto;
 import io.mosip.pms.common.entity.UserDetails;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
@@ -54,10 +57,17 @@ public class UserManagementServiceImplTest {
 
 	@Mock
 	PartnerServiceRepository partnerRepository;
+
+	@Mock
+	io.mosip.pms.partner.util.PartnerHelper partnerHelper;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+		ReflectionTestUtils.setField(userManagementServiceImpl, "postSaveUserConsentGivenId", "post.consent.id");
+		ReflectionTestUtils.setField(userManagementServiceImpl, "getUserConsentGivenId", "get.consent.id");
+		ReflectionTestUtils.setField(userManagementServiceImpl, "putNotificationsSeenTimestampId", "put.notification.id");
+		ReflectionTestUtils.setField(userManagementServiceImpl, "getNotificationsSeenTimestampId", "get.notification.id");
 	}
 	
 	@Test
@@ -69,7 +79,6 @@ public class UserManagementServiceImplTest {
 		userDto.setMobile("partner@gmail.com");
 		Mockito.doReturn(userDto).when(keycloakImpl).registerUser(registrationRequest);
 		userManagementServiceImpl.registerUser(registrationRequest);
-		
 	}
 
 	@Test
@@ -79,6 +88,8 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -106,6 +117,8 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -131,6 +144,8 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -138,6 +153,7 @@ public class UserManagementServiceImplTest {
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
 		userManagementServiceImpl.saveUserConsent();
 	}
+
 	@Test
 	public void saveUserConsentExceptionTest1() throws Exception {
 		userManagementServiceImpl.saveUserConsent();
@@ -150,6 +166,8 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -177,6 +195,8 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -192,6 +212,13 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void updateNotificationsSeenTimestampTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
 		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
 		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
 
@@ -228,6 +255,13 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void getNotificationsSeenTimestampTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -256,6 +290,13 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void getNotificationsSeenTimestampExceptionTest() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -266,11 +307,443 @@ public class UserManagementServiceImplTest {
 		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
 	}
 
+	@Test
+	public void testSaveUserConsentWithAdminRole() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		when(userDetailsRepository.save(any())).thenReturn(userDetails);
+		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void testSaveUserConsentWithPolicyManagerRole() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(true);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		when(userDetailsRepository.save(any())).thenReturn(userDetails);
+		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void testSaveUserConsentWithGeneralException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenThrow(new RuntimeException("DB error"));
+		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void testIsUserConsentGivenWithAdminRole() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void testIsUserConsentGivenWithPolicyManagerRole() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(true);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		userDetails.setConsentGiven("YES");
+		userDetails.setConsentGivenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void testIsUserConsentGivenWithConsentNotYes() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setConsentGiven("NO");
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void testIsUserConsentGivenWithEmptyUserDetails() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void testIsUserConsentGivenWithGeneralException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenThrow(new RuntimeException("DB error"));
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampWithAdminRole() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		UserDetails userDetails = new UserDetails();
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		when(userDetailsRepository.save(any())).thenReturn(userDetails);
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampWithUserDetailsNotFound() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampWithGeneralException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenThrow(new RuntimeException("Test exception"));
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampWithNonAdminUser() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		when(userDetailsRepository.save(any())).thenReturn(userDetails);
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testGetNotificationsSeenTimestampWithAdminRole() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
+	}
+
+	@Test
+	public void testGetNotificationsSeenTimestampWithGeneralException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenThrow(new RuntimeException("Test exception"));
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
+	}
+
+	@Test
+	public void testSaveUserConsentWithEmptyUserDetails() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		when(userDetailsRepository.save(any())).thenReturn(userDetails);
+		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampWithNullTimestamp() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		UserDetails userDetails = new UserDetails();
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(null);
+		ResponseWrapperV2<NotificationsSeenResponseDto> response = userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampPartnerServiceException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testUpdateNotificationsSeenTimestampGeneralException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenThrow(new RuntimeException("DB error"));
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void testGetNotificationsSeenTimestampWithNonAdminUser() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setUserId("123");
+		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
+	}
+
+	@Test
+	public void testGetNotificationsSeenTimestampPartnerServiceException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
+	}
+
+	@Test
+	public void testGetNotificationsSeenTimestampUserDetailsNotFound() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
+	}
+
+	@Test
+	public void testSaveUserConsentPartnerServiceException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
+		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void testSaveUserConsentWithNonAdminNonPolicyManager() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		UserDetails existingUserDetails = new UserDetails();
+		existingUserDetails.setId("existing-id");
+		existingUserDetails.setCrBy("creator");
+		existingUserDetails.setCrDtimes(LocalDateTime.now());
+		existingUserDetails.setUserId("existing-user-id");
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(existingUserDetails));
+
+		UserDetails savedUserDetails = new UserDetails();
+		savedUserDetails.setUserId("123");
+		savedUserDetails.setConsentGivenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.save(any())).thenReturn(savedUserDetails);
+		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void testIsUserConsentGivenPartnerServiceException() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
+	@Test
+	public void testIsUserConsentGivenWithNonAdminNonPolicyManager() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		partnerList.add(new Partner());
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		UserDetails userDetails = new UserDetails();
+		userDetails.setConsentGiven("YES");
+		userDetails.setConsentGivenDtimes(LocalDateTime.now());
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		userManagementServiceImpl.isUserConsentGiven();
+	}
+
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
 		mosipUserDto.setUserId("123");
 		mosipUserDto.setMail("abc@gmail.com");
 		return mosipUserDto;
 	}
-
 }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+
+      <div style="padding: 20px 36px; line-height: 1.6; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>प्रिय ${partnerId},</strong></p>
+
+          <p>
+            आपको सूचित किया जाता है कि पहचान सेवा प्रदाता मंच (MISP) की लाइसेंस कुंजी
+            #if($mispLicenseKeyName) <strong>${mispLicenseKeyName}</strong> #end
+            पार्टनर आईडी: <strong>${mispPartnerId}</strong> के लिए
+            <strong>${expiryDateTime} UTC</strong> को समाप्त होने वाली है।
+            सेवाओं में किसी भी बाधा से बचने के लिए कृपया समाप्ति तिथि से पहले लाइसेंस कुंजी का नवीनीकरण कर लें।
+          </p>
+
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">MISP लाइसेंस कुंजी विवरण</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              लाइसेंस कुंजी का नाम<br />
+              <span style="font-weight: 400;">#if($mispLicenseKeyName)${mispLicenseKeyName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              पार्टनर आईडी<br />
+              <span style="font-weight: 400;">${mispPartnerId}</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              नीति समूह<br />
+              <span style="font-weight: 400;">#if($policyGroupName)${policyGroupName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              नीति का नाम<br />
+              <span style="font-weight: 400;">#if($policyName)${policyName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              समाप्ति तिथि<br />
+              <span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+
+            <p><strong>आवश्यक कार्रवाई:</strong></p>
+            <p><strong>'MISP Services'</strong> में एक नई MISP लाइसेंस कुंजी उत्पन्न करें।</p>
+            <p>MISP लाइसेंस कुंजी बनाने की प्रक्रिया आगे बढ़ाने के लिए, कृपया नीचे दिए गए चरणों का पालन करें:</p>
+            <ol>
+              <li>PMS पोर्टल में लॉगिन करें।</li>
+              <li>पार्टनर एडमिन डैशबोर्ड में "MISP सेवाएँ" पर जाएँ।</li>
+              <li>नई MISP लाइसेंस कुंजी पुनः-निर्मित करें।</li>
+              <li>इसे सुरक्षित रखें, क्योंकि विंडो बंद करने के बाद यह छिपा दिया जाएगा।</li>
+            </ol>
+          </div>
+
+          <p>यदि आप समाप्ति तिथि से पहले लाइसेंस कुंजी नवीनीकृत नहीं करते हैं, तो सेवाओं में व्यवधान उत्पन्न हो सकता है।</p>
+
+          <p>
+            समाप्ति तिथि और समय UTC प्रारूप में प्रदान किया गया है — कृपया योजना बनाते समय समय-क्षेत्र के अंतर का ध्यान रखें।
+          </p>
+
+          <p>इस विषय पर आपके त्वरित ध्यान के लिए धन्यवाद।</p>
+
+          <p>सादर,<br />MOSIP</p>
+
+          <p style="padding: 6px 0px;">
+            ** यह एक स्वचालित ईमेल है। कृपया इस ईमेल का उत्तर न दें। **
+          </p>
+
+          <p>
+            वेबसाइट:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

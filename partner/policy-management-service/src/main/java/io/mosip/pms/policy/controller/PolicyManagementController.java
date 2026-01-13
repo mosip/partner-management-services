@@ -323,7 +323,7 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpolicygroups())")
 	@GetMapping(value = "/policy-groups")
 	@Operation(summary = "This endpoint retrieves details about all active Policy Groups",
-	description = "Available since release-1.2.2.0.")
+	description = "Available since release-1.2.2.0- This endpoint should be setup for all the roles: AUTH_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER,ABIS_PARTNER,MANUAL_ADJUDICATION,PARTNER_ADMIN,POLICYMANAGER.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -334,7 +334,7 @@ public class PolicyManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpolicies())")
 	@GetMapping(value = "/v2")
 	@Operation(summary = "This endpoint retrieves the list of all Policies",
-	description = "Available since release-1.2.2.0. It is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier POST endpoint /policies/search by adding features like pagination, filtering and sorting. It is configured for the POLICYMANAGER or PARTNER_ADMIN roles.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -356,14 +356,14 @@ public class PolicyManagementController {
 					schema = @Schema(allowableValues = {"activated", "deactivated", "draft"})
 			)
 			@RequestParam(value = "status", required = false) String status) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(policyType);
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(policyDescription);
-		inputValidator.validateRequestInput(policyGroupName);
-		inputValidator.validateRequestInput(status);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("policyType", policyType);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("policyDescription", policyDescription);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("status", status);
 		PolicyFilterDto filterDto = new PolicyFilterDto();
 		if (policyType != null) {
 			filterDto.setPolicyType(policyType.toLowerCase());
@@ -400,8 +400,8 @@ public class PolicyManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicy(policyId, requestWrapper.getRequest());
 	}
 
@@ -420,8 +420,8 @@ public class PolicyManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(policyGroupId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("policyGroupId", policyGroupId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return policyManagementService.deactivatePolicyGroup(policyGroupId, requestWrapper.getRequest());
 	}
 }

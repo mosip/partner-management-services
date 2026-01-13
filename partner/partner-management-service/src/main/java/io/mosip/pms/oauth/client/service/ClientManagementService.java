@@ -56,4 +56,14 @@ public interface ClientManagementService {
 			throws Exception;
 
 	ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto);
+
+	ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClientsV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, ClientFilterDto filterDto);
+
+	ResponseWrapperV2<ClientDetailResponse> createOIDCClientV2(ClientDetailCreateRequestV3 createRequest);
+
+	ResponseWrapperV2<ClientDetailResponse> updateOIDCClientV2(String clientId, ClientDetailUpdateRequestV3 updateRequest);
+
+	ResponseWrapperV2<ClientDetailV2> getOIDCClientV2(String clientId);
+
+	ResponseWrapperV2<ClientDetailResponse> deactivateOIDCClient(String clientId, DeactivateOidcClientRequestDto requestDto);
 }

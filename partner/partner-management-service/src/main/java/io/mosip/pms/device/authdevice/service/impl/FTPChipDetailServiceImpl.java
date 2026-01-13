@@ -592,19 +592,21 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 						ErrorCode.DEACTIVATE_STATUS_CODE.getErrorMessage());
 			}
 			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<Partner> partnerList = new ArrayList<>();
+			if (!isAdmin) {
+				partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exist.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}			
 			}
 			validateFtmId(ftmId);
 			Optional<FTPChipDetail> ftmChipDetail = ftpChipDetailRepository.findById(ftmId);
 			validateFtmChipDetail(ftmChipDetail);
 
 			FTPChipDetail ftm = ftmChipDetail.get();
-
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if(!isAdmin){
 				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
 				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);
@@ -667,11 +669,15 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		ResponseWrapperV2<FtmCertificateDownloadResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.error("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			List<Partner> partnerList = new ArrayList<>();
+			if (!isAdmin) {
+				partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.error("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
 			validateFtmId(ftmId);
 			Optional<FTPChipDetail> ftmChipDetail = ftpChipDetailRepository.findById(ftmId);
@@ -679,7 +685,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 
 			FTPChipDetail ftm = ftmChipDetail.get();
 
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if(!isAdmin){
 				Partner partnerDetails = getAssociatedPartner(partnerList, ftm, userId);
 				partnerHelper.checkIfPartnerIsNotActive(partnerDetails);

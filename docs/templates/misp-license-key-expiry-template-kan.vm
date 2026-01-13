@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="kn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style></style>
+  </head>
+  <body>
+    <div
+      style="font-family: Arial, sans-serif; background-color: #f5f5f5; color: #475467; max-width: 600px; margin: 20px auto; background-image: url('https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/header_background.png'); border: 1px solid #e0e0e0; border-radius: 20px; padding: 0 2px 1rem 2px;"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+    >
+      <div style="color: #ffffff; text-align: left; padding: 24px 36px;">
+        <img
+          style="height: 58px; width: 150px; vertical-align: middle; margin-right: 10px;"
+          src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/new_Mosip_logo.png"
+          alt="Logo"
+        />
+      </div>
+
+      <div style="padding: 20px 36px; line-height: 1.6; background-color: #ffffff;">
+        <div style="font-size: 14px;">
+          <p><strong>ಪ್ರಿಯ ${partnerId},</strong></p>
+
+          <p>
+            ನಿಮ್ಮ ಪಾಲುದಾರರ ಐಡಿ: <strong>${mispPartnerId}</strong> ಗೆ ಸಂಬಂಧಿಸಿದ
+            ಗುರುತಿನ ಸೇವಾ ಒದಗಿಸುವಿ ವೇದಿಕೆ (MISP) ಪರವಾನಗಿ ಕೀ
+            #if($mispLicenseKeyName) <strong>${mispLicenseKeyName}</strong> #end
+            <strong>${expiryDateTime} UTC</strong> ರಂದು ಅವಧಿ ಮುಗಿಯಲಿದೆ. 
+            ಸೇವೆಗಳು ತಪ್ಪದೆ ಮುಂದುವರಿಯಲು, ದಯವಿಟ್ಟು ಅವಧಿ ಮುಗಿಯುವ ಮೊದಲು ಪರವಾನಗಿ ಕೀ ಅನ್ನು ನವೀಕರಿಸಿ.
+          </p>
+
+          <div style="padding: 10px 20px; background-color: #FAFBFC; border-radius: 10px;">
+            <p style="font-size: 16px; font-weight: bold;">MISP ಪರವಾನಗಿ ಕೀ ವಿವರಗಳು</p>
+            <hr style="border-top: 1px solid #E5E5E5;" />
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಪರವಾನಗಿ ಕೀ ಹೆಸರು<br />
+              <span style="font-weight: 400;">#if($mispLicenseKeyName)${mispLicenseKeyName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಪಾಲುದಾರ ಐಡಿ<br />
+              <span style="font-weight: 400;">${mispPartnerId}</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ನೀತಿ ಗುಂಪು<br />
+              <span style="font-weight: 400;">#if($policyGroupName)${policyGroupName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ನೀತಿ ಹೆಸರು<br />
+              <span style="font-weight: 400;">#if($policyName)${policyName}#else -#end</span>
+            </p>
+
+            <p style="padding: 5px 0px; font-weight: 600;">
+              ಅವಧಿ ಮುಗಿಯುವ ದಿನಾಂಕ<br />
+              <span style="font-weight: 400;">${expiryDateTime} UTC</span>
+            </p>
+
+            <p><strong>ಕೈಗೊಳ್ಳಬೇಕಾದ ಕ್ರಮ:</strong></p>
+            <p><strong>'MISP Services'</strong> ನಲ್ಲಿ ಹೊಸ MISP ಪರವಾನಗಿ ಕೀ ಅನ್ನು ರಚಿಸಿ.</p>
+            <p>MISP ಲೈಸೆನ್ಸ್ ಕೀ ಅನ್ನು ರಚಿಸುವ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಮುಂದುವರಿಸಲು, ದಯವಿಟ್ಟು ಕೆಳಗಿನ ಹಂತಗಳನ್ನು ಅನುಸರಿಸಿ:</p>
+            <ol>
+              <li>PMS ಪೋರ್ಟಲ್‍ಗೆ ಲಾಗಿನ್ ಆಗಿ.</li>
+              <li>ಪಾಲುದಾರರ ಆಡಳಿತ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ "MISP ಸೇವೆಗಳು" ಆಯ್ಕೆಮಾಡಿ.</li>
+              <li>ಹೊಸ MISP ಪರವಾನಗಿ ಕೀ ಅನ್ನು ಮರು-ರಚಿಸಿ.</li>
+              <li>ವಿಂಡೋ ಮುಚ್ಚಿದ ನಂತರ ಕೀ ಮಸ್ಕ್ ಆಗುವ ಕಾರಣ, ಅದನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಸಂಗ್ರಹಿಸಿ.</li>
+            </ol>
+          </div>
+
+          <p>ಅವಧಿ ಮುಗಿಯುವ ದಿನಾಂಕದೊಳಗೆ ಪರವಾನಗಿ ಕೀ ನವೀಕರಣ ಮಾಡದಿದ್ದರೆ ಸೇವೆಯಲ್ಲಿ ವ್ಯತ್ಯಯ ಉಂಟಾಗಬಹುದು.</p>
+
+          <p>
+            ಅವಧಿ ಮುಗಿಯುವ ಸಮಯವನ್ನು UTC ಸ್ವರೂಪದಲ್ಲಿ ನೀಡಲಾಗಿದೆ — ನವೀಕರಣ ಯೋಜನೆ ಮಾಡುವಾಗ ಕಾಲ ವಲಯ ವ್ಯತ್ಯಾಸಗಳನ್ನು ಗಮನದಲ್ಲಿಡಿ.
+          </p>
+
+          <p>ಈ ವಿಷಯಕ್ಕೆ ತ್ವರಿತ ಗಮನ ನೀಡಿದಕ್ಕೆ ಧನ್ಯವಾದಗಳು.</p>
+
+          <p>ಹೃತ್ಪೂರ್ವಕ ಶುಭಾಶಯಗಳು,<br />MOSIP</p>
+
+          <p style="padding: 6px 0px;">
+            ** ಇದು ಆಟೋ-ಜೆನೆರೇಟೆಡ್ ಇಮೇಲ್. ದಯವಿಟ್ಟು ಈ ಇಮೇಲ್‌ಗೆ ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿ ಬೇಡ. **
+          </p>
+
+          <p>
+            ವೆಬ್‌ಸೈಟ್:
+            <a target="_blank" href="https://www.mosip.io">www.mosip.io</a>
+          </p>
+
+          <hr style="border-top: 1px solid #edeef0;" />
+        </div>
+
+        <div style="font-size: 14px; margin-top: 1.5rem;">
+          <div style="margin: auto; border-collapse: collapse; text-align: center;">
+            <a
+              target="_blank"
+              href="https://www.linkedin.com/company/mosip-project/posts/?feedView=all"
+            >
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/linkedin.png"
+                alt="linkedin"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+            <a target="_blank" href="https://www.youtube.com/@mosip16">
+              <img
+                src="https://raw.githubusercontent.com/mosip/documentation/1.2.0/docs/_images/youtube.png"
+                alt="youtube"
+                style="width: 24px; height: 24px; padding: 0px 4px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

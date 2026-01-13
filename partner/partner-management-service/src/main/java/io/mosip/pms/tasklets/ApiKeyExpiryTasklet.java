@@ -26,7 +26,6 @@ import io.mosip.pms.tasklets.service.EmailNotificationService;
 import io.mosip.pms.tasklets.util.BatchJobHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import io.mosip.pms.tasklets.util.KeycloakHelper;
-import io.mosip.pms.tasklets.util.PartnerCertificateExpiryHelper;
 
 /**
  * This Batch Job will create notifications for the all FTM chip certificates
@@ -54,9 +53,6 @@ public class ApiKeyExpiryTasklet implements Tasklet {
 
 	@Autowired
 	EmailNotificationService emailNotificationService;
-
-	@Autowired
-	PartnerCertificateExpiryHelper partnerCertificateExpiryHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -93,7 +89,7 @@ public class ApiKeyExpiryTasklet implements Tasklet {
 								authPartnerId + " within next 30 days.");
 						LocalDateTime apiKeyExpiryDateTime = apiKeyDetails.getValidToDatetime().toLocalDateTime();
 						log.info("The API key expiry date is {}", apiKeyExpiryDateTime);
-						boolean isExpiringWithin30Days = partnerCertificateExpiryHelper.checkIfExpiring(authPartner,
+						boolean isExpiringWithin30Days = batchJobHelper.checkIfExpiring(authPartner,
 								apiKeyExpiryDateTime, 30, true);
 						if (isExpiringWithin30Days) {
 							countOfApiKeysExpiringWithin30Days++;
@@ -105,19 +101,19 @@ public class ApiKeyExpiryTasklet implements Tasklet {
 							while (expiryPeriodsIterator.hasNext()) {
 								Integer expiryPeriod = expiryPeriodsIterator.next();
 								log.info("Checking for API Key expiry after " + expiryPeriod + " days.");
-								boolean isExpiringAfterExpiryPeriod = partnerCertificateExpiryHelper
+								boolean isExpiringAfterExpiryPeriod = batchJobHelper
 										.checkIfExpiring(authPartner, apiKeyExpiryDateTime, expiryPeriod, false);
 								// Step 5: If yes, add the notification
 								if (isExpiringAfterExpiryPeriod) {
 									List<ApiKeyDetailsDto> expiringApiKeysList = new ArrayList<ApiKeyDetailsDto>();
-									ApiKeyDetailsDto apiKeyDetailsDto = partnerCertificateExpiryHelper
+									ApiKeyDetailsDto apiKeyDetailsDto = batchJobHelper
 											.populateApiKeyDetails(expiryPeriod, apiKeyDetails);
 									expiringApiKeysList.add(apiKeyDetailsDto);
 									// Decrypt the email ID if it's already encrypted to avoid encrypting it again
 									String decryptedEmailId = keyManagerHelper.decryptData(authPartner.getEmailId());
 									NotificationEntity savedNotification = batchJobHelper.saveNotification(
-											PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE, authPartner, null, null,
-											null, expiringApiKeysList, decryptedEmailId);
+											PartnerConstants.API_KEY_EXPIRY_NOTIFICATION_TYPE, authPartner.getId(), authPartner.getLangCode(), null, null,
+											null, expiringApiKeysList, null, decryptedEmailId);
 									// Step 6: send email notification
 									emailNotificationService.sendEmailNotification(savedNotification, decryptedEmailId);
 									log.info("Created SBI expiry notification with notification id "

@@ -270,7 +270,7 @@ public class SecureBiometricInterfaceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostadddevicetosbi())")
 	@PostMapping(value = "/{sbiId}/devices")
 	@Operation(summary = "This endpoint adds a new Device and creates an inactive mapping between the device and the given SBI.", 
-	description = "Available since release-1.2.2.0. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. Whenever a device is created, this endpoint will first add a new device in DB and also add an in active mapping between device and SBI. Later when Partner Admin will approve the Device, the mapping will also be activated. If any error occurs while adding the inactive mapping between a device and SBI, instead of leaving the orphaned device in DB, this endpoint will delete it. This endpoint is configured for the roles DEVICE_PROVIDER or PARTNER_ADMIN.")
 	@io.swagger.v3.oas.annotations.responses.ApiResponses(value = {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK"),
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -282,15 +282,13 @@ public class SecureBiometricInterfaceController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(sbiId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceProviderId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getId());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceTypeCode());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getDeviceSubTypeCode());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getMake());
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getModel());
+		inputValidator.validateRequestInput("sbiId", sbiId);
+		inputValidator.validateRequestInput("make", requestWrapper.getRequest().getMake());
+		inputValidator.validateRequestInput("model", requestWrapper.getRequest().getModel());
+		inputValidator.validateRequestInput("deviceProviderId", requestWrapper.getRequest().getDeviceProviderId());
+		inputValidator.validateRequestInput("id", requestWrapper.getRequest().getId());
+		inputValidator.validateRequestInput("deviceTypeCode", requestWrapper.getRequest().getDeviceTypeCode());
+		inputValidator.validateRequestInput("deviceSubTypeCode", requestWrapper.getRequest().getDeviceSubTypeCode());
 		return secureBiometricInterface.addDeviceToSbi(requestWrapper.getRequest(), sbiId);
 	}
 
@@ -304,7 +302,7 @@ public class SecureBiometricInterfaceController {
 			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<List<DeviceDto>> getAllDevicesForSbi(@PathVariable String sbiId) {
-		inputValidator.validateRequestInput(sbiId);
+		inputValidator.validateRequestInput("sbiId", sbiId);
 		return secureBiometricInterface.getAllDevicesForSbi(sbiId);
 	}
 
@@ -323,8 +321,8 @@ public class SecureBiometricInterfaceController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput(sbiId);
-		inputValidator.validateRequestInput(requestWrapper.getRequest().getStatus());
+		inputValidator.validateRequestInput("sbiId", sbiId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
 		return secureBiometricInterface.deactivateSbi(sbiId, requestWrapper.getRequest());
 	}
 
@@ -363,14 +361,14 @@ public class SecureBiometricInterfaceController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(sbiId);
-		inputValidator.validateRequestInput(sbiVersion);
-		inputValidator.validateRequestInput(status);
-		inputValidator.validateRequestInput(sbiExpiryStatus);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("sbiId", sbiId);
+		inputValidator.validateRequestInput("sbiVersion", sbiVersion);
+		inputValidator.validateRequestInput("status", status);
+		inputValidator.validateRequestInput("sbiExpiryStatus", sbiExpiryStatus);
 		SbiFilterDto filterDto = new SbiFilterDto();
 		if (partnerId != null) {
 			filterDto.setPartnerId(partnerId.toLowerCase());

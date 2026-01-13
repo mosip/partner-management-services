@@ -81,6 +81,12 @@ public class UserController {
 	@Value("${pmp.partner.mobileNumber.max.length}")
 	private String phoneNumberMaxLength;
 
+	@Value("${mosip.pms.supported.oidc.languages}")
+	private String supportedOidcLanguages;
+
+	@Value("${mosip.pms.oidc.client.additional.info.required}")
+	private String isOidcClientAdditionalInfoRequired;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -146,6 +152,8 @@ public class UserController {
 		configMap.put("supportedNotificationLanguages", supportedNotificationLanguages);
 		configMap.put("partnerIdMaxLength", partnerIdMaxLength);
 		configMap.put("phoneNumberMaxLength", phoneNumberMaxLength);
+		configMap.put("supportedOidcLanguages", supportedOidcLanguages);
+		configMap.put("isOidcClientAdditionalInfoRequired", isOidcClientAdditionalInfoRequired);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
@@ -154,7 +162,7 @@ public class UserController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutnotificationseentimestamp())")
 	@PutMapping(value = "users/{userId}/notifications-seen-timestamp")
 	@Operation(summary = "Added in release-1.3.x. This endpoint updates the user's notifications seen timestamp",
-			description = "This endpoint updates the user's notifications seen timestamp. It is configured for all Partner Type roles.")
+			description = "This endpoint will update the status and timestamp of when the notifications were last viewed by the user in the PMS portal. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -169,7 +177,7 @@ public class UserController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotificationseentimestamp())")
 	@GetMapping(value = "users/{userId}/notifications-seen-timestamp")
 	@Operation(summary = "Added in release-1.3.x. This endpoint fetches the user's notifications seen timestamp",
-			description = "This endpoint fetches the user's notifications seen timestamp. It is configured for all Partner Type roles.")
+			description = "This endpoint will get the status and timestamp of when the notifications were last viewed by the user in the PMS portal. It is configured for all Partner Type roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})

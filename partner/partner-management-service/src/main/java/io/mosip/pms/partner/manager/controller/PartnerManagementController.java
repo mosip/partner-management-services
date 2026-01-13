@@ -9,6 +9,8 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
+import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -87,6 +89,9 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.api.id.link.policy.group.post}")
 	private String postLinkPolicyGroup;
+
+    @Value("${mosip.pms.api.id.update.api.key.patch}")
+    private String patchUpdateApiKey;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -272,9 +277,16 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/*
+	 * This endpoint has been deprecated since the release-1.3.0-beta.4
+	 * It has been replaced by the new PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint.
+	 * Please use the new endpoint for all future requests.
+	 */
+	@Deprecated(since = "release-1.3.0-beta.4")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnerspolicyapikeystatus())")
 	@PatchMapping(value = "/partners/{partnerId}/policy/{policyId}/apiKey/status")
-	@Operation(summary = "Service to activate/de-activate partner API key", description = "Service to activate/de-activate partner API key")
+	@Operation(summary = "Service to activate/de-activate partner API key - deprecated since release-1.3.0-beta.4",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,
 			@PathVariable String policyId, @RequestBody @Valid RequestWrapper<APIkeyStatusUpdateRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
@@ -289,21 +301,21 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
 	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Available since release-1.2.2.0. It is configured for the role PARTNER_ADMIN.")
+	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoint /partners/{partnerId} by adding new features like Policy Group Details in Response and Certificate Details in Response. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(@PathVariable String partnerId) {
-		inputValidator.validateRequestInput(partnerId);
+		inputValidator.validateRequestInput("partnerId", partnerId);
 		return partnerManagementService.getPartnerDetails(partnerId);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
 	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Available since release-1.2.2.0. This endpoint supports pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoints /partners and /partners/v2 by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -333,14 +345,15 @@ public class PartnerManagementController {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(partnerType);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(emailAddress);
-		inputValidator.validateRequestInput(certificateUploadStatus);
-		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("partnerType", partnerType);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("emailAddress", emailAddress);
+		inputValidator.validateRequestInput("certificateUploadStatus", certificateUploadStatus);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("status", status);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
 			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
@@ -403,17 +416,17 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "partnerType", required = false) String partnerType
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(partnerIdSearchType);
-		inputValidator.validateRequestInput(partnerComment);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(status);
-		inputValidator.validateRequestInput(policyId);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(policyGroupName);
-		inputValidator.validateRequestInput(partnerType);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("partnerIdSearchType", partnerIdSearchType);
+		inputValidator.validateRequestInput("partnerComment", partnerComment);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("status", status);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("partnerType", partnerType);
 		PartnerPolicyRequestFilterDto filterDto = new PartnerPolicyRequestFilterDto();
 		boolean isEqualSearch = false;
 		if (partnerIdSearchType != null) {
@@ -480,14 +493,14 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(apiKeyLabel);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(status);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("apiKeyLabel", apiKeyLabel);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("status", status);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
@@ -522,14 +535,14 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(partnerId);
-		inputValidator.validateRequestInput(apiKeyLabel);
-		inputValidator.validateRequestInput(orgName);
-		inputValidator.validateRequestInput(status);
-		inputValidator.validateRequestInput(policyName);
-		inputValidator.validateRequestInput(policyGroupName);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("apiKeyLabel", apiKeyLabel);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("status", status);
+		inputValidator.validateRequestInput("policyName", policyName);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
 		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
@@ -582,13 +595,13 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod) {
 		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
-		inputValidator.validateRequestInput(sortFieldName);
-		inputValidator.validateRequestInput(sortType);
-		inputValidator.validateRequestInput(caCertificateType);
-		inputValidator.validateRequestInput(certificateId);
-		inputValidator.validateRequestInput(partnerDomain);
-		inputValidator.validateRequestInput(issuedBy);
-		inputValidator.validateRequestInput(issuedTo);
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("caCertificateType", caCertificateType);
+		inputValidator.validateRequestInput("certificateId", certificateId);
+		inputValidator.validateRequestInput("partnerDomain", partnerDomain);
+		inputValidator.validateRequestInput("issuedBy", issuedBy);
+		inputValidator.validateRequestInput("issuedTo", issuedTo);
 		TrustCertificateFilterDto filterDto = new TrustCertificateFilterDto();
 		if (caCertificateType != null) {
 			filterDto.setCaCertificateType(caCertificateType);
@@ -623,7 +636,6 @@ public class PartnerManagementController {
 	ResponseWrapperV2<TrustCertificateResponseDto> downloadTrustCertificates(
 			@ApiParam("To download trust certificates.")  @PathVariable("certificateId") @NotNull String certificateId) {
 		featureAvailabilityUtil.validateRootAndIntermediateCertificatesFeatureEnabled();
-		inputValidator.validateRequestInput(certificateId);
 		if (!certificateId.matches(certificateIdRegex)) {
 			throw new PartnerServiceException(
 					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
@@ -640,7 +652,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostlinkpolicygrouptopartner())")
 	@PostMapping(value = "/{partnerId}/policy-group")
 	@Operation(summary = "This endpoint is used for linking a policy group to a partner.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is used for linking a policy group to a partner.")
+			description = "Available since release-1.3.0-beta.3. This endpoint is available for users with the PARTNER_ADMIN role. It is used to link a policy group to a partner with the MISP_PARTNER role, if not already linked.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Policy group linked successfully"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -655,5 +667,29 @@ public class PartnerManagementController {
 			return validationResponse.get();
 		}
 		return partnerManagementService.linkPolicyGroup(partnerId, requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchupdatepartnerapikey())")
+	@PatchMapping(value = "/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}")
+	@Operation(summary = "Service to deactivate API key and/or update expiry date",
+            description = "This endpoint is used to deactivate an API key or update its expiry date and time.")
+    @ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@PathVariable String apiKeyName,
+			@RequestBody @Valid RequestWrapperV2<APIKeyUpdateRequestDto> requestWrapper) {
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("apiKeyName", apiKeyName);
+        Optional<ResponseWrapperV2<APIKeyUpdateResponseDto>> validationResponse = requestValidator.validate(patchUpdateApiKey, requestWrapper);
+        if (validationResponse.isPresent()) {
+            return validationResponse.get();
+        }
+		return partnerManagementService.updateAPIKey(partnerId, policyId, apiKeyName, requestWrapper.getRequest());
 	}
 }

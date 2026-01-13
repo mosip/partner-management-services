@@ -100,6 +100,28 @@ public class NotificationsControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getNotificationsTestWithMispLicenseKeyName() throws Exception {
+        ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
+        Mockito.when(notificationsService.getNotifications(Mockito.anyInt(), Mockito.anyInt(), Mockito.any(NotificationsFilterDto.class)))
+                .thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.get("/notifications")
+                        .param("mispLicenseKeyName", "testKey"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getNotificationsTestWithMispPartnerId() throws Exception {
+        ResponseWrapperV2<PageResponseV2Dto<NotificationsResponseDto>> responseWrapper = new ResponseWrapperV2<>();
+        Mockito.when(notificationsService.getNotifications(Mockito.anyInt(), Mockito.anyInt(), Mockito.any(NotificationsFilterDto.class)))
+                .thenReturn(responseWrapper);
+        mockMvc.perform(MockMvcRequestBuilders.get("/notifications")
+                        .param("mispPartnerId", "partner123"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void dismissNotificationTest() throws Exception {
         RequestWrapperV2<DismissNotificationRequestDto> requestWrapper = new RequestWrapperV2<>();
         requestWrapper.setId(patchDismissNotificationId);

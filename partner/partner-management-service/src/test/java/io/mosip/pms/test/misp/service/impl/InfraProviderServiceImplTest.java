@@ -702,12 +702,13 @@ public class InfraProviderServiceImplTest {
 		MISPFilterDto filterDto = new MISPFilterDto();
 		filterDto.setPartnerId("partner1");
 		filterDto.setOrgName("abc");
+		filterDto.setExpiryPeriod(30);
 
 		MISPLicenseSummaryEntity entity = new MISPLicenseSummaryEntity();
 		entity.setPartnerId("partner1");
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<MISPLicenseSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
-		when(mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any())).thenReturn(page);
+		when(mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), anyInt(), any())).thenReturn(page);
 		infraProviderServiceImpl.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
