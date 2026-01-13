@@ -880,7 +880,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_grant_type"
+       "errorCode": "PMS_ESI_009"
        }
        ]
 }'
@@ -916,7 +916,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_grant_type"
+       "errorCode": "PMS_ESI_009"
        }
        ]
 }'
@@ -988,7 +988,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_grant_type"
+       "errorCode": "PMS_ESI_009"
        }
        ]
 }'
@@ -1024,7 +1024,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_grant_type"
+       "errorCode": "PMS_ESI_009"
        }
        ]
 }'
@@ -1060,7 +1060,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_grant_type"
+       "errorCode": "PMS_ESI_009"
        }
        ]
 }'
@@ -1164,7 +1164,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_client_auth"
+       "errorCode": "PMS_ESI_010"
        }
        ]
 }'
@@ -1200,7 +1200,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_client_auth"
+       "errorCode": "PMS_ESI_010"
        }
        ]
 }'

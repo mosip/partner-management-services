@@ -206,7 +206,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_grant_type"
+       "errorCode": "PMS_ESI_009"
        }
        ]
 }'
