@@ -23,7 +23,13 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
@@ -45,8 +51,20 @@ public class SbiExpiryAutoDeactivationTasklet implements Tasklet {
     @Autowired
     AuditUtil auditUtil;
 
-    @Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
-    private List<String> skipPartnerIds;
+    @Value("${mosip.pms.batch.job.skips.partner.ids:}")
+    private String skipPartnerIdsConfig;
+
+    private Set<String> skipPartnerIds = Collections.emptySet();
+
+    @PostConstruct
+    public void initSkipPartnerIds() {
+        if (skipPartnerIdsConfig != null && !skipPartnerIdsConfig.trim().isEmpty()) {
+            skipPartnerIds = Arrays.stream(skipPartnerIdsConfig.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toSet());
+        }
+    }
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
