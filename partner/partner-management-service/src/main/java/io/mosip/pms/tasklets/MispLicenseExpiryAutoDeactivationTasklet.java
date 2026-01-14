@@ -2,9 +2,15 @@ package io.mosip.pms.tasklets;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import jakarta.annotation.PostConstruct;
 
 import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.helper.WebSubPublisher;
@@ -35,11 +41,23 @@ public class MispLicenseExpiryAutoDeactivationTasklet implements Tasklet {
     @Autowired
     MispLicenseV2Repository mispLicenseRepository;
 
-    @Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
-    private List<String> skipPartnerIds;
+    @Value("${mosip.pms.batch.job.skips.partner.ids:}")
+    private String skipPartnerIdsConfig;
+
+    private Set<String> skipPartnerIds = Collections.emptySet();
 
     @Autowired
     WebSubPublisher webSubPublisher;
+
+    @PostConstruct
+    public void initSkipPartnerIds() {
+        if (skipPartnerIdsConfig != null && !skipPartnerIdsConfig.trim().isEmpty()) {
+            skipPartnerIds = Arrays.stream(skipPartnerIdsConfig.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toSet());
+        }
+    }
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {

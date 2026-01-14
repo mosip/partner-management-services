@@ -9,10 +9,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import jakarta.annotation.PostConstruct;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.mosip.pms.common.exception.ApiAccessibleException;
@@ -61,8 +67,10 @@ public class BatchJobHelper {
 	@Autowired
 	AuditUtil auditUtil;
 
-	@Value("#{'${mosip.pms.batch.job.skips.partner.ids}'.split(',')}")
-	private List<String> skipPartnerIds;
+	@Value("${mosip.pms.batch.job.skips.partner.ids:}")
+	private String skipPartnerIdsConfig;
+
+	private Set<String> skipPartnerIds = Collections.emptySet();
 
 	@Value("#{'${mosip.pms.batch.job.partner.cert.expiry.periods}'.split(',')}")
 	private List<Integer> partnerCertExpiryPeriods;
@@ -84,6 +92,16 @@ public class BatchJobHelper {
 
 	@Autowired
 	NotificationServiceRepository notificationServiceRepository;
+
+	@PostConstruct
+	public void initSkipPartnerIds() {
+		if (skipPartnerIdsConfig != null && !skipPartnerIdsConfig.trim().isEmpty()) {
+			skipPartnerIds = Arrays.stream(skipPartnerIdsConfig.split(","))
+					.map(String::trim)
+					.filter(s -> !s.isEmpty())
+					.collect(Collectors.toSet());
+		}
+	}
 
 	public boolean validatePartnerId(Optional<Partner> partnerById) {
 		if (partnerById.isEmpty()) {
