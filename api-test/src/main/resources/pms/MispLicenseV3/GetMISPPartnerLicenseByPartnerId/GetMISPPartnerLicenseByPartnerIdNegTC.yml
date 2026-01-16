@@ -149,14 +149,14 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111444",
+      "partnerId": "$ID:MISPPartnerRegistration_With_Not_Uploading_Certificate_Smoke_Sid_partnerId$",
       "licenseKeyName": "$REMOVE$",
       "policyId": "$REMOVE$"
 }'
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_MSP_429"
+           "errorCode": "PMS_MSP_427"
         }
     ]
 }'

@@ -912,7 +912,7 @@ CreateMISPPartnerNegativeScenarios:
         "organizationName": "MISP",
         "address": "Bangalore",
         "contactNumber": "9876554461",
-        "emailId": "newmisppartner@gmail.com",
+        "emailId": "newmisppartnerapiauto@gmail.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
