@@ -6,6 +6,7 @@
 package io.mosip.pms.oauth.client.dto;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class ClientDetail {
     private String policyName;
     private String relyingPartyId;
     private String logoUri;
-    private List<String> redirectUris;
+    private List<@URL String> redirectUris;
     private String publicKey;
     private List<String> claims;
     private List<String> acrValues;
