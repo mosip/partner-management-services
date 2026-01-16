@@ -41,7 +41,7 @@ public class ClientDetailCreateRequest {
 
     @NotNull
     @Size(min = 1, max = 5)
-    private List<String> redirectUris;
+    private List<@URL String> redirectUris;
     
     @NotNull
     @Size(min = 1, max = 3)

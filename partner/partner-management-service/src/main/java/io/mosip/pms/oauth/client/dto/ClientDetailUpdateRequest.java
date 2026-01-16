@@ -28,7 +28,7 @@ public class ClientDetailUpdateRequest {
 
     @NotNull
     @Size(min = 1, max = 5)
-    private List<@NotBlank String> redirectUris;
+    private List<@NotBlank @URL String> redirectUris;
 
     @NotNull
     @NotBlank
