@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.URL;
 
 @Data
 @AllArgsConstructor
@@ -21,8 +22,9 @@ public class CreateClientRequestDto {
     private String relyingPartyId;
     private List<String> userClaims;
     private List<String> authContextRefs;
+    @URL
     private String logoUri;
-    private List<String> redirectUris;
+    private List<@URL String> redirectUris;
     private List<String> grantTypes;
     private List<String> clientAuthMethods;
  
