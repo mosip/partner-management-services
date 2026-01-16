@@ -21,7 +21,7 @@ public class UpdateClientRequestDto {
 
     @NotNull
     @Size(min = 1)
-    private List<@NotBlank @URL String> redirectUris;
+    private List<@NotBlank String> redirectUris;
 
     @NotBlank
     @Pattern(regexp = "(ACTIVE)|(INACTIVE)")
