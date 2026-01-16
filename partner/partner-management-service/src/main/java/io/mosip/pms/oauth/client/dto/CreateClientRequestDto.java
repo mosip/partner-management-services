@@ -24,7 +24,7 @@ public class CreateClientRequestDto {
     private List<String> authContextRefs;
     @URL
     private String logoUri;
-    private List<String> redirectUris;
+    private List<@URL String> redirectUris;
     private List<String> grantTypes;
     private List<String> clientAuthMethods;
  

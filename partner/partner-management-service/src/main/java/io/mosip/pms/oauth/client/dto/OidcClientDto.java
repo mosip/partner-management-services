@@ -19,6 +19,7 @@ public class OidcClientDto {
     private String policyName;
     private String policyNameDescription;
     private String relyingPartyId;
+    @URL
     private String logoUri;
     private List<@URL String> redirectUris;
     private String publicKey;
