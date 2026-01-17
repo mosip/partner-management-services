@@ -9,6 +9,7 @@ import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 
@@ -28,6 +29,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -110,6 +112,51 @@ public class RestUtil {
 			}
 		}
 		return result;
+	}
+
+	public <T> ResponseEntity<T> putApiV2(
+			String apiUrl,
+			List<String> pathSegments,
+			Map<String, ?> queryParams,
+			MediaType mediaType,
+			Object requestBody,
+			Class<T> responseClass) {
+
+		try {
+			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(apiUrl);
+
+			// Path segments
+			Optional.ofNullable(pathSegments)
+					.orElse(List.of())
+					.stream()
+					.filter(segment -> segment != null && !segment.isBlank())
+					.forEach(builder::pathSegment);
+
+			// Query parameters
+			Optional.ofNullable(queryParams)
+					.orElse(Map.of())
+					.forEach(builder::queryParam);
+
+			String uri = builder.build(true).toUriString();
+
+			RestTemplate restTemplate = getRestTemplate();
+
+			HttpEntity<?> requestEntity = setRequestHeader(requestBody, mediaType);
+
+			return restTemplate.exchange(
+					uri,
+					HttpMethod.PUT,
+					requestEntity,
+					responseClass
+			);
+
+		} catch (Exception e) {
+			logger.error("Error occurred while calling PUT API", e);
+			throw new ApiAccessibleException(
+					ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage()
+			);
+		}
 	}
 
 	public void putApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
