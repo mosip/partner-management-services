@@ -806,7 +806,7 @@
                     "NEW"
                 ],
                 "summary": "Service to deactivate API key and/or update expiry date",
-                "description": "This endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated.",
+                "description": "This endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated. Note: Only Partner Admin can update the expiry date of the API key. Authentication Partners can only update the status.",
                 "operationId": "updateAPIKey",
                 "parameters": [
                     {
@@ -876,7 +876,7 @@
                                             },
                                             "expiryDateTime": {
                                                 "type": "string",
-                                                "description": "Expiry date and time for the API key",
+                                                "description": "Expiry date and time for the API key. Only Partner Admin can update the expiry date of the API key.",
                                                 "format": "date-time",
                                                 "example": "2024-12-31T23:59:59.000Z"
                                             }
@@ -926,10 +926,14 @@
                                     "type": "object",
                                     "properties": {
                                         "id": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "API identifier",
+                                            "example": "mosip.pms.update.api.key.patch"
                                         },
                                         "version": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "API version",
+                                            "example": "1.0"
                                         },
                                         "responseTime": {
                                             "type": "string",
