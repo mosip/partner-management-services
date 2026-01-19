@@ -56,6 +56,7 @@ public enum ErrorCode {
 	API_KEY_UPDATE_ERROR("PMS_PM_069", "Error while updating API key."),
 	AT_LEAST_ONE_FIELD_REQUIRED("PMS_PM_070", "At least one field (status or expiryDateTime) must be provided"),
     INVALID_API_KEY_STATUS_FOR_DEACTIVATION("PMS_PM_071", "Only 'De-active' status is supported for API key deactivation"),
+	PARTNER_CANNOT_UPDATE_EXPIRY_DATE("PMS_PM_072", "Only Partner Admin can update the expiry date of the API key."),
 	API_NOT_ACCESSIBLE("PMS-BJ-001", "API not accessible"),
     API_NULL_RESPONSE("PMS-BJ-002", "API returned a null response"),
     PARTNER_CERTIFICATE_FETCH_ERROR("PMS-BJ-003", "Error while fetching partner certificate"),
