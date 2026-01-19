@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +85,19 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	public static final String ENG_KEY = "eng";
 	public static final Set<String> VALID_USER_INFO_RESPONSE_TYPES = Set.of("JWS", "JWE");
 	public static final Set<String> VALID_PURPOSE_TYPES = Set.of("verify", "link", "login");
+	
+	// eSignet error code constants
+	private static final String ESIGNET_ERROR_INVALID_CLIENT_ID = "invalid_client_id";
+	private static final String ESIGNET_ERROR_INVALID_CLIENT_NAME = "invalid_client_name";
+	private static final String ESIGNET_ERROR_INVALID_CLAIM = "invalid_claim";
+	private static final String ESIGNET_ERROR_INVALID_ACR = "invalid_acr";
+	private static final String ESIGNET_ERROR_INVALID_URI = "invalid_uri";
+	private static final String ESIGNET_ERROR_INVALID_REDIRECT_URI = "invalid_redirect_uri";
+	private static final String ESIGNET_ERROR_INVALID_GRANT_TYPE = "invalid_grant_type";
+	private static final String ESIGNET_ERROR_INVALID_CLIENT_AUTH = "invalid_client_auth";
+	private static final String ESIGNET_ERROR_INVALID_CLIENT_NAME_VALUE = "invalid_client_name_value";
+	private static final String ESIGNET_ERROR_INVALID_LANGUAGE_CODE = "invalid_language_code";
+	private static final String ESIGNET_ERROR_INVALID_ADDITIONAL_CONFIG = "invalid_additional_config";
 
 	@Value("${mosip.pms.api.id.oauth.clients.get}")
 	private String getClientsId;
@@ -1054,7 +1068,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 	@SafeVarargs
 	@SuppressWarnings("unchecked")
-	private ClientDetailResponse callEsignetServiceV2(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) throws JsonProcessingException {
+	private void callEsignetServiceV2(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) throws JsonProcessingException {
 		RequestWrapper<CreateClientRequestDtoV3> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 
@@ -1071,7 +1085,120 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 		createRequestwrapper.setRequest(dto);
 
-		return makeCreateEsignetServiceCall(createRequestwrapper, calleeApi);
+		makeCreateEsignetServiceCallV2(createRequestwrapper, calleeApi);
+	}
+
+	/**
+	 * Maps eSignet error codes to PMS error codes
+	 * 
+	 * @param esignetErrorCode The error code from eSignet service
+	 * @param esignetErrorMessage The error message from eSignet service
+	 */
+	private void handleEsignetError(String esignetErrorCode, String esignetErrorMessage) {
+		// Map specific eSignet error codes to PMS error codes
+		if (ESIGNET_ERROR_INVALID_CLIENT_ID.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_CLIENT_ID_ESIGNET.getErrorCode(),
+					ErrorCode.INVALID_CLIENT_ID_ESIGNET.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_CLIENT_NAME.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_CLIENT_NAME.getErrorCode(),
+					ErrorCode.INVALID_CLIENT_NAME.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_CLAIM.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_CLAIM.getErrorCode(),
+					ErrorCode.INVALID_CLAIM.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_ACR.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_ACR.getErrorCode(),
+					ErrorCode.INVALID_ACR.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_URI.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_URI.getErrorCode(),
+					ErrorCode.INVALID_URI.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_REDIRECT_URI.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_REDIRECT_URI.getErrorCode(),
+					ErrorCode.INVALID_REDIRECT_URI.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_GRANT_TYPE.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_GRANT_TYPE.getErrorCode(),
+					ErrorCode.INVALID_GRANT_TYPE.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_CLIENT_AUTH.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_CLIENT_AUTH.getErrorCode(),
+					ErrorCode.INVALID_CLIENT_AUTH.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_CLIENT_NAME_VALUE.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_CLIENT_NAME_VALUE.getErrorCode(),
+					ErrorCode.INVALID_CLIENT_NAME_VALUE.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_LANGUAGE_CODE.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_LANGUAGE_CODE.getErrorCode(),
+					ErrorCode.INVALID_LANGUAGE_CODE.getErrorMessage());
+		} else if (ESIGNET_ERROR_INVALID_ADDITIONAL_CONFIG.equals(esignetErrorCode)) {
+			throw new PartnerServiceException(ErrorCode.INVALID_ADDITIONAL_CONFIG.getErrorCode(),
+					ErrorCode.INVALID_ADDITIONAL_CONFIG.getErrorMessage());
+		} else {
+			String pmsErrorMessage = String.format(ErrorCode.ESIGNET_SERVICE_ERROR.getErrorMessage(), esignetErrorMessage);
+			throw new PartnerServiceException(ErrorCode.ESIGNET_SERVICE_ERROR.getErrorCode(),
+					pmsErrorMessage);
+		}
+	}
+
+	/**
+	 * Extracts error information from eSignet error response and maps to PMS error codes
+	 * 
+	 * @param errorResponse The error response map from eSignet service
+	 */
+	private void processEsignetErrorResponse(Map<String, Object> errorResponse) {
+		if (!errorResponse.containsKey(PartnerConstants.ERRORS)) {
+			return;
+		}
+		
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> idpServiceErrorList = (List<Map<String, Object>>) errorResponse
+				.get(PartnerConstants.ERRORS);
+		
+		if (idpServiceErrorList == null || idpServiceErrorList.isEmpty()) {
+			return;
+		}
+		
+		LOGGER.error("IDPServiceResponse:: Idp service response contains errors.");
+		Map<String, Object> firstError = idpServiceErrorList.get(0);
+		String esignetErrorCode = (String) firstError.get(PartnerConstants.ERRORCODE);
+		String esignetErrorMessage = (String) firstError.get(ERROR_MESSAGE);
+		
+		handleEsignetError(esignetErrorCode, esignetErrorMessage);
+	}
+
+
+	/**
+	 * Creates OIDC client via eSignet service
+	 */
+	private void makeCreateEsignetServiceCallV2(Object request, String calleeApi) {
+		// Call eSignet service to create OIDC client
+		Map<String, Object> idpClientResponse = restUtil.postApi(calleeApi, null, "", "", 
+				MediaType.APPLICATION_JSON, request, Map.class);
+		
+		// Parse the response
+		ClientDetailResponse response = null;
+		try {
+			Object responseObject = idpClientResponse.get("response");
+			if (responseObject != null) {
+				String responseJson = objectMapper.writeValueAsString(responseObject);
+				response = objectMapper.readValue(responseJson, ClientDetailResponse.class);
+			}
+		} catch (Exception e) {
+			LOGGER.error("callIdpService::Error parsing response from idp service {} ", e.getMessage(), e);
+			throw new PartnerServiceException(ErrorCode.UNABLE_TO_PROCESS.getErrorCode(),
+					ErrorCode.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
+		}
+		
+		// Check for errors in response
+		if (response == null && idpClientResponse.containsKey(PartnerConstants.ERRORS)) {
+			processEsignetErrorResponse(idpClientResponse);
+			LOGGER.error("IDPServiceResponse:: Idp service response contains errors but error list is empty.");
+			throw new PartnerServiceException(ErrorCode.UNABLE_TO_PROCESS.getErrorCode(),
+					ErrorCode.UNABLE_TO_PROCESS.getErrorMessage());
+		}
+		
+		// Validate response is not null
+		if (response == null) {
+			LOGGER.error("IDPServiceResponse:: Idp service response is null");
+			throw new PartnerServiceException(ErrorCode.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ErrorCode.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+		}
 	}
 
     @Override
@@ -1131,32 +1258,72 @@ public class ClientManagementServiceImpl implements ClientManagementService {
         return clientDetail;
     }
 
-    @SafeVarargs
-    private void makeUpdateEsignetServiceCallV2(ClientDetail request, String calleeApi, Map<String,String>... clientNameLangMap) throws Exception {
-        RequestWrapper<UpdateClientRequestDtoV3> updateRequestwrapper = new RequestWrapper<>();
-        updateRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
+	/**
+	 * Updates OIDC client via eSignet service
+	 */
+	@SafeVarargs
+	private void makeUpdateEsignetServiceCallV2(ClientDetail request, String calleeApi, 
+			Map<String, String>... clientNameLangMap) throws Exception {
+		// Build update request wrapper
+		RequestWrapper<UpdateClientRequestDtoV3> updateRequestWrapper = new RequestWrapper<>();
+		updateRequestWrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
 
-        UpdateClientRequestDtoV3 updateRequest = new UpdateClientRequestDtoV3();
+		UpdateClientRequestDtoV3 updateRequest = new UpdateClientRequestDtoV3();
 		setUpdateClientRequest(request, updateRequest);
 
+		// Set client name language map if provided
 		if (clientNameLangMap.length > 0) {
 			updateRequest.setClientNameLangMap(clientNameLangMap[0]);
 		}
+		
+		// Set additional config if present
 		if (Objects.nonNull(request.getAdditionalConfig())) {
-			updateRequest.setAdditionalConfig(objectMapper.readValue(request.getAdditionalConfig(), Map.class));
+			updateRequest.setAdditionalConfig(
+					objectMapper.readValue(request.getAdditionalConfig(), Map.class));
 		}
-        updateRequestwrapper.setRequest(updateRequest);
-
-        List<String> pathsegments = new ArrayList<>();
-        pathsegments.add(request.getId());
-        try {
-            restUtil.putApi(calleeApi, pathsegments, null, null, MediaType.APPLICATION_JSON, updateRequestwrapper, Map.class);
-        }catch (Exception e) {
-            LOGGER.error("callIdpService::Error from idp service {} ", e.getMessage(), e);
-            throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
-                    ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
-        }
-    }
+		
+		updateRequestWrapper.setRequest(updateRequest);
+		
+		// Prepare path segments for PUT request
+		List<String> pathSegments = new ArrayList<>();
+		pathSegments.add(request.getId());
+		
+		// Call eSignet service to update OIDC client
+		ClientDetailResponse response = null;
+		ResponseEntity<Map> responseEntity = restUtil.putApiV2(calleeApi, pathSegments, null,
+				MediaType.APPLICATION_JSON, updateRequestWrapper, Map.class);
+		
+		@SuppressWarnings("unchecked")
+		Map<String, Object> idpClientResponse = responseEntity != null ? (Map<String, Object>) responseEntity.getBody() : null;
+		
+		// Parse the response
+		try {
+			Object responseObject = idpClientResponse != null ? idpClientResponse.get("response") : null;
+			if (responseObject != null) {
+				String responseJson = objectMapper.writeValueAsString(responseObject);
+				response = objectMapper.readValue(responseJson, ClientDetailResponse.class);
+			}
+		} catch (Exception e) {
+			LOGGER.error("callIdpService::Error parsing response from idp service {} ", e.getMessage(), e);
+			throw new PartnerServiceException(ErrorCode.UNABLE_TO_PROCESS.getErrorCode(),
+					ErrorCode.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
+		}
+		
+		// Check for errors in response
+		if (response == null && idpClientResponse != null && idpClientResponse.containsKey(PartnerConstants.ERRORS)) {
+			processEsignetErrorResponse(idpClientResponse);
+			LOGGER.error("IDPServiceResponse:: Idp service response contains errors but error list is empty.");
+			throw new PartnerServiceException(ErrorCode.UNABLE_TO_PROCESS.getErrorCode(),
+					ErrorCode.UNABLE_TO_PROCESS.getErrorMessage());
+		}
+		
+		// Validate response is not null
+		if (response == null) {
+			LOGGER.error("IDPServiceResponse:: Idp service response is null");
+			throw new PartnerServiceException(ErrorCode.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+					ErrorCode.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
+		}
+	}
 
 	private void setUpdateClientRequest(ClientDetail clientDetail, UpdateClientRequestDto updateRequest) {
 		updateRequest.setClientAuthMethods(convertStringToList(clientDetail.getClientAuthMethods()));
