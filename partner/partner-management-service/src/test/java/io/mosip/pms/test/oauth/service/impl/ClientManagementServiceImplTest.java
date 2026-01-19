@@ -48,6 +48,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -2944,7 +2945,8 @@ public class ClientManagementServiceImplTest {
 	public void testDeactivateOIDCClientEsignetServiceCallException() throws Exception {
 		setupPartnerAdmin();
 		setupClientAndPartner();
-		doThrow(new RuntimeException("eSignet service error")).when(restUtil).putApi(anyString(), anyList(), anyString(), anyString(), any(), any(), any());
+		when(environment.getProperty("mosip.pms.esignet.oidc.client.update.url")).thenReturn("http://esignet/update");
+		doThrow(new RuntimeException("eSignet service error")).when(restUtil).putApiV2(anyString(), anyList(), any(), any(MediaType.class), any(), any(Class.class));
 		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
 		requestDto.setStatus("INACTIVE");
 
@@ -2959,7 +2961,16 @@ public class ClientManagementServiceImplTest {
 	public void testDeactivateOIDCClientRepositorySaveException() throws Exception {
 		setupPartnerAdmin();
 		setupClientAndPartner();
-		doNothing().when(restUtil).putApi(anyString(), anyList(), anyString(), anyString(), any(), any(), any());
+		when(environment.getProperty("mosip.pms.esignet.oidc.client.update.url")).thenReturn("http://esignet/update");
+		// Mock putApiV2 to return a valid response so code proceeds to repository save
+		Map<String, Object> mockResponseBody = new HashMap<>();
+		Map<String, Object> responseData = new HashMap<>();
+		responseData.put("clientId", "client-123");
+		responseData.put("status", "INACTIVE");
+		mockResponseBody.put("response", responseData);
+		ResponseEntity<Map> mockResponseEntity = ResponseEntity.ok(mockResponseBody);
+		when(restUtil.putApiV2(anyString(), anyList(), any(), any(MediaType.class), any(), any(Class.class)))
+				.thenReturn(mockResponseEntity);
 		when(clientDetailRepository.save(any(ClientDetail.class))).thenThrow(new RuntimeException("DB error"));
 		DeactivateOidcClientRequestDto requestDto = new DeactivateOidcClientRequestDto();
 		requestDto.setStatus("INACTIVE");
