@@ -772,7 +772,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_redirect_uri"
+       "errorCode": "PMS_ESI_017"
        }
        ]
 }'
@@ -844,7 +844,7 @@ CreateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "invalid_redirect_uri"
+       "errorCode": "PMS_ESI_017"
        }
        ]
 }'
