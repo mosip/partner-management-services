@@ -7,7 +7,7 @@ delete from partner_policy where policy_id in (select id from auth_policy where 
 delete from partner_policy_request where part_id='Tech-123';
 delete from partner_policy_request where cr_by='partner-111997';
 delete from partner_policy where policy_id in (select id from auth_policy where cr_by in ('masterdata-111997', 'mimoto-111997', 'auth-111997', 'partner-111997', 'esignet-111997', 'idrepo-111997', 'prereg-111997', 'resident-111997'));
-delete from pms.partner_policy where label='string';
+delete from pms.partner_policy where label like 'pmsAutomation%';
 delete from partner_policy_request where policy_id in (select id from auth_policy where name in ('mosip policy','mosip data share policy','mosip policy9'));
 delete from partner_policy_bioextract where policy_id in (select id from auth_policy where name in ('mosip policy','mosip data share policy','mosip policy9'));
 delete from partner_policy_bioextract where cr_by='partner-111997';

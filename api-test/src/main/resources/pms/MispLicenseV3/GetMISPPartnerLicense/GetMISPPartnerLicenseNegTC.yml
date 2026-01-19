@@ -1,13 +1,25 @@
 GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_without_Access_Token_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=8
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_01
     description: Fetching MISP Partner License without Access Token
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "0",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -16,14 +28,26 @@ GetMISPPartnerLicenseNegTC:
       ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?partnerId=invalid_partnerid
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_02
     description: Fetching MISP Partner License with Invalid PartnerId
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "invalid_partnerid",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "response": {
         "pageNo": "0",
@@ -31,14 +55,26 @@ GetMISPPartnerLicenseNegTC:
    }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PartnerId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?orgName=Par@@!!$$.
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_03
     description: Fetching MISP Partner License using OrgName when PartnerId has special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "Par@@!!$$.",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+	}'
     output: '{
       "errors": [
           {
@@ -47,14 +83,26 @@ GetMISPPartnerLicenseNegTC:
 		]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_OrgName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?orgName=UnknownOrg
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_04
     description: Fetching MISP Partner License with Invalid OrgName
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "UnknownOrg",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "response": {
          "pageNo": "0",
@@ -62,14 +110,26 @@ GetMISPPartnerLicenseNegTC:
       }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_OrgName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?orgName=Org@@!!$$.
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_05
     description: Fetching MISP Partner License using OrgName when OrgName has special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "Org@@!!$$.",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -78,14 +138,26 @@ GetMISPPartnerLicenseNegTC:
 		]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PolicyGroupName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?policyGroupName=Invalid_policygroupname
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_06
     description: Fetching MISP Partner License with Invalid PolicyGroupName
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "Invalid_policygroupname",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "response": {
          "pageNo": "0",
@@ -93,14 +165,26 @@ GetMISPPartnerLicenseNegTC:
       }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyGroupName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?policyName=Gr@Up@!!$$.
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_07
     description: Fetching MISP Partner License using PolicyName when PolicyGroupName has special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "Gr@Up@!!$$.",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -109,14 +193,26 @@ GetMISPPartnerLicenseNegTC:
 		]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PolicyName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?policyName=Invalid_Policy
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_08
     description: Fetching MISP Partner License with Invalid PolicyName
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "Invalid_Policy",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "response": {
          "pageNo": "0",
@@ -131,7 +227,19 @@ GetMISPPartnerLicenseNegTC:
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "P@!!cY$$.",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -140,14 +248,26 @@ GetMISPPartnerLicenseNegTC:
 		]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_MispLicenseKeyName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=INVALID_KEY
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_10
     description: Fetching MISP Partner License with Invalid MispLicenseKeyName
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "INVALID_KEY",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "response": {
          "pageNo": "0",
@@ -155,14 +275,26 @@ GetMISPPartnerLicenseNegTC:
       }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_MispLicenseKeyName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?mispLicenseKeyName=Key@@!!$$.
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_11
     description: Fetching MISP Partner License using MispLicenseKeyName with special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "Key@@!!$$.",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -171,14 +303,26 @@ GetMISPPartnerLicenseNegTC:
 		]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageNo_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageNo=10089&pageSize=0
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_12
     description: Fetching MISP Partner License with Invalid PageNo
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "10089",
+    "pageSize": "0",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -187,14 +331,26 @@ GetMISPPartnerLicenseNegTC:
         ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_PageNo_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageNo=-1&pageSize=8
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_13
     description: Fetching MISP Partner License with Negative PageNo
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "-1",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -203,7 +359,7 @@ GetMISPPartnerLicenseNegTC:
         ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageSize_Format_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=abc
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_14
     description: Fetching MISP Partner License with Invalid format of PageSize
     role: partneradmin
@@ -211,19 +367,43 @@ GetMISPPartnerLicenseNegTC:
     checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/responseCode
-    input: '{}'
+    input: '{
+    "pageNo": "0",
+    "pageSize": "abc",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
     "responseCode": "400"
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Zero_PageSize_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageSize=0
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_15
     description: Fetching MISP Partner License with Zero PageSize
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "0",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -232,14 +412,26 @@ GetMISPPartnerLicenseNegTC:
         ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_PageSize_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageSize=-5
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_16
     description: Fetching MISP Partner License with Negative PageSize
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "-5",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -248,7 +440,7 @@ GetMISPPartnerLicenseNegTC:
         ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageNo_Format_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?pageNo=abc&pageSize=2
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_17
     description: Fetching MISP Partner License with Invalid format of PageNo
     role: partneradmin
@@ -256,19 +448,43 @@ GetMISPPartnerLicenseNegTC:
     checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/responseCode
-    input: '{}'
+    input: '{
+    "pageNo": "abc",
+    "pageSize": "2",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
     "responseCode": "400"
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_OrgName_and_Invalid_PolicyGroupName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?orgName=Org_A&policyGroupName=InvalidGroup123
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_18
     description: Fetching MISP Partner License with Valid OrgName and Invalid PolicyGroupName
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_organizationName$",
+    "policyGroupName": "InvalidGroup123",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "response": {
          "pageNo": "0",
@@ -276,14 +492,26 @@ GetMISPPartnerLicenseNegTC:
       }
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_SortType_Without_SortFieldName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?sortType=asc
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_19
     description: Fetching MISP Partner License when SortType is provided without SortFieldName
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "asc",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -292,14 +520,26 @@ GetMISPPartnerLicenseNegTC:
        ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_and_Invalid_SortType_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=mispLicenseKeyName&sortType=random
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_20
     description: Fetching MISP Partner License when SortFieldName is used with an invalid SortType
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "mispLicenseKeyName",
+    "sortType": "random",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -308,14 +548,26 @@ GetMISPPartnerLicenseNegTC:
        ]
 }'
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_SortFieldName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses?sortFieldName=@#$%
+    endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_21
     description: Fetching MISP Partner License using when SortFieldName has special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
     outputTemplate: pms/error
-    input: '{}'
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "@#$%",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
     output: '{
       "errors": [
           {
@@ -329,9 +581,10 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License when PolicyGroupName is Empty
     role: partneradmin
     restMethod: get
-    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseInput
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+}'
     output: '{
       "response": {
          "pageNo": "0",
@@ -344,12 +597,486 @@ GetMISPPartnerLicenseNegTC:
     description: Fetching MISP Partner License when PolicyName is Empty
     role: partneradmin
     restMethod: get
-    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseInput
     outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
-    input: '{}'
+    input: '{
+}'
     output: '{
       "response": {
          "pageNo": "0",
          "pageSize": "0"
        }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_Without_SortType_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_24
+    description: Fetch MISP partner licenses sorted by sortFieldName without passing sortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "mispLicenseKeyName",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_PS_ERROR_007"
+         }
+      ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Negative_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_25
+    description: Fetching MISP Partner License By providing Negative ExpiryPeriod
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "-10"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Exceeding_Maximum_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_26
+    description: Fetching MISP Partner License with exceeding Maximum Allowed ExpiryPeriod
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "31"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Decimal_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_27
+    description: Fetching MISP Partner License By providing Decimal Value for ExpiryPeriod
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "15.5"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Inactive_PartnerId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_28
+    description: Fetching MISP Partner License using Inactive(Not Uploaded Certificate) PartnerId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "pms-111545",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "response": {
+         "pageNo": "0",
+         "pageSize": "0"
+      }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Invalid_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_29
+    description: Fetching MISP Partner License using invalid SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "invalidFieldName",
+    "sortType": "asc",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_357"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Numeric_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_30
+    description: Fetching MISP Partner License using Numeric SortFieldName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "1234",
+    "sortType": "asc",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_357"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Unsupported_SortType_Value_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_31
+    description: Fetching MISP Partner License using Unsupported SortType Value
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "mispLicenseKeyName",
+    "sortType": "ascending",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_358"
+          }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_SpecialCharacter_In_SortType_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_32
+    description: Fetching MISP Partner License using Special Character in SortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "mispLicenseKeyName",
+    "sortType": "as@",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_358"
+           }
+		]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_33
+    description: Fetching MISP Partner License with Non Integer PageNo
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "abc",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Decimal_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_34
+    description: Fetching MISP Partner License with Decimal PageNo
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "1.2",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_VeryLarge_PageNo_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_35
+    description: Fetching MISP Partner License with Very Large PageNo
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{
+    "pageNo": "9999",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "response": {
+       "pageNo": "0",
+       "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_No_Status_Selected_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_36
+    description: Fetching MISP Partner License with No Status Selected
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "response": {
+       "pageNo": "0",
+       "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Null_OrgName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_37
+    description: Fetching MISP Partner License with Null OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "null",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "response": {
+        "pageNo": "0",
+        "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Valid_PolicyName_And_Invalid_OrgName_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_38
+    description: Fetching MISP Partner License with valid PolicyName and Invalid OrgName
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseOutputResult
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "UnknownOrg",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "response": {
+        "pageNo": "0",
+        "pageSize": "0"
+     }
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Large_PageSizeNumber_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_39
+    description: Fetching MISP Partner License with Large PageSize Number
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "500",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageSizeNumber_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_40
+    description: Fetching MISP Partner License with Non Integer PageSize Number
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "abc",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+    "responseCode": "400"
+}'
+  Pms_GetMISPPartnerLicenseNegTC_with_Deactivated_PartnerId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_41
+    description: Fetching MISP Partner License using Deactivated PartnerId
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
 }'

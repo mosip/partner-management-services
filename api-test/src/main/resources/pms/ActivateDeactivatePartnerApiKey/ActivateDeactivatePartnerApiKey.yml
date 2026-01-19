@@ -8,9 +8,9 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'
@@ -28,9 +28,9 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -48,9 +48,9 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/error
       input: '{
-   "partnerId": "Tech-1233",
+   "partnerId": "$ID:PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid_partnerId$",
    "policyId": "policyid",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -72,9 +72,9 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'
@@ -91,8 +91,8 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "asdfgrwg",
-   "policyId": "MDSP",
-   "label": "string",
+   "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -114,7 +114,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "partner-111997",
    "policyId": "asfv",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'
@@ -135,7 +135,7 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "partner-111997",
-   "policyId": "MDSP",
+   "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
    "label": "asdfsad",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
@@ -159,7 +159,7 @@ ActivateDeactivatePartnerApiKey:
       input: '{
    "partnerId": "partner-111997",
    "policyId": "MDSPK",
-   "label": "string",
+   "label": "pmsAutomation",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"
 }'
@@ -181,7 +181,7 @@ ActivateDeactivatePartnerApiKey:
       outputTemplate: pms/error
       input: '{
    "partnerId": "partner-111997",
-   "policyId": "MDSP",
+   "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
    "label": "$REMOVE$",
    "requesttime": "$TIMESTAMP$",
    "status": "Active"

@@ -10,7 +10,7 @@ ApproveDeviceDetail:
       outputTemplate: pms/device/makeAndModel/approve/approveDeviceDetailResult
       input: '{
     "approvalStatus": "Activate",
-    "id": "device-id-123",
+    "id": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "isItForRegistrationDevice": "true",
     "requesttime": "$TIMESTAMP$"
   }'
@@ -22,12 +22,13 @@ ApproveDeviceDetail:
       uniqueIdentifier: TC_PMS_createApproveRejectDeviceDetail_02
       description: Create Device details for Approved Partner while keeping approvalStatus as empty
       role: partner
+      additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: patch
       inputTemplate: pms/device/makeAndModel/approve/approveDeviceDetail
       outputTemplate: pms/error
       input: '{
     "approvalStatus": "$REMOVE$",
-    "id": "device-id-123",
+    "id": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "isItForRegistrationDevice": "true",
     "requesttime": "$TIMESTAMP$"
   }'

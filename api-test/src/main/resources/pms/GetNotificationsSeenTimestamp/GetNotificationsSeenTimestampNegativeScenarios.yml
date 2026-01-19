@@ -1,7 +1,7 @@
 GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_Invalid_userId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
-      role: partneradmin
+      role: partnerauth
       description: Get Notifications Seen Timestamp with invalid userId
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_01
       restMethod: get
@@ -50,6 +50,24 @@ GetNotificationsSeenTimestampNegativeScenarios:
       "errors": [
       {
        "errorCode": "KER-ATH-401"
+       }
+       ]
+}'
+   Pms_GetNotificationsSeenTimestampNegativeScenarios_Invalid_userId_PartnerAdminRole_Neg:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      role: partneradmin
+      description: Get Notifications Seen Timestamp with invalid userId
+      uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_04
+      restMethod: get
+      inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
+      outputTemplate: pms/error
+      input: '{
+      "userId": "base-admin"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_NOTIFICATION_ERROR_003"
        }
        ]
 }'

@@ -1,2 +1,4 @@
 ##### JIRA number;testcase 
 #MOSIP-12456------Mimoto_AddIdentity_Binding_smoke_Pos
+MOSIP-44227------Pms_UpdateOIDCClient_Invalid_ClientAuthMethod_Neg
+MOSIP-44227------Pms_UpdateOIDCClient_Invalid_GrantType_Neg

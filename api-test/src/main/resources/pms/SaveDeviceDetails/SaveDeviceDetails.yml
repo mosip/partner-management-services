@@ -11,7 +11,7 @@ SaveDeviceDetails:
       input: '{
     "deviceTypeCode": "Face",
     "deviceSubTypeCode": "Full face",
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "make": "AcmeCorp",
     "model": "X1000",
     "requestTime": "$TIMESTAMP$",
@@ -33,7 +33,7 @@ SaveDeviceDetails:
       input: '{
     "deviceTypeCode": "Face",
     "deviceSubTypeCode": "Full face",
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "make": "AcmeCorpReject",
     "model": "X1000Reject",
     "requestTime": "$TIMESTAMP$",
@@ -55,7 +55,7 @@ SaveDeviceDetails:
       input: '{
     "deviceTypeCode": "Face",
     "deviceSubTypeCode": "Full face",
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "make": "AcmeCorpApprovalPending",
     "model": "X1000ApprovalPending",
     "requestTime": "$TIMESTAMP$",
@@ -77,7 +77,7 @@ SaveDeviceDetails:
       input: '{
     "deviceTypeCode": "Face",
     "deviceSubTypeCode": "Full face",
-    "deviceProviderId": "pms-111998",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "make": "AcmeCorpDeactivate",
     "model": "X1000Deactivate",
     "requestTime": "$TIMESTAMP$",

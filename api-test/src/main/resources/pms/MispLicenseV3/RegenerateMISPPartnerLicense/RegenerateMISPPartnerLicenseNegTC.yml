@@ -14,7 +14,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -38,7 +38,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "pms-invalid",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -62,7 +62,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "pms-@@111555",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -86,7 +86,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "notapproved-policyId",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -110,7 +110,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "453@@677",
       "licenseKeyName": "$LICENSE_KEY_NAME$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -134,7 +134,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -158,7 +158,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "MISP_API_Automation_License_Key_ThisLicenseKeyNameIsExceedingTheMaximumAllowedLengthWhichIsExpectedToBeLessThanOrEqualToFiftyCharacters_$TIMESTAMP$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -182,7 +182,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "MISP@#%$^&*!_License_Key11",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -206,7 +206,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
       "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -277,7 +277,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -324,7 +324,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -348,7 +348,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -372,7 +372,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -396,7 +396,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [
@@ -421,7 +421,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "responseCode": "400"
@@ -440,7 +440,7 @@ RegenerateMISPPartnerLicenseNegTC:
       "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
 	  "licenseKeyName": "$LICENSE_KEY_NAME$",
 	  "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "expiryDate": "2035-10-10"
+      "expiryDate": "$EXPIRYDATE_10YEARS$"
 }'
     output: '{
       "errors": [

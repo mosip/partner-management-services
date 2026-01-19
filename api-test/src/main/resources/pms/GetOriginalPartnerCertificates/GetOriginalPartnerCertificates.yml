@@ -9,7 +9,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
      
@@ -25,13 +25,13 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "pms-111998"
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
      
 }'
 
-   Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
+   Pms_GetOriginalPartnerCertificates_FTMProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_03      
       description: Get original ftm partner certificates      
@@ -41,7 +41,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificatesResult
       input: '{
-      "partnerId": "pms-111888"
+      "partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
      
@@ -55,7 +55,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
@@ -112,7 +112,7 @@ GetOriginalPartnerCertificates:
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
       outputTemplate: pms/error
       input: '{
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [

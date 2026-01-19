@@ -12,7 +12,7 @@ definePolicy:
       "name": "mosip policy 19234",
       "attributeName": "fullName",
       "authTokenType": "policy",
-      "policyGroupName": "mosip policy group 19234",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -41,7 +41,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group 19234",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -69,7 +69,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "null",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -98,7 +98,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "Policy",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -127,7 +127,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "kjh54",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -156,7 +156,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -184,7 +184,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "$IGNORE$",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -213,7 +213,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": " ",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -243,7 +243,7 @@ definePolicy:
       "mandatory": false,
       "attributeName": "string",
       "authTokenType": "random",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -271,7 +271,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group 19234",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -301,7 +301,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -385,7 +385,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip delete before policy creation policy group 19234",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_DeleteBeforePolicyCreation_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -469,7 +469,7 @@ definePolicy:
             "mandatory": $REMOVE$,
             "attributeName": "string",
             "authTokenType": "partner",
-            "policyGroupName": "mosip policy group neg",
+            "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
             "policyType": "Auth",
             "version": "1.0",
             "allowedKycAttributes": "$REMOVE$",
@@ -498,7 +498,7 @@ definePolicy:
             "mandatory": true,
             "attributeName": "string",
             "authTokenType": "partner",
-            "policyGroupName": "mosip policy group neg",
+            "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
             "policyType": "Auth",
             "version": "1.0",
             "requesttime": "$TIMESTAMP$"
@@ -516,6 +516,7 @@ definePolicy:
       description: Define Policy without authtoken type
       uniqueIdentifier: TC_PMS_definePolicy_19
       restMethod: post
+      additionalDependencies: TC_PMS_definePolicyGroup_01
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
@@ -526,7 +527,7 @@ definePolicy:
             "mandatory": true,
             "attributeName": "string",
             "authTokenType": "$REMOVE$",
-            "policyGroupName": "mosip policy group 19234",
+            "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
             "policyType": "Auth",
             "version": "1.0",
             "requesttime": "$TIMESTAMP$"
@@ -610,7 +611,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -638,7 +639,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "162g@fsgs",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -666,7 +667,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "$REMOVE$",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -695,7 +696,7 @@ definePolicy:
       "mandatory": true,
       "attributeName": "string",
       "authTokenType": "partner",
-      "policyGroupName": "mosip policy group neg",
+      "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
       "policyType": "Auth",
       "version": "1.0",
       "requesttime": "$TIMESTAMP$"
@@ -720,7 +721,7 @@ definePolicy:
 	"name": "mosip deactive policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
-	"policyGroupName": "mosip deactivate policy group 19234",
+	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_name$",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"
@@ -745,7 +746,7 @@ definePolicy:
 	"name": "mosip published policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
-	"policyGroupName": "mosip published policy group 19234",
+	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_name$",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"
@@ -770,7 +771,7 @@ definePolicy:
 	"name": "mosip draft policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
-	"policyGroupName": "mosip draft policy group 19234",
+	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForDraftPolicy_pms_sid_name$",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"
@@ -795,7 +796,7 @@ definePolicy:
 	"name": "mosip reject policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
-	"policyGroupName": "mosip policy group 19234",
+	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"
@@ -820,7 +821,7 @@ definePolicy:
 	"name": "mosip in progress mapping policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
-	"policyGroupName": "mosip policy group 19234",
+	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"policyType": "Auth",
 	"version": "1.0",
 	"requesttime": "$TIMESTAMP$"

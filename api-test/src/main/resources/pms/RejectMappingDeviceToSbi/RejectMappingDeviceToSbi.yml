@@ -10,7 +10,7 @@ RejectMappingDeviceToSbi:
       outputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiResult
       input: '{
        "requestTime": "$TIMESTAMP$",
-       "partnerId": "pms-111998",
+       "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
        "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
        "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
   }'
