@@ -22,7 +22,7 @@ import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
@@ -41,7 +41,7 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSConfigManager.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -84,11 +84,14 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
-		if (PMSConfigManger.isInServiceNotDeployedList(GlobalConstants.ADMIN) && testCaseName.contains("BulkUpload_")) {
+		if (PMSConfigManager.isInServiceNotDeployedList(GlobalConstants.ADMIN) && testCaseName.contains("BulkUpload_")) {
 			throw new SkipException(GlobalConstants.SERVICE_NOT_DEPLOYED_MESSAGE);
 		}
 
 		String[] templateFields = testCaseDTO.getTemplateFields();
+		String inputJson = getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate());
+		inputJson = inputJsonKeyWordHandeler(inputJson, testCaseName);
+		inputJson = normalizeDateFields(inputJson);
 
 		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
 			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
@@ -110,8 +113,7 @@ public class GetWithQueryParam extends PMSUtil implements ITest {
 		}
 
 		else {
-			response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
+			response = getWithQueryParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 		}
 		validateResponse(response, testCaseName);

@@ -6,6 +6,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_03,TC_PMS_UploadCertificateMISPCASUBCA_04,TC_PMS_CreateMISPPartnerRegistration_01
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111555
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
@@ -20,6 +21,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_02
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111556
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
@@ -34,6 +36,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_03
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111557
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
@@ -48,6 +51,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_04
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111558
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
@@ -62,6 +66,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_01
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111559
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
@@ -76,6 +81,7 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_06
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111550
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
@@ -90,7 +96,23 @@ UploadMISPPartnerCertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_07
       inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111551
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadMISPPartnerCertificate_For_without_PolicyId_Valid:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_08
+      description: Upload MISP partner certificate for PMS-112211 partner id
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_09
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate112211
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
   "requesttime": "$TIMESTAMP$"

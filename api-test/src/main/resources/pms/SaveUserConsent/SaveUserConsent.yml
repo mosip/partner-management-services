@@ -49,7 +49,7 @@ SaveUserConsent:
 }'
    Pms_saveUserConsent_invalid_user_Neg:
       endPoint: /v1/partnermanager/users/user-consent
-      role: regproc
+      role: partnerauthexternal
       uniqueIdentifier: TC_PMS_saveUserConsent_04
       description: save User Consent for invalid user
       restMethod: post
@@ -63,4 +63,18 @@ SaveUserConsent:
        "errorCode": "PMS_CERTIFICATE_ERROR_002" 		
       }
       ]
+}'
+   Pms_saveUserConsent_With_PartnerAdmin_Role:
+      endPoint: /v1/partnermanager/users/user-consent
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_saveUserConsent_05
+      description: save User Consent 
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/SaveUserConsent/SaveUserConsent
+      outputTemplate: pms/SaveUserConsent/SaveUserConsentResult
+      input: '{
+}'
+      output: '{
+           "userId": "pms-111777"
 }'

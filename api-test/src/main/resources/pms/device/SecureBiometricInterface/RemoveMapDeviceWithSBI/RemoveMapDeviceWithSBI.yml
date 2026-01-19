@@ -4,6 +4,7 @@ RemoveMapDeviceWithSBI:
       uniqueIdentifier: TC_PMS_RemoveMapDeviceWithSBI_01
       description: Remove Partner Mapped Device with SBI
       role: partner
+      additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
       restMethod: put
       inputTemplate: pms/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBIResult

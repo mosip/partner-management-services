@@ -1,7 +1,7 @@
 createPartnerSelfRegistration:
-   Pms_PartnerSelfRegistration_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp__01
       description: Create MISP Partner Self Registration
       role: partner
       restMethod: post
@@ -21,9 +21,9 @@ createPartnerSelfRegistration:
         "partnerId": "MISP-AUTOMATION",
         "status": "InProgress"
     }'
-   Pms_PartnerSelfRegistration_MispLicense_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_MispLicense_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp_02
       description: Create MISP Partner Self Registration for Misp License
       role: partner
       restMethod: post
@@ -44,9 +44,9 @@ createPartnerSelfRegistration:
         "status": "InProgress"
     }'
     
-   Pms_PartnerSelfRegistration_MispLicense_Msip_Smoke:
+   Pms_PartnerSelfRegistration_MispLicense_Msip_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp_03
       description: Create MISP Partner Self Registration for Misp License
       role: partner
       restMethod: post

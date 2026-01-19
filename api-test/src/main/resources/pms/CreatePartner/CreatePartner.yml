@@ -1,5 +1,5 @@
 createPartnerSelfRegistration:
-   Pms_PartnerSelfRegistration_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
@@ -14,7 +14,7 @@ createPartnerSelfRegistration:
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "pms-111999",
     "partnerType": "AUTH_PARTNER",
-    "policyGroup": "mosip policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -38,7 +38,7 @@ createPartnerSelfRegistration:
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "pms-111999",
     "partnerType": "AUTH_PARTNER",
-    "policyGroup": "mosip policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -63,7 +63,7 @@ createPartnerSelfRegistration:
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "1119911",
     "partnerType": "AUTH_PARTNER",
-    "policyGroup": "mosip policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -89,7 +89,7 @@ createPartnerSelfRegistration:
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "1119910",
     "partnerType": "AUTH_PARTNER",
-    "policyGroup": "mosip policy group 19234"
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$"
   }'
       output: '{
    "errors": [
@@ -114,7 +114,7 @@ createPartnerSelfRegistration:
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "11199911",
     "partnerType": "AUTH_PARTNER",
-    "policyGroup": "mosip policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "1111-07-22T08:21:17.665Z"
   }'
       output: '{
@@ -125,12 +125,11 @@ createPartnerSelfRegistration:
   ]
 }'
 
-   Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerdevice
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_06
-
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -149,7 +148,7 @@ createPartnerSelfRegistration:
         "status": "InProgress"
     }'
     
-   Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerftm
@@ -172,29 +171,6 @@ createPartnerSelfRegistration:
         "status": "InProgress"
     }'
     
-   Pms_PartnerSelfRegistrationFor_PartnerAdmin_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
-      role: partneradmin
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_08
-      restMethod: post
-      inputTemplate: pms/CreatePartner/createPartner
-      outputTemplate: pms/CreatePartner/createPartnerResult
-      input: '{
-    "address": "Bangalore",
-    "contactNumber": "8553967572",
-    "emailId": "mosip98763admin@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111777",
-    "partnerType": "FTM_Provider",
-    "policyGroup": "$REMOVE$",
-    "requesttime": "$TIMESTAMP$"
-  }'
-      output: ' {
-        "partnerId": "pms-111777",
-        "status": "InProgress"
-    }'
-
    Partner_PartnerSelfRegistration_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_09
@@ -210,7 +186,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-321",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -233,7 +209,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-1233",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -256,7 +232,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "pms-111999",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -308,7 +284,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-3241",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip delete before policy creation policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_DeleteBeforePolicyCreation_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -335,7 +311,7 @@ createPartnerSelfRegistration:
     "organizationName": "PMS_API_ABC_ORG",
     "partnerId": "pms-111999",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group 19234",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -345,7 +321,7 @@ createPartnerSelfRegistration:
     }
   ]
     }'
-   Partner_PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke:
+   Partner_PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_15
       description: Create Partner Self Registrartion and update Policy Group for Partner with valid data

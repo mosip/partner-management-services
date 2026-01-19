@@ -5,16 +5,17 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_01
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
-    "policyName": "mosip policy 19234",
-    "label": "string",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "partnerId": "pms-111999",
-    "label": "string"    
+    "label": "pmsAutomation"
 }'
 
    Pms_GenerateApiKey_Regenerate_Same_Key_Neg:
@@ -23,11 +24,12 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_02
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
-    "policyName": "mosip policy 19234",
-    "label": "string",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -44,11 +46,12 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_03
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
-    "policyName": "mosip policy 19234",
-    "label": "String"
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+    "label": "pmsAutomation"
 }'
       output: '{
    "errors": [
@@ -64,13 +67,13 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_04
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
-    "policyName": "mosip policy 19234",
-    "label": "string",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+    "label": "pmsAutomation",
     "requesttime": "1111-07-22T08:21:17.665Z"
-    
 }'
       output: '{
    "errors": [
@@ -86,6 +89,7 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_05
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
@@ -106,10 +110,11 @@ GenerateApiKey:
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_06
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -126,11 +131,12 @@ GenerateApiKey:
       description: Generate Api Keys for Approved Policies with invalid policy
       role: partnerauth
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
     "policyName": "dfbgafb",
-    "label": "string",
+    "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -144,16 +150,18 @@ GenerateApiKey:
 
    Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
+      uniqueIdentifier: TC_PMS_GenerateApikey_08
       role: partnerauth
       restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
-    "policyName": "mosip policy",
-    "label": "string",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
+    "label": "pmsAutomation-19234",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
    "partnerId": "pms-111999",
-    "label": "string"    
+    "label": "pmsAutomation-19234"    
 }'

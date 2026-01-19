@@ -9,7 +9,7 @@ UpdatePolicyAgainstApiKey:
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
       outputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
    "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_id$",
    "newPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
@@ -48,7 +48,7 @@ UpdatePolicyAgainstApiKey:
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
       outputTemplate: pms/error
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "apiKey": "asvbgn",
    "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
@@ -70,7 +70,7 @@ UpdatePolicyAgainstApiKey:
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
       outputTemplate: pms/error
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
    "oldPolicyID": "asfbgt",
    "newPolicyID": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
@@ -92,7 +92,7 @@ UpdatePolicyAgainstApiKey:
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
       outputTemplate: pms/error
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$",
    "oldPolicyID": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "newPolicyID": "INVALID",

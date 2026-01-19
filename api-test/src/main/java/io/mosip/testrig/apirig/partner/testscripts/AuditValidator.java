@@ -24,7 +24,7 @@ import org.testng.internal.TestResult;
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.partner.utils.PMSConfigManger;
+import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -51,7 +51,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 
 	@BeforeClass
 	public static void setLogLevel() {
-		if (PMSConfigManger.IsDebugEnabled())
+		if (PMSConfigManager.IsDebugEnabled())
 			logger.setLevel(Level.ALL);
 		else
 			logger.setLevel(Level.ERROR);
@@ -81,7 +81,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 		List<String> queryProp = Arrays.asList(templateFields);
 		logger.info(queryProp);
 		String query = "select * from audit.app_audit_log where cr_by = '" + BaseTestCase.currentModule + "-"
-				+ PMSConfigManger.getproperty("partner_userName") + "'";
+				+ PMSConfigManager.getproperty("partner_userName") + "'";
 
 		logger.info(query);
 		Map<String, Object> response = DBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
@@ -112,7 +112,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 	public void setResultTestName(ITestResult result) {
 
 		String deleteQuery = "delete from audit.app_audit_log where cr_by = '"
-				+ PMSConfigManger.getproperty("partner_userName") + "'";
+				+ PMSConfigManager.getproperty("partner_userName") + "'";
 		logger.info(deleteQuery);
 		DBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
 		try {
