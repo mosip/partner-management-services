@@ -871,6 +871,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
                         ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
             }
 
+			// If user is not partner admin, they cannot update expiry date time
+			if (!isAdmin && Objects.nonNull(request.getExpiryDateTime())) {
+				LOGGER.error("Only Partner Admin can update the expiry date of the API key, for partner: " + partnerId);
+				throw new PartnerManagerServiceException(ErrorCode.PARTNER_CANNOT_UPDATE_EXPIRY_DATE.getErrorCode(),
+						ErrorCode.PARTNER_CANNOT_UPDATE_EXPIRY_DATE.getErrorMessage());
+			}
+
 			partnerPolicy.setUpdBy(getUser());
 			partnerPolicy.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 
