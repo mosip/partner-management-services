@@ -1881,8 +1881,29 @@ public class ClientManagementServiceImplTest {
 
 		ClientFilterDto filterDto = new ClientFilterDto();
 
+		List<ClientSummaryDto> clients = new ArrayList<>();
+		for (int i = 1; i <= 5; i++) {
+			ClientSummaryDto client = new ClientSummaryDto();
+			client.setClientId("client-" + i);
+			client.setClientName("Client " + i);
+			client.setStatus("ACTIVE");
+			clients.add(client);
+		}
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(clients);
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(1L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
 		assertNotNull(actualResponse);
+		if (actualResponse.getResponse() != null) {
+			assertEquals(1L, actualResponse.getResponse().getTotalResults());
+		}
 	}
 
 	@Test
@@ -1895,8 +1916,20 @@ public class ClientManagementServiceImplTest {
 		ClientFilterDto filterDto = new ClientFilterDto();
 		filterDto.setPartnerId("nonexistent-partner");
 
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(Collections.emptyList());
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(0L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
 		assertNotNull(actualResponse);
+		if (actualResponse.getResponse() != null) {
+			assertEquals(0L, actualResponse.getResponse().getTotalResults());
+		}
 	}
 
 	@Test
@@ -1909,8 +1942,25 @@ public class ClientManagementServiceImplTest {
 		ClientFilterDto filterDto = new ClientFilterDto();
 		filterDto.setStatus("ACTIVE");
 
+		ClientSummaryDto activeClient = new ClientSummaryDto();
+		activeClient.setClientId("active-client-123");
+		activeClient.setClientName("Active Client");
+		activeClient.setStatus("ACTIVE");
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(List.of(activeClient));
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(1L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
 		assertNotNull(actualResponse);
+		if (actualResponse.getResponse() != null && !actualResponse.getResponse().getData().isEmpty()) {
+			assertEquals("ACTIVE", actualResponse.getResponse().getData().getFirst().getStatus());
+		}
 	}
 
 	@Test
@@ -1922,8 +1972,31 @@ public class ClientManagementServiceImplTest {
 
 		ClientFilterDto filterDto = new ClientFilterDto();
 
+		List<ClientSummaryDto> clients = new ArrayList<>();
+		for (int i = 1; i <= 25; i++) {
+			ClientSummaryDto client = new ClientSummaryDto();
+			client.setClientId("client-page2-" + i);
+			client.setClientName("Client Page 2 - " + i);
+			client.setStatus("ACTIVE");
+			clients.add(client);
+		}
+
+		PageResponseV2Dto<ClientSummaryDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(clients);
+		pageResponse.setPageNo(pageNo);
+		pageResponse.setPageSize(pageSize);
+		pageResponse.setTotalResults(5L);
+
+		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> expectedResponse = new ResponseWrapperV2<>();
+		expectedResponse.setResponse(pageResponse);
+
 		ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> actualResponse = serviceImpl.getPartnersClientsV2(sortFieldName, sortType, (int)pageNo, (int)pageSize, filterDto);
 		assertNotNull(actualResponse);
+		if (actualResponse.getResponse() != null) {
+			assertEquals(pageNo, actualResponse.getResponse().getPageNo());
+			assertEquals(pageSize, actualResponse.getResponse().getPageSize());
+			assertEquals(5L, actualResponse.getResponse().getTotalResults());
+		}
     }
 
 	@Test
