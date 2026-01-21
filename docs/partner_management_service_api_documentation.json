@@ -159,6 +159,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -533,6 +534,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -872,7 +874,9 @@
                                                 "type": "string",
                                                 "description": "Status of the API key. Use 'De-active' to deactivate the API key",
                                                 "example": "De-active",
-                                                "enum": ["De-active"]
+                                                "enum": [
+                                                    "De-active"
+                                                ]
                                             },
                                             "expiryDateTime": {
                                                 "type": "string",
@@ -945,6 +949,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -972,7 +977,10 @@
                                                     "type": "string",
                                                     "description": "Status of the API key",
                                                     "example": "active",
-                                                    "enum": ["active", "De-active"]
+                                                    "enum": [
+                                                        "active",
+                                                        "De-active"
+                                                    ]
                                                 }
                                             }
                                         },
@@ -1325,6 +1333,7 @@
                                             "description": "Optional metadata about response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
@@ -1521,6 +1530,7 @@
                                             "type": "object"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "boolean",
                                             "description": "The value true indicates success while false indicates failure."
                                         },
@@ -1836,6 +1846,7 @@
                                             "description": "Optional metadata about the request"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -2276,6 +2287,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "caSignedCertificateData": {
@@ -2476,6 +2488,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "status": {
@@ -2826,6 +2839,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -3037,6 +3051,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -3288,6 +3303,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -3451,6 +3467,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -3693,6 +3710,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -3896,6 +3914,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -4057,6 +4076,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "userId": {
@@ -4262,318 +4282,359 @@
             }
         },
         "/oidc-clients": {
-			"post": {
-				"tags": [
-					"client-management-controller"
-				],
-				"summary": "NEW: Create new OIDC client",
-				"description": "Creates a new OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new `additionalConfig` field in the request.",
-				"operationId": "create-oidc-clients",
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"type": "string",
-										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.oidc.client.post`"
-									},
-									"version": {
-										"type": "string",
-										"description": "Version of this endpoint. \r\n`1.0`"
-									},
-									"requestTime": {
-										"type": "string",
-										"description": "Date time in ISO format, when request is being sent."
-									},
-									"metadata": {
-										"type": "object",
-										"description": "Optional metadata about the request"
-									},
-									"request": {
-										"type": "object",
-										"properties": {
-											"name": {
-												"type": "string",
-												"description": "Name of OIDC client."
-											},
-											"policyId": {
-												"type": "string",
-												"description": "Unique identifier of the Policy"
-											},
-											"publicKey": {
-												"type": "object",
-												"description": "OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OIDC client. Format: JSON Web Key (JWK).",
-												"additionalProperties": {
-													"type": "string"
-												}
-											},
-											"authPartnerId": {
-												"type": "string",
-												"description": "Unique identifier for the Auth partner"
-											},
-											"logoUri": {
-												"type": "string",
-												"description": "Relying party logo URI which will used to display logo in the login and consent pages."
-											},
-											"redirectUris": {
-												"type": "array",
-												"description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
-												"items": {
-													"type": "string"
-												}
-											},
-											"grantTypes": {
-												"type": "array",
-												"description": "Form of Authorization Grant presented to token endpoint",
-												"items": {
-													"type": "string"
-												}
-											},
-											"clientAuthMethods": {
-												"type": "array",
-												"description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
-												"items": {
-													"type": "string"
-												}
-											},
-											"clientNameLangMap": {
-												"type": "object",
-												"description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
-												"additionalProperties": {
-													"type": "string"
-												}
-											},
-											"additionalConfig": {
-												"type": "object",
-												"description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
-												"properties": {
-													"userinfo_response_type": {
-														"type": "string",
-														"enum": [
-															"JWS",
-															"JWE"
-														],
-														"description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
-													},
-													"purpose": {
-														"type": "object",
-														"description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
-														"properties": {
-															"type": {
-																"type": "string",
-																"enum": [
-																	"none",
-																	"verify",
-																	"link",
-																	"login"
-																]
-															},
-															"title": {
-																"type": "object",
-																"description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
-															},
-															"subTitle": {
-																"type": "object",
-																"description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
-															}
-														},
-														"required": [
-															"type"
-														]
-													},
-													"signup_banner_required": {
-														"type": "boolean",
-														"description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
-													},
-													"forgot_pwd_link_required": {
-														"type": "boolean",
-														"description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
-													},
-													"consent_expire_in_mins": {
-														"type": "number",
-														"description": "The number of minutes after which a user's given consent will expire."
-													}
-												}
-											}
-										},
-										"required": [
-											"name",
-											"policyId",
-											"publicKey",
-											"authPartnerId",
-											"logoUri",
-											"redirectUris",
-											"grantTypes",
-											"clientAuthMethods",
-											"clientNameLangMap"
-										]
-									}
-								},
-								"required": [
-									"id",
-									"version",
-									"requestTime",
-									"request"
-								]
-							},
-							"examples": {
-								"Example 1": {
-									"value": {
-										"id": "mosip.pms.create.oidc.client.post",
-										"version": "1.0",
-										"requestTime": "2024-11-05T10:36:13.780Z",
-										"metadata": {},
-										"request": {
-											"name": "test",
-											"policyId": "12345",
-											"publicKey": {
-												"kty": "RSA",
-												"e": "AQAB",
-												"use": "sig",
-												"alg": "RS256",
-												"n": "g7KPXZdZ18H2JoW9FhYz8WrSbLeKA5mO8ROW5YQVyzYDfjbRA9sy0FwpF7pa7mBmU1_G0RvD0xbEhSaFtCL5hyNVVZCfgVqNl41C7-F2yUWhfVQPhT5YnT3eH3gV9ZczhP1trNjIzGuH-8D7EDJcoxuwdGaaY-wTmEtHykHRyab08qr62hfwLuSjHAGN6VgV-Na81XIdXmR7Dwnd1U4MxWJxzRvnVlHFCBaZIG6jNJ21vbzM-DBMq1d8tvtrGQx4w3niK_sctUZ5NP1BLkQhYSEGLr-e_mbmHFCnGtuKfnfIm-PVD-6ihfEwX3j_YQT3LhphBZj7AdXg6iyyQn9EJQ"
-											},
-											"authPartnerId": "partner1",
-											"logoUri": "https://partner1.com/partner1-logo.png",
-											"redirectUris": [
-												"https://partner1.com/homepage"
-											],
-											"grantTypes": [
-												"authorization_code"
-											],
-											"clientAuthMethods": [
-												"private_key_jwt"
-											],
-											"clientNameLangMap": {
-												"fra": "Service e-Sim de Fastlane",
-												"ara": "خدمة فاست لين e-SIM"
-											},
-											"additionalConfig": {
-												"userinfo_response_type": "JWS",
-												"purpose": {
-													"title": {
-														"@none": "Title"
-													},
-													"type": "verify",
-													"subTitle": {
-														"@none": "subTitle"
-													}
-												},
-												"signup_banner_required": true,
-												"forgot_pwd_link_required": true,
-												"consent_expire_in_mins": 30
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"*/*": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"id": {
-											"type": "string",
-											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.oidc.client.post`"
-										},
-										"version": {
-											"type": "string",
-											"description": "Version of this endpoint. \r\n`1.0`"
-										},
-										"responseTime": {
-											"type": "string",
-											"description": "Date time in ISO format, when response is being sent."
-										},
-										"metadata": {
-											"type": "object",
-											"description": "Optional metadata about the response"
-										},
-										"response": {
-											"type": "object",
-											"properties": {
-												"clientId": {
-													"type": "string",
-													"description": "Unique identifier of the OIDC client."
-												},
-												"status": {
-													"type": "string",
-													"description": "Status of the OIDC Client.",
-													"enum": [
-														"ACTIVE",
-														"INACTIVE"
-													]
-												}
-											}
-										},
-										"errors": {
-											"type": "array",
-											"description": "Aray of error code and message indicating the error that has occured",
-											"items": {
-												"type": "object",
-												"properties": {
-													"errorCode": {
-														"type": "string",
-														"description": "Unique code of the error indicating the error that has occured"
-													},
-													"message": {
-														"type": "string",
-														"description": "Message indicating the error that has occured"
-													}
-												}
-											}
-										}
-									},
-									"x-examples": {
-										"Example 1": {
-											"id": "mosip.pms.create.oidc.client.post",
-											"version": "1.0",
-											"responseTime": "2024-11-05T10:36:13.780Z",
-											"metadata": {},
-											"response": {
-												"clientId": "aaa-bb-cc",
-												"status": "ACTIVE"
-											},
-											"errors": []
-										}
-									}
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
-					}
-				},
-				"parameters": [
-					{
-						"name": "Cookie",
-						"in": "header",
-						"description": "Authorization={jwt_token}",
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"servers": [
-					{
-						"url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-						"description": "Partner Management Service"
-					}
-				]
-			},
-			"get": {
+            "post": {
+                "tags": [
+                    "client-management-controller"
+                ],
+                "summary": "NEW: Create new OIDC client",
+                "description": "Creates a new OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new `additionalConfig` field in the request.",
+                "operationId": "create-oidc-clients",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.oidc.client.post`"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "description": "Version of this endpoint. \r\n`1.0`"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "description": "Date time in ISO format, when request is being sent."
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "description": "Optional metadata about the request"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Name of OIDC client."
+                                            },
+                                            "policyId": {
+                                                "type": "string",
+                                                "description": "Unique identifier of the Policy"
+                                            },
+                                            "publicKey": {
+                                                "type": "object",
+                                                "description": "OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OIDC client. Format: JSON Web Key (JWK).",
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "authPartnerId": {
+                                                "type": "string",
+                                                "description": "Unique identifier for the Auth partner"
+                                            },
+                                            "logoUri": {
+                                                "type": "string",
+                                                "description": "Relying party logo URI which will used to display logo in the login and consent pages."
+                                            },
+                                            "redirectUris": {
+                                                "type": "array",
+                                                "description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "grantTypes": {
+                                                "type": "array",
+                                                "description": "Form of Authorization Grant presented to token endpoint",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "clientAuthMethods": {
+                                                "type": "array",
+                                                "description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "clientNameLangMap": {
+                                                "type": "object",
+                                                "description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "additionalConfig": {
+                                                "type": "object",
+                                                "description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
+                                                "properties": {
+                                                    "userinfo_response_type": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "JWS",
+                                                            "JWE"
+                                                        ],
+                                                        "description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
+                                                    },
+                                                    "purpose": {
+                                                        "type": "object",
+                                                        "description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "none",
+                                                                    "verify",
+                                                                    "link",
+                                                                    "login"
+                                                                ]
+                                                            },
+                                                            "title": {
+                                                                "type": "object",
+                                                                "description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
+                                                            },
+                                                            "subTitle": {
+                                                                "type": "object",
+                                                                "description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "type"
+                                                        ]
+                                                    },
+                                                    "signup_banner_required": {
+                                                        "type": "boolean",
+                                                        "description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
+                                                    },
+                                                    "forgot_pwd_link_required": {
+                                                        "type": "boolean",
+                                                        "description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
+                                                    },
+                                                    "consent_expire_in_mins": {
+                                                        "type": "number",
+                                                        "description": "The number of minutes after which a user's given consent will expire."
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "name",
+                                            "policyId",
+                                            "publicKey",
+                                            "authPartnerId",
+                                            "logoUri",
+                                            "redirectUris",
+                                            "grantTypes",
+                                            "clientAuthMethods",
+                                            "clientNameLangMap"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ]
+                            },
+                            "examples": {
+                                "Example 1": {
+                                    "value": {
+                                        "id": "mosip.pms.create.oidc.client.post",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "name": "test",
+                                            "policyId": "12345",
+                                            "publicKey": {
+                                                "kty": "RSA",
+                                                "e": "AQAB",
+                                                "use": "sig",
+                                                "alg": "RS256",
+                                                "n": "g7KPXZdZ18H2JoW9FhYz8WrSbLeKA5mO8ROW5YQVyzYDfjbRA9sy0FwpF7pa7mBmU1_G0RvD0xbEhSaFtCL5hyNVVZCfgVqNl41C7-F2yUWhfVQPhT5YnT3eH3gV9ZczhP1trNjIzGuH-8D7EDJcoxuwdGaaY-wTmEtHykHRyab08qr62hfwLuSjHAGN6VgV-Na81XIdXmR7Dwnd1U4MxWJxzRvnVlHFCBaZIG6jNJ21vbzM-DBMq1d8tvtrGQx4w3niK_sctUZ5NP1BLkQhYSEGLr-e_mbmHFCnGtuKfnfIm-PVD-6ihfEwX3j_YQT3LhphBZj7AdXg6iyyQn9EJQ"
+                                            },
+                                            "authPartnerId": "partner1",
+                                            "logoUri": "https://partner1.com/partner1-logo.png",
+                                            "redirectUris": [
+                                                "https://partner1.com/homepage"
+                                            ],
+                                            "grantTypes": [
+                                                "authorization_code"
+                                            ],
+                                            "clientAuthMethods": [
+                                                "private_key_jwt"
+                                            ],
+                                            "clientNameLangMap": {
+                                                "fra": "Service e-Sim de Fastlane",
+                                                "ara": "خدمة فاست لين e-SIM"
+                                            },
+                                            "additionalConfig": {
+                                                "userinfo_response_type": "JWS",
+                                                "purpose": {
+                                                    "title": {
+                                                        "@none": "Title"
+                                                    },
+                                                    "type": "verify",
+                                                    "subTitle": {
+                                                        "@none": "subTitle"
+                                                    }
+                                                },
+                                                "signup_banner_required": true,
+                                                "forgot_pwd_link_required": true,
+                                                "consent_expire_in_mins": 30
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.create.oidc.client.post`"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of this endpoint. \r\n`1.0`"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "Date time in ISO format, when response is being sent."
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "clientId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier of the OIDC client."
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "description": "Status of the OIDC Client.",
+                                                    "enum": [
+                                                        "ACTIVE",
+                                                        "INACTIVE"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Unique code of the error indicating the error that has occured. eSignet error codes: PMS_ESI_009 (Invalid grant type), PMS_ESI_010 (Invalid client authentication method), PMS_ESI_011 (Generic eSignet error), PMS_ESI_012 (Invalid client id), PMS_ESI_013 (Invalid client name), PMS_ESI_014 (Invalid claim), PMS_ESI_015 (Invalid authentication context reference), PMS_ESI_016 (Invalid URI), PMS_ESI_017 (Invalid redirect URI), PMS_ESI_018 (Invalid client name value), PMS_ESI_019 (Invalid language code), PMS_ESI_020 (Invalid additional config)",
+                                                        "enum": [
+                                                            "PMS_ESI_009",
+                                                            "PMS_ESI_010",
+                                                            "PMS_ESI_011",
+                                                            "PMS_ESI_012",
+                                                            "PMS_ESI_013",
+                                                            "PMS_ESI_014",
+                                                            "PMS_ESI_015",
+                                                            "PMS_ESI_016",
+                                                            "PMS_ESI_017",
+                                                            "PMS_ESI_018",
+                                                            "PMS_ESI_019",
+                                                            "PMS_ESI_020"
+                                                        ]
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Message indicating the error that has occured"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "x-examples": {
+                                        "Example 1": {
+                                            "id": "mosip.pms.create.oidc.client.post",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "clientId": "aaa-bb-cc",
+                                                "status": "ACTIVE"
+                                            },
+                                            "errors": []
+                                        },
+                                        "Error Example - Invalid Grant Type": {
+                                            "id": "mosip.pms.create.oidc.client.post",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": null,
+                                            "errors": [
+                                                {
+                                                    "errorCode": "PMS_ESI_009",
+                                                    "message": "Invalid grant type provided."
+                                                }
+                                            ]
+                                        },
+                                        "Error Example - Invalid Client Auth": {
+                                            "id": "mosip.pms.create.oidc.client.post",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": null,
+                                            "errors": [
+                                                {
+                                                    "errorCode": "PMS_ESI_010",
+                                                    "message": "Invalid client authentication method provided."
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            },
+            "get": {
                 "summary": "NEW: Endpoint to get the list of all the OIDC clients created by the Auth Partners",
                 "tags": [
                     "client-management-controller"
@@ -4700,6 +4761,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -4841,361 +4903,362 @@
                     }
                 ]
             }
-		},
-		"/oidc-clients/{clientId}": {
-			"get": {
-				"tags": [
-					"client-management-controller"
-				],
-				"summary": "NEW: Get details of an existing OIDC client",
-				"description": "Retrieves details of an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the response.",
-				"operationId": "get-oidc-client-details",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"*/*": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"id": {
-											"type": "string",
-											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.oidc.client.details.get`"
-										},
-										"version": {
-											"type": "string",
-											"description": "Version of this endpoint. \r\n`1.0`"
-										},
-										"responseTime": {
-											"type": "string",
-											"description": "Date time in ISO format, when response is being sent."
-										},
-										"metadata": {
-											"type": "object",
-											"description": "Optional metadata about the response"
-										},
-										"response": {
-											"type": "object",
-											"properties": {
-												"id": {
-													"type": "string",
-													"description": "Unique identifier of the OIDC client."
-												},
-												"name": {
-													"type": "string",
-													"description": "Name of OIDC client."
-												},
-												"policyId": {
-													"type": "string",
-													"description": "Unique identifier of the Policy"
-												},
-												"policyName": {
-													"type": "string",
-													"description": "Name of the policy"
-												},
-												"policyDescription": {
-													"type": "string",
-													"description": "Description of the policy"
-												},
-												"policyGroupName": {
-													"type": "string",
-													"description": "Name of the policy group"
-												},
-												"policyGroupDescription": {
-													"type": "string",
-													"description": "Description of the policy group"
-												},
-												"relyingPartyId": {
-													"type": "string",
-													"description": "Unique identifier for the Auth partner"
-												},
-												"logoUri": {
-													"type": "string",
-													"description": "Relying party logo URI which will used to display logo in the login and consent pages."
-												},
-												"redirectUris": {
-													"type": "array",
-													"description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
-													"items": {
-														"type": "string"
-													}
-												},
-												"publicKey": {
-													"type": "object",
-													"description": "OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OIDC client. Format: JSON Web Key (JWK).",
-													"additionalProperties": {
-														"type": "string"
-													}
-												},
-												"claims": {
-													"type": "array",
-													"description": "Allowed user info claims, that can be requested by OIDC client in the authorize API",
-													"items": {
-														"type": "string"
-													}
-												},
-												"acrValues": {
-													"type": "array",
-													"description": "The Authentication Context Class Reference is case-sensitive string specifying a list of Authentication Context Class values that identifies the Authentication Context Class. Values that the authentication performed satisfied implying a Level Of Assurance.",
-													"items": {
-														"type": "string"
-													}
-												},
-												"status": {
-													"type": "string",
-													"description": "Status of the OIDC Client.",
-													"enum": [
-														"ACTIVE",
-														"INACTIVE"
-													]
-												},
-												"grantTypes": {
-													"type": "array",
-													"description": "Form of Authorization Grant presented to token endpoint",
-													"items": {
-														"type": "string"
-													}
-												},
-												"clientAuthMethods": {
-													"type": "array",
-													"description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
-													"items": {
-														"type": "string"
-													}
-												},
-												"clientNameLangMap": {
-													"type": "object",
-													"description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
-													"additionalProperties": {
-														"type": "string"
-													}
-												},
-												"additionalConfig": {
-													"type": "object",
-													"description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
-													"properties": {
-														"userinfo_response_type": {
-															"type": "string",
-															"enum": [
-																"JWS",
-																"JWE"
-															],
-															"description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
-														},
-														"purpose": {
-															"type": "object",
-															"description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
-															"properties": {
-																"type": {
-																	"type": "string",
-																	"enum": [
-																		"none",
-																		"verify",
-																		"link",
-																		"login"
-																	]
-																},
-																"title": {
-																	"type": "object",
-																	"description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
-																},
-																"subTitle": {
-																	"type": "object",
-																	"description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
-																}
-															},
-															"required": [
-																"type"
-															]
-														},
-														"signup_banner_required": {
-															"type": "boolean",
-															"description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
-														},
-														"forgot_pwd_link_required": {
-															"type": "boolean",
-															"description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
-														},
-														"consent_expire_in_mins": {
-															"type": "number",
-															"description": "The number of minutes after which a user's given consent will expire."
-														}
-													}
-												},
-												"createdDateTime": {
-													"type": "string",
-													"description": "Created date in ISO format"
-												}
-											}
-										},
-										"errors": {
-											"type": "array",
-											"description": "Aray of error code and message indicating the error that has occured",
-											"items": {
-												"type": "object",
-												"properties": {
-													"errorCode": {
-														"type": "string",
-														"description": "Unique code of the error indicating the error that has occured"
-													},
-													"message": {
-														"type": "string",
-														"description": "Message indicating the error that has occured"
-													}
-												}
-											}
-										}
-									},
-									"x-examples": {
-										"Example 1": {
-											"id": "mosip.pms.oidc.client.details.get",
-											"version": "1.0",
-											"responseTime": "2024-11-05T10:36:13.780Z",
-											"metadata": {},
-											"response": {
-												"id": "WMX5pO6dYdCFR3iaVWGclVPNxTNSADDv",
-												"name": "Fastlane e-Sim Service",
-												"policyId": "12345",
-												"policyName": "policy1",
-												"policyDescription": "descr",
-												"policyGroupName": "group1",
-												"policyGroupDescription": "descr",
-												"relyingPartyId": "Fastlane",
-												"logoUri": "https://fastlane.com/fastlane-esim.png",
-												"redirectUris": [
-													"https://fastlane.com/homepage",
-													"io.mosip.residentapp://oauth"
-												],
-												"publicKey": {
-													"kty": "RSA",
-													"e": "AQAB",
-													"use": "sig",
-													"alg": "RS256",
-													"n": "g7KPXZdZ18H2JoW9FhYz8WrSbLeKA5mO8ROW5YQVyzYDfjbRA9sy0FwpF7pa7mBmU1_G0RvD0xbEhSaFtCL5hyNVVZCfgVqNl41C7-F2yUWhfVQPhT5YnT3eH3gV9ZczhP1trNjIzGuH-8D7EDJcoxuwdGaaY-wTmEtHykHRyab08qr62hfwLuSjHAGN6VgV-Na81XIdXmR7Dwnd1U4MxWJxzRvnVlHFCBaZIG6jNJ21vbzM-DBMq1d8tvtrGQx4w3niK_sctUZ5NP1BLkQhYSEGLr-e_mbmHFCnGtuKfnfIm-PVD-6ihfEwX3j_YQT3LhphBZj7AdXg6iyyQn9EJQ"
-												},
-												"claims": [
-													"name",
-													"email",
-													"phone_number",
-													"address"
-												],
-												"acrValues": [
-													"mosip:idp:acr:generated-code",
-													"mosip:idp:acr:biometrics",
-													"mosip:idp:acr:linked-wallet"
-												],
-												"status": "ACTIVE",
-												"grantTypes": [
-													"authorization_code"
-												],
-												"clientAuthMethods": [
-													"private_key_jwt"
-												],
-												"clientNameLangMap": {
-													"fra": "Service e-Sim de Fastlane",
-													"ara": "خدمة فاست لين e-SIM"
-												},
-												"additionalConfig": {
-													"userinfo_response_type": "JWS",
-													"purpose": {
-														"title": {
-															"@none": "Title"
-														},
-														"type": "verify",
-														"subTitle": {
-															"@none": "subTitle"
-														}
-													},
-													"signup_banner_required": true,
-													"forgot_pwd_link_required": true,
-													"consent_expire_in_mins": 30
-												},
-												"createdDateTime": "2025-11-24T14:15:22Z"
-											},
-											"errors": []
-										}
-									}
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
-					}
-				},
-				"parameters": [
-					{
-						"name": "Cookie",
-						"in": "header",
-						"description": "Authorization={jwt_token}",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "clientId",
-						"in": "path",
-						"description": "Unique identifier for the OIDC client",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"servers": [
-					{
-						"url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-						"description": "Partner Management Service"
-					}
-				]
-			},
-			"put": {
-				"tags": [
-					"client-management-controller"
-				],
-				"summary": "NEW: Update existing OIDC client",
-				"description": "Updates an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the request.",
-				"operationId": "update-oidc-clients",
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"id": {
-										"type": "string",
-										"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.oidc.client.put`"
-									},
-									"version": {
-										"type": "string",
-										"description": "Version of this endpoint. \r\n`1.0`"
-									},
-									"requestTime": {
-										"type": "string",
-										"description": "Date time in ISO format, when request is being sent."
-									},
-									"metadata": {
-										"type": "object",
-										"description": "Optional metadata about the request"
-									},
-									"request": {
-										"type": "object",
-										"properties": {
-											"logoUri": {
-												"type": "string",
-												"description": "Relying party logo URI which will used to display logo in the login and consent pages."
-											},
-											"redirectUris": {
-												"type": "array",
-												"description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
-												"items": {
-													"type": "string"
-												}
-											},
+        },
+        "/oidc-clients/{clientId}": {
+            "get": {
+                "tags": [
+                    "client-management-controller"
+                ],
+                "summary": "NEW: Get details of an existing OIDC client",
+                "description": "Retrieves details of an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the response.",
+                "operationId": "get-oidc-client-details",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.oidc.client.details.get`"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of this endpoint. \r\n`1.0`"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "Date time in ISO format, when response is being sent."
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier of the OIDC client."
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "Name of OIDC client."
+                                                },
+                                                "policyId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier of the Policy"
+                                                },
+                                                "policyName": {
+                                                    "type": "string",
+                                                    "description": "Name of the policy"
+                                                },
+                                                "policyDescription": {
+                                                    "type": "string",
+                                                    "description": "Description of the policy"
+                                                },
+                                                "policyGroupName": {
+                                                    "type": "string",
+                                                    "description": "Name of the policy group"
+                                                },
+                                                "policyGroupDescription": {
+                                                    "type": "string",
+                                                    "description": "Description of the policy group"
+                                                },
+                                                "relyingPartyId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier for the Auth partner"
+                                                },
+                                                "logoUri": {
+                                                    "type": "string",
+                                                    "description": "Relying party logo URI which will used to display logo in the login and consent pages."
+                                                },
+                                                "redirectUris": {
+                                                    "type": "array",
+                                                    "description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "publicKey": {
+                                                    "type": "object",
+                                                    "description": "OIDC client's public key (JWK) used to verify the client's private_key_jwt at the token endpoint. This field cannot be updated later. If the private key is compromised, create a new OIDC client. Format: JSON Web Key (JWK).",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "claims": {
+                                                    "type": "array",
+                                                    "description": "Allowed user info claims, that can be requested by OIDC client in the authorize API",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "acrValues": {
+                                                    "type": "array",
+                                                    "description": "The Authentication Context Class Reference is case-sensitive string specifying a list of Authentication Context Class values that identifies the Authentication Context Class. Values that the authentication performed satisfied implying a Level Of Assurance.",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "description": "Status of the OIDC Client.",
+                                                    "enum": [
+                                                        "ACTIVE",
+                                                        "INACTIVE"
+                                                    ]
+                                                },
+                                                "grantTypes": {
+                                                    "type": "array",
+                                                    "description": "Form of Authorization Grant presented to token endpoint",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "clientAuthMethods": {
+                                                    "type": "array",
+                                                    "description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "clientNameLangMap": {
+                                                    "type": "object",
+                                                    "description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "additionalConfig": {
+                                                    "type": "object",
+                                                    "description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
+                                                    "properties": {
+                                                        "userinfo_response_type": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "JWS",
+                                                                "JWE"
+                                                            ],
+                                                            "description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
+                                                        },
+                                                        "purpose": {
+                                                            "type": "object",
+                                                            "description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "none",
+                                                                        "verify",
+                                                                        "link",
+                                                                        "login"
+                                                                    ]
+                                                                },
+                                                                "title": {
+                                                                    "type": "object",
+                                                                    "description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
+                                                                },
+                                                                "subTitle": {
+                                                                    "type": "object",
+                                                                    "description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "type"
+                                                            ]
+                                                        },
+                                                        "signup_banner_required": {
+                                                            "type": "boolean",
+                                                            "description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
+                                                        },
+                                                        "forgot_pwd_link_required": {
+                                                            "type": "boolean",
+                                                            "description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
+                                                        },
+                                                        "consent_expire_in_mins": {
+                                                            "type": "number",
+                                                            "description": "The number of minutes after which a user's given consent will expire."
+                                                        }
+                                                    }
+                                                },
+                                                "createdDateTime": {
+                                                    "type": "string",
+                                                    "description": "Created date in ISO format"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Message indicating the error that has occured"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "x-examples": {
+                                        "Example 1": {
+                                            "id": "mosip.pms.oidc.client.details.get",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "id": "WMX5pO6dYdCFR3iaVWGclVPNxTNSADDv",
+                                                "name": "Fastlane e-Sim Service",
+                                                "policyId": "12345",
+                                                "policyName": "policy1",
+                                                "policyDescription": "descr",
+                                                "policyGroupName": "group1",
+                                                "policyGroupDescription": "descr",
+                                                "relyingPartyId": "Fastlane",
+                                                "logoUri": "https://fastlane.com/fastlane-esim.png",
+                                                "redirectUris": [
+                                                    "https://fastlane.com/homepage",
+                                                    "io.mosip.residentapp://oauth"
+                                                ],
+                                                "publicKey": {
+                                                    "kty": "RSA",
+                                                    "e": "AQAB",
+                                                    "use": "sig",
+                                                    "alg": "RS256",
+                                                    "n": "g7KPXZdZ18H2JoW9FhYz8WrSbLeKA5mO8ROW5YQVyzYDfjbRA9sy0FwpF7pa7mBmU1_G0RvD0xbEhSaFtCL5hyNVVZCfgVqNl41C7-F2yUWhfVQPhT5YnT3eH3gV9ZczhP1trNjIzGuH-8D7EDJcoxuwdGaaY-wTmEtHykHRyab08qr62hfwLuSjHAGN6VgV-Na81XIdXmR7Dwnd1U4MxWJxzRvnVlHFCBaZIG6jNJ21vbzM-DBMq1d8tvtrGQx4w3niK_sctUZ5NP1BLkQhYSEGLr-e_mbmHFCnGtuKfnfIm-PVD-6ihfEwX3j_YQT3LhphBZj7AdXg6iyyQn9EJQ"
+                                                },
+                                                "claims": [
+                                                    "name",
+                                                    "email",
+                                                    "phone_number",
+                                                    "address"
+                                                ],
+                                                "acrValues": [
+                                                    "mosip:idp:acr:generated-code",
+                                                    "mosip:idp:acr:biometrics",
+                                                    "mosip:idp:acr:linked-wallet"
+                                                ],
+                                                "status": "ACTIVE",
+                                                "grantTypes": [
+                                                    "authorization_code"
+                                                ],
+                                                "clientAuthMethods": [
+                                                    "private_key_jwt"
+                                                ],
+                                                "clientNameLangMap": {
+                                                    "fra": "Service e-Sim de Fastlane",
+                                                    "ara": "خدمة فاست لين e-SIM"
+                                                },
+                                                "additionalConfig": {
+                                                    "userinfo_response_type": "JWS",
+                                                    "purpose": {
+                                                        "title": {
+                                                            "@none": "Title"
+                                                        },
+                                                        "type": "verify",
+                                                        "subTitle": {
+                                                            "@none": "subTitle"
+                                                        }
+                                                    },
+                                                    "signup_banner_required": true,
+                                                    "forgot_pwd_link_required": true,
+                                                    "consent_expire_in_mins": 30
+                                                },
+                                                "createdDateTime": "2025-11-24T14:15:22Z"
+                                            },
+                                            "errors": []
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Unique identifier for the OIDC client",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "client-management-controller"
+                ],
+                "summary": "NEW: Update existing OIDC client",
+                "description": "Updates an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the request.",
+                "operationId": "update-oidc-clients",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.oidc.client.put`"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "description": "Version of this endpoint. \r\n`1.0`"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "description": "Date time in ISO format, when request is being sent."
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "description": "Optional metadata about the request"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "logoUri": {
+                                                "type": "string",
+                                                "description": "Relying party logo URI which will used to display logo in the login and consent pages."
+                                            },
+                                            "redirectUris": {
+                                                "type": "array",
+                                                "description": "Valid list of callback Uris of the relying party. When calling the authorize API, one of these URIs should be sent as the redirect_uri. After successful login, the authorization_code will be sent to this URI.",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
                                             "status": {
                                                 "type": "string",
                                                 "description": "Status of the OIDC Client.",
@@ -5204,257 +5267,298 @@
                                                     "INACTIVE"
                                                 ]
                                             },
-											"grantTypes": {
-												"type": "array",
-												"description": "Form of Authorization Grant presented to token endpoint",
-												"items": {
-													"type": "string"
-												}
-											},
-											"clientName": {
-												"type": "string",
-												"description": "Name of OIDC client."
-											},
-											"clientAuthMethods": {
-												"type": "array",
-												"description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
-												"items": {
-													"type": "string"
-												}
-											},
-											"clientNameLangMap": {
-												"type": "object",
-												"description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
-												"additionalProperties": {
-													"type": "string"
-												}
-											},
-											"additionalConfig": {
-												"type": "object",
-												"description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
-												"properties": {
-													"userinfo_response_type": {
-														"type": "string",
-														"enum": [
-															"JWS",
-															"JWE"
-														],
-														"description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
-													},
-													"purpose": {
-														"type": "object",
-														"description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
-														"properties": {
-															"type": {
-																"type": "string",
-																"enum": [
-																	"none",
-																	"verify",
-																	"link",
-																	"login"
-																]
-															},
-															"title": {
-																"type": "object",
-																"description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
-															},
-															"subTitle": {
-																"type": "object",
-																"description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
-															}
-														},
-														"required": [
-															"type"
-														]
-													},
-													"signup_banner_required": {
-														"type": "boolean",
-														"description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
-													},
-													"forgot_pwd_link_required": {
-														"type": "boolean",
-														"description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
-													},
-													"consent_expire_in_mins": {
-														"type": "number",
-														"description": "The number of minutes after which a user's given consent will expire."
-													}
-												}
-											}
-										},
-										"required": [
-											"logoUri",
-											"redirectUris",
-											"status",
-											"grantTypes",
-											"clientName",
-											"clientAuthMethods",
-											"clientNameLangMap"
-										]
-									}
-								},
-								"required": [
-									"id",
-									"version",
-									"requestTime",
-									"request"
-								]
-							},
-							"examples": {
-								"Example 1": {
-									"value": {
-										"id": "mosip.pms.update.oidc.client.put",
-										"version": "1.0",
-										"requestTime": "2024-11-05T10:36:13.780Z",
-										"metadata": {},
-										"request": {
-											"logoUri": "https://partner1.com/partner1-logo.png",
-											"redirectUris": [
-												"https://partner1.com/homepage"
-											],
-											"status": "ACTIVE",
-											"grantTypes": [
-												"authorization_code"
-											],
-											"clientName": "updated name",
-											"clientAuthMethods": [
-												"private_key_jwt"
-											],
-											"clientNameLangMap": {
-												"fra": "Service e-Sim de Fastlane",
-												"ara": "خدمة فاست لين e-SIM"
-											},
-											"additionalConfig": {
-												"userinfo_response_type": "JWS",
-												"purpose": {
-													"title": {
-														"@none": "Title"
-													},
-													"type": "verify",
-													"subTitle": {
-														"@none": "subTitle"
-													}
-												},
-												"signup_banner_required": true,
-												"forgot_pwd_link_required": true,
-												"consent_expire_in_mins": 30
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"*/*": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"id": {
-											"type": "string",
-											"description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.oidc.client.put`"
-										},
-										"version": {
-											"type": "string",
-											"description": "Version of this endpoint. \r\n`1.0`"
-										},
-										"responseTime": {
-											"type": "string",
-											"description": "Date time in ISO format, when response is being sent."
-										},
-										"metadata": {
-											"type": "object",
-											"description": "Optional metadata about the response"
-										},
-										"response": {
-											"type": "object",
-											"properties": {
-												"clientId": {
-													"type": "string",
-													"description": "Unique identifier of the client."
-												},
-												"status": {
-													"type": "string",
-													"description": "Status of the Client.",
-													"enum": [
-														"ACTIVE",
-														"INACTIVE"
-													]
-												}
-											}
-										},
-										"errors": {
-											"type": "array",
-											"description": "Aray of error code and message indicating the error that has occured",
-											"items": {
-												"type": "object",
-												"properties": {
-													"errorCode": {
-														"type": "string",
-														"description": "Unique code of the error indicating the error that has occured"
-													},
-													"message": {
-														"type": "string",
-														"description": "Message indicating the error that has occured"
-													}
-												}
-											}
-										}
-									},
-									"x-examples": {
-										"Example 1": {
-											"id": "mosip.pms.update.oidc.client.put",
-											"version": "1.0",
-											"responseTime": "2024-11-05T10:36:13.780Z",
-											"metadata": {},
-											"response": {
-												"clientId": "aaa-bb-cc",
-												"status": "ACTIVE"
-											},
-											"errors": []
-										}
-									}
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
-					}
-				},
-				"parameters": [
-					{
-						"name": "Cookie",
-						"in": "header",
-						"description": "Authorization={jwt_token}",
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"name": "clientId",
-						"in": "path",
-						"description": "Unique identifier for the OIDC client",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"servers": [
-					{
-						"url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-						"description": "Partner Management Service"
-					}
-				]
-			},
+                                            "grantTypes": {
+                                                "type": "array",
+                                                "description": "Form of Authorization Grant presented to token endpoint",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "clientName": {
+                                                "type": "string",
+                                                "description": "Name of OIDC client."
+                                            },
+                                            "clientAuthMethods": {
+                                                "type": "array",
+                                                "description": "Auth method supported for token endpoint. At present only `private_key_jwt` is supported.",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "clientNameLangMap": {
+                                                "type": "object",
+                                                "description": "Client name in different languages. The language code needs to be passed as key and client name in the desired language needs to be passed as value",
+                                                "additionalProperties": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "additionalConfig": {
+                                                "type": "object",
+                                                "description": "This parameter allow us to configure the required values based on their specific authentication and integration needs, ensuring efficient implementation of eSignet for ID verification/authentication.",
+                                                "properties": {
+                                                    "userinfo_response_type": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "JWS",
+                                                            "JWE"
+                                                        ],
+                                                        "description": "The response type for the user info endpoint should be configurable to allow the Relying Party to choose between only signed tokens or signed tokens with encryption."
+                                                    },
+                                                    "purpose": {
+                                                        "type": "object",
+                                                        "description": "Relying Parties should indicate the purpose of using eSignet (e.g., for login, verification) during registration, allowing for specific customisation.",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "none",
+                                                                    "verify",
+                                                                    "link",
+                                                                    "login"
+                                                                ]
+                                                            },
+                                                            "title": {
+                                                                "type": "object",
+                                                                "description": "It will appear in the screen as the title of login page. It will be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing title object."
+                                                            },
+                                                            "subTitle": {
+                                                                "type": "object",
+                                                                "description": "It will appear in the screen below the title of login page. It will also be multilingual language map and `@none` when no language map is present, `@none` is compulsory if you are providing subTitle object."
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "type"
+                                                        ]
+                                                    },
+                                                    "signup_banner_required": {
+                                                        "type": "boolean",
+                                                        "description": "Relying Parties should be able to specify whether they require eSignet sign-up. If no signup service is required UI should not have “Sign up with Unified login“ option."
+                                                    },
+                                                    "forgot_pwd_link_required": {
+                                                        "type": "boolean",
+                                                        "description": "Relying Parties should be able to specify whether they require eSignet forgot password feature. If it is not required UI should not have “Forgot password“ option"
+                                                    },
+                                                    "consent_expire_in_mins": {
+                                                        "type": "number",
+                                                        "description": "The number of minutes after which a user's given consent will expire."
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "logoUri",
+                                            "redirectUris",
+                                            "status",
+                                            "grantTypes",
+                                            "clientName",
+                                            "clientAuthMethods",
+                                            "clientNameLangMap"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ]
+                            },
+                            "examples": {
+                                "Example 1": {
+                                    "value": {
+                                        "id": "mosip.pms.update.oidc.client.put",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "logoUri": "https://partner1.com/partner1-logo.png",
+                                            "redirectUris": [
+                                                "https://partner1.com/homepage"
+                                            ],
+                                            "status": "ACTIVE",
+                                            "grantTypes": [
+                                                "authorization_code"
+                                            ],
+                                            "clientName": "updated name",
+                                            "clientAuthMethods": [
+                                                "private_key_jwt"
+                                            ],
+                                            "clientNameLangMap": {
+                                                "fra": "Service e-Sim de Fastlane",
+                                                "ara": "خدمة فاست لين e-SIM"
+                                            },
+                                            "additionalConfig": {
+                                                "userinfo_response_type": "JWS",
+                                                "purpose": {
+                                                    "title": {
+                                                        "@none": "Title"
+                                                    },
+                                                    "type": "verify",
+                                                    "subTitle": {
+                                                        "@none": "subTitle"
+                                                    }
+                                                },
+                                                "signup_banner_required": true,
+                                                "forgot_pwd_link_required": true,
+                                                "consent_expire_in_mins": 30
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.oidc.client.put`"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of this endpoint. \r\n`1.0`"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "Date time in ISO format, when response is being sent."
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "clientId": {
+                                                    "type": "string",
+                                                    "description": "Unique identifier of the client."
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "description": "Status of the Client.",
+                                                    "enum": [
+                                                        "ACTIVE",
+                                                        "INACTIVE"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Unique code of the error indicating the error that has occured. eSignet error codes: PMS_ESI_009 (Invalid grant type), PMS_ESI_010 (Invalid client authentication method), PMS_ESI_011 (Generic eSignet error), PMS_ESI_012 (Invalid client id), PMS_ESI_013 (Invalid client name), PMS_ESI_014 (Invalid claim), PMS_ESI_015 (Invalid authentication context reference), PMS_ESI_016 (Invalid URI), PMS_ESI_017 (Invalid redirect URI), PMS_ESI_018 (Invalid client name value), PMS_ESI_019 (Invalid language code), PMS_ESI_020 (Invalid additional config)",
+                                                        "enum": [
+                                                            "PMS_ESI_009",
+                                                            "PMS_ESI_010",
+                                                            "PMS_ESI_011",
+                                                            "PMS_ESI_012",
+                                                            "PMS_ESI_013",
+                                                            "PMS_ESI_014",
+                                                            "PMS_ESI_015",
+                                                            "PMS_ESI_016",
+                                                            "PMS_ESI_017",
+                                                            "PMS_ESI_018",
+                                                            "PMS_ESI_019",
+                                                            "PMS_ESI_020"
+                                                        ]
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Message indicating the error that has occured"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "x-examples": {
+                                        "Example 1": {
+                                            "id": "mosip.pms.update.oidc.client.put",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "clientId": "aaa-bb-cc",
+                                                "status": "ACTIVE"
+                                            },
+                                            "errors": []
+                                        },
+                                        "Error Example - Invalid Grant Type": {
+                                            "id": "mosip.pms.update.oidc.client.put",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": null,
+                                            "errors": [
+                                                {
+                                                    "errorCode": "PMS_ESI_009",
+                                                    "message": "Invalid grant type provided."
+                                                }
+                                            ]
+                                        },
+                                        "Error Example - Invalid Client Auth": {
+                                            "id": "mosip.pms.update.oidc.client.put",
+                                            "version": "1.0",
+                                            "responseTime": "2024-11-05T10:36:13.780Z",
+                                            "metadata": {},
+                                            "response": null,
+                                            "errors": [
+                                                {
+                                                    "errorCode": "PMS_ESI_010",
+                                                    "message": "Invalid client authentication method provided."
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "clientId",
+                        "in": "path",
+                        "description": "Unique identifier for the OIDC client",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            },
             "patch": {
                 "tags": [
                     "client-management-controller"
@@ -5549,6 +5653,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "clientId": {
@@ -5632,8 +5737,8 @@
                     }
                 ]
             }
-		},
-		"/logout/user": {
+        },
+        "/logout/user": {
             "get": {
                 "tags": [
                     "login-controller"
@@ -5927,6 +6032,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "boolean",
                                             "description": "True value indicates success, while false indicates failure"
                                         },
@@ -6148,6 +6254,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -6422,6 +6529,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "partnerId": {
@@ -6730,6 +6838,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -6973,7 +7082,7 @@
                     {
                         "schema": {
                             "type": "integer",
-                            "minimum": 1, 
+                            "minimum": 1,
                             "maximum": 30
                         },
                         "in": "query",
@@ -7007,6 +7116,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -7292,6 +7402,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -7610,6 +7721,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -7875,6 +7987,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "pageNo": {
@@ -8047,6 +8160,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "p7bFile": {
@@ -8298,6 +8412,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "required": [
                                                 "pageNo",
@@ -8690,6 +8805,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "id": {
@@ -8863,6 +8979,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "notificationsSeenDtimes": {
@@ -8973,6 +9090,7 @@
                                             "description": "Optional metadata about the response"
                                         },
                                         "response": {
+                                            "nullable": true,
                                             "type": "object",
                                             "properties": {
                                                 "userId": {
@@ -9165,6 +9283,7 @@
                         "type": "object"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/IdDto"
                     },
                     "errors": {
@@ -9436,6 +9555,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/FilterResponseCodeDto"
                     },
                     "errors": {
@@ -9579,6 +9699,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/PartnerResponse"
                     },
                     "errors": {
@@ -9718,6 +9839,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "string"
                     },
                     "errors": {
@@ -9755,6 +9877,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/OriginalCertDownloadResponseDto"
                     },
                     "errors": {
@@ -9864,6 +9987,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/PartnerPolicyMappingResponseDto"
                     },
                     "errors": {
@@ -9960,6 +10084,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/APIKeyGenerateResponseDto"
                     },
                     "errors": {
@@ -10017,6 +10142,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/ApiKeyResponseDto"
@@ -10112,6 +10238,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/SbiDetailsDto"
@@ -10220,6 +10347,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PolicyDto"
@@ -10326,6 +10454,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/FtmProviderDetailsDto"
@@ -10451,6 +10580,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/CertificateDto"
@@ -10563,6 +10693,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/PolicyGroupDto"
@@ -10625,6 +10756,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/FtmProviderDto"
@@ -10680,6 +10812,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/DeviceProviderDto"
@@ -10793,6 +10926,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/ActivePolicyDto"
@@ -10906,6 +11040,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/SbiDetailsResponseDto"
                     },
                     "errors": {
@@ -11133,6 +11268,7 @@
                         "type": "object"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/FtpCertificateResponseDto"
                     },
                     "errors": {
@@ -11240,6 +11376,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/DeviceDetailResponseDto"
                     },
                     "errors": {
@@ -11306,6 +11443,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "object",
                         "description": "Example\r\n`{\r\n    \"maxAllowedyear\": \"\",\r\n    \"grantTypes\": \"\",\r\n    \"axiosTimeout\": \"\",\r\n    \"inActivityTimer\": \"\",\r\n    \"inActivityPromptTimer\": \"\",\r\n    \"clientAuthMethods\": \"\"\r\n}`",
                         "additionalProperties": {
@@ -11349,6 +11487,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "object",
                         "properties": {
                             "userId": {
@@ -11453,6 +11592,7 @@
                         "description": "Optional metadata"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/EmailVerificationResponseDto"
                     },
                     "errors": {
@@ -11548,6 +11688,7 @@
                         "type": "object"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/CACertificateResponseDto"
                     },
                     "errors": {
@@ -11649,6 +11790,7 @@
                         "description": "Optional metadata"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/PartnerCertificateResponseDto"
                     },
                     "errors": {
@@ -11805,6 +11947,7 @@
                         "description": "Optional metadata"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/ClientDetailResponse"
                     },
                     "errors": {
@@ -11937,6 +12080,7 @@
                         "description": "Optional metadata about the response"
                     },
                     "response": {
+                        "nullable": true,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/OidcClientDto"
@@ -12071,6 +12215,7 @@
                         "description": "Optional metadata"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/MosipUserDto"
                     },
                     "errors": {
@@ -12180,6 +12325,7 @@
                         "type": "object"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/PartnersPolicyMappingResponse"
                     },
                     "errors": {
@@ -12374,6 +12520,7 @@
                         "type": "object"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/PageResponseDtoPartnerType"
                     },
                     "errors": {
@@ -12469,6 +12616,7 @@
                         "type": "object"
                     },
                     "response": {
+                        "nullable": true,
                         "$ref": "#/components/schemas/ClientDetail"
                     },
                     "errors": {
