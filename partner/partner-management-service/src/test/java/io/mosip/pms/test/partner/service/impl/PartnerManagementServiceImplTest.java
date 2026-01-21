@@ -154,7 +154,8 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
-		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);		
+		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", partnerHelper);
 //		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
@@ -2053,5 +2054,423 @@ public class PartnerManagementServiceImplTest {
 		mosipUserDto.setUserId("123");
 		mosipUserDto.setMail("abc@gmail.com");
 		return mosipUserDto;
+	}
+
+	@Test
+	public void updateAPIKeyTest_SuccessWithExpiryDate() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		Mockito.when(partnerPolicyRepository.save(any(PartnerPolicy.class))).thenReturn(partnerPolicy);
+		Mockito.doNothing().when(webSubPublisher).notify(any(), any(), any());
+		Mockito.doNothing().when(notificationService).sendNotications(any(), any());
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void updateAPIKeyTest_SuccessWithDeactivateStatus() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		Mockito.when(partnerPolicyRepository.save(any(PartnerPolicy.class))).thenReturn(partnerPolicy);
+		Mockito.doNothing().when(webSubPublisher).notify(any(), any(), any());
+		Mockito.doNothing().when(notificationService).sendNotications(any(), any());
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void updateAPIKeyTest_SuccessWithBothFields() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+		requestDto.setExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		Mockito.when(partnerPolicyRepository.save(any(PartnerPolicy.class))).thenReturn(partnerPolicy);
+		Mockito.doNothing().when(webSubPublisher).notify(any(), any(), any());
+		Mockito.doNothing().when(notificationService).sendNotications(any(), any());
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void updateAPIKeyTest_NullPartnerId() throws Exception {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(null, "policy456", "apiKeyName123", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_EmptyPartnerId() throws Exception {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("", "policy456", "apiKeyName123", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_NullPolicyId() throws Exception {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("partner123", null, "apiKeyName123", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_NullApiKeyName() throws Exception {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("partner123", "policy456", null, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_NoFieldsProvided() throws Exception {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("partner123", "policy456", "apiKeyName123", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_PartnerPolicyNotFound() throws Exception {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(anyString(), anyString(), anyString()))
+				.thenReturn(null);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("partner123", "policy456", "apiKeyName123", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_PartnerNotActive() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(false);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_ApiKeyNotActive() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(false);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_NonAdminCannotUpdateExpiry() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("Auth_Partner")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setExpiryDateTime(java.time.OffsetDateTime.now().plusDays(30));
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_ExpiryDateInPast() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setExpiryDateTime(java.time.OffsetDateTime.now().minusDays(1));
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_InvalidStatus() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("Active");
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void updateAPIKeyTest_ExceptionHandling() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		String partnerId = "partner123";
+		String policyId = "policy456";
+		String apiKeyName = "apiKeyName123";
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto = new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+
+		PartnerPolicy partnerPolicy = getPartnerPolicy();
+		partnerPolicy.setIsActive(true);
+		partnerPolicy.setLabel(apiKeyName);
+		Partner partner = getPartner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partnerPolicy.setPartner(partner);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
+				.thenReturn(partnerPolicy);
+		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		Mockito.when(partnerPolicyRepository.save(any(PartnerPolicy.class))).thenThrow(new RuntimeException("Database error"));
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
 	}
 }
