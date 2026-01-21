@@ -730,7 +730,8 @@ public class PartnerServiceControllerTest {
         mockMvc.perform(put("/partners/v2/12345")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors").isNotEmpty());
     }
 
     @Test
