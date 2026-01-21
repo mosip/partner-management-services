@@ -1,5 +1,6 @@
 package io.mosip.pms.common.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -76,5 +79,6 @@ public class ClientDetail {
 	public Boolean isDeleted;
 
 	@Column(name = "additional_config", columnDefinition = "TEXT")
-	private String additionalConfig;
+	@JdbcTypeCode(SqlTypes.JSON)
+	private JsonNode additionalConfig;
 }
