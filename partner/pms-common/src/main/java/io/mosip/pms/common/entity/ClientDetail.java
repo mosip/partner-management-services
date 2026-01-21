@@ -78,7 +78,7 @@ public class ClientDetail {
 	@Column(name = "is_deleted")
 	public Boolean isDeleted;
 
-	@Column(name = "additional_config", columnDefinition = "TEXT")
+	@Column(name = "additional_config", columnDefinition = "jsonb")
 	@JdbcTypeCode(SqlTypes.JSON)
 	private JsonNode additionalConfig;
 }
