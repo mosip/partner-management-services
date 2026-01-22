@@ -72,7 +72,6 @@ public class RestUtil {
 	 * @param responseClass
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T postApi(String apiUrl, List<String> pathsegments, String queryParamName, String queryParamValue,
 						 MediaType mediaType, Object requestType, Class<?> responseClass) {
 		T result = null;
@@ -209,7 +208,6 @@ public class RestUtil {
 	 * @param responseType
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiName, List<String> pathsegments, String queryParamName, String queryParamValue,
 						Class<?> responseType) {
 		String apiHostIpPort = environment.getProperty(apiName);
@@ -262,7 +260,6 @@ public class RestUtil {
 	 * @param responseType
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T getApi(String apiUrl, Map<String, String> pathsegments, Class<?> responseType) {
 		T result = null;
 		UriComponentsBuilder builder = null;
@@ -294,7 +291,6 @@ public class RestUtil {
 	 * @param responseType
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T getApiWithContentType(String apiUrl, Map<String, String> pathsegments, Class<?> responseType, MediaType mediaType) {
 		T result = null;
 		UriComponentsBuilder builder = null;
@@ -347,7 +343,6 @@ public class RestUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unchecked")
 	private HttpEntity<Object> setRequestHeader(Object requestType, MediaType mediaType) throws IOException, NoSuchAlgorithmException, KeyStoreException {
 		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		final String token = getToken();

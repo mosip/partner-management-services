@@ -2,7 +2,6 @@ package io.mosip.pms.policy.dto;
 
 import lombok.Data;
 
-@SuppressWarnings("hiding")
 @Data
 public class KeyValuePair<String, V> {
 	

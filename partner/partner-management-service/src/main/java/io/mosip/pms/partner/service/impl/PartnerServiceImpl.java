@@ -749,7 +749,6 @@ public class PartnerServiceImpl implements PartnerService {
 		return resultMessage;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public CACertificateResponseDto uploadCACertificate(CACertificateRequestDto caCertRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -817,7 +816,6 @@ public class PartnerServiceImpl implements PartnerService {
 		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
 				PartnerCertificateResponseDto.class);
 		if (responseObject == null && uploadApiResponse.containsKey(PartnerConstants.ERRORS)) {
-			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
 					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {
@@ -889,7 +887,6 @@ public class PartnerServiceImpl implements PartnerService {
 					ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
 		}
 		if (responseObject == null && uploadApiResponse.containsKey(PartnerConstants.ERRORS)) {
-			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
 					.get(PartnerConstants.ERRORS);
 			if (!certServiceErrorList.isEmpty()) {

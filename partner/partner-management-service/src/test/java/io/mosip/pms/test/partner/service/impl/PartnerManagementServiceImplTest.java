@@ -1157,7 +1157,6 @@ public class PartnerManagementServiceImplTest {
 	
 	
 
-	@SuppressWarnings("unchecked")
 	private JSONObject getCertResponse() {
 		JSONObject obj=new JSONObject();		
 		obj.put("certificateData", "I6RNkys7tjbmOQhJkgY1HhRpvts8LZPioJD4I82wsMHDtGj");

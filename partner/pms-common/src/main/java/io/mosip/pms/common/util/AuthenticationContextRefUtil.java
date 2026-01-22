@@ -76,8 +76,7 @@ public class AuthenticationContextRefUtil {
         }
         return acrMappingJson;
     }
-	
-	@SuppressWarnings("unchecked")
+
 	@Cacheable
 	private List<String> getSupportedClaims(){
 		Map<String, Object> idpClientResponse = restUtil.getApi("mosip.pms.esignet.config-url", null, "", "", Map.class);
@@ -144,8 +143,7 @@ public class AuthenticationContextRefUtil {
 		        .collect(Collectors.toSet());
 		return matchedACRs;
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	public Set<String> getPolicySupportedClaims(Set<String> claimsFromPolicy) {		
 		Map<List<String>, String> map = getAllClaims();
 		Set<String> filteredClaims = new HashSet<String>();
