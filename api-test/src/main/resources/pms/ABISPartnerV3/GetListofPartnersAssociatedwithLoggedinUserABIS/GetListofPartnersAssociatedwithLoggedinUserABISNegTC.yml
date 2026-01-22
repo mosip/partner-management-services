@@ -73,7 +73,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_PolicyGroupAvailable_As_Empty_Neg:
     endPoint: /v1/partnermanager/partners/v3
-    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_05
+    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_05
     description: Retrieve all ABIS Partner records with policyGroupAvailable as Empty
     role: partneradmin
     checkErrorsOnlyInResponse: true
@@ -226,7 +226,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_PartnerType_And_Invalid_PolicyGroupAvailable_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_14
-    description: Retrieve all ABIS Partner records with valid status and invalid partnertype
+    description: Retrieve all ABIS Partner records with valid invalid partnertype and policyGroupAvailable
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true

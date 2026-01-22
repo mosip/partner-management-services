@@ -288,7 +288,7 @@
 	<test name="ABISPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner.yml" />
-			<parameter name="idKeyName" value="id,partnerId,name" />
+			<parameter name="idKeyName" value="id,partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />

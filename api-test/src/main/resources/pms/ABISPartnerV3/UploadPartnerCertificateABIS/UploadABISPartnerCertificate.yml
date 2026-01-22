@@ -2,7 +2,7 @@ UploadABISPartnerCertificate:
    Pms_UploadABISPartnerCertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadABISPartnerCertificate_01
-      description: Upload MISP partner certificate for PMS-111222 partner id
+      description: Upload ABIS partner certificate for PMS-111222 partner id
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
