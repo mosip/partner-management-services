@@ -1,0 +1,27 @@
+CreateABISPartner:
+  Pms_ABISPartnerRegistration_All_Valid_Smoke_Sid:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_PMS_CreateABISPartnerRegistration_01
+    description: Create MISP Partner Self Registration
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner
+    outputTemplate: pms/ABISPartnerV3/CreateABISPartner/CreateABISPartnerResult
+    input: '{
+      "id": "mosip.pms.create.partner.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "pms-111222",
+      "organizationName": "PMS_API_ABIS_ORG",
+      "address": "Bangalore",
+      "contactNumber": "9863967572",
+      "emailId": "newabispartnerapiauto@gmail.com",
+      "partnerType": "ABIS_Partner",
+      "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
+      "logoUrl": "https://example.com/logo.png",
+      "langCode": "eng"
+}'
+    output: ' {
+      "partnerId": "pms-111222",
+      "status": "InProgress"
+}'

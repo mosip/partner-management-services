@@ -1,0 +1,29 @@
+UploadCertificateABISCASUBCA:
+   Pms_UploadCACertificateForABIS_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_UploadCertificateABISCASUBCA_01
+      description: Upload valid CA certificate for ABIS Partner
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateCA
+      outputTemplate: pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
+   Pms_UploadSUBCACertificateForABIS_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_UploadCertificateABISCASUBCA_02
+      description: Upload valid SUBCA certificate for ABIS Partner
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateSUBCA
+      outputTemplate: pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+}'
