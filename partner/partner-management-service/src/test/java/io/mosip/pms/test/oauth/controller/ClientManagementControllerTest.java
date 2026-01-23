@@ -414,7 +414,7 @@ public class ClientManagementControllerTest {
         request.setGrantTypes(List.of("authorization_code"));
         request.setClientAuthMethods(List.of("private_key_jwt"));
         ObjectNode additionalConfig = objectMapper.createObjectNode();
-        additionalConfig.put("userinfoResponseType", "JSON");
+        additionalConfig.put("userinfoResponseType", "JWS");
         request.setAdditionalConfig(additionalConfig);
         requestWrapper.setRequest(request);
         requestWrapper.setRequestTime(LocalDateTime.now());

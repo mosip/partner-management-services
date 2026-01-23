@@ -1699,7 +1699,7 @@ public class ClientManagementServiceImplTest {
 		request.setRedirectUris(Arrays.asList("https://example.com/redirect1"));
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode additionalConfig = mapper.createObjectNode();
-		additionalConfig.put("userinfoResponseType", "JSON");
+		additionalConfig.put("userinfoResponseType", "JWS");
 		request.setAdditionalConfig(additionalConfig);
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 		try {
