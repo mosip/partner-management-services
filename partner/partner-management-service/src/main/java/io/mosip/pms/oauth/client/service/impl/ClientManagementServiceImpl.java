@@ -956,6 +956,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 
 	private void validateAdditionalConfigFields(JsonNode additionalConfig, String clientId, String clientName) {
+		if (!additionalConfig.isObject()) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_ADDITIONAL_CONFIG.getErrorCode(),
+					"additionalConfig must be a JSON object");
+		}
+		
 		if(additionalConfig.has("userinfo_response_type") && !additionalConfig.get("userinfo_response_type").isNull()) {
 			String userinfoResponseType = additionalConfig.get("userinfo_response_type").asText();
 			if(!VALID_USER_INFO_RESPONSE_TYPES.contains(userinfoResponseType)) {
@@ -984,6 +990,12 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if(additionalConfig.has("purpose")) {
 			JsonNode purpose = additionalConfig.get("purpose");
 			if(purpose != null && !purpose.isNull()) {
+				if (!purpose.isObject()) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+							"purpose must be a JSON object");
+				}
+				
 				// Extract individual fields
 				String type = purpose.has("type") ? purpose.get("type").asText() : null;
 				JsonNode title = purpose.has("title") ? purpose.get("title") : null;
