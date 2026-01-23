@@ -1092,7 +1092,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				dto.setClientNameLangMap(clientNameLangMap[0]);
 			}
 			if (Objects.nonNull(request.getAdditionalConfig())) {
-				dto.setAdditionalConfig(objectMapper.convertValue(request.getAdditionalConfig(), Map.class));
+				dto.setAdditionalConfig(objectMapper.convertValue(
+						objectMapper.readTree(request.getAdditionalConfig()), Map.class));
 			}
 		}
 		createRequestwrapper.setRequest(dto);
@@ -1289,7 +1290,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		// Set additional config if present
 		if (Objects.nonNull(request.getAdditionalConfig())) {
 			updateRequest.setAdditionalConfig(
-					objectMapper.convertValue(request.getAdditionalConfig(), Map.class));
+					objectMapper.convertValue(
+							objectMapper.readTree(request.getAdditionalConfig()), Map.class));
 		}
 		
 		updateRequestWrapper.setRequest(updateRequest);
