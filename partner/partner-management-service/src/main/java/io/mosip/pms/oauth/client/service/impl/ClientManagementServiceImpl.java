@@ -958,8 +958,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	private void validateAdditionalConfigFields(JsonNode additionalConfig, String clientId, String clientName) {
 		if (!additionalConfig.isObject()) {
 			throw new PartnerServiceException(
-					ErrorCode.INVALID_ADDITIONAL_CONFIG.getErrorCode(),
-					"additionalConfig must be a JSON object");
+					ErrorCode.INVALID_ADDITIONAL_CONFIG_TYPE.getErrorCode(),
+					ErrorCode.INVALID_ADDITIONAL_CONFIG_TYPE.getErrorMessage());
 		}
 		
 		if(additionalConfig.has("userinfo_response_type") && !additionalConfig.get("userinfo_response_type").isNull()) {
