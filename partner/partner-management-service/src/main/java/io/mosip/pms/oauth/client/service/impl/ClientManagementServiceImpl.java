@@ -989,55 +989,54 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		// PURPOSE VALIDATION
 		if(additionalConfig.has("purpose")) {
 			JsonNode purpose = additionalConfig.get("purpose");
-			if(purpose != null && !purpose.isNull()) {
-				if (!purpose.isObject()) {
-					throw new PartnerServiceException(
-							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-							"purpose must be a JSON object");
-				}
-				
-				// Extract individual fields
-				String type = purpose.has("type") ? purpose.get("type").asText() : null;
-				JsonNode title = purpose.has("title") ? purpose.get("title") : null;
-				JsonNode subtitle = purpose.has("subTitle") ? purpose.get("subTitle") : null;
+			if (purpose.isNull() || !purpose.isObject()) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose must be a JSON object"
+				);
+			}
+			
+			// Extract individual fields
+			String type = purpose.has("type") ? purpose.get("type").asText() : null;
+			JsonNode title = purpose.has("title") ? purpose.get("title") : null;
+			JsonNode subtitle = purpose.has("subTitle") ? purpose.get("subTitle") : null;
 
-				if(title != null && !title.isObject()) {
-					throw new PartnerServiceException(
-							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-							"purpose.title must be a map");
-				}
-				if(subtitle != null && !subtitle.isObject()) {
-					throw new PartnerServiceException(
-							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-							"purpose.subTitle must be a map");
-				}
+			if(title != null && !title.isObject()) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.title must be a map");
+			}
+			if(subtitle != null && !subtitle.isObject()) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.subTitle must be a map");
+			}
 
-				// 1. purpose.type only allow login / link / verify (case insensitive)
-				if(type != null) {
-					if(!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
-						throw new PartnerServiceException(
-								ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
-								String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type)
-						);
-					}
-				}
-
-				// 2. title/subtitle allowed ONLY if type is not null
-				if(type == null && ((title != null && !title.isEmpty()) ||
-						(subtitle != null && !subtitle.isEmpty()))) {
-
+			// 1. purpose.type only allow login / link / verify (case insensitive)
+			if(type != null) {
+				if(!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
 					throw new PartnerServiceException(
-							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage()
+							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
+							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type)
 					);
 				}
-
-				// 3. Validate title keys (@none mandatory)
-				validateLanguageKeys(title, "purpose.title", true);
-
-				// 4. Validate subtitle keys (@none mandatory)
-				validateLanguageKeys(subtitle, "purpose.subTitle", true);
 			}
+
+			// 2. title/subtitle allowed ONLY if type is not null
+			if(type == null && ((title != null && !title.isEmpty()) ||
+					(subtitle != null && !subtitle.isEmpty()))) {
+
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage()
+				);
+			}
+
+			// 3. Validate title keys (@none mandatory)
+			validateLanguageKeys(title, "purpose.title", true);
+
+			// 4. Validate subtitle keys (@none mandatory)
+			validateLanguageKeys(subtitle, "purpose.subTitle", true);
 		}
 	}
 

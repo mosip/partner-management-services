@@ -1697,8 +1697,7 @@ public class ClientManagementServiceImplTest {
 		request.setGrantTypes(Arrays.asList("authorization_code", "refresh_token"));
 		request.setLogoUri("https://example.com/logo.png");
 		request.setRedirectUris(Arrays.asList("https://example.com/redirect1"));
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
 		additionalConfig.put("userinfoResponseType", "JWS");
 		request.setAdditionalConfig(additionalConfig);
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
@@ -1811,8 +1810,7 @@ public class ClientManagementServiceImplTest {
 		clientAuthMethods.add("private_key_jwt");
 		request.setClientAuthMethods(clientAuthMethods);
 		request.setGrantTypes(Arrays.asList("authorization_code"));
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
 		additionalConfig.put("signupBannerRequired", true);
 		request.setAdditionalConfig(additionalConfig);
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
@@ -2071,8 +2069,7 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
 		additionalConfig.put("userinfo_response_type", "INVALID");
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
@@ -2099,8 +2096,7 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
 		additionalConfig.put("consent_expire_in_mins", 5);
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
@@ -2127,9 +2123,8 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
-		ObjectNode purpose = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
+		ObjectNode purpose = objectMapper.createObjectNode();
 		purpose.put("type", "INVALID_TYPE");
 		additionalConfig.set("purpose", purpose);
 
@@ -2157,9 +2152,8 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
-		ObjectNode purpose = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
+		ObjectNode purpose = objectMapper.createObjectNode();
 		purpose.put("type", "login");
 		purpose.put("title", "NotAMap");
 		additionalConfig.set("purpose", purpose);
@@ -2188,10 +2182,9 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
-		ObjectNode purpose = mapper.createObjectNode();
-		ObjectNode title = mapper.createObjectNode();
+		ObjectNode additionalConfig = objectMapper.createObjectNode();
+		ObjectNode purpose = objectMapper.createObjectNode();
+		ObjectNode title = objectMapper.createObjectNode();
 		title.put("@none", "Test Title");
 		purpose.set("title", title);
 		additionalConfig.set("purpose", purpose);
