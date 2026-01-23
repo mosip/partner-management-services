@@ -1,6 +1,7 @@
 package io.mosip.pms.test.oauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
@@ -412,8 +413,8 @@ public class ClientManagementControllerTest {
         request.setRedirectUris(List.of("https://example.com/redirect1"));
         request.setGrantTypes(List.of("authorization_code"));
         request.setClientAuthMethods(List.of("private_key_jwt"));
-        AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
-        additionalConfig.setUserinfoResponseType("JSON");
+        ObjectNode additionalConfig = objectMapper.createObjectNode();
+        additionalConfig.put("userinfoResponseType", "JSON");
         request.setAdditionalConfig(additionalConfig);
         requestWrapper.setRequest(request);
         requestWrapper.setRequestTime(LocalDateTime.now());

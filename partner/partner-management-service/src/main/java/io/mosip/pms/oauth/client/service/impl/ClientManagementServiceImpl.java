@@ -947,17 +947,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			// validate additional config fields 
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
-			// set JsonNode directly to client detail
-			clientDetail.setAdditionalConfig(createRequest.getAdditionalConfig());
+			// convert JsonNode to String and set to client detail
+			clientDetail.setAdditionalConfig(objectMapper.writeValueAsString(createRequest.getAdditionalConfig()));
 
 			processedClientDetail.setClientDetail(clientDetail);
 		}
 		return processedClientDetail;
 	}
 
-	private void validateAdditionalConfigFields(JsonNode additionalConfigDto, String clientId, String clientName) {
-		if(additionalConfigDto.has("userinfo_response_type") && !additionalConfigDto.get("userinfo_response_type").isNull()) {
-			String userinfoResponseType = additionalConfigDto.get("userinfo_response_type").asText();
+	private void validateAdditionalConfigFields(JsonNode additionalConfig, String clientId, String clientName) {
+		if(additionalConfig.has("userinfo_response_type") && !additionalConfig.get("userinfo_response_type").isNull()) {
+			String userinfoResponseType = additionalConfig.get("userinfo_response_type").asText();
 			if(!VALID_USER_INFO_RESPONSE_TYPES.contains(userinfoResponseType)) {
 				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}",
 						userinfoResponseType);
@@ -968,8 +968,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 								userinfoResponseType));
 			}
 		}
-		if(additionalConfigDto.has("consent_expire_in_mins") && !additionalConfigDto.get("consent_expire_in_mins").isNull()) {
-			int consentExpireInMins = additionalConfigDto.get("consent_expire_in_mins").asInt();
+		if(additionalConfig.has("consent_expire_in_mins") && !additionalConfig.get("consent_expire_in_mins").isNull()) {
+			int consentExpireInMins = additionalConfig.get("consent_expire_in_mins").asInt();
 			if(consentExpireInMins < 10) {
 				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
 						consentExpireInMins);
@@ -981,8 +981,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			}
 		}
 		// PURPOSE VALIDATION
-		if(additionalConfigDto.has("purpose")) {
-			JsonNode purpose = additionalConfigDto.get("purpose");
+		if(additionalConfig.has("purpose")) {
+			JsonNode purpose = additionalConfig.get("purpose");
 			if(purpose != null && !purpose.isNull()) {
 				// Extract individual fields
 				String type = purpose.has("type") ? purpose.get("type").asText() : null;
@@ -1250,8 +1250,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             // validate additional config fields
             validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
 
-            // set JsonNode directly to client detail
-            clientDetail.setAdditionalConfig(updateRequest.getAdditionalConfig());
+            // convert JsonNode to String and set to client detail
+            clientDetail.setAdditionalConfig(objectMapper.writeValueAsString(updateRequest.getAdditionalConfig()));
         }
         return clientDetail;
     }
@@ -1370,7 +1370,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// set additional config
 			if (client.getAdditionalConfig() != null) {
-				dto.setAdditionalConfig(client.getAdditionalConfig());
+				dto.setAdditionalConfig(objectMapper.readTree(client.getAdditionalConfig()));
 			}
 			responseWrapper.setResponse(dto);
 		} catch (PartnerServiceException ex) {
