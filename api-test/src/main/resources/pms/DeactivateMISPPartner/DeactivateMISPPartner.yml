@@ -9,7 +9,7 @@ DeactivateMISPPartner:
       inputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartner
       outputTemplate: pms/ActivateDeactivatePartner/activateDeactivatePartnerResult
       input: '{
-   "partnerId": "pms-111551",
+   "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$",
    "requesttime": "$TIMESTAMP$",
    "status": "De-Active"
 }'

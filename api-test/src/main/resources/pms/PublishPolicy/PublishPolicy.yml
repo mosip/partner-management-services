@@ -42,7 +42,7 @@ createPublishPolicy:
         "requesttime": "$TIMESTAMP$"
 	}'
       output: '{
-        "policyGroupName": "mosip policy group MISP",
+        "policyGroupName": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "is_Active": true
     }'
    Pms_PublishPolicy_InValid_AlreadyPublished_neg:

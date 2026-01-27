@@ -1,6 +1,6 @@
 UpdatePartnerDetails:
    Pms_UpdatePartnerDetails_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/pms-111999
+      endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_updatePartnerDetails_01
       description: Validate that updating Partner details with all valid inputs is successful and the changes are reflected correctly
       role: partner
@@ -9,17 +9,18 @@ UpdatePartnerDetails:
       inputTemplate: pms/UpdatePartner/updatePartner
       outputTemplate: pms/UpdatePartner/updatePartnerResult
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "address": "Bangalore Ind",
     "contactNumber": "8553967576",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111999",
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
         "status": "approved"
     }'
     
    Pms_UpdatePartnerDetails_invalid_partnerId:
-      endPoint: /v1/partnermanager/partners/Tech-1231234
+      endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_updatePartnerDetails_02
       description: Validate that updating Partner details fails when an invalid partnerId is provided
       role: partner
@@ -27,6 +28,7 @@ UpdatePartnerDetails:
       inputTemplate: pms/UpdatePartner/updatePartner
       outputTemplate: pms/error
       input: '{
+    "partnerId": "Tech-1231234",
     "address": "Bangalore Ind",
     "contactNumber": "8553967576",
     "requesttime": "$TIMESTAMP$"
@@ -40,7 +42,7 @@ UpdatePartnerDetails:
 }'
 
    Pms_UpdatePartnerDetails_Missing_InputParameter_Address:
-      endPoint: /v1/partnermanager/partners/Tech-123
+      endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_updatePartnerDetails_03
       description: Validate that updating Partner details fails when the address parameter is missing
       role: partner
@@ -48,6 +50,7 @@ UpdatePartnerDetails:
       inputTemplate: pms/UpdatePartner/updatePartner
       outputTemplate: pms/error
       input: '{
+    "partnerId": "Tech-123",
     "address": "$REMOVE$",
     "contactNumber": "8553967576",
     "requesttime": "$TIMESTAMP$"
@@ -61,7 +64,7 @@ UpdatePartnerDetails:
 }'
 
    Pms_UpdatePartnerDetails_Missing_InputParameter_contactNumber:
-      endPoint: /v1/partnermanager/partners/Tech-123
+      endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_updatePartnerDetails_04
       description: Validate that updating Partner details fails when the contactNumber parameter is missing
       role: partner
@@ -69,6 +72,7 @@ UpdatePartnerDetails:
       inputTemplate: pms/UpdatePartner/updatePartner
       outputTemplate: pms/error
       input: '{
+    "partnerId": "Tech-123",
     "address": "Bangalore Ind",
     "contactNumber": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"

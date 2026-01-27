@@ -10,7 +10,7 @@ MapDeviceWithSBI:
       inputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
       input: '{
-    "deviceDetailId": "device-id-123",
+    "deviceDetailId": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
   }'
       output: '{
@@ -26,7 +26,7 @@ MapDeviceWithSBI:
       inputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
       input: '{
-    "deviceDetailId": "device-id-123",
+    "deviceDetailId": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_sid_id$"
   }'
       output: '{
@@ -43,7 +43,7 @@ MapDeviceWithSBI:
       inputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/MapDeviceWithSBI/mapDeviceWithSBIResult
       input: '{
-    "deviceDetailId": "device-id-123",
+    "deviceDetailId": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "sbiId": "$ID:SaveSecureBiometricInterface_TO_Map_Smoke_sid_id$"
   }'
       output: '{

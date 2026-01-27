@@ -4,28 +4,34 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_01
       description: Validate that uploading a CA Certificate with all valid inputs is successful and reflected correctly
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificateAuthCa
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$CACERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "AUTH"
   }'
       output: ' {
+      "status": "Upload Success."
 }' 
    Pms_UploadSubCACertificate_with_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_02
       description: Validate that uploading a Sub CA Certificate with all valid inputs is successful and reflected correctly
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificateAuthSubCa
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$INTERCERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "AUTH"
   }'
       output: ' {
+      "status": "Upload Success."
 }'
 
    Pms_UploadCertificateDeviceProvider_with_All_Valid_Smoke:
@@ -33,14 +39,17 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_03
       description: Validate that uploading a Device Provider Certificate with all valid inputs is successful and reflected correctly
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceCa
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$CACERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "DEVICE"
   }'
       output: ' {
+      "status": "Upload Success."
 }'
 
    Pms_UploadSubCACertificate_DeviceProvider_All_Valid_Smoke:
@@ -48,26 +57,31 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_04
       description: Validate that uploading a Sub CA Certificate for a Device Provider with all valid inputs is successful
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificateDeviceSubCa
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$INTERCERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "DEVICE"
   }'
       output: ' {
+      "status": "Upload Success."
 }'
    Pms_UploadCACertificate_UploadAgain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_05
       description: Validate that re-uploading an already uploaded CA Certificate fails     
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificate2
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/error
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$CACERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "AUTH"
   }'
       output: ' {
       "errors": [
@@ -81,13 +95,15 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_06
       description: Validate that uploading a CA Certificate fails when invalid data is provided      
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       allowedErrorCodes: KER-CRY-003,KER-KMS-013
-      inputTemplate: pms/UploadCACertificate/uploadCertificate3
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/error
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "dgdhshj@hhdeege",
+ 	"partnerId": "$REMOVE$",
+ 	"partnerDomain": "AUTH"
   }'
       output: ' {
       "errors": [
@@ -103,10 +119,13 @@ UploadCACertificate:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificate4
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/error
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "",
+ 	"partnerId": "$REMOVE$",
+ 	"partnerDomain": "AUTH"
   }'
       output: ' {
       "errors": [
@@ -121,14 +140,17 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_08
       description: Validate that uploading a Certificate for an FTM Provider with all valid inputs is successful
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificateFtmCa
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$CACERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "FTM"
   }'
       output: ' {
+      "status": "Upload Success."
 }'
 
    Pms_UploadSubCACertificate_Ftm_Provider_All_Valid_Smoke:
@@ -136,12 +158,15 @@ UploadCACertificate:
       uniqueIdentifier: TC_PMS_UploadCACertificate_09
       description: Validate that uploading a Sub CA Certificate for an FTM Provider with all valid inputs is successful
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
-      inputTemplate: pms/UploadCACertificate/uploadCertificateFtmSubCa
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
       outputTemplate: pms/UploadCACertificate/uploadCertificateResult
       input: '{
-    "requesttime": "$TIMESTAMP$"
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$INTERCERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+ 	"partnerDomain": "FTM"
   }'
       output: ' {
+      "status": "Upload Success."
 }'

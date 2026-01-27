@@ -9,7 +9,7 @@ ActivateDeactivatePartnerApiKey:
       inputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKey
       outputTemplate: pms/ActivateDeactivatePartnerApiKey/activateDeactivatePartnerApiKeyResult
       input: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
    "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
    "label": "string",
    "requesttime": "$TIMESTAMP$",

@@ -11,5 +11,5 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-       "userId": "pms-111999"
+       "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'

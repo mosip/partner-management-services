@@ -10,15 +10,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "mosipprint@gmail.com",
-    "organizationName": "mosipprint",
-    "partnerId": "mosipprint",
+    "emailId": "$RUNCONTEXT$mosipprint@gmail.com",
+    "organizationName": "$RUNCONTEXT$mosipprint",
+    "partnerId": "$RUNCONTEXT$mosipprint",
     "partnerType": "Print_Partner",
-    "policyGroup":"mosip policy group",
+    "policyGroup":"$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
-     "partnerId": "mosipprint",
+     "partnerId": "$RUNCONTEXT$mosipprint",
      "status": "InProgress"
     }'
     
@@ -33,11 +33,11 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "mosipprint@gmail.com",
-    "organizationName": "mosipprint",
-    "partnerId": "mosipprint",
+    "emailId": "$RUNCONTEXT$mosipprint@gmail.com",
+    "organizationName": "$RUNCONTEXT$mosipprint",
+    "partnerId": "$RUNCONTEXT$mosipprint",
     "partnerType": "Print_Partner",
-    "policyGroup":"mosip policy group",
+    "policyGroup":"$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -63,7 +63,7 @@ createPartnerSelfRegistration:
     "organizationName": "mosipprint",
     "partnerId": "mosip print",
     "partnerType": "Print_Partner",
-    "policyGroup":"mosip policy group",
+    "policyGroup":"$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{

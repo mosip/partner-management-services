@@ -11,7 +11,7 @@ GetPartnerCert:
 	"partnerId": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '  {
- 	"partnerID": "MISP-AUTOMATION"
+ 	"partnerID": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$"
   }'
   
    Pms_GetPartner_MISP3_Valid_Smoke:
@@ -26,5 +26,5 @@ GetPartnerCert:
 	"partnerId": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_partnerId$"
 }'
       output: '  {
- 	"partnerID": "MISP3"
+ 	"partnerID": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_partnerId$"
   }'

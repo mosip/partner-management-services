@@ -11,18 +11,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111555",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111555",
+        "organizationName": "$RUNCONTEXT$pms-111555",
         "address": "Bangalore",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartnerapiauto@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartnerapiauto@gmail.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111555",
+        "partnerId": "$RUNCONTEXT$pms-111555",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_Empty_PolicyGroup_sid:
@@ -37,18 +37,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111556",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111556",
+        "organizationName": "$RUNCONTEXT$pms-111556",
         "address": "Bangalore",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartner1@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartner1@gmail.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111556",
+        "partnerId": "$RUNCONTEXT$pms-111556",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid:
@@ -63,17 +63,17 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111557",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111557",
+        "organizationName": "$RUNCONTEXT$pms-111557",
         "address": "Bangalore",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartner2@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartner2@gmail.com",
         "partnerType": "MISP_Partner",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111557",
+        "partnerId": "$RUNCONTEXT$pms-111557",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_Max_AddressField_sid:
@@ -88,18 +88,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111558",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111558",
+        "organizationName": "$RUNCONTEXT$pms-111558",
         "address": "The Modular Open Source Identity Platform was established in 2018 to support governments in providing its residents with an official form of the most important human asset identity.As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial first step. With a foundational national ID system in place, a government can build effective civil registries, and service delivery systems, serving the population in a myriad of ways. Among other benefits, robust systems like these enable faster disaster relief, climate resilience, ease of starting new businesses, and better access to financial inclusion, healthcare, and education. As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial first step. With a foundational national ID system in place, a government can build effective civil registries, and service delivery systems, serving the population in a myriad of ways. Among other benefits, robust systems like these enable faster disaster relief, climate resilience, ease of starting new businesses, and better access to financial inclusion, healthcare, and education.As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial first step. With a foundational national ID system in place, a government can build effective civil registries, and service delivery systems, serving the population in a myriad of ways. Among other benefits, robust systems like these enable faster disaster relief, climate resilience, ease of starting new businesses, and better access to financial inclusion, healthcare, and education.As nations around the world proceed on their digital transformation journeys towards true digital economies, a robust and secure national ID system is the crucial fiestaaa",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartner3@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartner3@gmail.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",		
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111558",
+        "partnerId": "$RUNCONTEXT$pms-111558",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_Max_Contact_number_sid:
@@ -114,18 +114,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111559",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111559",
+        "organizationName": "$RUNCONTEXT$pms-111559",
         "address": "Bangalore",
         "contactNumber": "8553967572918818",
-        "emailId": "newmisppartner4@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartner4@gmail.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111559",
+        "partnerId": "$RUNCONTEXT$pms-111559",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_Max_EmailID_sid:
@@ -140,18 +140,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111550",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111550",
+        "organizationName": "$RUNCONTEXT$pms-111550",
         "address": "Bangalore",
         "contactNumber": "8553967572918818",
-        "emailId": "this.is.a.really.long.fake.email.address.created.only.for.testing.purposespurposespurposespurposespurpos.and.demonstration.so.please.do.not.try.to.use.it.in.real.life.situations.because.it.is.not.valid@verylongdomainexampleforvalidationtestingpurpos1.com",
+        "emailId": "$RUNCONTEXT$this.is.a.really.long.fake.email.address.created.for.testing.purposespurposespurposespurposespurpos.and.demonstration.so.please.do.not.try.to.use.it.in.real.life.situations.because.it.is.not.valid@verylongdomainexampleforvalidationtestingpurpos1.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111550",
+        "partnerId": "$RUNCONTEXT$pms-111550",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_valid_langcode_Arabic_sid:
@@ -166,18 +166,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111551",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111551",
+        "organizationName": "$RUNCONTEXT$pms-111551",
         "address": "Bangalore",
         "contactNumber": "8553967571",
-        "emailId": "newmisppartner5@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartner5@gmail.com",
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "ara"
 }'
       output: ' {
-        "partnerId": "pms-111551",
+        "partnerId": "$RUNCONTEXT$pms-111551",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_With_Not_Uploading_Certificate_Smoke_Sid:
@@ -192,18 +192,18 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111545",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-111545",
+        "organizationName": "$RUNCONTEXT$pms-111545",
         "address": "Bangalore",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartnerapiauto01@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartnerapiauto01@gmail.com",
         "partnerType": "MISP_Partner",
-        "policyGroup": "mosip policy group MISP",
+        "policyGroup": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-111545",
+        "partnerId": "$RUNCONTEXT$pms-111545",
         "status": "InProgress"
 }'
    Pms_MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid:
@@ -218,16 +218,16 @@ CreateMISPPartner:
         "id": "mosip.pms.create.partner.post",
         "version": "1.0",
 		"requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-112211",
-        "organizationName": "PMS_API_MISP_ORG",
+        "partnerId": "$RUNCONTEXT$pms-112211",
+        "organizationName": "$RUNCONTEXT$pms-112211",
         "address": "Bangalore",
         "contactNumber": "8553967572",
-        "emailId": "newmisppartner03@gmail.com",
+        "emailId": "$RUNCONTEXT$newmisppartner03@gmail.com",
         "partnerType": "MISP_Partner",
         "logoUrl": "https://example.com/logo.png",
         "langCode": "eng"
 }'
       output: ' {
-        "partnerId": "pms-112211",
+        "partnerId": "$RUNCONTEXT$pms-112211",
         "status": "InProgress"
 }'

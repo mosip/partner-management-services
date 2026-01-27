@@ -10,6 +10,7 @@ UploadPartnerCert:
       inputTemplate: pms/mispPartner/UploadCert/uploadCert
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
+  "certificateData": "$MISPPARTNERCERT$",
   "partnerId": "$ID:PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'
@@ -21,11 +22,12 @@ UploadPartnerCert:
       description: Validate that a MISP license certificate is uploaded successfully with all required valid inputs as part of a smoke test
       role: partner
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
+      additionalDependencies: TC_PMS_uploadcaCertMisp_03, TC_PMS_uploadsubcaCertMisp_04
       restMethod: put
-      inputTemplate: pms/mispPartner/UploadCert/uploadCert2
+      inputTemplate: pms/mispPartner/UploadCert/uploadCert
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
+  "certificateData": "$MISPPARTNERCERT$",
   "partnerId": "$ID:PartnerSelfRegistration_MispLicense_All_Valid_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'
@@ -38,11 +40,12 @@ UploadPartnerCert:
       description: Validate that a MISP3 license certificate is uploaded successfully with all required valid inputs as part of a smoke test
       role: partner
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
+      additionalDependencies: TC_PMS_uploadcaCertMisp_05, TC_PMS_uploadsubcaCertMisp_06
       restMethod: put
-      inputTemplate: pms/mispPartner/UploadCert/uploadCert2
+      inputTemplate: pms/mispPartner/UploadCert/uploadCert
       outputTemplate: pms/mispPartner/UploadCert/uploadCertResult
       input: '{
+  "certificateData": "$MISPPARTNERCERT$",
   "partnerId": "$ID:PartnerSelfRegistration_MispLicense_Msip_Smoke_sid_partnerId$",
   "requesttime": "$TIMESTAMP$"
 }'

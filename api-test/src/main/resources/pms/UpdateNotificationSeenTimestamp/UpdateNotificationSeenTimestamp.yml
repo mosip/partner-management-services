@@ -13,7 +13,7 @@ UpdateNotificationSeenTimestamp:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
 }'

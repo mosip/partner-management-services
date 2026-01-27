@@ -8,7 +8,7 @@ VerifyPartnersEmail:
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
       input: '{
-    "emailId": "mosip98763@gmail.com",
+    "emailId": "$RUNCONTEXT$mosip98763@gmail.com",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -40,7 +40,7 @@ VerifyPartnersEmail:
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
       input: '{
-    "emailId": "mosip98763@gmail.com",
+    "emailId": "$RUNCONTEXT$mosip98763@gmail.com",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
@@ -114,7 +114,7 @@ VerifyPartnersEmail:
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmailResult
       input: '{
-    "emailId": "mosip98788@gmail.com",
+    "emailId": "$RUNCONTEXT$mosip98788@gmail.com",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{

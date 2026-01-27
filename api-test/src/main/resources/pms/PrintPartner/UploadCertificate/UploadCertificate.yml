@@ -8,7 +8,26 @@ uploadCert:
       inputTemplate: pms/PrintPartner/UploadCertificate/uploadCertificate
       outputTemplate: pms/PrintPartner/UploadCertificate/uploadCertificateResult
       input: '{
- 	"requesttime": "$TIMESTAMP$"
+ 	"requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$CACERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid_partnerId$"
+}'
+      output: ' {
+   "status": "Upload Success."
+}'
+
+   Pms_UploadIntermediateCertificate_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_uploadCACert_printpartner_01
+      description: Upload valid Intermediate Certificate for Print Partner
+      role: partner
+      restMethod: post
+      inputTemplate: pms/PrintPartner/UploadCertificate/uploadCertificate
+      outputTemplate: pms/PrintPartner/UploadCertificate/uploadCertificateResult
+      input: '{
+ 	"requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$INTERCERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid_partnerId$"
 }'
       output: ' {
    "status": "Upload Success."

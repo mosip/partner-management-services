@@ -12,7 +12,7 @@ GetPolicyForApiKey:
     "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$"
 }'
       output: '{
-   "partnerID": "pms-111999"      
+   "partnerID": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"      
 }'
    Pms_GetPolicyForApiKey_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}

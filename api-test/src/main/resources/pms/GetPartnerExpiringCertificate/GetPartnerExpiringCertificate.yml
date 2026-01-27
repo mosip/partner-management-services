@@ -12,7 +12,7 @@ GetPartnerExpiringCertificate:
       "expiryPeriod": "30"
 }'
       output: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
@@ -29,7 +29,7 @@ GetPartnerExpiringCertificate:
       "expiryPeriod": "30"
 }'
       output: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
@@ -46,7 +46,7 @@ GetPartnerExpiringCertificate:
       "expiryPeriod": "15"
 }'
       output: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
@@ -63,7 +63,7 @@ GetPartnerExpiringCertificate:
       "expiryPeriod": "10"
 }'
       output: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'

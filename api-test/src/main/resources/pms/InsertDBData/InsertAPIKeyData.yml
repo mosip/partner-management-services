@@ -8,6 +8,7 @@ InsertDBData:
       inputTemplate: pms/InsertDBData/InsertAPIKeyData
       outputTemplate: pms/InsertDBData/InsertAPIKeyDataResult
       input: '{
+      "partner_id": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policy_id": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{
@@ -21,6 +22,7 @@ InsertDBData:
       inputTemplate: pms/InsertDBData/InsertAPIKeyData15daysAPIKey
       outputTemplate: pms/InsertDBData/InsertAPIKeyDataResult
       input: '{
+      "partner_id": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policy_id": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{
@@ -34,6 +36,7 @@ InsertDBData:
       inputTemplate: pms/InsertDBData/InsertAPIKeyData10daysAPIKey
       outputTemplate: pms/InsertDBData/InsertAPIKeyDataResult
       input: '{
+      "partner_id": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policy_id": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
 }'
       output: '{

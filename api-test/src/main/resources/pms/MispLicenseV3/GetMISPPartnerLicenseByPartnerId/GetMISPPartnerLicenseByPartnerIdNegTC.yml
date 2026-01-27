@@ -68,7 +68,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111999",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
@@ -88,7 +88,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111556",
+      "partnerId": "$ID:MISPPartnerRegistration_Empty_PolicyGroup_sid_partnerId$",
       "licenseKeyName": "",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 		
@@ -129,7 +129,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "licenseKeyName": "$REMOVE$",
       "policyId": "$REMOVE$"
 }'

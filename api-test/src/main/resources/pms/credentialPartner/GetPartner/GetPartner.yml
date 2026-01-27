@@ -11,7 +11,7 @@ GetPartnerCert:
 	"partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '  {
-    "partnerID": "MOVP-AUTOMATION",
+    "partnerID": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
     "errors": "[]"
   }'
   

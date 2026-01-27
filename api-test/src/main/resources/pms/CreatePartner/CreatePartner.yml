@@ -10,15 +10,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98763@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111999",
+    "emailId": "$RUNCONTEXT$mosip98763@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "AUTH_PARTNER",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111999",
+        "partnerId": "$RUNCONTEXT$pms-111999",
         "status": "InProgress"
     }'
     
@@ -34,9 +34,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98763@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111999",
+    "emailId": "$RUNCONTEXT$mosip98763@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "AUTH_PARTNER",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
@@ -136,15 +136,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98768@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111998",
+    "emailId": "$RUNCONTEXT$mosip98768@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111998",
+    "partnerId": "$RUNCONTEXT$pms-111998",
     "partnerType": "Device_Provider",
     "policyGroup": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111998",
+        "partnerId": "$RUNCONTEXT$pms-111998",
         "status": "InProgress"
     }'
     
@@ -159,15 +159,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98788@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111888",
+    "emailId": "$RUNCONTEXT$mosip98788@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111888",
+    "partnerId": "$RUNCONTEXT$pms-111888",
     "partnerType": "FTM_Provider",
     "policyGroup": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111888",
+        "partnerId": "$RUNCONTEXT$pms-111888",
         "status": "InProgress"
     }'
     
@@ -182,15 +182,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosipgh@gmail.com",
-    "organizationName": "Techno",
-    "partnerId": "Tech-321",
+    "emailId": "$RUNCONTEXT$mosipgh@gmail.com",
+    "organizationName": "$RUNCONTEXT$Tech-321",
+    "partnerId": "$RUNCONTEXT$Tech-321",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "Tech-321",
+        "partnerId": "$RUNCONTEXT$Tech-321",
         "status": "InProgress"
     }'
     
@@ -205,15 +205,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosipsfgh@gmail.com",
-    "organizationName": "Techno",
-    "partnerId": "Tech-1233",
+    "emailId": "$RUNCONTEXT$mosipsfgh@gmail.com",
+    "organizationName": "$RUNCONTEXT$Tech-1233",
+    "partnerId": "$RUNCONTEXT$Tech-1233",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "Tech-1233",
+        "partnerId": "$RUNCONTEXT$Tech-1233",
         "status": "InProgress"
     }'
     
@@ -230,7 +230,7 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosippp@gmail.com",
     "organizationName": "Techno",
-    "partnerId": "pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
@@ -296,7 +296,7 @@ createPartnerSelfRegistration:
     }'
     
 
-   Partner_PartnerSelfRegistration_AlreadyExists_invalid:
+   Partner_PartnerSelfRegistration_AlreadyExists_invalid_neg:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_14
       description: Validate that partner self registration fails when attempting to register a partner that already exists with invalid details
@@ -307,9 +307,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip2@gmail.com",
+    "emailId": "$RUNCONTEXT$mosip2@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
@@ -332,15 +332,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "update@gmail.com",
-    "organizationName": "Test",
-    "partnerId": "updatepolicy",
+    "emailId": "$RUNCONTEXT$update@gmail.com",
+    "organizationName": "$RUNCONTEXT$updatepolicy",
+    "partnerId": "$RUNCONTEXT$updatepolicy",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "updatepolicy",
+        "partnerId": "$RUNCONTEXT$updatepolicy",
         "status": "InProgress"
     }'
    Partner_PartnerSelfRegistration_Missing_InputParameter_PartnerId:
@@ -358,7 +358,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "$REMOVE$",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -385,7 +385,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -412,7 +412,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -438,7 +438,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -464,7 +464,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "$REMOVE$",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{

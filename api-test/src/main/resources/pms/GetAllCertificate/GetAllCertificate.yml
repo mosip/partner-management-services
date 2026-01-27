@@ -10,7 +10,7 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerId": "pms-111999",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
@@ -26,7 +26,7 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'

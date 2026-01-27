@@ -11,7 +11,7 @@ GetDetailsOfPartner:
 	"partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
-      "partnerId": "pms-111999"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
    Pms_GetDetailsOfPartner_with_admin_role_Neg:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
@@ -138,5 +138,5 @@ GetDetailsOfPartner:
 		"partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '  {
- 	"partnerId": "pms-111998"
+ 	"partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$"
   }'

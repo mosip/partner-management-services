@@ -10,15 +10,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "oldmisp@gmail.com",
-    "organizationName": "misp",
-    "partnerId": "MISP-AUTOMATION",
+    "emailId": "$RUNCONTEXT$oldmisp@gmail.com",
+    "organizationName": "$RUNCONTEXT$MISP-AUTOMATION",
+    "partnerId": "$RUNCONTEXT$MISP-AUTOMATION",
     "partnerType": "MISP_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP-AUTOMATION",
+        "partnerId": "$RUNCONTEXT$MISP-AUTOMATION",
         "status": "InProgress"
     }'
    Pms_PartnerSelfRegistration_MispLicense_All_Valid_Smoke_sid:
@@ -32,15 +32,15 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "mis2p@gmail.com",
-    "organizationName": "misp2",
-    "partnerId": "MISP2-AUTOMATION",
+    "emailId": "$RUNCONTEXT$mis2p@gmail.com",
+    "organizationName": "$RUNCONTEXT$MISP2-AUTOMATION",
+    "partnerId": "$RUNCONTEXT$MISP2-AUTOMATION",
     "partnerType": "MISP_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP2-AUTOMATION",
+        "partnerId": "$RUNCONTEXT$MISP2-AUTOMATION",
         "status": "InProgress"
     }'
     
@@ -55,14 +55,14 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "90110300",
-    "emailId": "mis3p@gmail.com",
-    "organizationName": "misp3",
-    "partnerId": "MISP3",
+    "emailId": "$RUNCONTEXT$mis3p@gmail.com",
+    "organizationName": "$RUNCONTEXT$MISP3",
+    "partnerId": "$RUNCONTEXT$MISP3",
     "partnerType": "MISP_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MISP3",
+        "partnerId": "$RUNCONTEXT$MISP3",
         "status": "InProgress"
     }'

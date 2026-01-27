@@ -8,7 +8,7 @@ DBValidator:
       inputTemplate: pms/DbValidatorTest/dbValidatorTest
       outputTemplate: pms/DbValidatorTest/DbValidatorResult
       input: '{
-    "partner_id": "pms-111999",
+    "partner_id": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policy_name": "$REMOVE$",
     "api_key_id": "$REMOVE$",
     "license_key": "$REMOVE$"
