@@ -2,7 +2,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_Invalid_Access_Token_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_01
-    description: Checking MISP Partner Exists with Invalid Access Token
+    description: Validate that the API returns an error when checking MISP partner existence using an invalid access token
     role: invalidtoken
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -25,7 +25,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_Invalid_Id_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_02
-    description: Checking MISP Partner Exists with Invalid Id
+    description: Validate that the API returns an error when checking MISP partner existence using an invalid partner ID
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -48,7 +48,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_Invalid_Version_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_03
-    description: Checking MISP Partner Exists with Invalid Version
+    description: Validate that the API returns an error when checking MISP partner existence using an invalid version value
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -71,7 +71,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_Empty_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_04
-    description: Checking MISP Partner Exists with Empty Partner Type
+    description: Validate that the API returns an error when checking MISP partner existence with an empty partner type
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -94,7 +94,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_05
-    description: Checking MISP Partner Exists with Invalid Partner Type
+    description: Validate that the API returns an error when checking MISP partner existence using an invalid partner type
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -117,7 +117,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_Email_As_string_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_06
-    description: Checking MISP Partner Exists with Email ID as string
+    description: Validate that the API returns an error when checking MISP partner existence using an email value provided as an invalid string format
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -137,7 +137,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_PartnerId_As_string_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_07
-    description: Checking MISP Partner Exists with PartnerId As string
+    description: Validate that the API returns an error when checking MISP partner existence using a partner ID provided as an invalid string format
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists
@@ -157,7 +157,7 @@ MISPPartnerExistsNegTC:
   Pms_MISPPartnerExists_With_PartnerType_As_String_Neg:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExistsNegTC_08
-    description: Checking MISP Partner Exists with Partner Type as string
+    description: Validate that the API returns an error when checking MISP partner existence using a partner type provided as an invalid string format
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists

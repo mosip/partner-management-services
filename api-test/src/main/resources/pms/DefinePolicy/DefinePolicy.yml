@@ -1,7 +1,7 @@
 definePolicy:
    Pms_DefinePolicy_All_Valid_Smoke_pms_sid:
       endPoint: /v1/policymanager/policies
-      description: Creating a Policy using PolicyGroup
+      description: Validate that a policy is successfully created when all inputs are valid
       role: partneradmin
       uniqueIdentifier: TC_PMS_definePolicy_01
       restMethod: post
@@ -27,7 +27,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Get API key for deactivated SID
+      description: Validate that a policy is successfully created and can be used to get an API key even when associated SBIs are deactivated
       uniqueIdentifier: TC_PMS_definePolicy_02
       restMethod: post
       checkErrorsOnlyInResponse: true
@@ -56,7 +56,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Null_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy for auth token type null
+      description: Validate that policy creation fails when the AuthTypeToken value is null
       uniqueIdentifier: TC_PMS_definePolicy_03
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -85,7 +85,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Policy:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy for authtoken type policy
+      description: Validate that a policy is successfully created with AuthTypeToken configured
       uniqueIdentifier: TC_PMS_definePolicy_04
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -114,7 +114,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Invalid_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy For invalid AuthTypeToken
+      description: Validate that policy creation fails when an invalid AuthTypeToken is provided
       uniqueIdentifier: TC_PMS_definePolicy_05
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -143,7 +143,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Blank:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy for invalid AuthTypeToken
+      description: Validate that policy creation fails when the AuthTypeToken is left blank
       uniqueIdentifier: TC_PMS_definePolicy_06
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -171,7 +171,7 @@ definePolicy:
    Pms_DefinePolicy_without_AuthTypeToken:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: DefinePolicy without AuthTypeToken
+      description: Validate that policy creation fails when the AuthTypeToken is not provided
       uniqueIdentifier: TC_PMS_definePolicy_07
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -200,7 +200,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Space:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy for AuthTypeToken space
+      description: Validate that policy creation fails when the AuthTypeToken contains only spaces
       uniqueIdentifier: TC_PMS_definePolicy_08
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -229,7 +229,7 @@ definePolicy:
    Pms_DefinePolicy_RandomTokenType_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy for random AuthTypeToken
+      description: Validate that a policy is successfully created with a random token type
       uniqueIdentifier: TC_PMS_definePolicy_09
       restMethod: post
       checkErrorsOnlyInResponse: true
@@ -258,7 +258,7 @@ definePolicy:
    Pms_DefinePolicy_DemoAuth_With_Same_Policy_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy with same policyname
+      description: Validate that policy creation fails when DemoAuth uses an existing policy
       uniqueIdentifier: TC_PMS_definePolicy_10
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -288,7 +288,7 @@ definePolicy:
    Pms_DefinePolicy_Remove_Demo_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy without demo
+      description: Validate that policy update fails when Demo authentication is removed
       uniqueIdentifier: TC_PMS_definePolicy_11
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicyNeg
@@ -344,7 +344,7 @@ definePolicy:
    Pms_DefinePolicy_PolicyGrpNotExists_InValid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy for non existing policygroup
+      description: Validate that policy creation fails when the specified policy group does not exist
       uniqueIdentifier: TC_PMS_definePolicy_13
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -372,7 +372,7 @@ definePolicy:
    Pms_DefinePolicy_PolicyGrpInActive_InValid_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy for Inactive policy group
+      description: Validate that policy creation fails when the specified policy group is inactive
       uniqueIdentifier: TC_PMS_definePolicy_14
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -400,7 +400,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_name_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy missing input parameter
+      description: Validate that policy creation fails when the policy name input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_15
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -428,7 +428,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_descNeg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy withput input parameter
+      description: Validate that policy creation fails when the policy description input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_16
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -456,7 +456,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_mandatory_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy
+      description: Validate that policy creation fails when a mandatory input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_17
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicyNeg
@@ -485,7 +485,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_authType_neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy without authtype
+      description: Validate that policy creation fails when the AuthType input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_18
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicyNeg
@@ -513,7 +513,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_authTokenType_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy without authtoken type
+      description: Validate that policy creation fails when the AuthTokenType input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_19
       restMethod: post
       additionalDependencies: TC_PMS_definePolicyGroup_01
@@ -542,7 +542,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_policyGroupName:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define Policy without policygroupname
+      description: Validate that policy creation fails when the policyGroupName input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_21
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -570,7 +570,7 @@ definePolicy:
    Pms_DefinePolicy_Missing_InputParameter_policyType:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy without policy type
+      description: Validate that policy creation fails when the policyType input parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_22
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -598,7 +598,7 @@ definePolicy:
    Pms_DefinePolicy_when_authTokenType_null:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy without authtoken type
+      description: Validate that policy creation fails when the AuthTokenType is null
       uniqueIdentifier: TC_PMS_definePolicy_23
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -626,7 +626,7 @@ definePolicy:
    Pms_DefinePolicy_when_authTokenType_invalid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy with invalid authtokentype
+      description: Validate that policy creation fails when the AuthTokenType is invalid
       uniqueIdentifier: TC_PMS_definePolicy_24
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -654,7 +654,7 @@ definePolicy:
    Pms_DefinePolicy_when_authTokenType_missing:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy without authtoken type
+      description: Validate that policy creation fails when the AuthTokenType parameter is missing
       uniqueIdentifier: TC_PMS_definePolicy_25
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -683,7 +683,7 @@ definePolicy:
    Pms_DefinePolicy_demo_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
       role: partneradmin
-      description: Define policy
+      description: Validate that a policy is successfully created using Demo authentication
       uniqueIdentifier: TC_PMS_definePolicy_26
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -711,7 +711,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_27
-      description: Creating a Policy using PolicyGroup
+      description: Validate that a policy is successfully created when the PMS is deactivated
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -736,7 +736,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Published_Policy_pms_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_28
-      description: Creating a Policy using PolicyGroup
+      description: Validate that a policy is successfully created when the PMS is in a published state
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -761,7 +761,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Draft_Policy_pms_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_29
-      description: Creating a Policy using PolicyGroup
+      description: Validate that a policy is successfully created when the PMS is in draft state
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -786,7 +786,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Reject_Policy_pms_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_30
-      description: Creating a Policy using PolicyGroup
+      description: Validate that a policy is successfully created when the PMS has a rejected policy
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -811,7 +811,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_31
-      description: Creating a Policy using PolicyGroup
+      description: Validate that a policy is successfully created when the PMS has a policy in In-Progress mapping state
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy

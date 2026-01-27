@@ -2,7 +2,7 @@ GetAllPolicyGroup:
    Pms_GetAllPolicyGroup_allValid_smoke:
       endPoint: /v1/policymanager/policies/group/all
       uniqueIdentifier: TC_PMS_GetAllPolicyGroup_01
-      description: Retrieve All Partner Policy Group
+      description: Validate that all policy groups are successfully retrieved with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

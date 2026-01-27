@@ -2,7 +2,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_01
-      description: Create Device Details Filter with valid values
+      description: Validate that device details are successfully filtered using valid criteria
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
@@ -24,7 +24,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_To_MapSBI:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_02
-      description: Create Device Details Filter to MapSBI
+      description: Validate that device details are correctly filtered for mapping to a Secure Biometric Interface
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -44,7 +44,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_all_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_03
-      description: Create Device Details Filter with valid values
+      description: Validate that all device details are successfully filtered with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createServiceToSaveDeviceDetail_01
@@ -67,7 +67,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_04
-      description: Create Device Details Filter while keeping FilterType parameter as Empty
+      description: Validate that device detail filtering fails when the filterType is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
@@ -91,7 +91,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_05
-      description: Create Device Details Filter while keeping FilterColumn parameter as Empty
+      description: Validate that device detail filtering fails when the filterColumn is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
@@ -115,7 +115,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_06
-      description: Create Device Details Filter while keeping invalid values in Column parameter
+      description: Validate that device detail filtering fails when the specified filter column does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter
@@ -139,7 +139,7 @@ DeviceDetailsFilter:
    Pms_DeviceDetailsFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/filtervalues
       uniqueIdentifier: TC_PMS_DeviceDetailsFilter_07
-      description: Create Device Details Filter while keeping invalid values in Type parameter
+      description: Validate that device detail filtering fails when the specified filter type does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceDetailsFilter/deviceDetailsFilter

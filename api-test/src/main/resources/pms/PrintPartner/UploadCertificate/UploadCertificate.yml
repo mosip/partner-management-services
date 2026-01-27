@@ -2,7 +2,7 @@ uploadCert:
    Pms_UploadCACertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_uploadCACert_printpartner_01
-      description: Upload valid CA Certificate for Print Partner
+      description: Validate that CA certificates can be uploaded successfully with all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/PrintPartner/UploadCertificate/uploadCertificate

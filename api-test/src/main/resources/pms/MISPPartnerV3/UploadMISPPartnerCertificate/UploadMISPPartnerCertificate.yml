@@ -2,7 +2,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_01
-      description: Upload MISP partner certificate for PMS-111555 partner id
+      description: Verify that the system allows successful upload of a MISP partner certificate when all mandatory and valid inputs are provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -17,7 +17,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_valid_Empty_PolicyGroup:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_02
-      description: Upload MISP partner certificate for PMS-111556 partner id
+      description: Validate that the API returns an error or handles appropriately when attempting to upload a MISP partner certificate with an empty policy group
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -32,7 +32,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_without_PolicyGroup_Smoke_Valid:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_03
-      description: Upload MISP partner certificate for PMS-111557 partner id
+      description: Validate MISP partner certificate upload without a policy group
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -47,7 +47,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_Valid_Max_AddressField:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_04
-      description: Upload MISP partner certificate for PMS-111558 partner id
+      description: Validate MISP partner certificate upload with the maximum allowed address field length
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -62,7 +62,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_Valid_Max_Contact_number:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_05
-      description: Upload MISP partner certificate for PMS-111559 partner id
+      description: Validate MISP partner certificate upload with the maximum allowed contact number length
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -77,7 +77,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_Valid_Max_EmailID:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_06
-      description: Upload MISP partner certificate for PMS-111550 partner id
+      description: Validate MISP partner certificate upload with the maximum allowed email ID length
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -92,7 +92,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_Valid_langcode_Arabic:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_07
-      description: Upload MISP partner certificate for PMS-111551 partner id
+      description: Validate MISP partner certificate upload with the language code set to Arabic
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -107,7 +107,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_For_without_PolicyId_Valid:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_08
-      description: Upload MISP partner certificate for PMS-112211 partner id
+      description: Validate MISP partner certificate upload without providing a policy ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post

@@ -2,7 +2,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_01
-      description: Create Search Partner API Key with valid data
+      description: Validate that searching Partner API Keys with all valid inputs returns the expected results successfully
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -18,7 +18,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_02
-      description: Create Search Partner API Key with Only FilterCriteria
+      description: Validate that searching Partner API Keys using only filter criteria returns the expected results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -41,7 +41,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_03
-      description: Create Search Partner API Key with Only SortCriteria
+      description: Validate that searching Partner API Keys using only sort criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -63,7 +63,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_Only_Pagination_Criteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_04
-      description: Create Search Partner API Key with Only PaginationCriteria
+      description: Validate that searching Partner API Keys using only pagination criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -79,7 +79,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_05
-      description: Create Search Partner API Key while keeping Type parameter as contains and filter data in ascending order 
+      description: Validate that searching Partner API Keys with type containing a value, sorted ascending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -108,7 +108,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_type_contains_invalid_pagination:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_06
-      description: Create Search Partner API Key while keeping Type parameter as contains and invalid pagination
+      description: Validate that searching Partner API Keys with type containing a value and invalid pagination parameters returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
@@ -142,7 +142,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_type_contains_invalid_sortField:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_07
-      description: Create Search Partner API Key while keeping Type parameter as contains and invalid sortField
+      description: Validate that searching Partner API Keys with type containing a value and an invalid sortField returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
@@ -176,7 +176,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_type_contains_invalid_sortType:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_08
-      description: Create Search Partner API Key while keeping Type parameter as contains and invalid sortType
+      description: Validate that searching Partner API Keys with type containing a value and an invalid sortType returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey
@@ -210,7 +210,7 @@ SearchPartnerApiKey:
    Pms_SearchPartnerApiKey_type_contains_invalid_columnName:
       endPoint: /v1/partnermanager/partners/apikey/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiKey_09
-      description: Create Search Partner API Key while keeping Type parameter as contains and invalid columnName
+      description: Validate that searching Partner API Keys with type containing a value and an invalid column name returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerApiKey/searchPartnerApiKey

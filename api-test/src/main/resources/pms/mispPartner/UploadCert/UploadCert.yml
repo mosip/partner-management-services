@@ -2,7 +2,7 @@ UploadPartnerCert:
    Pms_UploadCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMispPartnerCert_01
-      description: Upload valid certificate for Misp Partner
+      description: Validate that certificates are uploaded successfully with all required valid inputs as part of a smoke test
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
@@ -18,7 +18,7 @@ UploadPartnerCert:
    Pms_UploadCert_MispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMispPartnerCert_02
-      description: Upload valid certificate for Misp License
+      description: Validate that a MISP license certificate is uploaded successfully with all required valid inputs as part of a smoke test
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02
@@ -35,7 +35,7 @@ UploadPartnerCert:
    Pms_UploadCert_MispLicense_MISP3_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMispPartnerCert_03
-      description: Upload valid certificate for Misp License with valid PartnerID
+      description: Validate that a MISP3 license certificate is uploaded successfully with all required valid inputs as part of a smoke test
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadcaCertMisp_01, TC_PMS_uploadsubcaCertMisp_02

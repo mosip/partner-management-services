@@ -2,7 +2,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_01
-    description: Linking Policy Group to MISP Partner using Invalid Access Token
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with invalid inputs
     role: invalidtoken
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -24,7 +24,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Valid_Request_And_Invalid_PartnerId_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_02
-    description: Linking Policy Group to MISP Partner using Invalid PartnerId
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with a valid request but an invalid partner ID
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -46,7 +46,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_InValid_Request_And_Valid_PartnerId_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_03
-    description: Linking Policy Group to MISP Partner using invalid Request and valid PartnerId
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with an invalid request but a valid partner ID
     role: partneradmin
     restMethod: post
     checkOnlyStatusCodeInResponse: true
@@ -65,7 +65,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Invalid_Id_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_04
-    description: Linking Policy Group to MISP Partner using invalid Id
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using an invalid policy group ID
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -87,7 +87,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Auth_Partner_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_05
-    description: Linking Policy Group to MISP Partner using Auth partner
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using an auth token belonging to a partner instead of an admin
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -109,7 +109,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Device_Partner_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_06
-    description: Linking Policy Group to MISP Partner using Device partner
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using a device token belonging to a partner instead of an admin
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -131,7 +131,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_FTM_Partner_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_07
-    description: Linking Policy Group to MISP Partner using FTM partner
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using an FTM token belonging to a partner instead of an admin
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -153,7 +153,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Invalid_Version_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_08
-    description: Linking Policy Group to MISP Partner using Invalid Version
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using an invalid API version
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -175,7 +175,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Using_Invalid_RequestTime_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_09
-    description: Link Policy Group to MISP Partner using Invalid RequestTime
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using an invalid reques
     role: partneradmin
     restMethod: post
     checkOnlyStatusCodeInResponse: true
@@ -194,7 +194,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_AlreadyLinked_PartnerId_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_10
-    description: Linking Policy Group to MISP Partner using already linked PartnerId
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner that is already linked
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -216,7 +216,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_requestId_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_11
-    description: Linking Policy Group to MISP Partner without requestId
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner without providing a request ID
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -237,7 +237,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Empty_RequestId_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_12
-    description: Linking Policy Group to MISP Partner using Empty request ID
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with an empty request ID
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -259,7 +259,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_With_NULL_RequestId_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_13
-    description: Linking Policy Group to MISP Partner using NULL requst ID
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with a null request ID
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -281,7 +281,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_Version_Field_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_14
-    description: Linking Policy Group to MISP Partner without Version field
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner without providing the version field
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -302,7 +302,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_With_NULL_Version_Parameter_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_15
-    description: Linking Policy Group to MISP Partner using NULL Version Parameter
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with a null version parameter
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -324,7 +324,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Version_Value_1_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_16
-    description: Linking Policy Group to MISP Partner using version value as 1
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using version value 1
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -346,7 +346,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Version_Value_0_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_17
-    description: Linking Policy Group to MISP Partner using version value as 0
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner using version value 0
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -368,7 +368,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_With_Empty_RequestTime_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_18
-    description: Linking Policy Group to MISP Partner using Empty RequestTime
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner with an empty request time
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -390,7 +390,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_RequestTime_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_19
-    description: Linking Policy Group to MISP Partner using without RequestTime
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner without providing request time
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -411,7 +411,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_Partneradmin_role_Neg:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_20
-    description: Linking Policy Group to MISP Partner using without Partneradmin role
+    description: Validate that the API returns an error when attempting to link a policy group to a MISP partner without a partner admin role
     role: partnerauth
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner
@@ -433,7 +433,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
   Pms_LinkPolicyGroupToMISPPartnerNegTC_Without_ObjectBody_Neg:
     endPoint: /v1/partnermanager/pms-111557/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_21
-    description: Linking Policy Group to MISP Partner using without Object Body
+    description:  Validate that the API returns an error when attempting to link a policy group to a MISP partner without providing the request body
     role: partnerauth
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartnerWithoutBody

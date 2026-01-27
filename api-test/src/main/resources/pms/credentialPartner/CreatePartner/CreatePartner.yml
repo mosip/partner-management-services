@@ -2,7 +2,7 @@ CreatePartnerSelfRegistration:
    Pms_PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createCredentialPartnerSelfRegistration_01
-      description: Create Partner self Registrartion with Valid data
+      description: Validate that a credential partner successfully completes self-registration when all inputs are valid
       role: partner
       restMethod: post
       inputTemplate: pms/credentialPartner/CreatePartner/createPartner
@@ -25,7 +25,7 @@ CreatePartnerSelfRegistration:
    Pms_PartnerSelfRegistration_credentialpartner_WithOut_Mandatory_Neg:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createCredentialPartnerSelfRegistration_02
-      description: Create Partner self Registrartion without PartnerID
+      description: Validate that credential partner self-registration fails when mandatory input parameters are missing
       role: partner
       restMethod: post
       inputTemplate: pms/credentialPartner/CreatePartner/createPartner
@@ -51,7 +51,7 @@ CreatePartnerSelfRegistration:
    Pms_PartnerSelfRegistration_credentialpartner_Same_Email:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createCredentialPartnerSelfRegistration_03
-      description: Create Partner self Registrartion with existing Email
+      description: Validate that credential partner self-registration fails when the email address is already in use
       role: partner
       restMethod: post
       inputTemplate: pms/credentialPartner/CreatePartner/createPartner

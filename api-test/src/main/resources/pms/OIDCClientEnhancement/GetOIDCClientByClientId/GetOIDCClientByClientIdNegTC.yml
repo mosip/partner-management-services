@@ -2,7 +2,7 @@ GetOIDCClientByClientIdV2NegTC:
   Pms_GetOIDCClientByClientIdV2NegTC_With_Invalid_Access_Token_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2NegTC_01
-    description: Fetching OIDC client details by Client ID using invalid access token
+    description: Validate that retrieving OIDC client details by client ID fails when an invalid access token is used
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
@@ -20,7 +20,7 @@ GetOIDCClientByClientIdV2NegTC:
   Pms_GetOIDCClientByClientIdV2NegTC_With_ClientId_Null_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2NegTC_02
-    description: Fetching OIDC client details by giving Client ID is null
+    description: Validate that retrieving OIDC client details fails when the client ID is null
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
@@ -38,7 +38,7 @@ GetOIDCClientByClientIdV2NegTC:
   Pms_GetOIDCClientByClientIdV2NegTC_With_Different_Partner_Role_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2NegTC_03
-    description: Fetching OIDC client details by Client ID using access token of different partner role
+    description: Validate that retrieving OIDC client details fails when accessed by a user with a different partner role
     role: partnerdevice
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
@@ -56,7 +56,7 @@ GetOIDCClientByClientIdV2NegTC:
   Pms_GetOIDCClientByClientIdV2NegTC_With_Invalid_ClientId_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2NegTC_04
-    description: Fetching OIDC client details by invalid Client ID
+    description: Validate that retrieving OIDC client details fails when an invalid client ID is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId
@@ -74,7 +74,7 @@ GetOIDCClientByClientIdV2NegTC:
   Pms_GetOIDCClientByClientIdV2NegTC_With_SpecialCharacter_ClientId_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2NegTC_05
-    description: Fetching OIDC client details by Client ID having special characters
+    description: Validate that retrieving OIDC client details fails when the client ID contains special characters
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClientByClientId/GetOIDCClientByClientId

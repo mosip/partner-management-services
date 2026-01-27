@@ -2,7 +2,7 @@ FilterMispLicense:
    Pms_FilterMispLicense_All_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/filtervalues
       uniqueIdentifier: TC_PMS_FilterMispLicense_01
-      description: Create MispLicense Filter for Partner while keeping Type All
+      description: Validate that all MISP licenses are retrieved successfully when a valid filter request is submitted
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/FilterMispLicense/filterMispLicense
@@ -31,7 +31,7 @@ FilterMispLicense:
    Pms_FilterMispLicense_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/filtervalues
       uniqueIdentifier: TC_PMS_FilterMispLicense_02
-      description: Create MispLicense Filter for Partner while keeping Type Unique
+      description: Validate that MISP licenses are retrieved successfully when filtered using valid criteria
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/FilterMispLicense/filterMispLicense
@@ -60,7 +60,7 @@ FilterMispLicense:
    Pms_FilterMispLicense_InValid_FilterType:
       endPoint: /v1/partnermanager/misps/filtervalues
       uniqueIdentifier: TC_PMS_FilterMispLicense_03
-      description: Create MispLicense Filter for Partner while keeping Text parameter as Empty
+      description: Validate that retrieving MISP licenses fails when an invalid filter type is provided
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/FilterMispLicense/filterMispLicense
@@ -83,7 +83,7 @@ FilterMispLicense:
    Pms_FilterMispLicense_Blank_FilterType:
       endPoint: /v1/partnermanager/misps/filtervalues
       uniqueIdentifier: TC_PMS_FilterMispLicense_04
-      description: Create MispLicense Filter for Partner while keeping Type parameter as Empty
+      description: Validate that retrieving MISP licenses fails when the filter type is left blank
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/FilterMispLicense/filterMispLicense
@@ -106,7 +106,7 @@ FilterMispLicense:
    Pms_FilterMispLicense_InValid_columnName:
       endPoint: /v1/partnermanager/misps/filtervalues
       uniqueIdentifier: TC_PMS_FilterMispLicense_05
-      description: Create MispLicense Filter for Partner while keeping ColumnName parameter as Invalid
+      description: Validate that retrieving MISP licenses fails when an invalid column name is provided in the filter
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/FilterMispLicense/filterMispLicense
@@ -129,7 +129,7 @@ FilterMispLicense:
    Pms_FilterMispLicense_InValid_Empty_columnName:
       endPoint: /v1/partnermanager/misps/filtervalues
       uniqueIdentifier: TC_PMS_FilterMispLicense_06
-      description: Create MispLicense Filter for Partner while keeping ColumnName parameter as Empty
+      description: Validate that retrieving MISP licenses fails when the column name in the filter is left empty
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/FilterMispLicense/filterMispLicense

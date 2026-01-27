@@ -2,7 +2,7 @@ GetNotificationsSeenTimestamp:
    Pms_GetNotificationsSeenTimestamp_All_Valid_Smoke:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: partneradmin
-      description: Get Notifications Seen Timestamp
+      description: Validate that the API successfully retrieves the seen timestamps for all notifications with valid inputs
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestamp_01
       checkErrorsOnlyInResponse: true
       restMethod: get

@@ -2,7 +2,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_without_Access_Token_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_01
-      description: Create MISP Partner Self Registration without Access Token
+      description: Validate that the API returns an error when attempting to register a MISP partner without providing an access token
       role: invalidtoken
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -31,7 +31,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_PartnerID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_02
-      description: Create MISP Partner Self Registration with Empty Partner ID
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty partner ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -60,7 +60,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Missing_PartnerID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_03
-      description: Create MISP Partner Self Registration with Empty Partner ID
+      description: Validate that the API returns an error when attempting to register a MISP partner with the partner ID field missing from the request
       role: partneradmin
       restMethod: post
       additionalDependencies: TC_PMS_definePolicyGroup_01
@@ -90,7 +90,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Invalid_PolicyGroup_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_04
-      description: Create MISP Partner Self Registration with Invalid Policy group
+      description: Validate that the API returns an error when attempting to register a MISP partner with an invalid policy group
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -119,7 +119,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_SpecialCharacters_PolicyGroup_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_05
-      description: Create MISP Partner Self Registration with SpecialCharacters Policy group
+      description: Validate that the API returns an error when attempting to register a MISP partner with special characters in the policy group field
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -148,7 +148,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_OrganizationName_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_06
-      description: Create MISP Partner Self Registration with Empty OrganizationName
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty organization name
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -177,7 +177,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Missing_OrganizationName_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_07
-      description: Create MISP Partner Self Registration with Missing OrganizationName
+      description: Validate that the API returns an error when attempting to register a MISP partner with the organization name field missing from the request
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -206,7 +206,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_Email_Address_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_08
-      description: Create MISP Partner Self Registration with Empty Email Address
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty email address
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -235,7 +235,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Invalid_Email_Address_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_09
-      description: Create MISP Partner Self Registration with Invalid Email Address
+      description: Validate that the API returns an error when attempting to register a MISP partner with an invalid email address format
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -264,7 +264,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_Address_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_10
-      description: Create MISP Partner Self Registration with Missing Address
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty address field
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -293,7 +293,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Null_Address_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_11
-      description: Create MISP Partner Self Registration with Null Address
+      description: Validate that the API returns an error when attempting to register a MISP partner with a null value in the address field
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -322,7 +322,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_2000+_Words_Address_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_12
-      description: Create MISP Partner Self Registration with more than maximum 2000 words in Address field
+      description: Validate that the API returns an error when attempting to register a MISP partner with an address field containing more than 2000 words
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -351,7 +351,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_ContactNumber_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_13
-      description: Create MISP Partner Self Registration with Empty ContactNumber
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty contact number
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -380,7 +380,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_maxlength_ContactNumber_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_14
-      description: Create MISP Partner Self Registration with more than expected values in ContactNumber
+      description: Validate that the API returns an error when attempting to register a MISP partner with a contact number exceeding the maximum allowed length
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -409,7 +409,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_maxlength_EmailID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_15
-      description: Create MISP Partner Self Registration with more than expected values in EmailID field
+      description: Validate that the API returns an error when attempting to register a MISP partner with an email ID exceeding the maximum allowed length
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -438,7 +438,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_-1_EmailID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_16
-      description: Create MISP Partner Self Registration with less than expected values in EmailID field
+      description: Validate that the API returns an error when attempting to register a MISP partner with -1 provided as the email ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -467,7 +467,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_PartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_17
-      description: Create MISP Partner Self Registration with Empty PartnerType
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty partner type
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -496,7 +496,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Invalid_PartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_18
-      description: Create MISP Partner Self Registration with Invalid PartnerType
+      description: Validate that the API returns an error when attempting to register a MISP partner with an invalid partner type
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -525,7 +525,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_langcode_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_19
-      description: Create MISP Partner Self Registration with Empty lang code
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty language code
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -554,7 +554,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Invalid_langcode_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_20
-      description: Create MISP Partner Self Registration with invalid lang code
+      description: Validate that the API returns an error when attempting to register a MISP partner with an invalid language code
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -583,7 +583,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_RequestTime_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_21
-      description: Create MISP Partner Self Registration with Empty requestTime
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty request time
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -612,7 +612,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Invalid_RequestID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_22
-      description: Create MISP Partner Self Registration with Invalid requestID
+      description: Validate that the API returns an error when attempting to register a MISP partner using an invalid request ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -641,7 +641,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_without_RequestID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_23
-      description: Create MISP Partner Self Registration with Invalid requestID
+      description: Validate that the API returns an error when attempting to register a MISP partner without providing a request ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -669,7 +669,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_null_RequestID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_24
-      description: Create MISP Partner Self Registration with null requestID
+      description: Validate that the API returns an error when attempting to register a MISP partner with a null request ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -698,7 +698,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Empty_RequestID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_25
-      description: Create MISP Partner Self Registration with Empty requestID
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty request ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -727,7 +727,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_without_Version_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_26
-      description: Create MISP Partner Self Registration without Version
+      description: Validate that the API returns an error when attempting to register a MISP partner without providing a version
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -755,7 +755,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_null_Version_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_27
-      description: Create MISP Partner Self Registration null Version
+      description: Validate that the API returns an error when attempting to register a MISP partner with a null version value
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -784,7 +784,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Invalid_Version_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_28
-      description: Create MISP Partner Self Registration Invalid Version
+      description: Validate that the API returns an error when attempting to register a MISP partner with an invalid version value
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -813,7 +813,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Version_value1_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_29
-      description: Create MISP Partner Self Registration version value 1
+      description: Validate that the API returns an error when attempting to register a MISP partner using an unsupported version value 1
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -842,7 +842,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_Version_value0_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_30
-      description: Create MISP Partner Self Registration version value 0
+      description: Validate that the API returns an error when attempting to register a MISP partner using an unsupported version value 0
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -871,7 +871,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_without_RequestTime_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_31
-      description: Create MISP Partner Self Registration without requestTime
+      description: Validate that the API returns an error when attempting to register a MISP partner without providing the request time
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -899,7 +899,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_existing_EmailID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_32
-      description: Create MISP Partner Self Registration with already registered Email address
+      description: Validate that the API returns an error when attempting to register a MISP partner using an already existing email ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -928,7 +928,7 @@ CreateMISPPartnerNegativeScenarios:
    Pms_MISPPartnerRegistration_existing_PartnerID_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_33
-      description: Create MISP Partner Self Registration with already registered Partner
+      description: Validate that the API returns an error when attempting to register a MISP partner using an already existing Partner ID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner

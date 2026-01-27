@@ -2,7 +2,7 @@ InsertDBData:
    PMS_InsertDBData_For_API_Key_Valid_smoke_Pos:
       endPoint: no endpoint
       uniqueIdentifier: TC_DBDependent_InsertQuery_01
-      description: Inserting data in partner policy table for creation of API Key ID
+      description: Validate that API key data is inserted successfully into the database when a valid request is submitted
       role: partnerauth
       restMethod: post
       inputTemplate: pms/InsertDBData/InsertAPIKeyData
@@ -15,7 +15,7 @@ InsertDBData:
    PMS_InsertDBData_For_API_Key_15_days:
       endPoint: no endpoint
       uniqueIdentifier: TC_DBDependent_InsertQuery_02
-      description: Inserting data in partner policy table for creation of API Key ID
+      description: Validate that API key data is inserted into the database with an expiry set 15 days from the creation date
       role: partnerauth
       restMethod: post
       inputTemplate: pms/InsertDBData/InsertAPIKeyData15daysAPIKey
@@ -28,7 +28,7 @@ InsertDBData:
    PMS_InsertDBData_For_API_Key_10_days:
       endPoint: no endpoint
       uniqueIdentifier: TC_DBDependent_InsertQuery_03
-      description: Inserting data in partner policy table for creation of API Key ID
+      description: Validate that API key data is inserted into the database with an expiry set 10 days from the creation date
       role: partnerauth
       restMethod: post
       inputTemplate: pms/InsertDBData/InsertAPIKeyData10daysAPIKey

@@ -2,7 +2,7 @@ GetAllApprovedDeviceProviderIds:
    Pms_GetAllApprovedDeviceProviderIds_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=Device_Provider
       role: partnerdevice
-      description: Get All Approved Device ProviderId
+      description: Validate that all approved device provider IDs are successfully retrieved with valid inputs
       uniqueIdentifier: TC_PMS_GetAllApprovedDeviceProviders_05
       restMethod: get
       inputTemplate: pms/GetAllApprovedDeviceProviderIds/GetAllApprovedDeviceProviderIds

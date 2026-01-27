@@ -2,7 +2,7 @@ UploadPartnerCert:
   Pms_UploadCert_All_Valid_Smoke:
     endPoint: /v1/partnermanager/partners/certificate/upload
     uniqueIdentifier: TC_PMS_UploadPartnerCert_Printpartner_01
-    description: Upload Print Partner Certificate
+    description: Validate that certificates can be uploaded successfully with all valid inputs
     role: partner
     checkErrorsOnlyInResponse: true
     restMethod: post

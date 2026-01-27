@@ -2,7 +2,7 @@ PartnerFilter:
    Pms_PartnerFilter_unique_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/filtervalues
       uniqueIdentifier: TC_PMS_PartnerFilter_01
-      description: Create Partner Filter while keeping Type parameter as Unique
+      description: Validate that partners are successfully filtered using unique criteria with all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerFilter/partnerFilter
@@ -27,7 +27,7 @@ PartnerFilter:
    Pms_PartnerFilter_all_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/filtervalues
       uniqueIdentifier: TC_PMS_PartnerFilter_02
-      description: Create Partner Filter while keeping Type parameter as All
+      description: Validate that partners are successfully filtered with all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerFilter/partnerFilter
@@ -52,7 +52,7 @@ PartnerFilter:
    Pms_PartnerFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/partners/filtervalues
       uniqueIdentifier: TC_PMS_PartnerFilter_03
-      description: Create Partner Filter while keeping FilterType parameter as Empty
+      description: Validate that partner filtering fails when the filterType is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerFilter/partnerFilter
@@ -75,7 +75,7 @@ PartnerFilter:
    Pms_PartnerFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/partners/filtervalues
       uniqueIdentifier: TC_PMS_PartnerFilter_04
-      description: Create Partner Filter while keeping invalid values in Column parameter
+      description: Validate that partner filtering fails when the specified filter column does not exist.
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerFilter/partnerFilter
@@ -98,7 +98,7 @@ PartnerFilter:
    Pms_PartnerFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/partners/filtervalues
       uniqueIdentifier: TC_PMS_PartnerFilter_05
-      description: Create Partner Filter while keeping invalid values in Type parameter
+      description: Validate that partner filtering fails when the specified filter type does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerFilter/partnerFilter
@@ -121,7 +121,7 @@ PartnerFilter:
    Pms_PartnerFilter_Invalid_Empty_column:
       endPoint: /v1/partnermanager/partners/filtervalues
       uniqueIdentifier: TC_PMS_PartnerFilter_06
-      description: Create Partner Filter while keeping FilterColumn parameter as Empty
+      description: Validate that partner filtering fails when the filter column is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerFilter/partnerFilter

@@ -2,7 +2,7 @@ GetRootIntermediateExpiringCertificateNegativeScenarios:
    Pms_GetPartnerExpiringCertificateNegativeScenarios_Invalid_Token_Neg:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: invalidtoken
-      description: Get Root Intermediate Expiring Certificates with invalid token
+      description: Validate that retrieving partner expiring certificates fails when an invalid token is used
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenarios_01
       restMethod: get
       inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
@@ -20,7 +20,7 @@ GetRootIntermediateExpiringCertificateNegativeScenarios:
    Pms_GetRootIntermediateExpiringCertificateNegativeScenarios_Partner_Role_Neg:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partnerftm
-      description: Get Root Intermediate Expiring Certificates with Partner Role
+      description: Validate that retrieving root and intermediate expiring certificates fails when the user has an invalid or unauthorized partner role
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificateNegativeScenarios_02
       restMethod: get
       inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate

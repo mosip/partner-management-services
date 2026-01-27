@@ -2,7 +2,7 @@ UpdatePartnerDetails:
    Pms_UpdatePartnerDetails_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/pms-111999
       uniqueIdentifier: TC_PMS_updatePartnerDetails_01
-      description: Update Partner Details for Partner with valid data
+      description: Validate that updating Partner details with all valid inputs is successful and the changes are reflected correctly
       role: partner
       restMethod: put
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
@@ -21,7 +21,7 @@ UpdatePartnerDetails:
    Pms_UpdatePartnerDetails_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/Tech-1231234
       uniqueIdentifier: TC_PMS_updatePartnerDetails_02
-      description: Update Partner Details for Partner with invalid partnerID
+      description: Validate that updating Partner details fails when an invalid partnerId is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePartner/updatePartner
@@ -42,7 +42,7 @@ UpdatePartnerDetails:
    Pms_UpdatePartnerDetails_Missing_InputParameter_Address:
       endPoint: /v1/partnermanager/partners/Tech-123
       uniqueIdentifier: TC_PMS_updatePartnerDetails_03
-      description: Update Partner Details for Partner while keeping Address parameter as missing
+      description: Validate that updating Partner details fails when the address parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePartner/updatePartner
@@ -63,7 +63,7 @@ UpdatePartnerDetails:
    Pms_UpdatePartnerDetails_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners/Tech-123
       uniqueIdentifier: TC_PMS_updatePartnerDetails_04
-      description: Update Partner Details for Partner while keeping Contact Number parameter as missing
+      description: Validate that updating Partner details fails when the contactNumber parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePartner/updatePartner

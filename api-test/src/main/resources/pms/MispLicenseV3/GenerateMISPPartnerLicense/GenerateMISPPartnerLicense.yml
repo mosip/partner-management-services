@@ -2,7 +2,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_01
-      description: Generate MISP Partner License
+      description: Validate that a MISP partner license is successfully generated with a valid SID when all inputs are valid
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -23,7 +23,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_02
-      description: Generate MISP Partner License without PolicyID and user should be able to generate the license
+      description: Validate that a MISP partner license is successfully generated with a valid SID even when the policy ID is not provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -44,7 +44,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_without_PolicyGroup_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_03
-      description: Generate MISP Partner License without PolicyGroup
+      description: Validate that generating a MISP partner license fails when the policy group is not provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -65,7 +65,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_with_Numeric_MisplicenseKeyName_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_04
-      description: Generate MISP Partner License with numeric licenseKeyName
+      description: Validate that a MISP partner license is successfully generated when the license key name contains numeric characters
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -86,7 +86,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_with_MisplicenseKeyName_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_05
-      description: Generate MISP Partner License
+      description: Validate that a MISP partner license is successfully generated when a valid license key name is provided along with a valid SID
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -107,7 +107,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_with_Empty_PolicyId_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_06
-      description: Generate MISP Partner License without PolicyId
+      description: Validate that generating a MISP partner license fails when the policy ID is left empty even if a valid SID is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense

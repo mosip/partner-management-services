@@ -1,7 +1,7 @@
 GetAllDeviceTypes:
    Pms_GetAllDeviceTypes_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that all device types are successfully retrieved with valid inputs
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllDeviceTypes_01
       restMethod: post
@@ -36,9 +36,9 @@ GetAllDeviceTypes:
     }'
     
     
-      partner_DeviceTypeFilter_All_Valid_Smoke:
+   partner_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
-      description: Get device type
+      description: Validate that device types are successfully filtered for a partner with all valid inputs
       uniqueIdentifier: TC_PMS_GetAllDeviceTypes_02
       role: partner
       restMethod: post

@@ -2,7 +2,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_AllValid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_01
-      description: Create Search Device Type with all valid details
+      description: Validate that device types can be searched successfully with all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -24,7 +24,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_02
-      description: Create Search Device Type with Only FilterCriteria
+      description: Validate that device types can be searched successfully using only filter criteria without sorting
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -53,7 +53,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType__Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_03
-      description: Create Search Device Type with Only SortCriteria
+      description: Validate that device types can be searched successfully using only sort criteria without filters
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -81,7 +81,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_04
-      description: Create Search Device Type with Only PaginationCriteria
+      description: Validate that device types can be searched successfully using only pagination criteria without filters
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -103,7 +103,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_05
-      description: Create Search Device Type
+      description: Validate that device types can be searched successfully with valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -138,7 +138,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_with_missing_columnName:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_06
-      description: Create Search Device Type while keeping columnName parameter as empty
+      description: Validate that searching device types fails when the sort column name is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -173,7 +173,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_with_missing_type:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_07
-      description: Create Search Device Type while keeping Type parameter as empty
+      description: Validate that searching device types fails when the sort type ascending is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -208,7 +208,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_with_invalid_sort_type:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_08
-      description: Create Search Device Type while keeping sortType parameter as invalid
+      description: Validate that searching device types fails when an invalid sort type is provided
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -243,7 +243,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_with_missing_sort_type:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_09
-      description: Create Search Device Type while keeping sortType parameter as empty
+      description: Validate device type search with missing sortType parameter
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -278,7 +278,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_with_invalid_sort_field:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_10
-      description: Create Search Device Type while keeping sortField parameter as invalid
+      description: Validate that searching device types fails an error when an invalid sortField is provided
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType
@@ -313,7 +313,7 @@ createSearchDeviceType:
    Pms_SearchDeviceType_with_missing_sort_field:
       endPoint: /v1/partnermanager/devicedetail/deviceType/search
       uniqueIdentifier: TC_PMS_createSearchDeviceType_11
-      description: Create Search Device Type while keeping sortField parameter as empty
+      description: Validate device type search behavior when the sortField parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceType/createSearchDeviceType

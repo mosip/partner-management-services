@@ -2,7 +2,7 @@ UpdateNotificationSeenTimestamp:
    Pms_UpdateNotificationSeenTimestamp_All_Valid_Smoke:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestamp_01
-      description: Update Notification Seen Timestamp with valid details
+      description: Validate that updating the Notification Seen Timestamp with all valid inputs is successful and the changes are reflected correctly
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: put

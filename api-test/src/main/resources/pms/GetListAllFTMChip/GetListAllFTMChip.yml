@@ -2,7 +2,7 @@ GetListAllFTMChip:
    Pms_GetListAllFTMChip_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChip_01
-      description: Retrieve all FTM chip details with valid details
+      description: Validate that the list of all FTM chips is successfully retrieved with valid inputs
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get

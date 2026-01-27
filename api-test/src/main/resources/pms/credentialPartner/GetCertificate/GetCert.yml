@@ -2,7 +2,7 @@ GetPartnerCert:
    Pms_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       uniqueIdentifier: TC_PMS_getOnlineVerificationPartnerCert_01
-      description: Retreive Partner certificate
+      description: Validate that partner certificates are retrieved successfully when all inputs are valid
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadcredentialPartnerCert_01

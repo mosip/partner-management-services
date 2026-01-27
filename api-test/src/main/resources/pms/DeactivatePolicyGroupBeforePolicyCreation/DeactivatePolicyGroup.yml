@@ -2,7 +2,7 @@ DeactivatePolicyGroupBeforePolicyCreation:
    Pms_DeactivatePolicyGroupBeforePolicyCreation_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_DeactivatePolicyGroupBeforePolicyCreation_01      
-      description: Deactivate Policy Group before policy is created
+      description: Validate that a policy group can be successfully deactivated before any policies are created within it
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch

@@ -2,7 +2,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_MispPartner_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp__01
-      description: Create MISP Partner Self Registration
+      description: Validate that a MISP partner can successfully complete self registration with all required valid inputs as part of a smoke test
       role: partner
       restMethod: post
       inputTemplate: pms/mispPartner/CreatePartner/createPartner
@@ -24,7 +24,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_MispLicense_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp_02
-      description: Create MISP Partner Self Registration for Misp License
+      description: Validate that a MISP license can be successfully registered through partner self registration with all required valid inputs as part of a smoke test
       role: partner
       restMethod: post
       inputTemplate: pms/mispPartner/CreatePartner/createPartner
@@ -47,7 +47,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_MispLicense_Msip_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_misp_03
-      description: Create MISP Partner Self Registration for Misp License
+      description: Validate that a MISP license can be successfully registered via MSIP through partner self registration as part of a smoke test
       role: partner
       restMethod: post
       inputTemplate: pms/mispPartner/CreatePartner/createPartner

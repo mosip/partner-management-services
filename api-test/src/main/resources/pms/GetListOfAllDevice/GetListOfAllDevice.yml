@@ -1,9 +1,8 @@
 GetListOfAllDevice:
    Pms_GetListOfAllDevice_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
-      description: Fetching all the active SBI
+      description: Validate that the list of all devices is successfully retrieved with valid inputs
       uniqueIdentifier: TC_PMS_devicedetails_01      
-      description: Fetching list of all the devices
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -16,7 +15,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_without_Authentication:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_devicedetails_02      
-      description: Fetching list of all the devices without authentication
+      description: Validate that retrieving the list of all devices fails without authentication
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -34,7 +33,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_invalid_token:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_devicedetails_03 
-      description: Fetching list of all the devices with invalid token
+      description: Validate that retrieving the list of all devices fails with an invalid token
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -52,7 +51,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_pagesize_specified:
       endPoint: /v1/partnermanager/devicedetail?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_devicedetails_04      
-      description: Fetching list of all the devices with pagesize specified
+      description: Validate that the list of all devices is retrieved successfully when a page size is specified
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -79,7 +78,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_negative_pageno:
       endPoint: /v1/partnermanager/devicedetail?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_devicedetails_05 
-      description: Fetching list of all the devices with negative pageno
+      description: Validate that device list retrieval fails when a negative page number is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -111,7 +110,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_negative_pagesize:
       endPoint: /v1/partnermanager/devicedetail?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_devicedetails_06 
-      description: Fetching list of all the devices with negative pageSize
+      description: Validate that device list retrieval fails when a negative page size is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -143,7 +142,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_status_rejected:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_07      
-      description: Fetching list of all the devices with status as rejected
+      description: Validate that devices with status Rejected are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -170,7 +169,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_status_approved:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_08      
-      description: Fetching list of all the devices with status as approved
+      description: Validate that devices with status Approved are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -197,7 +196,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_status_deactivated:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_09      
-      description: Fetching list of all the devices with status as deactivated
+      description: Validate that devices with status Deactivated are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -224,7 +223,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_status_pending_approval:
       endPoint: /v1/partnermanager/devicedetail?status={status}
       uniqueIdentifier: TC_PMS_devicedetails_10      
-      description: Fetching list of all the devices with status as pending_approval
+      description: Validate that devices with status Pending Approval are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -251,7 +250,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_partnerid:
       endPoint: /v1/partnermanager/devicedetail?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_devicedetails_11      
-      description: Fetching list of all the devices with partnerid value given as 'a'
+      description: Validate that devices are successfully retrieved when filtered by a valid partnerId
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -278,7 +277,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_with_orgName:
       endPoint: /v1/partnermanager/devicedetail?orgName={orgName}
       uniqueIdentifier: TC_PMS_devicedetails_25     
-      description: Fetching list of all the devices with orgName value given as '1'
+      description: Validate that devices are successfully retrieved when filtered by a valid orgName
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -305,7 +304,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_invalid_sorttype:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_12      
-      description: Fetching list of all the devices with invalid sorttype
+      description: Validate that device list retrieval fails when an invalid sortType is provided
       role: partneradmin
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -336,7 +335,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_sorttype_asc:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}
       uniqueIdentifier: TC_PMS_devicedetails_13      
-      description: Fetching list of all the devices with sorttype as 'asc'
+      description: Validate that devices are successfully retrieved in ascending order when sorted by a valid sortType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -368,7 +367,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_sorttype_desc:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_14     
-      description: Fetching list of all the devices with sorttype as 'desc'
+      description: Validate that devices are successfully retrieved in descending order when sorted by a valid sortType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -395,7 +394,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_sbiversion_given:
       endPoint: /v1/partnermanager/devicedetail?sbiVersion={sbiVersion}
       uniqueIdentifier: TC_PMS_devicedetails_15     
-      description: Fetching list of all the devices with sbiVersion given as 'abcd'
+      description: Validate that devices are successfully retrieved when filtered by a valid SBI version
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -422,7 +421,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_invalid_sortfield_Neg:
       endPoint: /v1/partnermanager/devicedetail?sortType={sortType}&sortFieldName={sortFieldName}
       uniqueIdentifier: TC_PMS_devicedetails_16      
-      description: Fetching list of all the devices with invalid sortFieldName
+      description: Validate that device list retrieval fails when an invalid sortField is provided
       role: partneradmin
       restMethod: get
       inputTemplate: pms/GetListOfAllDevice/getListOfAllDevice
@@ -453,7 +452,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_deviceType_given:
       endPoint: /v1/partnermanager/devicedetail?deviceType={deviceType}
       uniqueIdentifier: TC_PMS_devicedetails_17     
-      description: Fetching list of all the devices with deviceType given as 'i'
+      description: Validate that devices are successfully retrieved when filtered by a valid deviceType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -480,7 +479,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_deviceSubType_given:
       endPoint: /v1/partnermanager/devicedetail?deviceSubType={deviceSubType}
       uniqueIdentifier: TC_PMS_devicedetails_18     
-      description: Fetching list of all the devices with deviceSubType given as 'i'
+      description: Validate that devices are successfully retrieved when filtered by a valid deviceSubType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -507,7 +506,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_make_given:
       endPoint: /v1/partnermanager/devicedetail?make={make}
       uniqueIdentifier: TC_PMS_devicedetails_19     
-      description: Fetching list of all the devices with make given as '3'
+      description: Validate that devices are successfully retrieved when filtered by a valid make
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -534,7 +533,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_model_given:
       endPoint: /v1/partnermanager/devicedetail?model={model}
       uniqueIdentifier: TC_PMS_devicedetails_20     
-      description: Fetching list of all the devices with model given as '4'
+      description: Validate that devices are successfully retrieved when filtered by a valid model
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -561,7 +560,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_sbiId_given:
       endPoint: /v1/partnermanager/devicedetail?sbiId={sbiId}
       uniqueIdentifier: TC_PMS_devicedetails_21     
-      description: Fetching list of all the devices with sbiId given as 'q'
+      description: Validate that devices are successfully retrieved when filtered by a valid SBI ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -588,7 +587,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_deviceId_given:
       endPoint: /v1/partnermanager/devicedetail?deviceId={deviceId}
       uniqueIdentifier: TC_PMS_devicedetails_22     
-      description: Fetching list of all the devices with deviceId given as '9'
+      description: Validate that a device is successfully retrieved when filtered by a valid device ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -615,7 +614,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_multiple_attribute_values_given:
       endPoint: /v1/partnermanager/devicedetail?make={make}&model={model}
       uniqueIdentifier: TC_PMS_devicedetails_23    
-      description: Fetching list of all the devices with make and model is given
+      description: Validate that devices are successfully retrieved when filtered using multiple attribute values
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -642,7 +641,7 @@ GetListOfAllDevice:
    Pms_GetListOfAllDevice_deviceId_random_value_given:
       endPoint: /v1/partnermanager/devicedetail?deviceId={deviceId}
       uniqueIdentifier: TC_PMS_devicedetails_24     
-      description: Fetching list of all the devices with random value given for deviceid
+      description: Validate that device retrieval fails when a random or invalid device ID is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get

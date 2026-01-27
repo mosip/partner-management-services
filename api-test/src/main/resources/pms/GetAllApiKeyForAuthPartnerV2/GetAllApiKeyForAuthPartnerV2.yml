@@ -1,7 +1,7 @@
 GetAllApiKeyForAuthPartnerV2:
    Pms_GetAllApiKeyForAuthPartnerV2_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key created by Authentication Partner by Partner Admin token
+      description: Validate that all API keys are successfully retrieved for an authenticated partner using the V2 API with valid inputs
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_01
       checkErrorsOnlyInResponse: true
@@ -15,7 +15,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Auth_Partner_Token_Smoke:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key created by Authentication Partner
+      description: Validate that all API keys are successfully retrieved for an authenticated partner using a partner token
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_02
       checkErrorsOnlyInResponse: true
@@ -29,7 +29,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_apiKeyLabel:
       endPoint: /v1/partnermanager/partner-api-keys/v2?apiKeyLabel=s
-      description: Fetching all the API Key created by Authentication Partner Filter by apiKeyLabel
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by API key label
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_03
       checkErrorsOnlyInResponse: true
@@ -43,7 +43,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_orgName:
       endPoint: /v1/partnermanager/partner-api-keys/v2?orgName=PMS
-      description: Fetching all the API Key created by Authentication Partner Filter by orgName
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by organization name
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_04
       checkErrorsOnlyInResponse: true
@@ -57,7 +57,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_ByPageNo:
       endPoint: /v1/partnermanager/partner-api-keys/v2?pageNo=2&pageSize=4
-      description: Fetching all the API Key created by Authentication Partner Filter by pageNo
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by page number
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_05
       checkErrorsOnlyInResponse: true
@@ -71,7 +71,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_pageSize:
       endPoint: /v1/partnermanager/partner-api-keys/v2?orgName=PMS
-      description: Fetching all the API Key created by Authentication Partner Filter by pageSize
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by page size
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_06
       checkErrorsOnlyInResponse: true
@@ -85,7 +85,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_partnerID:
       endPoint: /v1/partnermanager/partner-api-keys/v2?partnerId=pms-111999
-      description: Fetching all the API Key created by Authentication Partner Filter by partnerId
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by partner ID
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_07
       checkErrorsOnlyInResponse: true
@@ -99,7 +99,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_policyGroupName:
       endPoint: /v1/partnermanager/partner-api-keys/v2?policyGroupName=mosip
-      description: Fetching all the API Key created by Authentication Partner Filter by policyGroupName
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by policy group name
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_08
       checkErrorsOnlyInResponse: true
@@ -113,7 +113,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_policyName:
       endPoint: /v1/partnermanager/partner-api-keys/v2?policyName=mosip
-      description: Fetching all the API Key created by Authentication Partner Filter by policyName
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by policy name
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_09
       checkErrorsOnlyInResponse: true
@@ -127,7 +127,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_sortFieldName_sortType_ASC:
       endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=partnerId&sortType=asc&pageNo=0&pageSize=4
-      description: Fetching all the API Key created by Authentication Partner Filter by sortFieldName and sortType Ascending
+      description: Validate that API keys are successfully retrieved for an authenticated partner and sorted in ascending order based on the specified field
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_10
       checkErrorsOnlyInResponse: true
@@ -141,7 +141,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_sortFieldName_sortType_DESC:
       endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=partnerId&sortType=desc&pageNo=0&pageSize=4
-      description: Fetching all the API Key created by Authentication Partner Filter by sortFieldName and sortType Descending
+      description: Validate that API keys are successfully retrieved for an authenticated partner and sorted in descending order based on the specified field
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_11
       checkErrorsOnlyInResponse: true
@@ -155,7 +155,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_Status_Activated:
       endPoint: /v1/partnermanager/partner-api-keys/v2?status=activated
-      description: Fetching all the API Key created by Authentication Partner Filter by Status Activated
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by status Activated
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_12
       checkErrorsOnlyInResponse: true
@@ -169,7 +169,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_Status_Dectivated:
       endPoint: /v1/partnermanager/partner-api-keys/v2?status=deactivated
-      description: Fetching all the API Key created by Authentication Partner Filter by Status Deactivated
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered by status Deactivated
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_13
       checkErrorsOnlyInResponse: true
@@ -183,7 +183,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_Expiry_Period_30_days:
       endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=30
-      description: Fetching all the API Key created by Authentication Partner Filter by Expiry period 30 days
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered for keys expiring within the next 30 days
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_14
       checkErrorsOnlyInResponse: true
@@ -197,7 +197,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_Expiry_Period_15_days:
       endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=15
-      description: Fetching all the API Key created by Authentication Partner Filter by Expiry period 15 days
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered for keys expiring within the next 15 days
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_15
       checkErrorsOnlyInResponse: true
@@ -211,7 +211,7 @@ GetAllApiKeyForAuthPartnerV2:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_Expiry_Period_10_days:
       endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=10
-      description: Fetching all the API Key created by Authentication Partner Filter by Expiry period 10 days
+      description: Validate that API keys are successfully retrieved for an authenticated partner when filtered for keys expiring within the next 10 days
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2_16
       checkErrorsOnlyInResponse: true

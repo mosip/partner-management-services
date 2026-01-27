@@ -2,7 +2,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_All_Valid_Smoke:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_01
-    description: Fetching OIDC Client details using a valid access token
+    description: Validate that retrieving OIDC client details succeeds for all valid clients
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -15,7 +15,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_LoggedIn_Users_With_Partner_Admin_Role:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_02
-    description: Fetching OIDC Client details using a valid access token of partner admin role
+    description: Validate that retrieving OIDC client details succeeds for users logged in with the Partner Admin role
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -28,7 +28,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_Using_PartnerId:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_03
-    description: Fetching OIDC Client details using a valid access token and partnerId
+    description: Validate that OIDC client details can be retrieved using a valid Partner ID
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -51,7 +51,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_Using_PolicyId:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_04
-    description: Fetching OIDC Client details using a valid access token and policyId
+    description: Validate that OIDC client details can be retrieved using a valid Policy ID
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -74,7 +74,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_Using_ClientName_And_SortType_Asc:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_05
-    description: Fetching OIDC Client details using ClientName and SortType as ASC
+    description: Validate that OIDC client details can be retrieved and sorted in ascending order by client name
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -97,7 +97,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_With_Status_Active:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_06
-    description: Fetching OIDC Client details With Active Status
+    description: Validate that only OIDC clients with an active status are retrieved successfully
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -120,7 +120,7 @@ GetOIDCClientV2:
   Pms_GetOIDCClientV2_With_Status_Inactive:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2_07
-    description: Fetching OIDC Client details With Inactive Status
+    description: Validate that only OIDC clients with an inactive status are retrieved successfully
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true

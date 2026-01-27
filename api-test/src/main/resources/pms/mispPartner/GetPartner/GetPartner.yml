@@ -2,7 +2,7 @@ GetPartnerCert:
    Pms_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_getPartnerCert_01
-      description: Retrieve Misp Partner details
+      description: Validate that partner details are retrieved successfully with all required valid parameters as part of a smoke test
       role: partner
       restMethod: get
       inputTemplate: pms/mispPartner/GetPartner/getPartner
@@ -17,7 +17,7 @@ GetPartnerCert:
    Pms_GetPartner_MISP3_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_getPartnerCert_02
-      description: Retrieve Misp Partner details with valid PartnerId
+      description: Validate that MISP3 partner details are retrieved successfully with all required valid parameters, as part of a smoke test
       role: partner
       restMethod: get
       inputTemplate: pms/mispPartner/GetPartner/getPartner

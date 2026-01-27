@@ -2,7 +2,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_01
-      description: Create MISP Partner Self Registration
+      description: Validate that a MISP partner is successfully registered with all required valid inputs as part of a smoke test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -28,7 +28,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_Empty_PolicyGroup_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_02
-      description: Create MISP Partner Self Registration Empty Policy group
+      description: Validate that the API returns an error when attempting to register a MISP partner with an empty policy group
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -54,7 +54,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_03
-      description: Create MISP Partner Self Registration without Policy group
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner without providing a policy group as part of a smoke test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -79,7 +79,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_Max_AddressField_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_04
-      description: Create MISP Partner Self Registration with maximum 2000 words in Address field
+      description: Validate that a MISP partner can be successfully registered when the address field contains the maximum allowed number of characters
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -105,7 +105,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_Max_Contact_number_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_05
-      description: Create MISP Partner Self Registration with maximum 16 numbers in contactNumber field
+      description: Validate that a MISP partner can be successfully registered when the contact number field contains the maximum allowed digits
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -131,7 +131,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_Max_EmailID_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_06
-      description: Create MISP Partner Self Registration with maximum 254 email id
+      description: Validate that a MISP partner can be successfully registered when the email ID field contains the maximum allowed characters
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -157,7 +157,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_valid_langcode_Arabic_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_07
-      description: Create MISP Partner Self Registration with lang code arabic
+      description: Validate that a MISP partner can be successfully registered when the language code is set to Arabic
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -183,7 +183,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_With_Not_Uploading_Certificate_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_08
-      description: Create MISP Partner Self Registration Without Uploading Certificate
+      description: Validate that the API handles MISP partner registration successfully even when the certificate is not uploaded as part of a smoke test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -209,7 +209,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_09
-      description: Create MISP Partner Self Registration Without Policy Id
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner without providing a policy ID as part of a smoke test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner

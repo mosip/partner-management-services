@@ -2,7 +2,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_01
-      description: Verify Partners Email
+      description: Validate that verifying a partner’s email with all valid inputs is successful
       role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -18,7 +18,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_02
-      description: Verify Partners Email
+      description: Validate that verifying a Device Provider partner’s email with all valid inputs is successful
       role: partnerdevice
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -34,7 +34,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Device_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_03
-      description: Verify Partners Email
+      description: Validate that verifying a Device Provider partners email with all valid inputs is successful
       role: partnerauth
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -49,7 +49,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_without_auth_neg:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_04
-      description: Verify Partners Email
+      description: Validate that verifying a partners email fails when authentication is not provided
       role: invalidtoken
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
@@ -69,7 +69,7 @@ VerifyPartnersEmail:
       endPoint: /v1/partnermanager/partners/email/verify
       role: partnerauth
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_05
-      description: Verify Partners Email
+      description: Validate that verifying a partner’s email fails when the email parameter is missing
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -89,7 +89,7 @@ VerifyPartnersEmail:
       endPoint: /v1/partnermanager/partners/email/verify
       role: partnerauth
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_06
-      description: Verify Partners Email
+      description: Validate that verifying a partners email fails when an invalid email is provided
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail
       outputTemplate: pms/error
@@ -108,7 +108,7 @@ VerifyPartnersEmail:
    Pms_VerifyPartnersEmail_Ftm_Provider_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/email/verify
       uniqueIdentifier: TC_PMS_VerifyPartnersEmail_07
-      description: Verify Partners Email
+      description: Validate that verifying an FTM Provider partners email with all valid inputs is successful
       role: partnerftm
       restMethod: put
       inputTemplate: pms/VerifyPartnersEmail/verifyPartnersEmail

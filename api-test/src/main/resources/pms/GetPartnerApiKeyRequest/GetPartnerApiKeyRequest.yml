@@ -2,7 +2,7 @@ GetPartnerApiKeyRequest:
    Pms_GetPartnerApiKeyRequest_InValid_partnerId_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/request
       uniqueIdentifier: TC_PMS_GetPartnerApiKeyRequest_01
-      description: Retrieve ApiKeyRequests for Partner while keeping invalid PartnerId
+      description: Validate that retrieving API key requests fails when an invalid partner ID is provided
       role: partner
       restMethod: get
       inputTemplate: pms/GetPartnerApiKeyRequest/getPartnerApiKeyRequest

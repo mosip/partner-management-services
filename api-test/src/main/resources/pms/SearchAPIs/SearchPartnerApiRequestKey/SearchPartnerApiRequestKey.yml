@@ -2,7 +2,7 @@ SearchPartnerApiRequestKey:
    Pms_SearchPartnerApiRequestKey_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiRequestKey_01
-      description: Create Search Partner API Request Key with valid data
+      description: Validate that searching Partner API Request Keys with all valid inputs returns the expected results successfully
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -19,7 +19,7 @@ SearchPartnerApiRequestKey:
    Pms_SearchPartnerApiRequestKey_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiRequestKey_02
-      description: Create Search Partner API Request Key with Only FilterCriteria
+      description: Validate that searching Partner API Request Keys using only filter criteria returns the expected results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -43,7 +43,7 @@ SearchPartnerApiRequestKey:
    Pms_SearchPartnerApiRequestKey_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiRequestKey_03
-      description: Create Search Partner API Request Key with Only SortCriteria
+      description: Validate that searching Partner API Request Keys using only sort criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -66,7 +66,7 @@ SearchPartnerApiRequestKey:
    Pms_SearchPartnerApiRequestKey_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiRequestKey_04
-      description: Create Search Partner API Request Key with Only PaginationCriteria
+      description: Validate that searching Partner API Request Keys using only pagination criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -83,7 +83,7 @@ SearchPartnerApiRequestKey:
    Pms_SearchPartnerApiRequestKey_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/apikey/request/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiRequestKey_05
-      description: Create Search Partner API Request Key while keeping Type parameter as contains and filter data in ascending order
+      description: Validate that searching Partner API Request Keys with type containing a value sorted ascending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -109,7 +109,7 @@ SearchPartnerApiRequestKey:
    Pms_SearchPartnerApiRequestKey_type_contains_invalid_pagination:
       endPoint: /v1/partnermanager/partners/apikey/request/search
       uniqueIdentifier: TC_PMS_SearchPartnerApiRequestKey_06
-      description: Create Search Partner API Request Key while keeping Type parameter as contains and invalid pagination
+      description: Validate that searching Partner API Request Keys with type containing a value and invalid pagination parameters returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerApiRequestKey/searchPartnerApiRequestKey
