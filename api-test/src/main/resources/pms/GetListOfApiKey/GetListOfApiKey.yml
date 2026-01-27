@@ -2,7 +2,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partner-api-keys
       uniqueIdentifier: TC_PMS_GetListOfApiKey_01
-      description: Fetching all the API Keys
+      description: Validate that the list of all API keys is successfully retrieved with valid inputs
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -15,7 +15,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_without_authentication_Neg:
       endPoint: /v1/partnermanager/partner-api-keys
       uniqueIdentifier: TC_PMS_GetListOfApiKey_02
-      description: Fetching the API Keys without authentication
+      description: Validate that API key list retrieval fails without authentication
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -33,7 +33,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_individual_partner_Neg:
       endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_03
-      description: Fetching the API Keys with individual partner
+      description: Validate that API key list retrieval fails when accessed using an individual partner token
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -60,7 +60,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_invalid_pageSize:
       endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_04
-      description: Fetching the API Keys with pageSize
+      description: Validate that API key list retrieval fails when an invalid page size is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -87,7 +87,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_negative_pageNo_Neg:
       endPoint: /v1/partnermanager/partner-api-keys?pageNo={pageNo}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_05
-      description: Fetching the API Keys with negative pageNo
+      description: Validate that API key list retrieval fails when a negative page number is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -114,7 +114,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_negative_pageSize_Neg:
       endPoint: /v1/partnermanager/partner-api-keys?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_06
-      description: Fetching the API Keys with negative pageSize
+      description: Validate that API key list retrieval fails when a negative page size is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -141,7 +141,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_status_activated:
       endPoint: /v1/partnermanager/partner-api-keys?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_07
-      description: Fetching the API Keys with status activated
+      description: Validate that API keys with status Activated are successfully retrieved
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -163,7 +163,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_status_deactivated:
       endPoint: /v1/partnermanager/partner-api-keys?status={status}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_08
-      description: Fetching the API Keys with status deactivated
+      description: Validate that API keys with status Deactivated are successfully retrieved
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -185,7 +185,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_partial_partnerId_value:
       endPoint: /v1/partnermanager/partner-api-keys?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_09
-      description: Fetching the API Keys on passing partial partnerId value
+      description: Validate that API key retrieval fails or returns no results when filtered with a partial partnerId value
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -208,7 +208,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_partial_policyGroupName_value:
       endPoint: /v1/partnermanager/partner-api-keys?policyGroupName={policyGroupName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_10
-      description: Fetching the API Keys on passing partial policyGroupName value
+      description: Validate that API key retrieval fails or returns no results when filtered with a partial policyGroupName value
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -230,7 +230,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_invalid_sortType_Neg:
       endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_11
-      description: Fetching the API Keys with invalid sortType
+      description: Validate that API key list retrieval fails when an invalid sort type is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -257,7 +257,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_valid_ascending_sortType:
       endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}&sortFieldName=partnerId&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_12
-      description: Fetching the API Keys with ascending sortType
+      description: Validate that API keys are successfully retrieved in ascending order when a valid sort type is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -279,7 +279,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_valid_descending_sortType:
       endPoint: /v1/partnermanager/partner-api-keys?sortType={sortType}&sortFieldName=orgName&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_13
-      description: Fetching the API Keys with ascending sortType
+      description: Validate that API keys are successfully retrieved in descending order when a valid sort type is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -301,7 +301,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_partial_orgName_value:
       endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_14
-      description: Fetching the API Keys with partial orgName value
+      description: Validate that API key retrieval fails or returns no results when filtered with a partial orgName value
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -323,7 +323,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_partial_policyName_value:
       endPoint: /v1/partnermanager/partner-api-keys?policyName={policyName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_15
-      description: Fetching the API Keys with partial policyName values
+      description: Validate that API key retrieval fails or returns no results when filtered with a partial policyName value
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -345,7 +345,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_partial_apiKeyLabel_value:
       endPoint: /v1/partnermanager/partner-api-keys?apiKeyLabel={apiKeyLabel}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_16
-      description: Fetching the API Keys with partial apiKeyLabel values
+      description: Validate that API key retrieval fails or returns no results when filtered with a partial apiKeyLabel value
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -367,7 +367,7 @@ GetListOfApiKey:
    Pms_GetListOfApiKey_with_random_data:
       endPoint: /v1/partnermanager/partner-api-keys?orgName={orgName}
       uniqueIdentifier: TC_PMS_GetListOfApiKey_17
-      description: Fetching the API Keys with random values given to a valid parameter
+      description: Validate that API key retrieval fails or returns no results when filtered with random data
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get

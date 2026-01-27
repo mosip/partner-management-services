@@ -2,7 +2,7 @@ DeactivateMISPPartner:
   Pms_DeactivateMISPPartner:
       endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_DeactivateMISPPartner_01
-      description: Update the status as Deactivated of MISP Partner
+      description: Validate that the MISP partner is successfully deactivated with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch

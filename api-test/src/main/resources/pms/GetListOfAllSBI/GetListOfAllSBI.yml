@@ -2,7 +2,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_03      
-      description: Fetching all the active SBI
+      description: Validate that all SBIs are successfully retrieved when a valid SBI ID is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -15,7 +15,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_status_rejected:
       endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_33     
-      description: Fetching all the active SBI with status as rejected
+      description: Validate that SBIs with status Rejected are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -40,7 +40,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_status_approved_sid:
       endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_32      
-      description: Fetching all the active SBI with status as approved
+      description: Validate that SBIs with status Approved are successfully retrieved when filtered by a valid SBI ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -65,7 +65,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_status_deactivated:
       endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_31      
-      description: Fetching all the active SBI with status as deactivated
+      description: Validate that SBIs with status Deactivated are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -90,7 +90,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_status_pending_approval_sid:
       endPoint: /v1/partnermanager/securebiometricinterface?status={status}
       uniqueIdentifier: TC_PMS_SBI_List_30     
-      description: Fetching all the active SBI with status as pending_approval
+      description: Validate that SBIs with status Pending Approval are successfully retrieved when filtered by a valid SBI ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -115,7 +115,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_sbiExpiryStatus_expired:
       endPoint: /v1/partnermanager/securebiometricinterface?sbiExpiryStatus={sbiExpiryStatus}
       uniqueIdentifier: TC_PMS_SBI_List_29      
-      description: Fetching all the active SBI with sbiExpiryStatus as expired
+      description: Validate that SBIs with expiry status Expired are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -140,7 +140,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_sbiExpiryStatus_valid:
       endPoint: /v1/partnermanager/securebiometricinterface?sbiExpiryStatus={sbiExpiryStatus}
       uniqueIdentifier: TC_PMS_SBI_List_28      
-      description: Fetching all the active SBI with sbiExpiryStatus as vaild
+      description: Validate that SBIs with expiry status Valid are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -165,7 +165,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_orgName_valid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_14      
-      description: Fetching all the active SBI with orgName contains '1'
+      description: Validate that SBIs are successfully retrieved when filtered by a valid orgName
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -190,7 +190,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_partnerId_valid_sid:
       endPoint: /v1/partnermanager/securebiometricinterface?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_SBI_List_27      
-      description: Fetching all the active SBI with partnerId contains 'p'
+      description: Validate that SBIs are successfully retrieved when filtered by a valid partnerId and SBI ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -217,7 +217,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_sortType_ASC:
       endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_25      
-      description: Fetching all the active SBI with ASC
+      description: Validate that SBIs are successfully retrieved in ascending order when sorted by a valid sortType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -243,7 +243,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_sortType_DESC:
       endPoint: /v1/partnermanager/securebiometricinterface?sortType={sortType}&sortFieldName={sortFieldName}&pageNo={pageNo}&pageSize={pageSize}
       uniqueIdentifier: TC_PMS_SBI_List_17      
-      description: Fetching all the active SBI with sbiVersion
+      description: Validate that SBIs are successfully retrieved in descending order when sorted by a valid sortType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -269,7 +269,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_random_value_given_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_18      
-      description: Fetching all the active SBI with random value for partnerId
+      description: Validate that SBI retrieval fails when a random or invalid SBI ID is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -294,7 +294,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_sbiVersion_given:
       endPoint: /v1/partnermanager/securebiometricinterface?sbiVersion={sbiVersion}
       uniqueIdentifier: TC_PMS_SBI_List_26   
-      description: Fetching all the active SBI with sbiVersion
+      description: Validate that SBIs are successfully retrieved when filtered by a valid SBI version
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -319,7 +319,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_pagesize_given_valid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_20      
-      description: Fetching all the active SBI with pageSize specified
+      description: Validate that SBIs are successfully retrieved when a valid page size is specified
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -344,7 +344,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_Partner_device_token:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_21    
-      description: Fetching all the SBI details with Parter device token
+      description: Validate that SBIs are successfully retrieved for a partner when a valid device token is provided
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -357,7 +357,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid:
       endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
       uniqueIdentifier: TC_PMS_SBI_List_22
-      description: Fetching all the SBI details filter by Expiry period 30 days
+      description: Validate that SBIs expiring within 30 days are successfully retrieved when filtered by a valid SBI ID
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -382,7 +382,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_Filter_Expiry_Period_15_days:
       endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
       uniqueIdentifier: TC_PMS_SBI_List_23
-      description: Fetching all the SBI details filter by Expiry period 15 days
+      description: Validate that SBIs expiring within 15 days are successfully retrieved
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -407,7 +407,7 @@ GetListOfAllSBI:
    Pms_GetListOfAllSBI_Filter_Expiry_Period_10_days:
       endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
       uniqueIdentifier: TC_PMS_SBI_List_24
-      description: Fetching all the SBI details filter by Expiry period 10 days
+      description: Validate that SBIs expiring within 10 days are successfully retrieved
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get

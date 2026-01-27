@@ -2,7 +2,7 @@ UpdateFtpChipDetail:
    Pms_UpdateFtpChipDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_UpdateFtpChipDetail_01
-      description: Update FTP Chip detail for Partner with valid details
+      description: Validate that updating FTM Chip details with all valid inputs is successful and the changes are reflected correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -20,7 +20,7 @@ UpdateFtpChipDetail:
    Pms_UpdateFtpChipDetail_Missing_InputParameter_ftpChipDetailId:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_UpdateFtpChipDetail_02
-      description: Update FTP Chip detail for Partner while keeping ftpChipDetailId parameter as missing
+      description: Validate that updating FTM Chip details fails when the ftpChipDetailId parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/UpdateFtpChipDetail/updateFtpChipDetail

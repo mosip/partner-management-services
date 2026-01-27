@@ -2,7 +2,7 @@ GetUserConsent:
    Pms_GetUserConsent_allValid_smoke:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_01
-      description: Retrieve the PMS GetUserConsent for All Valid Smoke
+      description: Validate that all user consent records are retrieved successfully for a valid request
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -16,7 +16,7 @@ GetUserConsent:
    Pms_GetUserConsent_Get_consent_status_without_access_token_neg:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_02
-      description: Retrieve the PMS GetUserConsent Status Without an Access Token and Expecting an Error in The Response
+      description: Validate that retrieving user consent status fails when no access token is provided
       role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent
@@ -33,7 +33,7 @@ GetUserConsent:
    Pms_GetUserConsent_Get_consent_status_invalid_user_neg:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_03
-      description: Retrieve the PMS GetUserConsent Status for invalid User and Expecting an Error in The Response
+      description: Validate that retrieving user consent status fails when an invalid user ID is provided
       role: partnerauthexternal
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent
@@ -50,7 +50,7 @@ GetUserConsent:
    Pms_GetUserConsent_Get_consent_status_invalid_auth_token_neg:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_04
-      description: Retrieve PMS GetUserConsent Status with an Invalid Auth Token
+      description: Validate that retrieving user consent status fails when an invalid token is provided
       role: ftm
       restMethod: get
       inputTemplate: pms/GetUserConsent/GetUserConsent

@@ -2,7 +2,7 @@ GetApiKeyRequests:
    Pms_GetApiKeyRequests_allValid_smoke:
       endPoint: /v1/partnermanager/partners/apikey
       uniqueIdentifier: TC_PMS_GetApiKeyRequests_01
-      description: Retrieve ApiKeyRequests for Partner
+      description: Validate that all API key requests are successfully retrieved with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

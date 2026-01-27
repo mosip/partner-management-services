@@ -2,7 +2,7 @@ GetBioExtractors:
    Pms_GetBioExtractors_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       uniqueIdentifier: TC_PMS_GetBioExtractors_01
-      description: Retrieve Bio Extractors for Partner
+      description: Validate that all bio extractor details are successfully retrieved with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -17,7 +17,7 @@ GetBioExtractors:
    Pms_GetBioExtractors_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       uniqueIdentifier: TC_PMS_GetBioExtractors_02
-      description: Retrieve Bio Extractors for Partner while keeping invalid PartnerId
+      description: Validate that bio extractor retrieval fails no data when an invalid partnerId is provided
       role: partner
       restMethod: get
       inputTemplate: pms/GetBioExtractors/getBioExtractors

@@ -2,7 +2,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_before_certificate_upload:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_08      
-      description: Get original Auth partner certificates before certificate upload    
+      description: Validate that no partner certificates are returned if the certificates have not been uploaded yet 
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get

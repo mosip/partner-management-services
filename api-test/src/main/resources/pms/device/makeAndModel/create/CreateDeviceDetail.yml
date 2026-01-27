@@ -2,7 +2,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_01
-      description: Create Service To Save Device Details with valid details
+      description: Validate that device details are successfully saved with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -25,7 +25,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_sameMakeModelType_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_02
-      description: Create Service To Save Device Details while keeping same Make Model Type with valid details
+      description: Validate that device details are successfully saved when the make model and type are the same
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -47,7 +47,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_sameMakeModel_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_03
-      description: Create Service To Save Device Details while keeping same Make Model with valid details
+      description: Validate that device details are successfully saved when the make and model are the same
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -69,7 +69,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_sameTypeSubType_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_04
-      description: Create Service To Save Device Details while keeping same Type SubType with valid details
+      description: Validate that device details are successfully saved when the type and subtype are the same
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -91,7 +91,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_AlreadyExists_Invalid:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_05
-      description: Create Service To Save Device Details while keeping already exisits Model
+      description: Validate that saving device details fails when the device already exists
       role: partner
       restMethod: post
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
@@ -117,7 +117,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_Missing_InputParameter_DeviceId:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_06
-      description: Create Service To Save Device Details while keeping DeviceId as empty
+      description: Validate that saving device details fails when the deviceId input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
@@ -144,7 +144,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_Missing_InputParameter_deviceProviderId:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_07
-      description: Create Service To Save Device Details while keeping DeviceProviderId as empty
+      description: Validate that saving device details fails when the deviceProviderId input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
@@ -171,7 +171,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_Missing_InputParameter_deviceSubTypeCode:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_08
-      description: Create Service To Save Device Details while keeping DeviceSubTypeCode as empty
+      description: Validate that saving device details fails when the deviceSubTypeCode input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail
@@ -198,7 +198,7 @@ CreateDeviceDetail:
    Pms_ServiceToSaveDeviceDetail_Missing_InputParameter_deviceTypeCode:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToSaveDeviceDetail_09
-      description: Create Service To Save Device Details while keeping DeviceTypeCode as empty
+      description: Validate that saving device details fails when the deviceTypeCode input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/device/makeAndModel/create/createDeviceDetail

@@ -2,7 +2,7 @@ GetPartnerExpiringCertificate:
    Pms_GetPartnerExpiringCertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       role: partnerdevice
-      description: Get Partner Expiring Certificates
+      description: Validate that all partner certificates nearing expiry are retrieved successfully for a valid request
       uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_01
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -19,7 +19,7 @@ GetPartnerExpiringCertificate:
    Pms_GetPartnerExpiringCertificate_Expiry_Days_30_Smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       role: partnerdevice
-      description: Get Partner Expiring Certificate with Expiry date 30 days
+      description: Validate that partner certificates expiring within the next 30 days are retrieved successfully
       uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_02
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -36,7 +36,7 @@ GetPartnerExpiringCertificate:
    Pms_GetPartnerExpiringCertificate_Expiry_Date_15_Smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       role: partnerdevice
-      description: Get Partner Expiring Certificate with Expiry date 15 days
+      description: Validate that partner certificates expiring exactly 15 days from today are retrieved successfully
       uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_03
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -53,7 +53,7 @@ GetPartnerExpiringCertificate:
    Pms_GetPartnerExpiringCertificate_Expiry_Date_10_Smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       role: partnerdevice
-      description: Get Partner Expiring Certificate with Expiry date 10 days
+      description: Validate that partner certificates expiring exactly 10 days from today are retrieved successfully
       uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificate_04
       checkErrorsOnlyInResponse: true
       restMethod: get

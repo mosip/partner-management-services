@@ -1,7 +1,7 @@
 GetAllRequestedPolicies:
    Pms_GetAllRequestedPolicies_without_auth:
       endPoint: /v1/partnermanager/partner-policy-requests
-      description: Fetching all the Requested Policies without login token
+      description: Validate that requested policies retrieval fails when no authentication is provided
       uniqueIdentifier: TC_PMS_GetAllRequestedPolicies_01
       role: invalidtoken
       restMethod: get
@@ -18,7 +18,7 @@ GetAllRequestedPolicies:
 }'
    Pms_GetAllRequestedPolicies_invalid_auth:
       endPoint: /v1/partnermanager/partner-policy-requests
-      description: Fetching all the Requested Policies with invalid role
+      description: Validate that requested policies retrieval fails when an invalid or expired authentication token is used
       uniqueIdentifier: TC_PMS_GetAllRequestedPolicies_02
       role: invalidtoken
       restMethod: get

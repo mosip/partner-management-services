@@ -2,7 +2,7 @@ AddContact:
    Pms_AddContact_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/pms-111999/contact/add
       uniqueIdentifier: TC_PMS_AddContact_01
-      description: Create Contact details for Partner with Valid data
+      description: Validate that a new contact can be added successfully when all required inputs are provided and valid
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -21,7 +21,7 @@ AddContact:
    Pms_AddContact_Missing_InputParameter_address:
       endPoint: /v1/partnermanager/partners/pms-111999/contact/add
       uniqueIdentifier: TC_PMS_AddContact_02
-      description: Create contact details for the Partner while keeping the address parameter as missing
+      description: Validate that adding a contact fails when the address input parameter is missing
       role: partner
       restMethod: post
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01  
@@ -46,7 +46,7 @@ AddContact:
    Pms_AddContact_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners/pms-111999/contact/add
       uniqueIdentifier: TC_PMS_AddContact_03
-      description: Create contact details for the Partner while keeping the contactNumber parameter as missing
+      description: Validate that adding a contact fails when the contact number input parameter is missing
       role: partner
       restMethod: post
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
@@ -69,7 +69,7 @@ AddContact:
    Pms_AddContact_Missing_InputParameter_emailId:
       endPoint: /v1/partnermanager/partners/pms-111999/contact/add
       uniqueIdentifier: TC_PMS_AddContact_04
-      description: Create contact details for the Partner while keeping the emailID parameter as missing
+      description: Validate that adding a contact fails when the email ID input parameter is missing
       role: partner
       restMethod: post
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  

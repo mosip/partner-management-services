@@ -2,7 +2,7 @@ MISPPartnerExists:
   Pms_MISPPartnerExists_All_Valid_Smoke:
     endPoint: /v1/partnermanager/partners/exists
     uniqueIdentifier: TC_PMS_MISPPartnerExists_01
-    description: Checking MISP Partner Exists for given Partner ID and Email ID
+    description: Validate that the API successfully confirms the existence of a MISP partner when all required valid parameters are provided as part of a smoke test
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MISPPartnerV3/MISPPartnerExists/MISPPartnerExists

@@ -2,7 +2,7 @@ GetPartnerCert:
    Pms_GetPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_getOnlineVerificationPartner_01
-      description: Retreive Partner details
+      description: Validate that all partner details are successfully retrieved when valid inputs are provided
       role: partner
       restMethod: get
       inputTemplate: pms/credentialPartner/GetPartner/getPartner
@@ -18,7 +18,7 @@ GetPartnerCert:
    Pms_GetPartner_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}
       uniqueIdentifier: TC_PMS_getOnlineVerificationPartner_02
-      description: Retreive Partner details with invalid PartnerID
+      description: Validate that retrieving partner details fails when an invalid partner ID is provided
       role: partner
       restMethod: get
       inputTemplate: pms/credentialPartner/GetPartner/getPartner

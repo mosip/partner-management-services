@@ -2,7 +2,7 @@ ServiceToFilterSBI:
    Pms_ServiceToFilterSBI_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
       uniqueIdentifier: TC_PMS_ServiceToFilterSBI_01
-      description: Create ServiceToFilterSBI for Partner while keeping Type parameter as Unique
+      description: Validate that Secure Biometric Interfaces (SBI) are successfully filtered with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -21,7 +21,7 @@ ServiceToFilterSBI:
    Pms_ServiceToFilterSBI_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
       uniqueIdentifier: TC_PMS_ServiceToFilterSBI_02
-      description: Create ServiceToFilterSBI for Partner while keeping Type parameter as All
+      description: Validate that all Secure Biometric Interfaces are successfully filtered with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -40,7 +40,7 @@ ServiceToFilterSBI:
    Pms_ServiceToFilterSBI_InValid_Empty_type:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
       uniqueIdentifier: TC_PMS_ServiceToFilterSBI_03
-      description: Create ServiceToFilterSBI for Partner while keeping FilterType parameter as Empty
+      description: Validate that SBI filtering fails when the type parameter is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
@@ -64,7 +64,7 @@ ServiceToFilterSBI:
    Pms_ServiceToFilterSBI_InValid_Empty_column:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
       uniqueIdentifier: TC_PMS_ServiceToFilterSBI_04
-      description: Create ServiceToFilterSBI for Partner while keeping FilterColumn parameter as Empty
+      description: Validate that SBI filtering fails when the column parameter is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
@@ -88,7 +88,7 @@ ServiceToFilterSBI:
    Pms_ServiceToFilterSBI_InValid_type_doesnt_exist:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
       uniqueIdentifier: TC_PMS_ServiceToFilterSBI_05
-      description: Create ServiceToFilterSBI for Partner while keeping invalid values in Type parameter
+      description: Validate that SBI filtering fails when the specified type does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI
@@ -112,7 +112,7 @@ ServiceToFilterSBI:
    Pms_ServiceToFilterSBI_InValid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/securebiometricinterface/filtervalues
       uniqueIdentifier: TC_PMS_ServiceToFilterSBI_06
-      description: Create ServiceToFilterSBI for Partner while keeping invalid values in Column parameter
+      description: Validate that SBI filtering fails when the specified column does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/ServiceToFilterSBI/serviceToFilterSBI

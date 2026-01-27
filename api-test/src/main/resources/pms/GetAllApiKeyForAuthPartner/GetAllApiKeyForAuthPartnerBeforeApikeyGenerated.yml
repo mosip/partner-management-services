@@ -1,7 +1,7 @@
 GetAllApiKeyForAuthPartnerBeforeApiKeyGenerated:
    Pms_GetAllApiKeyForAuthPartner_BeforeApiKeyGenerated_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key Without Partner Register
+      description: Validate that retrieving API keys for a partner fails when no API key has been generated yet
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerBeforeApiKeyGenerated_01
       role: partnerauth
       checkErrorsOnlyInResponse: true

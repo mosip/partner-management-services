@@ -2,7 +2,7 @@ DeactivateMISPLicense:
   Pms_DeactivateMISPLicense:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPLicense_01
-    description: Deactivating the MISP Partner License using a valid access token.
+    description: Validate that the MISP license is successfully deactivated with valid inputs
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense

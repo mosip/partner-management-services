@@ -2,7 +2,7 @@ DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       role: partnerdevice
-      description: Device SubType Filter
+      description: Validate that device subtypes are successfully filtered with all valid inputs
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_01
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
@@ -29,7 +29,7 @@ DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_ColumnCode_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_02
-      description: Create DeviceSubType Filter with valid values
+      description: Validate that device subtypes are successfully filtered using the column code with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -50,7 +50,7 @@ DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_03
-      description: Create DeviceSubType Filter while keeping FilterType parameter as Empty
+      description: Validate that device subtype filtering fails when the filterType is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
@@ -74,7 +74,7 @@ DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_04
-      description: Create DeviceSubType Filter while keeping FilterColumn parameter as Empty
+      description: Validate that device subtype filtering fails when the filterColumn is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
@@ -98,7 +98,7 @@ DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_05
-      description: Create DeviceSubType Filter while keeping invalid values in Type parameter
+      description: Validate that device subtype filtering fails when the specified filter type does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter
@@ -122,7 +122,7 @@ DeviceSubTypeFilter:
    Pms_DeviceSubTypeFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceSubType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceSubTypeFilter_06
-      description: Create DeviceSubType Filter while keeping invalid values in Column parameter
+      description: Validate that device subtype filtering fails when the specified filter column does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceSubTypeFilter/DeviceSubTypeFilter

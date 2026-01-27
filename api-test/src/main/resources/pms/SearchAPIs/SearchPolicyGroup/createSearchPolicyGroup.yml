@@ -2,7 +2,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_AllValid_Smoke:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_01
-      description: Create Search Policy Group with all valid details
+      description: Validate that searching Policy Groups with all valid inputs returns the expected results successfully
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -19,7 +19,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_Only_FilterCriteria_Smoke:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_02
-      description: Create Search Policy Group with Only FilterCriteria
+      description: Validate that searching Policy Groups using only filter criteria returns the expected results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -43,7 +43,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_Only_SortCriteria_Smoke:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_03
-      description: Create Search Policy Group with Only SortCriteria
+      description: Validate that searching Policy Groups using only sort criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -66,7 +66,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_Only_PaginationCriteria_Smoke:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_04
-      description: Create Search Policy Group with Only PaginationCriteria
+      description: Validate that searching Policy Groups using only pagination criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -83,7 +83,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_type_contains_Smoke_asc_sid:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_05
-      description: Create Search Policy Group while keeping Type parameter as contains and filter data in ascending order
+      description: Validate that searching Policy Groups with type containing a value sorted ascending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -113,7 +113,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_type_contains_Smoke_desc_sid:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_06
-      description: Create Search Policy Group while keeping Type parameter as contains and filter data in descending order
+      description: Validate that searching Policy Groups with type containing a value sorted descending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -143,7 +143,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_type_equals_Smoke_desc_sid:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_07
-      description: Create Search Policy Group while keeping Type parameter as equals and filter data in descending order
+      description: Validate that searching Policy Groups with type equal to a value sorted descending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -173,7 +173,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_type_equals_Smoke_asc_sid:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_08
-      description: Create Search Policy Group while keeping Type parameter as equals and filter data in ascending order
+      description: Validate that searching Policy Groups with type equal to a value sorted ascending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -204,7 +204,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_type_startswith_Smoke_asc_sid:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_09
-      description: Create Search Policy Group while keeping Type parameter as startswith and filter data in ascending order
+      description: Validate that searching Policy Groups with type starting with a value sorted ascending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -234,7 +234,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_type_startswith_Smoke_desc_sid:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_10
-      description: Create Search Policy Group while keeping Type parameter as startswith and filter data in descending order
+      description: Validate that searching Policy Groups with type starting with a value sorted descending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -264,7 +264,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_columnname_id_desc_smoke:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_11
-      description: Create Search Policy Group while keeping columnName parameter as id and filter data in descending order
+      description: Validate that searching Policy Groups sorted by id in descending order returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -294,7 +294,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_columnname_id_asc_smoke:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_12
-      description: Create Search Policy Group while keeping columnName parameter as id and filter data in ascending order
+      description: Validate that searching Policy Groups sorted by id in ascending order returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -325,7 +325,7 @@ createSearchPolicyGroup:
    Pms_SearchPolicyGroup_with_missing_columnName:
       endPoint: /v1/policymanager/policies/group/search
       uniqueIdentifier: TC_PMS_createSearchPolicyGroup_13
-      description: Create Search Policy Group while keeping columnName parameter as empty
+      description: Validate that searching Policy Groups with the columnName parameter missing returns results using default behavior
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPolicyGroup/createSearchPolicyGroup

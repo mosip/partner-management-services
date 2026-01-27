@@ -2,7 +2,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_All_Valid_Smoke:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications
+      description: Validate that all notifications are successfully retrieved with valid inputs
       uniqueIdentifier: TC_PMS_GetAllNotifications_01
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -15,7 +15,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Page_Size4_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering page size 4
+      description: Validate that retrieving notifications fails when an invalid page size 4 is provided in the filter
       uniqueIdentifier: TC_PMS_GetAllNotifications_02
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -28,7 +28,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Page_Size8_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=8
       role: partneradmin
-      description: Get All Notifications by filtering page size 4
+      description: Validate that retrieving notifications fails when an invalid page size 8 is provided in the filter
       uniqueIdentifier: TC_PMS_GetAllNotifications_03
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -42,7 +42,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Invalid_Certificate_ID_Without_NotificationType_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=8&certificateId=777apple123
       role: partneradmin
-      description: Get All Notifications by filtering invalid certificate ID
+      description: Validate that retrieving notifications fails when an invalid certificate ID is provided without specifying the notification type
       uniqueIdentifier: TC_PMS_GetAllNotifications_04
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -59,7 +59,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Invalid_Created_From_Date:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&createdFromDate=123456
       role: partneradmin
-      description: Get All Notifications by filtering invalid Created From Date
+      description: Validate that retrieving notifications fails when an invalid created-from date is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_05
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -76,7 +76,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Different_Time_Format_Created_From_Date:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&createdFromDate=07-04-2025
       role: partneradmin
-      description: Get All Notifications by filtering different format Created From Date
+      description: Validate that retrieving notifications fails when the createdFromDate is provided in an unsupported or incorrect date/time format
       uniqueIdentifier: TC_PMS_GetAllNotifications_06
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -93,7 +93,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Invalid_Created_To_Date:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&createdToDate=928382
       role: partneradmin
-      description: Get All Notifications by filtering invalid Created To Date
+      description: Validate that retrieving notifications fails when an invalid createdToDate value is provided in the request
       uniqueIdentifier: TC_PMS_GetAllNotifications_07
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -110,7 +110,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Different_Time_Format_Created_To_Date:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&createdToDate=07-04-2025
       role: partneradmin
-      description: Get All Notifications by filtering different format Created To Date
+      description: Validate that retrieving notifications fails when the createdToDate is provided in an unsupported or incorrect date/time format
       uniqueIdentifier: TC_PMS_GetAllNotifications_08
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -127,7 +127,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Invalid_Expiry_Date:
       endPoint: /v1/partnermanager/notifications?pageSize=16&expiryDate=881718821
       role: partneradmin
-      description: Get All Notifications by filtering invalid Expiry Date
+      description: Validate that retrieving notifications fails when an invalid expiryDate value is provided in the request
       uniqueIdentifier: TC_PMS_GetAllNotifications_09
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -144,7 +144,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Different_Time_Format_Expiry_Date:
       endPoint: /v1/partnermanager/notifications?pageSize=16&expiryDate=07-04-2025
       role: partneradmin
-      description: Get All Notifications by filtering different format Expiry Date
+      description: Validate that retrieving notifications fails when the expiryDate is provided in an unsupported or incorrect date/time format
       uniqueIdentifier: TC_PMS_GetAllNotifications_10
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -161,7 +161,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_by_filtering_IssuedBy_without_selecting_NotificatioType_Neg:
       endPoint: /v1/partnermanager/notifications?pageSize=16&issuedBy=mosip
       role: partneradmin
-      description: Get All Notifications by filtering IssuedBy without selecting NotificatioType filter
+      description: Validate that retrieving notifications fails when filtering by issuedBy is attempted without selecting a notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_11
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -178,7 +178,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_by_filtering_IssuedTo_without_selecting_NotificatioType_Neg:
       endPoint: /v1/partnermanager/notifications?pageSize=4&issuedTo=mosip
       role: partneradmin
-      description: Get All Notifications by filtering IssuedTo without selecting NotificatioType filter
+      description: Validate that retrieving notifications fails when filtering by issuedTo is attempted without selecting a notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_12
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -195,7 +195,7 @@ GetAllNotifications:
    PMS_GetAllNotifications_UsingPartnerToken_FilteredByNotificationTypeRoot_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
       role: partnerftm
-      description: Get All Notifications by using Partner Token and filtered by Notification Type Root
+      description: Validate that retrieving notifications using a partner token fails when filtered by a notificationTypeRoot that the partner is not authorized to access
       uniqueIdentifier: TC_PMS_GetAllNotifications_13
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -212,7 +212,7 @@ GetAllNotifications:
    PMS_GetAllNotifications_by_filtering_CertificateID_without_selecting_NotificatioType_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&certificateId=fd0e8be0-9499-448e-9b85-06d5649c3f0e
       role: partneradmin
-      description: Get All Notifications by filtering CertificateID without selecting NotificatioType filter
+      description: Validate that retrieving notifications fails when filtering by certificateID is attempted without selecting a notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_14
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -229,7 +229,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_without_Authorization_Token_Neg:
       endPoint: /v1/partnermanager/notifications
       role: invalidtoken
-      description: Get All Notifications without Authorization Token
+      description: Validate that retrieving notifications fails when the request is made without providing a valid authorization token
       uniqueIdentifier: TC_PMS_GetAllNotifications_15
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -246,7 +246,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_without_Partner_Admin_Role_Neg:
       endPoint: /v1/partnermanager/notifications
       role: auth
-      description: Get All Notifications without partner admin role
+      description: Validate that retrieving notifications fails when the request is made by a user who does not have the Partner Admin role
       uniqueIdentifier: TC_PMS_GetAllNotifications_16
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -263,7 +263,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Weekly_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only Weekly summary notifications
+      description: Validate that the Get All Notifications API correctly retrieves notifications filtered for the current week returning only notifications issued within the last 7 days
       uniqueIdentifier: TC_PMS_GetAllNotifications_17
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -276,8 +276,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Root_Certificates_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only Root certificate notifications
-      uniqueIdentifier: TC_PMS_GetAllNotifications_18
+      description: Validate that the Get All Notifications API correctly retrieves notifications related to root certificates when filtered by the appropriate notificationType
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -289,7 +288,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Status_Active_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationStatus=active&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only Active certificate notifications
+      description: Validate that the Get All Notifications API correctly retrieves notifications that are currently active when filtered by status active
       uniqueIdentifier: TC_PMS_GetAllNotifications_19
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -302,7 +301,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Status_Dismissed_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationStatus=dismissed&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only Dismissed certificate notifications
+      description: Validate that the Get All Notifications API correctly retrieves notifications that are dismissed when filtered by status dismissed
       uniqueIdentifier: TC_PMS_GetAllNotifications_20
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -315,7 +314,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_For_RootType_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only RootType certificate notifications
+      description: Validate that retrieving notifications fails when requesting notifications for RootType without proper filters
       uniqueIdentifier: TC_PMS_GetAllNotifications_21
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -328,7 +327,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_For_IntermediateType_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=intermediate&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only IntermediateType certificate notifications
+      description: Validate that retrieving notifications fails when requesting notifications for IntermediateType without proper filters or permissions
       uniqueIdentifier: TC_PMS_GetAllNotifications_22
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -341,7 +340,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_For_WeeklyType_Notifications:
       endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
       role: partneradmin
-      description: Get All Notifications by filtering only WeeklyType certificate notifications
+      description: Validate that retrieving notifications fails when requesting notifications for WeeklyType without proper filters
       uniqueIdentifier: TC_PMS_GetAllNotifications_23
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -354,7 +353,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_invalid_apiKeyName_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=apikey&apiKeyName=%2APMS121
       role: partneradmin
-      description: Fetch all API key expiry notifications that with invalid API key name
+      description: Validate that retrieving notifications fails when an invalid apiKeyName is provided in the request
       uniqueIdentifier: TC_PMS_GetAllNotifications_24
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -371,7 +370,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_policyName_without_notificationType_Neg:
       endPoint: /v1/partnermanager/notifications?policyName=PMS-test
       role: partneradmin
-      description: Fetch all policyName without selecting notificationType
+      description: Validate that notifications retrieval fails when policyName is filtered without notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_25
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -388,7 +387,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_policyName_invalid_notificationType_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&policyName=PMS-test
       role: partneradmin
-      description: Fetch all policyName by selecting invalid notificationType
+      description: Validate that notifications retrieval fails when policyName is filtered with an invalid notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_26
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -405,7 +404,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_policyName_Neg:
       endPoint: /v1/partnermanager/notifications?policyName=PMS-test
       role: partneradmin
-      description: Fetch all policyName with invalid data
+      description: Validate that notifications retrieval fails when an invalid policyName is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_27
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -422,7 +421,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_ftmId_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&ftmId=342342
       role: partneradmin
-      description: Fetch all FTM Chip with invalid data
+      description: Validate that notifications retrieval fails when an invalid ftmId is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_28
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -435,7 +434,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_make_model_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
       role: partneradmin
-      description: Fetch all ftmChip with make & model data
+      description: Validate that notifications retrieval fails when an invalid make or model is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_29
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -448,7 +447,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_ftmChip_without_notificationType_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
       role: partneradmin
-      description: Fetch all ftmChip without selecting notificationType
+      description: Validate that notifications retrieval fails when filtering by ftmChip without selecting a notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_30
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -465,7 +464,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_SbiID_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI
       role: partneradmin
-      description: Fetch all SBI Chip with invalid data
+      description: Validate that notifications retrieval fails when an invalid sbiId is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_31
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -478,7 +477,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_SbiID_without_notificationType_Neg:
       endPoint: /v1/partnermanager/notifications?sbiId=PMS-SBI
       role: partneradmin
-      description: Fetch all ftmChip without selecting notificationType
+      description: Validate that notifications retrieval fails when filtering by sbiId without selecting a notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_32
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -495,7 +494,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_SbiVersion_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI&sbiVersion=ab-102-13881
       role: partneradmin
-      description: Fetch all SBI Chip with invalid SBI Version data
+      description: Validate that notifications retrieval fails when an invalid sbiVersion is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_33
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -508,7 +507,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_SbiVersionValues_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI&sbiVersion=_%2ASBI
       role: partneradmin
-      description: Fetch all SBI Chip with invalid SBI Version data
+      description: Validate that notifications retrieval fails when invalid sbiVersion values are provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_34
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -525,7 +524,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_PageNo_2_Neg:
       endPoint: /v1/partnermanager/notifications?pageSize=2
       role: partneradmin
-      description: Fetch all notifications invalid PageNo
+      description: Validate that notifications retrieval fails when an invalid page number is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_35
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -538,7 +537,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_PageNo_Neg:
       endPoint: /v1/partnermanager/notifications?pageNo=-4
       role: partneradmin
-      description: Fetch all Notifications with invalid pageNo
+      description: Validate that notifications retrieval fails when an invalid or non-numeric page number is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_36
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -555,7 +554,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_invalid_PageSize_Neg:
       endPoint: /v1/partnermanager/notifications?pageSize=-22
       role: partneradmin
-      description: Fetch all Notifications with invalid pageNo
+      description: Validate that notifications retrieval fails when an invalid or non-numeric page size is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_37
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -572,7 +571,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_ApiKey_Invalid_ftmChipType_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi&apiKeyName=12
       role: partneradmin
-      description: Fetch all Notifications by selecting Api key name label and selecting NotificationType as ftmChip
+      description: Validate that notifications retrieval fails when an invalid ftmChipType is provided while filtering by apiKey
       uniqueIdentifier: TC_PMS_GetAllNotifications_38
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -589,7 +588,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_ftmChip_Invalid_apikeyType_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi&ftmId=12
       role: partneradmin
-      description: Fetch all Notifications by selecting ftmChip Id and selecting NotificationType as sbi
+      description: Validate that notifications retrieval fails when an invalid apiKeyType is provided while filtering by ftmChip
       uniqueIdentifier: TC_PMS_GetAllNotifications_39
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -606,7 +605,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_sbiId_Invalid_ftmChip_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&sbiId=12
       role: partneradmin
-      description: Fetch all Notifications by selecting sbi Id and selecting NotificationType as ftmChip
+      description: Validate that notifications retrieval fails when an invalid ftmChip is provided while filtering by sbiId
       uniqueIdentifier: TC_PMS_GetAllNotifications_40
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -623,7 +622,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Filter_Invalid_NotificationType_invalid_partnerDomain_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&partnerDomain=AUTH
       role: partneradmin
-      description: Fetch all Notifications by selecting sbi Id and selecting NotificationType as ftmChip
+      description: Validate that notifications retrieval fails when an invalid notificationType or partnerDomain is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_41
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -640,7 +639,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Invalid_Access_Token_Neg:
       endPoint: /v1/partnermanager/notifications
       role: invalidtoken
-      description: Get All Notifications with invalid access token
+      description: Validate that notifications retrieval fails when an invalid access token is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_42
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -657,7 +656,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Invalid_QueryParams_Neg:
       endPoint: /v1/partnermanager/notifications?mispPartnerId=pms@%111555
       role: partneradmin
-      description: Get All Notifications with invalid query parameters
+      description: Validate that notifications retrieval fails when invalid query parameters are provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_43
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -674,7 +673,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_MISP_NotificationType:
       endPoint: /v1/partnermanager/notifications?notificationType=misp
       role: partneradmin
-      description: Get All Notifications with MISP Notification Type
+      description: Validate that notifications retrieval fails when an unsupported MISP notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_44
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -687,7 +686,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Partner_NotificationType:
       endPoint: /v1/partnermanager/notifications?notificationType=partner
       role: partneradmin
-      description: Get All Notifications with Partner Notification Type
+      description: Validate that notifications retrieval fails when an unsupported Partner notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_45
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -700,7 +699,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Sbi_NotificationType:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi
       role: partneradmin
-      description: Get All Notifications with SBI Notification Type
+      description: Validate that notifications retrieval fails when an unsupported SBI notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_46
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -713,7 +712,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Ftm-chip_NotificationType:
       endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip
       role: partneradmin
-      description: Get All Notifications with ftm-chip Notification Type
+      description: Validate that notifications retrieval fails when an unsupported FTM-Chip notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_47
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -726,7 +725,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Apikey_NotificationType:
       endPoint: /v1/partnermanager/notifications?notificationType=apikey
       role: partneradmin
-      description: Get All Notifications with API Key Notification Type
+      description: Validate that notifications retrieval fails when an unsupported API Key notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_48
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -739,7 +738,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_Invalid_Certificate_ID_Neg:
       endPoint: /v1/partnermanager/notifications?notificationType=sbi&certificateId=777apple@%123
       role: partneradmin
-      description: Get All Notifications by filtering invalid certificate ID
+      description: Validate that notifications retrieval fails when an invalid certificateID is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_49
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -756,7 +755,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Apikey_NotificationType_And_CertificateId_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with API Key Notification Type and Certificate ID
+      description: Validate that notifications retrieval fails when filtering by API Key notification type along with an invalid certificateID
       uniqueIdentifier: TC_PMS_GetAllNotifications_50
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -781,7 +780,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_None_NotificationType_And_CertificateId_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with None Notification Type and Certificate ID
+      description: Validate that notifications retrieval fails when filtering with no notificationType and an invalid certificateID
       uniqueIdentifier: TC_PMS_GetAllNotifications_51
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -806,7 +805,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Partner_NotificationType_And_MispPartnerId_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with Partner Notification Type and MISP Partner ID
+      description: Validate that notifications retrieval fails when filtering by Partner notification type with an invalid MISP Partner ID
       uniqueIdentifier: TC_PMS_GetAllNotifications_52
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -831,7 +830,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Apikey_NotificationType_And_LicenseKeyName_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with API Key Notification Type and License Key Name
+      description: Validate that notifications retrieval fails when filtering by API Key notification type with an invalid licenseKeyName
       uniqueIdentifier: TC_PMS_GetAllNotifications_53
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -856,7 +855,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Apikey_NotificationType_And_apiKeyName:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with API Key Notification Type and API Key Name
+      description: Validate that notifications retrieval fails when filtering by API Key notification type with an invalid apiKeyName
       uniqueIdentifier: TC_PMS_GetAllNotifications_54
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -877,7 +876,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Root_NotificationType_And_apiKeyName_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with Root Notification Type and API Key Name
+      description: Validate that notifications retrieval fails when filtering by Root notification type with an invalid apiKeyName
       uniqueIdentifier: TC_PMS_GetAllNotifications_55
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -902,7 +901,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Partner_NotificationType_And_apiKeyName_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with Partner Notification Type and API Key Name
+      description: Validate that notifications retrieval fails when filtering by Partner notification type with an invalid apiKeyName
       uniqueIdentifier: TC_PMS_GetAllNotifications_56
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -927,7 +926,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Sbi_NotificationType_And_ExpiryDate:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with Sbi Notification Type and Expiry Date
+      description: Validate that notifications retrieval fails when filtering by SBI notification type with an invalid expiryDate
       uniqueIdentifier: TC_PMS_GetAllNotifications_57
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -948,7 +947,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Weekly_NotificationType_And_createdFromDate_And_createdToDate:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with Weekly Notification Type and created From Date and created To Date
+      description: Validate that notifications retrieval fails when filtering by Weekly notification type with invalid createdFromDate or createdToDate
       uniqueIdentifier: TC_PMS_GetAllNotifications_58
       restMethod: get
       checkErrorsOnlyInResponse: true
@@ -969,7 +968,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_with_Partner_NotificationType_And_createdToDate_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Get All Notifications with Partner Notification Type and created To Date
+      description: Validate that notifications retrieval fails when filtering by Partner notification type with an invalid createdToDate
       uniqueIdentifier: TC_PMS_GetAllNotifications_59
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput

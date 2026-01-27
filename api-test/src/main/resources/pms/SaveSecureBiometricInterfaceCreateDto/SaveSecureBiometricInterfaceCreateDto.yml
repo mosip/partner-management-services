@@ -2,7 +2,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       role: partnerdevice
-      description: Create SaveSecureBiometricInterface for Device Provider with all valid details
+      description: Validate that secure biometric interface details can be created successfully by a device provider with all valid inputs
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_01	  
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -23,6 +23,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       role: partner
+	  description: Validate that secure biometric interface details can be saved successfully with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_10
@@ -41,7 +42,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_02
-      description: Create SaveSecureBiometricInterface with valid details
+      description: Validate that secure biometric interface details can be saved successfully with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -61,7 +62,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_Valid_Smoke_ForReject_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_08
-      description: Create SaveSecureBiometricInterface with valid details
+      description: Validate that secure biometric interface details can be saved successfully for the reject flow with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -81,7 +82,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_TO_Map_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_03
-      description: Create SaveSecureBiometricInterface To Map sId
+      description: Validate that secure biometric interface details can be saved successfully to enable mapping with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -101,7 +102,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_Valid_ForDeactivate_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_09
-      description: Create SaveSecureBiometricInterface with valid details
+      description: Validate that secure biometric interface details can be saved successfully for deactivation with valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -121,7 +122,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_dublicate_swVersion_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_04
-      description: Create SaveSecureBiometricInterface with duplicate swVersion
+      description: Validate that saving secure biometric interface fails when a duplicate software version is provided
       role: partner
       restMethod: post
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
@@ -145,7 +146,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_Missing_swVersion_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_05
-      description: Create SaveSecureBiometricInterface while keeping parameter swVersion as empty
+      description: Validate that saving secure biometric interface fails when the software version is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
@@ -170,7 +171,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_Missing_partnerId_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_06
-      description: Create SaveSecureBiometricInterface while keeping parameter PartnerId as empty
+      description: Validate that saving secure biometric interface fails when the partner ID is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
@@ -194,7 +195,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_SpaceVal_partnerId_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_07
-      description: Create SaveSecureBiometricInterface while keeping provderid parameter SpaceVal as empty
+      description: Validate that saving secure biometric interface fails when the partner ID contains only spaces
       role: partner
       restMethod: post
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
@@ -217,7 +218,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_11
-      description: Create SaveSecureBiometricInterface Using FTM Partner
+      description: Validate that a device provider can create secure biometric interface details successfully when associated with an FTM partner
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: post

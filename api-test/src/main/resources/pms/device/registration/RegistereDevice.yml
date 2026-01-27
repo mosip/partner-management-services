@@ -2,7 +2,7 @@ CreateSignedRegisteredDevice:
    Pms_SignedRegisteredDevice_All_Valid_Smoke:
       endPoint: /v1/partnermanager/registereddevices
       uniqueIdentifier: TC_PMS_createSignedRegisteredDevice_01
-      description: Create Signed Registered Device with valid details
+      description: Validate that a registered device is successfully signed with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -19,7 +19,7 @@ CreateSignedRegisteredDevice:
    Pms_SignedRegisteredDevice_Missing_InputParameter_deviceData:
       endPoint: /v1/partnermanager/registereddevices
       uniqueIdentifier: TC_PMS_createSignedRegisteredDevice_02
-      description: Create Signed Registered Device while keeping parameter DeviceData as empty
+      description: Validate that signing a registered device fails when the deviceData input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/device/registration/registereDevice

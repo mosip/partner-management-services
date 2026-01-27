@@ -2,7 +2,7 @@ GetMispLicense:
    Pms_GetMispLicense_allValid_smoke:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_GetMispLicense_01
-      description: Retreive MispLicense for Partner
+      description: Validate that all MISP licenses are retrieved successfully for a valid request
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

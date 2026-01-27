@@ -2,7 +2,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_different_deviceDetails_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_01
-      description: Approve mapping device to sbi with different deviceDetails
+      description: Validate that device mapping to an SBI fails when the provided device details do not match the expected SBI mapping
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -25,7 +25,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_without_SBI_ID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_02
-      description: Approve mapping device to sbi without without sbiId value
+      description: Validate that device mapping to an SBI fails when the SBI ID is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbi
@@ -46,7 +46,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_without_Req_ID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_03
-      description: Approve mapping device to sbi without Request ID
+      description: Validate that device mapping to an SBI fails when the request ID is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -69,7 +69,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_without_Version_value_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_04
-      description: Approve mapping device to sbi without Version value
+      description: Validate that device mapping to an SBI fails when the version value is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -92,7 +92,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_without_deviceProviderID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_05
-      description: Approve mapping device to sbi without Device provider Id
+      description: Validate that device mapping to an SBI fails when the device provider ID is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -115,7 +115,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_with_random_DeviceProviderID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_06
-      description: Approve mapping device to sbi with randome Device provider Id
+      description: Validate that device mapping to an SBI fails when a random or invalid device provider ID is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -138,7 +138,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_without_RequestTime_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_07
-      description: Approve mapping device to sbi without requestTime
+      description: Validate that device mapping to an SBI fails when request time is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -161,7 +161,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_with_missing_SBIID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_08
-      description: Approve mapping device to sbi while keeping SBI ID parameter as missing
+      description: Validate that device mapping to an SBI fails when the SBI ID is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -184,7 +184,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_which_is_already_approved_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_09
-      description: Approve mapping device to sbi by providing parameters which are already approved
+      description: Validate that device mapping to an SBI fails when the device has already been approved for the same SBI
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -207,7 +207,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_with_Invalid_DeviceID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_10
-      description: Approve mapping device to sbi by providing invalid Device ID
+      description: Validate that device mapping to an SBI fails when an invalid device ID is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -230,7 +230,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_with_Invalid_SBIID_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_11
-      description: Approve mapping device to sbi by providing invalid SBI ID
+      description: Validate that device mapping to an SBI fails when an invalid or non-existent SBI ID is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -253,7 +253,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_without_Partner_Authentication_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_12
-      description: Approve mapping device to sbi without Partner Authentication
+      description: Validate that device mapping to an SBI fails when partner authentication is not provided
       role: invalidtoken
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
@@ -276,7 +276,7 @@ ApproveMappingDeviceToSbiNegativeScenarios:
    Pms_ApproveMappingDeviceToSbi_with_Invalid_Partner_Authentication_Neg:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_13
-      description: Approve mapping device to sbi with Invalid Partner Authentication
+      description: Validate that device mapping to an SBI fails when invalid partner authentication is provided
       role: invalidtoken
       restMethod: post
       inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios

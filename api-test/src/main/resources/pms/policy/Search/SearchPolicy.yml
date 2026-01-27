@@ -2,7 +2,7 @@ createSearchPolicy:
    Pms_SearchPolicy_AllValid_Smoke:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_01
-      description: Create Search Policy with valid details
+      description: Validate that policies can be searched and retrieved successfully for all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -26,7 +26,7 @@ createSearchPolicy:
    Pms_SearchPolicy_Only_FilterCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_03
-      description: Create Search Policy with Only FilterCriteria
+      description: Validate that policies can be searched successfully using only filter criteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -51,7 +51,7 @@ createSearchPolicy:
    Pms_SearchPolicy_Only_SortaCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_04
-      description: Create Search Policy with Only SortCriteria
+      description: Validate that policies can be searched successfully using only sorting
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -81,7 +81,7 @@ createSearchPolicy:
    Pms_SearchPolicy_Only_PaginationCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_05
-      description: Create Search Policy with Only PaginationCriteria
+      description: Validate that policies can be searched successfully using only pagination
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -105,7 +105,7 @@ createSearchPolicy:
    Pms_SearchPolicy_type_contains_Smoke_asc:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_06
-      description: Create Search Policy while keeping Type parameter as contains and filter data in ascending order
+      description: Validate that policies can be searched successfully when the type contains a given value sorted in ascending order
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -142,7 +142,7 @@ createSearchPolicy:
    Pms_SearchPolicy_type_contains_Smoke_desc:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_07
-      description: Create Search Policy while keeping Type parameter as contains and filter the data in descending order
+      description: Validate that policies can be searched successfully when the type contains a given value sorted in descending order
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -179,7 +179,7 @@ createSearchPolicy:
    Pms_SearchPolicy_type_equals_Smoke_desc:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_08
-      description: Create Search Policy while keeping Type parameter as Equals and filter the data in descending order
+      description: Validate that policies can be searched successfully when the type equals a given value sorted in descending order
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -215,7 +215,7 @@ createSearchPolicy:
    Pms_SearchPolicy_type_equals_Smoke_asc:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_09
-      description: Create Search Policy while keeping Type parameter as Equals and filter the data in ascending order  
+      description: Validate that policies can be searched successfully when the type equals a given value sorted in ascending order  
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -251,7 +251,7 @@ createSearchPolicy:
    Pms_SearchPolicy_type_startswith_Smoke_asc:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_10
-      description: Create Search Policy while keeping Type parameter as Startswith and filter the data in ascending order
+      description: Validate that policies can be searched successfully when the type starts with a given value sorted in ascending order
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -287,7 +287,7 @@ createSearchPolicy:
    Pms_SearchPolicy_type_startswith_Smoke_desc:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_11
-      description: Create Search Policy while keeping Type parameter as Startswith and filter the data in descending order
+      description: Validate that policies can be searched successfully when the type starts with a given value sorted in descending order
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -324,7 +324,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_invalid_value_contains:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_12
-      description: Create Search Policy while keeping value parameter as invalid and filter the data in descending order
+      description: Validate that searching policies returns fails when an invalid value is used with the contains filter
       role: partner
       checkErrorsOnlyInResponse: true
       checkErrorsOnlyInResponse: true
@@ -356,7 +356,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_invalid_value_equals:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_13
-      description: Create Search Policy while keeping value parameter as invalid and Type parameter as Equals
+      description: Validate that searching policies returns fails when an invalid value is used with the equals filter
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -387,7 +387,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_invalid_value_startswith:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_14
-      description: Create Search Policy while keeping value parameter as invalid and Type parameter as startswith
+      description: Validate that searching policies returns fails when an invalid value is used with the starts with filter
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -418,7 +418,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_invalid_columnName:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_15
-      description: Create Search Policy while keeping columnName parameter
+      description: Validate that searching policies fails when an invalid column name is provided
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -453,7 +453,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_missing_columnName:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_16
-      description: Create Search Policy while keeping columnName parameter as Empty
+      description: Validate that searching policies fails when the column name is missing
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -489,7 +489,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_missing_type:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_17
-      description: Create Search Policy while keeping Type parameter as Empty
+      description: Validate that searching policies fails when the type filter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -524,7 +524,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_invalid_sort_type:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_18
-      description: Create Search Policy while keeping sortType parameter as invalid
+      description: Validate that searching policies fails when an invalid sort type is provided
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -559,7 +559,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_missing_sort_type:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_19
-      description: Create Search Policy while keeping sortType parameter as Empty
+      description: Validate that searching policies fails when the sort type is missing
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -594,7 +594,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_invalid_sort_field:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_20
-      description: Create Search Policy while keeping sortField parameter as invalid
+      description: Validate that searching policies fails when an invalid sort field is provided
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy
@@ -629,7 +629,7 @@ createSearchPolicy:
    Pms_SearchPolicy_with_missing_sort_field:
       endPoint: /v1/policymanager/policies/search
       uniqueIdentifier: TC_PMS_createSearchPartner_21
-      description: Create Search Policy while keeping sortField parameter as Empty
+      description: Validate that searching policies fails when the sort field is missing
       role: partner
       restMethod: post
       inputTemplate: pms/policy/Search/searchPolicy

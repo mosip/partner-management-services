@@ -1,7 +1,7 @@
 GetAllActivePolicyGroups:
    Pms_GetAllActivePolicyGroups_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/policy-groups
-      description: Fetching all the active PolicyGroups
+      description: Validate that all active policy groups are successfully retrieved with valid inputs
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_01
       checkErrorsOnlyInResponse: true
@@ -14,7 +14,7 @@ GetAllActivePolicyGroups:
 }'
    Pms_GetAllActivePolicyGroups_without_auth:
       endPoint: /v1/policymanager/policies/policy-groups
-      description: Fetching all the active PolicyGroups without token
+      description: Validate that retrieving all active policy groups fails when authentication is not provided
       uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_02
       role: invalidtoken
       checkErrorsOnlyInResponse: true
@@ -32,7 +32,7 @@ GetAllActivePolicyGroups:
 }'
    Pms_GetAllActivePolicyGroups_Invalid_auth:
       endPoint: /v1/policymanager/policies/policy-groups
-      description: Fetching all the active PolicyGroups with invalid token
+      description: Validate that retrieving all active policy groups fails when an invalid authentication is provided
       uniqueIdentifier: TC_PMS_GetAllActivePolicyGroups_03
       role: invalidtoken
       checkErrorsOnlyInResponse: true

@@ -301,7 +301,7 @@ UpdateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_ESI_010"
+       "errorCode": "PMS_COR_001"
        }
        ]
 }'
@@ -534,7 +534,7 @@ UpdateOIDCClient:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_ESI_009"
+       "errorCode": "PMS_POLICY_ERROR_019"
        }
        ]
 }'

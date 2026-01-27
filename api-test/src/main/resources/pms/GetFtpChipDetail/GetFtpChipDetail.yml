@@ -2,8 +2,7 @@ GetFTPChipDetail:
    Pms_GetFtpChipDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail/getPartnerCertificate/{ftpChipDetailId}
       uniqueIdentifier: TC_PMS_GetFTPChipDetail_01
-      description: Retreive FTP ChipDetails Partner with valid detail
-      role: partner
+      description: Validate that all FTM chip details are successfully retrieved with valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/GetFtpChipDetail/getFtpChipDetail

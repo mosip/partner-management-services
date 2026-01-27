@@ -1,7 +1,7 @@
 GetAllApprovedAuthPartnerPolicy:
    Pms_GetAllApprovedAuthPartnerPolicy_without_auth:
       endPoint: /v1/partnermanager/partners/auth-partners-policies
-      description: Fetching all Approved Auth Partner Policies without token
+      description: Validate that retrieving all approved policies for a partner fails when authentication is not provided
       uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_01
       role: invalidtoken
       restMethod: get
@@ -18,7 +18,7 @@ GetAllApprovedAuthPartnerPolicy:
 }'
    Pms_GetAllApprovedAuthPartnerPolicy_invalid_auth:
       endPoint: /v1/partnermanager/partners/auth-partners-policies
-      description: Fetching all Approved Auth Partner Policies with invalid token
+      description: Validate that retrieving all approved policies for a partner fails when an invalid authentication is provided
       uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_02
       role: invalidtoken
       restMethod: get

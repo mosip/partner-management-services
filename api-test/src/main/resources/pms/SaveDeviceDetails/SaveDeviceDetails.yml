@@ -3,7 +3,7 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_01
-      description: Save Device Details
+      description: Validate that device details can be saved successfully by a device provider with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
@@ -25,7 +25,7 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_02
-      description: Save Device Details
+      description: Validate that device details can be saved successfully by a device provider for rejection flow with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
@@ -47,7 +47,7 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_03
-      description: Save Device Details
+      description: Validate that device details can be saved successfully by a device provider for pending approval with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
@@ -69,7 +69,7 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_04
-      description: Save Device Details
+      description: Validate that device details can be saved successfully by a device provider for deactivation with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails

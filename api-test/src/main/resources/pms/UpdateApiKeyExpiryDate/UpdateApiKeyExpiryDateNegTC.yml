@@ -1,7 +1,7 @@
 UpdateApiKeyExpiryDateNegTC:
   Pms_UpdateApiKeyExpiryDateNegTC_With_PartnerAuth_Role_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with PartnerAuth Role
+    description: Validate that updating the API Key Expiry Date fails when performed by a user with only Partner Auth role
     role: partnerauth
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_01
     restMethod: patch
@@ -25,7 +25,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Invalid_Token_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with invalid token
+    description: Validate that updating the API Key Expiry Date fails when an invalid token is used
     role: invalidtoken
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_02
     restMethod: patch
@@ -49,7 +49,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Missing_ApiKeyName_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key without apiKeyName field
+    description: Validate that updating the API Key Expiry Date fails when the apiKeyName parameter is missing
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_03
     restMethod: patch
@@ -72,7 +72,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Missing_ApiKeyExpiryDateTime_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key without ExpiryDate field
+    description: Validate that updating the API Key Expiry Date fails when the apiKeyExpiryDateTime parameter is missing
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_04
     restMethod: patch
@@ -95,7 +95,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_NotValid_ISOFormat_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with not valid ISO format ExpiryDate
+    description: Validate that updating the API Key Expiry Date fails when the date is not in a valid ISO format
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_05
     restMethod: patch
@@ -116,7 +116,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Past_ExpiryDate_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with past ExpiryDate
+    description: Validate that updating the API Key Expiry Date fails when a past date is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_06
     restMethod: patch
@@ -140,7 +140,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Empty_ApiKeyName_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with empty apiKeyName
+    description: Validate that updating the API Key Expiry Date fails when the apiKeyName parameter is empty
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_07
     restMethod: patch
@@ -164,7 +164,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Empty_ApiKeyExpiryDateTime_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with empty ExpiryDate
+    description: Validate that updating the API Key Expiry Date fails when the apiKeyExpiryDateTime parameter is empty
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_08
     restMethod: patch
@@ -188,7 +188,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Special_Character_As%_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with % special character in PartnerId
+    description: Validate that updating the API Key Expiry Date fails when the partnerId contains special characters like %
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_09
     restMethod: patch
@@ -209,7 +209,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Special_Character_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with special character in PartnerId
+    description: Validate that updating the API Key Expiry Date fails when the partnerId contains any special characters
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_10
     restMethod: patch
@@ -233,7 +233,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key without existing PartnerId
+    description: Validate that updating the API Key Expiry Date fails when a non-existing partnerId is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_11
     restMethod: patch
@@ -257,7 +257,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Special_Character_PolicyID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with special character in PolicyId
+    description: Validate that updating the API Key Expiry Date fails when the policyId contains special characters
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_12
     restMethod: patch
@@ -281,7 +281,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Special_Character_AS%_PolicyID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with % special character in PolicyId
+    description: Validate that updating the API Key Expiry Date fails when the policyId contains special characters like %
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_13
     restMethod: patch
@@ -302,7 +302,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_PolicyID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key for without existing PolicyId
+    description: Validate that updating the API Key Expiry Date fails when a non existing policyId is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_14
     restMethod: patch
@@ -326,7 +326,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Invalid_Request_ID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with invalid request ID
+    description: Validate that updating the API Key Expiry Date fails when an invalid requestId is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_15
     restMethod: patch
@@ -350,7 +350,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_Request_ID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key without request ID
+    description: Validate that updating the API Key Expiry Date fails when the requestId parameter is missing
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_16
     restMethod: patch
@@ -373,7 +373,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Null_Request_ID_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with null request ID
+    description: Validate that updating the API Key Expiry Date fails when the requestId parameter is null
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_17
     restMethod: patch
@@ -397,7 +397,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_Version_Parameter_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key without Version Parameter
+    description: Validate that updating the API Key Expiry Date fails when the version parameter is missing
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_18
     restMethod: patch
@@ -420,7 +420,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Invalid_Version_Parameter_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with invalid Version Parameter
+    description: Validate that updating the API Key Expiry Date fails when an invalid version parameter is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_19
     restMethod: patch
@@ -444,7 +444,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_With_Null_Version_Parameter_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key with null Version Parameter
+    description: Validate that updating the API Key Expiry Date fails when the version parameter is null
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_20
     restMethod: patch
@@ -468,7 +468,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_RequestTime_Parameter_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an API Key without RequestTime Parameter
+    description: Validate that updating the API Key Expiry Date fails when the requestTime parameter is missing
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_21
     restMethod: patch
@@ -491,7 +491,7 @@ UpdateApiKeyExpiryDateNegTC:
 }'
   Pms_UpdateApiKeyExpiryDateNegTC_Without_Existing_ApiKeyName_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating the expiry date without an existing API key for the given PartnerId and PolicyId
+    description: Validate that updating the API Key Expiry Date fails when a non existing apiKeyName is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_22
     restMethod: patch

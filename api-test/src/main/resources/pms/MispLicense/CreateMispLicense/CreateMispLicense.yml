@@ -2,7 +2,7 @@ CreateMispLicense:
    Pms_CreateMispLicense_allValid_smoke_sid:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_CreateMispLicense_01
-      description: Create MISP License Partner
+      description: Validate that a MISP license is successfully created with a valid SID when all inputs are valid
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/CreateMispLicense/createMispLicense
@@ -18,7 +18,7 @@ CreateMispLicense:
    Pms_CreateMispLicense_MispLicense_allValid_smoke_sid:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_CreateMispLicense_02
-      description: Create MISP License Partner with all valid details
+      description: Validate that a MISP license is successfully created with all required fields and a valid SID when the request is valid
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/CreateMispLicense/createMispLicense
@@ -34,7 +34,7 @@ CreateMispLicense:
    Pms_CreateMispLicense_InValid_ProviderId:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_CreateMispLicense_03
-      description: Create MISP License Partner while keeping invalid ProviderID
+      description: Validate that creating a MISP license fails when an invalid provider ID is provided
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/CreateMispLicense/createMispLicense

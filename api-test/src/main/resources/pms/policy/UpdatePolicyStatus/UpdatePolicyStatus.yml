@@ -2,7 +2,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_01
-      description: Update Policy Status as DeActive
+      description: Validate that a policy can be deactivated successfully using valid authentication details
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -20,7 +20,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_DeActive_datashare_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_03
-      description: Update Policy Status as DeActive for datashare
+      description: Validate that a data share policy can be deactivated successfully with valid inputs
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -37,7 +37,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Active_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_04
-      description: Update Policy Status as Active with invalid data
+      description: Validate that activating a policy fails when invalid inputs are provided
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -59,7 +59,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_PolicyId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_05
-      description: Update Policy Status as Active with invalid PolicyID
+      description: Validate that updating the status of a policy fails when an invalid policy ID is provided
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -81,7 +81,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_06
-      description: Update Policy Status while keeping status parameter as invalid
+      description: Validate that updating a policy status fails when an invalid status value is provided
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -103,7 +103,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_PolicyGroupId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_07
-      description: Update Policy Status while keeping PolicyGroupId parameter as invalid
+      description: Validate that updating a policy status fails when an invalid policy group ID is provided
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus
@@ -125,7 +125,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Missing_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       uniqueIdentifier: TC_PMS_UpdatePolicyStatus_08
-      description: Update Policy Status while keeping status parameter as empty
+      description: Validate that updating a policy status fails when the status value is missing
       role: partner
       restMethod: patch
       inputTemplate: pms/policy/UpdatePolicyStatus/updatePolicyStatus

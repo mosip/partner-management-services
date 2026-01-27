@@ -2,7 +2,7 @@ PolicyGroupFilter:
    Pms_PolicyGroupFilter_using_name_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/filtervalues
       uniqueIdentifier: TC_PMS_PolicyGroupFilter_01
-      description: Create Policy Group Filter for Partner using valid name
+      description: Validate that policy groups are successfully filtered using the name with valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PolicyGroupFilter/policyGroupFilter

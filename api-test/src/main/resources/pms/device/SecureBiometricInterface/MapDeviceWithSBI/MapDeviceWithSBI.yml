@@ -2,7 +2,7 @@ MapDeviceWithSBI:
    Pms_MapDeviceWithSBI_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
       uniqueIdentifier: TC_PMS_MapDeviceWithSBI_01
-      description: MapDeviceWithSBI with valid details
+      description: Validate that a device is successfully mapped with a Secure Biometric Interface with all valid inputs
       role: partner
       restMethod: put
       checkErrorsOnlyInResponse: true
@@ -18,7 +18,7 @@ MapDeviceWithSBI:
    Pms_MapDeviceWithSBI_Multiple_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
       uniqueIdentifier: TC_PMS_MapDeviceWithSBI_02
-      description: MapDevice Partner With Multiple SBI valid details
+      description: Validate that multiple devices are successfully mapped with a Secure Biometric Interface with all valid inputs
       role: partner
       restMethod: put
       checkErrorsOnlyInResponse: true
@@ -35,7 +35,7 @@ MapDeviceWithSBI:
    Pms_MapDeviceWithSBI_Multiple_map:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
       uniqueIdentifier: TC_PMS_MapDeviceWithSBI_03
-      description: MapDevice Partner With Multiple SBI
+      description: Validate that multiple devices can be mapped to a Secure Biometric Interface
       role: partner
       restMethod: put
       checkErrorsOnlyInResponse: true
@@ -52,7 +52,7 @@ MapDeviceWithSBI:
    Pms_MapDeviceWithSBI_Multiple_MapDeviceWith_Diff_Provider:
       endPoint: /v1/partnermanager/securebiometricinterface/devicedetails/map
       uniqueIdentifier: TC_PMS_MapDeviceWithSBI_04
-      description: MapDevice Partner With Multiple SBI with different Provider
+      description: Validate that multiple devices from different providers can be mapped to a Secure Biometric Interface
       role: partner
       restMethod: put
       additionalDependencies: TC_PMS_createSaveSecureBiometricInterface_02

@@ -3,7 +3,7 @@ RejectMappingDeviceToSbiwhichisRejected:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       role: partneradmin
       uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbi_32
-      description: Reject mapping device to sbi by providing SBI which is Rejected and expecting an error in response
+      description: Validate that rejecting the mapping of a device to SBI fails when the mapping is already in a rejected state
       restMethod: post
       inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi
       outputTemplate: pms/error

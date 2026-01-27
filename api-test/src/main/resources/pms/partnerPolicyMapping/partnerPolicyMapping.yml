@@ -2,7 +2,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_05	  
-      description: Mapping Partner & Policy
+      description: Validate that partner policy mappings are retrieved successfully for all valid entries
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01  
@@ -20,7 +20,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_ForDeactivateOIDCNeg_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_02
-      description: Mapping Partner & Policy
+      description: Validate that partner-policy mappings are retrieved successfully for all valid entries in scenarios related to OIDC client deactivation
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
@@ -36,7 +36,7 @@ partnerPolicyMapping:
     }'
    Pms_partnerPolicyMapping_For_MISP_Policy_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/pms-111555/policy/map
-      description: Mapping Partner & Policy
+      description: Validate that partner-policy mappings are retrieved successfully for all valid MISPs
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_06
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -54,7 +54,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_invalid_policyName_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_07
-      description: Mapping Partner & Policy when invalid policyname is given      
+      description: Validate that retrieving partner-policy mappings fails when an invalid policy name is provided     
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
@@ -76,7 +76,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_invalid_partnerId_neg:
       endPoint: /v1/partnermanager/partners/1hhggg9/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_08
-      description: Mapping Partner & Policy when invalid partnerId is given      
+      description: Validate that retrieving partner-policy mappings fails when an invalid partner ID is provided    
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: post 
@@ -97,7 +97,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_missing_policyName_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_09
-      description: Mapping Partner & Policy when policyname is removed from request      
+      description: Validate that retrieving partner-policy mappings fails when the policy name is missing      
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
@@ -120,7 +120,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_missing_useCaseDescription_neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_10
-      description: Mapping Partner & Policy when usecaseDescription is removed from request      
+      description: Validate that retrieving partner-policy mappings fails when the use case description is missing     
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
@@ -143,7 +143,7 @@ partnerPolicyMapping:
    Pms_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
-      description: Create Partner API Key Request for Partner with valid data
+      description: Validate that partner API key requests can be submitted and rejected successfully for all valid entries
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
@@ -161,7 +161,7 @@ partnerPolicyMapping:
    Pms_SubmitPartnerApiKeyRequest_Approval_All_for_Deactivated_policy:
       endPoint: /v1/partnermanager/partners/Tech-1233/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
-      description: Create Partner API Key Request for Partner with Deactivated Policy
+      description: Validate that partner API key request approval fails when the associated policy is deactivated
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_10
@@ -184,7 +184,7 @@ partnerPolicyMapping:
    Pms_SubmitPartnerApiKeyRequest_Map_partner_partner_inprogress_state_Neg:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_04
-      description: Create Partner API Key Request for Partner and mapping the Partner with Inprogress Policy
+      description: Validate that submitting a partner API key request fails when the partner mapping is in an in progress state
       role: partnerauth
       restMethod: post
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
@@ -206,7 +206,7 @@ partnerPolicyMapping:
    Pms_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription_neg:
       endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_05
-      description: Create Partner API Key Request for Credential Partner with invalid use case description
+      description: Validate that creating a partner API key request fails when an invalid use case description is provided
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
@@ -228,7 +228,7 @@ partnerPolicyMapping:
    Pms_CredPartnerApiKeyRequest_With_Invalid_policyName_useCaseDescription_neg:
       endPoint: /v1/partnermanager/partners/MOVP-AUTOMATION/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_06
-      description: Create Partner API Key Request for Credential Partner with invalid Policy Name use case description
+      description: Validate that creating a partner API key request fails when both the policy name and use case description are invalid
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
@@ -251,7 +251,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_ForRejecting_All_Valid_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyauthPartner_11
-      description: Mapping Partner & Policy
+      description: Validate that all valid partner-policy mappings are accessible and correctly listed during API key rejection processes
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
@@ -269,7 +269,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_ForPending_All_Valid_sid:
       endPoint: /v1/partnermanager/partners/pms-111999/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyauthPartner_12
-      description: Mapping Partner & Policy
+      description: Validate that partner policy mappings in a pending state are listed correctly for all valid entries
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01

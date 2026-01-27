@@ -2,7 +2,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_01
-      description: Create Data Share Policy with valid details
+      description: Validate that defining a data share policy succeeds for all valid inputs
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -34,7 +34,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_All_for_req_ApiKey_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_02
-      description: Create Data Share Policy for requested API Key
+      description: Validate that defining a data share policy succeeds for all valid API key request 
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -66,7 +66,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_All_for_Update_smoke_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_03
-      description: Create Data Share Policy for update partner	  
+      description: Validate that updating a data share policy succeeds for all valid inputs 
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -98,7 +98,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_ToCheckStatus_Smoke_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_04
-      description: Create Data Share Policy To check status
+      description: Validate that the status of a data share policy can be checked successfully for valid inputs
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -129,7 +129,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_WithoutMandatoryFields_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_05
-      description: Create Data Share Policy Without Mandatory Fields
+      description: Validate that defining a data share policy fails when mandatory fields are not provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -161,7 +161,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_duplicate_policy_name:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_06
-      description: Create Data Share Policy with duplicate Policy name
+      description: Validate that defining a data share policy fails when a duplicate policy name is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -193,7 +193,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_InActive_policyGroup:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_07
-      description: Create Data Share Policy for inactive Policy Group
+      description: Validate that defining a data share policy fails when the associated policy group is inactive
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -225,7 +225,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_invalid_policy_grp_name:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_08
-      description: Create Data Share Policy while keeping invalid Policy Group name
+      description: Validate that defining a data share policy fails when an invalid policy group name is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -257,7 +257,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_invalid_policy_type:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_09
-      description: Create Data Share Policy while keeping invalid Policy Type
+      description: Validate that defining a data share policy fails when an invalid policy type is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -289,7 +289,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_missing_name:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_10
-      description: Create Data Share Policy while keeping name parameter as Empty
+      description: Validate that defining a data share policy fails when the policy name is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -321,7 +321,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_missing_descr:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_11
-      description: Create Data Share Policy while keeping description parameter as Empty
+      description: Validate that defining a data share policy fails when the policy description is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -353,7 +353,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_missing_PolicyGrpName:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_12
-      description: Create Data Share Policy while keeping Policy Group Name parameter as Empty
+      description: Validate that defining a data share policy fails when the policy group name is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -385,7 +385,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_missing_PolicyType:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_13
-      description: Create Data Share Policy while keeping Policy Type parameter as Empty
+      description: Validate that defining a data share policy fails when the policy type is missing
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -418,7 +418,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_RemovedAttribute_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_14
-      description: Create Data Share Policy while keeping AttributeName parameter as Empty
+      description: Validate that defining a data share policy fails when a removed attribute is included in the request
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -452,7 +452,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_format_SpaceVal_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_15
-      description: Create Data Share Policy while keeping Format parameter with spaces value
+      description: Validate that defining a data share policy fails when fields contain only space values formatting
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -484,7 +484,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_IndividualBiometrics_Attribute:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_16
-      description: Create Data Share Policy while keeping attributeName parameter as IndividualBiometrics
+      description: Validate that defining a data share policy succeeds when individual biometrics attributes are included
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -516,7 +516,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_Zipcode_Attribute:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_17
-      description: Create Data Share Policy while keeping attributeName parameter as Zipcode
+      description: Validate that defining a data share policy succeeds when the zipcode attribute is included
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -548,7 +548,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_typeOfShare_SpaceVal_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_18
-      description: Create Data Share Policy while keeping typeofShare parameter with spaces value
+      description: Validate that defining a data share policy fails when the typeOfShare field contains only space values
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -581,7 +581,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_typeOfShare_Direct_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_19
-      description: Create Data Share Policy while keeping typeOfShare parameter as Direct value
+      description: Validate that defining a data share policy fails when typeOfShare is set to an invalid value Direct
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -614,7 +614,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_typeOfShare_Remove_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_20
-      description: Create Data Share Policy while keeping typeOfShare parameter as Empty
+      description: Validate that defining a data share policy fails when the typeOfShare attribute is removed from the request
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -647,7 +647,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_shareDomain_https_Smoke:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_21
-      description: Create Data Share Policy while keeping shareDomain parameter as https
+      description: Validate that defining a data share policy succeeds when the shareDomain is provided with a valid HTTPS URL
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -679,7 +679,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_EncryptionType_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_22
-      description: Create Data Share Policy while keeping EncryptionType parameter as none value
+      description: Validate that defining a data share policy fails when an invalid encryptionType is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -711,7 +711,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_AttributeName_Custom_Name_Neg:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_23
-      description: Create Data Share Policy while keeping AttributeName parameter as custome name value
+      description: Validate that defining a data share policy fails when an custom attribute name is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -742,7 +742,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_Cancelling_the_create_dataSharePolicy:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_24
-      description: Create Data Share Policy while Cancelling the created dataSharePolicy
+      description: Validate that the creation of a data share policy is cancelled successfully when the operation is aborted before submission
       role: partneradmin
       restMethod: post
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
@@ -773,7 +773,7 @@ defineDataSharePolicy:
    Pms_DefineDataSharePolicy_without_policyId:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_25
-      description: Create Data Share Policy without PolicyId
+      description: Validate that defining a data share policy fails when the policyId is missing
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post

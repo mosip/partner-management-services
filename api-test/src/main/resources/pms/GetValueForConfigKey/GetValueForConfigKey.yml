@@ -2,7 +2,7 @@ GetValueForConfigKey:
    Pms_GetValueForConfigKey_allValid_smoke:
       endPoint: /v1/policymanager/policies/config/{key}
       uniqueIdentifier: TC_PMS_GetValueForConfigKey_01
-      description: Retrieve valid Value For Config Key
+      description: Validate that the value for a given configuration key is retrieved successfully for a valid request
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -19,7 +19,7 @@ GetValueForConfigKey:
    Pms_GetValueForConfigKey_allValid_smoke:
       endPoint: /v1/policymanager/policies/config/{key}
       uniqueIdentifier: TC_PMS_GetValueForConfigKey_02
-      description: Retrieve valid Value For Config Key keeping invalid Key
+      description: Validate that all configuration key values are retrieved successfully for valid requests
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

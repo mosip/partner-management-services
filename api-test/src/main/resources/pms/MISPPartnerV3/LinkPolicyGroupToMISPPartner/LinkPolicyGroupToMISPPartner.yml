@@ -2,7 +2,7 @@ LinkPolicyGroupToMISPPartner:
   Pms_LinkPolicyGroupToMISPPartner_All_Valid_Smoke:
     endPoint: /v1/partnermanager/{partnerId}/policy-group
     uniqueIdentifier: TC_PMS_LinkPolicyGroupToMISPPartner_01
-    description: Linking Policy Group to MISP Partner using valid Access Token
+    description: Validate that the API successfully links a policy group to a MISP partner with valid inputs
     role: partneradmin
     restMethod: post
     inputTemplate: pms/MISPPartnerV3/LinkPolicyGroupToMISPPartner/LinkPolicyGroupToMISPPartner

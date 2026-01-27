@@ -2,7 +2,7 @@ GetListAllFTMChipNegativeScenarios:
    Pms_GetListAllFTMChip_Without_Authentication_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_01
-      description: Retrieve all FTM chip details without Partner authentication
+      description: Validate that FTM chip list retrieval fails when no authentication is provided
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -20,7 +20,7 @@ GetListAllFTMChipNegativeScenarios:
    Pms_GetListAllFTMChip_Invalid_Token_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_02
-      description: Retrieve all FTM chip details with Invalid access token
+      description: Validate that FTM chip list retrieval fails when an invalid token is used
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -38,7 +38,7 @@ GetListAllFTMChipNegativeScenarios:
    Pms_GetListAllFTMChip_WhenNo_FTM_Chips_AddedNeg:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_03
-      description: Retrieve all FTM chip details when FTM Chips are not added for Partner
+      description: Validate that the FTM chip list is empty when no FTM chips are added
       checkErrorsOnlyInResponse: true
       role: partnerftm
       restMethod: get
@@ -49,10 +49,10 @@ GetListAllFTMChipNegativeScenarios:
       output: '{
       
 }'
-   Pms_GetListAllFTMChip_Without_Authentication_Neg:
+   Pms_GetListAllFTMChip_With_Auth_Partner_Authentication_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_04
-      description: Retrieve all FTM chip details with Auth Partner token
+      description: Validate that FTM chip list retrieval fails when accessed using an authenticated partner token that is not authorized
       role: partnerauth
       restMethod: get
       inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
@@ -66,10 +66,10 @@ GetListAllFTMChipNegativeScenarios:
        }
        ]
 }'
-   Pms_GetListAllFTMChip_Without_Authentication_Neg:
+   Pms_GetListAllFTMChip_With_Device_Partner_Authentication_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail
       uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_05
-      description: Retrieve all FTM chip details wwith Device Partner token
+      description: Validate that FTM chip list retrieval fails when accessed using a device partner authentication token
       role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip

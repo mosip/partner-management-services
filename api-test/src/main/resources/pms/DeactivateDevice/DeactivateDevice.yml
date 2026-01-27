@@ -2,7 +2,7 @@ DeactivateDevice:
    Pms_DeactivateDevice_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail/{deviceId}
       role: partnerdevice
-      description: Deactivate Device
+      description: Validate that a device is successfully deactivated when all input parameters are valid
       uniqueIdentifier: TC_PMS_DeactivateDevice_01
       checkErrorsOnlyInResponse: true
       restMethod: patch

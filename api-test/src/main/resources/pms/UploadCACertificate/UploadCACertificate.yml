@@ -2,7 +2,7 @@ UploadCACertificate:
    Pms_UploadCACertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_01
-      description: Upload CA Cert
+      description: Validate that uploading a CA Certificate with all valid inputs is successful and reflected correctly
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -16,7 +16,7 @@ UploadCACertificate:
    Pms_UploadSubCACertificate_with_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_02
-      description: Upload Sub-CA Cert
+      description: Validate that uploading a Sub CA Certificate with all valid inputs is successful and reflected correctly
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -31,7 +31,7 @@ UploadCACertificate:
    Pms_UploadCertificateDeviceProvider_with_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_03
-      description: Upload CA Cert
+      description: Validate that uploading a Device Provider Certificate with all valid inputs is successful and reflected correctly
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -46,7 +46,7 @@ UploadCACertificate:
    Pms_UploadSubCACertificate_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_04
-      description: Upload Sub-CA Cert
+      description: Validate that uploading a Sub CA Certificate for a Device Provider with all valid inputs is successful
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -60,7 +60,7 @@ UploadCACertificate:
    Pms_UploadCACertificate_UploadAgain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_05
-      description: Upload CA Cert which is already uploaded      
+      description: Validate that re-uploading an already uploaded CA Certificate fails     
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -79,7 +79,7 @@ UploadCACertificate:
    Pms_UploadCACertificate_with_invalid_data:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_06
-      description: Upload CA Cert with invalid data      
+      description: Validate that uploading a CA Certificate fails when invalid data is provided      
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -99,7 +99,7 @@ UploadCACertificate:
    Pms_UploadCACertificate_with_blank_data:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_07
-      description: Upload CA Cert with blank data      
+      description: Validate that uploading a CA Certificate fails when the input data is blank  
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -119,7 +119,7 @@ UploadCACertificate:
    Pms_UploadCertificate_Ftm_Provider_with_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_08
-      description: Upload CA Cert
+      description: Validate that uploading a Certificate for an FTM Provider with all valid inputs is successful
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -134,7 +134,7 @@ UploadCACertificate:
    Pms_UploadSubCACertificate_Ftm_Provider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_09
-      description: Upload Sub-CA Cert
+      description: Validate that uploading a Sub CA Certificate for an FTM Provider with all valid inputs is successful
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post

@@ -2,7 +2,7 @@ UpdatePolicyAgainstApiKey:
    Pms_UpdatePolicyAgainstApiKey_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
       uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_01
-      description: Update Policy Against ApiKey with valid details
+      description: Validate that updating a Policy against an API Key with all valid inputs is successful and the changes are reflected correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -20,7 +20,7 @@ UpdatePolicyAgainstApiKey:
    Pms_UpdatePolicyAgainstApiKey_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
       uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_02
-      description: Update Policy Against ApiKey with invalid PartnerId
+      description: Validate that updating a Policy against an API Key fails when an invalid partnerId is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
@@ -42,7 +42,7 @@ UpdatePolicyAgainstApiKey:
    Pms_UpdatePolicyAgainstApiKey_invalid_apiKey:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
       uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_03
-      description: Update Policy Against ApiKey with invalid ApiKey
+      description: Validate that updating a Policy against an API Key fails when an invalid apiKey is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
@@ -64,7 +64,7 @@ UpdatePolicyAgainstApiKey:
    Pms_UpdatePolicyAgainstApiKey_invalid_OldPolicyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
       uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_04
-      description: Update Policy Against ApiKey with invalid OldPolicyId
+      description: Validate that updating a Policy against an API Key fails when an invalid oldPolicyId is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey
@@ -86,7 +86,7 @@ UpdatePolicyAgainstApiKey:
    Pms_UpdatePolicyAgainstApiKey_invalid_newPolicyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}/policies
       uniqueIdentifier: TC_PMS_UpdatePolicyAgainstApiKey_05
-      description: Update Policy Against ApiKey with invalid NewPolicyId
+      description: Validate that updating a Policy against an API Key fails when an invalid newPolicyId is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyAgainstApiKey/updatePolicyAgainstApiKey

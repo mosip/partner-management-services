@@ -2,7 +2,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_All_Valid_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_01
-      description: Upload Partner Cert for auth partner
+      description: Validate that uploading a Partner Certificate with all valid inputs including sid is successful
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01,TC_PMS_UploadCACertificate_01, TC_PMS_UploadCACertificate_02
@@ -18,7 +18,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_uploadCertificateDeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_03
-      description: Upload Partner Cert for device provider
+      description: Validate that uploading a Partner Certificate and Device Provider Certificate with all valid inputs is successful
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_06,TC_PMS_UploadCACertificate_03, TC_PMS_UploadCACertificate_04
@@ -34,7 +34,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_missing_PartnerDomain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_04
-      description: Upload Partner Cert without partnerdomain      
+      description: Validate that uploading a Partner Certificate fails when the Partner Domain is missing      
       role: partnerauth
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert2
@@ -52,7 +52,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_invalid_certificate_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_05
-      description: Upload Partner Cert by giving invalid cert data      
+      description: Validate that uploading a Partner Certificate fails when an invalid certificate is provided
       role: partnerauth
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert3
@@ -70,7 +70,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_invalid_Domain_Neg:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_06
-      description: Upload Partner Cert by giving invalid domain      
+      description: Validate that uploading a Partner Certificate fails when an invalid domain is provided  
       role: partnerauth
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert4
@@ -89,7 +89,7 @@ uploadPartnerCert:
       endPoint: /v1/partnermanager/partners/certificate/upload
       role: partnerauth
       uniqueIdentifier: TC_PMS_uploadPartnerCert_07
-      description: Upload partner certificate again
+      description: Validate that uploading a Partner Certificate again fails when the certificate already exists
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01,TC_PMS_UploadCACertificate_01, TC_PMS_UploadCACertificate_02
       restMethod: post
@@ -104,7 +104,7 @@ uploadPartnerCert:
    Pms_UploadPartnerCert_uploadCertificateFtmProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_08
-      description: Upload Partner Cert for ftm provider
+      description: Validate that uploading a Partner Certificate and FTM Provider Certificate with all valid inputs is successful
       role: partnerftm
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_07,TC_PMS_UploadCACertificate_05, TC_PMS_UploadCACertificate_06

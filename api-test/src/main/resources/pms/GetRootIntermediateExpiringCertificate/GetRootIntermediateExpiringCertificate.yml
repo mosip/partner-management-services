@@ -2,7 +2,7 @@ GetRootIntermediateExpiringCertificate:
    Pms_GetRootIntermediateExpiringCertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
-      description: Get Root and Intermediate Expiring Certificates
+      description: Validate that all root and intermediate certificates nearing expiry are retrieved successfully for a valid request
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_01
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -17,7 +17,7 @@ GetRootIntermediateExpiringCertificate:
    Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_30_Smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
-      description: Get Root and Intermediate Expiring Certificates
+      description: Validate that root and intermediate certificates expiring within the next 30 days are retrieved successfully
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_02
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -32,7 +32,7 @@ GetRootIntermediateExpiringCertificate:
    Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_15_Smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
-      description: Get Root and Intermediate Expiring Certificates
+      description: Validate that root and intermediate certificates expiring exactly 15 days from today are retrieved successfully
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_03
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -47,7 +47,7 @@ GetRootIntermediateExpiringCertificate:
    Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_10_Smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
-      description: Get Root and Intermediate Expiring Certificates
+      description: Validate that root and intermediate certificates expiring exactly 10 days from today are retrieved successfully
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_04
       checkErrorsOnlyInResponse: true
       restMethod: get

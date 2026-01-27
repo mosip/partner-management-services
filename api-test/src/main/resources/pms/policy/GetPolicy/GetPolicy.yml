@@ -2,7 +2,7 @@ getPolicy:
    Pms_GetPolicy_All_Valid_Smoke_sid:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_getPolicy_01
-      description: Retrieve Parter Policy
+      description: Validate that all policies can be retrieved successfully for valid inputs
       role: partner
       restMethod: get
       inputTemplate: pms/policy/GetPolicy/getPolicy
@@ -21,7 +21,7 @@ getPolicy:
    Pms_GetPolicy_Invalid_InputParameter_policyId:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_getPolicy_02
-      description: Retrieve Parter Policy with invalid PolicyId
+      description: Validate that retrieving a policy fails when an invalid policyId is provided
       role: partner
       restMethod: get
       inputTemplate: pms/policy/GetPolicy/getPolicy

@@ -2,7 +2,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Valid_Smoke:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_01
-      description: Create Search Misp License with valid details
+      description: Validate that MISP licenses are retrieved successfully when searched using valid search criteria
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -24,7 +24,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Valid_Filter_Name:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_02
-      description: Create Search Misp License with valid Filter Name
+      description: Validate that MISP licenses are retrieved successfully when searched using a valid filter by name
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -49,7 +49,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Invalid_NegPageFetch:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_03
-      description: Create Search Misp License with invalid Page fetch
+      description: Validate that retrieving MISP licenses fails when an invalid or negative page number is provided for pagination
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/SearchMispLicense/searchMispLicense
@@ -78,7 +78,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Invalid_NegPageStart:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_04
-      description: Create Search Misp License with invalid Page Start
+      description: Validate that retrieving MISP licenses fails when an invalid start page value is provided for pagination
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/SearchMispLicense/searchMispLicense
@@ -107,7 +107,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Invalid_SortType_neg:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_05
-      description: Create Search Misp License with invalid SortType
+      description: Validate that retrieving MISP licenses fails when an invalid sort type is provided in the search request
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/SearchMispLicense/searchMispLicense
@@ -136,7 +136,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Invalid_SortField_neg:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_06
-      description: Create Search Misp License with invalid SortField
+      description: Validate that retrieving MISP licenses fails when an invalid sort field is provided in the search request
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/SearchMispLicense/searchMispLicense
@@ -166,7 +166,7 @@ SearchMispLicense:
    Pms_SearchMispLicense_Blank_SortField:
       endPoint: /v1/partnermanager/misps/search
       uniqueIdentifier: TC_PMS_SearchMispLicense_07
-      description: Create Search Misp License with Empty Sort Field
+      description: Validate that retrieving MISP licenses fails when the sort field is left blank in the search request
       role: partner
       restMethod: post
       inputTemplate: pms/MispLicense/SearchMispLicense/searchMispLicense

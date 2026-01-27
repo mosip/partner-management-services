@@ -2,7 +2,7 @@ getPolicyGroup:
    Pms_GetPolicyGroup_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_getPolicyGroup_01
-      description: Retrieve Parter Policy Group
+      description: Validate that all policy groups can be retrieved successfully for valid inputs
       role: partner
       restMethod: get
       inputTemplate: pms/policy/GetPolicyGroup/getPolicyGroup
@@ -18,7 +18,7 @@ getPolicyGroup:
    Pms_GetPolicyGroup_By_Invalid_policyGroupId:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_getPolicyGroup_02
-      description: Retrieve Parter Policy Group with invalid PolicyGroupId
+      description: Validate that retrieving a policy group fails when an invalid policyGroupId is provided
       role: partner
       restMethod: get
       inputTemplate: pms/policy/GetPolicyGroup/getPolicyGroup

@@ -3,7 +3,7 @@ InactiveMappingDeviceToSbi:
       endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
       role: partnedevice
       uniqueIdentifier: TC_PMS_InactiveMappingDeviceToSbi_01
-      description: Inactive Mapping Device To Sbi 
+      description: Validate that a device is successfully inactivated for its SBI mapping when a valid request is submitted
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbi
@@ -22,7 +22,7 @@ InactiveMappingDeviceToSbi:
       endPoint: /v1/partnermanager/devicedetail/inactive-mapping-device-to-sbi
       role: partnerdevice
       uniqueIdentifier: TC_PMS_InactiveMappingDeviceToSbi_02
-      description: Reject Mapping Device To Sbi
+      description: Validate that a devices SBI mapping is successfully rejected when a valid reject request is submitted
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/InactiveMappingDeviceToSbi/InactiveMappingDeviceToSbi
