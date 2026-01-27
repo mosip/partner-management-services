@@ -1000,21 +1000,17 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			JsonNode title = purpose.path("title");
 			JsonNode subtitle = purpose.path("subTitle");
 
-			boolean titleInvalid = !title.isMissingNode() && !title.isNull() && !title.isObject();
-			boolean subtitleInvalid = !subtitle.isMissingNode() && !subtitle.isNull() && !subtitle.isObject();
-
-			if (titleInvalid || subtitleInvalid) {
+			if ((!title.isMissingNode() && !title.isNull() && !title.isObject()) ||
+				(!subtitle.isMissingNode() && !subtitle.isNull() && !subtitle.isObject())) {
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
 						"purpose.title and purpose.subTitle must be maps");
 			}
 
 			JsonNode typeNode = purpose.path("type");
-			boolean titlePresent = !title.isMissingNode() && !title.isEmpty();
-			boolean subtitlePresent = !subtitle.isMissingNode() && !subtitle.isEmpty();
 
 			// If title or subtitle exist, type must be present and valid
-			if (titlePresent || subtitlePresent) {
+			if ((title.isObject() && !title.isEmpty()) || (subtitle.isObject() && !subtitle.isEmpty())) {
 				if (typeNode.isMissingNode() || typeNode.isNull()) {
 					throw new PartnerServiceException(
 							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
