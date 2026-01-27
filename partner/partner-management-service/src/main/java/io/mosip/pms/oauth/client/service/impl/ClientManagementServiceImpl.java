@@ -1008,6 +1008,15 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			}
 
 			JsonNode typeNode = purpose.path("type");
+           // Validate type if present
+			if (!typeNode.isMissingNode() && !typeNode.isNull()) {
+				String type = typeNode.asText();
+				if (!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
+							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type));
+				}
+			}
 
 			// If title or subtitle exist, type must be present and valid
 			if ((title.isObject() && !title.isEmpty()) || (subtitle.isObject() && !subtitle.isEmpty())) {
@@ -1015,16 +1024,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					throw new PartnerServiceException(
 							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
 							"purpose.type is required when title or subTitle is provided");
-				}
-			}
-
-			// Validate type if present
-			if (!typeNode.isMissingNode() && !typeNode.isNull()) {
-				String type = typeNode.asText();
-				if (!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
-					throw new PartnerServiceException(
-							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
-							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type));
 				}
 			}
 
