@@ -990,6 +990,16 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						"purpose must be a JSON object");
 			}
 			
+			JsonNode title = purpose.get("title");
+			JsonNode subtitle = purpose.get("subTitle");
+			
+			if((title != null && !title.isNull() && !title.isObject()) || 
+			   (subtitle != null && !subtitle.isNull() && !subtitle.isObject())) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						"purpose.title and purpose.subTitle must be maps");
+			}
+			
 			if(purpose.has("type") && !purpose.get("type").isNull()) {
 				String type = purpose.get("type").asText();
 				if(!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
@@ -997,10 +1007,14 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
 							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type));
 				}
+			} else if((title != null && !title.isEmpty()) || (subtitle != null && !subtitle.isEmpty())) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage());
 			}
 
-			validateLanguageKeys(purpose.get("title"), "purpose.title", true);
-			validateLanguageKeys(purpose.get("subTitle"), "purpose.subTitle", true);
+			validateLanguageKeys(title, "purpose.title", true);
+			validateLanguageKeys(subtitle, "purpose.subTitle", true);
 		}
 	}
 
