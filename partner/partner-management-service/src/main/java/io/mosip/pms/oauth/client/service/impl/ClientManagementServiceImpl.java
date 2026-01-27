@@ -996,47 +996,18 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				);
 			}
 			
-			// Extract individual fields
-			String type = purpose.has("type") ? purpose.get("type").asText() : null;
-			JsonNode title = purpose.has("title") ? purpose.get("title") : null;
-			JsonNode subtitle = purpose.has("subTitle") ? purpose.get("subTitle") : null;
-
-			if(title != null && !title.isObject()) {
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-						"purpose.title must be a map");
-			}
-			if(subtitle != null && !subtitle.isObject()) {
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-						"purpose.subTitle must be a map");
-			}
-
-			// 1. purpose.type only allow login / link / verify (case insensitive)
-			if(type != null) {
+			JsonNode typeNode = purpose.get("type");
+			if(typeNode != null && !typeNode.isNull()) {
+				String type = typeNode.asText();
 				if(!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
 					throw new PartnerServiceException(
 							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
-							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type)
-					);
+							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type));
 				}
 			}
 
-			// 2. title/subtitle allowed ONLY if type is not null
-			if(type == null && ((title != null && !title.isEmpty()) ||
-					(subtitle != null && !subtitle.isEmpty()))) {
-
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage()
-				);
-			}
-
-			// 3. Validate title keys (@none mandatory)
-			validateLanguageKeys(title, "purpose.title", true);
-
-			// 4. Validate subtitle keys (@none mandatory)
-			validateLanguageKeys(subtitle, "purpose.subTitle", true);
+			validateLanguageKeys(purpose.get("title"), "purpose.title", true);
+			validateLanguageKeys(purpose.get("subTitle"), "purpose.subTitle", true);
 		}
 	}
 
