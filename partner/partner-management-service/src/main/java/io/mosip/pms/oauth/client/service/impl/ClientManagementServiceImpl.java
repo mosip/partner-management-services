@@ -961,56 +961,71 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ErrorCode.INVALID_ADDITIONAL_CONFIG_TYPE.getErrorCode(),
 					ErrorCode.INVALID_ADDITIONAL_CONFIG_TYPE.getErrorMessage());
 		}
-		
-		if(additionalConfig.has("userinfo_response_type") && !additionalConfig.get("userinfo_response_type").isNull()) {
-			String userinfoResponseType = additionalConfig.get("userinfo_response_type").asText();
-			if(!VALID_USER_INFO_RESPONSE_TYPES.contains(userinfoResponseType)) {
+
+		// Validate userinfo_response_type
+		JsonNode responseTypeNode = additionalConfig.get("userinfo_response_type");
+		if (responseTypeNode != null && !responseTypeNode.isNull()) {
+			String userinfoResponseType = responseTypeNode.asText();
+			if (!VALID_USER_INFO_RESPONSE_TYPES.contains(userinfoResponseType)) {
 				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}", userinfoResponseType);
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName, clientId);
-				throw new PartnerServiceException(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(),
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(),
 						String.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(), userinfoResponseType));
 			}
 		}
-		
-		if(additionalConfig.has("consent_expire_in_mins") && !additionalConfig.get("consent_expire_in_mins").isNull()) {
-			int consentExpireInMins = additionalConfig.get("consent_expire_in_mins").asInt();
-			if(consentExpireInMins < 10) {
+
+		// Validate consent_expire_in_mins
+		JsonNode consentNode = additionalConfig.get("consent_expire_in_mins");
+		if (consentNode != null && !consentNode.isNull()) {
+			int consentExpireInMins = consentNode.asInt();
+			if (consentExpireInMins < 10) {
 				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}", consentExpireInMins);
 				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName, clientId);
-				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(),
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(),
 						String.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(), consentExpireInMins));
 			}
 		}
-		
-		if(additionalConfig.has("purpose")) {
-			JsonNode purpose = additionalConfig.get("purpose");
-			if (purpose.isNull() || !purpose.isObject()) {
+
+		// Validate purpose
+		JsonNode purpose = additionalConfig.path("purpose");
+		if (!purpose.isMissingNode()) {
+			if (!purpose.isObject()) {
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
 						"purpose must be a JSON object");
 			}
-			
-			JsonNode title = purpose.get("title");
-			JsonNode subtitle = purpose.get("subTitle");
-			
-			if((title != null && !title.isNull() && !title.isObject()) || 
-			   (subtitle != null && !subtitle.isNull() && !subtitle.isObject())) {
+
+			JsonNode title = purpose.path("title");
+			JsonNode subtitle = purpose.path("subTitle");
+
+			boolean titleInvalid = !title.isMissingNode() && !title.isNull() && !title.isObject();
+			boolean subtitleInvalid = !subtitle.isMissingNode() && !subtitle.isNull() && !subtitle.isObject();
+
+			if (titleInvalid || subtitleInvalid) {
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
 						"purpose.title and purpose.subTitle must be maps");
 			}
-			
-			if(purpose.has("type") && !purpose.get("type").isNull()) {
-				String type = purpose.get("type").asText();
-				if(!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
+
+			JsonNode typeNode = purpose.path("type");
+			if (!typeNode.isMissingNode() && !typeNode.isNull()) {
+				String type = typeNode.asText();
+				if (!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
 					throw new PartnerServiceException(
 							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
 							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type));
 				}
-			} else if((title != null && !title.isEmpty()) || (subtitle != null && !subtitle.isEmpty())) {
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage());
+			} else {
+				boolean titlePresent = !title.isMissingNode() && !title.isEmpty();
+				boolean subtitlePresent = !subtitle.isMissingNode() && !subtitle.isEmpty();
+
+				if (titlePresent || subtitlePresent) {
+					throw new PartnerServiceException(
+							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage());
+				}
 			}
 
 			validateLanguageKeys(title, "purpose.title", true);
