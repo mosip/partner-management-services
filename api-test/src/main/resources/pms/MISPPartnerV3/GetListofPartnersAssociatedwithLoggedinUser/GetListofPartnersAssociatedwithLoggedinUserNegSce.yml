@@ -2,7 +2,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Invalid_Token_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_01
-      description: Retrieve all MISP Partner records with invalid access token
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using an invalid token
       role: invalidtoken
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
@@ -22,7 +22,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Special_Characters_Status_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_02
-      description: Retrieve all MISP Partner records with invalid Special Characters in status
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using special characters in the status filter
       role: partneradmin
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
@@ -42,7 +42,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Invalid_partnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_03
-      description: Retrieve all MISP Partner records with invalid partnerType
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using an invalid partner type
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -58,7 +58,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Special_Characters_partnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_04
-      description: Retrieve all MISP Partner records with invalid Special Characters in partnerType
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using special characters in the partner type filter
       role: partneradmin
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
@@ -78,7 +78,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_lowercase_partnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_05
-      description: Retrieve all MISP Partner records with invalid Special Characters in partnerType
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using a lowercase partner type value
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -94,7 +94,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Invalid_query_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_06
-      description: Retrieve all MISP Partner records with invalid Special Characters in partnerType
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using an invalid query parameter
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -110,7 +110,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Partner_Fetching_MISP_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_07
-      description: Retrieve all MISP Partner records with non-Admin user fetching MISP_Partner
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user if MISP partner fetching fails
       role: partnerauth
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
@@ -130,7 +130,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_InvalidStatus_validPartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_08
-      description: Retrieve all MISP Partner records with invalid status and valid partnertype
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using an invalid status with a valid partner type
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -146,7 +146,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_validStatus_invalidPartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_09
-      description: Retrieve all MISP Partner records with valid status and invalid partnertype
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using a valid status with an invalid partner type
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -162,7 +162,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_invalidStatus_invalidPartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_10
-      description: Retrieve all MISP Partner records with invalid status and invalid partnertype
+      description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using both invalid status and invalid partner type
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get

@@ -2,7 +2,7 @@ AddBioExtractors:
    Pms_AddBioExtractors_MosipDataSharePolicy_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       uniqueIdentifier: TC_PMS_addBioExtractors_01
-      description: Add BioExtractors for MOSIPDataSharePolicy for valid PolicyID
+      description: Validate that bio extractors can be successfully added under the Mosip Data Share policy when all inputs are valid
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -17,7 +17,7 @@ AddBioExtractors:
    Pms_AddBioExtractors_MosipPolicy_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       uniqueIdentifier: TC_PMS_addBioExtractors_02
-      description: Add BioExtractors for MOSIP Policy for valid PolicyID
+      description: Validate that bio extractors can be successfully added under the Mosip policy when all inputs are valid
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -32,7 +32,7 @@ AddBioExtractors:
    Pms_AddBioExtractors_invalid_policyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       uniqueIdentifier: TC_PMS_addBioExtractors_03
-      description: Add BioExtractors for invalid PolicyID
+      description: Validate that adding bio extractors fails when an invalid policy ID is provided
       role: partner
       restMethod: post
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
@@ -53,7 +53,7 @@ AddBioExtractors:
    Pms_AddBioExtractors_invalid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
       uniqueIdentifier: TC_PMS_addBioExtractors_04
-      description: Add BioExtractors for invalid PartnerID
+      description: Validate that adding bio extractors fails when an invalid partner ID is provided
       role: partner
       restMethod: post
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors

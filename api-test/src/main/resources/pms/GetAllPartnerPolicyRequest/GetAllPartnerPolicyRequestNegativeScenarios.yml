@@ -2,7 +2,7 @@ GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_without_Authentication_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_02      
-      description: Fetching all the partner policy requests without authentication
+      description: Validate that partner policy requests retrieval fails when no authentication is provided
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -21,7 +21,7 @@ GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_Invalid_Token_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_03      
-      description: Fetching all the partner policy requests with invalid token
+      description: Validate that partner policy requests retrieval fails when an invalid or expired token is used
       role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
@@ -38,7 +38,7 @@ GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_invalid_sortType_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_13   
-      description: Fetching all the partner policy requests by invalid sort type
+      description: Validate that partner policy requests retrieval fails an error when an invalid sortType is provided
       role: partnerauth
       restMethod: get
       inputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequest
@@ -62,7 +62,7 @@ GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_invalid_pageSize_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_17  
-      description: Fetching all the partner policy requests by giving negative pagesize value
+      description: Validate that partner policy requests retrieval fails an error when an invalid pageSize is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -87,7 +87,7 @@ GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_invalid_pageNo_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_18  
-      description: Fetching all the partner policy requests by giving negative pageNo value
+      description: Validate that partner policy requests retrieval fails an error when an invalid pageNo is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -112,7 +112,7 @@ GetAllPartnerPolicyRequest:
    Pms_GetAllPartnerPolicyRequest_invalid_sortFieldName_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests
       uniqueIdentifier: TC_PMS_partner-policy-requests_20  
-      description: Fetching all the partner policy requests with invalid sortfieldname
+      description: Validate that partner policy requests retrieval fails an error when an invalid sortFieldName is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get

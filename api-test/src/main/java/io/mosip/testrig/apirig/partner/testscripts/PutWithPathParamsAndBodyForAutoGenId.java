@@ -29,14 +29,13 @@ import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
-import io.mosip.testrig.apirig.utils.GlobalMethods;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.ReportUtil;
 import io.mosip.testrig.apirig.utils.SecurityXSSException;
 import io.restassured.response.Response;
 
-public class PutWithPathParamsAndBody extends PMSUtil implements ITest {
-	private static final Logger logger = Logger.getLogger(PutWithPathParamsAndBody.class);
+public class PutWithPathParamsAndBodyForAutoGenId extends PMSUtil implements ITest {
+	private static final Logger logger = Logger.getLogger(PutWithPathParamsAndBodyForAutoGenId.class);
 	protected String testCaseName = "";
 	String pathParams = null;
 	public String idKeyName = null;

@@ -2,7 +2,7 @@ UpdatePrintPartner:
    Pms_UpdatePrintPartner_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/v2/{partnerId}
       uniqueIdentifier: TC_PMS_UpdatePrintPartner_01
-      description: Update Print Partner with valid details
+      description: Validate that a partners print details can be updated successfully with all valid inputs
       role: partner
       restMethod: put
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_printpartner_01  
@@ -15,6 +15,6 @@ UpdatePrintPartner:
 	     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-	     "partnerId": "mosipprint",
+	     "partnerId": "$ID:PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid_partnerId$",
           "status": "approved"
 }'

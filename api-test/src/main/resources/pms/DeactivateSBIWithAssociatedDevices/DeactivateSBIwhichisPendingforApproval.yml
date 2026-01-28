@@ -2,7 +2,7 @@ DeactivateSBIwhichisPendingforApproval:
    Pms_DeactivateSBI_PendingForApproval_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_21
-      description: Deactivate SBI which is pending for approval
+      description: Validate that SBI deactivation fails when the SBI is pending approval
       role: partnerdevice
       restMethod: patch
       inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices

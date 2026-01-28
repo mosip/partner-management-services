@@ -2,7 +2,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Without_Authentication_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_01
-      description: Deactivate SBI with associated Devices without Partner authentication
+      description: Validate that SBI deactivation fails when authentication is not provided even if it has associated devices
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -22,7 +22,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Missing_requestTime_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_02
-      description: Deactivate SBI while keeping requestTime parameter as Missing in request
+      description: Validate that SBI deactivation fails when the request time is missing even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -42,7 +42,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Empty_requestTime_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_03
-      description: Deactivate SBI while keeping requestTime parameter as Empty in request
+      description: Validate that SBI deactivation fails when the request time is empty even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -62,7 +62,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_04
-      description: Deactivate SBI by passing Invalid ID parameter in request
+      description: Validate that SBI deactivation fails when an invalid SBI ID is provided even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -84,7 +84,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Missing_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_05
-      description: Deactivate SBI while keeping ID parameter as Missing in request
+      description: Validate that SBI deactivation fails when the SBI ID is missing even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -106,7 +106,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Keeping_IDas_Null_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_06
-      description: Deactivate SBI while keeping ID parameter as Null in request
+      description: Validate that SBI deactivation fails when the SBI ID is provided as null even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -128,7 +128,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Empty_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_07
-      description: Deactivate SBI while keeping ID parameter as Empty in request
+      description: Validate that SBI deactivation fails when the SBI ID is empty even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -150,7 +150,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Missing_Version_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_08
-      description: Deactivate SBI without Version parameter in request
+      description: Validate that SBI deactivation fails when the version is missing even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -172,7 +172,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Null_Version_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_09
-      description: Deactivate SBI while keeping Version parameter as Null in request
+      description: Validate that SBI deactivation fails when the version is null even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -194,7 +194,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Empty_Version_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_10
-      description: Deactivate SBI while keeping Version parameter as Empty in request
+      description: Validate that SBI deactivation fails when the version is empty even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -216,7 +216,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue1_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_11
-      description: Deactivate SBI while keeping Version parameter as invalid value 1 in request
+      description: Validate that SBI deactivation fails when an invalid version value is provided even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -238,7 +238,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue0_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_12
-      description: Deactivate SBI while keeping Version parameter as invalid value 0 in request
+      description: Validate that SBI deactivation fails when the version value is 0 even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -260,7 +260,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_VersionValue_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_13
-      description: Deactivate SBI while keeping Version parameter as invalid values in request
+      description: Validate that SBI deactivation fails when an invalid version value is provided even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -282,7 +282,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_requestTime_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_14
-      description: Deactivate SBI while keeping Request Time parameter as invalid in request
+      description: Validate that SBI deactivation fails when an invalid request time is provided even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -305,7 +305,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Already_deactivated_SBI_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_15
-      description: Deactivate SBI which already Deactivated in request
+      description: Validate that SBI deactivation fails when the SBI is already deactivated even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -325,7 +325,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Null_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_16
-      description: Deactivate SBI while keeping SBI ID parameter as Null in request
+      description: Validate that SBI deactivation fails when the SBI ID is null, even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -347,7 +347,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Space_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_17
-      description: Deactivate SBI while keeping SBI ID parameter as Empty in request
+      description: Validate that SBI deactivation fails when the SBI ID contains only spaces even if it has associated devices
       role: partnerdevice
       checkOnlyStatusCodeInResponse: true
       restMethod: patch
@@ -365,7 +365,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_InvalidNumeric_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_18
-      description: Deactivate SBI while keeping SBI ID parameter as Invalid Numeric values in request
+      description: Validate that SBI deactivation fails when the SBI ID contains an invalid numeric value even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -387,7 +387,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Invalid_SBI_ID_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_19
-      description: Deactivate SBI while keeping SBI ID parameter as Invalid values in request
+      description: Validate that SBI deactivation fails when an invalid SBI ID is provided even if it has associated devices
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -409,7 +409,7 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_with_invalid_roles_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_20
-      description: Deactivate SBI with invalid Partner roles
+      description: Validate that SBI deactivation fails when attempted by a user with invalid roles even if the SBI has associated devices
       role: device
       checkErrorsOnlyInResponse: true
       restMethod: patch

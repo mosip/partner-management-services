@@ -2,7 +2,7 @@ GetOriginalFtmCertifacteNegativeScenarios:
    Pms_GetOriginalPartnerCertificates_Before_Uploading_Partner_Cert_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacte_BeforecertUpload_01
-      description: Retrieve Original FTM Certifacte with valid Partner ID
+      description: Validate that the API fails when partner certificates are not yet uploaded.
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get

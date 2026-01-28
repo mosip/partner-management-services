@@ -2,7 +2,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_without_Access_Token:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_01
-      description: Generate MISP Partner License without access Token
+      description: Validate that generating a MISP partner license fails when no access token is provided
       role: invalidtoken
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -26,7 +26,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Invalid_RequestID:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_02
-      description: Generate MISP Partner License with invalid request ID
+      description: Validate that generating a MISP partner license fails when an invalid request ID is provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -50,7 +50,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_without_RequestID:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_03
-      description: Generate MISP Partner License without request ID
+      description: Validate that generating a MISP partner license fails when the request ID is not provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -74,7 +74,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Null_RequestID:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_04
-      description: Generate MISP Partner License Null request ID
+      description: Validate that generating a MISP partner license fails when the request ID is null
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -98,7 +98,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Empty_RequestID:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_05
-      description: Generate MISP Partner License Empty request ID
+      description: Validate that generating a MISP partner license fails when the request ID is left empty
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -122,7 +122,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Invalid_Version:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_06
-      description: Generate MISP Partner License invalid version
+      description: Validate that generating a MISP partner license fails when an invalid version is provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -146,7 +146,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_without_Version:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_07
-      description: Generate MISP Partner License without version
+      description: Validate that generating a MISP partner license fails when the version is not provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -170,7 +170,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Null_Version:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_08
-      description: Generate MISP Partner License without version
+      description: Validate that generating a MISP partner license fails when the version is set to null
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -194,7 +194,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Version_value1:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_09
-      description: Generate MISP Partner License version value 1
+      description: Validate that generating a MISP partner license fails when an unsupported version value 1 is provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -218,7 +218,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Version_value0:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_10
-      description: Generate MISP Partner License version value 0
+      description: Validate that generating a MISP partner license fails when an invalid version value 0 is provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -242,7 +242,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_past_requestTime:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_11
-      description: Generate MISP Partner License with past request time
+      description: Validate that generating a MISP partner license fails when the request time is set in the past
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -266,7 +266,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_without_requestTime:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_12
-      description: Generate MISP Partner License with past request time
+      description: Validate that generating a MISP partner license fails when the request time is not provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -290,7 +290,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Invalid_partnerId:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_13
-      description: Generate MISP Partner License with invalid partnerId
+      description: Validate that generating a MISP partner license fails when an invalid partner ID is provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -314,7 +314,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Empty_partnerId:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_14
-      description: Generate MISP Partner License with Empty partnerId
+      description: Validate that generating a MISP partner license fails when the partner ID is left empty
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -338,7 +338,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_null_partnerId:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_15
-      description: Generate MISP Partner License with null partnerId
+      description: Validate that generating a MISP partner license fails when the partner ID is set to null
       role: partneradmin
       restMethod: post		
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -362,7 +362,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_invalid_LicenseKeyName:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_16
-      description: Generate MISP Partner License with invalid licenseKeyName
+      description: Validate that generating a MISP partner license fails when an invalid license key name is provided
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -386,7 +386,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Empty_LicenseKeyName:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_17
-      description: Generate MISP Partner License with Empty licenseKeyName
+      description: Validate that generating a MISP partner license fails when the license key name is left empty
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -410,7 +410,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Empty_expiryDate:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_18
-      description: Generate MISP Partner License with Empty expiryDate
+      description: Validate that generating a MISP partner license fails when the expiry date is left empty
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -434,7 +434,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Past_expiryDate:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_19
-      description: Generate MISP Partner License with Past expiryDate
+      description: Validate that generating a MISP partner license fails when the expiry date is set in the past
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -443,7 +443,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111555",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$LICENSE_KEY_NAME$",
         "expiryDate": "2025-10-08"
@@ -458,7 +458,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
    Pms_GenerateMISPPartnerLicenseNegativeScenarios_Already_registered_LicenseKeyName:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_20
-      description: Generate MISP Partner License with already registered licenseKeyName
+      description: Validate that generating a MISP partner license fails when the license key name has already been registered
       role: partneradmin
       restMethod: post	
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
@@ -467,7 +467,7 @@ GenerateMISPPartnerLicenseNegativeScenarios:
         "id": "mosip.pms.misp.generate.license.post",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111555",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
         "expiryDate": "$EXPIRYDATE$"

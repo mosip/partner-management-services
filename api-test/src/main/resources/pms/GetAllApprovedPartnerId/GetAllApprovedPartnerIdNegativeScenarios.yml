@@ -1,7 +1,7 @@
 GetAllApprovedPartnerId:
    Pms_GetAllApprovedAuthPartnerId_without_auth:
       endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
-      description: Fetching all approved Partner Id without token
+      description: Validate that retrieving approved authenticated partner IDs fails when authentication is not provided
       uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerId_01_neg
       role: invalidtoken
       restMethod: get
@@ -18,7 +18,7 @@ GetAllApprovedPartnerId:
 }'
    Pms_GetAllApprovedAuthPartnerId_invalid_auth:
       endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
-      description: Fetching all approved Partner Id with invalid token
+      description: Validate that retrieving approved authenticated partner IDs fails when an invalid authentication is provided
       uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerId_02_neg
       role: invalidtoken
       restMethod: get

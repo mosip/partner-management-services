@@ -2,7 +2,7 @@ DeviceTypeFilter:
    Pms_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
       role: partnerdevice
-      description: Device Type Filter
+      description: Validate that device types are successfully filtered with all valid inputs
       uniqueIdentifier: TC_PMS_DeviceTypeFilter_01
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter
@@ -29,7 +29,7 @@ DeviceTypeFilter:
    Pms_DeviceTypeFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceTypeFilter_02
-      description: Create Device Type Filter for Partner with valid values
+      description: Validate that device types are successfully filtered with all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter
@@ -56,7 +56,7 @@ DeviceTypeFilter:
    Pms_DeviceTypeFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceTypeFilter_03
-      description: Create Device Type Filter for Partner while keeping FilterType parameter as Empty
+      description: Validate that device type filtering fails when the filterType is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter
@@ -81,7 +81,7 @@ DeviceTypeFilter:
    Pms_DeviceTypeFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceTypeFilter_04
-      description: Create Device Type Filter for Partner while keeping FilterColumn parameter as Empty
+      description: Validate that device type filtering fails when the filterColumn is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter
@@ -105,7 +105,7 @@ DeviceTypeFilter:
    Pms_DeviceTypeFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceTypeFilter_05
-      description: Create Device Type Filter for Partner while keeping invalid values in Column parameter
+      description: Validate that device type filtering fails when the specified filter column does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter
@@ -129,7 +129,7 @@ DeviceTypeFilter:
    Pms_DeviceTypeFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/devicedetail/deviceType/filtervalues
       uniqueIdentifier: TC_PMS_DeviceTypeFilter_06
-      description: Create Device Type Filter for Partner while keeping invalid values in Type parameter
+      description: Validate that device type filtering fails when the specified filter type does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/DeviceTypeFilter/DeviceTypeFilter

@@ -2,7 +2,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_Invalid_userId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: partnerauth
-      description: Get Notifications Seen Timestamp with invalid userId
+      description: Validate that the API fails to retrieve notification timestamps when an invalid userId is provided
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_01
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
@@ -20,7 +20,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_without_AdminRole_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: auth
-      description: Get Notifications Seen Timestamp without Adminrole
+      description: Validate that the API fails to retrieve notification timestamps when accessed without an admin role
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_02
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
@@ -38,7 +38,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_with_InvalidToken_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: invalidtoken
-      description: Get Notifications Seen Timestamp with invalid token
+      description: Validate that the API fails to retrieve notification timestamps when an invalid or expired token is used
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_03
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
@@ -56,7 +56,7 @@ GetNotificationsSeenTimestampNegativeScenarios:
    Pms_GetNotificationsSeenTimestampNegativeScenarios_Invalid_userId_PartnerAdminRole_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       role: partneradmin
-      description: Get Notifications Seen Timestamp with invalid userId
+      description: Validate that the API fails to retrieve notification timestamps when an invalid userId is provided even with a Partner Admin role
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestampNegativeScenarios_04
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp

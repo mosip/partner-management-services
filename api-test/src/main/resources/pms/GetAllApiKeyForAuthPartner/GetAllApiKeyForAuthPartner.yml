@@ -1,7 +1,7 @@
 GetAllApiKeyForAuthPartner:
    Pms_GetAllApiKeyForAuthPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key available for Auth Partner
+      description: Validate that all API keys are successfully retrieved for an authenticated partner with valid inputs
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_01
       checkErrorsOnlyInResponse: true
@@ -14,7 +14,7 @@ GetAllApiKeyForAuthPartner:
 }'
    Pms_GetAllApiKeyForAuthPartner_without_auth:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key available for Auth Partner without token
+      description: Validate that retrieving API keys for a partner fails when authentication is not provided
       uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_02
       role: invalidtoken
       checkErrorsOnlyInResponse: true
@@ -32,7 +32,7 @@ GetAllApiKeyForAuthPartner:
 }'
    Pms_GetAllApiKeyForAuthPartner_invalid_auth:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key available for Auth Partner with invalid token
+      description: Validate that retrieving API keys for a partner fails when an invalid authentication is provided
       uniqueIdentifier: TC_PMS_GetAllApikeyForAuthPartner_03
       role: invalidtoken
       restMethod: get

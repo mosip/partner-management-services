@@ -2,7 +2,7 @@ DeactivateFtm:
    Pms_DeactivateFtm_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtm_01
-      description: Deactivate Device with valid Partner authentication
+      description: Validate that an FTM device is successfully deactivated when all input parameters are valid
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: patch

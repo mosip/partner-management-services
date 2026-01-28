@@ -2,7 +2,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_After_Publish_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_01      
-      description: Deactivate policy      
+      description: Validate that a published policy is successfully deactivated with all valid inputs     
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -21,7 +21,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_without_authentication:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_02      
-      description: Deactivate policy without authentication    
+      description: Validate that policy deactivation fails when authentication is not provided    
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -45,7 +45,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_invalid_roles:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_03      
-      description: Deactivate policy authenticated with invalid roles   
+      description: Validate that policy deactivation fails when attempted by a user with invalid roles  
       role: POLICYMANAGER
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -69,7 +69,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_invalid_policyId:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_04      
-      description: Deactivate policy with invalid policyid   
+      description: Validate that policy deactivation fails when an invalid policy ID is provided 
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -93,7 +93,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_invalid_policyId_spaces:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_05      
-      description: Deactivate policy with only spaces as policyid   
+      description: Validate that policy deactivation fails when the policy ID contains spaces  
       role: partneradmin
       checkOnlyStatusCodeInResponse: true
       restMethod: patch
@@ -113,7 +113,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_already_deactivated:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_06      
-      description: Deactivate policy which is already deactiavted   
+      description: Validate that policy deactivation fails when the policy is already deactivated 
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -137,7 +137,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_without_id:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_07      
-      description: Deactivate policy without id   
+      description: Validate that policy deactivation fails when the policy ID is not provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -161,7 +161,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_without_version:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_08      
-      description: Deactivate policy without version   
+      description: Validate that policy deactivation fails when the policy version is not provided  
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -185,7 +185,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_without_requestime:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_09      
-      description: Deactivate policy without requesttime   
+      description: Validate that policy deactivation fails when the request time is not provided  
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -209,7 +209,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_with_approved_policyrequests:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_10      
-      description: Deactivate policy with approved policy requests   
+      description: Validate that policy deactivation fails when there are approved policy requests associated with it  
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -234,7 +234,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_WithRejectedPolicy_Neg:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_11      
-      description: Deactivate policy with rejected policy    
+      description: Validate that policy deactivation fails when the policy is in rejected status 
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -254,7 +254,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_with_DraftPolicy_Neg:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_12      
-      description: Deactivate policy with draft policy requests   
+      description: Validate that policy deactivation fails when the policy is in draft status  
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -279,7 +279,7 @@ DeactivatePolicy:
    Pms_DeactivatePolicy_with_InProgressPolicy_Neg:
       endPoint: /v1/policymanager/policies/{policyId}
       uniqueIdentifier: TC_PMS_deactivate_policy_13    
-      description: Deactivate policy with draft policy requests   
+      description: Validate that policy deactivation fails when the policy is in progress 
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch

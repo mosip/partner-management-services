@@ -3,7 +3,7 @@ SaveUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       role: partnerauth
       uniqueIdentifier: TC_PMS_saveUserConsent_01
-      description: save User Consent 
+      description: Validate that user consent can be saved successfully with all valid inputs 
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveUserConsent/SaveUserConsent
@@ -11,13 +11,13 @@ SaveUserConsent:
       input: '{
 }'
       output: '{
-           "userId": "pms-111999"
+           "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
    Pms_saveUserConsent_invalid_roles_Neg:
       endPoint: /v1/partnermanager/users/user-consent
       role: ftm
       uniqueIdentifier: TC_PMS_saveUserConsent_02
-      description: save User Consent when authentication is done with invalid roles
+      description: Validate that saving user consent fails when the user has invalid roles
       restMethod: post
       inputTemplate: pms/SaveUserConsent/SaveUserConsent
       outputTemplate: pms/error
@@ -34,7 +34,7 @@ SaveUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       role: invalidtoken
       uniqueIdentifier: TC_PMS_saveUserConsent_03
-      description: save User Consent without authentication
+      description: Validate that saving user consent fails when authentication details are missing
       restMethod: post
       inputTemplate: pms/SaveUserConsent/SaveUserConsent
       outputTemplate: pms/error
@@ -51,7 +51,7 @@ SaveUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       role: partnerauthexternal
       uniqueIdentifier: TC_PMS_saveUserConsent_04
-      description: save User Consent for invalid user
+      description: Validate that saving user consent fails when an invalid user is provided
       restMethod: post
       inputTemplate: pms/SaveUserConsent/SaveUserConsent
       outputTemplate: pms/error
@@ -68,7 +68,7 @@ SaveUserConsent:
       endPoint: /v1/partnermanager/users/user-consent
       role: partneradmin
       uniqueIdentifier: TC_PMS_saveUserConsent_05
-      description: save User Consent 
+      description: Validate that a user consent can be saved successfully when the user has the Partner Admin role
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/SaveUserConsent/SaveUserConsent
@@ -76,5 +76,5 @@ SaveUserConsent:
       input: '{
 }'
       output: '{
-           "userId": "pms-111777"
+           "userId": "$RUNCONTEXT$pms-111777"
 }'

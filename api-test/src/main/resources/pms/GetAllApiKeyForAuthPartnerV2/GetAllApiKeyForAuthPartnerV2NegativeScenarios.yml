@@ -1,7 +1,7 @@
 GetAllApiKeyForAuthPartnerV2NegativeScenarios:
    Pms_GetAllApiKeyForAuthPartner_without_Authentication_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key created by Authentication Partner without Authentication for Partner Admin
+      description: Validate that retrieving API keys for a partner fails when authentication is not provided
       role: invalidtoken
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_01
       restMethod: get
@@ -18,7 +18,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_DevicePartner_Token_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key created by Authentication Partner Filter by Device Partner token
+      description: Validate that retrieving API keys fails when a device partner token is used instead of a valid partner token
       role: partnerdevice
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_02
       restMethod: get
@@ -35,7 +35,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_FTMPartner_Token_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key created by Authentication Partner Filter by FTM Partner token
+      description: Validate that retrieving API keys fails when an FTM partner token is used instead of a valid partner token
       role: partnerftm
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_03
       restMethod: get
@@ -52,7 +52,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_apiKeyLabel_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?apiKeyLabel=InvalidAPIKey
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid apiKeyLabel
+      description: Validate that retrieving API keys fails when an invalid API key label is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_04
       restMethod: get
@@ -65,7 +65,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_orgName_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?orgName=%2APMS-1100
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid orgName
+      description: Validate that retrieving API keys fails when an invalid organization name is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_05
       restMethod: get
@@ -82,7 +82,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_pageNo_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?pageNo=-22&pageSize=2
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid pageNo
+      description: Validate that retrieving API keys fails when an invalid page number is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_06
       restMethod: get
@@ -99,7 +99,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_pageSize_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?pageNo=1&pageSize=-1
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid pageSize
+      description: Validate that retrieving API keys fails when an invalid page size is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_07
       restMethod: get
@@ -116,7 +116,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_partnerID_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?partnerId=%252APMS
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid partnerId
+      description: Validate that retrieving API keys fails when an invalid partner ID is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_08
       restMethod: get
@@ -133,7 +133,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_policyGroupName_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?policyGroupName=testmosip12121
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid policyGroupName
+      description: Validate that retrieving API keys fails when an invalid policy group name is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_09
       restMethod: get
@@ -146,7 +146,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_policyName_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?policyName=testmosip1212
-      description: Fetching all the API Key created by Authentication Partner Filter by Invalid policyName
+      description: Validate that retrieving API keys fails when an invalid policy name is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_10
       restMethod: get
@@ -159,7 +159,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_sortFieldName_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=MOSIP_PMS
-      description: Fetching all the API Key created by Authentication Partner Filter by sortFieldName and without selecting pageno & pageSize
+      description: Validate that retrieving API keys fails when an invalid sort field name is provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_11
       restMethod: get
@@ -176,7 +176,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invalid_sortFieldName_1_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?sortFieldName=_partnerID&sortType=asc&pageNo=1&pageSize=1
-      description: Fetching all the API Key created by Authentication Partner Filter by invalid sortFieldName
+      description: Validate that retrieving API keys fails when the sort field name is set to an invalid value 1
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_12
       restMethod: get
@@ -193,7 +193,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Invaid_Role_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2
-      description: Fetching all the API Key created by Authentication Partner Filter by invalid sortFieldName
+      description: Validate that retrieving API keys fails when the user has an invalid role
       role: admin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_13
       restMethod: get
@@ -210,7 +210,7 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
 }'
    Pms_GetAllApiKeyForAuthPartner_Filter_WithoutPageNo_Neg:
       endPoint: /v1/partnermanager/partner-api-keys/v2?pageSize=4
-      description: Fetching all the API Key created by Authentication Partner Filter by invalid sortFieldName
+      description: Validate that retrieving API keys fails when the page number is not provided
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_14
       restMethod: get

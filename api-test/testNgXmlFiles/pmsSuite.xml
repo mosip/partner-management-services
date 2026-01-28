@@ -33,9 +33,10 @@
 		<parameter name="ymlFile"
 			value="pms/policy/UpdatePolicyGroup/UpdatePolicyGroup.yml" />
 		<parameter name="pathParams" value="policyGroupId" />
+		<parameter name="idKeyName" value="name" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBodyForAutoGenId" />
 		</classes>
 	</test>
 
@@ -378,9 +379,10 @@
 	<test name="UpdatePartner">
 		<parameter name="ymlFile"
 			value="pms/UpdatePartner/UpdatePartner.yml" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
 		</classes>
 	</test>
 
@@ -457,9 +459,10 @@
 	<test name="AddAdditionalContact">
 		<parameter name="ymlFile"
 			value="pms/authPartner/AddContacts/AddContact.yml" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
 
@@ -467,9 +470,10 @@
 		<parameter name="ymlFile"
 			value="pms/partnerPolicyMapping/partnerPolicyMapping.yml" />
 		<parameter name="idKeyName" value="mappingkey" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
 		</classes>
 	</test>
 
@@ -552,9 +556,10 @@
 		<parameter name="ymlFile"
 			value="pms/GenerateApiKey/GenerateApiKey.yml" />
 		<parameter name="idKeyName" value="apiKey,label,policyId" />
+		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePatchForAutoGenId" />
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBodyForAutoGenId" />
 		</classes>
 	</test>
 	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has 

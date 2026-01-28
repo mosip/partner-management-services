@@ -2,7 +2,7 @@ GetRoles:
    Pms_GetRoles_allValid_smoke:
       endPoint: /v1/partnermanager/roles
       uniqueIdentifier: TC_PMS_GetRoles_01
-      description: Retrieve all Partner Roles
+      description: Validate that all user roles are retrieved successfully for a valid request
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

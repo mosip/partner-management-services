@@ -2,7 +2,7 @@ getPartnerCert:
    Pms_GetPartnerCert_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       uniqueIdentifier: TC_PMS_getMispPartnerCert_01
-      description: Retrieve Misp Partner Certificate
+      description: Validate that partner certificates are retrieved successfully with all required valid parameters, as part of a smoke test
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

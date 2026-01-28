@@ -1,7 +1,7 @@
 GetAllCertificate:
    Pms_GetAllCertificate_allValid_smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
-      description: Fetching all the API certificates of the Logged in Partner
+      description: Validate that all certificates are successfully retrieved with valid inputs
       role: partnerauth
       uniqueIdentifier: TC_PMS_GetAllCertificate_01
       restMethod: get
@@ -10,14 +10,14 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerId": "pms-111999",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Auth_Partner",
       "isCertificateAvailable": true
 }'
 
    Pms_GetAllCertificate_Device_allValid_smoke:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
-      description: Fetching all the API certificates of the Loggedin Partner
+      description: Validate that all device certificates are successfully retrieved with valid inputs
       role: partnerdevice
       uniqueIdentifier: TC_PMS_GetAllCertificate_02
       restMethod: get
@@ -26,13 +26,13 @@ GetAllCertificate:
       input: '{
 }'
       output: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "partnerType": "Device_Provider",
       "isCertificateAvailable": true
 }'
    Pms_GetAllCertificate_without_auth:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
-      description: Fetching all the API certificates of the partner without login
+      description: Validate that retrieving certificates fails when authentication is not provided
       uniqueIdentifier: TC_PMS_GetAllCertificate_03
       role: invalidtoken
       restMethod: get
@@ -49,7 +49,7 @@ GetAllCertificate:
 }'
    Pms_GetAllCertificate_invalid_auth:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
-      description: Fetching all the API certificates of the partner invalid partner
+      description: Validate that retrieving certificates fails when an invalid authentication is provided
       uniqueIdentifier: TC_PMS_GetAllCertificate_04
       role: invalidtoken
       restMethod: get

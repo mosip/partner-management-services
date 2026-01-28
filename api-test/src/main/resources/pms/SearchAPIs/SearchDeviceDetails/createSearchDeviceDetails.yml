@@ -2,7 +2,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_sort_type_desc_equals_Smoke_sid:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_01
-      description: Create Search Device Details while Type parameter as Equals and filter data in descending order
+      description: Validate that device details can be searched and sorted successfully in descending order using valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -33,7 +33,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_AllValid_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_02
-      description: Create Search Device Details with all valid data
+      description: Validate that device details can be searched successfully with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -51,7 +51,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_03
-      description: Create Search Device Details with Only FilterCriteria
+      description: Validate that device details can be searched successfully using only filter criteria without sorting
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -76,7 +76,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_04
-      description: Create Search Device Details with Only SortCriteria
+      description: Validate that device details can be searched successfully using only sort criteria without filters
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -100,7 +100,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_05
-      description: Create Search Device Details with Only PaginationCriteria
+      description: Validate that device details can be searched successfully using only pagination criteria without filtering
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -118,7 +118,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_with_invalid_columnName:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_06
-      description: Create Search Device Details with invalid columnName
+      description: Validate that searching device details fails when an invalid sort column name is provided
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -154,7 +154,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_with_missing_type:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_07
-      description: Create Search Device Details while keeping Type parameter as empty
+      description: Validate that searching device details fails when the sort type descending is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -190,7 +190,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_with_invalid_sort_type:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_08
-      description: Create Search Device Details while keeping sortType parameter as invalid
+      description: Validate that searching device details fails when an invalid sort type is provided
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -226,7 +226,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_with_missing_sort_type:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_09
-      description: Create Search Device Details while keeping sortType parameter as empty
+      description: Validate that searching device details fails when the sort type is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -262,7 +262,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_with_invalid_sort_field:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_10
-      description: Create Search Device Details while keeping sortField parameter as invalid
+      description: Validate that searching device details fails when an invalid sort field is provided
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails
@@ -298,7 +298,7 @@ createSearchDeviceDetails:
    Pms_SearchDeviceDetails_with_missing_sort_field:
       endPoint: /v1/partnermanager/devicedetail/search
       uniqueIdentifier: TC_PMS_createSearchDeviceDetails_11
-      description: Create Search Device Details while keeping sortField parameter as empty
+      description: Validate that searching device details fails when the sort field is missing
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchDeviceDetails/createSearchDeviceDetails

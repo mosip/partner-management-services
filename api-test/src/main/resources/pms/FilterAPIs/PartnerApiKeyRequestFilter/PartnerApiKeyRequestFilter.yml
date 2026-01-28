@@ -2,7 +2,7 @@ PartnerApiKeyRequestFilter:
    Pms_PartnerApiKeyRequestFilter_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
       uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_01
-      description: Create ApiKeyRequestFilter for Partner with valid values
+      description: Validate that partner API key requests are successfully filtered with all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -27,7 +27,7 @@ PartnerApiKeyRequestFilter:
    Pms_PartnerApiKeyRequestFilter_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
       uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_02
-      description: Create ApiKeyRequestFilter for Partner with valid values
+      description: Validate that partner API key requests are successfully filtered using valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -52,7 +52,7 @@ PartnerApiKeyRequestFilter:
    Pms_PartnerApiKeyRequestFilter_Invalid_EmptyFilterType:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
       uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_03
-      description: Create ApiKeyRequestFilter for Partner while keeping FilterType parameter as Empty
+      description: Validate that partner API key request filtering fails when the filterType is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -75,7 +75,7 @@ PartnerApiKeyRequestFilter:
    Pms_PartnerApiKeyRequestFilter_Invalid_EmptyFilterColumn:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
       uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_04
-      description: Create ApiKeyRequestFilter for Partner while keeping FilterColumn parameter as Empty
+      description: Validate that partner API key request filtering fails when the filterColumn is empty
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -98,7 +98,7 @@ PartnerApiKeyRequestFilter:
    Pms_PartnerApiKeyRequestFilter_Invalid_Column_doesnt_exist:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
       uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_05
-      description: Create ApiKeyRequestFilter for Partner while keeping invalid values in Column parameter
+      description: Validate that partner API key request filtering fails when the specified filter column does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter
@@ -121,7 +121,7 @@ PartnerApiKeyRequestFilter:
    Pms_PartnerApiKeyRequestFilter_Invalid_type_doesnt_exist:
       endPoint: /v1/partnermanager/partners/apikey/request/filtervalues
       uniqueIdentifier: TC_PMS_PartnerApiKeyRequestFilter_06
-      description: Create ApiKeyRequestFilter for Partner while keeping invalid values in Type parameter
+      description: Validate that partner API key request filtering fails when the specified filter type does not exist
       role: partner
       restMethod: post
       inputTemplate: pms/FilterAPIs/PartnerApiKeyRequestFilter/partnerApiKeyRequestFilter

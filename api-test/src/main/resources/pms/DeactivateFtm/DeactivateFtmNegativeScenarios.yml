@@ -2,7 +2,7 @@ DeactivateFtmNegativeScenarios:
    Pms_DeactivateFtm_without_Authentication_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_01
-      description: Deactivate FTM without Partner authentication and expecting an error in the response 
+      description: Validate that FTM device deactivation fails when authentication is not provided
       role: invalidtoken
       checkErrorsOnlyInResponse: true
       restMethod: patch

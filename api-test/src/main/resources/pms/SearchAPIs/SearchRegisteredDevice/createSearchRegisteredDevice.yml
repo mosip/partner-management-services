@@ -1,7 +1,7 @@
 createSearchRegisteredDevice:
    Pms_SearchRegisteredDevice_AllValid_Smoke:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device with all valid details
+      description: Validate that searching Registered Devices with all valid inputs returns the expected results successfully
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -22,7 +22,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_Only_FilterCriteria_Smoke:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device with Only FilterCriteria
+      description: Validate that searching Registered Devices using only filter criteria returns the expected results correctly
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -50,7 +50,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_Only_SortCriteria_Smoke:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device with Only SortCriteria
+      description: Validate that searching Registered Devices using only sort criteria returns results correctly
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -77,7 +77,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_Only_PaginationCriteria_Smoke:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device with Only PaginationCriteria
+      description: Validate that searching Registered Devices using only pagination criteria returns results correctly
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -98,7 +98,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_type_contains_Smoke_asc_sid:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as contains and filter data in ascending order
+      description: Validate that searching Registered Devices with type containing a value sorted ascending by sid returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -132,7 +132,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_type_contains_Smoke_desc_sid:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as contains and filter data in descending order
+      description: Validate that searching Registered Devices with type containing a value sorted descending by sid returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -166,7 +166,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_type_equals_Smoke_desc_sid:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as equals and filter data in descending order
+      description: Validate that searching Registered Devices with type equal to a value sorted descending by sid returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -200,7 +200,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_type_equals_Smoke_asc_sid:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as equals and filter data in ascending order
+      description: Validate that searching Registered Devices with type equal to a value sorted ascending by sid returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -234,7 +234,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_type_startswith_Smoke_asc_sid:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as startswith and filter data in ascending order
+      description: Validate that searching Registered Devices with type starting with a value sorted ascending by sid returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -268,7 +268,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_type_startswith_Smoke_desc_sid:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as startswith and filter data in descending order
+      description: Validate that searching Registered Devices with type starting with a value sorted descending by sid returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -302,7 +302,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_invalid_value_containts:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping value parameter as invalid
+      description: Validate that searching Registered Devices with an invalid value using type contains returns no results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -336,7 +336,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_invalid_value_equals:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping value parameter as invalid and type parameter as equals
+      description: Validate that searching Registered Devices with an invalid value using type equals returns no results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -370,7 +370,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_invalid_value_startswith:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as startswith
+      description: Validate that searching Registered Devices with an invalid value using type starts with returns no results
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -404,7 +404,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_invalid_columnName:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping columnName parameter as invalid
+      description: Validate that searching Registered Devices with an invalid column name returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -438,7 +438,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_missing_columnName:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping columnName parameter as empty
+      description: Validate that searching Registered Devices with the columnName parameter missing returns results using default behavior
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -472,7 +472,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_missing_type:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping Type parameter as empty
+      description: Validate that searching Registered Devices with the type parameter missing returns results using default behavior
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -506,7 +506,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_invalid_sort_type:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping sortType parameter as invalid
+      description: Validate that searching Registered Devices with an invalid sortType returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -540,7 +540,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_missing_sort_type:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping sortType parameter as empty
+      description: Validate that searching Registered Devices with the sortType parameter missing returns results using default sorting
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -574,7 +574,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_invalid_sort_field:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping sortField parameter as invalid
+      description: Validate that searching Registered Devices with an invalid sortField returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice
@@ -608,7 +608,7 @@ createSearchRegisteredDevice:
 }'
    Pms_SearchRegisteredDevice_with_missing_sort_field:
       endPoint: /partnermanagement/v1/partners/registereddevices/search
-      description: Create Search Registered Device while keeping sortField parameter as empty
+      description: Validate that searching Registered Devices with the sortField parameter missing returns results using default sorting
       role: partner
       restMethod: post
       inputTemplate: pms/Search/SearchRegisteredDevice/createSearchRegisteredDevice

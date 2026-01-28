@@ -2,7 +2,7 @@ CreateSearchPartner:
    Pms_SearchPartner_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners/search
       uniqueIdentifier: TC_PMS_createSearchPartner_01
-      description: Create Search Partner with valid data
+      description: Validate that searching partners with all valid inputs returns the expected results successfully
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -20,7 +20,7 @@ CreateSearchPartner:
    Pms_SearchPartner_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/search
       uniqueIdentifier: TC_PMS_createSearchPartner_02
-      description: Create Search Partner with Only SortCriteria
+      description: Validate that searching partners using only sort criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -45,7 +45,7 @@ CreateSearchPartner:
    Pms_SearchPartner_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/search
       uniqueIdentifier: TC_PMS_createSearchPartner_03
-      description: Create Search Partner with Only Filter Criteria
+      description: Validate that searching partners using only filter criteria returns the expected results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -69,7 +69,7 @@ CreateSearchPartner:
    Pms_SearchPartner_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/search
       uniqueIdentifier: TC_PMS_createSearchPartner_04
-      description: Create Search Partner with Only PaginationCriteria
+      description: Validate that searching partners using only pagination criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -87,7 +87,7 @@ CreateSearchPartner:
    Pms_SearchPartner_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
       uniqueIdentifier: TC_PMS_createSearchPartner_05
-      description: Create Search Partner while keeping Type parameter as contains
+      description: Validate that searching partners with type containing a value using ascending sort on sid, returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
