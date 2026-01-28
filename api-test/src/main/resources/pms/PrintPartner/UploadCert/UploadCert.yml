@@ -6,7 +6,7 @@ UploadPartnerCert:
     role: partner
     checkErrorsOnlyInResponse: true
     restMethod: post
-    additionalDependencies: TC_PMS_uploadCACert_printpartner_01
+    additionalDependencies: TC_PMS_uploadCACert_printpartner_01,TC_PMS_uploadCACert_printpartner_02
     inputTemplate: pms/PrintPartner/UploadCert/uploadCert
     outputTemplate: pms/PrintPartner/UploadCert/uploadCertResult
     input: '{

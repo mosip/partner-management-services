@@ -360,6 +360,7 @@
     ],
     "TC_PMS_UploadPartnerCert_Printpartner_01": [
         "TC_PMS_uploadCACert_printpartner_01",
+		"TC_PMS_uploadCACert_printpartner_02",
         "TC_PMS_createPartnerSelfRegistration_printpartner_01"
     ],
     "TC_PMS_ApproveMappingDevice_02": [

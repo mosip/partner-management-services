@@ -18,7 +18,7 @@ uploadCert:
 
    Pms_UploadIntermediateCertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
-      uniqueIdentifier: TC_PMS_uploadCACert_printpartner_01
+      uniqueIdentifier: TC_PMS_uploadCACert_printpartner_02
       description: Upload valid Intermediate Certificate for Print Partner
       role: partner
       restMethod: post
