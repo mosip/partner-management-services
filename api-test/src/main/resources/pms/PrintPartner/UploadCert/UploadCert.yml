@@ -6,10 +6,12 @@ UploadPartnerCert:
     role: partner
     checkErrorsOnlyInResponse: true
     restMethod: post
-    additionalDependencies: TC_PMS_uploadCACert_printpartner_01
+    additionalDependencies: TC_PMS_uploadCACert_printpartner_01,TC_PMS_uploadCACert_printpartner_02
     inputTemplate: pms/PrintPartner/UploadCert/uploadCert
     outputTemplate: pms/PrintPartner/UploadCert/uploadCertResult
     input: '{
-      "requesttime": "$TIMESTAMP$"
+      "requesttime": "$TIMESTAMP$",
+      "certificateData": "$PARTNERCERT$",
+      "partnerId": "$ID:PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid_partnerId$"
     }'
     output: '{}'

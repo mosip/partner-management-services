@@ -9,7 +9,7 @@ GetNotificationsSeenTimestamp:
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
       outputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestampResult
       input: '{
-      "userId": "pms-111999"
+      "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'

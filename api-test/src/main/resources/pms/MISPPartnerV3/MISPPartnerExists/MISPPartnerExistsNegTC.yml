@@ -146,7 +146,7 @@ MISPPartnerExistsNegTC:
       "id": "mosip.pms.partner.exists.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "emailId": "newmisppartnerapiauto@gmail.com",
+      "emailId": "$RUNCONTEXT$newmisppartnerapiauto@gmail.com",
       "partnerId": "string",
       "partnerType": "MISP_Partner"
 }'

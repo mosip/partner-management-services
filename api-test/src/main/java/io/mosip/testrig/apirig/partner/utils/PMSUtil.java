@@ -86,7 +86,6 @@ public class PMSUtil extends AdminTestUtil {
 	}
 	
 	public static void DbCleanRevamp() {
-		BaseTestCase.currentModule = GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
 		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
 				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
@@ -98,14 +97,6 @@ public class PMSUtil extends AdminTestUtil {
 		DBManager.executeDBQueries(PMSConfigManager.getIdaDbUrl(), PMSConfigManager.getIdaDbUser(),
 				PMSConfigManager.getIdaDbPass(), PMSConfigManager.getIdaDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
-		
-		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
-				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-		
-		DBManager.executeDBQueries(PMSConfigManager.getKMDbUrl(), PMSConfigManager.getKMDbUser(),
-				PMSConfigManager.getKMDbPass(), PMSConfigManager.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 	}
 	
 	public void validateResponse(Response response, String testCaseName, String idKeyName) {

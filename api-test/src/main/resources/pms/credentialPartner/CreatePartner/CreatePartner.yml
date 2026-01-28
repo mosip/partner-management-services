@@ -10,15 +10,15 @@ CreatePartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "movp@gmail.com",
-    "organizationName": "movp",
-    "partnerId": "MOVP-AUTOMATION",
+    "emailId": "$RUNCONTEXT$movp@gmail.com",
+    "organizationName": "$RUNCONTEXT$MOVP-AUTOMATION",
+    "partnerId": "$RUNCONTEXT$MOVP-AUTOMATION",
     "partnerType": "Credential_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "MOVP-AUTOMATION",
+        "partnerId": "$RUNCONTEXT$MOVP-AUTOMATION",
         "status": "InProgress"
     }'
     
@@ -37,7 +37,7 @@ CreatePartnerSelfRegistration:
     "organizationName": "movp",
     "partnerId": "$REMOVE$",
     "partnerType": "Credential_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
@@ -59,11 +59,11 @@ CreatePartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "movp@gmail.com",
+    "emailId": "$RUNCONTEXT$movp@gmail.com",
     "organizationName": "movp",
     "partnerId": "MOVP-AUTOMATION",
     "partnerType": "Credential_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {

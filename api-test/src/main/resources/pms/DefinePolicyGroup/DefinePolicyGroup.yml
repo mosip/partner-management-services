@@ -8,13 +8,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group19234",
-    "name": "mosip policy group 19234",
+    "desc": "$RUNCONTEXT$desc mosip policy group19234",
+    "name": "$RUNCONTEXT$mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group 19234",
+        "desc": "$RUNCONTEXT$desc mosip policy group19234",
         "is_Active": true
     }'
    Pms_DefinePolicyGroup_create_then_All_Valid_Smoke_pms_deactivate_sid:
@@ -26,13 +26,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group1923456789",
-    "name": "mosip policy group1923456789",
+    "desc": "$RUNCONTEXT$desc mosip policy group1923456789",
+    "name": "$RUNCONTEXT$mosip policy group1923456789",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group1923456789",
+        "desc": "$RUNCONTEXT$desc mosip policy group1923456789",
         "is_Active": true
     }'
    Pms_DefinePolicyGroup_create_then_deactivateAll_Valid_Smoke_pms_sid:
@@ -44,13 +44,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group1923456",
-    "name": "mosip policy group1923456",
+    "desc": "$RUNCONTEXT$desc mosip policy group1923456",
+    "name": "$RUNCONTEXT$mosip policy group1923456",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group1923456",
+        "desc": "$RUNCONTEXT$desc mosip policy group1923456",
         "is_Active": true
     }'  
 
@@ -64,15 +64,15 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/error
       input: '{
-    "desc": "desc mosip policy group19234",
-    "name": "mosip policy group 19234",
+    "desc": "$RUNCONTEXT$desc mosip policy group19234",
+    "name": "$RUNCONTEXT$mosip policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
       "errors": [
        {
             "errorCode": "PMS_POL_014",
-            "message": "Policy group exists with name : mosip policy group 19234"
+            "message": "Policy group exists with name : $RUNCONTEXT$mosip policy group 19234"
         }
   ]
     }'
@@ -196,13 +196,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy neg",
-    "name": "mosip policy group neg",
+    "desc": "$RUNCONTEXT$desc mosip policy neg",
+    "name": "$RUNCONTEXT$mosip policy group neg",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group neg",
+        "desc": "$RUNCONTEXT$desc mosip policy neg",
         "is_Active": true
 }' 
 
@@ -215,13 +215,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc deactivate mosip policy group19234",
-    "name": "mosip deactivate policy group 19234",
+    "desc": "$RUNCONTEXT$desc deactivate mosip policy group19234",
+    "name": "$RUNCONTEXT$mosip deactivate policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip deactivate policy group 19234",
+        "desc": "$RUNCONTEXT$desc deactivate mosip policy group19234",
         "is_Active": true
     }'
     
@@ -234,13 +234,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc published mosip policy group19234",
-    "name": "mosip published policy group 19234",
+    "desc": "$RUNCONTEXT$desc published mosip policy group19234",
+    "name": "$RUNCONTEXT$mosip published policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip published policy group 19234",
+        "desc": "$RUNCONTEXT$desc published mosip policy group19234",
         "is_Active": true
     }'
     
@@ -253,13 +253,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip draft policy group19234",
-    "name": "mosip draft policy group 19234",
+    "desc": "$RUNCONTEXT$desc mosip draft policy group19234",
+    "name": "$RUNCONTEXT$mosip draft policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip draft policy group 19234",
+        "desc": "$RUNCONTEXT$desc mosip draft policy group19234",
         "is_Active": true
     }'
     
@@ -272,13 +272,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip delete before policy creation policy group19234",
-    "name": "mosip delete before policy creation policy group 19234",
+    "desc": "$RUNCONTEXT$desc mosip delete before policy creation policy group19234",
+    "name": "$RUNCONTEXT$mosip delete before policy creation policy group 19234",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip delete before policy creation policy group 19234",
+        "desc": "$RUNCONTEXT$desc mosip delete before policy creation policy group19234",
         "is_Active": true
     }'
 
@@ -291,13 +291,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
-    "name": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "desc": "$RUNCONTEXT$mosip policy group for req key For_Req_Key_deactivaed_Policy",
+    "name": "$RUNCONTEXT$mosip policy group for req key For_Req_Key_deactivaed_Policy",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group for req key For_Req_Key_deactivaed_Policy",
+        "desc": "$RUNCONTEXT$mosip policy group for req key For_Req_Key_deactivaed_Policy",
         "is_Active": true
     }'
     
@@ -310,13 +310,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc update policy group",
-    "name": "update_policy_group",
+    "desc": "$RUNCONTEXT$desc update policy group",
+    "name": "$RUNCONTEXT$update_policy_group",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$update_policy_group",
+        "desc": "$RUNCONTEXT$desc update policy group",
         "is_Active": true
     }'
     
@@ -329,13 +329,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group for req key For Update",
-    "name": "mosip policy group for req key For Update",
+    "desc": "$RUNCONTEXT$desc mosip policy group for req key For Update",
+    "name": "$RUNCONTEXT$mosip policy group for req key For Update",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group for req key For Update",
+        "desc": "$RUNCONTEXT$desc mosip policy group for req key For Update",
         "is_Active": true
     }'
     
@@ -348,13 +348,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group AuthTypeToken",
-    "name": "mosip policy group for AuthTypeToken",
+    "desc": "$RUNCONTEXT$desc mosip policy group AuthTypeToken",
+    "name": "$RUNCONTEXT$mosip policy group for AuthTypeToken",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group for AuthTypeToken",
+        "desc": "$RUNCONTEXT$desc mosip policy group AuthTypeToken",
         "is_Active": true
     }'
     
@@ -367,13 +367,13 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "desc mosip policy group2",
-    "name": "mosip policy group2",
+    "desc": "$RUNCONTEXT$desc mosip policy group2",
+    "name": "$RUNCONTEXT$mosip policy group2",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "name": "$IGNORE$",
-        "desc": "$IGNORE$",
+        "name": "$RUNCONTEXT$mosip policy group2",
+        "desc": "$RUNCONTEXT$desc mosip policy group2",
         "is_Active": true
     }'
    Pms_DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid:
@@ -385,8 +385,8 @@ definePolicyGroup:
       inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
       outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
       input: '{
-    "desc": "mosip policy group MISP",
-    "name": "mosip policy group MISP",
+    "desc": "$RUNCONTEXT$mosip policy group MISP",
+    "name": "$RUNCONTEXT$mosip policy group MISP",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {

@@ -8,8 +8,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-      "desc": "desc mosip policy 19234",
-      "name": "mosip policy 19234",
+      "desc": "$RUNCONTEXT$desc mosip policy 19234",
+      "name": "$RUNCONTEXT$mosip policy 19234",
       "attributeName": "fullName",
       "authTokenType": "policy",
       "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
@@ -18,9 +18,9 @@ definePolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group 19234",
-    "name": "$IGNORE$",
-    "desc": "$IGNORE$",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy 19234",
+    "desc": "$RUNCONTEXT$desc mosip policy 19234",
     "is_Active": false
 }'
 
@@ -34,8 +34,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/policy/DefinePolicy/definePolicyResult
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy",
+      "desc": "$RUNCONTEXT$desc mosip policy",
+      "name": "$RUNCONTEXT$mosip policy",
       "authSubType": "FINGER",
       "authType": "bio",
       "mandatory": true,
@@ -47,9 +47,9 @@ definePolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group 19234",
-    "name": "mosip policy",
-    "desc": "desc mosip policy",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy",
+    "desc": "$RUNCONTEXT$desc mosip policy",
     "is_Active": false
 }' 
 
@@ -82,7 +82,7 @@ definePolicy:
   ]
 }'
 
-   Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Policy:
+   Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Policy_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that a policy is successfully created with AuthTypeToken configured
@@ -140,7 +140,7 @@ definePolicy:
   ]
 }'
 
-   Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Blank:
+   Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Blank_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the AuthTypeToken is left blank
@@ -168,7 +168,7 @@ definePolicy:
         }
   ]
 }'
-   Pms_DefinePolicy_without_AuthTypeToken:
+   Pms_DefinePolicy_without_AuthTypeToken_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the AuthTypeToken is not provided
@@ -197,7 +197,7 @@ definePolicy:
   ]
 }'
 
-   Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Space:
+   Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Space_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the AuthTypeToken contains only spaces
@@ -236,8 +236,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/policy/DefinePolicy/definePolicyResult
       input: '{
-      "desc": "desc mosip policy2",
-      "name": "mosip policy2 Neg",
+      "desc": "$RUNCONTEXT$desc mosip policy2",
+      "name": "$RUNCONTEXT$mosip policy2 Neg",
       "authSubType": "FINGER",
       "authType": "bio",
       "mandatory": false,
@@ -249,9 +249,9 @@ definePolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip policy2",
-    "desc": "desc mosip policy2",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy2",
+    "desc": "$RUNCONTEXT$desc mosip policy2",
     "is_Active": false
 }'
 
@@ -264,8 +264,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/error
       input: '{
-      "desc": "desc mosip policy",
-      "name": "mosip policy 19234",
+      "desc": "$RUNCONTEXT$desc mosip policy",
+      "name": "$RUNCONTEXT$mosip policy 19234",
       "authSubType": "FINGER",
       "authType": "demo",
       "mandatory": true,
@@ -341,7 +341,7 @@ definePolicy:
 #     }
 #  ]
 #}'
-   Pms_DefinePolicy_PolicyGrpNotExists_InValid:
+   Pms_DefinePolicy_PolicyGrpNotExists_InValid_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the specified policy group does not exist
@@ -425,7 +425,7 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_descNeg:
+   Pms_DefinePolicy_Missing_InputParameter_desc_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the policy description input parameter is missing
@@ -539,7 +539,7 @@ definePolicy:
         }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_policyGroupName:
+   Pms_DefinePolicy_Missing_InputParameter_policyGroupName_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the policyGroupName input parameter is missing
@@ -567,7 +567,7 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_Missing_InputParameter_policyType:
+   Pms_DefinePolicy_Missing_InputParameter_policyType_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the policyType input parameter is missing
@@ -595,7 +595,7 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_when_authTokenType_null:
+   Pms_DefinePolicy_when_authTokenType_null_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the AuthTokenType is null
@@ -623,7 +623,7 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_when_authTokenType_invalid:
+   Pms_DefinePolicy_when_authTokenType_invalid_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the AuthTokenType is invalid
@@ -651,7 +651,7 @@ definePolicy:
     }
   ]
 }'
-   Pms_DefinePolicy_when_authTokenType_missing:
+   Pms_DefinePolicy_when_authTokenType_missing_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
       description: Validate that policy creation fails when the AuthTokenType parameter is missing
@@ -689,8 +689,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-      "desc": "desc mosip policy9",
-      "name": "mosip policy9 Neg",
+      "desc": "$RUNCONTEXT$desc mosip policy9",
+      "name": "$RUNCONTEXT$mosip policy9 Neg",
       "authSubType": "FINGER",
       "authType": "demo",
       "mandatory": true,
@@ -702,9 +702,9 @@ definePolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group neg",
-    "name": "mosip policy9 Neg",
-    "desc": "desc mosip policy9",
+    "policyGroupName": "$ID:DefinePolicyGroup_ForNeg_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy9 Neg",
+    "desc": "$RUNCONTEXT$desc mosip policy9",
     "is_Active": false
 }'
 
@@ -717,8 +717,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc deactive mosip policy 19234",
-	"name": "mosip deactive policy 19234",
+	"desc": "$RUNCONTEXT$desc deactive mosip policy 19234",
+	"name": "$RUNCONTEXT$mosip deactive policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
 	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_name$",
@@ -727,9 +727,9 @@ definePolicy:
 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip deactivate policy group 19234",
-    "name": "$IGNORE$",
-    "desc": "$IGNORE$",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip deactive policy 19234",
+    "desc": "$RUNCONTEXT$desc deactive mosip policy 19234",
     "is_Active": false
 }'
 
@@ -742,8 +742,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc published mosip policy 19234",
-	"name": "mosip published policy 19234",
+	"desc": "$RUNCONTEXT$desc published mosip policy 19234",
+	"name": "$RUNCONTEXT$mosip published policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
 	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_name$",
@@ -752,9 +752,9 @@ definePolicy:
 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip published policy group 19234",
-    "name": "$IGNORE$",
-    "desc": "$IGNORE$",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip published policy 19234",
+    "desc": "$RUNCONTEXT$desc published mosip policy 19234",
     "is_Active": false
 }'
 
@@ -767,8 +767,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc draft mosip policy 19234",
-	"name": "mosip draft policy 19234",
+	"desc": "$RUNCONTEXT$desc draft mosip policy 19234",
+	"name": "$RUNCONTEXT$mosip draft policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
 	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForDraftPolicy_pms_sid_name$",
@@ -777,9 +777,9 @@ definePolicy:
 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip draft policy group 19234",
-    "name": "$IGNORE$",
-    "desc": "$IGNORE$",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForDraftPolicy_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip draft policy 19234",
+    "desc": "$RUNCONTEXT$desc draft mosip policy 19234",
     "is_Active": false
 }'
 
@@ -792,8 +792,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc reject mosip policy 19234",
-	"name": "mosip reject policy 19234",
+	"desc": "$RUNCONTEXT$desc reject mosip policy 19234",
+	"name": "$RUNCONTEXT$mosip reject policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
 	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
@@ -802,9 +802,9 @@ definePolicy:
 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group 19234",
-    "name": "$IGNORE$",
-    "desc": "$IGNORE$",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip reject policy 19234",
+    "desc": "$RUNCONTEXT$desc reject mosip policy 19234",
     "is_Active": false
 }'
 
@@ -817,8 +817,8 @@ definePolicy:
       inputTemplate: pms/DefinePolicy/definePolicy
       outputTemplate: pms/DefinePolicy/definePolicyResult
       input: '{
-	"desc": "desc in progress mapping mosip policy 19234",
-	"name": "mosip in progress mapping policy 19234",
+	"desc": "$RUNCONTEXT$desc in progress mapping mosip policy 19234",
+	"name": "$RUNCONTEXT$mosip in progress mapping policy 19234",
 	"attributeName": "fullName",
 	"authTokenType": "policy",
 	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
@@ -827,8 +827,8 @@ definePolicy:
 	"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group 19234",
-    "name": "$IGNORE$",
-    "desc": "$IGNORE$",
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip in progress mapping policy 19234",
+    "desc": "$RUNCONTEXT$desc in progress mapping mosip policy 19234",
     "is_Active": false
 }'

@@ -3,7 +3,7 @@ UpdateSecureBiometricInterface:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_01
       role: partneradmin
-	  description: Validate updating Secure Biometric Interface for a Device Provider with valid inputs succeeds
+      description: Validate updating Secure Biometric Interface for a Device Provider with valid inputs succeeds
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface

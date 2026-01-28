@@ -9,7 +9,7 @@ RemoveMapDeviceWithSBI:
       inputTemplate: pms/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBI
       outputTemplate: pms/device/SecureBiometricInterface/RemoveMapDeviceWithSBI/removeMapDeviceWithSBIResult
       input: '{
-    "deviceDetailId": "device-id-123",
+    "deviceDetailId": "$ID:ServiceToSaveDeviceDetail_All_Valid_Smoke_sid_id$",
     "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
   }'
       output: '{

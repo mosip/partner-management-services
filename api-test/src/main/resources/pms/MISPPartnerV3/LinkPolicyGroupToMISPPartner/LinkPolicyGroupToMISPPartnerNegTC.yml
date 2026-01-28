@@ -96,7 +96,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -118,7 +118,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
@@ -140,7 +140,7 @@ LinkPolicyGroupToMISPPartnerNegTC:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111888",
+      "partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{

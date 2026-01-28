@@ -15,6 +15,6 @@ UpdatePrintPartner:
 	     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-	     "partnerId": "mosipprint",
+	     "partnerId": "$ID:PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid_partnerId$",
           "status": "approved"
 }'

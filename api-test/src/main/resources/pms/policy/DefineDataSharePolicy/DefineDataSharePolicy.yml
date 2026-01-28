@@ -8,10 +8,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policy",
-		"policyId": "MDSP",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policy",
+		"policyId": "$RUNCONTEXT$MDSP",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -25,9 +25,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policy",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policy",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -40,9 +40,9 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy ApiKey",
-		"name": "mosip data share policy ApiKey",
-		"policyId": "MDSPFA",
+		"desc": "$RUNCONTEXT$mosip data share policy ApiKey",
+		"name": "$RUNCONTEXT$mosip data share policy ApiKey",
+		"policyId": "$RUNCONTEXT$MDSPFA",
 		"policyGroupName": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
@@ -57,9 +57,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group for req key For_Req_Key_deactivaed_Policy",
-    "name": "mosip data share policy",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policy",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -72,10 +72,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "desc mosip policy group for req key For Update",
-		"name": "mosip policy group for req key For Update",
-		"policyId": "MDSPFU",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$desc mosip policy group for req key For Update",
+		"name": "$RUNCONTEXT$mosip policy group for req key For Update",
+		"policyId": "$RUNCONTEXT$MDSPFU",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"attributeName":"biometrics",
@@ -89,9 +89,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policy",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policy",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -104,10 +104,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy check status",
-		"name": "mosip data share policy to check status22",
-		"policyId": "MDSP8",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy check status",
+		"name": "$RUNCONTEXT$mosip data share policy to check status22",
+		"policyId": "$RUNCONTEXT$MDSP8",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"attributeName":"biometrics",
@@ -121,9 +121,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policy to check status22",
-    "desc": "mosip policy group",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policy to check status22",
+    "desc": "$RUNCONTEXT$mosip data share policy check status",
     "is_Active": false      
     }'
    Pms_DefineDataSharePolicy_WithoutMandatoryFields_All_Valid_Smoke_sid:
@@ -135,10 +135,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy2",
-		"name": "mosip data share policy2",
-		"policyId": "MDSP2",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy2",
+		"name": "$RUNCONTEXT$mosip data share policy2",
+		"policyId": "$RUNCONTEXT$MDSP2",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"$REMOVE$",
 		"attributeName":"biometrics",
@@ -152,9 +152,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policy2",
-    "desc": "mosip data share policy2",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policy2",
+    "desc": "$RUNCONTEXT$mosip data share policy2",
     "is_Active": false      
     }'
     
@@ -167,10 +167,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/error
       input: '{
-    "desc": "mosip data share policy",
-    "name": "mosip data share policy",
-    "policyId": "MDSP",
-    "policyGroupName": "mosip policy group",
+    "desc": "$RUNCONTEXT$mosip data share policy",
+    "name": "$RUNCONTEXT$mosip data share policy",
+    "policyId": "$RUNCONTEXT$MDSP",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "policyType": "DataShare",
     "format":"extraction",
     "attributeName":"biometrics",
@@ -266,7 +266,7 @@ defineDataSharePolicy:
     "desc": "mosip data share policy",
     "name": "mosip data share policy",
     "policyId": "MDSP",
-    "policyGroupName": "mosip policy group",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "policyType": "abcd",
     "format":"extraction",
     "attributeName":"biometrics",
@@ -298,7 +298,7 @@ defineDataSharePolicy:
     "desc": "mosip data share policy",
     "name": "$REMOVE$",
     "policyId": "MDSP",
-    "policyGroupName": "mosip policy group",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "policyType": "DataShare",
     "format":"extraction",
     "attributeName":"biometrics",
@@ -330,7 +330,7 @@ defineDataSharePolicy:
     "desc": "$REMOVE$",
     "name": "mosip data share policy",
     "policyId": "MDSP",
-    "policyGroupName": "mosip policy group",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "policyType": "DataShare",
     "format":"extraction",
     "attributeName":"biometrics",
@@ -394,7 +394,7 @@ defineDataSharePolicy:
     "desc": "mosip data share policy",
     "name": "mosip data share policy",
     "policyId": "MDSP",
-    "policyGroupName": "mosip policy group",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "policyType": "$REMOVE$",
     "format":"extraction",
     "attributeName":"biometrics",
@@ -427,7 +427,7 @@ defineDataSharePolicy:
 		"desc": "mosip data share policy7",
 		"name": "mosip data share policy7",
 		"policyId": "MDSP",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"attributeName":"$REMOVE$",
@@ -449,7 +449,7 @@ defineDataSharePolicy:
 
     }'
 
-   Pms_DefineDataSharePolicy_format_SpaceVal_Neg:
+   Pms_DefineDataSharePolicy_format_SpaceVal:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_defineDataSharePolicy_15
       description: Validate that defining a data share policy fails when fields contain only space values formatting
@@ -458,10 +458,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policya",
-		"policyId": "MDSPA",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policya",
+		"policyId": "$RUNCONTEXT$MDSPA",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":" ",
 		"typeOfShare": "Data Share",
@@ -475,9 +475,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policya",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policya",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -490,10 +490,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policyb",
-		"policyId": "MDSPB",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policyb",
+		"policyId": "$RUNCONTEXT$MDSPB",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -507,9 +507,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policyb",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policyb",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -522,10 +522,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policyd",
-		"policyId": "MDSPC",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policyd",
+		"policyId": "$RUNCONTEXT$MDSPC",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -539,9 +539,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policyd",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policyd",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -557,7 +557,7 @@ defineDataSharePolicy:
 		"desc": "mosip data share policy",
 		"name": "mosip data share policye",
 		"policyId": "MDSPDD",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": " ",
@@ -590,7 +590,7 @@ defineDataSharePolicy:
 		"desc": "mosip data share policy",
 		"name": "mosip data share policyf",
 		"policyId": "MDSPEE",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Direct",
@@ -623,7 +623,7 @@ defineDataSharePolicy:
 		"desc": "mosip data share policy",
 		"name": "mosip data share policyi",
 		"policyId": "MDSPEE",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "$REMOVE$",
@@ -653,10 +653,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policyg",
-		"policyId": "MDSPGG",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policyg",
+		"policyId": "$RUNCONTEXT$MDSPGG",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -670,9 +670,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policyg",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policyg",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -685,10 +685,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policyh",
-		"policyId": "MDSPHH",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policyh",
+		"policyId": "$RUNCONTEXT$MDSPHH",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -702,9 +702,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policyh",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policyh",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
     
@@ -717,10 +717,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policyk",
-		"policyId": "MDSPm",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policyk",
+		"policyId": "$RUNCONTEXT$MDSPm",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -734,9 +734,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policyk",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policyk",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false      
     }'
    Pms_DefineDataSharePolicy_Cancelling_the_create_dataSharePolicy:
@@ -748,10 +748,10 @@ defineDataSharePolicy:
       inputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicy
       outputTemplate: pms/policy/DefineDataSharePolicy/defineDataSharePolicyResult
       input: '{
-		"desc": "mosip data share policy",
-		"name": "mosip data share policy name",
-		"policyId": "MDSP239fhfdndn",
-		"policyGroupName": "mosip policy group",
+		"desc": "$RUNCONTEXT$mosip data share policy",
+		"name": "$RUNCONTEXT$mosip data share policy name",
+		"policyId": "$RUNCONTEXT$MDSP239fhfdndn",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",
@@ -765,9 +765,9 @@ defineDataSharePolicy:
 		"requesttime": "$TIMESTAMP$"
 }'
       output: ' {
-    "policyGroupName": "mosip policy group",
-    "name": "mosip data share policy name",
-    "desc": "mosip data share policy",
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$mosip data share policy name",
+    "desc": "$RUNCONTEXT$mosip data share policy",
     "is_Active": false
     }'
    Pms_DefineDataSharePolicy_without_policyId:
@@ -783,7 +783,7 @@ defineDataSharePolicy:
 		"desc": "mosip data share policy",
 		"name": "mosip data share policy without policy id",
 		"policyId": "$REMOVE$",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "DataShare",
 		"format":"extraction",
 		"typeOfShare": "Data Share",

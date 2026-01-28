@@ -11,11 +11,11 @@ getPolicy:
     "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$"
   }'
       output: ' {
-        "policyGroupName": "mosip policy group 19234",
-        "policyGroupDesc": "desc mosip policy group19234",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+        "policyGroupDesc": "$RUNCONTEXT$desc mosip policy group19234",
         "policyGroupStatus": true,
-        "policyName": "mosip policy 19234",
-        "policyDesc": "desc mosip policy 19234",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+        "policyDesc": "$RUNCONTEXT$desc mosip policy 19234",
         "authTokenType": "partner"
     }'
    Pms_GetPolicy_Invalid_InputParameter_policyId:

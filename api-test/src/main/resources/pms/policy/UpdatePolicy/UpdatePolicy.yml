@@ -16,7 +16,7 @@ createUpdatePolicy:
 		"mandatory": true,
 		"attributeName": "string",
 		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "Auth",
 		"version": "1.0",
 		"requesttime": "$TIMESTAMP$"
@@ -76,7 +76,7 @@ createUpdatePolicy:
 		"mandatory": true,
 		"attributeName": "string",
 		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "Auth",
 		"version": "1.0",
 		"requesttime": "$TIMESTAMP$"
@@ -106,7 +106,7 @@ createUpdatePolicy:
 		"mandatory": true,
 		"attributeName": "string",
 		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "Auth",
 		"version": "1.0",
 		"requesttime": "$TIMESTAMP$"
@@ -136,7 +136,7 @@ createUpdatePolicy:
 		"mandatory": true,
 		"attributeName": "string",
 		"authTokenType": "partner",
-		"policyGroupName": "mosip policy group",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 		"policyType": "Auth",
 		"version": "1.0",
 		"requesttime": "$TIMESTAMP$"
@@ -166,7 +166,7 @@ createUpdatePolicy:
 		"mandatory": true,
 		"attributeName": "string",
 		"authTokenType": "$REMOVE$",
-		"policyGroupName": "mosip policy group 19234",
+		"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 		"policyType": "Auth",
 		"version": "1.0",
 		"requesttime": "$TIMESTAMP$"

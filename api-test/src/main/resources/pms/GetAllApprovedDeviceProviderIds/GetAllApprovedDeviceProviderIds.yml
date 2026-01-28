@@ -10,5 +10,5 @@ GetAllApprovedDeviceProviderIds:
       input: '{
 }'
       output: '{
-      "partnerId": "pms-111998"
+      "partnerId": "$RUNCONTEXT$pms-111998"
 }'

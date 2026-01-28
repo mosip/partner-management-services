@@ -11,7 +11,7 @@ SaveUserConsent:
       input: '{
 }'
       output: '{
-           "userId": "pms-111999"
+           "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
    Pms_saveUserConsent_invalid_roles_Neg:
       endPoint: /v1/partnermanager/users/user-consent
@@ -76,5 +76,5 @@ SaveUserConsent:
       input: '{
 }'
       output: '{
-           "userId": "pms-111777"
+           "userId": "$RUNCONTEXT$pms-111777"
 }'

@@ -189,7 +189,7 @@ createSearchPolicy:
       {
         "columnName": "name",
         "type": "equals",
-        "value": "mosip data share policy"
+        "value": "$RUNCONTEXT$mosip data share policy"
       }
     ],
     "sort": [
@@ -225,7 +225,7 @@ createSearchPolicy:
       {
         "columnName": "name",
         "type": "equals",
-        "value": "mosip data share policy"
+        "value": "$RUNCONTEXT$mosip data share policy"
       }
     ],
     "sort": [

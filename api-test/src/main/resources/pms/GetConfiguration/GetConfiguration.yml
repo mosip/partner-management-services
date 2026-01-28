@@ -1,7 +1,7 @@
 GetConfiguration:
    Partner_GetConfiguration_allValid_smoke:
       endPoint: /v1/partnermanager/system-config
-	  description: Validate that all partner configurations are successfully retrieved with valid inputs
+      description: Validate that all partner configurations are successfully retrieved with valid inputs
       role: partner
       uniqueIdentifier: TC_PMS_GetConfiguration_01
       checkErrorsOnlyInResponse: true

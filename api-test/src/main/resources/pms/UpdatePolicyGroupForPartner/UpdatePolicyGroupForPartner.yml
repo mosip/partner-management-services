@@ -9,8 +9,8 @@ UpdatePolicyGroupForPartner:
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartnerResult
       input: '{
-    "partnerId": "updatepolicy",
-    "policygroupName": "mosip policy group"
+    "partnerId": "$ID:PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke_sid_partnerId$",
+    "policygroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$"
 }'
       output: '{
    "response": "$IGNORE$"
@@ -24,8 +24,8 @@ UpdatePolicyGroupForPartner:
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: pms/error
       input: '{
-    "partnerId": "pms-111998",
-    "policygroupName": "mosip policy group 19234"
+    "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+    "policygroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$"
 }'
       output: '{
    "errors": [
@@ -62,7 +62,7 @@ UpdatePolicyGroupForPartner:
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: pms/error
       input: '{
-    "partnerId": "updatepolicy",
+    "partnerId": "$ID:PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke_sid_partnerId$",
     "policygroupName": "dsfgeagb"
 }'
       output: '{

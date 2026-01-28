@@ -12,7 +12,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -78,7 +78,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -99,7 +99,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -121,7 +121,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -143,7 +143,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -164,7 +164,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "id": "mosip.pms.users.notifications.seen.timestamp.put",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -186,7 +186,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "Null",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -208,7 +208,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1010",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -230,7 +230,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -252,7 +252,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -295,7 +295,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": " ",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -317,7 +317,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "$REMOVE$",
-      "userId": "pms-111999"
+      "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
@@ -339,7 +339,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": " ",
-      "userId": "pms-111999"
+      "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
@@ -361,7 +361,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -383,7 +383,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [

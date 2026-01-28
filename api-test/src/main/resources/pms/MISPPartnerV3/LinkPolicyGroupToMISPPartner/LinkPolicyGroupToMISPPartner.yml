@@ -11,9 +11,9 @@ LinkPolicyGroupToMISPPartner:
       "id": "mosip.pms.link.policy.group.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111557",
+      "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$",
       "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$"
 }'
     output: '{
-       "policyGroupName": "mosip policy group MISP"
+       "policyGroupName": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$"
 }'

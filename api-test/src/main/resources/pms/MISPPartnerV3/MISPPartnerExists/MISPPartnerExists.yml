@@ -11,7 +11,7 @@ MISPPartnerExists:
       "id": "mosip.pms.partner.exists.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "emailId": "newmisppartnerapiauto@gmail.com",
+      "emailId": "$RUNCONTEXT$newmisppartnerapiauto@gmail.com",
       "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
       "partnerType": "MISP_Partner"
 }'

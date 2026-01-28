@@ -5,12 +5,15 @@ uploadPartnerCert:
       description: Validate that uploading a Partner Certificate with all valid inputs including sid is successful
       role: partnerauth
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01,TC_PMS_UploadCACertificate_01, TC_PMS_UploadCACertificate_02
+      additionalDependencies: TC_PMS_UploadCACertificate_01, TC_PMS_UploadCACertificate_02
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "AUTH"
 }'
       output: ' {
 }'          
@@ -21,12 +24,15 @@ uploadPartnerCert:
       description: Validate that uploading a Partner Certificate and Device Provider Certificate with all valid inputs is successful
       role: partnerdevice
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_06,TC_PMS_UploadCACertificate_03, TC_PMS_UploadCACertificate_04
+      additionalDependencies: TC_PMS_UploadCACertificate_03, TC_PMS_UploadCACertificate_04
       restMethod: post
-      inputTemplate: pms/UploadPartnerCert/uploadCertDeviceProvider
+      inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "DEVICE"
 }'
       output: ' {
 }'
@@ -37,10 +43,13 @@ uploadPartnerCert:
       description: Validate that uploading a Partner Certificate fails when the Partner Domain is missing      
       role: partnerauth
       restMethod: post
-      inputTemplate: pms/UploadPartnerCert/uploadCert2
+      inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/error
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "$REMOVE$"
 }'
       output: ' {
   "errors": [
@@ -55,10 +64,13 @@ uploadPartnerCert:
       description: Validate that uploading a Partner Certificate fails when an invalid certificate is provided
       role: partnerauth
       restMethod: post
-      inputTemplate: pms/UploadPartnerCert/uploadCert3
+      inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/error
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "hgftywqgtftfqgd",
+  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "AUTH"
 }'
       output: ' {
   "errors": [
@@ -73,10 +85,13 @@ uploadPartnerCert:
       description: Validate that uploading a Partner Certificate fails when an invalid domain is provided  
       role: partnerauth
       restMethod: post
-      inputTemplate: pms/UploadPartnerCert/uploadCert4
+      inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/error
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "dht"
 }'
       output: ' {
   "errors": [
@@ -96,7 +111,10 @@ uploadPartnerCert:
       inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "AUTH"
 }'
       output: ' {
 }' 
@@ -109,10 +127,13 @@ uploadPartnerCert:
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_07,TC_PMS_UploadCACertificate_05, TC_PMS_UploadCACertificate_06
       restMethod: post
-      inputTemplate: pms/UploadPartnerCert/uploadCertFtmProvider
+      inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
       input: '{  
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "FTM"
 }'
       output: ' {
 }'

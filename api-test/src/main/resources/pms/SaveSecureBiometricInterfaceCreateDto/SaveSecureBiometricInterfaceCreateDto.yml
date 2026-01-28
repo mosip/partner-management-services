@@ -23,7 +23,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       role: partner
-	  description: Validate that secure biometric interface details can be saved successfully with all valid inputs
+      description: Validate that secure biometric interface details can be saved successfully with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_10
@@ -229,7 +229,7 @@ SaveSecureBiometricInterfaceCreateDto:
     "swCreateDateTime": "$TIMESTAMP$",
     "swExpiryDateTime": "2033-08-22T12:51:07.794Z",
     "swVersion": "sbi_ftmpartner_version",
-    "providerId": "pms-111888"
+    "providerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$"
   }'
       output: '{      
     }'

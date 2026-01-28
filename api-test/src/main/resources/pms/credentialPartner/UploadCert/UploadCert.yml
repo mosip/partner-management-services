@@ -10,7 +10,9 @@ uploadPartnerCert:
       inputTemplate: pms/credentialPartner/UploadCert/uploadCert
       outputTemplate: pms/credentialPartner/UploadCert/uploadCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'   

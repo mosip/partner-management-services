@@ -1,6 +1,6 @@
 AddContact:
    Pms_AddContact_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/pms-111999/contact/add
+      endPoint: /v1/partnermanager/partners/{partnerId}/contact/add
       uniqueIdentifier: TC_PMS_AddContact_01
       description: Validate that a new contact can be added successfully when all required inputs are provided and valid
       role: partner
@@ -10,16 +10,17 @@ AddContact:
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/authPartner/AddContacts/addContactResult
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "address": "Bangalore",
     "contactNumber": "9903255448",
-    "emailId": "print@email.com",
+    "emailId": "$RUNCONTEXT$print@email.com",
     "is_Active": true,
     "requesttime": "$TIMESTAMP$"
   }'
       output: '{
     }'
    Pms_AddContact_Missing_InputParameter_address:
-      endPoint: /v1/partnermanager/partners/pms-111999/contact/add
+      endPoint: /v1/partnermanager/partners/{partnerId}/contact/add
       uniqueIdentifier: TC_PMS_AddContact_02
       description: Validate that adding a contact fails when the address input parameter is missing
       role: partner
@@ -28,6 +29,7 @@ AddContact:
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "address": "$REMOVE$",
     "contactNumber": "9903255448",
     "emailId": "print@email.com",
@@ -44,7 +46,7 @@ AddContact:
 }'
    
    Pms_AddContact_Missing_InputParameter_contactNumber:
-      endPoint: /v1/partnermanager/partners/pms-111999/contact/add
+      endPoint: /v1/partnermanager/partners/{partnerId}/contact/add
       uniqueIdentifier: TC_PMS_AddContact_03
       description: Validate that adding a contact fails when the contact number input parameter is missing
       role: partner
@@ -53,6 +55,7 @@ AddContact:
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "address": "Bangalore",
     "contactNumber": "$REMOVE$",
     "emailId": "print@email.com",
@@ -67,7 +70,7 @@ AddContact:
   ]
 }'
    Pms_AddContact_Missing_InputParameter_emailId:
-      endPoint: /v1/partnermanager/partners/pms-111999/contact/add
+      endPoint: /v1/partnermanager/partners/{partnerId}/contact/add
       uniqueIdentifier: TC_PMS_AddContact_04
       description: Validate that adding a contact fails when the email ID input parameter is missing
       role: partner
@@ -76,6 +79,7 @@ AddContact:
       inputTemplate: pms/authPartner/AddContacts/addContact
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "address": "Bangalore",
     "contactNumber": "9903255448",
     "emailId": "$REMOVE$",

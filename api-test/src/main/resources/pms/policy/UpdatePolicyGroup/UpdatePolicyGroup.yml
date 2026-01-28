@@ -3,9 +3,9 @@ UpdatePolicyGroup:
     endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
     uniqueIdentifier: TC_PMS_updatePolicyGroup_01
     description: Validate that a policy group can be deactivated successfully with valid inputs
-    input: "{ \"isActive\": false, \"desc\": \"desc mosip policy group deactivate\", \"name\": \"mosip policy group deactivate\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    input: "{ \"isActive\": false, \"desc\": \"$RUNCONTEXT$desc mosip policy group deactivate\", \"name\": \"$RUNCONTEXT$mosip policy group deactivate\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
     inputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroup
-    output: " { \"name\": \"mosip policy group deactivate\", \"desc\": \"desc mosip policy group deactivate\", \"is_Active\": false }"
+    output: " { \"name\": \"$RUNCONTEXT$mosip policy group deactivate\", \"desc\": \"$RUNCONTEXT$desc mosip policy group deactivate\", \"is_Active\": false }"
     outputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroupResult
     restMethod: put
     role: partner
@@ -13,19 +13,19 @@ UpdatePolicyGroup:
     endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
     uniqueIdentifier: TC_PMS_updatePolicyGroup_02
     description: Validate that a policy group can be updated successfully with valid inputs
-    input: "{ \"isActive\": false, \"desc\": \"desc mosip policy group20\", \"name\": \"mosip policy group20\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    input: "{ \"isActive\": false, \"desc\": \"$RUNCONTEXT$desc mosip policy group20\", \"name\": \"$RUNCONTEXT$mosip policy group20\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
     inputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroup
-    output: " { \"name\": \"mosip policy group20\", \"desc\": \"desc mosip policy group20\", \"is_Active\": false }"
+    output: " { \"name\": \"$RUNCONTEXT$mosip policy group20\", \"desc\": \"$RUNCONTEXT$desc mosip policy group20\", \"is_Active\": false }"
     outputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroupResult
     restMethod: put
     role: partner
-  Pms_UpdatePolicyGroup_activate_All_Valid_Smoke: 
+  Pms_UpdatePolicyGroup_activate_All_Valid_Smoke_Sid: 
     endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
     uniqueIdentifier: TC_PMS_updatePolicyGroup_03
     description: Validate that a policy group can be activated successfully with valid inputs
-    input: "{ \"isActive\": true, \"desc\": \"desc mosip policy group updated\", \"name\": \"mosip policy group\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    input: "{ \"isActive\": true, \"desc\": \"$RUNCONTEXT$desc mosip policy group updated\", \"name\": \"$RUNCONTEXT$mosip policy group\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
     inputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroup
-    output: " { \"name\": \"mosip policy group\", \"desc\": \"desc mosip policy group updated\", \"is_Active\": true }"
+    output: " { \"name\": \"$RUNCONTEXT$mosip policy group\", \"desc\": \"$RUNCONTEXT$desc mosip policy group updated\", \"is_Active\": true }"
     outputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroupResult
     restMethod: put
     role: partner

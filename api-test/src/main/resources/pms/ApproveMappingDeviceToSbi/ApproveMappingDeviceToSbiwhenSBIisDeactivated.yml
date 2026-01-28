@@ -9,7 +9,7 @@ ApproveMappingDeviceToSbiwhenSBIisDeactivated:
       outputTemplate: pms/error
       input: '{
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$",
       "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProvider_AllValid_Smoke_sid_id$"
  }'
