@@ -9,9 +9,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -24,7 +24,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
@@ -40,7 +40,7 @@ createPublishPolicy:
         "policygroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$",
         "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
         "requesttime": "$TIMESTAMP$"
-	}'
+}'
       output: '{
         "policyGroupName": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "is_Active": true
@@ -54,9 +54,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -75,9 +75,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "sgdasfgbv",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "sgdasfgbv",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -96,9 +96,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "afgrwfg",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "afgrwfg",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -117,9 +117,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/error
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "errors": [
@@ -139,9 +139,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -154,7 +154,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
@@ -169,9 +169,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -184,7 +184,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'  
@@ -199,9 +199,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_For_Published_Policy_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_Published_Policy_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -214,7 +214,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'  
@@ -222,16 +222,16 @@ createPublishPolicy:
    Partner_PublishDataSharePolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_10
-	  description: Validate that a partner can publish a data share policy successfully with all valid inputs
+      description: Validate that a partner can publish a data share policy successfully with all valid inputs
       role: partneradmin
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
-		"policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -242,7 +242,7 @@ createPublishPolicy:
         "policyType": "DataShare",
         "status": "PUBLISHED",
         "is_Active": true,
-		"authType": "$IGNORE$",
+        "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
         "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
@@ -259,9 +259,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -274,7 +274,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
@@ -289,9 +289,9 @@ createPublishPolicy:
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
-		"policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
-		"policyId": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_id$",
-		"requesttime": "$TIMESTAMP$"
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_id$",
+      "requesttime": "$TIMESTAMP$"
 }'
       output: '{
         "policyGroupName": "$IGNORE$",
@@ -304,7 +304,7 @@ createPublishPolicy:
         "is_Active": true,
         "authType": "$IGNORE$",
         "authSubType": "$IGNORE$",
-		"mandatory": "$IGNORE$",
+        "mandatory": "$IGNORE$",
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'

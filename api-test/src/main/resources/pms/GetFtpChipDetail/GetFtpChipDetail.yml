@@ -3,6 +3,7 @@ GetFTPChipDetail:
       endPoint: /v1/partnermanager/ftpchipdetail/getPartnerCertificate/{ftpChipDetailId}
       uniqueIdentifier: TC_PMS_GetFTPChipDetail_01
       description: Validate that all FTM chip details are successfully retrieved with valid inputs
+      role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/GetFtpChipDetail/getFtpChipDetail

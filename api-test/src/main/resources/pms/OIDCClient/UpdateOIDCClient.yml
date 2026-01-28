@@ -1,7 +1,7 @@
 UpdateOIDCClient:
    Pms_UpdateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client/{client_id}
-	  description: Validate that an OIDC client is updated successfully with all required valid inputs as part of a smoke test
+      description: Validate that an OIDC client is updated successfully with all required valid inputs as part of a smoke test
       role: partnerauth
       checkErrorsOnlyInResponse: true
       uniqueIdentifier: TC_PMS_UpdateOIDCClient_01

@@ -158,7 +158,7 @@ GenerateApiKey:
    Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid:
       endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
       uniqueIdentifier: TC_PMS_GenerateApikey_08
-	  description: Validate that API keys are successfully generated for all approved policies with valid inputs
+      description: Validate that API keys are successfully generated for all approved policies with valid inputs
       role: partnerauth
       restMethod: patch
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01

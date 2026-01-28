@@ -23,7 +23,7 @@ SaveSecureBiometricInterfaceCreateDto:
    Pms_SaveSecureBiometricInterface_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       role: partner
-	  description: Validate that secure biometric interface details can be saved successfully with all valid inputs
+      description: Validate that secure biometric interface details can be saved successfully with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
       uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_10
