@@ -2,7 +2,7 @@ GetPartnerDetails:
    Pms_GetPartnerDetails_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v2
       uniqueIdentifier: TC_PMS_GetPrintPartnerDetails_01
-      description: Retrieve Print Partner Details
+      description: Validate that partner details can be retrieved successfully for all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

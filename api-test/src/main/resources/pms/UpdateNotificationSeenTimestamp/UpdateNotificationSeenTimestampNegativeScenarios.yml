@@ -2,7 +2,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Without_Authentication_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_01
-      description: Update Notification Seen Timestamp without Authentication
+      description: Validate that updating the Notification Seen Timestamp fails when authentication is not provided
       role: invalidtoken
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -12,7 +12,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -24,7 +24,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Invalid_userId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_02
-      description: Update Notification Seen Timestamp with invalid userID
+      description: Validate that updating the Notification Seen Timestamp fails when an invalid userId is provided
       role: partnerauth
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -46,7 +46,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Null_userId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_03
-      description: Update Notification Seen Timestamp with Null userID
+      description: Validate that updating the Notification Seen Timestamp fails when the userId is null
       role: partnerauth
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -68,7 +68,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Invalid_RequestId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_04
-      description: Update Notification Seen Timestamp with Invalid RequestId param
+      description: Validate that updating the Notification Seen Timestamp fails when an invalid requestId is provided
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -78,7 +78,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -90,7 +90,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_without_RequestId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_05
-      description: Update Notification Seen Timestamp without RequestId param
+      description: Validate that updating the Notification Seen Timestamp fails when the requestId parameter is missing
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -99,7 +99,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -111,7 +111,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Null_RequestId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_06
-      description: Update Notification Seen Timestamp Null RequestId param
+      description: Validate that updating the Notification Seen Timestamp fails when the requestId parameter is null
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -121,7 +121,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -133,7 +133,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Empty_RequestId_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_07
-      description: Update Notification Seen Timestamp Empty RequestId param
+      description: Validate that updating the Notification Seen Timestamp fails when the requestId parameter is empty
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -143,7 +143,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -155,7 +155,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Without_Version_Value_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_08
-      description: Update Notification Seen Timestamp without Version value
+      description: Validate that updating the Notification Seen Timestamp fails when the version parameter value is missing
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -164,7 +164,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "id": "mosip.pms.users.notifications.seen.timestamp.put",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -176,7 +176,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Null_Version_Value_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_09
-      description: Update Notification Seen Timestamp Null Version value
+      description: Validate that updating the Notification Seen Timestamp fails when the version parameter value is null
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -186,7 +186,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "Null",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -198,7 +198,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Invalid_Version_Value_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_10
-      description: Update Notification Seen Timestamp Invalid Version value
+      description: Validate that updating the Notification Seen Timestamp fails when an invalid version parameter value is provided
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -208,7 +208,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1010",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -220,7 +220,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Version_Value1_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_11
-      description: Update Notification Seen Timestamp Version value1
+      description: Validate that updating the Notification Seen Timestamp fails when version is set to an unsupported value -1
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -230,7 +230,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -242,7 +242,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Version_Value0_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_12
-      description: Update Notification Seen Timestamp Version value0
+      description: Validate that updating the Notification Seen Timestamp fails when version is set to an invalid value 0
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -252,7 +252,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -264,7 +264,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_without_RequestTime_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_13
-      description: Update Notification Seen Timestamp without RequestTime
+      description: Validate that updating the Notification Seen Timestamp fails when the requestTime parameter is missing
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -285,7 +285,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Empty_RequestTime_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_14
-      description: Update Notification Seen Timestamp Empty RequestTime
+      description: Validate that updating the Notification Seen Timestamp fails when the requestTime parameter is empty
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -295,7 +295,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": " ",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -307,7 +307,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_without_Object_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_15
-      description: Update Notification Seen Timestamp without Object parameter
+      description: Validate that updating the Notification Seen Timestamp fails when the request object is missing
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -317,7 +317,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "$REMOVE$",
-      "userId": "pms-111999"
+      "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
@@ -329,7 +329,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Empty_notificationsSeenDtimes_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_16
-      description: Update Notification Seen Timestamp Empty notificationsSeenDtimes parameter
+      description: Validate that updating the Notification Seen Timestamp fails when notificationsSeenDtimes is empty
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -339,7 +339,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": " ",
-      "userId": "pms-111999"
+      "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'
       output: '{
       "errors": [
@@ -351,7 +351,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Invalid_Partner_Admin_Role_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_17
-      description: Update Notification Seen Timestamp with Invalid partner admin role
+      description: Validate that updating the Notification Seen Timestamp fails when performed by a user with an invalid Partner Admin role
       role: auth
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -361,7 +361,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -373,7 +373,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_with_Partner_Role_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_18
-      description: Update Notification Seen Timestamp with Invalid partner admin role
+      description: Validate that updating the Notification Seen Timestamp fails when performed by a user with Partner role
       role: partnerftm
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
@@ -383,7 +383,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       "version": "1.0",
       "requesttime": "$TIMESTAMP$",
       "notificationsSeenDtimes": "2025-06-04T10:00:00Z",
-      "userId": "pms-111777"
+      "userId": "$RUNCONTEXT$pms-111777"
 }'
       output: '{
       "errors": [
@@ -395,7 +395,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
    Pms_UpdateNotificationSeenTimestamp_Invalid_userId_With_PartnerAdminRole_Neg:
       endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
       uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_19
-      description: Update Notification Seen Timestamp with invalid userID
+      description: Validate that updating the Notification Seen Timestamp fails when an invalid userId is provided even with Partner Admin role
       role: partneradmin
       restMethod: put
       inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp

@@ -1,7 +1,7 @@
 UpdateApiKeyExpiryDate:
   Pms_UpdateApiKeyExpiryDate_All_Valid_Smoke:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key
+    description: Validate that updating the API Key Expiry Date with all valid inputs is successful and the changes are reflected correctly
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDate_01
     checkErrorsOnlyInResponse: true
@@ -21,7 +21,7 @@ UpdateApiKeyExpiryDate:
 }'
   Pms_UpdateApiKeyExpiryDate_With_Alphanumeric_ApiKeyName_Smoke:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with alphanumeric apiKeyName
+    description: Validate that updating the API Key Expiry Date for an API Key with an alphanumeric name is successful and the changes are reflected correctly
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDate_02
     checkErrorsOnlyInResponse: true
@@ -41,7 +41,7 @@ UpdateApiKeyExpiryDate:
 }'
   Pms_UpdateApiKeyExpiryDate_With_After_10yrs_Expiry_Date_Smoke:
     endPoint: /v1/partnermanager/partners/{partnerId}/policy/{policyId}/apiKey/expiry-date
-    description: Updating expiry date of an existing Partner API Key with expiry date after 10 years
+    description: Validate updating an API Key expiry date 10 years ahead is successful
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDate_03
     checkErrorsOnlyInResponse: true

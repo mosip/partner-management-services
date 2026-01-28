@@ -2,7 +2,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Invalid_Access_Token_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_01
-    description: Fetching MISP partner license details by Partner ID using invalid access token
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses by partner ID using an invalid access token
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
@@ -22,7 +22,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_PartnerId_Null_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_02
-    description: Fetching MISP partner license details by giving Partner ID is null
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with a null partner ID
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
@@ -42,7 +42,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Invalid_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_03
-    description: Fetching MISP partner license details by Partner ID using invalid PartnerId
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid partner ID
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
@@ -62,13 +62,13 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Auth_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_04
-    description: Fetching MISP partner license details by using Auth Partner ID
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a partner ID that is not authorized
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111999",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "licenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 }'
@@ -82,13 +82,13 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_PartnerId_And_Without_LicenseKeyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_05
-    description: Fetching MISP partner license details by Partner ID without LicenseKeyName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a valid partner ID but without providing a license key name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111556",
+      "partnerId": "$ID:MISPPartnerRegistration_Empty_PolicyGroup_sid_partnerId$",
       "licenseKeyName": "",
       "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$"
 		
@@ -103,7 +103,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_NotRegistered_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_06
-    description: Fetching MISP partner license details using Not Registered Partner ID
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a partner ID that is not registered
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
@@ -123,13 +123,13 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_DiffOrg_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_07
-    description: Fetching MISP partner license details using Different organisation Partner ID
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a partner ID belonging to a different organization
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
     outputTemplate: pms/error
     input: '{
-      "partnerId": "pms-111998",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
       "licenseKeyName": "$REMOVE$",
       "policyId": "$REMOVE$"
 }'
@@ -143,7 +143,7 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_NotUploaded_Certificate_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_08
-    description: Fetching MISP partner license details using Not uploaded certificate Partner ID
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses for a partner ID whose certificate has not been uploaded
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId

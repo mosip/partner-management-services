@@ -2,7 +2,7 @@ GetPolicyForApiKey:
    Pms_GetPolicyForApiKey_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
       uniqueIdentifier: TC_PMS_GetPolicyForApiKey_01
-      description: Retrieve Partner Policy API Key
+      description: Validate that all policies associated with a valid API key are retrieved successfully
       role: partner
       restMethod: get
       inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey
@@ -12,12 +12,12 @@ GetPolicyForApiKey:
     "apiKey": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_apiKey$"
 }'
       output: '{
-   "partnerID": "pms-111999"      
+   "partnerID": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"      
 }'
    Pms_GetPolicyForApiKey_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
       uniqueIdentifier: TC_PMS_GetPolicyForApiKey_02
-      description: Retrieve Partner Policy API Key while keeping invalid PartnerId
+      description: Validate that retrieving policies for an API key fails when an invalid partner ID is provided
       role: partner
       restMethod: get
       inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey
@@ -36,7 +36,7 @@ GetPolicyForApiKey:
    Pms_GetPolicyForApiKey_InValid_apiKey:
       endPoint: /v1/partnermanager/partners/{partnerId}/apikey/{apiKey}
       uniqueIdentifier: TC_PMS_GetPolicyForApiKey_03
-      description: Retrieve Partner Policy API Key while keeping invalid APIKey
+      description: Validate that retrieving policies fails when an invalid API key is provided
       role: partner
       restMethod: get
       inputTemplate: pms/GetPolicyForApiKey/getPolicyForApiKey

@@ -2,7 +2,7 @@ RegenerateMISPPartnerLicense:
   Pms_RegenerateMISPPartnerLicense_All_Valid_Smoke_sid:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_01
-    description: Regenerating MISP Partner License with valid Access Token
+    description: Validate that a MISP partner license is successfully regenerated for a valid partner ID and all required parameters as part of a smoke test
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
@@ -21,7 +21,7 @@ RegenerateMISPPartnerLicense:
   Pms_RegenerateMISPPartnerLicense_Without_PolicyId:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_02
-    description: Regenerating MISP Partner License without PolicyId
+    description: Validate that the API returns an error when attempting to regenerate a MISP partner license without providing a policy ID
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
@@ -40,7 +40,7 @@ RegenerateMISPPartnerLicense:
   Pms_RegenerateMISPPartnerLicense_with_valid_PolicyId:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_03
-    description: Regenerating MISP Partner License with valid PolicyId
+    description: Validate that the MISP partner license is successfully regenerated when a valid policy ID is provided
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
@@ -59,7 +59,7 @@ RegenerateMISPPartnerLicense:
   Pms_RegenerateMISPPartnerLicense_with_valid_LicenseKeyName:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_04
-    description: Regenerating MISP Partner License with valid License Key Name
+    description: Validate that the MISP partner license is successfully regenerated when a valid license key name is provided
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense
@@ -78,7 +78,7 @@ RegenerateMISPPartnerLicense:
   Pms_RegenerateMISPPartnerLicense_With_Empty_PolicyId:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_RegenerateMISPPartnerLicense_05
-    description: Regenerating MISP Partner License with empty PolicyId 
+    description: Validate that the API returns an error when attempting to regenerate a MISP partner license with an empty policy ID
     role: partneradmin
     restMethod: put
     inputTemplate: pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense

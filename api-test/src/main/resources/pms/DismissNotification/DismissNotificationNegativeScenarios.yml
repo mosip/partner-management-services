@@ -2,7 +2,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Without_Authentication_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: invalidtoken
-      description: Dismiss Notification without Authentication
+      description: Validate that dismissing a notification fails when authentication is not provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_01
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -24,7 +24,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_NotificationID_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Invalid NotificationID
+      description: Validate that dismissing a notification fails when an invalid notification ID is provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_02
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -46,7 +46,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Null_NotificationID_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Null NotificationID
+      description: Validate that dismissing a notification fails when the notification ID is null
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_03
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -68,7 +68,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_RequestID_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with invalid Request ID
+      description: Validate that dismissing a notification fails when an invalid request ID is provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_04
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -90,7 +90,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Without_RequestID_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification without Request ID
+      description: Validate that dismissing a notification fails when the request ID is not provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_05
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -111,7 +111,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Null_RequestID_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Null Request ID
+      description: Validate that dismissing a notification fails when the request ID is null
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_06
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -132,7 +132,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Empty_RequestID_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Empty Request ID
+      description: Validate that dismissing a notification fails when the request ID is empty
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_07
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -153,7 +153,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Without_Version_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Version parameter
+      description: Validate that dismissing a notification fails when the version is not provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_08
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -174,7 +174,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Null_Version_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Version parameter
+      description: Validate that dismissing a notification fails when the version is null
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_09
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -196,7 +196,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_Version_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Version parameter
+      description: Validate that dismissing a notification fails when an invalid version is provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_10
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -218,7 +218,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_Value_1_Version_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Version value 1 parameter
+      description: Validate that dismissing a notification fails when the version value is invalid set to 1
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_11
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -240,7 +240,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_Value_0_Version_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Version value 0 parameter
+      description: Validate that dismissing a notification fails when the version value is invalid set to 0
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_12
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -262,7 +262,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_without_RequestTime_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification without RequestTime parameter
+      description: Validate that dismissing a notification fails when the requestTime is not provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_13
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -283,7 +283,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Empty_RequestTime_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Empty Request Time param
+      description: Validate that dismissing a notification fails when the requestTime is empty
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_14
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -305,7 +305,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_without_PartnerAdmin_Role_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: auth
-      description: Dismiss Notification without Partner Admin role
+      description: Validate that dismissing a notification fails when the user does not have the Partner Admin role
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_15
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -327,7 +327,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_without_Object_Parameter_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification without object Parameter
+      description: Validate that dismissing a notification fails when the object parameter is not provided
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_16
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -349,7 +349,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_Notification_Status_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with invalid Notification status
+      description: Validate that dismissing a notification fails when the notification status is invalid
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_17
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -371,7 +371,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Empty_Notification_Status_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with Empty Notification Status
+      description: Validate that dismissing a notification fails when the notification status is empty
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_18
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification
@@ -393,7 +393,7 @@ DismissNotificationNegativeScenarios:
    Pms_DismissNotification_Invalid_Param_Dismiss_Notification_Status_Neg:
       endPoint: /v1/partnermanager/notifications/{notificationId}
       role: partneradmin
-      description: Dismiss Notification with invalid Notification Status parameter as DISMISS
+      description: Validate that dismissing a notification fails when an invalid parameter is provided for dismissNotificationStatus
       uniqueIdentifier: TC_PMS_DismissNotificationNegativeScenarios_19
       restMethod: patch
       inputTemplate: pms/DismissNotification/DismissNotification

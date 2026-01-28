@@ -2,7 +2,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_type_contains_Smoke_asc:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_01
-      description: Create Search Partner Type with valid data
+      description: Validate that searching Partner Types with type containing a value sorted in ascending order returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -36,7 +36,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_AllValid_Smoke:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_02
-      description: Create Search Partner Type with all valid data
+      description: Validate that searching Partner Types with all valid inputs returns the expected results successfully
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -57,7 +57,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_03
-      description: Create Search Partner Type with Only FilterCriteria
+      description: Validate that searching Partner Types using only filter criteria returns the expected results correctly
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -85,7 +85,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_04
-      description: Create Search Partner Type with Only SortCriteria
+      description: Validate that searching Partner Types using only sort criteria returns results correctly
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -112,7 +112,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_05
-      description: Create Search Partner Type with Only PaginationCriteria
+      description: Validate that searching Partner Types using only pagination criteria returns results correctly
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -133,7 +133,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_type_contains_Smoke_desc:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_06
-      description: Create Search Partner Type while keeping Type parameter as contains and filter data in descending order
+      description: Validate that searching Partner Types with type containing a value sorted in descending order returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -167,7 +167,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_type_equals_Smoke_desc:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_07
-      description: Create Search Partner Type while keeping Type parameter as equals and filter data in descending order
+      description: Validate that searching Partner Types with type equal to a value sorted in descending order returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -201,7 +201,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_type_equals_Smoke_asc:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_08
-      description: Create Search Partner Type while keeping Type parameter as contains and filter data in ascending order
+      description: Validate that searching Partner Types with type equal to a value sorted in ascending order returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -235,7 +235,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_type_startswith_Smoke_asc:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_09
-      description: Create Search Partner Type while keeping Type parameter as startswith and filter data in ascending order
+      description: Validate that searching Partner Types with type starting with a value sorted in ascending order returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -269,7 +269,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_type_startswith_Smoke_desc:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_10
-      description: Create Search Partner Type while keeping Type parameter as startswith and filter data in descending order
+      description: Validate that searching Partner Types with type starting with a value sorted in descending order returns correct results
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -303,7 +303,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_invalid_value_equals:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_11
-      description: Create Search Partner Type while keeping Value parameter as invalid
+      description: Validate that searching Partner Types with an invalid value using type equals returns no results
       role: partner
       restMethod: post
       checkErrorsOnlyInResponse: true
@@ -333,7 +333,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_invalid_value_startswith:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_12
-      description: Create Search Partner Type while keeping value parameter as invalid
+      description: Validate that searching Partner Types with an invalid value using type starts with returns no results
       role: partner
       restMethod: post
       checkErrorsOnlyInResponse: true
@@ -363,7 +363,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_invalid_columnName:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_13
-      description: Create Search Partner Type while keeping columnName parameter as invalid
+      description: Validate that searching Partner Types with an invalid column name returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -397,7 +397,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_missing_columnName:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_14
-      description: Create Search Partner Type while keeping columnName parameter as empty
+      description: Validate that searching Partner Types with the columnName parameter missing returns results using default behavior
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -431,7 +431,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_missing_type:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_15
-      description: Create Search Partner Type while keeping Type parameter as empty
+      description: Validate that searching Partner Types with the type parameter missing returns results using default behavior
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -465,7 +465,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_invalid_sort_type:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_16
-      description: Create Search Partner Type while keeping sortType parameter as invalid
+      description: Validate that searching Partner Types with an invalid sortType returns an appropriate error
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -499,7 +499,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_missing_sort_type:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_17
-      description: Create Search Partner Type while keeping sortType parameter as empty
+      description: Validate that searching Partner Types with the sortType parameter missing returns results using default sorting
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -533,7 +533,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_invalid_sort_field:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_18
-      description: Create Search Partner Type while keeping sortField parameter as invalid
+      description: Validate that searching Partner Types fails and returns an appropriate error when an invalid sortField is provided in the request
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType
@@ -567,7 +567,7 @@ CreateSearchPartnerType:
    Pms_SearchPartnerType_with_missing_sort_field:
       endPoint: /v1/partnermanager/partners/partnertype/search
       uniqueIdentifier: TC_PMS_createSearchPartnerType_19
-      description: Create Search Partner Type while keeping sortField parameter as empty
+      description: Validate that searching Partner Types with the sortField parameter missing returns results using default sorting
       role: partner
       restMethod: post
       inputTemplate: pms/SearchAPIs/SearchPartnerType/createSearchPartnerType

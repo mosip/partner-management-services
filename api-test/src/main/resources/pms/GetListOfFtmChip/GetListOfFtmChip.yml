@@ -2,7 +2,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail/v2
       uniqueIdentifier: TC_PMS_FTM_chip_03      
-      description: Fetching all the ftpchipdetail
+      description: Validate that all FTM chips are successfully retrieved with valid inputs
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -15,7 +15,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_sortType_ASC:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?sortType={sortType}
       uniqueIdentifier: TC_PMS_FTM_chip_06     
-      description: Fetching all the ftpchipdetail by sort type ASC for the given sort field
+      description: Validate that FTM chips are successfully retrieved in ascending order when sorted by a valid sortType
       role: partneradmin
       restMethod: get
       inputTemplate: pms/GetListOfFtmChip/getListOfFtmChip
@@ -41,7 +41,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_sortType_DESC:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?sortType={sortType}
       uniqueIdentifier: TC_PMS_FTM_chip_07    
-      description: Fetching all the ftpchipdetail by sort type DESC for the given sort field
+      description: Validate that FTM chips are successfully retrieved in descending order when sorted by a valid sortType
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -68,7 +68,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_orgName_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?orgName={orgName}
       uniqueIdentifier: TC_PMS_FTM_chip_08    
-      description: Fetching all the ftpchipdetail for orgName which contains '1'
+      description: Validate that FTM chips are successfully retrieved when filtered by a valid orgName
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -90,7 +90,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_partnerId_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_FTM_chip_09   
-      description: Fetching all the ftpchipdetail for partnerId which contains 'a'
+      description: Validate that FTM chips are successfully retrieved when filtered by a valid partnerId
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -112,7 +112,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_status_given_rejected:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
       uniqueIdentifier: TC_PMS_FTM_chip_10   
-      description: Fetching all the ftpchipdetail for status as rejected
+      description: Validate that FTM chips with status Rejected are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -134,7 +134,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_status_given_approved:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
       uniqueIdentifier: TC_PMS_FTM_chip_11   
-      description: Fetching all the ftpchipdetail for status as approved
+      description: Validate that FTM chips with status Approved are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -156,7 +156,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_status_given_deactivated:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
       uniqueIdentifier: TC_PMS_FTM_chip_12   
-      description: Fetching all the ftpchipdetail for status as deactivated
+      description: Validate that FTM chips with status Deactivated are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -178,7 +178,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_status_given_pending_cert_upload:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
       uniqueIdentifier: TC_PMS_FTM_chip_13  
-      description: Fetching all the ftpchipdetail for status as pending_cert_upload
+      description: Validate that FTM chips with status Pending Certificate Upload are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -200,7 +200,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_status_given_pending_approval:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?status={status}
       uniqueIdentifier: TC_PMS_FTM_chip_14  
-      description: Fetching all the ftpchipdetail for status as pending_approval
+      description: Validate that FTM chips with status Pending Approval are successfully retrieved
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -222,7 +222,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_pagesize_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?pageSize={pageSize}
       uniqueIdentifier: TC_PMS_FTM_chip_17  
-      description: Fetching all the ftpchipdetail for pageSize specified
+      description: Validate that FTM chips are successfully retrieved when a valid page size is specified
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -244,7 +244,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_make_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?make={make}
       uniqueIdentifier: TC_PMS_FTM_chip_18  
-      description: Fetching all the ftpchipdetail for make value contains 'abcd'
+      description: Validate that FTM chips are successfully retrieved when filtered by a valid make
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -266,7 +266,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_model_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?model={model}
       uniqueIdentifier: TC_PMS_FTM_chip_19  
-      description: Fetching all the ftpchipdetail for model value contains 'xyz'
+      description: Validate that FTM chips are successfully retrieved when filtered by a valid model
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -288,7 +288,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_random_value_given:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?partnerId={partnerId}
       uniqueIdentifier: TC_PMS_FTM_chip_20  
-      description: Fetching all the ftpchipdetail by giving random value for partnerId
+      description: Validate that FTM chip retrieval fails when filtered with random values
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -311,7 +311,7 @@ GetListOfFtmChip:
    Pms_GetListOfFtmChip_with_with_combination_search_twofields:
       endPoint: /v1/partnermanager/ftpchipdetail/v2?make={make}&model={model}
       uniqueIdentifier: TC_PMS_FTM_chip_21  
-      description: Fetching all the ftpchipdetail by giving value for both make and model
+      description: Validate that FTM chips are successfully retrieved when filtered using a combination of two fields
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get

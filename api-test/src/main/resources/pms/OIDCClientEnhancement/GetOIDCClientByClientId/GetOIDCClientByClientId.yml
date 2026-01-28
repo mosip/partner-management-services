@@ -2,7 +2,7 @@ GetOIDCClientByClientIdV2:
   Pms_GetOIDCClientByClientIdV2_All_Valid_Smoke:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2_01
-    description: Fetching OIDC client details by Client ID using a valid access token
+    description: Validate that OIDC client details can be retrieved successfully using a valid client ID
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -16,7 +16,7 @@ GetOIDCClientByClientIdV2:
   Pms_GetOIDCClientByClientIdV2_With_Partner_Admin_Role:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2_02
-    description: Fetching OIDC client details by Client ID using a valid access token of partner admin role
+    description: Validate that OIDC client details can be retrieved using a valid client ID by a user with the Partner Admin role
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -30,7 +30,7 @@ GetOIDCClientByClientIdV2:
   Pms_GetOIDCClientByClientIdV2_With_Deactivated_ClientId:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_GetOIDCClientByClientIdV2_03
-    description: Fetching OIDC client details by Deactivated Client ID
+    description: Validate that retrieving OIDC client details fails when the client ID is deactivated
     role: partnerauth
     restMethod: get
     checkErrorsOnlyInResponse: true

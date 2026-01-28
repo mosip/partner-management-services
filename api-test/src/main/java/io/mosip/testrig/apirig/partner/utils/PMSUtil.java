@@ -2,6 +2,7 @@ package io.mosip.testrig.apirig.partner.utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -85,7 +86,6 @@ public class PMSUtil extends AdminTestUtil {
 	}
 	
 	public static void DbCleanRevamp() {
-		BaseTestCase.currentModule = GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
 		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
 				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getPMSDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueries.txt");
@@ -97,14 +97,6 @@ public class PMSUtil extends AdminTestUtil {
 		DBManager.executeDBQueries(PMSConfigManager.getIdaDbUrl(), PMSConfigManager.getIdaDbUser(),
 				PMSConfigManager.getIdaDbPass(), PMSConfigManager.getIdaDbSchema(),
 				getGlobalResourcePath() + "/" + "config/partnerRevampDataDeleteQueriesForIDA.txt");
-		
-		DBManager.executeDBQueries(PMSConfigManager.getPMSDbUrl(), PMSConfigManager.getPMSDbUser(),
-				PMSConfigManager.getPMSDbPass(), PMSConfigManager.getPMSDbSchema(),
-				getGlobalResourcePath() + "/" + "config/pmsDataDeleteQueries.txt");
-		
-		DBManager.executeDBQueries(PMSConfigManager.getKMDbUrl(), PMSConfigManager.getKMDbUser(),
-				PMSConfigManager.getKMDbPass(), PMSConfigManager.getKMDbSchema(),
-				getGlobalResourcePath() + "/" + "config/keyManagerDataDeleteQueries.txt");
 	}
 	
 	public void validateResponse(Response response, String testCaseName, String idKeyName) {

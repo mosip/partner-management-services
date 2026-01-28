@@ -2,7 +2,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_without_Access_Token_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_01
-    description: Fetching MISP Partner License without Access Token
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses without providing an access token
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -30,7 +30,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_02
-    description: Fetching MISP Partner License with Invalid PartnerId
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid partner ID
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -57,7 +57,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_03
-    description: Fetching MISP Partner License using OrgName when PartnerId has special characters
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a partner ID containing special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -85,7 +85,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_04
-    description: Fetching MISP Partner License with Invalid OrgName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid organization name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -112,7 +112,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_05
-    description: Fetching MISP Partner License using OrgName when OrgName has special characters
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an organization name containing special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -140,7 +140,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_06
-    description: Fetching MISP Partner License with Invalid PolicyGroupName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid policy group name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -167,7 +167,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_07
-    description: Fetching MISP Partner License using PolicyName when PolicyGroupName has special characters
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a policy group name containing special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -195,7 +195,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PolicyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_08
-    description: Fetching MISP Partner License with Invalid PolicyName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid policy name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -222,7 +222,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_PolicyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyName=P@!!cY$$.
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_09
-    description: Fetching MISP Partner License using PolicyName when PolicyName has special characters
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a policy name containing special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -250,7 +250,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_MispLicenseKeyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_10
-    description: Fetching MISP Partner License with Invalid MispLicenseKeyName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid MISP license key name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -277,7 +277,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_MispLicenseKeyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_11
-    description: Fetching MISP Partner License using MispLicenseKeyName with special characters
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a MISP license key name containing special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -305,7 +305,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageNo_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_12
-    description: Fetching MISP Partner License with Invalid PageNo
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid page number
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -333,7 +333,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_PageNo_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_13
-    description: Fetching MISP Partner License with Negative PageNo
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a negative page number
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -361,7 +361,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageSize_Format_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_14
-    description: Fetching MISP Partner License with Invalid format of PageSize
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid page size format
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -386,7 +386,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Zero_PageSize_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_15
-    description: Fetching MISP Partner License with Zero PageSize
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with a page size of zero
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -414,7 +414,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_PageSize_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_16
-    description: Fetching MISP Partner License with Negative PageSize
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a negative page size
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -442,7 +442,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_PageNo_Format_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_17
-    description: Fetching MISP Partner License with Invalid format of PageNo
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid page number format
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -467,7 +467,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_OrgName_and_Invalid_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_18
-    description: Fetching MISP Partner License with Valid OrgName and Invalid PolicyGroupName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a valid organization name but an invalid policy group name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -494,7 +494,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_SortType_Without_SortFieldName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_19
-    description: Fetching MISP Partner License when SortType is provided without SortFieldName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses by providing a sort type without specifying a sort field name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -522,7 +522,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_and_Invalid_SortType_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_20
-    description: Fetching MISP Partner License when SortFieldName is used with an invalid SortType
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a valid sort field name but an invalid sort type
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -550,7 +550,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Special_Char_SortFieldName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_21
-    description: Fetching MISP Partner License using when SortFieldName has special characters
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a sort field name containing special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -578,7 +578,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Empty_String_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyGroupName=""
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_22
-    description: Fetching MISP Partner License when PolicyGroupName is Empty
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an empty string for the policy group name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseInput
@@ -594,7 +594,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Empty_String_PolicyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses?policyName=""
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_23
-    description: Fetching MISP Partner License when PolicyName is Empty
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an empty string for the policy name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseInput
@@ -610,7 +610,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_SortFieldName_Without_SortType_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_24
-    description: Fetch MISP partner licenses sorted by sortFieldName without passing sortType
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses by providing a sort field name without specifying a sort type
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -638,7 +638,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Negative_ExpiryPeriod_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_25
-    description: Fetching MISP Partner License By providing Negative ExpiryPeriod
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a negative expiryPeriod value
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -663,7 +663,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Exceeding_Maximum_ExpiryPeriod_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_26
-    description: Fetching MISP Partner License with exceeding Maximum Allowed ExpiryPeriod
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an expiryPeriod value exceeding the maximum allowed limit
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -688,7 +688,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Decimal_ExpiryPeriod_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_27
-    description: Fetching MISP Partner License By providing Decimal Value for ExpiryPeriod
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a decimal value for the expiryPeriod parameter
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -713,7 +713,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Inactive_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_28
-    description: Fetching MISP Partner License using Inactive(Not Uploaded Certificate) PartnerId
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an inactive partner ID
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -740,7 +740,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Invalid_SortFieldName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_29
-    description: Fetching MISP Partner License using invalid SortFieldName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an invalid sort field name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -768,7 +768,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Numeric_SortFieldName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_30
-    description: Fetching MISP Partner License using Numeric SortFieldName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a numeric value as the sort field name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -796,7 +796,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Unsupported_SortType_Value_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_31
-    description: Fetching MISP Partner License using Unsupported SortType Value
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an unsupported sort type value
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -824,7 +824,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_SpecialCharacter_In_SortType_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_32
-    description: Fetching MISP Partner License using Special Character in SortType
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using special characters in the sort type parameter
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -852,7 +852,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageNo_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_33
-    description: Fetching MISP Partner License with Non Integer PageNo
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a non-integer value for the page number
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -877,7 +877,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Decimal_PageNo_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_34
-    description: Fetching MISP Partner License with Decimal PageNo
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a decimal value for the page number
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -902,7 +902,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_VeryLarge_PageNo_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_35
-    description: Fetching MISP Partner License with Very Large PageNo
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an excessively large page number
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -929,7 +929,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_No_Status_Selected_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_36
-    description: Fetching MISP Partner License with No Status Selected
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses without selecting any status filter
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -956,7 +956,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Null_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_37
-    description: Fetching MISP Partner License with Null OrgName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a null value for the organization name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -983,7 +983,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Valid_PolicyName_And_Invalid_OrgName_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_38
-    description: Fetching MISP Partner License with valid PolicyName and Invalid OrgName
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a valid policy name but an invalid organization name
     role: partneradmin
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
@@ -1010,7 +1010,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Large_PageSizeNumber_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_39
-    description: Fetching MISP Partner License with Large PageSize Number
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using an excessively large page size value
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -1034,7 +1034,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_NonInteger_PageSizeNumber_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_40
-    description: Fetching MISP Partner License with Non Integer PageSize Number
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a non-integer value for the page size
     role: partneradmin
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -1059,7 +1059,7 @@ GetMISPPartnerLicenseNegTC:
   Pms_GetMISPPartnerLicenseNegTC_with_Deactivated_PartnerId_Neg:
     endPoint: /v1/partnermanager/misp-licenses
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_41
-    description: Fetching MISP Partner License using Deactivated PartnerId
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses using a deactivated partner ID
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true

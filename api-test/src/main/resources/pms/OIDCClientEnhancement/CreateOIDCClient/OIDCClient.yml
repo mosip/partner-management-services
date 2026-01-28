@@ -1,7 +1,7 @@
 CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client
+      description: Validate that an OIDC client is created successfully with all required valid inputs as part of a smoke test
       uniqueIdentifier: TC_PMS_CreateOIDCClient_01
       role: partnerauth
       restMethod: post
@@ -34,7 +34,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_auth_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid auth token
+      description: Validate that OIDC client creation fails when invalid authentication details are provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_02
       role: invalidtoken
       restMethod: post
@@ -70,7 +70,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_all_Valid_Name_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with valid name
+      description: Validate OIDC client creation with a valid name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_03
       role: partnerauth
       restMethod: post
@@ -103,7 +103,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_Name_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid name
+      description: Validate OIDC client creation fails with an invalid name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_04
       role: partnerauth
       restMethod: post
@@ -139,7 +139,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_Name_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with empty name
+      description: Validate OIDC client creation fails with an empty name
       uniqueIdentifier: TC_PMS_CreateOIDCClient_05
       role: partnerauth
       restMethod: post
@@ -175,7 +175,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_Name_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without name
+      description: Validate OIDC client creation fails when the name is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_06
       role: partnerauth
       restMethod: post
@@ -211,7 +211,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_all_ValidName_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client
+      description: Validate that an OIDC client is created successfully when a valid name is provided along with all other required parameters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_07
       role: partnerauth
       restMethod: post
@@ -244,7 +244,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_Name_with_tab_Characters_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with name contains newline or tab characters
+      description: Validate that OIDC client creation fails when the name contains tab characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_08
       role: partnerauth
       restMethod: post
@@ -277,7 +277,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_PolicyID_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid policyid
+      description: Validate that OIDC client creation fails when an invalid policy ID is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_09
       role: partnerauth
       restMethod: post
@@ -313,7 +313,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Special_Character_PolicyID_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with special character policyid
+      description: Validate that OIDC client creation fails when the policy ID contains special characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_10
       role: partnerauth
       restMethod: post
@@ -349,7 +349,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_PolicyID_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with empty policyid
+      description: Validate that OIDC client creation fails when the policy ID is empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_11
       role: partnerauth
       restMethod: post
@@ -385,7 +385,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_PolicyID_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with Without policyid
+      description: Validate that OIDC client creation fails when the policy ID is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_12
       role: partnerauth
       restMethod: post
@@ -421,7 +421,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_PublicKey_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid public key
+      description: Validate that OIDC client creation fails when an invalid public key is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_13
       role: partnerauth
       restMethod: post
@@ -454,7 +454,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_PublicKey_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with without public key
+      description: Validate that OIDC client creation fails when the public key is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_14
       role: partnerauth
       restMethod: post
@@ -490,7 +490,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_PublicKey_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with Empty public key
+      description: Validate that OIDC client creation fails when the public key is empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_15
       role: partnerauth
       restMethod: post
@@ -526,7 +526,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_authPartnerId_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid authPartnerId
+      description: Validate that OIDC client creation fails when an invalid auth partner ID is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_16
       role: partnerauth
       restMethod: post
@@ -562,7 +562,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_authPartnerId_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without AuthPartnerId
+      description: Validate that OIDC client creation fails when the auth partner ID is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_17
       role: partnerauth
       restMethod: post
@@ -598,7 +598,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Special_Character_authPartnerId_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with special character authPartnerId
+      description: Validate that OIDC client creation fails when the auth partner ID contains special characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_18
       role: partnerauth
       restMethod: post
@@ -634,7 +634,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_LogoUri_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid LogoUri
+      description: Validate that OIDC client creation fails when an invalid logo URI is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_19
       role: partnerauth
       restMethod: post
@@ -670,7 +670,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_LogoUri_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without LogoUri
+      description: Validate that OIDC client creation fails when the logo URI is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_20
       role: partnerauth
       restMethod: post
@@ -706,7 +706,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_LogoUri_As_Special_Character_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with LogoUri as special characters
+      description: Validate that OIDC client creation fails when the logo URI contains special characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_21
       role: partnerauth
       restMethod: post
@@ -742,7 +742,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_RedirectURLs_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid RedirectURLs
+      description: Validate that OIDC client creation fails when invalid redirect URLs are provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_22
       role: partnerauth
       restMethod: post
@@ -778,7 +778,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_RedirectURLs_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without RedirectURLs
+      description: Validate that OIDC client creation fails when redirect URLs are not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_23
       role: partnerauth
       restMethod: post
@@ -814,7 +814,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_RedirectURLs_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with empty RedirectURLs
+      description: Validate that OIDC client creation fails when redirect URLs are empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_24
       role: partnerauth
       restMethod: post
@@ -850,7 +850,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_GrantTypes_Extra_Spaces_Trimmed_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with grant types having extra spaces
+      description: Validate that OIDC client creation handles correctly when grant types contain extra spaces
       uniqueIdentifier: TC_PMS_CreateOIDCClient_25
       role: partnerauth
       restMethod: post
@@ -886,7 +886,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Multiple_GrantTypes_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with multiple grant types
+      description: Validate that OIDC client creation fails when multiple invalid grant types are provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_26
       role: partnerauth
       restMethod: post
@@ -922,7 +922,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_GrantTypes_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without grant types
+      description: Validate that OIDC client creation fails when grant types are not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_27
       role: partnerauth
       restMethod: post
@@ -958,7 +958,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_GrantTypes_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with empty grant types
+      description: Validate that OIDC client creation fails when grant types are empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_28
       role: partnerauth
       restMethod: post
@@ -994,7 +994,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_GrantTypes_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid grant types
+      description: Validate that OIDC client creation fails when invalid grant types are provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_29
       role: partnerauth
       restMethod: post
@@ -1030,7 +1030,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_GrantTypes_Special_Character_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with grant types having special characters
+      description: Validate that OIDC client creation fails when grant types contain special characters
       uniqueIdentifier: TC_PMS_CreateOIDCClient_30
       role: partnerauth
       restMethod: post
@@ -1066,7 +1066,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Valid_ClientAuthMethods_Containing_Only_Private_key_jwt:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with grant types having valid clientAuthMethods containing only private_key_jwt
+      description: Validate that OIDC client creation succeeds when the client authentication methods contain only private_key_jwt
       uniqueIdentifier: TC_PMS_CreateOIDCClient_31
       role: partnerauth
       restMethod: post
@@ -1098,7 +1098,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with grant types having without clientAuthMethods
+      description: Validate that OIDC client creation fails when client authentication methods are not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_32
       role: partnerauth
       restMethod: post
@@ -1134,7 +1134,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having empty clientAuthMethods
+      description: Validate that OIDC client creation fails when client authentication methods are provided but empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_33
       role: partnerauth
       restMethod: post
@@ -1170,7 +1170,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_ClientAuthMethods_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having invalid clientAuthMethods
+      description: Validate that OIDC client creation fails when invalid client authentication methods are provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_34
       role: partnerauth
       restMethod: post
@@ -1206,7 +1206,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_ClientNameLangMap:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having empty clientNameLangMap
+      description: Validate that OIDC client creation fails when the client name language map is empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_35
       role: partnerauth
       restMethod: post
@@ -1238,7 +1238,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_UserResponceType_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having invalid userinfoResponseType
+      description: Validate that OIDC client creation fails when an invalid user response type is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_36
       role: partnerauth
       restMethod: post
@@ -1274,7 +1274,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Empty_UserResponceType_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having empty userinfoResponseType
+      description: Validate that OIDC client creation fails when the user response type is empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_37
       role: partnerauth
       restMethod: post
@@ -1310,7 +1310,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_type_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having invalid type
+      description: Validate that OIDC client creation fails when an invalid client type is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_38
       role: partnerauth
       restMethod: post
@@ -1346,7 +1346,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_all_Valid_type_link_Smoke:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having valid type as link
+      description: Validate that OIDC client creation succeeds for all valid client types
       uniqueIdentifier: TC_PMS_CreateOIDCClient_39
       role: partnerauth
       restMethod: post
@@ -1379,7 +1379,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_all_Valid_type_login_Smoke:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having valid type as login
+      description: Validate that OIDC client creation succeeds for all valid client types during login scenarios
       uniqueIdentifier: TC_PMS_CreateOIDCClient_40
       role: partnerauth
       restMethod: post
@@ -1412,7 +1412,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_empty_type_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having empty type
+      description: Validate that OIDC client creation fails when the client type is empty
       uniqueIdentifier: TC_PMS_CreateOIDCClient_41
       role: partnerauth
       restMethod: post
@@ -1448,7 +1448,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_SignupBannerRequired_False_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client signupBannerRequired as false
+      description: Validate that OIDC client creation succeeds when signupBannerRequired is set to false
       uniqueIdentifier: TC_PMS_CreateOIDCClient_42
       role: partnerauth
       restMethod: post
@@ -1481,7 +1481,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_forgotPwdLinkRequired_False_Smoke_sid:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client forgotPwdLinkRequired as false
+      description: Validate that OIDC client creation succeeds when forgotPwdLinkRequired is set to false
       uniqueIdentifier: TC_PMS_CreateOIDCClient_43
       role: partnerauth
       restMethod: post
@@ -1514,7 +1514,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having invalid consentExpireInMins
+      description: Validate that OIDC client creation fails when an invalid value is provided for consentExpireInMins
       uniqueIdentifier: TC_PMS_CreateOIDCClient_44
       role: partnerauth
       restMethod: post
@@ -1550,7 +1550,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_ConsentExpireInMins_String_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having invalid consentExpireInMins as string
+      description: Validate that OIDC client creation fails when consentExpireInMins is provided as a string instead of a numeric value
       uniqueIdentifier: TC_PMS_CreateOIDCClient_45
       role: partnerauth
       restMethod: post
@@ -1583,7 +1583,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_ConsentExpireInMins_smoke:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without consentExpireInMins
+      description: Validate that OIDC client creation succeeds when consentExpireInMins is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_46
       role: partnerauth
       restMethod: post
@@ -1615,7 +1615,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Invalid_id_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client having invalid id
+      description: Validate that OIDC client creation fails when an invalid client ID is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_47
       role: partnerauth
       restMethod: post
@@ -1651,7 +1651,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_id_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without id
+      description: Validate that OIDC client creation fails when the client ID is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_48
       role: partnerauth
       restMethod: post
@@ -1687,7 +1687,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_with_null_id_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with null id
+      description: Validate that OIDC client creation fails when the client ID is null
       uniqueIdentifier: TC_PMS_CreateOIDCClient_49
       role: partnerauth
       restMethod: post
@@ -1723,7 +1723,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_Version_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without version
+      description: Validate that OIDC client creation fails when the client version is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_50
       role: partnerauth
       restMethod: post
@@ -1759,7 +1759,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_With_null_Version_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with null version
+      description: Validate that OIDC client creation fails when the client version is null
       uniqueIdentifier: TC_PMS_CreateOIDCClient_51
       role: partnerauth
       restMethod: post
@@ -1795,7 +1795,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_With_invalid_Version_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid version
+      description: Validate that OIDC client creation fails when an invalid client version is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_52
       role: partnerauth
       restMethod: post
@@ -1831,7 +1831,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_With_invalid_Version_integer_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client with invalid version as integer
+      description: Validate that OIDC client creation fails when the client version is provided as an invalid integer
       uniqueIdentifier: TC_PMS_CreateOIDCClient_53
       role: partnerauth
       restMethod: post
@@ -1867,7 +1867,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_Without_RequestTime_neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Creating OAUTH Client without requestTime
+      description: Validate that OIDC client creation fails when the request time is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_54
       role: partnerauth
       restMethod: post

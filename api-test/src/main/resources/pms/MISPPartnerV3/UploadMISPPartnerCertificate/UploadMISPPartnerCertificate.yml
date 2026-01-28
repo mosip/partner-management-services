@@ -2,120 +2,136 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_01
-      description: Upload MISP partner certificate for PMS-111555 partner id
+      description: Verify that the system allows successful upload of a MISP partner certificate when all mandatory and valid inputs are provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_03,TC_PMS_UploadCertificateMISPCASUBCA_04,TC_PMS_CreateMISPPartnerRegistration_01
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111555
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_03,TC_PMS_UploadCertificateMISPCASUBCA_04
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_valid_Empty_PolicyGroup:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_02
-      description: Upload MISP partner certificate for PMS-111556 partner id
+      description: Validate that the API returns an error or handles appropriately when attempting to upload a MISP partner certificate with an empty policy group
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_02
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111556
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_Empty_PolicyGroup_sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_without_PolicyGroup_Smoke_Valid:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_03
-      description: Upload MISP partner certificate for PMS-111557 partner id
+      description: Validate MISP partner certificate upload without a policy group
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_03
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111557
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_05,TC_PMS_UploadCertificateMISPCASUBCA_06
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_Without_PolicyGroup_Smoke_sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_Valid_Max_AddressField:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_04
-      description: Upload MISP partner certificate for PMS-111558 partner id
+      description: Validate MISP partner certificate upload with the maximum allowed address field length
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_04
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111558
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_07,TC_PMS_UploadCertificateMISPCASUBCA_08
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_Max_AddressField_sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_Valid_Max_Contact_number:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_05
-      description: Upload MISP partner certificate for PMS-111559 partner id
+      description: Validate MISP partner certificate upload with the maximum allowed contact number length
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_01
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111559
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_09,TC_PMS_UploadCertificateMISPCASUBCA_10
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_Max_Contact_number_sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_Valid_Max_EmailID:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_06
-      description: Upload MISP partner certificate for PMS-111550 partner id
+      description: Validate MISP partner certificate upload with the maximum allowed email ID length
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_06
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111550
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_11,TC_PMS_UploadCertificateMISPCASUBCA_12
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_Max_EmailID_sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_Valid_langcode_Arabic:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_07
-      description: Upload MISP partner certificate for PMS-111551 partner id
+      description: Validate MISP partner certificate upload with the language code set to Arabic
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_07
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate111551
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_13,TC_PMS_UploadCertificateMISPCASUBCA_14
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$"
 }'
       output: ' {
 }'
    Pms_UploadMISPPartnerCertificate_For_without_PolicyId_Valid:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_08
-      description: Upload MISP partner certificate for PMS-112211 partner id
+      description: Validate MISP partner certificate upload without providing a policy ID
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post
-      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_01,TC_PMS_UploadCertificateMISPCASUBCA_02,TC_PMS_CreateMISPPartnerRegistration_09
-      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate112211
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_15,TC_PMS_UploadCertificateMISPCASUBCA_16
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
       outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
       input: '{
-  "requesttime": "$TIMESTAMP$"
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_For_Without_PolicyId_Smoke_Sid_partnerId$"
 }'
       output: ' {
 }'

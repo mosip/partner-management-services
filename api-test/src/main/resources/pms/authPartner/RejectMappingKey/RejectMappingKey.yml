@@ -19,7 +19,7 @@ RejectMappingKey:
    Pms_RejectMappingKey_Missing_InputParameter_status:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       uniqueIdentifier: TC_PMS_RejectAPIKey_02
-      description: Update the status for Approved Partner while keeping the Status parameter as missing
+      description: Validate that mapping key rejection fails when the status input parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/authPartner/RejectMappingKey/RejectMappingKey

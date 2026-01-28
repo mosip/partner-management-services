@@ -2,7 +2,7 @@ UpdateSBIID:
    PMS_UpdateSBIID_30_days_Valid_smoke_Pos:
       endPoint: no endpoint
       uniqueIdentifier: TC_UpdateSBID_InsertQuery_01
-      description: Updating SBI ID in SBI table for 30 days Expiry
+      description: Validate that the SBI ID is successfully updated with a validity of 30 days when a valid request is submitted
       role: partnerdevice
       restMethod: post
       inputTemplate: pms/InsertDBData/UpdateSBIID
@@ -15,7 +15,7 @@ UpdateSBIID:
    PMS_UpdateSBIID_15_days_Valid_smoke_Pos:
       endPoint: no endpoint
       uniqueIdentifier: TC_UpdateSBID_InsertQuery_02
-      description: Updating SBI ID in SBI table for 15 days Expiry
+      description: Validate that the SBI ID is successfully updated with a validity of 15 days when a valid request is submitted
       role: partnerdevice
       restMethod: post
       inputTemplate: pms/InsertDBData/UpdateSBIID15daysSBIExpiry
@@ -28,7 +28,7 @@ UpdateSBIID:
    PMS_UpdateSBIID_10_days_Valid_smoke_Pos:
       endPoint: no endpoint
       uniqueIdentifier: TC_UpdateSBID_InsertQuery_03
-      description: Updating SBI ID in SBI table for 10 days Expiry
+      description: Validate that the SBI ID is successfully updated with a validity of 10 days when a valid request is submitted
       role: partnerdevice
       restMethod: post
       inputTemplate: pms/InsertDBData/UpdateSBIID10daysSBIExpiry

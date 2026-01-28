@@ -1,7 +1,7 @@
 UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Active_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
-      description: Update Policy Status
+      description: Validate that updating the Policy status to Active with all valid inputs by an authorized user is successful
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
@@ -19,6 +19,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_DeActive_auth_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partneradmin
+	  description: Validate that updating the Policy status to DeActive with all valid inputs by an authorized user is successful
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/UpdatePolicyStatus/updatePolicyStatusResult
@@ -35,6 +36,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Active_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partneradmin
+	  description: Validate that updating the Policy status to Active fails when invalid inputs are provided
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -56,6 +58,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_PolicyId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partneradmin
+	  description: Validate that updating the Policy status fails when an invalid policyId is provided
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -77,6 +80,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partneradmin
+	  description: Validate that updating the Policy status fails when an invalid status value is provided
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -97,6 +101,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_PolicyGroupId_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partneradmin
+	  description: Validate that updating the Policy status fails when an invalid policyGroupId is provided
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error
@@ -117,6 +122,7 @@ UpdatePolicyStatus:
    Pms_UpdatePolicyStatus_Missing_status_InValid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}
       role: partneradmin
+	  description: Validate that updating the Policy status fails when the status parameter is missing
       restMethod: patch
       inputTemplate: pms/UpdatePolicyStatus/updatePolicyStatus
       outputTemplate: pms/error

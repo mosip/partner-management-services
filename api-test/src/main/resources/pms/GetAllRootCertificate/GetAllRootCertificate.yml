@@ -1,7 +1,7 @@
 GetAllRootCertificate:
    Pms_GetAllRootCertificate_allValid_smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
-      description: Fetching all the root certificates of the Logged in Partner
+      description: Validate that all root certificates are successfully retrieved with valid inputs
       uniqueIdentifier: TC_PMS_getAllRootCertificate_01
       role: partneradmin
       restMethod: get

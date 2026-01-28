@@ -2,7 +2,7 @@ UpdateDeviceDetail:
    Pms_ServiceToUpdateDeviceDetail_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_01
-      description: Create Service To Update DeviceDetail with valid details
+      description: Validate that device details are successfully updated with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -26,7 +26,7 @@ UpdateDeviceDetail:
    Pms_ServiceToUpdateDeviceDetail_afterReject_All_Valid_Smoke:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_02
-      description: Create Service To Update DeviceDetail afterReject
+      description: Validate that device details are successfully updated after rejection with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
@@ -50,7 +50,7 @@ UpdateDeviceDetail:
    Pms_ServiceToUpdateDeviceDetail_Missing_InputParameter_DeviceId:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_03
-      description: Create Service To Update DeviceDetail while keeping DeviceId as empty
+      description: Validate that device detail update fails when the deviceId input parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/device/makeAndModel/update/updateDeviceDetail
@@ -80,7 +80,7 @@ UpdateDeviceDetail:
    Pms_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceProviderId:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_04
-      description: Create Service To Update DeviceDetail while keeping DeviceProvideId as empty
+      description: Validate that device detail update fails when the deviceProviderId input parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/device/makeAndModel/update/updateDeviceDetail
@@ -109,7 +109,7 @@ UpdateDeviceDetail:
    Pms_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceSubTypeCode:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_05
-      description: Create Service To Update DeviceDetail while keeping DeviceSubTypeCode as empty
+      description: Validate that device detail update fails when the deviceSubTypeCode input parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/device/makeAndModel/update/updateDeviceDetail
@@ -137,7 +137,7 @@ UpdateDeviceDetail:
    Pms_ServiceToUpdateDeviceDetail_Missing_InputParameter_deviceTypeCode:
       endPoint: /v1/partnermanager/devicedetail
       uniqueIdentifier: TC_PMS_createServiceToUpdateDeviceDetail_06
-      description: Create Service To Update DeviceDetail while keeping DeviceTypeCode as empty
+      description: Validate that device detail update fails when the deviceTypeCode input parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/device/makeAndModel/update/updateDeviceDetail

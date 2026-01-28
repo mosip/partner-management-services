@@ -1,7 +1,7 @@
 createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that a partner can successfully complete self-registration when all required inputs are valid
       role: partnerauth
       restMethod: post
       inputTemplate: pms/CreateDeviceDetail/CreateDeviceDetail

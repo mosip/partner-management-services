@@ -2,7 +2,7 @@ GetListOfAllSBIBeforeAddingSBI:
    Pms_GetListOfAllSBIBeforeAddingSBI_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_SBI_List_21     
-      description: Fetching all the active SBI
+      description: Validate that all SBIs existing before adding a new SBI are successfully retrieved when filtered by a valid SBI ID
       role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI

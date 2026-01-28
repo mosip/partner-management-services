@@ -2,7 +2,7 @@ DeactivateFtmwhichisPendingforApproval:
    Pms_DeactivateFtm_whichisPendingforApproval_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
       uniqueIdentifier: TC_PMS_DeactivateFtm_19
-      description: Deactivate FTM which is Pending for Approval
+      description: Validate that FTM device deactivation fails when the device is still pending approval
       role: partnerftm
       restMethod: patch
       inputTemplate: pms/DeactivateFtm/DeactivateFtm

@@ -2,7 +2,7 @@ UpdateMispLicense:
    Pms_UpdateMispLicense_Deactive_allValid_smoke:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_UpdateMispLicense_01
-      description: Update MispLicense Partner as Deactive
+      description: Validate that a MISP license is successfully deactivated when a valid deactivation request is submitted
       role: partner
       restMethod: put
       inputTemplate: pms/MispLicense/UpdateMispLicense/updateMispLicense
@@ -19,7 +19,7 @@ UpdateMispLicense:
    Pms_UpdateMispLicense_Active_allValid_smoke:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_UpdateMispLicense_02
-      description: Update MispLicense Partner as active
+      description: Validate that a MISP license is successfully activated when a valid activation request is submitted
       role: partner
       restMethod: put
       inputTemplate: pms/MispLicense/UpdateMispLicense/updateMispLicense
@@ -36,7 +36,7 @@ UpdateMispLicense:
    Pms_UpdateMispLicense_InValid_licenseKeyStatus:
       endPoint: /v1/partnermanager/misps
       uniqueIdentifier: TC_PMS_UpdateMispLicense_03
-      description: Update MispLicense for Partner with InValid_licenseKeyStatus
+      description: Validate that updating a MISP license fails when an invalid license key status is provided
       role: partner
       restMethod: put
       inputTemplate: pms/MispLicense/UpdateMispLicense/updateMispLicense

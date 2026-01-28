@@ -3,18 +3,21 @@ UploadCertificateOfFtpChip:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
       role: partnerftm
       uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_01
-      description: Upload FTP chip Certificate
+      description: Validate that uploading a Certificate with all valid inputs for a given FTM/FTP Provider ID is successful
       restMethod: post
       checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_UploadCaCertificateOfFtpChip_01, TC_PMS_UploadCaCertificateOfFtpChip_02
       inputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip
       outputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChipResult
       input: '{
-      "requesttime":"$TIMESTAMP$",
-     "ftpProviderId": "pms-111888",
+     "requesttime":"$TIMESTAMP$",
+     "certificateData": "$PARTNERCERT$",
+     "ftpProviderId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
      "ftpChipDeatilId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
      "isItForRegistrationDevice": true,
-     "organizationName": "PMS_API_ABC_ORG",
-     "partnerDomain": "DEVICE"
+     "organizationName": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+     "partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+     "partnerDomain": "FTM"
   }'
       output: ' {
 
@@ -22,18 +25,20 @@ UploadCertificateOfFtpChip:
 
    Pms_UploadCertificate_InValid_ftpProviderId_neg:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
-      uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_01
-      description: Upload Certificate for FTP chip provider Partner while keeping ftpProviderId parameter as invalid 
+      uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_03
+      description: Validate that uploading a Certificate fails when an invalid FTM/FTP Provider ID is provided 
       role: partner
       restMethod: post
       inputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip
       outputTemplate: pms/error
       input: '{
     "ftpProviderId": "asdgfb",
+    "certificateData": "$PARTNERCERT$",
     "ftpChipDeatilId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
     "isItForRegistrationDevice": true,
     "organizationName": "ftp",
-    "partnerDomain": "DEVICE"
+    "partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+    "partnerDomain": "FTM"
   }'
       output: ' {
   "errors": [
@@ -45,17 +50,19 @@ UploadCertificateOfFtpChip:
    Pms_UploadCertificate_InValid_ftpChipId_neg:
       endPoint: /v1/partnermanager/ftpchipdetail/uploadcertificate
       uniqueIdentifier: TC_PMS_UploadCertificateOfFtpChip_02
-      description: Upload Certificate for FTP chip provider Partner while keeping ftpChipId parameter as invalid
+      description: Validate that uploading a Certificate fails when an invalid FTM Chip ID is provided
       role: partner
       restMethod: post
       inputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip
       outputTemplate: pms/error
       input: '{
-    "ftpProviderId": "pms-111888",
+    "ftpProviderId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+    "certificateData": "$PARTNERCERT$",
     "ftpChipDeatilId": "asdf",
     "isItForRegistrationDevice": true,
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerDomain": "DEVICE"
+    "organizationName": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+    "partnerId": "$ID:PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid_partnerId$",
+    "partnerDomain": "FTM"
   }'
       output: ' {
   "errors": [

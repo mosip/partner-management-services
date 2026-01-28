@@ -1,7 +1,7 @@
 GetListOfPolicies:
    Pms_GetListOfPolicies_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/v2
-      description: Fetching all the active List Of Policies in the system
+      description: Validate that the system successfully retrieves the list of policies when all required inputs and query parameters are valid
       uniqueIdentifier: TC_PMS_listofPolicies_01      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -15,7 +15,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_invalid_token_neg:
       endPoint: /v1/policymanager/policies/v2
-      description: Fetching all the active List Of Policies invalid token
+      description: Validate that fetching the list of policies fails when an invalid access token is used and the system returns the appropriate authorization error response
       uniqueIdentifier: TC_PMS_listofPolicies_02      
       role: POLICYMANAGER
       restMethod: get
@@ -32,7 +32,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_without_Authentication_neg:
       endPoint: /v1/policymanager/policies/v2
-      description: Fetching all the active List Of Policies without authentication
+      description: Validate that fetching the list of policies fails when no authentication token is provided and the system returns the appropriate unauthorized error response
       uniqueIdentifier: TC_PMS_listofPolicies_03      
       role: invalidtoken
       restMethod: get
@@ -49,7 +49,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_status_activated:
       endPoint: /v1/policymanager/policies/v2?status={status}
-      description: Fetching all the active List Of Policies with status as 'activated'
+      description: Validate that the API returns only policies with Activated status when the status filter is set to activated
       uniqueIdentifier: TC_PMS_listofPolicies_04      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -73,7 +73,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_status_deactivated:
       endPoint: /v1/policymanager/policies/v2?status={status}
-      description: Fetching all the active List Of Policies with status as 'deactivated'
+      description: Validate that the API returns only policies with Deactivated status when the status filter is set to deactivated
       uniqueIdentifier: TC_PMS_listofPolicies_05      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -97,7 +97,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_status_draft:
       endPoint: /v1/policymanager/policies/v2?status={status}
-      description: Fetching all the active List Of Policies with status as 'draft'
+      description: Validate that the API returns only policies with Draft status when the status filter is set to draft
       uniqueIdentifier: TC_PMS_listofPolicies_06      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -121,7 +121,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_pagesize_specified_valid:
       endPoint: /v1/policymanager/policies/v2?pageSize={pageSize}
-      description: Fetching all the active List Of Policies with pageSize as '6'
+      description: Verify that the API returns policies limited to the specified valid pageSize
       uniqueIdentifier: TC_PMS_listofPolicies_07     
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -145,7 +145,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_negative_pageNo_neg:
       endPoint: /v1/policymanager/policies/v2?pageNo={pageNo}
-      description: Fetching all the active List Of Policies with pageNo as '-6'
+      description: Validate that the API fails when a negative page number is provided
       uniqueIdentifier: TC_PMS_listofPolicies_08      
       role: partneradmin
       restMethod: get
@@ -172,7 +172,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_negative_pageSize_neg:
       endPoint: /v1/policymanager/policies/v2?pageSize={pageSize}
-      description: Fetching all the active List Of Policies with pageSize as '-6'
+      description: Validate that the API fails when a negative page size is provided
       uniqueIdentifier: TC_PMS_listofPolicies_09      
       role: partneradmin
       restMethod: get
@@ -199,7 +199,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_pageNo_specified_valid:
       endPoint: /v1/policymanager/policies/v2?pageNo={pageNo}
-      description: Fetching all the active List Of Policies with pageNo as '6'
+      description: Verify that the API returns policies for the specified valid page number
       uniqueIdentifier: TC_PMS_listofPolicies_10      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -223,7 +223,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_sortType_asc:
       endPoint: /v1/policymanager/policies/v2?sortType={sortType}
-      description: Fetching all the active List Of Policies with sortType as 'asc'
+      description: Verify that policies are successfully retrieved in ascending order when a valid sort type is specified
       uniqueIdentifier: TC_PMS_listofPolicies_11      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -247,7 +247,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_sortType_desc:
       endPoint: /v1/policymanager/policies/v2?sortType={sortType}
-      description: Fetching all the active List Of Policies with sortType as 'desc'
+      description: Verify that policies are successfully retrieved in descending order when a valid sort type is specified
       uniqueIdentifier: TC_PMS_listofPolicies_12      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -271,7 +271,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_sortType_invalid_neg:
       endPoint: /v1/policymanager/policies/v2?sortType={sortType}
-      description: Fetching all the active List Of Policies with sortType as 'abdcfegff'
+      description: Validate that the API fails when an invalid sort type is provided
       uniqueIdentifier: TC_PMS_listofPolicies_13      
       role: partneradmin
       restMethod: get
@@ -298,7 +298,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_policyId_valid:
       endPoint: /v1/policymanager/policies/v2?policyId={policyId}
-      description: Fetching all the active List Of Policies with policyId as '1'
+      description: Validate that the API successfully retrieves the policy details when a valid policy ID is provided
       uniqueIdentifier: TC_PMS_listofPolicies_14      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -322,7 +322,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_policyName_valid:
       endPoint: /v1/policymanager/policies/v2?policyName={policyName}
-      description: Fetching all the active List Of Policies with policyName as 'a'
+      description: Validate that the API successfully retrieves policies when filtered by a valid policy name
       uniqueIdentifier: TC_PMS_listofPolicies_15      
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -346,7 +346,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_policyGroupName_valid:
       endPoint: /v1/policymanager/policies/v2?policyGroupName={policyGroupName}
-      description: Fetching all the active List Of Policies with policyGroupName as 'ab'
+      description: Validate that the API successfully retrieves policies when filtered by a valid policy group name
       uniqueIdentifier: TC_PMS_listofPolicies_16     
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -370,7 +370,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_policyDescription_valid:
       endPoint: /v1/policymanager/policies/v2?policyDescription={policyDescription}
-      description: Fetching all the active List Of Policies with policyDescription as 'a'
+      description: Validate that the API successfully retrieves policies when filtered by a valid policy description
       uniqueIdentifier: TC_PMS_listofPolicies_17     
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -394,7 +394,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_sortFieldName_valid:
       endPoint: /v1/policymanager/policies/v2?sortFieldName={sortFieldName}&sortType={sortType}
-      description: Fetching all the active List Of Policies with sortFieldName as 'status' as per given sorttype
+      description: Validate that the API successfully retrieves policies when a valid sort field name is provided
       uniqueIdentifier: TC_PMS_listofPolicies_18     
       role: partneradmin
       checkErrorsOnlyInResponse: true
@@ -418,7 +418,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_sortFieldName_invalid_neg:
       endPoint: /v1/policymanager/policies/v2?sortFieldName={sortFieldName}&sortType={sortType}
-      description: Fetching all the active List Of Policies with sortFieldName as 'status' as per given sorttype
+      description: Validate that the API fails when an invalid sort field name is provided
       uniqueIdentifier: TC_PMS_listofPolicies_19     
       role: partneradmin
       restMethod: get
@@ -445,7 +445,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_policyDescription_random_invalid_neg:
       endPoint: /v1/policymanager/policies/v2?policyDescription={policyDescription}
-      description: Fetching all the active List Of Policies with policyDescription as '3fdfds'
+      description: Validate that the API fails or returns no results when filtered with a random or invalid policy description
       uniqueIdentifier: TC_PMS_listofPolicies_20     
       role: partneradmin
       restMethod: get
@@ -468,7 +468,7 @@ GetListOfPolicies:
 }'
    Pms_GetListOfPolicies_with_combination_twoattributes_valid:
       endPoint: /v1/policymanager/policies/v2?policyId={policyId}&policyName={policyName}
-      description: Fetching all the active List Of Policies with policyName and policyid given
+      description: Validate that the API successfully retrieves policies when filtered using a combination of two valid attributes
       uniqueIdentifier: TC_PMS_listofPolicies_21     
       role: partneradmin
       checkErrorsOnlyInResponse: true

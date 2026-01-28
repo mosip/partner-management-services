@@ -2,15 +2,15 @@ UpdatePolicyGroupForPartner:
    Pms_UpdatePolicyGroupForPartner_AllValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
       uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_01
-      description: Update Policy Group For Partner with valid data
+      description: Validate that updating a Policy Group for a Partner with all valid inputs is successful and the changes are reflected correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartnerResult
       input: '{
-    "partnerId": "updatepolicy",
-    "policygroupName": "mosip policy group"
+    "partnerId": "$ID:PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke_sid_partnerId$",
+    "policygroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$"
 }'
       output: '{
    "response": "$IGNORE$"
@@ -18,14 +18,14 @@ UpdatePolicyGroupForPartner:
    Pms_UpdatePolicyGroupForPartner_InValid_ApprovedPartner:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
       uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_02
-      description: Update Policy Group For Partner with invalid Approved Partner
+      description: Validate that updating a Policy Group for a Partner fails when an invalid Partner is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: pms/error
       input: '{
-    "partnerId": "pms-111998",
-    "policygroupName": "mosip policy group 19234"
+    "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+    "policygroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$"
 }'
       output: '{
    "errors": [
@@ -37,7 +37,7 @@ UpdatePolicyGroupForPartner:
    Pms_UpdatePolicyGroupForPartner_InValid_partnerId:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
       uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_03
-      description: Update Policy Group For Partner with invalid PartnerId
+      description: Validate that updating a Policy Group for a Partner fails when an invalid partnerId is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
@@ -56,13 +56,13 @@ UpdatePolicyGroupForPartner:
    Pms_UpdatePolicyGroupForPartner_InValid_PolicyGroup:
       endPoint: /v1/partnermanager/partners/{partnerId}/policygroup/{policygroupName}
       uniqueIdentifier: TC_PMS_UpdatePolicyGroupForPartner_04
-      description: Update Policy Group For Partner with invalid Policy GroupId
+      description: Validate that updating a Policy Group for a Partner fails when an invalid policyGroup is provided
       role: partner
       restMethod: put
       inputTemplate: pms/UpdatePolicyGroupForPartner/updatePolicyGroupForPartner
       outputTemplate: pms/error
       input: '{
-    "partnerId": "updatepolicy",
+    "partnerId": "$ID:PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke_sid_partnerId$",
     "policygroupName": "dsfgeagb"
 }'
       output: '{

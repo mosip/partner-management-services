@@ -1,7 +1,7 @@
 GetPartnerCert:
    Pms_GetPartnerCert_AuthPartner_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
-      description: Fetching all the certificate for the Partner Id
+      description: Validate that all partner certificates are successfully retrieved for an authenticated partner with valid inputs
       uniqueIdentifier: TC_PMS_GetPartnerCert_01  
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -15,7 +15,7 @@ GetPartnerCert:
 }'
    Pms_GetPartnerCert_with_unregistered_partner_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
-      description: Fetching all the certificate for the Partner Id
+      description: Validate that partner certificate retrieval fails when requested for an unregistered partner
       uniqueIdentifier: TC_PMS_GetPartnerCert_03
       role: partnerauth
       restMethod: get
@@ -34,7 +34,7 @@ GetPartnerCert:
 
    Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
-      description: Fetching all the certificate for the Partner Id
+      description: Validate that all partner certificates are successfully retrieved for a device provider with valid inputs
       uniqueIdentifier: TC_PMS_GetPartnerCert_04	  
       role: partnerdevice
       checkErrorsOnlyInResponse: true
@@ -49,7 +49,7 @@ GetPartnerCert:
 
    Pms_GetPartnerCert_FtmProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
-      description: Fetching all the certificate for the Partner Id
+      description: Get partner certificate succeeds for FTM providerValidate that all partner certificates are successfully retrieved for an FTM provider with valid inputs
       uniqueIdentifier: TC_PMS_GetPartnerCert_02	  
       role: partnerftm
       checkErrorsOnlyInResponse: true

@@ -2,7 +2,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_PrintPartner_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/v2
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_printpartner_01
-      description: Create Print Partner Self Registration with valid details
+      description: Validate that a partner’s self-registration details can be printed successfully for all valid inputs
       role: partner
       restMethod: post
       inputTemplate: pms/PrintPartner/CreatePartner/createPartner
@@ -10,22 +10,22 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "mosipprint@gmail.com",
-    "organizationName": "mosipprint",
-    "partnerId": "mosipprint",
+    "emailId": "$RUNCONTEXT$mosipprint@gmail.com",
+    "organizationName": "$RUNCONTEXT$mosipprint",
+    "partnerId": "$RUNCONTEXT$mosipprint",
     "partnerType": "Print_Partner",
-    "policyGroup":"mosip policy group",
+    "policyGroup":"$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
-     "partnerId": "mosipprint",
+     "partnerId": "$RUNCONTEXT$mosipprint",
      "status": "InProgress"
     }'
     
    Pms_PartnerSelfRegistration_PrintPartner_DuplicateEmail_Neg:
       endPoint: /v1/partnermanager/partners/v2
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
-      description: Create Print Partner Self Registration with duplicate Email
+      description: Validate that partner self-registration fails when a duplicate email is provided
       role: partner
       restMethod: post
       inputTemplate: pms/PrintPartner/CreatePartner/createPartner
@@ -33,11 +33,11 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "9553967572",
-    "emailId": "mosipprint@gmail.com",
-    "organizationName": "mosipprint",
-    "partnerId": "mosipprint",
+    "emailId": "$RUNCONTEXT$mosipprint@gmail.com",
+    "organizationName": "$RUNCONTEXT$mosipprint",
+    "partnerId": "$RUNCONTEXT$mosipprint",
     "partnerType": "Print_Partner",
-    "policyGroup":"mosip policy group",
+    "policyGroup":"$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -51,7 +51,7 @@ createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_PrintPartner_SpaceIn_PartnerId_Neg:
       endPoint: /v1/partnermanager/partners/v2
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
-      description: Create Print Partner Self Registration while keeping SpaceIn PartnerId
+      description: Validate that partner self-registration fails when the Partner ID contains only spaces
       role: partner
       restMethod: post
       inputTemplate: pms/PrintPartner/CreatePartner/createPartner
@@ -63,7 +63,7 @@ createPartnerSelfRegistration:
     "organizationName": "mosipprint",
     "partnerId": "mosip print",
     "partnerType": "Print_Partner",
-    "policyGroup":"mosip policy group",
+    "policyGroup":"$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{

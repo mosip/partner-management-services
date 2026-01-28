@@ -2,7 +2,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_Access_Token_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_01
-    description: Fetching OIDC Client details using a invalid access token
+    description: Validate that retrieving OIDC client details fails when an invalid access token is used
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientInput
@@ -19,7 +19,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Different_Partner's_Access_Token_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_02
-    description: Fetching OIDC Client details using a different partner's access token
+    description: Validate that retrieving OIDC client details fails when an access token from a different partner is used
     role: partnerdevice
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClientInput
@@ -36,7 +36,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_ClientName_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_03
-    description: Fetching OIDC Client details using invalid clientName
+    description: Validate that retrieving OIDC client details fails when an invalid client name is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -63,7 +63,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_orgName_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_04
-    description: Fetching OIDC Client details using invalid Organization Name
+    description: Validate that retrieving OIDC client details fails when an invalid organization name is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -90,7 +90,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_PageNo_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_05
-    description: Fetching OIDC Client details using invalid Page Number
+    description: Validate that retrieving OIDC client details fails when an invalid page number is provided
     role: partnerauth
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -114,7 +114,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_PageSize_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_06
-    description: Fetching OIDC Client details using invalid Page Size
+    description: Validate that retrieving OIDC client details fails when an invalid page size is provided
     role: partnerauth
     restMethod: get
     checkOnlyStatusCodeInResponse: true
@@ -138,7 +138,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_PartnerId_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_07
-    description: Fetching OIDC Client details using invalid PartnerID
+    description: Validate that retrieving OIDC client details fails when an invalid Partner ID is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -165,7 +165,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_PolicyGroupName_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_08
-    description: Fetching OIDC Client details using invalid Policy Group Name
+    description: Validate that retrieving OIDC client details fails when an invalid policy group name is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -192,7 +192,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_PolicyName_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_09
-    description: Fetching OIDC Client details using invalid Policy Name
+    description: Validate that retrieving OIDC client details fails when an invalid policy name is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -219,7 +219,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_SortFieldName_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_10
-    description: Fetching OIDC Client details using invalid Sort Field Name
+    description: Validate that retrieving OIDC client details fails when an invalid sort field name is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -246,7 +246,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Valid_SortType_And_Without_SortFieldName_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_11
-    description: Fetching OIDC Client details using Valid Sort Type and without Sort Field Name
+    description: Validate that retrieving OIDC client details fails when a valid sort type is provided but the sort field name is missing
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -273,7 +273,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_SortType_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_12
-    description: Fetching OIDC Client details using invalid Sort Type
+    description: Validate that retrieving OIDC client details fails when an invalid sort type is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -300,7 +300,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_Invalid_Status_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_13
-    description: Fetching OIDC Client details using invalid Status
+    description: Validate that retrieving OIDC client details fails when an invalid status is provided
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient
@@ -327,7 +327,7 @@ GetOIDCClientV2NegTC:
   Pms_GetOIDCClientV2NegTC_With_PageNo_Without_PageSize_Neg:
     endPoint: /v1/partnermanager/oidc-clients
     uniqueIdentifier: TC_PMS_GetOIDCClientV2NegTC_14
-    description: Fetching OIDC Client details using Page No and without Page Size
+    description: Validate that retrieving OIDC client details fails when a page number is provided without specifying the page size
     role: partnerauth
     restMethod: get
     inputTemplate: pms/OIDCClientEnhancement/GetOIDCClient/GetOIDCClient

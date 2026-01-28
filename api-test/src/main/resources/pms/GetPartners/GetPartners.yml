@@ -2,7 +2,7 @@ GetPartners:
    Pms_GetPartners_allValid_smoke:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_GetPartners_01
-      description: Retrieve all the Partner details
+      description: Validate that all partners are retrieved successfully for a valid request
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -15,7 +15,7 @@ GetPartners:
    Pms_GetPartners_ByPartnerType_allValid_smoke:
       endPoint: /v1/partnermanager/partners?partnerType=Device_Provider
       uniqueIdentifier: TC_PMS_GetPartners_02
-      description: Retrieve all the Partner details while keeping valid PartnerType
+      description: Validate that partners are retrieved successfully when filtered by a valid partner type
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -28,7 +28,7 @@ GetPartners:
    Pms_GetPartners_invalid_partnerType:
       endPoint: /v1/partnermanager/partners?partnerType=zsfvgefb
       uniqueIdentifier: TC_PMS_GetPartners_03
-      description: Retrieve all the Partner details while keeping invalid PartnerType
+      description: Validate that retrieving partners fails when an invalid partner type is provided
       role: partner
       restMethod: get
       inputTemplate: pms/GetPartners/getPartners
@@ -46,7 +46,7 @@ GetPartners:
    Pms_PrintPartener_ByPartnerType_allValid_smoke:
       endPoint: /v1/partnermanager/partners/v2?partnerType=Print_Partner
       uniqueIdentifier: TC_PMS_GetPartners_04
-      description: Retrieve all the Print Partner details while keeping valid PartnerType
+      description: Validate that the partner list can be printed successfully when filtered by a valid partner type
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get

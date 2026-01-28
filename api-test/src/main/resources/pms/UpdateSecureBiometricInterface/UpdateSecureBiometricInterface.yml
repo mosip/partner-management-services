@@ -3,6 +3,7 @@ UpdateSecureBiometricInterface:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_01
       role: partneradmin
+      description: Validate updating Secure Biometric Interface for a Device Provider with valid inputs succeeds
       checkErrorsOnlyInResponse: true
       restMethod: patch
       inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
@@ -19,7 +20,7 @@ UpdateSecureBiometricInterface:
    Pms_UpdateSecureBiometricInterface_ReApprove_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_02
-      description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
+      description: Validate that re approving a Secure Biometric Interface fails when not allowed
       role: partner
       restMethod: put
       inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
@@ -39,7 +40,7 @@ UpdateSecureBiometricInterface:
    Pms_UpdateSecureBiometricInterface_AfterReject_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_04
-      description: Create UpdateSecureBiometricInterface AfterRejectwith valid details
+      description: Validate that updating a Secure Biometric Interface fails after it has been rejected
       role: partner
       restMethod: put
       inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
@@ -58,7 +59,7 @@ UpdateSecureBiometricInterface:
    Pms_UpdateSecureBiometricInterface_Missing_InputParameter_Id:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_03
-      description: Create UpdateSecureBiometricInterface while keeping parameter ID as empty
+      description: Validate that updating a Secure Biometric Interface fails when the id parameter is missing
       role: partner
       restMethod: put
       inputTemplate: pms/UpdateSecureBiometricInterface/UpdateSecureBiometricInterface
@@ -77,7 +78,7 @@ UpdateSecureBiometricInterface:
    Pms_UpdateSecureBiometricInterface_for_FTMPartner_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_createUpdateSecureBiometricInterface_05
-      description: Activate UpdateSecureBiometricInterface for FTM Partner
+      description: Validate that updating a Secure Biometric Interface for an FTM Partner with valid inputs is successful
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch

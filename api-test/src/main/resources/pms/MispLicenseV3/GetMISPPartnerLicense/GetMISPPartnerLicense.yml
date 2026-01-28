@@ -2,7 +2,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_All_Valid_Smoke:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_01
-        description: Fetch MISP partner license using a valid access token
+        description: Validate that all MISP partner licenses are retrieved successfully for a valid request
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -26,7 +26,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Nofilter_Valid_Smoke:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_02
-        description: Fetch all MISP license keys without passing any query parameters
+        description: Validate that all MISP partner licenses are retrieved successfully when no filter criteria are applied
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -39,7 +39,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_ByValidPartnerId:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_03
-        description: Fetch MISP partner license using a valid partnerId
+        description: Validate that the MISP partner license is retrieved successfully for a valid Partner ID
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -63,7 +63,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Status_Activated:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_04
-        description: Fetch MISP partner license with status set to activated
+        description: Validate that the MISP partner licenses are retrieved successfully when the status filter is set to Activated
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -87,7 +87,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Status_Deactived:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_05
-        description: Fetch MISP partner license with status set to DEACTIVATED
+        description: Validate that the MISP partner licenses are retrieved successfully when the status filter is set to Deactivate
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -111,7 +111,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_ORGName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_06
-        description: Fetch MISP partner license using a valid OrgName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by organization name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -135,7 +135,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_PolicyGroupName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_07
-        description: Fetch MISP partner license using a valid PolicyGroupName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by policy group name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -159,7 +159,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_PolicyName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_08
-        description: Fetch MISP partner license using a valid PolicyName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by policy name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -183,7 +183,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_MispLicenseKeyName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_09
-        description: Fetch MISP partner license using a valid MispLicenseKeyName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by MISP license key name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -207,7 +207,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Pagination:
         endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=2
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_10
-        description: Fetch MISP partner license using pagination with 2 records per page
+        description: Validate that the MISP partner licenses are retrieved successfully using pagination parameters
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -231,7 +231,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Default_Pagination:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_11
-        description: Fetch MISP partner license using default pagination settings
+        description: Validate that the MISP partner licenses are retrieved successfully using default pagination settings when no pagination parameters are provided
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -244,7 +244,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_SortField_And_Ascending_Order:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_12
-        description: Fetch MISP partner licenses sorted by mispLicenseKeyName in ascending order
+        description: Validate that the MISP partner licenses are retrieved successfully when sorted by the specified sort field in ascending order
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -268,7 +268,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_SortField_And_Descending_Order:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_13
-        description: Fetch MISP partner licenses sorted by mispLicenseKeyName in descending order
+        description: Validate that the MISP partner licenses are retrieved successfully when sorted by the specified sort field in descending order
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -292,7 +292,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_ExpiryPeriod_NotPassing_Any_Value:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_14
-        description: Fetch MISP partner licenses with expiryPeriod without passing any value
+        description: Validate that the MISP partner licenses are retrieved successfully when the expiryPeriod parameter is not provided
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -316,7 +316,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_ExpiryPeriod_Passing_Valid_Value:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_15
-        description: Fetch MISP partner licenses sorted by expiryPeriod with passing valid value
+        description: Validate that the MISP partner licenses are retrieved successfully when a valid expiryPeriod value is provided
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -340,7 +340,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Minimum_ExpiryPeriod:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_16
-        description: Fetch MISP partner licenses sorted by minimum expiryPeriod
+        description: Validate that the MISP partner licenses are retrieved successfully when the minimum allowed expiryPeriod value is provided
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -364,7 +364,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_Maximum_ExpiryPeriod:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_17
-        description: Fetch MISP partner licenses sorted by maximum expiryPeriod
+        description: Validate that the MISP partner licenses are retrieved successfully when the maximum allowed expiryPeriod value is provided
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -388,7 +388,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_ByValidPartnerId_And_Status_Activated:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_18
-        description: Fetch MISP partner license using a valid partnerId and status activated
+        description: Validate that the MISP partner license is retrieved successfully for a valid partner ID with status set to Activated
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -412,7 +412,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_ByValidPartnerId_And_Status_Deactivated:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_19
-        description: Fetch MISP partner license using a valid partnerId and status deactivated
+        description: Validate that the MISP partner license is retrieved successfully for a valid partner ID with status set to Deactivated
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -436,7 +436,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_Pagination_And_Valid_PartnerId:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_20
-        description: Fetch MISP partner license using pagination and valid partnerId
+        description: Validate that the MISP partner licenses are retrieved successfully for a valid partner ID using pagination parameters
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -460,7 +460,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_PartnerId_And_PolicyName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_21
-        description: Fetch MISP partner license using partnerId and PolicyName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by both a valid partner ID and policy name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -484,7 +484,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_SortField_As_ExpiryDateTime_And_Ascending_Order:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_22
-        description: Fetch MISP partner licenses sorted by expiryDate in ascending order
+        description: Validate that the MISP partner licenses are retrieved successfully when sorted by ExpiryDateTime in ascending order
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -508,7 +508,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_SortField_As_ExpiryDateTime_And_Descending_Order:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_23
-        description: Fetch MISP partner licenses sorted by expiryDate in descending order
+        description: Validate that the MISP partner licenses are retrieved successfully when sorted by ExpiryDateTime in descending order
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -532,7 +532,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_PageSize_Without_PageNumber:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_24
-        description: Fetch MISP partner license using pageSize without passing pageNumber
+        description: Validate that the MISP partner licenses are retrieved successfully when a page size is provided but no page number is specified
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -556,7 +556,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_Numeric_LicenseKeyName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_25
-        description: Fetch MISP partner license using numeric LicenseKeyName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering using a numeric license key name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -580,7 +580,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_with_SortField_As_PartnerId_And_Ascending_Order:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_26
-        description: Fetch MISP partner licenses sorted by partnerId in ascending order
+        description: Validate that the MISP partner licenses are retrieved successfully when sorted by PartnerId in ascending order
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -604,7 +604,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_PolicyName_And_Pagination:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_27
-        description: Fetch MISP partner license using PolicyName and pagination
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by policy name and using pagination parameters
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -628,7 +628,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_PolicyName_And_Valid_OrgName:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_28
-        description: Fetch MISP partner license using PolicyName and valid OrgName
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by both policy name and a valid organization name
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true
@@ -652,7 +652,7 @@ GetMISPPartnerLicense:
     Pms_GetMISPPartnerLicense_With_PolicyGroupName_And_Status_Activated:
         endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_29
-        description: Fetch MISP partner license using PolicyGroupName and status activated
+        description: Validate that the MISP partner licenses are retrieved successfully when filtering by policy group name with status set to Activated
         role: partneradmin
         restMethod: get
         checkErrorsOnlyInResponse: true

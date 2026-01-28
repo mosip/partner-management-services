@@ -1,7 +1,7 @@
 GetAllOidcClient:
    Pms_GetAllOidcClient_without_Auth:
       endPoint: /v1/partnermanager/oauth/client
-      description: Fetching all OIDC Clients of the loggedin Partner
+      description: Validate that retrieving OIDC clients fails when the request is made without an authorization token
       uniqueIdentifier: TC_PMS_GetAllOidcClient_noauth_01
       role: invalidtoken
       checkErrorsOnlyInResponse: true
@@ -19,7 +19,7 @@ GetAllOidcClient:
 }'
    Pms_GetAllOidcClient_Invalid_Auth:
       endPoint: /v1/partnermanager/oauth/client
-      description: Fetching all OIDC Clients of the loggedin Partner
+      description: Validate that retrieving OIDC clients fails when an invalid authorization token is provided
       uniqueIdentifier: TC_PMS_GetAllOidcClient_dummyauth_02
       role: invalidtoken
       checkErrorsOnlyInResponse: true
