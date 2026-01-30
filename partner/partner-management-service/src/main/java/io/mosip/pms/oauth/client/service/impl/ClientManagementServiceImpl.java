@@ -383,7 +383,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	 * @throws Exception  
 	 */
 	@SafeVarargs
-	@SuppressWarnings("unchecked")
 	private ClientDetailResponse callEsignetService(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) {
 		RequestWrapper<CreateClientRequestDto> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
@@ -475,7 +474,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage() + e.getMessage());
 		}
 		if (response == null && idpClientResponse.containsKey(PartnerConstants.ERRORS)) {
-			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> idpServiceErrorList = (List<Map<String, Object>>) idpClientResponse
 					.get(PartnerConstants.ERRORS);
 			if (!idpServiceErrorList.isEmpty()) {
@@ -509,7 +507,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				MapperUtils.mapClientDataToPublishDto(clientData), EventType.OIDC_CLIENT_CREATED);
 	}
 
-	@SuppressWarnings("unchecked")
 	private String getPartnerCertificate(String certificateAlias) {
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", certificateAlias);
@@ -1067,7 +1064,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 
 	@SafeVarargs
-	@SuppressWarnings("unchecked")
 	private void callEsignetServiceV2(ClientDetail request, String calleeApi, Boolean isOAuthClient, Map<String,String>... clientNameLangMap) throws JsonProcessingException {
 		RequestWrapper<CreateClientRequestDtoV3> createRequestwrapper = new RequestWrapper<>();
 		createRequestwrapper.setRequestTime(DateUtils.getUTCCurrentDateTimeString(CommonConstant.DATE_FORMAT));
@@ -1145,8 +1141,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		if (!errorResponse.containsKey(PartnerConstants.ERRORS)) {
 			return;
 		}
-		
-		@SuppressWarnings("unchecked")
+
 		List<Map<String, Object>> idpServiceErrorList = (List<Map<String, Object>>) errorResponse
 				.get(PartnerConstants.ERRORS);
 		
@@ -1292,8 +1287,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		ClientDetailResponse response = null;
 		ResponseEntity<Map> responseEntity = restUtil.putApiV2(calleeApi, pathSegments, null,
 				MediaType.APPLICATION_JSON, updateRequestWrapper, Map.class);
-		
-		@SuppressWarnings("unchecked")
+
 		Map<String, Object> idpClientResponse = responseEntity != null ? (Map<String, Object>) responseEntity.getBody() : null;
 		
 		// Parse the response

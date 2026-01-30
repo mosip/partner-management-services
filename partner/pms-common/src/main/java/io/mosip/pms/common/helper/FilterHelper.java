@@ -67,7 +67,6 @@ public class FilterHelper  {
 	@Value("${mosip.pms.filtervalue.max_columns:500}")
 	int filterValueMaxColumns;
 
-	@SuppressWarnings("unchecked")
 	public <E, T> List<T> filterValues(Class<E> entity, FilterDto filterDto, FilterValueDto filterValueDto) {
 		String columnName = filterDto.getColumnName();
 		String columnType = filterDto.getType();

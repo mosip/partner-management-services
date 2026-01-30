@@ -37,7 +37,6 @@ public class MemoryCache<K, T> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public T get(K key) {
 		synchronized (cacheMap) {
 			CacheObject c = (CacheObject) cacheMap.get(key);

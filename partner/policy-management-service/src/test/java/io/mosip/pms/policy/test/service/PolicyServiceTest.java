@@ -1059,8 +1059,7 @@ public class PolicyServiceTest {
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(authPolicy))).when(searchHelper).search(Mockito.any(), Mockito.any());
 		service.searchPolicy(policySearchDto);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void searchPolicyTest_02() {
 		Mockito.doReturn(new PageImpl<>(Collections.EMPTY_LIST)).when(searchHelper).search(Mockito.any(), Mockito.any());
@@ -1083,8 +1082,7 @@ public class PolicyServiceTest {
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(policyGroup))).when(searchHelper).search(Mockito.any(), Mockito.any());
 		service.searchPolicyGroup(policySearchDto);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void searchPolicyGroup_02() {
 		Mockito.doReturn(new PageImpl<>(Collections.EMPTY_LIST)).when(searchHelper).search(Mockito.any(), Mockito.any());
