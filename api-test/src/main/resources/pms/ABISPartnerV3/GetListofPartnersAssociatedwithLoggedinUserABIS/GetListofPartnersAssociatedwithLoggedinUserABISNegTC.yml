@@ -97,7 +97,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "_Invalid_Partner"
 }'
@@ -112,7 +112,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/error
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "@%Partner"
 }'
@@ -133,7 +133,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": ""
 }'
@@ -149,7 +149,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "abis_partner"
 }'
@@ -165,7 +165,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "Device_Provider"
 }'
@@ -265,7 +265,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "false",
       "partnerType": "Device_Provider"
 }'
@@ -281,7 +281,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
     input: '{
-      "status": "APPROVED",
+      "status": "approved",
       "policyGroupAvailable": "false",
       "partnerType": "FTM_Provider"
 }'
