@@ -327,7 +327,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		return "Status updated successfully.";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public FtpCertificateResponseDto uploadCertificate(FtpChipCertificateRequestDto ftpChipCertRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
@@ -423,7 +422,6 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 		return responseObject;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public FtpCertDownloadResponeDto getCertificate(FtpChipCertDownloadRequestDto certDownloadRequestDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {

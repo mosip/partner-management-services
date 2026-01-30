@@ -564,8 +564,7 @@ public class PartnerServiceControllerTest {
     	dto.setPartnerId("1001");
     	return dto;
     }
-    
-    @SuppressWarnings("unused")
+
 	private RequestWrapper<PartnerCertDownloadRequestDto> partnerCertificateDownloadRequest() {
         RequestWrapper<PartnerCertDownloadRequestDto> request = new RequestWrapper<PartnerCertDownloadRequestDto>();
         request.setRequest(certDownloadRequest());

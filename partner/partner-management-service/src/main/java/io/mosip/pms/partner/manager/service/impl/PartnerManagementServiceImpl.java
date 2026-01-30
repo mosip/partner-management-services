@@ -505,7 +505,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	private String getPartnerCertificate(String certificateAlias) {
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", certificateAlias);
