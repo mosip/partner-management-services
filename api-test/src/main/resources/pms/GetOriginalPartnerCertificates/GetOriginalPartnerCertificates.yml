@@ -2,7 +2,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_01      
-      description: Get original Auth partner certificates      
+      description: Verify that all original partner certificates are successfully retrieved with valid inputs      
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -18,7 +18,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_DeviceProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_02      
-      description: Get original device partner certificates      
+      description: Validate that all original partner certificates for device providers are successfully retrieved with valid inputs  
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -34,7 +34,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_FTMProvider_allValid_smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_03      
-      description: Get original ftm partner certificates      
+      description: Validate that all original partner certificates are retrieved successfully for a valid FTM Provider request     
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -49,7 +49,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_invalid_roles_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_04      
-      description: Get original Auth partner certificates when authenticated as device partner     
+      description: Validate that retrieving partner certificates fails when the user has invalid     
       role: partnerdevice
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
@@ -68,7 +68,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_without_partnerid_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_05      
-      description: Get original Auth partner certificates without partnerid     
+      description: Validate that retrieving partner certificates fails when the partner ID is not provided    
       role: partneradmin
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
@@ -87,7 +87,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_random_partnerid_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_06      
-      description: Get original Auth partner certificates random value for partnerid   
+      description: Validate that retrieving partner certificates fails when a random partner ID is provided  
       role: partneradmin
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates
@@ -106,7 +106,7 @@ GetOriginalPartnerCertificates:
    Pms_GetOriginalPartnerCertificates_without_authentication_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate-data
       uniqueIdentifier: TC_PMS_getPartner_certificate_07      
-      description: Get original Auth partner certificates without authentication   
+      description: Validate that retrieving partner certificates fails when no authentication is provided  
       role: invalidtoken
       restMethod: get
       inputTemplate: pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates

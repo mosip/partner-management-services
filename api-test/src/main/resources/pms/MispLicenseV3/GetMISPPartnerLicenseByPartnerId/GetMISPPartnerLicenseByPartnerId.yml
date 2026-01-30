@@ -2,7 +2,7 @@ GetMISPPartnerLicenseByPartnerId:
   Pms_GetMISPPartnerLicenseByPartnerId_All_Valid_Smoke:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerId_01
-    description: Fetching MISP partner license details by Partner ID using a valid access token
+    description: Validate that the MISP partner licenses are retrieved successfully for a valid partner ID with all required parameters as part of a smoke test
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true

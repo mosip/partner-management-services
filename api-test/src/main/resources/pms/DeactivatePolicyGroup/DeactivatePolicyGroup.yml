@@ -2,7 +2,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_01      
-      description: Deactivate Policy Group
+      description: Validate that a policy group is successfully deactivated when all inputs are valid
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -22,7 +22,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_without_authentication_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_02      
-      description: Deactivate Policy Group without authentication
+      description: Validate that policy group deactivation fails when authentication is not provided
       role: invalidtoken
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -44,7 +44,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_invalid_roles_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_03      
-      description: Deactivate Policy Group authenticated using invalid roles
+      description: Validate that policy group deactivation fails when attempted by a user with invalid roles
       role: POLICYMANAGER
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -66,7 +66,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_without_id_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_04      
-      description: Deactivate Policy Group without id value
+      description: Validate that policy group deactivation fails when the policy group ID is not provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -88,7 +88,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_invalid_id_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_05      
-      description: Deactivate Policy Group with invalid id value
+      description: Validate that policy group deactivation fails when an invalid policy group ID is provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -110,7 +110,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_without_version_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_06      
-      description: Deactivate Policy Group without version
+      description: Validate that policy group deactivation fails when the version is not provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -132,7 +132,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_invalid_version_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_07      
-      description: Deactivate Policy Group invalid version
+      description: Validate that policy group deactivation fails when an invalid version is provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -154,7 +154,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_without_status_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_08      
-      description: Deactivate Policy Group without status
+      description: Validate that policy group deactivation fails when the status is not provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -176,7 +176,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_invalid_status_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_09      
-      description: Deactivate Policy Group with invalid status
+      description: Validate that policy group deactivation fails when an invalid status is provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -198,7 +198,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_spacevalue_policygroupid_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_10      
-      description: Deactivate Policy Group without policygroupid
+      description: Validate that policy group deactivation fails when the policy group ID contains only spaces
       role: partneradmin
       checkOnlyStatusCodeInResponse: true
       restMethod: patch
@@ -217,7 +217,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_invalid_policygroupid_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_11      
-      description: Deactivate Policy Group invalid policygroupid
+      description: Validate that policy group deactivation fails when an invalid policy group ID is provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -239,7 +239,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_future_date_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_12      
-      description: Deactivate Policy Group with future date given as requesttime
+      description: Validate that policy group deactivation fails when a future date is provided in the request
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -261,7 +261,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_past_date_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_13      
-      description: Deactivate Policy Group with past date given as requesttime
+      description: Validate that policy group deactivation fails when a past date is provided in the request
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -283,7 +283,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_without_requesttime_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_14      
-      description: Deactivate Policy Group without requesttime
+      description: Validate that policy group deactivation fails when the request time is not provided
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -305,7 +305,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_with_deactivated_policies:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_15     
-      description: Deactivate Policy Group with deactivated policies
+      description: Validate that policy group deactivation succeeds even when it contains already deactivated policies
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -324,7 +324,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_with_publishpolicy_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_16      
-      description: Deactivate Policy Group with published policy
+      description: Validate that policy group deactivation fails when it contains published policies
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup
@@ -346,7 +346,7 @@ DeactivatePolicyGroup:
    Pms_DeactivatePolicyGroup_with_Draftpolicy_neg:
       endPoint: /v1/policymanager/policies/group/{policyGroupId}
       uniqueIdentifier: TC_PMS_deactivate_policy_group_17      
-      description: Deactivate Policy Group with draft policy
+      description: Validate that policy group deactivation fails when it contains draft policies
       role: partneradmin
       restMethod: patch
       inputTemplate: pms/DeactivatePolicyGroup/deactivatePolicyGroup

@@ -3,7 +3,7 @@ RejectMappingDeviceToSbi:
       endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
       role: partneradmin
       uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbi_01
-      description: Reject Mapping Device To Sbi
+      description: Validate that mapping of a device to SBI can be rejected successfully with all valid inputs
       restMethod: post
       checkErrorsOnlyInResponse: true
       inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbi

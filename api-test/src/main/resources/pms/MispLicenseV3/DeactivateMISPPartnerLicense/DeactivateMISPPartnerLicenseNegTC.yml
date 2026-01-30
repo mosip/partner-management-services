@@ -2,7 +2,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_without_Access_Token_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_01
-    description: Deactivating MISP Partner License with invalid Access Token
+    description: Validate that deactivating a MISP partner license fails when no access token is provided
     role: invalidtoken
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -26,7 +26,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Version_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_02
-    description: Deactivating MISP Partner License with invalid Version
+    description: Validate that deactivating a MISP partner license fails when an invalid or incorrect version is provided
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -50,7 +50,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Status_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_03
-    description: Deactivating MISP Partner License with invalid Status
+    description: Validate that deactivating a MISP partner license fails when an invalid license status is provided
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -74,7 +74,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_PolicyId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_04
-    description: Deactivating MISP Partner License with invalid PolicyId
+    description: Validate that deactivating a MISP partner license fails when an invalid policy ID is provided
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -98,7 +98,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_PolicyId_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_05
-    description: Deactivating MISP Partner License with Empty PolicyId
+    description: Validate that deactivating a MISP partner license fails when the policy ID is left empty
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -122,7 +122,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_PolicyId_And_LicenseKeyName_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_06
-    description: Deactivating MISP Partner License with Empty PolicyId and LicenseKeyName
+    description: Validate that deactivating a MISP partner license fails when both the policy ID and license key name are left empty
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -146,7 +146,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_PolicyId_And_Status_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_07
-    description: Deactivating MISP Partner License with Empty PolicyId and Status
+    description: Validate that deactivating a MISP partner license fails when both the policy ID and status are left empty
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -170,7 +170,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_without_PartnerId_Field_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_08
-    description: Deactivating MISP Partner License without PartnerId Field
+    description: Validate that deactivating a MISP partner license fails when the partner ID field is missing from the request
     role: partneradmin
     restMethod: patch
     checkOnlyStatusCodeInResponse: true
@@ -190,7 +190,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Token_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_09
-    description: Deactivating MISP Partner License with invalid Access Token
+    description: Validate that deactivating a MISP partner license fails when an invalid authentication token is provided
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -214,7 +214,7 @@ DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Id_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_10
-    description: Deactivating MISP Partner License with invalid Id
+    description: Validate that deactivating a MISP partner license fails when an invalid license ID is provided
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense

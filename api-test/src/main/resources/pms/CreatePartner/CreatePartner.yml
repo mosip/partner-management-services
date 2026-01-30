@@ -1,7 +1,7 @@
 createPartnerSelfRegistration:
    Pms_PartnerSelfRegistration_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that a partner successfully completes self registration when all required inputs are valid
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_01
       restMethod: post
@@ -10,22 +10,22 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98763@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111999",
+    "emailId": "$RUNCONTEXT$mosip98763@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "AUTH_PARTNER",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111999",
+        "partnerId": "$RUNCONTEXT$pms-111999",
         "status": "InProgress"
     }'
     
 
    Pms_PartnerSelfRegistration_reuse_same_Email_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that partner self registration fails when the same email address is reused
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
       restMethod: post
@@ -34,9 +34,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98763@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111999",
+    "emailId": "$RUNCONTEXT$mosip98763@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "AUTH_PARTNER",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
     "requesttime": "$TIMESTAMP$"
@@ -51,7 +51,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Missing_Email_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that partner self registration fails when the email address is missing
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
       restMethod: post
@@ -76,7 +76,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Missing_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner with missing request time
+      description: Validate that partner self registration fails when the request time is missing
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_04
       restMethod: post
@@ -101,7 +101,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_PastDate_Request_Time_Neg:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner with invalid request time
+      description: Validate that partner self registration fails when the request time is set to a past date
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_05
       restMethod: post
@@ -127,7 +127,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that a device provider successfully completes partner self registration with valid inputs
       role: partnerdevice
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_06
       restMethod: post
@@ -136,21 +136,21 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98768@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111998",
+    "emailId": "$RUNCONTEXT$mosip98768@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111998",
+    "partnerId": "$RUNCONTEXT$pms-111998",
     "partnerType": "Device_Provider",
     "policyGroup": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111998",
+        "partnerId": "$RUNCONTEXT$pms-111998",
         "status": "InProgress"
     }'
     
    Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      description: Creating a Partner
+      description: Validate that an FTM provider successfully completes partner self registration when all inputs are valid
       role: partnerftm
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_07
       restMethod: post
@@ -159,22 +159,22 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip98788@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111888",
+    "emailId": "$RUNCONTEXT$mosip98788@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-111888",
+    "partnerId": "$RUNCONTEXT$pms-111888",
     "partnerType": "FTM_Provider",
     "policyGroup": "$REMOVE$",
     "requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "pms-111888",
+        "partnerId": "$RUNCONTEXT$pms-111888",
         "status": "InProgress"
     }'
     
    Partner_PartnerSelfRegistration_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_09
-      description: Create Partner Self Registrartion with Deactivated Partner ID
+      description: Validate that partner self registration fails when the partner ID is deactivated
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -182,22 +182,22 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosipgh@gmail.com",
-    "organizationName": "Techno",
-    "partnerId": "Tech-321",
+    "emailId": "$RUNCONTEXT$mosipgh@gmail.com",
+    "organizationName": "$RUNCONTEXT$Tech-321",
+    "partnerId": "$RUNCONTEXT$Tech-321",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "Tech-321",
+        "partnerId": "$RUNCONTEXT$Tech-321",
         "status": "InProgress"
     }'
     
    Partner_PartnerSelfRegistration_All_for_Get_ApiKey_With_Deactive_Partner_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_10
-      description: Create Partner Self Registrartion with Deactivated Partner ID	  
+      description: Validate that partner self registration and API key retrieval work correctly even when associated with a deactivated partner using valid inputs	  
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -205,22 +205,22 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosipsfgh@gmail.com",
-    "organizationName": "Techno",
-    "partnerId": "Tech-1233",
+    "emailId": "$RUNCONTEXT$mosipsfgh@gmail.com",
+    "organizationName": "$RUNCONTEXT$Tech-1233",
+    "partnerId": "$RUNCONTEXT$Tech-1233",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "Tech-1233",
+        "partnerId": "$RUNCONTEXT$Tech-1233",
         "status": "InProgress"
     }'
     
    Partner_PartnerSelfRegistration_AlreadyExisting_Policy_Name:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_11
-      description: Create Partner Self Registrartion with Already Existing Policy Name	  
+      description: Validate that partner self registration fails when the policy name already exists
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -230,7 +230,7 @@ createPartnerSelfRegistration:
     "contactNumber": "8553967572",
     "emailId": "mosippp@gmail.com",
     "organizationName": "Techno",
-    "partnerId": "pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
@@ -246,7 +246,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_SpaceVAl_PartnerId_Neg:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_12
-      description: Create Partner Self Registrartion with invalid PartnerID
+      description: Validate that partner self registration fails when the partner ID contains spaces
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -272,7 +272,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_InActive_policyGroup:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_13
-      description: Create Partner Self Registrartion with Policy Group
+      description: Validate that partner self registration fails when the selected policy group is inactive
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -296,10 +296,10 @@ createPartnerSelfRegistration:
     }'
     
 
-   Partner_PartnerSelfRegistration_AlreadyExists_invalid:
+   Partner_PartnerSelfRegistration_AlreadyExists_invalid_neg:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_14
-      description: Create Partner Self Registrartion with Already Existing Partner
+      description: Validate that partner self registration fails when attempting to register a partner that already exists with invalid details
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -307,9 +307,9 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mosip2@gmail.com",
+    "emailId": "$RUNCONTEXT$mosip2@gmail.com",
     "organizationName": "PMS_API_ABC_ORG",
-    "partnerId": "pms-111999",
+    "partnerId": "$RUNCONTEXT$pms-111999",
     "partnerType": "Auth_Partner",
     "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
 	"requesttime": "$TIMESTAMP$"
@@ -324,7 +324,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_UpdatePolicyGroupForPartner_AllValid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_15
-      description: Create Partner Self Registrartion and update Policy Group for Partner with valid data
+      description: Validate that a partner’s policy group can be successfully updated when all inputs are valid
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -332,21 +332,21 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "update@gmail.com",
-    "organizationName": "Test",
-    "partnerId": "updatepolicy",
+    "emailId": "$RUNCONTEXT$update@gmail.com",
+    "organizationName": "$RUNCONTEXT$updatepolicy",
+    "partnerId": "$RUNCONTEXT$updatepolicy",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: ' {
-        "partnerId": "updatepolicy",
+        "partnerId": "$RUNCONTEXT$updatepolicy",
         "status": "InProgress"
     }'
    Partner_PartnerSelfRegistration_Missing_InputParameter_PartnerId:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_16
-      description: Create Partner Self Registrartion while keeping the PartnerID parameter as missing
+      description: Validate that partner self registration fails when the Partner ID input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -358,7 +358,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "$REMOVE$",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -373,7 +373,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_Missing_InputParameter_address:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_17
-      description: Create Partner Self Registrartion while keeping the address parameter as missing
+      description: Validate that partner self registration fails when the address input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -385,7 +385,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -400,7 +400,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_Missing_InputParameter_contactNumber:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_18
-      description: Create Partner Self Registrartion while keeping the Contact Number parameter as missing
+      description: Validate that partner self registration fails when the contact number input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -412,7 +412,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -426,7 +426,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_Missing_InputParameter_emailId:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_19
-      description: Create Partner Self Registrartion while keeping the emailID parameter as missing	  
+      description: Validate that partner self registration fails when the email ID input parameter is missing  
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -438,7 +438,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "Auth_Partner",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{
@@ -452,7 +452,7 @@ createPartnerSelfRegistration:
    Partner_PartnerSelfRegistration_Missing_InputParameter_partnerType:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_20
-      description: Create Partner Self Registrartion while keeping the PartnerType parameter as missing
+      description: Validate that partner self registration fails when the partner type input parameter is missing
       role: partner
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
@@ -464,7 +464,7 @@ createPartnerSelfRegistration:
     "organizationName": "Techno",
     "partnerId": "Tech-123",
     "partnerType": "$REMOVE$",
-    "policyGroup": "mosip policy group",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
 	"requesttime": "$TIMESTAMP$"
   }'
       output: '{

@@ -2,7 +2,7 @@ DeactivateOIDCClientV2:
   Pms_DeactivateOIDCClientV2_All_Valid_Smoke:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2_01
-    description: Deactivating the OIDC Client using clientId with a valid access token
+    description: Validate that OIDC client deactivation succeeds for all valid clients
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -19,7 +19,7 @@ DeactivateOIDCClientV2:
   Pms_DeactivateOIDCClientV2_With_Partner_Admin_Role:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2_02
-    description: Deactivating the OIDC Client using clientId having partneradmin role
+    description: Validate that OIDC client deactivation succeeds when performed by a user with the Partner Admin role
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient

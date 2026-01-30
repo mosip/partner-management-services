@@ -2,7 +2,7 @@ addContact:
    Pms_AddContact_All_Valid_Smoke:
       endPoint: SELECT module_name,cr_by FROM audit.app_audit_log where module_name LIKE '%partner%' order by action_dtimes desc LIMIT 5
       uniqueIdentifier: TC_PMS_addContact_01
-      description: Get the AuditLogs for add contact scenario
+      description: Validate that a contact is successfully added when all input parameters are valid
       role: audit
       templateFields: ["partnerQuery","partner service"]
       restMethod: post

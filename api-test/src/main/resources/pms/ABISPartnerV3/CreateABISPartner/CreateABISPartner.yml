@@ -11,17 +11,17 @@ CreateABISPartner:
       "id": "mosip.pms.create.partner.post",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111222",
-      "organizationName": "PMS_API_ABIS_ORG",
+      "partnerId": "$RUNCONTEXT$pms-111222",
+      "organizationName": "$RUNCONTEXT$pms-111222",
       "address": "Bangalore",
       "contactNumber": "9863967572",
-      "emailId": "newabispartnerapiauto@gmail.com",
+      "emailId": "$RUNCONTEXT$newabispartnerapiauto@gmail.com",
       "partnerType": "ABIS_Partner",
       "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
       "logoUrl": "https://example.com/logo.png",
       "langCode": "eng"
 }'
     output: ' {
-      "partnerId": "pms-111222",
+      "partnerId": "$RUNCONTEXT$pms-111222",
       "status": "InProgress"
 }'

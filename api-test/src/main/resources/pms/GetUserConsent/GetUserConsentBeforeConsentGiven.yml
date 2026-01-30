@@ -2,7 +2,7 @@ GetUserConsent:
    Pms_GetUserConsent_before_consent_given:
       endPoint: /v1/partnermanager/users/user-consent
       uniqueIdentifier: TC_pms_GetUserConsent_05
-      description: Retrieve the PMS GetUserConsent before consent is saved
+      description: Validate that no consent status is returned for a user who has not yet given consent
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -11,5 +11,5 @@ GetUserConsent:
       input: '{
 }'
       output: '{
-       "userId": "pms-111999"
+       "userId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$"
 }'

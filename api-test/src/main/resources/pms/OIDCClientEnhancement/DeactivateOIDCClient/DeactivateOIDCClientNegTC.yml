@@ -2,7 +2,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Invalid_Access_Token_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_01
-    description: Deactivating the OIDC Client using clientId with invalid access token
+    description: Validate that OIDC client deactivation fails when an invalid access token is used
     role: invalidtoken
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -24,7 +24,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Invalid_ID_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_02
-    description: Deactivating the OIDC Client using clientId with invalid ID
+    description: Validate that OIDC client deactivation fails when an invalid client ID is provided
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -46,7 +46,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Empty_ID_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_03
-    description: Deactivating the OIDC Client using clientId with Empty ID
+    description: Validate that OIDC client deactivation fails when the client ID is empty
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -68,7 +68,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Invalid_Version_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_04
-    description: Deactivating the OIDC Client using clientId with Invalid Version
+    description: Validate that OIDC client deactivation fails when using a valid client ID with an invalid version
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -90,7 +90,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Empty_Version_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_05
-    description: Deactivating the OIDC Client using clientId with Empty Version
+    description: Validate that OIDC client deactivation fails when the client version is empty
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -112,7 +112,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Past_RequestTime_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_06
-    description: Deactivating the OIDC Client using clientId with Past Requesttime
+    description: Validate that OIDC client deactivation fails when the request time provided is in the past
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -134,7 +134,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Empty_RequestTime_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_07
-    description: Deactivating the OIDC Client using clientId with Empty Requesttime
+    description: Validate that OIDC client deactivation fails when the request time is empty
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -156,7 +156,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Invalid_Status_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_08
-    description: Deactivating the OIDC Client using clientId with Invalid Status
+    description: Validate that OIDC client deactivation fails when an invalid status is provided
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -178,7 +178,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Empty_Status_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_09
-    description: Deactivating the OIDC Client using clientId with Empty Status
+    description: Validate that OIDC client deactivation fails when the status is empty
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -200,7 +200,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Invalid_ClientId_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_10
-    description: Deactivating the OIDC Client using invalid ClientId
+    description: Validate that OIDC client deactivation fails when an invalid client ID is provided
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -222,7 +222,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_SpecialCharacter_In_ClientId_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_11
-    description: Deactivating the OIDC Client using Special Character in ClientId
+    description: Validate that OIDC client deactivation fails when the client ID contains special characters
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient
@@ -244,7 +244,7 @@ DeactivateOIDCClientV2NegTC:
   Pms_DeactivateOIDCClientV2NegTC_With_Deactivated_ClientId_Neg:
     endPoint: /v1/partnermanager/oidc-clients/{clientId}
     uniqueIdentifier: TC_PMS_DeactivateOIDCClientV2NegTC_12
-    description: Deactivating the OIDC Client using Deactivated ClientId
+    description: Validate that OIDC client deactivation fails when the client ID is already deactivated
     role: partnerauth
     restMethod: patch
     inputTemplate: pms/OIDCClientEnhancement/DeactivateOIDCClient/DeactivateOIDCClient

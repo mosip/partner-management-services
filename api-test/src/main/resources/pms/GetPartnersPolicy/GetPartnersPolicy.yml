@@ -2,7 +2,7 @@ GetPartnersPolicy:
    Pms_GetPartnersPolicy_allValid_smoke:
       endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
       uniqueIdentifier: TC_PMS_GetPartnersPolicy_01
-      description: Retrieve Partner Policy details
+      description: Validate that all policies associated with partners are retrieved successfully for a valid request
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -24,7 +24,7 @@ GetPartnersPolicy:
    Pms_GetPartnersPolicy_invalid_partnerId:
       endPoint: /v1/policymanager/policies/{policyId}/partner/{partnerId}
       uniqueIdentifier: TC_PMS_GetPartnersPolicy_02
-      description: Retrieve Partners Policy details while keeping invalid PartnerId
+      description: Validate that retrieving partner policies fails when an invalid partner ID is provided
       role: partner
       restMethod: get
       inputTemplate: pms/GetPartnersPolicy/getPartnersPolicy

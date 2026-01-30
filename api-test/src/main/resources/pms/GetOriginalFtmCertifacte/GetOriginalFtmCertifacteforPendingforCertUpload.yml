@@ -2,7 +2,7 @@ GetOriginalFtmCertifacteforPendingforCertUpload:
    Pms_GetOriginalPartnerCertificates_forPendingforCertUpload_Neg:
       endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}/certificate-data
       uniqueIdentifier: TC_PMS_GetOriginalFtmCertifacteNegativeScenarios_07
-      description: Retrieve Original FTM Certifacte for Pending for Certificate Upload
+      description: Validate that the API fails or returns appropriate errors when attempting to retrieve partner certificates that are still pending certificate upload
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get

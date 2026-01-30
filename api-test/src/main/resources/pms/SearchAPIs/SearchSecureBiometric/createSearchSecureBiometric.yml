@@ -2,7 +2,7 @@ createSearchSecureBiometric:
    Pms_SearchSecureBiometric_AllValid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
       uniqueIdentifier: TC_PMS_createSearchSecureBiometric_01
-      description: Create Search Secure Biometric with valid details
+      description: Validate that searching Secure Biometric records with all valid inputs returns the expected results successfully
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -18,7 +18,7 @@ createSearchSecureBiometric:
    Pms_SearchSecureBiometric_Only_FilterCriteria_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
       uniqueIdentifier: TC_PMS_createSearchSecureBiometric_02
-      description: Create Search Secure Biometric with Only FilterCriteria
+      description: Validate that searching Secure Biometric records using only filter criteria returns the expected results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -41,7 +41,7 @@ createSearchSecureBiometric:
    Pms_SearchSecureBiometric_Only_SortCriteria_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
       uniqueIdentifier: TC_PMS_createSearchSecureBiometric_03
-      description: Create Search Secure Biometric with Only SortCriteria
+      description: Validate that searching Secure Biometric records using only sort criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -63,7 +63,7 @@ createSearchSecureBiometric:
    Pms_SearchSecureBiometric_Only_PaginationCriteria_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/search
       uniqueIdentifier: TC_PMS_createSearchSecureBiometric_04
-      description: Create Search Secure Biometric with Only PaginationCriteria
+      description: Validate that searching Secure Biometric records using only pagination criteria returns results correctly
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -79,7 +79,7 @@ createSearchSecureBiometric:
    Pms_SearchSecureBiometric_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/securebiometricinterface/search
       uniqueIdentifier: TC_PMS_createSearchSecureBiometric_05
-      description: Create Search Secure Biometric while keeping Type parameter as contains and filter data in ascending order
+      description: Validate that searching Secure Biometric records with type containing a value sorted ascending by sid returns correct results
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post

@@ -1,7 +1,7 @@
 CreateOIDCClient:
    Pms_CreateOIDCClient_all_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client
+      description: Validate that an OIDC client is created successfully with all required valid inputs as part of a smoke test
       uniqueIdentifier: TC_PMS_CreateOIDCClient_01
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -26,7 +26,7 @@ CreateOIDCClient:
 
    Pms_CreateOIDCClient_ForNeg_all_Valid_sid:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client
+      description: Validate OIDC client creation fails with invalid inputs
       uniqueIdentifier: TC_PMS_CreateOIDCClient_02
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -51,7 +51,7 @@ CreateOIDCClient:
 
    Pms_CreateOIDCClient_invalid_policyID_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client with invalid policyid
+      description: Validate that OIDC client creation fails with an invalid policy ID
       uniqueIdentifier: TC_PMS_CreateOIDCClient_03     
       role: partnerauth
       restMethod: post
@@ -77,7 +77,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_logoUri_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client with invalid logoUri
+      description: Validate that OIDC client creation fails with an invalid logo URI
       uniqueIdentifier: TC_PMS_CreateOIDCClient_04      
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -104,7 +104,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_RedirectUri_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client with invalid redirectUri
+      description: Validate that OIDC client creation fails with an invalid redirect URI
       uniqueIdentifier: TC_PMS_CreateOIDCClient_05    
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -131,7 +131,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_auth_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client without token
+      description: Validate that OIDC client creation fails with invalid authentication details
       uniqueIdentifier: TC_PMS_CreateOIDCClient_06      
       role: invalidtoken
       checkErrorsOnlyInResponse: true
@@ -158,7 +158,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_publickey_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client without publickkey
+      description: Validate that OIDC client creation fails when the public key is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_07      
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -185,7 +185,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_granttypes_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client with invalid granttypes
+      description: Validate that OIDC client creation fails when invalid grant types are provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_08     
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -212,7 +212,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_granttypes_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client without granttypes
+      description: Validate that OIDC client creation fails when grant types are not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_09      
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -239,7 +239,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_without_name_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client without name field
+      description: Validate that OIDC client creation fails when the client name is not provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_10     
       role: partnerauth
       checkErrorsOnlyInResponse: true
@@ -266,7 +266,7 @@ CreateOIDCClient:
 }'
    Pms_CreateOIDCClient_invalid_publickey_neg:
       endPoint: /v1/partnermanager/oauth/client
-      description: Creating OAUTH Client with invalid publickkey
+      description: Validate that OIDC client creation fails when an invalid public key is provided
       uniqueIdentifier: TC_PMS_CreateOIDCClient_11     
       role: partnerauth
       checkErrorsOnlyInResponse: true

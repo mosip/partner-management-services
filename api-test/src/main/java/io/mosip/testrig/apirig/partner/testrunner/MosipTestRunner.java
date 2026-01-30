@@ -139,7 +139,8 @@ public class MosipTestRunner {
 		if (!runType.equalsIgnoreCase("JAR")) {
 			AuthTestsUtil.removeOldMosipTempTestResource();
 		}
-		BaseTestCase.currentModule = GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
+		BaseTestCase.currentModule = BaseTestCase.runContext + GlobalConstants.PARTNER_MANAGEMENT_SERVICE;
+		LOGGER.info("Current Running Module set to: " + BaseTestCase.currentModule);
 		PMSUtil.DbCleanRevamp();
 
 		AdminTestUtil.copyPmsTestResource();

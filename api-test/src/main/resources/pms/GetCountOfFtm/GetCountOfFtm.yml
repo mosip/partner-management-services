@@ -1,7 +1,7 @@
 GetCountOfFtm:
    Pms_GetCountOfFtm_All_Valid_Smoke:
       endPoint: /v1/partnermanager/ftpchipdetail/v2
-      description: Fetching all active FTM
+      description: Validate that the total count of FTM records is successfully retrieved with valid inputs
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get

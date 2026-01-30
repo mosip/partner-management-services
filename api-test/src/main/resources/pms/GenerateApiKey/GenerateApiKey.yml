@@ -1,7 +1,7 @@
 GenerateApiKey:
    Pms_GenerateApiKey_AllValid_smoke_sid:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-      description: Generating an API Key
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate that an API key is successfully generated with all valid inputs
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_01
       restMethod: patch
@@ -9,18 +9,19 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
     "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "label": "pmsAutomation"
 }'
 
    Pms_GenerateApiKey_Regenerate_Same_Key_Neg:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-      description: Generating an API Key
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate that regenerating an API key fails when the same key already exists
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_02
       restMethod: patch
@@ -28,6 +29,7 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
     "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
@@ -41,8 +43,8 @@ GenerateApiKey:
 }'
 
    Pms_GenerateApiKey_Missing_Request_time_Neg:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-      description: Generating an API Key
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate that API key generation fails when the requestTime parameter is missing
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_03
       restMethod: patch
@@ -50,6 +52,7 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
     "label": "pmsAutomation"
 }'
@@ -62,8 +65,8 @@ GenerateApiKey:
 }'
 
    Pms_GenerateApiKey_PastDate_Request_time_Neg:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-      description: Generating an API Key
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate API key generation fails when requestTime is missing
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_04
       restMethod: patch
@@ -71,6 +74,7 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
     "label": "pmsAutomation",
     "requesttime": "1111-07-22T08:21:17.665Z"
@@ -84,8 +88,8 @@ GenerateApiKey:
 }'
 
    Pms_GenerateApiKey_Missing_label_Neg:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-      description: Generating an API Key
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate that API key generation fails when the label parameter is missing
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_05
       restMethod: patch
@@ -93,6 +97,7 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "mosip policy 192341",
     "requesttime": "$TIMESTAMP$"
 }'
@@ -105,8 +110,8 @@ GenerateApiKey:
 }'
 
    Pms_GenerateApiKey_Missing_policyName_Neg:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
-      description: Generating an API Key
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate that API key generation fails when the policyName parameter is missing
       role: partnerauth
       uniqueIdentifier: TC_PMS_GenerateApikey_06
       restMethod: patch
@@ -114,6 +119,7 @@ GenerateApiKey:
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
 }'
@@ -126,15 +132,16 @@ GenerateApiKey:
 }'
 
    Pms_GenerateApiKey_InValid_policy_Neg:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
       uniqueIdentifier: TC_PMS_GenerateApikey_07
-      description: Generate Api Keys for Approved Policies with invalid policy
+      description: Validate that API key generation fails when an invalid policy is provided
       role: partnerauth
       restMethod: patch
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/error
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "dfbgafb",
     "label": "pmsAutomation",
     "requesttime": "$TIMESTAMP$"
@@ -149,19 +156,21 @@ GenerateApiKey:
 }'
 
    Pms_GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid:
-      endPoint: /v1/partnermanager/partners/pms-111999/generate/apikey
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
       uniqueIdentifier: TC_PMS_GenerateApikey_08
+      description: Validate that API keys are successfully generated for all approved policies with valid inputs
       role: partnerauth
       restMethod: patch
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/GenerateApiKey/generateApiKey
       outputTemplate: pms/GenerateApiKey/generateApiKeyResult
       input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
     "label": "pmsAutomation-19234",
     "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-   "partnerId": "pms-111999",
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "label": "pmsAutomation-19234"    
 }'

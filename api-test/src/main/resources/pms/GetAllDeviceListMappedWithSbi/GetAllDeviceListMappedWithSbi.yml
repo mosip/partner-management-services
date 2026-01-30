@@ -2,7 +2,7 @@ GetAllDeviceListMappedWithSbi:
    Pms_GetAllDeviceListMappedWithSbi_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
-      description: Get All Device List Mapped With Sbi
+      description: Validate that all devices mapped with SBIs are successfully retrieved with valid inputs
       uniqueIdentifier: TC_PMS_GetAllDeviceListMappedwithSbi_01
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -14,5 +14,5 @@ GetAllDeviceListMappedWithSbi:
       output: ' {
       "deviceTypeCode": "Face",
       "deviceSubTypeCode": "Full face",
-      "deviceProviderId": "pms-111998"
+      "deviceProviderId": "$RUNCONTEXT$pms-111998"
 }'

@@ -2,7 +2,7 @@ RejectSecureBiometricInterface:
    Pms_RejectSecureBiometricInterface_All_Valid_Smoke:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_01
-      description: Reject SecureBiometricInterface with valid detais
+      description: Validate that a Secure Biometric Interface is successfully rejected with all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
       restMethod: patch
@@ -20,7 +20,7 @@ RejectSecureBiometricInterface:
    Pms_RejectSecureBiometricInterface_SpaVal_neg:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_03
-      description: Reject SecureBiometricInterface with SpaVal invalid
+      description: Validate that SBI rejection fails when an invalid input is provided
       role: partner
       restMethod: patch
       inputTemplate: pms/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface
@@ -42,7 +42,7 @@ RejectSecureBiometricInterface:
    Pms_RejectSecureBiometricInterface_Missing_InputParameter_approvalStatus:
       endPoint: /v1/partnermanager/securebiometricinterface
       uniqueIdentifier: TC_PMS_RejectSecureBiometricInterface_04
-      description: Reject SecureBiometricInterface while keeping parameter approvalStatus as Empty
+      description: Validate that SBI rejection fails when the approvalStatus input parameter is missing
       role: partner
       restMethod: patch
       inputTemplate: pms/device/SecureBiometricInterface/reject/rejectSecureBiometricInterface

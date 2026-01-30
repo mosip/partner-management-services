@@ -2,7 +2,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_01
-      description: Retrieve all MISP Partner records with status approved
+      description: Validate that the API successfully retrieves the list of partners associated with the logged in user
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -18,7 +18,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_status_InProgress:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_02
-      description: Retrieve all MISP Partner records with status InProgress
+      description: Validate that the API retrieves the list of partners associated with the logged in user when the status filter is set to InProgress
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -34,7 +34,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_policyGroupAvailable_false:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_03
-      description: Retrieve all MISP Partner records with status InProgress
+      description: Validate that the API retrieves the list of partners associated with the logged in user when no policy group is available
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -50,7 +50,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_policyGroupAvailable_true:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_04
-      description: Retrieve all MISP Partner records with status true
+      description: Validate that the API retrieves the list of partners associated with the logged in user when a policy group is available
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -66,7 +66,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_policyGroupAvailable_Empty:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_05
-      description: Retrieve all MISP Partner records with policyGroupAvailable Empty
+      description: Validate that the API retrieves the list of partners associated with the logged in user when the policy group field is empty
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -81,7 +81,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_partnerType_Empty:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_06
-      description: Retrieve all MISP Partner records with partnerType Empty
+      description: Validate that the API retrieves the list of partners associated with the logged in user when the partner type field is empty
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -97,7 +97,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_only_Status:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_07
-      description: Retrieve all MISP Partner records with only query parameter kept as status
+      description: Validate that the API retrieves the list of partners associated with the logged in user when only the status filter is applied
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -113,7 +113,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_AuthToken:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_08
-      description: Retrieve all th ePartner Id's associated with Auth Partner token
+      description: Validate that the API retrieves the list of partners associated with the loggedin user when a valid auth token is provided
       role: partnerauth
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -129,7 +129,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_DeviceToken:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_09
-      description: Retrieve all th ePartner Id's associated with Device Partner token
+      description: Validate that the API retrieves the list of partners associated with the logged in user when a valid device token is provided
       role: partnerdevice
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -145,7 +145,7 @@ GetListofPartnersAssociatedwithLoggedinUser:
    Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_FTMToken:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_10
-      description: Retrieve all th ePartner Id's associated with FTM Partner token
+      description: Validate that the API retrieves the list of partners associated with the logged in user when a valid FTM token is provided
       role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
