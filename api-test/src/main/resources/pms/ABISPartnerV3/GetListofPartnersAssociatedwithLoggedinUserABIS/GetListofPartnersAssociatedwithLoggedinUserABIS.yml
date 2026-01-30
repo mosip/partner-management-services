@@ -2,7 +2,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_All_Valid_Smoke:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_01
-    description: Retrieve all ABIS Partner records with status approved
+    description: Retrieve the list of approved ABIS partners associated with the logged-in Partner Admin account
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -18,7 +18,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Status_InProgress:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_02
-    description: Retrieve all ABIS Partner records with status InProgress
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin whose status is InProgress
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -34,7 +34,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_PolicyGroupAvailable_As_False:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_03
-    description: Retrieve all ABIS Partner records with policyGroupAvailable as false
+    description: Retrieve approved ABIS partners with policyGroupAvailable set to false for the logged-in Partner Admin
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -50,7 +50,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Mandatory_Parameters:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_04
-    description: Retrieve all ABIS Partner records with only mandatory parameters (status=approved)
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using only the mandatory parameter (status = approved)
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -66,7 +66,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_Without_PartnerType:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_05
-    description: Retrieve all ABIS Partner records without partnerType
+    description: Retrieve the list of approved partners associated with the logged-in Partner Admin without providing partnerType
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get

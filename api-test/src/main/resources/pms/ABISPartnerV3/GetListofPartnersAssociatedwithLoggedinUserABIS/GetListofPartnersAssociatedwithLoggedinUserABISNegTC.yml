@@ -2,7 +2,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_Token_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_01
-    description: Retrieve all ABIS Partner records with invalid access token
+    description: Retrieve the list of ABIS partners using an invalid access token
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
@@ -22,7 +22,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Empty_Status_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_02
-    description: Retrieve all ABIS Partner records with empty status
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using an empty status value
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -38,7 +38,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Uppercase_Status_APPROVED_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_03
-    description: Retrieve all ABIS Partner records with status APPROVED in uppercase
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using status in uppercase (APPROVED)
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -54,7 +54,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_SpecialCharacter_Status_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_04
-    description: Retrieve all ABIS Partner records with special character in status
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using special characters in the status field
     role: partneradmin
     restMethod: get
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
@@ -74,7 +74,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_PolicyGroupAvailable_As_Empty_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_05
-    description: Retrieve all ABIS Partner records with policyGroupAvailable as Empty
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin with an empty policyGroupAvailable value
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -90,7 +90,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_06
-    description: Retrieve all ABIS Partner records with invalid partnerType
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using an invalid partnerType
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -106,7 +106,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_SpecialCharacter_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_07
-    description: Retrieve all ABIS Partner records with special character in partnerType
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using special characters in the partnerType field
     role: partneradmin
     restMethod: get
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
@@ -126,7 +126,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Empty_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_08
-    description: Retrieve all ABIS Partner records with Empty partnerType
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin with an empty partnerType
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -142,7 +142,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_CaseSensitive_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_09
-    description: Retrieve all ABIS Partner records with case sensitive partnerType
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using a case-sensitive partnerType (abis_partner)
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -158,7 +158,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_DeviceProvider_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_10
-    description: Retrieve all ABIS Partner records with device provider partnerType
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using partnerType as Device_Provider
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -174,7 +174,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_NonAdmin_Role_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_11
-    description: Retrieve all ABIS Partner records with non admin role
+    description: Retrieve the list of ABIS partners with a non-admin role
     role: partnerauth
     restMethod: get
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
@@ -194,7 +194,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_Status_And_Valid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_12
-    description: Retrieve all ABIS Partner records with invalid status and valid partnertype
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using an invalid status and a valid partnerType
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -210,7 +210,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Valid_Status_And_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_13
-    description: Retrieve all ABIS Partner records with valid status and invalid partnertype
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using a valid status and an invalid partnerType
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -226,7 +226,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_PartnerType_And_Invalid_PolicyGroupAvailable_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_14
-    description: Retrieve all ABIS Partner records with valid invalid partnertype and policyGroupAvailable
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using an invalid partnerType and an invalid policyGroupAvailable value
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -242,7 +242,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_AuthPartner_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_15
-    description: Retrieve all ABIS Partner records with auth partner type
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using partnerType as Auth_Partner
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -258,7 +258,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_DeviceProvider_And_PolicyGroupAvailable_As_False_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_16
-    description: Retrieve all ABIS Partner records with device provider partner type and policyGroupAvailable as false
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using partnerType as Device_Provider and policyGroupAvailable as false
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -274,7 +274,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_FTMProvider_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_17
-    description: Retrieve all ABIS Partner records with FTM provider partner type
+    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using partnerType as FTM_Provider
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
