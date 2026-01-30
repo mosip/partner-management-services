@@ -1467,7 +1467,6 @@ public class PartnerServiceImplTest {
 		return partnerType;
 	}
 
-	@SuppressWarnings("unused")
 	private String caCertResponse() {
 	 return "{\n"
 	 		+ "\"id\": null,\n"

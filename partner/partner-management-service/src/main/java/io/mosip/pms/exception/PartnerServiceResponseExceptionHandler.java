@@ -259,7 +259,6 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	 *             this class contains Checked Exception
 	 */
 
-	@SuppressWarnings("unused")
 	private ResponseWrapper<ErrorResponse> setErrors(HttpServletRequest httpServletRequest) throws IOException {
 		ResponseWrapper<ErrorResponse> responseWrapper = new ResponseWrapper<>();
 		String requestBody = null;

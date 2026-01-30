@@ -49,7 +49,6 @@ import io.mosip.pms.common.entity.MISPLicenseEntityV2;
  *
  */
 @Component
-@SuppressWarnings("unchecked")
 public class MapperUtils {
 
 	/*
