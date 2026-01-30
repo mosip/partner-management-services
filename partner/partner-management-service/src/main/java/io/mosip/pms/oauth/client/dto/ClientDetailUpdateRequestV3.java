@@ -1,5 +1,6 @@
 package io.mosip.pms.oauth.client.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,11 +17,11 @@ public class ClientDetailUpdateRequestV3 extends ClientDetailUpdateRequest {
 
     private Map<String, String> clientNameLangMap;
 
-    private AdditionalConfigDto additionalConfig;
+    private JsonNode additionalConfig;
 
     public ClientDetailUpdateRequestV3(String logoUri, List<String> redirectUris, String status, List<String> grantTypes, String clientName, List<String> clientAuthMethods,
                                        Map<String, String> clientNameLangMap,
-                                       AdditionalConfigDto additionalConfig) {
+                                       JsonNode additionalConfig) {
         super(logoUri, redirectUris, status, grantTypes, clientName, clientAuthMethods);
         this.clientNameLangMap = clientNameLangMap;
         this.additionalConfig = additionalConfig;
