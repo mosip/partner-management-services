@@ -108,6 +108,7 @@ public enum ErrorCode {
 	UPDATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_016", "Error while updating OIDC client."),
 	INVALID_PURPOSE_TYPE("PMS_POLICY_ERROR_017", "Invalid purpose.type: %s. Allowed: login, link, verify"),
 	INVALID_PURPOSE_TITLE_OR_SUBTITLE("PMS_POLICY_ERROR_018", "purpose.title and purpose.subtitle are allowed only when purpose.type is provided"),
+	INVALID_ADDITIONAL_CONFIG_TYPE("PMS_POLICY_ERROR_025", "additionalConfig must be a JSON object"),
 	INVALID_LANGUAGE_KEY("PMS_POLICY_ERROR_019", "%s contains invalid language key '%s'."),
 	MISSING_MANDATORY_LANGUAGE_KEY("PMS_POLICY_ERROR_020", "%s must contain mandatory '@none' key"),
 	GET_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_021", "Error while fetching OIDC client details."),

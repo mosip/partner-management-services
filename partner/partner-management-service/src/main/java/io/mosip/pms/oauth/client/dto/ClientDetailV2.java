@@ -1,5 +1,6 @@
 package io.mosip.pms.oauth.client.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,6 @@ public class ClientDetailV2 extends ClientDetail {
     private String policyGroupDescription;
     private String policyDescription;
     private Map<String, String> clientNameLangMap;
-    private AdditionalConfigDto additionalConfig;
+    private JsonNode additionalConfig;
     private LocalDateTime createdDateTime;
 }
