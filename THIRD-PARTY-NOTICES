@@ -1,0 +1,2794 @@
+THIRD-PARTY-NOTICES
+
+This project includes third-party packages that are distributed under various open-source licenses. Below is a list of packages and their associated licenses.
+============================================================
+Package: FastInfoset
+Version: 2.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.sun.xml.fastinfoset/FastInfoset@2.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: HdrHistogram
+Version: 2.1.12
+SPDX License: BSD-2-Clause
+Homepage: pkg:maven/org.hdrhistogram/HdrHistogram@2.1.12
+License URL: https://opensource.org/licenses/BSD-2-Clause
+============================================================
+
+============================================================
+Package: HdrHistogram
+Version: 2.1.12
+SPDX License: BSD-2-Clause
+Homepage: pkg:maven/org.hdrhistogram/HdrHistogram@2.1.12
+License URL: https://opensource.org/licenses/BSD-2-Clause
+============================================================
+
+============================================================
+Package: HikariCP
+Version: 5.0.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.zaxxer/HikariCP@5.0.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: LatencyUtils
+Version: 2.0.3
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.latencyutils/LatencyUtils@2.0.3
+License URL: N/A
+============================================================
+
+============================================================
+Package: LatencyUtils
+Version: 2.0.3
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.latencyutils/LatencyUtils@2.0.3
+License URL: N/A
+============================================================
+
+============================================================
+Package: acl-libs
+Version: 2.3.2-r1
+SPDX License: LGPL-2.1-or-later AND GPL-2.0-or-later
+Homepage: pkg:apk/alpine/acl-libs@2.3.2-r1?arch=x86_64&distro=alpine-3.22.2&upstream=acl
+License URL: N/A
+============================================================
+
+============================================================
+Package: activation
+Version: 1.1
+SPDX License: CDDL-1.0
+Homepage: pkg:maven/com.sun/activation@1.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: alpine-baselayout
+Version: 3.7.0-r0
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/alpine-baselayout@3.7.0-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: alpine-baselayout-data
+Version: 3.7.0-r0
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/alpine-baselayout-data@3.7.0-r0?arch=x86_64&distro=alpine-3.22.2&upstream=alpine-baselayout
+License URL: N/A
+============================================================
+
+============================================================
+Package: alpine-keys
+Version: 2.5-r0
+SPDX License: MIT
+Homepage: pkg:apk/alpine/alpine-keys@2.5-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: alpine-release
+Version: 3.22.2-r0
+SPDX License: MIT
+Homepage: pkg:apk/alpine/alpine-release@3.22.2-r0?arch=x86_64&distro=alpine-3.22.2&upstream=alpine-base
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: annotations
+Version: 3.0.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.google.code.findbugs/annotations@3.0.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: antlr
+Version: 2.7.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/antlr/antlr@2.7.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: antlr4-runtime
+Version: 4.13.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.antlr/antlr4-runtime@4.13.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: aopalliance
+Version: 1.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/aopalliance/aopalliance@1.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: apiguardian-api
+Version: 1.1.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apiguardian.api/apiguardian-api@1.1.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: apk-tools
+Version: 2.14.9-r3
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/apk-tools@2.14.9-r3?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: aspectjweaver
+Version: 1.9.21
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.aspectj.weaver/aspectjweaver@1.9.21
+License URL: N/A
+============================================================
+
+============================================================
+Package: bcprov-jdk18on
+Version: 1.78.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.bouncycastle/bcprov-jdk18on@1.78.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: brave
+Version: 5.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.zipkin.brave/brave@5.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: brave-propagation-aws
+Version: 0.23.5
+SPDX License: Apache-2.0
+Homepage: pkg:maven/brave-propagation-aws/brave-propagation-aws@0.23.5
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: brotli-libs
+Version: 1.1.0-r2
+SPDX License: MIT
+Homepage: pkg:apk/alpine/brotli-libs@1.1.0-r2?arch=x86_64&distro=alpine-3.22.2&upstream=brotli
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: busybox
+Version: 1.37.0-r19
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/busybox@1.37.0-r19?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: busybox-binsh
+Version: 1.37.0-r19
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/busybox-binsh@1.37.0-r19?arch=x86_64&distro=alpine-3.22.2&upstream=busybox
+License URL: N/A
+============================================================
+
+============================================================
+Package: byte-buddy
+Version: 1.14.12
+SPDX License: Apache-2.0
+Homepage: pkg:maven/net.bytebuddy/byte-buddy@1.14.12
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: c3p0
+Version: 0.9.5.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.mchange/c3p0@0.9.5.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: ca-certificates
+Version: 20250911-r0
+SPDX License: MPL-2.0 AND MIT
+Homepage: pkg:apk/alpine/ca-certificates@20250911-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: ca-certificates-bundle
+Version: 20250911-r0
+SPDX License: MPL-2.0 AND MIT
+Homepage: pkg:apk/alpine/ca-certificates-bundle@20250911-r0?arch=x86_64&distro=alpine-3.22.2&upstream=ca-certificates
+License URL: N/A
+============================================================
+
+============================================================
+Package: checker-qual
+Version: 3.31.0
+SPDX License: MIT
+Homepage: pkg:maven/org.checkerframework.checker.qual/checker-qual@3.31.0
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: classmate
+Version: 1.6.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml/classmate@1.6.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: colesico-config
+Version: 5.3.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/net.colesico.framework/colesico-config@5.3.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: colesico-hikaricp
+Version: 5.3.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/net.colesico.framework/colesico-hikaricp@5.3.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: colesico-introspection
+Version: 5.3.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/net.colesico.framework/colesico-introspection@5.3.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: colesico-ioc
+Version: 5.3.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/net.colesico.framework/colesico-ioc@5.3.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: commons-beanutils
+Version: 1.7.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.commons.beanutils/commons-beanutils@1.7.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-chain
+Version: 1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-chain/commons-chain@1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-codec
+Version: 1.16.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-codec/commons-codec@1.16.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-codec
+Version: 1.16.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/commons-codec/commons-codec@1.16.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: commons-collections
+Version: 3.2.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-collections/commons-collections@3.2.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-collections
+Version: 3.2.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/commons-collections/commons-collections@3.2.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: commons-digester
+Version: 1.8
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-digester/commons-digester@1.8
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-io
+Version: 2.6
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-io/commons-io@2.6
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-io
+Version: 2.8.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/commons-io/commons-io@2.8.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: commons-lang
+Version: 2.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-lang/commons-lang@2.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-lang3
+Version: 3.10
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.apache.commons/commons-lang3@3.10
+License URL: N/A
+============================================================
+
+============================================================
+Package: commons-lang3
+Version: 3.13.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.commons/commons-lang3@3.13.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-logging
+Version: 1.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-logging/commons-logging@1.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-logging
+Version: 1.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/commons-logging/commons-logging@1.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: commons-math3
+Version: 3.6.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.commons/commons-math3@3.6.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: commons-validator
+Version: 1.3.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/commons-validator/commons-validator@1.3.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: context-propagation
+Version: 1.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/context-propagation@1.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: context-slf4j
+Version: 5.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.zipkin.brave.context-slf4j/context-slf4j@5.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: coreutils
+Version: 9.7-r1
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/coreutils@9.7-r1?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: coreutils-env
+Version: 9.7-r1
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/coreutils-env@9.7-r1?arch=x86_64&distro=alpine-3.22.2&upstream=coreutils
+License URL: N/A
+============================================================
+
+============================================================
+Package: coreutils-fmt
+Version: 9.7-r1
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/coreutils-fmt@9.7-r1?arch=x86_64&distro=alpine-3.22.2&upstream=coreutils
+License URL: N/A
+============================================================
+
+============================================================
+Package: coreutils-sha512sum
+Version: 9.7-r1
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/coreutils-sha512sum@9.7-r1?arch=x86_64&distro=alpine-3.22.2&upstream=coreutils
+License URL: N/A
+============================================================
+
+============================================================
+Package: dom4j
+Version: 1.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.dom4j/dom4j@1.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: encoder
+Version: 1.2.3
+SPDX License: BSD-3-Clause
+Homepage: pkg:maven/org.owasp.encoder/encoder@1.2.3
+License URL: https://opensource.org/licenses/BSD-3-Clause
+============================================================
+
+============================================================
+Package: encodings
+Version: 1.0.7-r1
+SPDX License: UNKNOWN
+Homepage: pkg:apk/alpine/encodings@1.0.7-r1?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: evictor
+Version: 1.0.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.stoyanr/evictor@1.0.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: evictor
+Version: 1.0.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.stoyanr/evictor@1.0.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: font-dejavu
+Version: 2.37-r6
+SPDX License: Bitstream-Vera
+Homepage: pkg:apk/alpine/font-dejavu@2.37-r6?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: fontconfig
+Version: 2.15.0-r3
+SPDX License: MIT
+Homepage: pkg:apk/alpine/fontconfig@2.15.0-r3?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: freetype
+Version: 2.13.3-r0
+SPDX License: FTL OR GPL-2.0-or-later
+Homepage: pkg:apk/alpine/freetype@2.13.3-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: gdbm
+Version: 1.24-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gdbm@1.24-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: gmp
+Version: 6.3.0-r3
+SPDX License: LGPL-3.0-or-later OR GPL-2.0-or-later
+Homepage: pkg:apk/alpine/gmp@6.3.0-r3?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnupg
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gnupg@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnupg-dirmngr
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gnupg-dirmngr@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnupg-gpgconf
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gnupg-gpgconf@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnupg-keyboxd
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gnupg-keyboxd@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnupg-utils
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gnupg-utils@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnupg-wks-client
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gnupg-wks-client@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gnutls
+Version: 3.8.8-r0
+SPDX License: LGPL-2.1-or-later
+Homepage: pkg:apk/alpine/gnutls@3.8.8-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: gpg
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gpg@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gpg-agent
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gpg-agent@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gpg-wks-server
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gpg-wks-server@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gpgsm
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gpgsm@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gpgv
+Version: 2.4.7-r0
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/gpgv@2.4.7-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gnupg
+License URL: N/A
+============================================================
+
+============================================================
+Package: gson
+Version: 2.10.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.google.code.gson/gson@2.10.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: gson
+Version: 2.12.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.google.code.gson/gson@2.12.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: guava
+Version: 19.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.google.guava/guava@19.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: guava
+Version: 19.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.google.guava/guava@19.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: h2
+Version: 2.2.224
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.h2database/h2@2.2.224
+License URL: N/A
+============================================================
+
+============================================================
+Package: hibernate-commons-annotations
+Version: 6.0.6.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.hibernate/hibernate-commons-annotations@6.0.6.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: hibernate-core
+Version: 6.4.4.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.hibernate/hibernate-core@6.4.4.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: hibernate-hikaricp
+Version: 6.4.4.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.hibernate/hibernate-hikaricp@6.4.4.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: hibernate-validator
+Version: 8.0.1.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.hibernate.validator/hibernate-validator@8.0.1.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: httpclient
+Version: 4.5.13
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.httpcomponents/httpclient@4.5.13
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: httpclient
+Version: 4.5.13
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.apache.httpcomponents/httpclient@4.5.13
+License URL: N/A
+============================================================
+
+============================================================
+Package: httpclient5
+Version: 5.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.httpcomponents.client5/httpclient5@5.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: httpclient5
+Version: 5.2.3
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.apache.httpcomponents.client5/httpclient5@5.2.3
+License URL: N/A
+============================================================
+
+============================================================
+Package: httpcore
+Version: 4.4.16
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.httpcomponents/httpcore@4.4.16
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: httpcore
+Version: 4.4.16
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.apache.httpcomponents/httpcore@4.4.16
+License URL: N/A
+============================================================
+
+============================================================
+Package: httpcore5
+Version: 5.2.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.httpcomponents.core5/httpcore5@5.2.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: httpcore5
+Version: 5.2.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.apache.httpcomponents.core5/httpcore5@5.2.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: httpcore5-h2
+Version: 5.2.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.httpcomponents.core5/httpcore5-h2@5.2.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: httpcore5-h2
+Version: 5.2.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.apache.httpcomponents.core5/httpcore5-h2@5.2.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: instrumentation-http
+Version: 5.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.zipkin.brave.instrumentation-http/instrumentation-http@5.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: istack-commons-runtime
+Version: 4.1.2
+SPDX License: EDL-1.0
+Homepage: pkg:maven/com.sun.istack/istack-commons-runtime@4.1.2
+License URL: https://www.eclipse.org/org/documents/edl-v10.php
+============================================================
+
+============================================================
+Package: jackson-annotations
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-annotations
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-core
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.core/jackson-core@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-core
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.core/jackson-core@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-databind
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-databind
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-dataformat-yaml
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-datatype-jdk8
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jdk8@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-datatype-jdk8
+Version: 2.15.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jdk8@2.15.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: jackson-datatype-jsr310
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-datatype-jsr310
+Version: 2.15.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.fasterxml.jackson.datatype/jackson-datatype-jsr310@2.15.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: jackson-module-afterburner
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.module/jackson-module-afterburner@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-module-parameter-names
+Version: 2.15.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.fasterxml.jackson.module/jackson-module-parameter-names@2.15.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jackson-module-parameter-names
+Version: 2.15.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.fasterxml.jackson.module/jackson-module-parameter-names@2.15.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: jakarta.activation-api
+Version: 2.1.2
+SPDX License: EDL-1.0
+Homepage: pkg:maven/jakarta.activation/jakarta.activation-api@2.1.2
+License URL: https://www.eclipse.org/org/documents/edl-v10.php
+============================================================
+
+============================================================
+Package: jakarta.annotation-api
+Version: 2.1.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/jakarta.annotation/jakarta.annotation-api@2.1.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: jakarta.annotation-api
+Version: 2.1.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/jakarta.annotation/jakarta.annotation-api@2.1.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: jakarta.inject-api
+Version: 2.0.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/jakarta.inject/jakarta.inject-api@2.0.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jakarta.persistence-api
+Version: 3.1.0
+SPDX License: EDL-1.0
+Homepage: pkg:maven/jakarta.persistence/jakarta.persistence-api@3.1.0
+License URL: https://www.eclipse.org/org/documents/edl-v10.php
+============================================================
+
+============================================================
+Package: jakarta.transaction-api
+Version: 2.0.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/jakarta.transaction/jakarta.transaction-api@2.0.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: jakarta.validation-api
+Version: 3.0.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/jakarta.validation/jakarta.validation-api@3.0.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jakarta.xml.bind-api
+Version: 4.0.1
+SPDX License: EDL-1.0
+Homepage: pkg:maven/jakarta.xml.bind/jakarta.xml.bind-api@4.0.1
+License URL: https://www.eclipse.org/org/documents/edl-v10.php
+============================================================
+
+============================================================
+Package: jandex
+Version: 3.1.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.smallrye/jandex@3.1.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: java-jwt
+Version: 3.8.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/java-jwt/java-jwt@3.8.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: javapoet
+Version: 1.13.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.squareup/javapoet@1.13.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: javassist
+Version: 3.27.0-GA
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.javassist/javassist@3.27.0-GA
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: javax.activation-api
+Version: 1.2.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/javax.activation/javax.activation-api@1.2.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: javax.interceptor-api
+Version: 1.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/javax.interceptor/javax.interceptor-api@1.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: javax.persistence-api
+Version: 2.2
+SPDX License: EDL-1.0
+Homepage: pkg:maven/javax.persistence/javax.persistence-api@2.2
+License URL: https://www.eclipse.org/org/documents/edl-v10.php
+============================================================
+
+============================================================
+Package: javax.transaction-api
+Version: 1.3
+SPDX License: UNKNOWN
+Homepage: pkg:maven/javax.transaction/javax.transaction-api@1.3
+License URL: N/A
+============================================================
+
+============================================================
+Package: jaxb-api
+Version: 2.3.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/javax.xml.bind/jaxb-api@2.3.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: jaxb-runtime
+Version: 2.3.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.glassfish.jaxb/jaxb-runtime@2.3.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: jboss-logging
+Version: 3.5.3.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.jboss.logging/jboss-logging@3.5.3.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jcip-annotations
+Version: 1.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/jcip-annotations/jcip-annotations@1.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: jcip-annotations
+Version: 1.0-1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.github.stephenc.jcip/jcip-annotations@1.0-1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jcl-over-slf4j
+Version: 2.0.12
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.slf4j/jcl-over-slf4j@2.0.12
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jctools-core
+Version: 3.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.jctools/jctools-core@3.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jctools-core
+Version: 3.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.jctools/jctools-core@3.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jjwt
+Version: 0.6.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.jsonwebtoken/jjwt@0.6.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jjwt
+Version: 0.6.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.jsonwebtoken/jjwt@0.6.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jrt-fs
+Version: 21.0.9
+SPDX License: UNKNOWN
+Homepage: pkg:maven/jrt-fs/jrt-fs@21.0.9
+License URL: N/A
+============================================================
+
+============================================================
+Package: json
+Version: 20231013
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.json/json@20231013
+License URL: N/A
+============================================================
+
+============================================================
+Package: json
+Version: 20231013
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.json/json@20231013
+License URL: N/A
+============================================================
+
+============================================================
+Package: json-simple
+Version: 1.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.googlecode.json-simple/json-simple@1.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jsr305
+Version: 3.0.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.google.code.findbugs/jsr305@3.0.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jsr305
+Version: 3.0.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.google.code.findbugs/jsr305@3.0.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: jul-to-slf4j
+Version: 2.0.12
+SPDX License: MIT
+Homepage: pkg:maven/org.slf4j/jul-to-slf4j@2.0.12
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: jul-to-slf4j
+Version: 2.0.12
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.slf4j/jul-to-slf4j@2.0.12
+License URL: N/A
+============================================================
+
+============================================================
+Package: junit-platform-commons
+Version: 1.10.2
+SPDX License: EPL-2.0
+Homepage: pkg:maven/junit-platform-commons/junit-platform-commons@1.10.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: junit-platform-engine
+Version: 1.10.2
+SPDX License: EPL-2.0
+Homepage: pkg:maven/junit-platform-engine/junit-platform-engine@1.10.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: junit-vintage-engine
+Version: 5.10.2
+SPDX License: EPL-2.0
+Homepage: pkg:maven/junit-vintage-engine/junit-vintage-engine@5.10.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: jwks-rsa
+Version: 0.18.0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/jwks-rsa/jwks-rsa@0.18.0
+License URL: N/A
+============================================================
+
+============================================================
+Package: kernel-auth-adapter
+Version: 1.3.0-beta.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-auth-adapter@1.3.0-beta.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: kernel-authcodeflowproxy-api
+Version: 1.3.0-beta.2
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-authcodeflowproxy-api@1.3.0-beta.2
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-core
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-core@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-dataaccess-hibernate
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-dataaccess-hibernate@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-logger-logback
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-logger-logback@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-openid-bridge-api
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-openid-bridge-api@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-openid-bridge-api
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-openid-bridge-api@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-templatemanager-velocity
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-templatemanager-velocity@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: kernel-websubclient-api
+Version: 1.3.0-beta.1
+SPDX License: MPL-2.0
+Homepage: pkg:maven/io.mosip.kernel/kernel-websubclient-api@1.3.0-beta.1
+License URL: https://www.mozilla.org/en-US/MPL/2.0/
+============================================================
+
+============================================================
+Package: libapk2
+Version: 2.14.9-r3
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/libapk2@2.14.9-r3?arch=x86_64&distro=alpine-3.22.2&upstream=apk-tools
+License URL: N/A
+============================================================
+
+============================================================
+Package: libassuan
+Version: 2.5.7-r0
+SPDX License: LGPL-2.1-or-later
+Homepage: pkg:apk/alpine/libassuan@2.5.7-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libattr
+Version: 2.5.2-r2
+SPDX License: LGPL-2.1-or-later
+Homepage: pkg:apk/alpine/libattr@2.5.2-r2?arch=x86_64&distro=alpine-3.22.2&upstream=attr
+License URL: N/A
+============================================================
+
+============================================================
+Package: libbz2
+Version: 1.0.8-r6
+SPDX License: bzip2-1.0.6
+Homepage: pkg:apk/alpine/libbz2@1.0.8-r6?arch=x86_64&distro=alpine-3.22.2&upstream=bzip2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libcrypto3
+Version: 3.5.4-r0
+SPDX License: Apache-2.0
+Homepage: pkg:apk/alpine/libcrypto3@3.5.4-r0?arch=x86_64&distro=alpine-3.22.2&upstream=openssl
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: libexpat
+Version: 2.7.3-r0
+SPDX License: MIT
+Homepage: pkg:apk/alpine/libexpat@2.7.3-r0?arch=x86_64&distro=alpine-3.22.2&upstream=expat
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: libffi
+Version: 3.4.8-r0
+SPDX License: MIT
+Homepage: pkg:apk/alpine/libffi@3.4.8-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: libfontenc
+Version: 1.1.8-r0
+SPDX License: MIT
+Homepage: pkg:apk/alpine/libfontenc@1.1.8-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: libgcrypt
+Version: 1.10.3-r1
+SPDX License: LGPL-2.1-or-later AND GPL-2.0-or-later
+Homepage: pkg:apk/alpine/libgcrypt@1.10.3-r1?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libgpg-error
+Version: 1.55-r0
+SPDX License: GPL-2.0-or-later AND LGPL-2.1-or-later
+Homepage: pkg:apk/alpine/libgpg-error@1.55-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libidn2
+Version: 2.3.7-r0
+SPDX License: GPL-2.0-or-later OR LGPL-3.0-or-later
+Homepage: pkg:apk/alpine/libidn2@2.3.7-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libintl
+Version: 0.24.1-r0
+SPDX License: LGPL-2.1-or-later
+Homepage: pkg:apk/alpine/libintl@0.24.1-r0?arch=x86_64&distro=alpine-3.22.2&upstream=gettext
+License URL: N/A
+============================================================
+
+============================================================
+Package: libksba
+Version: 1.6.7-r0
+SPDX License: LGPL-3.0-only AND GPL-2.0-only AND GPL-3.0-only
+Homepage: pkg:apk/alpine/libksba@1.6.7-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libldap
+Version: 2.6.8-r0
+SPDX License: OLDAP-2.8
+Homepage: pkg:apk/alpine/libldap@2.6.8-r0?arch=x86_64&distro=alpine-3.22.2&upstream=openldap
+License URL: N/A
+============================================================
+
+============================================================
+Package: libncursesw
+Version: 6.5_p20250503-r0
+SPDX License: X11
+Homepage: pkg:apk/alpine/libncursesw@6.5_p20250503-r0?arch=x86_64&distro=alpine-3.22.2&upstream=ncurses
+License URL: N/A
+============================================================
+
+============================================================
+Package: libpng
+Version: 1.6.47-r0
+SPDX License: Libpng
+Homepage: pkg:apk/alpine/libpng@1.6.47-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libsasl
+Version: 2.1.28-r8
+SPDX License: BSD-3-Clause-Attribution AND BSD-4-Clause
+Homepage: pkg:apk/alpine/libsasl@2.1.28-r8?arch=x86_64&distro=alpine-3.22.2&upstream=cyrus-sasl
+License URL: N/A
+============================================================
+
+============================================================
+Package: libssl3
+Version: 3.5.4-r0
+SPDX License: Apache-2.0
+Homepage: pkg:apk/alpine/libssl3@3.5.4-r0?arch=x86_64&distro=alpine-3.22.2&upstream=openssl
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: libtasn1
+Version: 4.20.0-r0
+SPDX License: LGPL-2.1-or-later
+Homepage: pkg:apk/alpine/libtasn1@4.20.0-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: libunistring
+Version: 1.3-r0
+SPDX License: GPL-2.0-or-later OR LGPL-3.0-or-later
+Homepage: pkg:apk/alpine/libunistring@1.3-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: log4j-api
+Version: 2.21.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.logging.log4j/log4j-api@2.21.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: log4j-api
+Version: 2.21.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.logging.log4j/log4j-api@2.21.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: log4j-core
+Version: 2.21.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.logging.log4j/log4j-core@2.21.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: log4j-to-slf4j
+Version: 2.21.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.logging.log4j/log4j-to-slf4j@2.21.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: log4j-to-slf4j
+Version: 2.21.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.logging.log4j/log4j-to-slf4j@2.21.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: logback-access
+Version: 1.4.14
+SPDX License: UNKNOWN
+Homepage: pkg:maven/ch.qos.logback/logback-access@1.4.14
+License URL: N/A
+============================================================
+
+============================================================
+Package: logback-classic
+Version: 1.4.14
+SPDX License: UNKNOWN
+Homepage: pkg:maven/ch.qos.logback/logback-classic@1.4.14
+License URL: N/A
+============================================================
+
+============================================================
+Package: logback-classic
+Version: 1.4.14
+SPDX License: UNKNOWN
+Homepage: pkg:maven/ch.qos.logback/logback-classic@1.4.14
+License URL: N/A
+============================================================
+
+============================================================
+Package: logback-core
+Version: 1.4.14
+SPDX License: UNKNOWN
+Homepage: pkg:maven/ch.qos.logback/logback-core@1.4.14
+License URL: N/A
+============================================================
+
+============================================================
+Package: logback-core
+Version: 1.4.14
+SPDX License: UNKNOWN
+Homepage: pkg:maven/ch.qos.logback/logback-core@1.4.14
+License URL: N/A
+============================================================
+
+============================================================
+Package: logstash-logback-encoder
+Version: 6.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/net.logstash.logback/logstash-logback-encoder@6.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: lombok
+Version: 1.18.30
+SPDX License: BSD-3-Clause
+Homepage: pkg:maven/lombok/lombok@1.18.30
+License URL: https://opensource.org/licenses/BSD-3-Clause
+============================================================
+
+============================================================
+Package: mavenEcjBootstrapAgent
+Version: UNKNOWN
+SPDX License: UNKNOWN
+Homepage: pkg:maven/mavenEcjBootstrapAgent/mavenEcjBootstrapAgent
+License URL: N/A
+============================================================
+
+============================================================
+Package: mavenEcjBootstrapAgent
+Version: UNKNOWN
+SPDX License: UNKNOWN
+Homepage: pkg:maven/mavenEcjBootstrapAgent/mavenEcjBootstrapAgent
+License URL: N/A
+============================================================
+
+============================================================
+Package: mchange-commons-java
+Version: 0.2.15
+SPDX License: UNKNOWN
+Homepage: pkg:maven/com.mchange/mchange-commons-java@0.2.15
+License URL: N/A
+============================================================
+
+============================================================
+Package: micrometer-commons
+Version: 1.12.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-commons@1.12.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: micrometer-core
+Version: 1.12.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-core@1.12.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: micrometer-jakarta9
+Version: 1.12.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-jakarta9@1.12.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: micrometer-observation
+Version: 1.12.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-observation@1.12.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: micrometer-registry-prometheus
+Version: 1.12.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-registry-prometheus@1.12.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: micrometer-tracing
+Version: 1.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-tracing@1.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: micrometer-tracing-bridge-brave
+Version: 1.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.micrometer/micrometer-tracing-bridge-brave@1.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: mkfontscale
+Version: 1.2.3-r1
+SPDX License: MIT
+Homepage: pkg:apk/alpine/mkfontscale@1.2.3-r1?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: musl
+Version: 1.2.5-r10
+SPDX License: MIT
+Homepage: pkg:apk/alpine/musl@1.2.5-r10?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: musl-locales
+Version: 0.1.0-r1
+SPDX License: LGPL-3.0-only
+Homepage: pkg:apk/alpine/musl-locales@0.1.0-r1?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: musl-locales-lang
+Version: 0.1.0-r1
+SPDX License: MIT
+Homepage: pkg:apk/alpine/musl-locales-lang@0.1.0-r1?arch=x86_64&distro=alpine-3.22.2&upstream=musl-locales
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: musl-utils
+Version: 1.2.5-r10
+SPDX License: MIT AND BSD-2-Clause AND GPL-2.0-or-later
+Homepage: pkg:apk/alpine/musl-utils@1.2.5-r10?arch=x86_64&distro=alpine-3.22.2&upstream=musl
+License URL: N/A
+============================================================
+
+============================================================
+Package: ncurses-terminfo-base
+Version: 6.5_p20250503-r0
+SPDX License: X11
+Homepage: pkg:apk/alpine/ncurses-terminfo-base@6.5_p20250503-r0?arch=x86_64&distro=alpine-3.22.2&upstream=ncurses
+License URL: N/A
+============================================================
+
+============================================================
+Package: nettle
+Version: 3.10.1-r0
+SPDX License: GPL-2.0-or-later OR LGPL-3.0-or-later
+Homepage: pkg:apk/alpine/nettle@3.10.1-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-buffer
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-buffer@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-buffer
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-buffer@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-codec
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-codec@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-codec
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-codec@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-codec-dns
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-codec-dns@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-codec-dns
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-codec-dns@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-codec-http
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-codec-http@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-codec-http
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-codec-http@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-codec-http2
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-codec-http2@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-codec-http2
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-codec-http2@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-codec-socks
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-codec-socks@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-codec-socks
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-codec-socks@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-common
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-common@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-common
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-common@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-handler
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-handler@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-handler
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-handler@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-handler-proxy
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-handler-proxy@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-handler-proxy
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-handler-proxy@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-resolver
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-resolver@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-resolver
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-resolver@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-resolver-dns
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-resolver-dns@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-resolver-dns
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-resolver-dns@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-resolver-dns-classes-macos
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-resolver-dns-classes-macos@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-resolver-dns-classes-macos
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-resolver-dns-classes-macos@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-resolver-dns-native-macos
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-resolver-dns-native-macos@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-resolver-dns-native-macos
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-resolver-dns-native-macos@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-transport
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-transport@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-transport
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-transport@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-transport-classes-epoll
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-transport-classes-epoll@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-transport-classes-epoll
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-transport-classes-epoll@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-transport-native-epoll
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-transport-native-epoll@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-transport-native-epoll
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-transport-native-epoll@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: netty-transport-native-unix-common
+Version: 4.1.107.Final
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.netty/netty-transport-native-unix-common@4.1.107.Final
+License URL: N/A
+============================================================
+
+============================================================
+Package: netty-transport-native-unix-common
+Version: 4.1.107.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.netty/netty-transport-native-unix-common@4.1.107.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: nimbus-jose-jwt
+Version: 10.0.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/com.nimbusds/nimbus-jose-jwt@10.0.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: npth
+Version: 1.8-r0
+SPDX License: LGPL-2.0-or-later
+Homepage: pkg:apk/alpine/npth@1.8-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: openjdk
+Version: 21.0.9+10-LTS
+SPDX License: UNKNOWN
+Homepage: pkg:generic/oracle/openjdk@21.0.9%2B10-LTS?repository_url=https%3A%2F%2Fgithub.com%2Fadoptium%2Fjdk21u.git
+License URL: N/A
+============================================================
+
+============================================================
+Package: openssl
+Version: 3.5.4-r0
+SPDX License: Apache-2.0
+Homepage: pkg:apk/alpine/openssl@3.5.4-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: opentest4j
+Version: 1.3.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.opentest4j/opentest4j@1.3.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: oro
+Version: 2.0.8
+SPDX License: Apache-1.1
+Homepage: pkg:maven/org.apache.oro/oro@2.0.8
+License URL: N/A
+============================================================
+
+============================================================
+Package: p11-kit
+Version: 0.25.5-r2
+SPDX License: BSD-3-Clause
+Homepage: pkg:apk/alpine/p11-kit@0.25.5-r2?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/BSD-3-Clause
+============================================================
+
+============================================================
+Package: p11-kit-trust
+Version: 0.25.5-r2
+SPDX License: BSD-3-Clause
+Homepage: pkg:apk/alpine/p11-kit-trust@0.25.5-r2?arch=x86_64&distro=alpine-3.22.2&upstream=p11-kit
+License URL: https://opensource.org/licenses/BSD-3-Clause
+============================================================
+
+============================================================
+Package: partner-management-service
+Version: 1.3.0-SNAPSHOT
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.mosip.pms/partner-management-service@1.3.0-SNAPSHOT
+License URL: N/A
+============================================================
+
+============================================================
+Package: pcre2
+Version: 10.46-r0
+SPDX License: BSD-3-Clause
+Homepage: pkg:apk/alpine/pcre2@10.46-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: https://opensource.org/licenses/BSD-3-Clause
+============================================================
+
+============================================================
+Package: pinentry
+Version: 1.3.1-r0
+SPDX License: GPL-2.0-or-later
+Homepage: pkg:apk/alpine/pinentry@1.3.1-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: pms-common
+Version: 1.3.0-SNAPSHOT
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.mosip.pms/pms-common@1.3.0-SNAPSHOT
+License URL: N/A
+============================================================
+
+============================================================
+Package: postgresql
+Version: 42.6.1
+SPDX License: BSD-2-Clause
+Homepage: pkg:maven/org.postgresql/postgresql@42.6.1
+License URL: https://opensource.org/licenses/BSD-2-Clause
+============================================================
+
+============================================================
+Package: quartz
+Version: 2.3.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.quartz-scheduler/quartz@2.3.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: reactive-streams
+Version: 1.0.4
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.reactivestreams/reactive-streams@1.0.4
+License URL: N/A
+============================================================
+
+============================================================
+Package: reactor-core
+Version: 3.6.3
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.projectreactor.reactor-core/reactor-core@3.6.3
+License URL: N/A
+============================================================
+
+============================================================
+Package: reactor-extra
+Version: 3.5.1
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.projectreactor.addons.reactor-extra/reactor-extra@3.5.1
+License URL: N/A
+============================================================
+
+============================================================
+Package: reactor-netty-core
+Version: 1.1.16
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.projectreactor.netty/reactor-netty-core@1.1.16
+License URL: N/A
+============================================================
+
+============================================================
+Package: reactor-netty-http
+Version: 1.1.16
+SPDX License: UNKNOWN
+Homepage: pkg:maven/io.projectreactor.netty/reactor-netty-http@1.1.16
+License URL: N/A
+============================================================
+
+============================================================
+Package: scanelf
+Version: 1.3.8-r1
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/scanelf@1.3.8-r1?arch=x86_64&distro=alpine-3.22.2&upstream=pax-utils
+License URL: N/A
+============================================================
+
+============================================================
+Package: simpleclient
+Version: 0.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.prometheus/simpleclient@0.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: simpleclient_common
+Version: 0.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.prometheus/simpleclient_common@0.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: simpleclient_tracer_common
+Version: 0.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.prometheus/simpleclient_tracer_common@0.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: simpleclient_tracer_otel
+Version: 0.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.prometheus/simpleclient_tracer_otel@0.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: simpleclient_tracer_otel_agent
+Version: 0.16.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.prometheus/simpleclient_tracer_otel_agent@0.16.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: skalibs-libs
+Version: 2.14.4.0-r0
+SPDX License: ISC
+Homepage: pkg:apk/alpine/skalibs-libs@2.14.4.0-r0?arch=x86_64&distro=alpine-3.22.2&upstream=skalibs
+License URL: N/A
+============================================================
+
+============================================================
+Package: slf4j-api
+Version: 2.0.12
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.slf4j/slf4j-api@2.0.12
+License URL: N/A
+============================================================
+
+============================================================
+Package: slf4j-api
+Version: 2.0.12
+SPDX License: MIT
+Homepage: pkg:maven/org.slf4j/slf4j-api@2.0.12
+License URL: https://opensource.org/licenses/MIT
+============================================================
+
+============================================================
+Package: snakeyaml
+Version: 2.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.yaml/snakeyaml@2.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: snakeyaml
+Version: 2.2
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.yaml/snakeyaml@2.2
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-aop
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-aop@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-aspects
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-aspects@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-batch-core
+Version: 5.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.batch/spring-batch-core@5.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-batch-infrastructure
+Version: 5.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.batch/spring-batch-infrastructure@5.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-beans
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-beans@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-boot
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.boot/spring-boot@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-boot-actuator
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.boot/spring-boot-actuator@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-boot-actuator-autoconfigure
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.boot/spring-boot-actuator-autoconfigure@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-boot-autoconfigure
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.boot/spring-boot-autoconfigure@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-boot-jarmode-layertools
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.boot/spring-boot-jarmode-layertools@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-commons
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-commons@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-commons
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-commons@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-config-client
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-config-client@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-config-client
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-config-client@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-context
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-context@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-context
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-context@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-loadbalancer
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-loadbalancer@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-loadbalancer
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-loadbalancer@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter-bootstrap
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter-bootstrap@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter-config
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter-config@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter-config
+Version: 4.1.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter-config@4.1.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter-loadbalancer
+Version: 4.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter-loadbalancer@4.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-cloud-starter-loadbalancer
+Version: 4.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.cloud/spring-cloud-starter-loadbalancer@4.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-context
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-context@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-context-support
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-context-support@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-core
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-core@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-data-commons
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.data/spring-data-commons@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-data-jpa
+Version: 3.2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.data/spring-data-jpa@3.2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-expression
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-expression@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-jcl
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-jcl@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-jdbc
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-jdbc@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-orm
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-orm@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-retry
+Version: 2.0.5
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.retry/spring-retry@2.0.5
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-security-config
+Version: 6.2.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.springframework.security/spring-security-config@6.2.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: spring-security-core
+Version: 6.2.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.springframework.security/spring-security-core@6.2.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: spring-security-crypto
+Version: 6.2.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.springframework.security/spring-security-crypto@6.2.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: spring-security-rsa
+Version: 1.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.security/spring-security-rsa@1.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-security-rsa
+Version: 1.1.1
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework.security/spring-security-rsa@1.1.1
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-security-web
+Version: 6.2.2
+SPDX License: UNKNOWN
+Homepage: pkg:maven/org.springframework.security/spring-security-web@6.2.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: spring-tx
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-tx@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-web
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-web@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-webflux
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-webflux@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: spring-webmvc
+Version: 6.1.4
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springframework/spring-webmvc@6.1.4
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: springdoc-openapi-starter-common
+Version: 2.6.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springdoc/springdoc-openapi-starter-common@2.6.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: springdoc-openapi-starter-webmvc-api
+Version: 2.6.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springdoc/springdoc-openapi-starter-webmvc-api@2.6.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: springdoc-openapi-starter-webmvc-ui
+Version: 2.6.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.springdoc/springdoc-openapi-starter-webmvc-ui@2.6.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: sqlite-libs
+Version: 3.49.2-r1
+SPDX License: blessing
+Homepage: pkg:apk/alpine/sqlite-libs@3.49.2-r1?arch=x86_64&distro=alpine-3.22.2&upstream=sqlite
+License URL: N/A
+============================================================
+
+============================================================
+Package: ssl_client
+Version: 1.37.0-r19
+SPDX License: GPL-2.0-only
+Homepage: pkg:apk/alpine/ssl_client@1.37.0-r19?arch=x86_64&distro=alpine-3.22.2&upstream=busybox
+License URL: N/A
+============================================================
+
+============================================================
+Package: sslext
+Version: 1.2-0
+SPDX License: UNKNOWN
+Homepage: pkg:maven/sslext/sslext@1.2-0
+License URL: N/A
+============================================================
+
+============================================================
+Package: stax-ex
+Version: 2.1.0
+SPDX License: EDL-1.0
+Homepage: pkg:maven/org.jvnet.staxex/stax-ex@2.1.0
+License URL: https://www.eclipse.org/org/documents/edl-v10.php
+============================================================
+
+============================================================
+Package: struts-core
+Version: 1.3.8
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.struts/struts-core@1.3.8
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: struts-taglib
+Version: 1.3.8
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.struts/struts-taglib@1.3.8
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: struts-tiles
+Version: 1.3.8
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.struts/struts-tiles@1.3.8
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: swagger-annotations
+Version: 1.5.21
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.swagger/swagger-annotations@1.5.21
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: swagger-annotations-jakarta
+Version: 2.2.22
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.swagger.core.v3/swagger-annotations-jakarta@2.2.22
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: swagger-core-jakarta
+Version: 2.2.22
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.swagger.core.v3/swagger-core-jakarta@2.2.22
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: swagger-models
+Version: 1.5.21
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.swagger/swagger-models@1.5.21
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: swagger-models-jakarta
+Version: 2.2.22
+SPDX License: Apache-2.0
+Homepage: pkg:maven/io.swagger.core.v3/swagger-models-jakarta@2.2.22
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: swagger-ui
+Version: 5.17.14
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.webjars/swagger-ui@5.17.14
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: tomcat-annotations-api
+Version: 10.1.19
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.tomcat/tomcat-annotations-api@10.1.19
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: tomcat-embed-core
+Version: 10.1.19
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.tomcat.embed/tomcat-embed-core@10.1.19
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: tomcat-embed-el
+Version: 10.1.19
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.tomcat.embed/tomcat-embed-el@10.1.19
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: tomcat-embed-websocket
+Version: 10.1.19
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.tomcat.embed/tomcat-embed-websocket@10.1.19
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: txw2
+Version: 4.0.4
+SPDX License: BSD-3-Clause
+Homepage: pkg:maven/org.glassfish.jaxb/txw2@4.0.4
+License URL: https://opensource.org/licenses/BSD-3-Clause
+============================================================
+
+============================================================
+Package: tzdata
+Version: 2025b-r0
+SPDX License: UNKNOWN
+Homepage: pkg:apk/alpine/tzdata@2025b-r0?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: unzip
+Version: 6.0-r15
+SPDX License: UNKNOWN
+Homepage: pkg:apk/alpine/unzip@6.0-r15?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: utmps-libs
+Version: 0.1.3.1-r0
+SPDX License: ISC
+Homepage: pkg:apk/alpine/utmps-libs@0.1.3.1-r0?arch=x86_64&distro=alpine-3.22.2&upstream=utmps
+License URL: N/A
+============================================================
+
+============================================================
+Package: validation-api
+Version: 2.0.1.Final
+SPDX License: Apache-2.0
+Homepage: pkg:maven/javax.validation/validation-api@2.0.1.Final
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: velocity
+Version: 1.7
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.velocity/velocity@1.7
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: velocity-engine-core
+Version: 2.3
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.velocity/velocity-engine-core@2.3
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: velocity-tools
+Version: 2.0
+SPDX License: Apache-2.0
+Homepage: pkg:maven/org.apache.velocity/velocity-tools@2.0
+License URL: https://www.apache.org/licenses/LICENSE-2.0
+============================================================
+
+============================================================
+Package: wget
+Version: 1.25.0-r1
+SPDX License: GPL-3.0-or-later
+Homepage: pkg:apk/alpine/wget@1.25.0-r1?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================
+
+============================================================
+Package: zlib
+Version: 1.3.1-r2
+SPDX License: Zlib
+Homepage: pkg:apk/alpine/zlib@1.3.1-r2?arch=x86_64&distro=alpine-3.22.2
+License URL: N/A
+============================================================

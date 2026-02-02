@@ -1,0 +1,395 @@
+================================================================================
+COPYRIGHT NOTICES
+================================================================================
+
+This file contains the copyright notices and license information for all
+third-party packages used in the MOSIP Khazana project. Each package's 
+copyright holder, year range, and license terms are listed below.
+
+ALL libraries listed require copyright notice preservation as mandated by
+their respective licenses. This is a legal requirement for distribution.
+
+================================================================================
+
+1. COPYLEFT LICENSES (GNU LGPL-3.0)
+================================================================================
+
+Package: Git Commit ID Maven Plugin
+Group ID: pl.project13.maven
+Artifact ID: git-commit-id-plugin
+Version: 3.0.1
+Copyright: (C) 2007 Free Software Foundation, Inc.
+License: GNU Lesser General Public License v3.0 (LGPL-3.0-only)
+Full License: https://www.gnu.org/licenses/lgpl-3.0.html
+Homepage: https://github.com/git-commit-id/git-commit-id-maven-plugin
+
+--------------------------------------------------------------------------------
+
+Package: Sonar Maven Plugin
+Group ID: org.sonarsource.scanner.maven
+Artifact ID: sonar-maven-plugin
+Version: 3.7.0.1746
+Copyright: (C) 2009-present SonarSource SA
+License: GNU Lesser General Public License v3.0 (LGPL-3.0-only)
+Full License: https://www.gnu.org/licenses/lgpl-3.0.html
+Homepage: https://github.com/SonarSource/sonar-scanner-maven
+
+Note: LGPL-3.0 requires prominent notice that LGPL'd library is used and
+provision of source code access. See license text for full requirements.
+
+================================================================================
+
+2. ECLIPSE PUBLIC LICENSE (EPL)
+================================================================================
+
+Package: JUnit Vintage Engine (JUnit 5)
+Group ID: org.junit.vintage
+Artifact ID: junit-vintage-engine
+Version: Managed by kernel-bom 1.3.0-SNAPSHOT
+Copyright: (C) 2015-present JUnit Team and Contributors
+License: Eclipse Public License 2.0 (EPL-2.0)
+Full License: https://www.eclipse.org/legal/epl-2.0/
+Homepage: https://junit.org/junit5/
+
+--------------------------------------------------------------------------------
+
+Package: JaCoCo Maven Plugin
+Group ID: org.jacoco
+Artifact ID: jacoco-maven-plugin
+Version: 0.8.11
+Copyright: (C) 2009, 2025 Mountainminds GmbH & Co. KG and Contributors
+License: Eclipse Public License 2.0 (EPL-2.0)
+Full License: https://www.eclipse.org/legal/epl-2.0/
+Homepage: https://www.jacoco.org/
+
+Note: EPL-2.0 requires preservation of all copyright, patent, trademark, and
+attribution notices. Build/analysis tools like JaCoCo may not need to be
+distributed with binary releases but are included here for completeness.
+
+================================================================================
+
+3. APACHE LICENSE 2.0
+================================================================================
+
+--------------------------------------------------------------------------------
+3.1 Apache Maven Plugins
+--------------------------------------------------------------------------------
+
+Package: Maven Jar Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-jar-plugin
+Version: 3.0.2
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-jar-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven Javadoc Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-javadoc-plugin
+Version: 3.2.0
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-javadoc-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven Surefire Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-surefire-plugin
+Version: 2.22.0
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/surefire/maven-surefire-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven Compiler Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-compiler-plugin
+Version: 3.8.0
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-compiler-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven Source Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-source-plugin
+Version: 2.2.1
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-source-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven GPG Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-gpg-plugin
+Version: 1.5
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-gpg-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven WAR Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-war-plugin
+Version: 3.1.0
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-war-plugin/
+
+--------------------------------------------------------------------------------
+
+Package: Maven Deploy Plugin
+Group ID: org.apache.maven.plugins
+Artifact ID: maven-deploy-plugin
+Version: 2.8.1
+Copyright: 2001-2019 The Apache Software Foundation
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://maven.apache.org/plugins/maven-deploy-plugin/
+
+--------------------------------------------------------------------------------
+3.2 Spring Framework and Plugins
+--------------------------------------------------------------------------------
+
+Package: Spring Boot Maven Plugin
+Group ID: org.springframework.boot
+Artifact ID: spring-boot-maven-plugin
+Version: 3.2.3
+Copyright: (C) 2002-2024 VMware, Inc. (formerly Pivotal Software, Inc.)
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://spring.io/projects/spring-boot
+
+--------------------------------------------------------------------------------
+3.3 Cloud and Storage SDKs
+--------------------------------------------------------------------------------
+
+Package: AWS SDK for Java
+Group ID: com.amazonaws
+Artifact ID: aws-java-sdk
+Version: 1.11.368
+Copyright: (C) 2010-2014 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Additional Third-Party Components:
+  - XML parsing from JetS3t: Copyright 2006-2009 James Murty
+  - PKCS#1 functions from oauth.googlecode.com: Copyright 1998-2010 AOL Inc.
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://aws.amazon.com/sdk-for-java/
+
+--------------------------------------------------------------------------------
+
+Package: JOSS (Java OpenStack Storage)
+Group ID: org.javaswift
+Artifact ID: joss
+Version: 0.10.2
+Copyright: JOSS contributors
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://github.com/javaswift/joss
+
+--------------------------------------------------------------------------------
+3.4 Testing Frameworks
+--------------------------------------------------------------------------------
+
+Package: PowerMock API Mockito2
+Group ID: org.powermock
+Artifact ID: powermock-api-mockito2
+Version: Managed by kernel-bom 1.3.0-SNAPSHOT
+Copyright: PowerMock contributors
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://github.com/powermock/powermock
+
+--------------------------------------------------------------------------------
+
+Package: PowerMock Module JUnit4
+Group ID: org.powermock
+Artifact ID: powermock-module-junit4
+Version: Managed by kernel-bom 1.3.0-SNAPSHOT
+Copyright: PowerMock contributors
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://github.com/powermock/powermock
+
+--------------------------------------------------------------------------------
+3.5 Maven Publishing
+--------------------------------------------------------------------------------
+
+Package: Central Publishing Maven Plugin
+Group ID: org.sonatype.central
+Artifact ID: central-publishing-maven-plugin
+Version: 0.7.0
+Copyright: (C) 2022-present Sonatype, Inc.
+License: Apache License 2.0 (Apache-2.0)
+Full License: https://www.apache.org/licenses/LICENSE-2.0
+Homepage: https://github.com/sonatype/central-publishing-maven-plugin
+
+--------------------------------------------------------------------------------
+
+Apache License 2.0 Requirements:
+  - Preserve all copyright, patent, trademark, and attribution notices
+  - Include copy of Apache License 2.0 text with distributions
+  - Include NOTICE file content (if present in original distribution)
+  - Mark modified files as changed
+
+================================================================================
+
+4. MIT LICENSE
+================================================================================
+
+Package: Lombok
+Group ID: org.projectlombok
+Artifact ID: lombok
+Version: Managed by kernel-bom 1.3.0-SNAPSHOT
+Copyright: (C) 2009-2021 The Project Lombok Authors
+Additional Components:
+  - ASM bytecode framework: Copyright (C) 2000-2011 INRIA, France Telecom
+License: MIT License
+Full License: https://opensource.org/licenses/MIT
+Homepage: https://projectlombok.org/
+
+--------------------------------------------------------------------------------
+
+Package: Mockito Core
+Group ID: org.mockito
+Artifact ID: mockito-core
+Version: 3.3.3
+Copyright: (C) 2007-present Mockito contributors
+License: MIT License
+Full License: https://opensource.org/licenses/MIT
+Homepage: https://site.mockito.org/
+
+--------------------------------------------------------------------------------
+
+Package: S3Mock (Findify)
+Group ID: io.findify
+Artifact ID: s3mock_2.12
+Version: 0.2.4
+Copyright: (C) 2016 Findify AB
+License: MIT License
+Full License: https://opensource.org/licenses/MIT
+Homepage: https://github.com/findify/s3mock
+
+--------------------------------------------------------------------------------
+
+MIT License Requirements:
+  - Preserve copyright notice and permission notice
+  - Include full MIT License text with distributions
+  - Apply to all copies or substantial portions of the software
+
+================================================================================
+
+5. MOZILLA PUBLIC LICENSE 2.0 (MPL-2.0)
+================================================================================
+
+Package: MOSIP Kernel Core
+Group ID: io.mosip.kernel
+Artifact ID: kernel-core
+Version: 1.3.0-SNAPSHOT
+Copyright: (C) 2018-present MOSIP (Modular Open Source Identity Platform)
+License: Mozilla Public License 2.0 (MPL-2.0)
+Full License: https://www.mozilla.org/en-US/MPL/2.0/
+Homepage: https://github.com/mosip/commons
+
+--------------------------------------------------------------------------------
+
+Package: MOSIP Kernel BOM
+Group ID: io.mosip.kernel
+Artifact ID: kernel-bom
+Version: 1.3.0-SNAPSHOT
+Copyright: (C) 2018-present MOSIP (Modular Open Source Identity Platform)
+License: Mozilla Public License 2.0 (MPL-2.0)
+Full License: https://www.mozilla.org/en-US/MPL/2.0/
+Homepage: https://github.com/mosip/commons
+
+--------------------------------------------------------------------------------
+
+Package: MOSIP Kernel Keymanager Service
+Group ID: io.mosip.kernel
+Artifact ID: kernel-keymanager-service
+Version: 1.3.0-SNAPSHOT
+Copyright: (C) 2018-present MOSIP (Modular Open Source Identity Platform)
+License: Mozilla Public License 2.0 (MPL-2.0)
+Full License: https://www.mozilla.org/en-US/MPL/2.0/
+Homepage: https://github.com/mosip/commons
+
+--------------------------------------------------------------------------------
+
+MPL-2.0 Requirements (Exhibit A):
+  Each source code file must include the following notice (or equivalent):
+  
+  "This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/."
+
+  - Cannot remove or alter existing license/copyright/patent notices
+  - May add accurate additional notices
+  - File-level copyleft: modified MPL files must remain under MPL-2.0
+
+================================================================================
+
+FULL LICENSE TEXTS
+================================================================================
+
+Complete license texts for all licenses used in this project are available at:
+
+1. Apache License 2.0: https://www.apache.org/licenses/LICENSE-2.0.txt
+2. MIT License: https://opensource.org/licenses/MIT
+3. Eclipse Public License 2.0: https://www.eclipse.org/legal/epl-2.0/
+4. GNU Lesser General Public License 3.0: https://www.gnu.org/licenses/lgpl-3.0.txt
+5. Mozilla Public License 2.0: https://www.mozilla.org/en-US/MPL/2.0/
+
+For source distributions, these full license texts should be included in a
+license/ directory at the root of the distribution.
+
+================================================================================
+
+COMPLIANCE SUMMARY
+================================================================================
+
+Total Dependencies: 21
+  - LGPL-3.0 (Copyleft): 2
+  - EPL-2.0: 2
+  - Apache-2.0: 11
+  - MIT: 3
+  - MPL-2.0: 3
+
+ALL 21 dependencies require mandatory copyright notice preservation.
+
+Build/Analysis Tools Note:
+  - JaCoCo Maven Plugin (0.8.11): Build-time code coverage tool
+  - Sonar Maven Plugin (3.7.0.1746): Build-time code quality analysis tool
+  
+  These tools are used during the build process and may not need to be
+  distributed with binary releases, but their copyright information is
+  included here for complete legal compliance documentation.
+
+================================================================================
+
+ABOUT THIS PROJECT
+================================================================================
+
+Project: MOSIP Khazana - Object Store Service
+License: Mozilla Public License 2.0 (MPL-2.0)
+Copyright: (C) 2018-present MOSIP Contributors
+
+This project itself is licensed under MPL-2.0. See the LICENSE file in the
+root directory for the project's license terms.
+
+================================================================================
+END OF COPYRIGHT NOTICES
+================================================================================
