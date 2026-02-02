@@ -136,4 +136,13 @@ public class PutWithPathParamsAndBody extends PMSUtil implements ITest {
 				throw new AdminTestException("Failed at output validation");
 		}
 
+	/**
+	 * The method ser current test name to result
+	 * 
+	 * @param result
+	 */
+	@AfterMethod(alwaysRun = true)
+	public void setResultTestName(ITestResult result) {
+		result.setAttribute("TestCaseName", testCaseName);
+	}
 }

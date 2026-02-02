@@ -115,5 +115,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 				+ PMSConfigManager.getproperty("partner_userName") + "'";
 		logger.info(deleteQuery);
 		DBManager.executeQueryAndDeleteRecord("audit", deleteQuery);
+
+		result.setAttribute("TestCaseName", testCaseName);
 	}
 }

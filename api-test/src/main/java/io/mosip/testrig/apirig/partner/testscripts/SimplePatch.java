@@ -125,4 +125,13 @@ public class SimplePatch extends PMSUtil implements ITest {
 
 	}
 
+	/**
+	 * The method ser current test name to result
+	 * 
+	 * @param result
+	 */
+	@AfterMethod(alwaysRun = true)
+	public void setResultTestName(ITestResult result) {
+		result.setAttribute("TestCaseName", testCaseName);
+	}
 }
