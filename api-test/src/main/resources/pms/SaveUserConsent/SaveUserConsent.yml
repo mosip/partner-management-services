@@ -64,7 +64,7 @@ SaveUserConsent:
       }
       ]
 }'
-   Pms_saveUserConsent_With_PartnerAdmin_Role:
+   Pms_saveUserConsent_With_PartnerAdmin_Role_Smoke:
       endPoint: /v1/partnermanager/users/user-consent
       role: partneradmin
       uniqueIdentifier: TC_PMS_saveUserConsent_05
