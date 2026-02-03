@@ -15,5 +15,5 @@ UploadABISPartnerCertificate:
       "partnerId": "$ID:ABISPartnerRegistration_All_Valid_Smoke_Sid_partnerId$",
       "partnerDomain": "AUTH"
 }'
-    output: ' {
+    output: '{
 }'

@@ -2,7 +2,7 @@ CreateABISPartner:
   Pms_ABISPartnerRegistration_All_Valid_Smoke_Sid:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_PMS_CreateABISPartnerRegistration_01
-    description: Validate that a ABIS partner is successfully registered with all required valid inputs as part of a smoke test
+    description: Validate that an ABIS partner is successfully registered with all required valid inputs as part of a smoke test
     role: partneradmin
     restMethod: post
     inputTemplate: pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner
