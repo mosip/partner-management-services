@@ -2,7 +2,7 @@ UploadABISPartnerCertificate:
   Pms_UploadABISPartnerCertificate_All_Valid_Smoke:
     endPoint: /v1/partnermanager/partners/certificate/upload
     uniqueIdentifier: TC_PMS_UploadABISPartnerCertificate_01
-    description: Validate that a Partner certificate is uploaded successfully for ABIS Partner(pms-111222) with all required valid inputs, as part of a smoke test
+    description: Validate that a Partner certificate is uploaded successfully for ABIS Partner(pms-111222) with all required valid inputs
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: post
