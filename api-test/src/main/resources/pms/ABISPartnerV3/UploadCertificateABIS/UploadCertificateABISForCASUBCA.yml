@@ -2,7 +2,7 @@ UploadCertificateABISCASUBCA:
    Pms_UploadCACertificateForABIS_All_Valid_Smoke:
      endPoint: /v1/partnermanager/partners/certificate/ca/upload
      uniqueIdentifier: TC_PMS_UploadCertificateABISCASUBCA_01
-     description: Upload valid CA certificate for ABIS Partner
+     description: Validate that a CA certificate is uploaded successfully for ABIS Partner with all required valid inputs, as part of a smoke test
      role: partneradmin
      restMethod: post
      inputTemplate: pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateCASUBCA
@@ -19,7 +19,7 @@ UploadCertificateABISCASUBCA:
    Pms_UploadSUBCACertificateForABIS_All_Valid_Smoke:
      endPoint: /v1/partnermanager/partners/certificate/ca/upload
      uniqueIdentifier: TC_PMS_UploadCertificateABISCASUBCA_02
-     description: Upload valid SUBCA certificate for ABIS Partner
+     description: Validate that a Sub-CA certificate is uploaded successfully for ABIS Partner with all required valid inputs, as part of a smoke test
      role: partneradmin
      restMethod: post
      inputTemplate: pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateCASUBCA

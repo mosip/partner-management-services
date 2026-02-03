@@ -2,7 +2,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_All_Valid_Smoke:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_01
-    description: Retrieve the list of approved ABIS partners associated with the logged-in Partner Admin account
+    description: Validate that the API successfully retrieves the list of approved ABIS partners associated with the logged-in Partner Admin user
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -18,7 +18,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Status_InProgress:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_02
-    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin whose status is InProgress
+    description: Validate that the API successfully retrieves the list of ABIS partners with InProgress status associated with the logged-in Partner Admin user.
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -34,7 +34,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_PolicyGroupAvailable_As_False:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_03
-    description: Retrieve approved ABIS partners with policyGroupAvailable set to false for the logged-in Partner Admin
+    description: Validate that the API successfully retrieves the list of approved ABIS partners with policyGroupAvailable set to false associated with the logged-in Partner Admin user.
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -50,7 +50,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Mandatory_Parameters:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_04
-    description: Retrieve the list of ABIS partners associated with the logged-in Partner Admin using only the mandatory parameter (status = approved)
+    description: Validate that the API successfully retrieves the list of ABIS partners associated with the logged-in Partner Admin user using only the mandatory parameter (status = approved)
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -66,7 +66,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_Without_PartnerType:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_05
-    description: Retrieve the list of approved partners associated with the logged-in Partner Admin without providing partnerType
+    description: Validate that the API successfully retrieves the list of approved partners associated with the logged-in Partner Admin user without providing the partnerType parameter
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
