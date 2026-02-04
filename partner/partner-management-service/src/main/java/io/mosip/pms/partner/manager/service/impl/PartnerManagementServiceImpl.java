@@ -847,6 +847,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
                         ErrorCode.AT_LEAST_ONE_FIELD_REQUIRED.getErrorMessage());
             }
 
+			// Validate that partner exists in PMS
+			Optional<Partner> partnerOptional = partnerServiceRepository.findById(partnerId);
+			if (partnerOptional.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "Partner ID does not exist: " + partnerId);
+				throw new PartnerManagerServiceException(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+
+			// Validate that policy exists in PMS
+			Optional<AuthPolicy> policyOptional = authPolicyRepository.findById(policyId);
+			if (policyOptional.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "Policy ID does not exist: " + policyId);
+				throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+
 			PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName);
 			if (partnerPolicy == null) {
 				throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
@@ -856,6 +872,32 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			//check if logged in user is admin
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if (!isAdmin){
+				// Validate that the API key belongs to the logged in user
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+					throw new PartnerManagerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+							ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+				}
+				
+				// Check if the API key's partner belongs to the logged in user
+				boolean isApiKeyBelongsToUser = false;
+				if (partnerPolicy.getPartner() != null) {
+					for (Partner partner : partnerList) {
+						if (partner.getId().equals(partnerPolicy.getPartner().getId())) {
+							isApiKeyBelongsToUser = true;
+							break;
+						}
+					}
+				}
+				
+				if (!isApiKeyBelongsToUser) {
+					LOGGER.error("sessionId", "idType", "id", "The given API key does not belong to the logged in user.");
+					throw new PartnerManagerServiceException(ErrorCode.API_KEY_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+							ErrorCode.API_KEY_NOT_BELONGS_TO_THE_USER.getErrorMessage());
+				}
+				
 				// check if Partner is Active or not.
 				if (partnerPolicy.getPartner() != null && !partnerPolicy.getPartner().getIsActive()) {
 					LOGGER.error("Partner is not Active, hence status of API key cannot be updated, for partner: " + partnerId);
