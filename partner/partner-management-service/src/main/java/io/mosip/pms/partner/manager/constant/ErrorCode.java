@@ -34,6 +34,7 @@ public enum ErrorCode {
 	UNABLE_TO_UPDATE_POLICY_AGAINST_APIKEY("PMS_PMP_053","The old and new policy IDs are same, so the policy cannot be updated for the given API key"),
 	POLICY_NOT_EXIST_EXCEPTION("PMS_PMP_014","Policy does not exist"),
 	PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION("PMS_PMS_022","Given Partner api key is not active."),
+	APIKEY_NOT_ACTIVE_EXCEPTION("PMS_PMS_023","Expiry date cannot be updated for a deactivated API key."),
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),
 	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
 	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
