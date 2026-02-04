@@ -866,8 +866,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
             if (!partnerPolicy.getIsActive()) {
                 LOGGER.warn("API key is inactive for partnerId={}", partnerId);
-                throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-                        ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+                throw new PartnerManagerServiceException(ErrorCode.APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
             }
 
 			// If user is not partner admin, they cannot update expiry date time
