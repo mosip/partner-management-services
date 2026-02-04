@@ -286,6 +286,48 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
+	<test name="ABISPartnerV3">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner.yml" />
+			<parameter name="idKeyName" value="id,partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateABISCASUBCA">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateABISForCASUBCA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadABISPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/UploadPartnerCertificateABIS/UploadABISPartnerCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	
+	<test name="GetListofPartnersAssociatedwithLoggedinUserABIS">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUserABISNegTC">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISNegTC.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />

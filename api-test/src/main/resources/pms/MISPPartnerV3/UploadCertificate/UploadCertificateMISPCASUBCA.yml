@@ -1,5 +1,5 @@
 UploadCertificateMISPCASUBCA:
-   Pms_UploadCACertificate_All_Valid_Smoke_Partner_111556:
+   Pms_UploadCACertificate_All_Valid_Partner_111556:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_01
       description: Validate that a CA certificate is uploaded successfully with all required valid inputs, as part of a smoke test
@@ -15,7 +15,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadSUBCACertificate_All_Valid_Smoke_Partner_111556:
+   Pms_UploadSUBCACertificate_All_Valid_Partner_111556:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_02
       description: Validate that a Sub-CA certificate is uploaded successfully with all required valid inputs as part of a smoke test
@@ -95,7 +95,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadCACertificate_All_Valid_Smoke_For_Partner_111558:
+   Pms_UploadCACertificate_All_Valid_For_Partner_111558:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_07
       description: Upload valid CA certificate for Misp Partner 111558
@@ -111,7 +111,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadSUBCACertificate_All_Valid_Smoke_For_Partner_111558:
+   Pms_UploadSUBCACertificate_All_Valid_For_Partner_111558:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_08
       description: Upload valid SUBCA certificate for Misp Partner 111558
@@ -127,7 +127,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadCACertificate_All_Valid_Smoke_For_Partner_111559:
+   Pms_UploadCACertificate_All_Valid_For_Partner_111559:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_09
       description: Upload valid CA certificate for Misp Partner 111559
@@ -143,7 +143,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadSUBCACertificate_All_Valid_Smoke_For_Partner_111559:
+   Pms_UploadSUBCACertificate_All_Valid_For_Partner_111559:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_10
       description: Upload valid SUBCA certificate for Misp Partner 111559
@@ -159,7 +159,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadCACertificate_All_Valid_Smoke_For_Partner_111550:
+   Pms_UploadCACertificate_All_Valid_For_Partner_111550:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_11
       description: Upload valid CA certificate for Misp Partner 111550
@@ -175,7 +175,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadSUBCACertificate_All_Valid_Smoke_For_Partner_111550:
+   Pms_UploadSUBCACertificate_All_Valid_For_Partner_111550:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_12
       description: Upload valid SUBCA certificate for Misp Partner 111550
@@ -191,7 +191,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadCACertificate_All_Valid_Smoke_For_Partner_111551:
+   Pms_UploadCACertificate_All_Valid_For_Partner_111551:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_13
       description: Upload valid CA certificate for Misp Partner 111551
@@ -207,7 +207,7 @@ UploadCertificateMISPCASUBCA:
       output: ' {
       "status": "Upload Success."
 }'
-   Pms_UploadSUBCACertificate_All_Valid_Smoke_For_Partner_111551:
+   Pms_UploadSUBCACertificate_All_Valid_For_Partner_111551:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_14
       description: Upload valid SUBCA certificate for Misp Partner 111551
