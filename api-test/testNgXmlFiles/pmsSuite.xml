@@ -625,7 +625,24 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test> -->
-
+    <test name="UpdateOrDeactivateApiKey">
+		<parameter name="ymlFile"
+			value="pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey.yml" />
+		<parameter name="pathParams" value="partnerId,policyId,apiKeyName" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="UpdateOrDeactivateApiKeyNegTC">
+		<parameter name="ymlFile"
+			value="pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyNegTC.yml" />
+		<parameter name="pathParams" value="partnerId,policyId,apiKeyName" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
 	<test name="ActivateDeactivatePartnerApiKey">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
