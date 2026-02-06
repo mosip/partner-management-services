@@ -1,0 +1,64 @@
+UpdateOrDeactivateApiKey:
+   Pms_UpdateOrDeactivateApiKey_Valid_ExpiryDateTime_WithOut_Status_Field:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
+    description: Validate that updating the API Key expiry date to a future ISO formate datetime is successful
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKey_02
+    checkErrorsOnlyInResponse: true
+    restMethod: patch
+    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
+    outputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyResult
+    input: '{
+      "id": "mosip.pms.update.api.key.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
+      "status": "$REMOVE$"
+}'
+    output: '{
+}'
+   Pms_UpdateOrDeactivateApiKey_With_Empty_status:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
+    description: Validate that updating or deactivating an API key when an empty status is provided
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKey_03
+    restMethod: patch
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
+    outputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyResult
+    input: '{
+      "id": "mosip.pms.update.api.key.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
+	  "status": ""
+}'
+    output: '{
+}'
+   Pms_UpdateOrDeactivateApiKey_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
+    description: Validate that updating the API Key Expiry Date with all valid inputs is successful and the changes are reflected correctly
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKey_01
+    checkErrorsOnlyInResponse: true
+    restMethod: patch
+    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
+    outputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyResult
+    input: '{
+      "id": "mosip.pms.update.api.key.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
+	  "status": "De-active"
+}'
+    output: '{
+}'

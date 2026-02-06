@@ -135,7 +135,7 @@
 	<test name="PrintPartner">
 		<parameter name="ymlFile"
 			value="pms/PrintPartner/CreatePartner/CreatePartner.yml" />
-			<parameter name="idKeyName" value="partnerId" />
+		<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -205,8 +205,8 @@
 	<test name="MISPPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
-			<parameter name="idKeyName" value="id,partnerId,name" />
-			<parameter name="reqKeyName" value="organizationName" />
+		<parameter name="idKeyName" value="id,partnerId,name" />
+		<parameter name="reqKeyName" value="organizationName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -289,7 +289,7 @@
 	<test name="ABISPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner.yml" />
-			<parameter name="idKeyName" value="id,partnerId" />
+		<parameter name="idKeyName" value="id,partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -331,7 +331,7 @@
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
-			<parameter name="idKeyName" value="partnerId" />
+		<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -604,6 +604,24 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBodyForAutoGenId" />
 		</classes>
 	</test>
+	<test name="UpdateOrDeactivateApiKey">
+		<parameter name="ymlFile"
+			value="pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey.yml" />
+		<parameter name="pathParams" value="partnerId,policyId,apiKeyName" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="UpdateOrDeactivateApiKeyNegTC">
+		<parameter name="ymlFile"
+			value="pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyNegTC.yml" />
+		<parameter name="pathParams" value="partnerId,policyId,apiKeyName" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
 	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has 
 		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
 		Ticket ID: MOSIP-43700, Story ID: MOSIP-44155 -->
@@ -625,8 +643,10 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test> -->
-
-	<test name="ActivateDeactivatePartnerApiKey">
+	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/status has 
+		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
+		Ticket ID: MOSIP-44170, Story ID: MOSIP-44155 -->
+	<!--<test name="ActivateDeactivatePartnerApiKey">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
 		<parameter name="pathParams" value="partnerId,policyId" />
@@ -634,7 +654,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
-	</test>
+	</test>-->
 	<test name="InsertDBData">
 		<parameter name="ymlFile"
 			value="pms/InsertDBData/InsertAPIKeyData.yml" />
