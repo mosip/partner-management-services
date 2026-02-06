@@ -1,5 +1,5 @@
 UpdateOrDeactivateApiKeyNegTC:
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Invalid_Token_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Invalid_Token_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when an invalid access token is provided
     role: invalidtoken
@@ -11,10 +11,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
       "status": "De-active"
 }'
     output: '{
@@ -24,11 +24,36 @@ UpdateOrDeactivateApiKeyNegTC:
           }
       ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_InValid_ISOFormat_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKey_With_Empty_ApiKeyExpiryDateTime:                                                                                
+    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
+    description: Validate that updating or deactivating an API key fails when an empty ApiKey expirydate time is provided
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_02
+    restMethod: patch
+    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "",
+	  "status": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PM_070"
+        }
+    ]
+}'
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_InValid_ISOFormat_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when an invalid ISO 8601 expiryDateTime format is provided
     role: partneradmin
-    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_02
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_03
     restMethod: patch
     checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
@@ -37,41 +62,16 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "33-2026-01-18T23:59:59.000Z",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "33-2026-01-18T23:59:59.000Z",
       "status": "De-active"
        }'
     output: '{
       "responseCode": "400"
        }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Past_ExpiryDateTime_Neg_Smoke:
-    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that updating or deactivating an API key fails when a past expiry date time is provided
-    role: partneradmin
-    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_03
-    restMethod: patch
-    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
-    outputTemplate: pms/error
-    input: '{
-      "id": "mosip.pms.update.api.key.patch",
-      "version": "1.0",
-      "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "2024-01-18T23:59:59.000Z",
-      "status": "De-active"
-}'
-    output: '{
-        "errors": [
-           {
-               "errorCode": "PMS_PM_067"
-           }
-        ]
-}'
-   Pms_UpdateOrDeactivateApiKeyNegTC_invalid_Status_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_invalid_Status_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when an invalid status value is provided
     role: partneradmin
@@ -83,10 +83,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
       "status": "rejedt"
       }'
     output: '{
@@ -96,7 +96,7 @@ UpdateOrDeactivateApiKeyNegTC:
          }
        ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Empty_Request_body_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Empty_Request_body_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when Empty request body is provided
     role: partneradmin
@@ -108,10 +108,10 @@ UpdateOrDeactivateApiKeyNegTC:
         "id": "mosip.pms.update.api.key.patch",
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
-        "partnerId": "pms-111999",
-        "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-        "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-        "apiKeyExpiryDateTime": "$REMOVE$",
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+        "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+        "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+        "expiryDateTime": "$REMOVE$",
         "status": "$REMOVE$"
           }'
     output: '{
@@ -121,7 +121,7 @@ UpdateOrDeactivateApiKeyNegTC:
              }
          ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_Without_Existing_ApiKeyName_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_Without_Existing_ApiKeyName_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when a non-existing apiKeyName is provided
     role: partneradmin
@@ -133,10 +133,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
       "apiKeyName": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "expiryDateTime": "$EXPIRYDATE$",
       "status": "De-active"
     }'
     output: '{
@@ -146,28 +146,32 @@ UpdateOrDeactivateApiKeyNegTC:
              }
          ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Empty_ApiKeyName_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Empty_ApiKeyName_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when an empty apiKeyName is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_07
     restMethod: patch
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
-    outputTemplate: pms/responseCode
+    outputTemplate: pms/error
     input: '{
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
       "apiKeyName": " ",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
 }'
     output: '{
-       "responseCode": "400"
+       "errors": [
+           {
+              "errorCode": "PMS_PM_068"
+           }
+      ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_invalid_partnerId_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_invalid_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when an invalid partnerId value is provided
     role: partneradmin
@@ -180,9 +184,9 @@ UpdateOrDeactivateApiKeyNegTC:
        "version": "1.0",
        "requestTime": "$TIMESTAMP$",
        "partnerId": "parth08geid",
-       "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-       "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-       "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+       "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+       "expiryDateTime": "$EXPIRYDATE$",
        "status": "De-active"
    }'
     output: '{
@@ -192,7 +196,7 @@ UpdateOrDeactivateApiKeyNegTC:
                 }
         ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Special_Character_ApiKeyName_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Special_Character_ApiKeyName_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating the API Key Expiry Date fails when the apikeyname contains any special characters
     role: partneradmin
@@ -204,10 +208,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
       "apiKeyName": "api*$key",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "expiryDateTime": "$EXPIRYDATE$",
       "status": "De-active"
 }'
     output: '{
@@ -217,7 +221,7 @@ UpdateOrDeactivateApiKeyNegTC:
           }
     ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Special_Character_partnerId_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Special_Character_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating the API Key Expiry Date fails when the apikeyname contains any special characters
     role: partneradmin
@@ -230,9 +234,9 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms*1234",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "policyId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
 }'
     output: '{
@@ -242,9 +246,9 @@ UpdateOrDeactivateApiKeyNegTC:
           }
     ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_ExpiryDateTime_DeactiveApiKey_sid_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKey_With_Empty_ApiKeyExpiryDateTime_And_Status_Active_Neg:                                                                                
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Verify that updating the API key expiryDateTime fails when the API key status is DE-ACTIVE and the system returns an appropriate error response without updating the expiry date
+    description: Validate that updating or deactivating an API key fails when an empty ApiKey expirydate time and status as active is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_11
     restMethod: patch
@@ -254,23 +258,23 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
-	  "status": "De-active"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "",
+	  "status": "active"
 }'
     output: '{
       "errors": [
-         {
-            "errorCode": "PMS_PMS_022"
-          }
-    ]
+    {
+       "errorCode": "PMS_PM_071"
+    }
+   ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Unauthorized_User_sid_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Unauthorized_User_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating API key details fails when attempted by an unauthorized user and the system returns an appropriate authorization error response
-    role: partneradmin
+    role: partnerdevice
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_12
     restMethod: patch
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
@@ -279,10 +283,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
 }'
     output: '{
@@ -292,7 +296,7 @@ UpdateOrDeactivateApiKeyNegTC:
           }
      ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Already_Deactive_sid_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Already_Deactive_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating API key details fails when the API key is already in DE-ACTIVE status and the system returns an appropriate error without making any changes
     role: partneradmin
@@ -304,10 +308,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
       "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
 }'
     output: '{
@@ -317,7 +321,7 @@ UpdateOrDeactivateApiKeyNegTC:
           }
      ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Deactive_Uppercase_Valid_sid_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Deactive_Uppercase_Valid_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that the API key status is successfully updated when the status value DEACTIVE is provided in uppercase and the system correctly processes the request without case sensitivity issues
     role: partneradmin
@@ -329,11 +333,11 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
-	  "status": "DE-ACTIVE"
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
+	  "status": "DEACTIVE"
 }'
     output: '{
        "errors": [
@@ -342,7 +346,7 @@ UpdateOrDeactivateApiKeyNegTC:
           }
      ]
 }'
-   Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Active_Uppercase_Valid_sid_Neg_Smoke:
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Active_Uppercase_Valid_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that the API key status is successfully updated when the status value ACTIVE is provided in uppercase and the system correctly processes the request without case sensitivity issues
     role: partneradmin
@@ -354,10 +358,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "pms-111999",
-      "policyId": "$ID:GenerateApiKey_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
-      "apiKeyExpiryDateTime": "$EXPIRYDATE$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "ACTIVE"
 }'
     output: '{
@@ -367,5 +371,49 @@ UpdateOrDeactivateApiKeyNegTC:
           }
      ]
 }'
-
-   
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Past_ExpiryDateTime_Neg:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
+    description: Validate that updating or deactivating an API key fails when a past expiry date time is provided
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_16
+    restMethod: patch
+    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.api.key.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "2024-01-18T23:59:59.000Z",
+      "status": "De-active"
+}'
+    output: '{
+        "errors": [
+           {
+               "errorCode": "PMS_PM_067"
+           }
+        ]
+}'
+   Pms_UpdateOrDeactivateApiKey_Without_ExpiryDateTime_AndWith_Status_DEACTIVE_Smoke:
+    endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}                                                                              
+    description: Validate that the API key is successfully deactivated when the status is set to DEACTIVE for the specified apiKeyName
+    role: partneradmin
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKey_04
+    restMethod: patch
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
+    outputTemplate: pms/
+    input: '{
+      "id": "mosip.pms.update.api.key.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "expiryDateTime": "$REMOVE$",
+	  "status": "De-active"
+}'
+    output: '{
+}'
