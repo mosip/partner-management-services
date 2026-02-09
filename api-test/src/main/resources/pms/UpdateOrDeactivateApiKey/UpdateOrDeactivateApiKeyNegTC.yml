@@ -51,7 +51,7 @@ UpdateOrDeactivateApiKeyNegTC:
 }'
    Pms_UpdateOrDeactivateApiKeyNegTC_With_InValid_ISOFormat_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that updating or deactivating an API key fails when an invalid ISO 8601 expiryDateTime format is provided
+    description: Validate that updating or deactivating an API key fails when an invalid ISO expiryDateTime format is provided
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_03
     restMethod: patch
@@ -87,7 +87,7 @@ UpdateOrDeactivateApiKeyNegTC:
       "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
-      "status": "rejet"
+      "status": "reject"
       }'
     output: '{
       "errors": [
