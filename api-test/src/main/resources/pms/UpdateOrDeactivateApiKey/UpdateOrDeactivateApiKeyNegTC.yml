@@ -12,8 +12,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
       "status": "De-active"
 }'
@@ -37,8 +37,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "",
 	  "status": "$REMOVE$"
 }'
@@ -63,8 +63,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "33-2026-01-18T23:59:59.000Z",
       "status": "De-active"
        }'
@@ -84,10 +84,10 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
-      "status": "rejedt"
+      "status": "rejet"
       }'
     output: '{
       "errors": [
@@ -109,8 +109,8 @@ UpdateOrDeactivateApiKeyNegTC:
         "version": "1.0",
         "requestTime": "$TIMESTAMP$",
         "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-        "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-        "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+        "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+        "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
         "expiryDateTime": "$REMOVE$",
         "status": "$REMOVE$"
           }'
@@ -134,9 +134,9 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
       "apiKeyName": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz",
-      "expiryDateTime": "$EXPIRYDATE$",
+      "expiryDateTime": "$EXPIRYDATE$", 
       "status": "De-active"
     }'
     output: '{
@@ -159,7 +159,7 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
       "apiKeyName": " ",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
@@ -184,8 +184,8 @@ UpdateOrDeactivateApiKeyNegTC:
        "version": "1.0",
        "requestTime": "$TIMESTAMP$",
        "partnerId": "parth08geid",
-       "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+       "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
        "expiryDateTime": "$EXPIRYDATE$",
        "status": "De-active"
    }'
@@ -209,7 +209,7 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
       "apiKeyName": "api*$key",
       "expiryDateTime": "$EXPIRYDATE$",
       "status": "De-active"
@@ -234,8 +234,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms*1234",
-      "policyId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
 }'
@@ -259,8 +259,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "",
 	  "status": "active"
 }'
@@ -284,8 +284,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
 }'
@@ -334,8 +334,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "DEACTIVE"
 }'
@@ -359,8 +359,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "ACTIVE"
 }'
@@ -384,8 +384,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "2024-01-18T23:59:59.000Z",
       "status": "De-active"
 }'
@@ -410,8 +410,8 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
-      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_policyId$",
+      "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid_label$",
       "expiryDateTime": "$REMOVE$",
 	  "status": "De-active"
 }'

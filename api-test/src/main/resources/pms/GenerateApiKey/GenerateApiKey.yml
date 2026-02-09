@@ -174,3 +174,23 @@ GenerateApiKey:
    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "label": "pmsAutomation-19234"    
 }'
+
+   Pms_GenerateApiKeysforApprovedPolicies_With_Diff_PolicyGroup_smoke_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      uniqueIdentifier: TC_PMS_GenerateApikey_09
+      description: Validate that API keys are successfully generated for all approved policies with valid inputs
+      role: partnerauth
+      restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/GenerateApiKey/generateApiKeyResult
+      input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
+    "label": "pmsAutomation-19235",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+    "label": "pmsAutomation-19235"
+}'
