@@ -125,7 +125,7 @@ UpdateOrDeactivateApiKeyNegTC:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when a non-existing apiKeyName is provided
     role: partneradmin
-    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_06
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_06
     restMethod: patch
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
     outputTemplate: pms/error
@@ -223,7 +223,7 @@ UpdateOrDeactivateApiKeyNegTC:
 }'
    Pms_UpdateOrDeactivateApiKeyNegTC_With_Special_Character_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that updating the API Key Expiry Date fails when the apikeyname contains any special characters
+    description: Validate that updating the API Key Expiry Date fails when the partnerId contains any special characters
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_10
     restMethod: patch
@@ -404,7 +404,7 @@ UpdateOrDeactivateApiKeyNegTC:
     restMethod: patch
     checkErrorsOnlyInResponse: true
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
-    outputTemplate: pms/
+    outputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyResult
     input: '{
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",
