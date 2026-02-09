@@ -100,7 +100,7 @@ UpdateOrDeactivateApiKeyNegTC:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when Empty request body is provided
     role: partneradmin
-    uniqueIdentifier: TC_UpdateOrDeactivateApiKeyNegTC_05
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_05
     restMethod: patch
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
     outputTemplate: pms/error
@@ -323,7 +323,7 @@ UpdateOrDeactivateApiKeyNegTC:
 }'
    Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Deactive_Uppercase_Valid_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that the API key status is successfully updated when the status value DEACTIVE is provided in uppercase and the system correctly processes the request without case sensitivity issues
+    description: Validate that updating or deactivating an API key fails when the status value DEACTIVE is provided in uppercase as the system treats status values as case sensitive
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_14
     restMethod: patch
@@ -348,7 +348,7 @@ UpdateOrDeactivateApiKeyNegTC:
 }'
    Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Active_Uppercase_Valid_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that the API key status is successfully updated when the status value ACTIVE is provided in uppercase and the system correctly processes the request without case sensitivity issues
+    description:  Validate that updating or deactivating an API key fails when the status value ACTIVE is provided in uppercase as the system treats status values as case sensitive
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_15
     restMethod: patch
