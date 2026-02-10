@@ -135,7 +135,7 @@
 	<test name="PrintPartner">
 		<parameter name="ymlFile"
 			value="pms/PrintPartner/CreatePartner/CreatePartner.yml" />
-            <parameter name="idKeyName" value="partnerId" />
+			<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -205,8 +205,8 @@
 	<test name="MISPPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/MISPPartnerV3/CreatePartner/CreateMISPPartner.yml" />
-            <parameter name="idKeyName" value="id,partnerId,name" />
-            <parameter name="reqKeyName" value="organizationName" />
+			<parameter name="idKeyName" value="id,partnerId,name" />
+			<parameter name="reqKeyName" value="organizationName" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -289,7 +289,7 @@
 	<test name="ABISPartnerV3">
 		<parameter name="ymlFile"
 			value="pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner.yml" />
-            <parameter name="idKeyName" value="id,partnerId" />
+			<parameter name="idKeyName" value="id,partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -331,7 +331,7 @@
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
-		    <parameter name="idKeyName" value="partnerId" />
+			<parameter name="idKeyName" value="partnerId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />

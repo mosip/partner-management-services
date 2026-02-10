@@ -24,7 +24,7 @@ UpdateOrDeactivateApiKeyNegTC:
           }
       ]
 }'
-   Pms_UpdateOrDeactivateApiKey_With_Empty_ApiKeyExpiryDateTime:                                                                                
+   Pms_UpdateOrDeactivateApiKeyNegTC_With_Empty_ApiKeyExpiryDateTime:                                                                                
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when an empty ApiKey expirydate time is provided
     role: partneradmin
