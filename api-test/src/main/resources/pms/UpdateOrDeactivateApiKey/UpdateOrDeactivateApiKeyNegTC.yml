@@ -125,7 +125,7 @@ UpdateOrDeactivateApiKeyNegTC:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
     description: Validate that updating or deactivating an API key fails when a non-existing apiKeyName is provided
     role: partneradmin
-    uniqueIdentifier: TC_PMS_UpdateApiKeyExpiryDateNegTC_06
+    uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_06
     restMethod: patch
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
     outputTemplate: pms/error
@@ -234,7 +234,7 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms*1234",
-      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$"",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$",
       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
