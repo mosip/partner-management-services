@@ -1,7 +1,7 @@
 UpdateOrDeactivateApiKey:
    Pms_UpdateOrDeactivateApiKey_Valid_ExpiryDateTime_WithOut_Status_Field:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that updating the API Key expiry date to a future ISO formate datetime is successful
+    description: Validate that updating the API Key expiry date to a future ISO format datetime is successful
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKey_02
     checkErrorsOnlyInResponse: true

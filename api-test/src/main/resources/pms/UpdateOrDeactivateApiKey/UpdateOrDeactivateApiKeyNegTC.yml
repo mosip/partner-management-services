@@ -223,7 +223,7 @@ UpdateOrDeactivateApiKeyNegTC:
 }'
    Pms_UpdateOrDeactivateApiKeyNegTC_With_Special_Character_partnerId_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that updating the API Key Expiry Date fails when the apikeyname contains any special characters
+    description: Validate that updating the API Key Expiry Date fails when the partnerId contains any special characters
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_10
     restMethod: patch
@@ -234,7 +234,7 @@ UpdateOrDeactivateApiKeyNegTC:
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "partnerId": "pms*1234",
-      "policyId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      "policyId": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_policyId$"",
       "apiKeyName": "$ID:GenerateApiKeysforApprovedPolicies_AllValid_smoke_sid_label$",
       "expiryDateTime": "$EXPIRYDATE$",
 	  "status": "De-active"
@@ -323,7 +323,7 @@ UpdateOrDeactivateApiKeyNegTC:
 }'
    Pms_UpdateOrDeactivateApiKeyNegTC_With_Status_Deactive_Uppercase_Valid_sid_Neg:
     endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}
-    description: Validate that the API key status is successfully updated when the status value DEACTIVE is provided in uppercase and the system correctly processes the request without case sensitivity issues
+    description: Validate that the Update or Deactivate API Key API returns an appropriate error when the status is provided as DEACTIVE in uppercase with a valid SID
     role: partneradmin
     uniqueIdentifier: TC_PMS_UpdateOrDeactivateApiKeyNegTC_14
     restMethod: patch
@@ -404,7 +404,7 @@ UpdateOrDeactivateApiKeyNegTC:
     restMethod: patch
     checkErrorsOnlyInResponse: true
     inputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey
-    outputTemplate: pms/
+    outputTemplate: pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyResult
     input: '{
       "id": "mosip.pms.update.api.key.patch",
       "version": "1.0",

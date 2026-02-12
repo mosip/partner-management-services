@@ -137,9 +137,9 @@ To execute the tests using Eclipse IDE, use the following steps:
 	   
 ## 5. **Update the property file**
       
-    1. Navigate to the pms.properties file located at: partner-management-services-repository\api-test\src\main\resources\config\pms.properties
-    2. Open the file in your preferred editor
-    3. Update the client secret values and other required credentials as per your environment
+   1. Navigate to the pms.properties file located at: `partner-management-services-repository/api-test/src/main/resources/config/pms.properties`
+   2. Open the file in your preferred editor.
+   3. Update the client secret values and other required credentials as per your environment.
 	
 
 ## 6. **Run the Configuration**
