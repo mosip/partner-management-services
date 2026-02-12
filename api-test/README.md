@@ -133,15 +133,23 @@ To execute the tests using Eclipse IDE, use the following steps:
      - **VM Arguments**:
        ```
        -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression```
+	   (example : -Dmodules=Partner -Denv.user=api-internal.test-env -Denv.endpoint=https://api-internal.test-env.mosip.net -Denv.testLevel=smokeAndRegression)
+	   
+## 5. **Update the property file**
+      
+    1. Navigate to the pms.properties file located at: partner-management-services-repository\api-test\src\main\resources\config\pms.properties
+    2. Open the file in your preferred editor
+    3. Update the client secret values and other required credentials as per your environment
+	
 
-## 5. **Run the Configuration**
+## 6. **Run the Configuration**
 
    - Once the configuration is set up, click **Run** to execute the test suite.
    - The tests will run, and the results will be shown in the **Console** tab of Eclipse.
 
    **Note**: You can also run in **Debug Mode** to troubleshoot issues by setting breakpoints in your code and choosing `Debug` instead of `Run`.
 
-## 6. **View Test Results**
+## 7. **View Test Results**
 
    - After the tests are executed, you can view the detailed results in the `api-test\testng-report` directory.
 
