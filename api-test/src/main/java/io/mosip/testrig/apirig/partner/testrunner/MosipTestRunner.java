@@ -119,7 +119,7 @@ public class MosipTestRunner {
 		// Used for generating the test case interdependency JSON file
 		if ("yes".equalsIgnoreCase(generateDependency)) {
 			LOGGER.info("Generating test case inter-dependencies");
-			AdminTestUtil.generateTestCaseInterDependencies(BaseTestCase.testCaseInterDependencyPath);
+			AdminTestUtil.generateTestCaseInterDependencies(BaseTestCase.getTestCaseInterDependencyPath());
 		} else {
 			LOGGER.info("Skipping dependency generation");
 		}
