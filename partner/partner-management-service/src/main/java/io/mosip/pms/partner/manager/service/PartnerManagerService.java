@@ -11,6 +11,7 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.CreateAPIKeyRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
@@ -115,4 +116,16 @@ public interface PartnerManagerService {
     ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, @NotNull @Valid LinkPolicyGroupRequestDto request);
 
 	ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, @NotNull @Valid APIKeyUpdateRequestDto request);
+
+	/**
+	 * Creates an API key for a given partner and policy.
+	 * Partner Admin can create API keys on behalf of Manual Adjudication partners.
+	 * Auth Partner can create API keys for their own partner account only.
+	 *
+	 * @param partnerId the partner ID
+	 * @param policyId the policy ID
+	 * @param request the request containing API key label
+	 * @return response with generated API key details
+	 */
+	ResponseWrapperV2<APIKeyGenerateResponseDto> createAPIKey(String partnerId, String policyId, @NotNull @Valid CreateAPIKeyRequestDto request);
 }

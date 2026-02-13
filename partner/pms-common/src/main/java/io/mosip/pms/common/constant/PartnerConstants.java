@@ -103,6 +103,8 @@ public final class PartnerConstants {
 	public static final String MISP_PARTNER_TYPE = "MISP_Partner";
 
 	public static final String ABIS_PARTNER_TYPE = "ABIS_Partner";
+
+	public static final String MANUAL_ADJUDICATION_PARTNER_TYPE = "Manual_Adjudication";
 	
 	public static final String PARTNER_DOMAIN_AUTH = "AUTH";
 
