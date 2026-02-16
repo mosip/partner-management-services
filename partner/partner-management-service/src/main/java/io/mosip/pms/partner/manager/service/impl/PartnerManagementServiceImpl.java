@@ -794,18 +794,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						ErrorCode.PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION.getErrorMessage());
 			}
 
-			Optional<AuthPolicy> policyOptional = authPolicyRepository.findById(policyId);
-			if (policyOptional.isEmpty()) {
-				LOGGER.error("Policy ID does not exist: {}", policyId);
-				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-				throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
-						ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
-			}
-			AuthPolicy authPolicy = policyOptional.get();
+			// Validate policy exists, is active, policy group is active, and policy is not expired
+			AuthPolicy authPolicy = validatePolicy(policyId);
 
 			if (!isPartnerAdmin) {
 				if (partner.getPolicyGroupId() == null
-						|| authPolicy.getPolicyGroup() == null
 						|| !partner.getPolicyGroupId().equals(authPolicy.getPolicyGroup().getId())) {
 					LOGGER.error("Policy {} does not belong to partner's policy group", policyId);
 					auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
