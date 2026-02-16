@@ -1896,7 +1896,7 @@ public class PartnerServiceImpl implements PartnerService {
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			List<Partner> partners = new ArrayList<>();
 			// if not MISP_Partner and ABIS_Partner type, fetch partners for logged in user
-			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType)) {
+			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType)) {
 				if (!isPartnerAdmin) {
 					List<Partner> partnerList = partnerRepository.findByUserId(userId);
 					if (partnerList.isEmpty()) {
