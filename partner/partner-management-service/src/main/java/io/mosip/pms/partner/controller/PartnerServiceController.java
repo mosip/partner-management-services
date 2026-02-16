@@ -588,12 +588,12 @@ public class PartnerServiceController {
 	}
 	
 	/*
-	 * This endpoint has been deprecated since the release-1.3.0
+	 * This endpoint has been deprecated since the 1.3.0
 	 * It has been replaced by the new POST /partners/{partnerId}/policies/{policyId}/api-keys endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.0")
+	@Deprecated(since = "1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersgenerateapikey())")
 	@Operation(summary = "To generate API Key for approved policies - deprecated",
 			description = "This endpoint has been deprecated and replaced by the POST /partners/{partnerId}/policies/{policyId}/api-keys endpoint.")
@@ -613,7 +613,7 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscreateapikey())")
 	@PostMapping(value = "/{partnerId}/policies/{policyId}/api-keys")
 	@Operation(summary = "This endpoint is used to create an API key for a given partner and policy.",
-			description = "Available since 1.3.0. Partner Admin can create API keys on behalf of Manual Adjudication partners. Auth Partner can create API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.")
+			description = "Available since 1.3.0 Partner Admin can create API keys on behalf of Manual Adjudication partners. Auth Partner can create API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

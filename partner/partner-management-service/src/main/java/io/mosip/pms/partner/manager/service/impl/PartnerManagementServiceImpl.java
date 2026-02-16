@@ -768,7 +768,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 			}
 
-			// Validate partner exists in DB (for both admin and non-admin)
 			Optional<Partner> partnerOptional = partnerServiceRepository.findById(partnerId);
 			if (partnerOptional.isEmpty()) {
 				LOGGER.error("Partner ID does not exist: {}", partnerId);
@@ -778,7 +777,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 			Partner partner = partnerOptional.get();
 
-			// Validate partner is active
 			if (!partner.getIsActive()) {
 				LOGGER.error("Partner is not active with id: {}", partnerId);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
@@ -786,7 +784,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 			}
 
-			// For Partner Admin, partner type must be Manual_Adjudication
 			if (isPartnerAdmin
 					&& !PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partner.getPartnerTypeCode())) {
 				LOGGER.error("Partner Admin can only create API keys for Manual Adjudication partners. Partner type: {}",
