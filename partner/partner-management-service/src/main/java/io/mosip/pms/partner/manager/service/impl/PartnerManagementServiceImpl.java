@@ -829,6 +829,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			// Validate that policy belongs to the partner's policy group
 			if (partner.getPolicyGroupId() == null
+					|| authPolicy.getPolicyGroup() == null
 					|| !partner.getPolicyGroupId().equals(authPolicy.getPolicyGroup().getId())) {
 				LOGGER.error("Policy {} does not belong to partner's policy group", policyId);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_API_KEY_FAILURE, partnerId, "partnerId");
@@ -881,7 +882,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicy.setPolicyId(policyId);
 			partnerPolicy.setIsActive(true);
 			partnerPolicy.setIsDeleted(false);
-			partnerPolicy.setLabel(request.getApiKeyName());
+			partnerPolicy.setLabel(PartnerUtil.trimAndReplace(request.getApiKeyName()));
 			partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 			partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 			partnerPolicy.setCrBy(getUser());

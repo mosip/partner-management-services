@@ -588,7 +588,7 @@ public class PartnerServiceController {
 	}
 	
 	/*
-	 * This endpoint has been deprecated since the release-1.3.0-beta.4
+	 * This endpoint has been deprecated since the release-1.3.0
 	 * It has been replaced by the new POST /partners/{partnerId}/policies/{policyId}/api-keys endpoint.
 	 * The functionality provided by this API is now available in the new endpoint.
 	 * Please use the new endpoint for all future requests.
@@ -625,6 +625,7 @@ public class PartnerServiceController {
 			@RequestBody @Valid RequestWrapperV2<CreateAPIKeyRequestDto> requestWrapper) {
 		inputValidator.validateRequestInput("partnerId", partnerId);
 		inputValidator.validateRequestInput("policyId", policyId);
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
 		Optional<ResponseWrapperV2<APIKeyGenerateResponseDto>> validationResponse =
 				requestValidator.validate(postCreateApiKeyId, requestWrapper);
 		if (validationResponse.isPresent()) {
