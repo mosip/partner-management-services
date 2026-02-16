@@ -127,7 +127,7 @@ public class AuthorizedRolesDto {
 	
 	private List<String> patchpartnersgenerateapikey;
 
-	private List<String> postpartnerscreateapikey;
+	private List<String> postpartnersgenerateapikey;
 	
 	//partner manager controller
 	

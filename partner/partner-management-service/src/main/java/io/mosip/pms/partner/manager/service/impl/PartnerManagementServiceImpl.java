@@ -75,7 +75,7 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
-import io.mosip.pms.partner.request.dto.CreateAPIKeyRequestDto;
+import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 
@@ -113,8 +113,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.update.api.key.patch}")
 	private String patchUpdateApiKey;
 
-	@Value("${mosip.pms.api.id.create.api.key.post}")
-	private String postCreateApiKeyId;
+	@Value("${mosip.pms.api.id.generate.api.key.post}")
+	private String postGenerateApiKeyId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -743,7 +743,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(String partnerId, String policyId, CreateAPIKeyRequestDto request) {
+	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(String partnerId, String policyId, GenerateAPIKeyRequestDto request) {
 		ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(partnerId) || partnerId.isBlank()) {
@@ -786,7 +786,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			if (isPartnerAdmin
 					&& !PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partner.getPartnerTypeCode())) {
-				LOGGER.error("Partner Admin can only create API keys for Manual Adjudication partners. Partner type: {}",
+				LOGGER.error("Partner Admin can only generate API keys for Manual Adjudication partners. Partner type: {}",
 						partner.getPartnerTypeCode());
 				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 				throw new PartnerManagerServiceException(
@@ -881,10 +881,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In generateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ErrorCode.CREATE_API_KEY_ERROR.getErrorCode(),
-					ErrorCode.CREATE_API_KEY_ERROR.getErrorMessage()));
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ErrorCode.GENERATE_API_KEY_ERROR.getErrorCode(),
+					ErrorCode.GENERATE_API_KEY_ERROR.getErrorMessage()));
 		}
-		responseWrapper.setId(postCreateApiKeyId);
+		responseWrapper.setId(postGenerateApiKeyId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

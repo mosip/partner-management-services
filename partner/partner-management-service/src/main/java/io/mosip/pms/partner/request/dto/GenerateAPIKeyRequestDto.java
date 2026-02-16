@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CreateAPIKeyRequestDto {
+public class GenerateAPIKeyRequestDto {
 
 	@NotBlank(message = "API key name is required")
 	private String apiKeyName;

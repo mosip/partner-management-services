@@ -44,7 +44,7 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
-import io.mosip.pms.partner.request.dto.CreateAPIKeyRequestDto;
+import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -83,8 +83,8 @@ public class PartnerServiceController {
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
 
-	@Value("${mosip.pms.api.id.create.api.key.post}")
-	private String postCreateApiKeyId;
+	@Value("${mosip.pms.api.id.generate.api.key.post}")
+	private String postGenerateApiKeyId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -610,10 +610,10 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscreateapikey())")
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersgenerateapikey())")
 	@PostMapping(value = "/{partnerId}/policies/{policyId}/api-keys")
-	@Operation(summary = "This endpoint is used to create an API key for a given partner and policy.",
-			description = "Available since 1.3.0 Partner Admin can create API keys on behalf of Manual Adjudication partners. Auth Partner can create API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.")
+	@Operation(summary = "This endpoint is used to generate an API key for a given partner and policy.",
+			description = "Available since 1.3.0 Partner Admin can generate API keys on behalf of Manual Adjudication partners. Auth Partner can generate API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -622,12 +622,13 @@ public class PartnerServiceController {
 	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(
 			@PathVariable("partnerId") String partnerId,
 			@PathVariable("policyId") String policyId,
-			@RequestBody @Valid RequestWrapperV2<CreateAPIKeyRequestDto> requestWrapper) {
+			@RequestBody @Valid RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper) {
 		inputValidator.validateRequestInput("partnerId", partnerId);
 		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("apiKeyName", requestWrapper.getRequest().getApiKeyName());
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
 		Optional<ResponseWrapperV2<APIKeyGenerateResponseDto>> validationResponse =
-				requestValidator.validate(postCreateApiKeyId, requestWrapper);
+				requestValidator.validate(postGenerateApiKeyId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
