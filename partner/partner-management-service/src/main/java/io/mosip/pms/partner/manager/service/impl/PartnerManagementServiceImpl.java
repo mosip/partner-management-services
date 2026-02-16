@@ -113,6 +113,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.update.api.key.patch}")
 	private String patchUpdateApiKey;
 
+	@Value("${mosip.pms.api.id.create.api.key.post}")
+	private String postCreateApiKeyId;
+
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
 
@@ -743,16 +746,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public ResponseWrapperV2<APIKeyGenerateResponseDto> createAPIKey(String partnerId, String policyId, CreateAPIKeyRequestDto request) {
 		ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_API_KEY, partnerId, "partnerId");
-
 			// Validate input parameters
 			if (Objects.isNull(partnerId) || partnerId.isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "Partner Id is null or empty");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_API_KEY_FAILURE, partnerId, "partnerId");
 				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
 						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "partnerId"));
 			}
 			if (Objects.isNull(policyId) || policyId.isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "Policy Id is null or empty");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_API_KEY_FAILURE, partnerId, "partnerId");
 				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
 						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "policyId"));
 			}
@@ -778,9 +781,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 			}
 
-			// Authorization: Role-based access control
 			if (isAdmin) {
-				// Partner Admin can only create API keys on behalf of Manual Adjudication partners
 				if (!PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partner.getPartnerTypeCode())) {
 					LOGGER.error("Partner Admin can only create API keys for Manual Adjudication partners. Partner type: {}",
 							partner.getPartnerTypeCode());
@@ -790,7 +791,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 							ErrorCode.PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION.getErrorMessage());
 				}
 			} else {
-				// Non-admin (Auth Partner) can only create API keys for their own partner account
+				if (!PartnerConstants.AUTH_PARTNER_TYPE.equals(partner.getPartnerTypeCode())) {
+					LOGGER.error("Non-admin users can only create API keys for Auth_Partner type. Partner type: {}",
+							partner.getPartnerTypeCode());
+					auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_API_KEY_FAILURE, partnerId, "partnerId");
+					throw new PartnerManagerServiceException(
+							ErrorCode.PARTNER_TYPE_NOT_ELIGIBLE_FOR_API_KEY.getErrorCode(),
+							ErrorCode.PARTNER_TYPE_NOT_ELIGIBLE_FOR_API_KEY.getErrorMessage());
+				}
 				String userId = getUserId();
 				List<Partner> userPartners = partnerServiceRepository.findByUserId(userId);
 				if (userPartners.isEmpty()) {
@@ -841,7 +849,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			// Validate label uniqueness
 			PartnerPolicy existingPolicyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
-					partnerId, policyId, PartnerUtil.trimAndReplace(request.getLabel()));
+					partnerId, policyId, PartnerUtil.trimAndReplace(request.getApiKeyName()));
 			if (existingPolicyByLabel != null) {
 				LOGGER.error("Label already exists for partner {} and policy {}", partnerId, policyId);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_API_KEY_FAILURE, partnerId, "partnerId");
@@ -873,7 +881,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicy.setPolicyId(policyId);
 			partnerPolicy.setIsActive(true);
 			partnerPolicy.setIsDeleted(false);
-			partnerPolicy.setLabel(request.getLabel());
+			partnerPolicy.setLabel(request.getApiKeyName());
 			partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 			partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 			partnerPolicy.setCrBy(getUser());
@@ -910,6 +918,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ErrorCode.CREATE_API_KEY_ERROR.getErrorCode(),
 					ErrorCode.CREATE_API_KEY_ERROR.getErrorMessage()));
 		}
+		responseWrapper.setId(postCreateApiKeyId);
+		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
 
