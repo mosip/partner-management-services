@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class CreateAPIKeyRequestDto {
 
-	@NotBlank
+	@NotBlank(message = "API key name is required")
 	private String apiKeyName;
 }

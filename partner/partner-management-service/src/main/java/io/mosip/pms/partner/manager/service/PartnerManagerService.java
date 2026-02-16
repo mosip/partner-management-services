@@ -117,5 +117,5 @@ public interface PartnerManagerService {
 
 	ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, @NotNull @Valid APIKeyUpdateRequestDto request);
 
-	ResponseWrapperV2<APIKeyGenerateResponseDto> createAPIKey(String partnerId, String policyId, @NotNull @Valid CreateAPIKeyRequestDto request);
+	ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(String partnerId, String policyId, @NotNull @Valid CreateAPIKeyRequestDto request);
 }

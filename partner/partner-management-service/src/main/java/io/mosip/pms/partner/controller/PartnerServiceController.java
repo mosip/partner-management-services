@@ -619,7 +619,7 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<APIKeyGenerateResponseDto> createAPIKey(
+	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(
 			@PathVariable("partnerId") String partnerId,
 			@PathVariable("policyId") String policyId,
 			@RequestBody @Valid RequestWrapperV2<CreateAPIKeyRequestDto> requestWrapper) {
@@ -631,7 +631,7 @@ public class PartnerServiceController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		return partnerManagerService.createAPIKey(partnerId, policyId, requestWrapper.getRequest());
+		return partnerManagerService.generateAPIKey(partnerId, policyId, requestWrapper.getRequest());
 	}
 
 	@PostMapping(value = "/v3")
