@@ -115,7 +115,4 @@ public final class PartnerConstants {
     public static final String FTM = "ftm";
     
     public static final String GET_SIGNED_PARTNER_CERT_URL = "pmp.partner.original.certificate.get.rest.uri";
-
-	public static final String MANUAL_ADJUDICATION_PARTNER_TYPE ="Manual_Adjudication";
-
 }
