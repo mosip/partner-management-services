@@ -345,6 +345,8 @@ public class PartnerServiceControllerTest {
         responseDto.setPolicyId(policyId);
         ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(responseDto);
+        responseWrapper.setId("mosip.pms.partner.generateapikey");
+        responseWrapper.setVersion("1.0");
         RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper = new RequestWrapperV2<>();
         GenerateAPIKeyRequestDto requestDto = new GenerateAPIKeyRequestDto();
         requestDto.setApiKeyName("my-api-key");
@@ -371,6 +373,8 @@ public class PartnerServiceControllerTest {
         responseDto.setLabel("admin-api-key");
         ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(responseDto);
+        responseWrapper.setId("mosip.pms.partner.generateapikey");
+        responseWrapper.setVersion("1.0");
         RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper = new RequestWrapperV2<>();
         GenerateAPIKeyRequestDto requestDto = new GenerateAPIKeyRequestDto();
         requestDto.setApiKeyName("admin-api-key");
