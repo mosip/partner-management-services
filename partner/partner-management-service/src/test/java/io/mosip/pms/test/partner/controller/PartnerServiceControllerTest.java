@@ -353,8 +353,6 @@ public class PartnerServiceControllerTest {
         requestWrapper.setRequest(requestDto);
         requestWrapper.setId("mosip.pms.partner.generateapikey");
         requestWrapper.setVersion("1.0");
-        requestWrapper.setRequesttime(java.time.LocalDateTime.now());
-        when(requestValidator.validate(anyString(), any())).thenReturn(Optional.empty());
         when(partnerManagerService.generateAPIKey(eq(partnerId), eq(policyId), any(GenerateAPIKeyRequestDto.class)))
                 .thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/" + partnerId + "/policies/" + policyId + "/api-keys")
@@ -383,8 +381,6 @@ public class PartnerServiceControllerTest {
         requestWrapper.setRequest(requestDto);
         requestWrapper.setId("mosip.pms.partner.generateapikey");
         requestWrapper.setVersion("1.0");
-        requestWrapper.setRequesttime(java.time.LocalDateTime.now());
-        when(requestValidator.validate(anyString(), any())).thenReturn(Optional.empty());
         when(partnerManagerService.generateAPIKey(eq(partnerId), eq(policyId), any(GenerateAPIKeyRequestDto.class)))
                 .thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/" + partnerId + "/policies/" + policyId + "/api-keys")
