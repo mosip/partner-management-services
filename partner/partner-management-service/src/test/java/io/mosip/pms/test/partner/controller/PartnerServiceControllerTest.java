@@ -345,14 +345,15 @@ public class PartnerServiceControllerTest {
         responseDto.setPolicyId(policyId);
         ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(responseDto);
-        responseWrapper.setId("mosip.pms.partner.generateapikey");
+        responseWrapper.setId("mosip.pms.generate.api.key.post");
         responseWrapper.setVersion("1.0");
         RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper = new RequestWrapperV2<>();
         GenerateAPIKeyRequestDto requestDto = new GenerateAPIKeyRequestDto();
         requestDto.setApiKeyName("my-api-key");
         requestWrapper.setRequest(requestDto);
-        requestWrapper.setId("mosip.pms.partner.generateapikey");
+        requestWrapper.setId("mosip.pms.generate.api.key.post");
         requestWrapper.setVersion("1.0");
+        requestWrapper.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         when(partnerManagerService.generateAPIKey(eq(partnerId), eq(policyId), any(GenerateAPIKeyRequestDto.class)))
                 .thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/" + partnerId + "/policies/" + policyId + "/api-keys")
@@ -373,14 +374,15 @@ public class PartnerServiceControllerTest {
         responseDto.setLabel("admin-api-key");
         ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(responseDto);
-        responseWrapper.setId("mosip.pms.partner.generateapikey");
+        responseWrapper.setId("mosip.pms.generate.api.key.post");
         responseWrapper.setVersion("1.0");
         RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper = new RequestWrapperV2<>();
         GenerateAPIKeyRequestDto requestDto = new GenerateAPIKeyRequestDto();
         requestDto.setApiKeyName("admin-api-key");
         requestWrapper.setRequest(requestDto);
-        requestWrapper.setId("mosip.pms.partner.generateapikey");
+        requestWrapper.setId("mosip.pms.generate.api.key.post");
         requestWrapper.setVersion("1.0");
+        requestWrapper.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         when(partnerManagerService.generateAPIKey(eq(partnerId), eq(policyId), any(GenerateAPIKeyRequestDto.class)))
                 .thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.post("/partners/" + partnerId + "/policies/" + policyId + "/api-keys")
