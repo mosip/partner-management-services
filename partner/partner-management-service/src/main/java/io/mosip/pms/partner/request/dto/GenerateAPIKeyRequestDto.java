@@ -1,0 +1,12 @@
+package io.mosip.pms.partner.request.dto;
+
+import jakarta.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class GenerateAPIKeyRequestDto {
+
+	@NotBlank(message = "API key name is required")
+	private String apiKeyName;
+}

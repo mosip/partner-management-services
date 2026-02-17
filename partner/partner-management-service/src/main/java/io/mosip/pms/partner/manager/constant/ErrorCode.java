@@ -41,6 +41,7 @@ public enum ErrorCode {
 	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same."),
 	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner"),
 	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
+	PARTNER_POLICY_APIKEY_NAME_EXISTS("PMS_PRT_112","Given apiKeyName already exists. Provide unique apiKeyName."),
 	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination"),
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
 	JSON_NOT_VALID("PMS_PRT_096","Json is not valid"),
@@ -74,7 +75,11 @@ public enum ErrorCode {
     INVALID_CERTIFICATE_TYPE("PMS-BJ-011", "Invalid certificate type"),
     INVALID_NOTIFICATION_TYPE("PMS-BJ-012", "Invalid notification type"),
 	DECRYPT_DATA_ERROR("PMS-BJ-013", "Failed to decrypt data using Key Manager"),
-	ENCRYPT_DATA_ERROR("PMS-BJ-014", "Failed to encrypt data using Key Manager");
+	ENCRYPT_DATA_ERROR("PMS-BJ-014", "Failed to encrypt data using Key Manager"),
+	PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION("PMS_PM_074", "Partner Admin can only generate API keys on behalf of Manual Adjudication partners."),
+	PARTNER_TYPE_NOT_ELIGIBLE_FOR_API_KEY("PMS_PM_075", "The partner type is not eligible for API key generation via this endpoint."),
+	POLICY_NOT_BELONGS_TO_POLICY_GROUP("PMS_PM_076", "The given policy does not belong to the partner's policy group."),
+	GENERATE_API_KEY_ERROR("PMS_PM_077", "Error while generating API key.");
 	
 
 	/**
