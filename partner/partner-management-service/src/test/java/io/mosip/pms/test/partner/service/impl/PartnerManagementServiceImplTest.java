@@ -1103,7 +1103,7 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(newPartner);
 		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(newPartner.get().getPolicyGroupId(),request.getPolicyName())).thenReturn(getAuthPolicies().get(0));
 		Mockito.when((partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode(Mockito.any(),Mockito.any(),Mockito.any()))).thenReturn(List.of(getPartnerPolicyRequestData()));
-		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel("partner","234","unique")).thenReturn(getPartnerPolicy());
+		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel("partner","234","unique")).thenReturn(null);
 		Map<String, Object> response = new HashMap<>();
 		response.put("response", getCertResponse());
 		response.put("id",null);
