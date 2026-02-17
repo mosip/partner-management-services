@@ -11,6 +11,7 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
@@ -115,4 +116,6 @@ public interface PartnerManagerService {
     ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, @NotNull @Valid LinkPolicyGroupRequestDto request);
 
 	ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, @NotNull @Valid APIKeyUpdateRequestDto request);
+
+	ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(String partnerId, String policyId, @NotNull @Valid GenerateAPIKeyRequestDto request);
 }

@@ -75,6 +75,7 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
+import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 
@@ -111,6 +112,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.update.api.key.patch}")
 	private String patchUpdateApiKey;
+
+	@Value("${mosip.pms.api.id.generate.api.key.post}")
+	private String postGenerateApiKeyId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -657,7 +661,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Override
 	public APIKeyGenerateResponseDto generateAPIKey(String partnerId, APIKeyGenerateRequestDto requestDto) {
-		if(!getUser().equals(partnerId)) {
+		if (!getUser().equals(partnerId)) {
 			throw new PartnerManagerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
@@ -672,44 +676,170 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
-		AuthPolicy validPolicy = authPolicyRepository.findByPolicyGroupIdAndName(partnerFromDb.get().getPolicyGroupId(),requestDto.getPolicyName());
-		if(validPolicy == null) {
+
+		AuthPolicy validPolicy = authPolicyRepository.findByPolicyGroupIdAndName(
+				partnerFromDb.get().getPolicyGroupId(), requestDto.getPolicyName());
+		if (validPolicy == null) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());			
-		}		
+					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+
+		APIKeyGenerateResponseDto response = createAndPersistApiKey(
+				partnerId,
+				validPolicy,
+				PartnerUtil.trimAndReplace(requestDto.getLabel())
+		);
+
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
+		return response;
+	}
+
+	@Override
+	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(
+			String partnerId, String policyId, GenerateAPIKeyRequestDto request) {
+
+		ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(partnerId) || partnerId.isBlank()) {
+				LOGGER.info("sessionId", "idType", "id", "Partner Id is null or empty");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
+						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "partnerId"));
+			}
+			if (Objects.isNull(policyId) || policyId.isBlank()) {
+				LOGGER.info("sessionId", "idType", "id", "Policy Id is null or empty");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
+						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "policyId"));
+			}
+
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+
+			AuthPolicy authPolicy;
+
+			if (isPartnerAdmin) {
+				Partner partner = partnerServiceRepository.findById(partnerId)
+						.orElseThrow(() -> {
+							LOGGER.error("Partner ID does not exist: {}", partnerId);
+							auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+							return new PartnerManagerServiceException(
+									ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+									ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+						});
+
+				if (!partner.getIsActive()) {
+					LOGGER.error("Partner is not active with id: {}", partnerId);
+					auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+					throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+							ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				}
+
+				if (!PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partner.getPartnerTypeCode())) {
+					LOGGER.error("Partner Admin can only generate API keys for Manual Adjudication partners. Partner type: {}",
+							partner.getPartnerTypeCode());
+					auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+					throw new PartnerManagerServiceException(
+							ErrorCode.PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION.getErrorCode(),
+							ErrorCode.PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION.getErrorMessage());
+				}
+
+				authPolicy = validatePolicy(policyId);
+
+			} else {
+				if (!getUser().equals(partnerId)) {
+					LOGGER.error("Logged-in user {} does not match the requested partner {}", getUser(), partnerId);
+					auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+					throw new PartnerManagerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+							ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+				}
+
+				Partner partner = partnerServiceRepository.findById(partnerId)
+						.orElseThrow(() -> {
+							LOGGER.error("Partner ID does not exist: {}", partnerId);
+							auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+							return new PartnerManagerServiceException(
+									ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+									ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+						});
+
+				if (!partner.getIsActive()) {
+					LOGGER.error("Partner is not active with id: {}", partnerId);
+					auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+					throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+							ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+				}
+
+				authPolicy = validatePolicy(policyId);
+
+				if (partner.getPolicyGroupId() == null
+						|| !partner.getPolicyGroupId().equals(authPolicy.getPolicyGroup().getId())) {
+					LOGGER.error("Policy {} does not belong to partner's policy group", policyId);
+					auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+					throw new PartnerManagerServiceException(
+							ErrorCode.POLICY_NOT_BELONGS_TO_POLICY_GROUP.getErrorCode(),
+							ErrorCode.POLICY_NOT_BELONGS_TO_POLICY_GROUP.getErrorMessage());
+				}
+			}
+
+			APIKeyGenerateResponseDto response = createAndPersistApiKey(
+					partnerId,
+					authPolicy,
+					PartnerUtil.trimAndReplace(request.getApiKeyName())
+			);
+
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
+			responseWrapper.setResponse(response);
+
+		} catch (PartnerManagerServiceException | PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In generateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In generateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					ErrorCode.GENERATE_API_KEY_ERROR.getErrorCode(),
+					ErrorCode.GENERATE_API_KEY_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(postGenerateApiKeyId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private APIKeyGenerateResponseDto createAndPersistApiKey(
+			String partnerId, AuthPolicy authPolicy, String apiKeyName) {
+
 		List<PartnerPolicyRequest> approvedMappedPolicy = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, validPolicy.getId(),
-						PartnerConstants.APPROVED);
+				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, authPolicy.getId(), PartnerConstants.APPROVED);
 		if (approvedMappedPolicy.isEmpty()) {
+			LOGGER.error("No approved policy mapping found for partner {} and policy {}", partnerId, authPolicy.getId());
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
-				partnerFromDb.get().getId(), validPolicy.getId(), PartnerUtil.trimAndReplace(requestDto.getLabel()));
-		if(policyByLabel != null) {
+
+		PartnerPolicy existingPolicyByApiKeyName = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
+				partnerId, authPolicy.getId(), apiKeyName);
+		if (existingPolicyByApiKeyName != null) {
+			LOGGER.error("apiKeyName '{}' already exists for partner {} and policy {}", apiKeyName, partnerId, authPolicy.getId());
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorMessage());
+			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS.getErrorCode(),
+					ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS.getErrorMessage());
 		}
-		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
+
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		// Generate an initial API key ID
 		String apiKeyId = PartnerUtil.createPartnerApiKey();
-
 		int attempts = 0;
-
-		// Keep generating new API key ID until a unique one is found or maxRetries is reached
 		while (partnerPolicyRepository.existsById(apiKeyId)) {
 			if (attempts >= maxRetries) {
-				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "API Key ID",
-						"policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries);
+				LOGGER.error("Failed to generate unique API Key ID after {} attempts", maxRetries);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 				throw new PartnerServiceException(
 						io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries)
-				);
+						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+								"API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries));
 			}
 			apiKeyId = PartnerUtil.createPartnerApiKey();
 			attempts++;
@@ -717,25 +847,31 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 		partnerPolicy.setPolicyApiKey(apiKeyId);
 		partnerPolicy.setPartner(approvedMappedPolicy.get(0).getPartner());
-		partnerPolicy.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
+		partnerPolicy.setPolicyId(authPolicy.getId());
 		partnerPolicy.setIsActive(true);
 		partnerPolicy.setIsDeleted(false);
-		partnerPolicy.setLabel(requestDto.getLabel());
+		partnerPolicy.setLabel(apiKeyName);
 		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 		partnerPolicy.setCrBy(getUser());
 		partnerPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRepository.save(partnerPolicy);		
-		notify(MapperUtils.mapDataToPublishDto(approvedMappedPolicy.get(0).getPartner(),
-				getPartnerCertificate(approvedMappedPolicy.get(0).getPartner().getCertificateAlias())),
-				MapperUtils.mapPolicyToPublishDto(validPolicy, getPolicyObject(validPolicy.getPolicyFileId())),
-				MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_APPROVED);
+		partnerPolicyRepository.save(partnerPolicy);
+
+		notify(
+				MapperUtils.mapDataToPublishDto(
+						approvedMappedPolicy.get(0).getPartner(),
+						getPartnerCertificate(approvedMappedPolicy.get(0).getPartner().getCertificateAlias())),
+				MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())),
+				MapperUtils.mapKeyDataToPublishDto(partnerPolicy),
+				EventType.APIKEY_APPROVED
+		);
+
+		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
 		response.setApiKey(partnerPolicy.getPolicyApiKey());
 		response.setLabel(partnerPolicy.getLabel());
 		response.setPartnerId(partnerId);
-		response.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
-		return response;	
+		response.setPolicyId(authPolicy.getId());
+		return response;
 	}
 
 	@Override
