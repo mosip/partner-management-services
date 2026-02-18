@@ -685,11 +685,18 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
 		}
 
-		APIKeyGenerateResponseDto response = createAndPersistApiKey(
-				partnerId,
-				validPolicy,
-				PartnerUtil.trimAndReplace(requestDto.getLabel())
-		);
+		String label = PartnerUtil.trimAndReplace(requestDto.getLabel());
+		PartnerPolicy existingPolicyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
+				partnerId, validPolicy.getId(), label);
+		if (existingPolicyByLabel != null) {
+			LOGGER.error("Label '{}' already exists for partner {} and policy {}", label, partnerId,
+					validPolicy.getId());
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode(),
+					ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorMessage());
+		}
+
+		APIKeyGenerateResponseDto response = createAndPersistApiKey(partnerId, validPolicy, label);
 
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
 		return response;
@@ -782,11 +789,18 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				}
 			}
 
-			APIKeyGenerateResponseDto response = createAndPersistApiKey(
-					partnerId,
-					authPolicy,
-					PartnerUtil.trimAndReplace(request.getApiKeyName())
-			);
+			String apiKeyName = PartnerUtil.trimAndReplace(request.getApiKeyName());
+			PartnerPolicy existingPolicyByApiKeyName = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
+					partnerId, authPolicy.getId(), apiKeyName);
+			if (existingPolicyByApiKeyName != null) {
+				LOGGER.error("apiKeyName '{}' already exists for partner {} and policy {}", apiKeyName, partnerId,
+						authPolicy.getId());
+				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+				throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS.getErrorCode(),
+						ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS.getErrorMessage());
+			}
+
+			APIKeyGenerateResponseDto response = createAndPersistApiKey(partnerId, authPolicy, apiKeyName);
 
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
 			responseWrapper.setResponse(response);
@@ -818,15 +832,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
-		}
-
-		PartnerPolicy existingPolicyByApiKeyName = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
-				partnerId, authPolicy.getId(), apiKeyName);
-		if (existingPolicyByApiKeyName != null) {
-			LOGGER.error("apiKeyName '{}' already exists for partner {} and policy {}", apiKeyName, partnerId, authPolicy.getId());
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS.getErrorMessage());
 		}
 
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
