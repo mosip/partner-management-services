@@ -3,7 +3,6 @@ package io.mosip.pms.oauth.client.service.impl;
 import java.security.PublicKey;
 import java.util.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetKeyPair;
@@ -901,7 +900,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			ProcessedClientDetail processedClientDetail = processCreateOIDCClientV2(request);
-			validateLanguageKeys(objectMapper.valueToTree(request.getClientNameLangMap()), "clientNameLangMap",  false);
+			validateLanguageKeys(request.getClientNameLangMap(), "clientNameLangMap",  false);
 			ClientDetail clientDetail = processedClientDetail.getClientDetail();
 			callEsignetServiceV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.create.url"), true, request.getClientNameLangMap());
 			String clientName=getClientNameLanguageMapAsJsonString(
@@ -944,93 +943,93 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			// validate additional config fields 
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
-			// convert JsonNode to String and set to client detail
-			clientDetail.setAdditionalConfig(objectMapper.writeValueAsString(createRequest.getAdditionalConfig()));
+			// convert additional config as String and set to client detail
+			ObjectMapper mapper = new ObjectMapper();
+			String additionalConfig = mapper.writeValueAsString(createRequest.getAdditionalConfig());
+			clientDetail.setAdditionalConfig(additionalConfig);
 
 			processedClientDetail.setClientDetail(clientDetail);
 		}
 		return processedClientDetail;
 	}
 
-	private void validateAdditionalConfigFields(JsonNode additionalConfig, String clientId, String clientName) {
-		if (!additionalConfig.isObject()) {
-			throw new PartnerServiceException(
-					ErrorCode.INVALID_ADDITIONAL_CONFIG_TYPE.getErrorCode(),
-					ErrorCode.INVALID_ADDITIONAL_CONFIG_TYPE.getErrorMessage());
+	private void validateAdditionalConfigFields(AdditionalConfigDto additionalConfigDto, String clientId, String clientName) {
+		if(additionalConfigDto.getUserinfoResponseType() != null &&
+				!VALID_USER_INFO_RESPONSE_TYPES.contains(additionalConfigDto.getUserinfoResponseType())) {
+				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}",
+						additionalConfigDto.getUserinfoResponseType());
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+						clientId);
+				throw new PartnerServiceException(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(), String
+						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
+								additionalConfigDto.getUserinfoResponseType()));
 		}
-
-		// Validate userinfo_response_type
-		JsonNode responseTypeNode = additionalConfig.get("userinfo_response_type");
-		if (responseTypeNode != null && !responseTypeNode.isNull()) {
-			String userinfoResponseType = responseTypeNode.asText();
-			if (!VALID_USER_INFO_RESPONSE_TYPES.contains(userinfoResponseType)) {
-				LOGGER.error("validateAdditionalConfigFields::Invalid userinfo_response_type {}", userinfoResponseType);
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName, clientId);
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(),
-						String.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(), userinfoResponseType));
-			}
+		if(additionalConfigDto.getConsentExpireInMins() != null &&
+				additionalConfigDto.getConsentExpireInMins() < 10) {
+				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
+						additionalConfigDto.getConsentExpireInMins());
+				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+						clientId);
+				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
+						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
+								additionalConfigDto.getConsentExpireInMins()));
 		}
+		// PURPOSE VALIDATION
+		Map<String, Object> purpose = additionalConfigDto.getPurpose();
+		if (purpose != null && !purpose.isEmpty()) {
 
-		// Validate consent_expire_in_mins
-		JsonNode consentNode = additionalConfig.get("consent_expire_in_mins");
-		if (consentNode != null && !consentNode.isNull()) {
-			int consentExpireInMins = consentNode.asInt();
-			if (consentExpireInMins < 10) {
-				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}", consentExpireInMins);
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName, clientId);
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(),
-						String.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(), consentExpireInMins));
-			}
-		}
+			// Extract individual fields
+			String type = purpose.get("type") != null ? purpose.get("type").toString() : null;
+			Map<String, Object> title = null;
+			Map<String, Object> subtitle = null;
 
-		// Validate purpose
-		JsonNode purpose = additionalConfig.path("purpose");
-		if (!purpose.isMissingNode()) {
-			if (!purpose.isObject()) {
+			Object titleObj = purpose.get("title");
+			if (titleObj instanceof Map) {
+				title = (Map<String, Object>) titleObj;
+			} else if (titleObj != null) {
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-						"purpose must be a JSON object");
+						"purpose.title must be a map");
 			}
-
-			JsonNode title = purpose.path("title");
-			JsonNode subtitle = purpose.path("subTitle");
-
-			if ((!title.isMissingNode() && !title.isNull() && !title.isObject()) ||
-				(!subtitle.isMissingNode() && !subtitle.isNull() && !subtitle.isObject())) {
+			Object subtitleObj = purpose.get("subTitle");
+			if (subtitleObj instanceof Map) {
+				subtitle = (Map<String, Object>) subtitleObj;
+			} else if (subtitleObj != null) {
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-						"purpose.title and purpose.subTitle must be maps");
+						"purpose.subTitle must be a map");
 			}
 
-			JsonNode typeNode = purpose.path("type");
-           // Validate type if present
-			if (!typeNode.isMissingNode() && !typeNode.isNull()) {
-				String type = typeNode.asText();
+			// 1. purpose.type only allow login / link / verify (case insensitive)
+			if (type != null) {
 				if (!VALID_PURPOSE_TYPES.contains(type.toLowerCase())) {
 					throw new PartnerServiceException(
 							ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(),
-							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type));
+							String.format(ErrorCode.INVALID_PURPOSE_TYPE.getErrorMessage(), type)
+					);
 				}
 			}
 
-			// If title or subtitle exist, type must be present and valid
-			if ((title.isObject() && !title.isEmpty()) || (subtitle.isObject() && !subtitle.isEmpty())) {
-				if (typeNode.isMissingNode() || typeNode.isNull()) {
-					throw new PartnerServiceException(
-							ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
-							"purpose.type is required when title or subTitle is provided");
-				}
+			// 2. title/subtitle allowed ONLY if type is not null
+			if (type == null && ((title != null && !title.isEmpty()) ||
+					(subtitle != null && !subtitle.isEmpty()))) {
+
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(),
+						ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorMessage()
+				);
 			}
 
+			// 3. Validate title keys (@none mandatory)
 			validateLanguageKeys(title, "purpose.title", true);
+
+			// 4. Validate subtitle keys (@none mandatory)
 			validateLanguageKeys(subtitle, "purpose.subTitle", true);
 		}
 	}
 
-	private void validateLanguageKeys(JsonNode langMap, String fieldName, boolean isNoneMandatory) {
-		if (langMap == null || langMap.isNull() || langMap.isEmpty()) {
+	private void validateLanguageKeys(Map<String, ?> langMap, String fieldName, boolean isNoneMandatory) {
+		if (langMap == null || langMap.isEmpty()) {
 			return;
 		}
 
@@ -1041,9 +1040,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		// Validate invalid keys
-		Iterator<String> fieldNames = langMap.fieldNames();
-		while(fieldNames.hasNext()) {
-			String key = fieldNames.next();
+		for (String key : langMap.keySet()) {
 			if (!validKeys.contains(key)) {
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_LANGUAGE_KEY.getErrorCode(),
@@ -1055,7 +1052,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		}
 
 		// Validate mandatory @none
-		if (isNoneMandatory && !langMap.has(NONE_LANG_KEY)) {
+		if (isNoneMandatory && !langMap.containsKey(NONE_LANG_KEY)) {
 			throw new PartnerServiceException(
 					ErrorCode.MISSING_MANDATORY_LANGUAGE_KEY.getErrorCode(),
 					String.format(
@@ -1079,8 +1076,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 				dto.setClientNameLangMap(clientNameLangMap[0]);
 			}
 			if (Objects.nonNull(request.getAdditionalConfig())) {
-				dto.setAdditionalConfig(objectMapper.convertValue(
-						objectMapper.readTree(request.getAdditionalConfig()), Map.class));
+				dto.setAdditionalConfig(objectMapper.readValue(request.getAdditionalConfig(), Map.class));
 			}
 		}
 		createRequestwrapper.setRequest(dto);
@@ -1205,7 +1201,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
         ResponseWrapperV2<ClientDetailResponse> responseWrapper = new ResponseWrapperV2<>();
         try {
             ClientDetail clientDetail = processUpdateOIDCClientV2(clientId,updateRequest);
-			validateLanguageKeys(objectMapper.valueToTree(updateRequest.getClientNameLangMap()), "clientNameLangMap",  false);
+			validateLanguageKeys(updateRequest.getClientNameLangMap(), "clientNameLangMap",  false);
             makeUpdateEsignetServiceCallV2(clientDetail, environment.getProperty("mosip.pms.esignet.oidc.client.update.url"), updateRequest.getClientNameLangMap());
             String clientName=getClientNameLanguageMapAsJsonString(
                     updateRequest.getClientNameLangMap(),
@@ -1249,8 +1245,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             // validate additional config fields
             validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
 
-            // convert JsonNode to String and set to client detail
-            clientDetail.setAdditionalConfig(objectMapper.writeValueAsString(updateRequest.getAdditionalConfig()));
+            // convert additional config as String and set to client detail
+            ObjectMapper mapper = new ObjectMapper();
+            String additionalConfig = mapper.writeValueAsString(updateRequest.getAdditionalConfig());
+            clientDetail.setAdditionalConfig(additionalConfig);
         }
         return clientDetail;
     }
@@ -1276,8 +1274,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		// Set additional config if present
 		if (Objects.nonNull(request.getAdditionalConfig())) {
 			updateRequest.setAdditionalConfig(
-					objectMapper.convertValue(
-							objectMapper.readTree(request.getAdditionalConfig()), Map.class));
+					objectMapper.readValue(request.getAdditionalConfig(), Map.class));
 		}
 		
 		updateRequestWrapper.setRequest(updateRequest);
@@ -1369,7 +1366,9 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// set additional config
 			if (client.getAdditionalConfig() != null) {
-				dto.setAdditionalConfig(objectMapper.readTree(client.getAdditionalConfig()));
+				dto.setAdditionalConfig(
+						objectMapper.readValue(client.getAdditionalConfig(), AdditionalConfigDto.class)
+				);
 			}
 			responseWrapper.setResponse(dto);
 		} catch (PartnerServiceException ex) {
