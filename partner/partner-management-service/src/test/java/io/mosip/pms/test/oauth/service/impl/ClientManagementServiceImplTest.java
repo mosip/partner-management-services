@@ -66,7 +66,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.RestUtil;
@@ -1714,8 +1713,8 @@ public class ClientManagementServiceImplTest {
 		request.setGrantTypes(Arrays.asList("authorization_code", "refresh_token"));
 		request.setLogoUri("https://example.com/logo.png");
 		request.setRedirectUris(Arrays.asList("https://example.com/redirect1"));
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		additionalConfig.put("userinfoResponseType", "JWS");
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setUserinfoResponseType("JSON");
 		request.setAdditionalConfig(additionalConfig);
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 		try {
@@ -1827,8 +1826,8 @@ public class ClientManagementServiceImplTest {
 		clientAuthMethods.add("private_key_jwt");
 		request.setClientAuthMethods(clientAuthMethods);
 		request.setGrantTypes(Arrays.asList("authorization_code"));
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		additionalConfig.put("signupBannerRequired", true);
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setSignupBannerRequired(true);
 		request.setAdditionalConfig(additionalConfig);
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 		when(partnerRepository.findById("invalidPartnerId")).thenReturn(Optional.empty());
@@ -2095,13 +2094,13 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		additionalConfig.put("userinfo_response_type", "INVALID");
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		additionalConfigDto.setUserinfoResponseType("INVALID");
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 
 		try {
-			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfig, "clientId", "clientName");
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
 			fail("Expected PartnerServiceException");
 		} catch (PartnerServiceException ex) {
 			assertEquals(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorCode(), ex.getErrorCode());
@@ -2122,13 +2121,13 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		additionalConfig.put("consent_expire_in_mins", 5);
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		additionalConfigDto.setConsentExpireInMins(5);
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 
 		try {
-			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfig, "clientId", "clientName");
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
 			fail("Expected PartnerServiceException");
 		} catch (PartnerServiceException ex) {
 			assertEquals(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), ex.getErrorCode());
@@ -2149,15 +2148,15 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		ObjectNode purpose = objectMapper.createObjectNode();
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		Map<String, Object> purpose = new HashMap<>();
 		purpose.put("type", "INVALID_TYPE");
-		additionalConfig.set("purpose", purpose);
+		additionalConfigDto.setPurpose(purpose);
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 
 		try {
-			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfig, "clientId", "clientName");
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
 			fail("Expected PartnerServiceException");
 		} catch (PartnerServiceException ex) {
 			assertEquals(ErrorCode.INVALID_PURPOSE_TYPE.getErrorCode(), ex.getErrorCode());
@@ -2178,16 +2177,16 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		ObjectNode purpose = objectMapper.createObjectNode();
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		Map<String, Object> purpose = new HashMap<>();
 		purpose.put("type", "login");
 		purpose.put("title", "NotAMap");
-		additionalConfig.set("purpose", purpose);
+		additionalConfigDto.setPurpose(purpose);
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 
 		try {
-			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfig, "clientId", "clientName");
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
 			fail("Expected PartnerServiceException");
 		} catch (PartnerServiceException ex) {
 			assertEquals(ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(), ex.getErrorCode());
@@ -2208,17 +2207,17 @@ public class ClientManagementServiceImplTest {
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
-		ObjectNode additionalConfig = objectMapper.createObjectNode();
-		ObjectNode purpose = objectMapper.createObjectNode();
-		ObjectNode title = objectMapper.createObjectNode();
+		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
+		Map<String, Object> purpose = new HashMap<>();
+		Map<String, Object> title = new HashMap<>();
 		title.put("@none", "Test Title");
-		purpose.set("title", title);
-		additionalConfig.set("purpose", purpose);
+		purpose.put("title", title);
+		additionalConfigDto.setPurpose(purpose);
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 
 		try {
-			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfig, "clientId", "clientName");
+			ReflectionTestUtils.invokeMethod(serviceImpl, "validateAdditionalConfigFields", additionalConfigDto, "clientId", "clientName");
 			fail("Expected PartnerServiceException");
 		} catch (PartnerServiceException ex) {
 			assertEquals(ErrorCode.INVALID_PURPOSE_TITLE_OR_SUBTITLE.getErrorCode(), ex.getErrorCode());
@@ -2227,8 +2226,7 @@ public class ClientManagementServiceImplTest {
 
 	@Test
 	public void testValidateLanguageKeysInvalidLanguageKey() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode langMap = mapper.createObjectNode();
+		Map<String, Object> langMap = new HashMap<>();
 		langMap.put("invalid_lang", "value");
 
 		try {
@@ -2241,8 +2239,7 @@ public class ClientManagementServiceImplTest {
 
 	@Test
 	public void testValidateLanguageKeysMissingMandatoryNoneKey() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode langMap = mapper.createObjectNode();
+		Map<String, Object> langMap = new HashMap<>();
 		langMap.put("eng", "value");
 
 		try {
@@ -2255,8 +2252,7 @@ public class ClientManagementServiceImplTest {
 
 	@Test
 	public void testValidateLanguageKeysValidLanguageKeys() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode langMap = mapper.createObjectNode();
+		Map<String, Object> langMap = new HashMap<>();
 		langMap.put("@none", "English Title");
 		langMap.put("eng", "English Title");
 		langMap.put("ara", "العنوان العربي");
@@ -2482,9 +2478,8 @@ public class ClientManagementServiceImplTest {
 		Map<String, String> clientNameLangMap = new HashMap<>();
 		clientNameLangMap.put("eng", "Updated Client");
 		updateRequest.setClientNameLangMap(clientNameLangMap);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
-		additionalConfig.put("userinfoResponseType", "JWS");
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setUserinfoResponseType("JWS");
 		updateRequest.setAdditionalConfig(additionalConfig);
 
 		ClientDetail clientDetail = new ClientDetail();
@@ -2638,9 +2633,8 @@ public class ClientManagementServiceImplTest {
 		String clientId = "test-client-123";
 		ClientDetailUpdateRequestV3 updateRequest = new ClientDetailUpdateRequestV3();
 		updateRequest.setClientName("Updated Client");
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
-		additionalConfig.put("userinfoResponseType", "INVALID_TYPE");
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setUserinfoResponseType("INVALID_TYPE");
 		updateRequest.setAdditionalConfig(additionalConfig);
 
 		ClientDetail clientDetail = new ClientDetail();
@@ -2725,9 +2719,8 @@ public class ClientManagementServiceImplTest {
 		String clientId = "test-client-123";
 		ClientDetailUpdateRequestV3 updateRequest = new ClientDetailUpdateRequestV3();
 		updateRequest.setClientName("Updated Client");
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode additionalConfig = mapper.createObjectNode();
-		additionalConfig.put("consentExpireInMins", 5);
+		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
+		additionalConfig.setConsentExpireInMins(5);
 		updateRequest.setAdditionalConfig(additionalConfig);
 
 		ClientDetail clientDetail = new ClientDetail();
