@@ -1421,7 +1421,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(
-					filterDto.getPartnerId(), filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
+					filterDto.getPartnerId(), filterDto.getPartnerType(), filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
 					filterDto.getPolicyGroupName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
 					expiryEndDate, filterDto.getExpiryPeriod(), pageable
 			);

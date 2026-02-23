@@ -462,9 +462,9 @@ public class PartnerManagementControllerTest {
 		Integer pageNo = 0;
 		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
-		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+		Mockito.when(partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
 						.param("sortFieldName", sortFieldName)
@@ -476,7 +476,8 @@ public class PartnerManagementControllerTest {
 						.param("orgName", "ABC")
 						.param("status", "approved")
 						.param("policyName", "policy name")
-						.param("policyGroupName", "policy group"))
+						.param("policyGroupName", "policy group")
+						.param("partnerType", "Auth_Partner"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -488,9 +489,9 @@ public class PartnerManagementControllerTest {
 		Integer pageNo = 0;
 		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
-		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+		Mockito.when(partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
 						.param("sortFieldName", sortFieldName)

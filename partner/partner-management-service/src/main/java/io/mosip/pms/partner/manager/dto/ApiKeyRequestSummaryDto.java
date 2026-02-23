@@ -35,6 +35,9 @@ public class ApiKeyRequestSummaryDto {
     @Schema(description = "Description of the policy group the partner has selected", example = "PolicyGroup123")
     private String policyGroupDescription;
 
+    @Schema(description = "Type of partner (e.g., Auth_Partner, Manual_Adjudication)", example = "Auth_Partner")
+    private String partnerType;
+
     @Schema(description = "Status of the API key (e.g., activated, deactivated)", example = "activated")
     private String status;
 
