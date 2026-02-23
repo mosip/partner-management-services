@@ -507,8 +507,8 @@ public class PartnerManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys/v2")
-	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the partners.",
-			description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and filtering based on optional query parameters including partnerType (e.g. Auth_Partner, Manual_Adjudication). If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners. Response includes partnerType for each API key.")
+	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners.",
+			description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
