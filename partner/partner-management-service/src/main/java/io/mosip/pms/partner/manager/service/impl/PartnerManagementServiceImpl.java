@@ -1420,7 +1420,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
 			}
 
-			// Old endpoint: filter by Auth_Partner only. V2 Partner Admin: honour request partnerType. V2 non-admin (Auth Partner): set internally to Auth_Partner (partnerType filter is only for Partner Admin).
 			String effectivePartnerType;
 			if (dtoClass == ApiKeyRequestSummaryDto.class) {
 				effectivePartnerType = PartnerConstants.AUTH_PARTNER_TYPE;
