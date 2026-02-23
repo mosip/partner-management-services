@@ -3,6 +3,7 @@ package io.mosip.pms.partner.manager.controller;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
@@ -501,7 +502,8 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
+		// Deprecated endpoint: always filter by Auth_Partner (legacy behaviour set at API boundary, not in service)
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, PartnerConstants.AUTH_PARTNER_TYPE, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
