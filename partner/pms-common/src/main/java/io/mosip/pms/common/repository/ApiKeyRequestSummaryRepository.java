@@ -31,7 +31,7 @@ public interface ApiKeyRequestSummaryRepository extends BaseRepository<ApiKeyReq
             "LEFT JOIN pp.policy ap " +
             "LEFT JOIN ap.policyGroup pg " +
             "WHERE (:partnerId IS NULL OR lower(pp.partnerId) LIKE %:partnerId%) " +
-            "AND (:partnerType IS NULL OR p.partnerTypeCode = :partnerType) " +
+            "AND (:partnerType IS NULL OR lower(p.partnerTypeCode) = :partnerType) " +
             "AND (:apiKeyLabel IS NULL OR lower(pp.label) LIKE %:apiKeyLabel%) " +
             "AND (:orgName IS NULL OR lower(p.name) LIKE %:orgName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +

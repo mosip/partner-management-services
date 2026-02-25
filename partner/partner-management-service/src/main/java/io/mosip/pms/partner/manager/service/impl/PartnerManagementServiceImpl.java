@@ -1424,14 +1424,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				expiryEndDate = expiryStartDate.plusDays(filterDto.getExpiryPeriod()).with(LocalTime.MAX);
 			}
 
-			// Partner Admin: use request partnerType (null = all types). Non-admin: default to Auth_Partner when not set (partnerType filter only for Partner Admin).
-			String effectivePartnerType = filterDto.getPartnerType();
-			if (!isPartnerAdmin && effectivePartnerType == null) {
-				effectivePartnerType = PartnerConstants.AUTH_PARTNER_TYPE;
-			}
-
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(
-					filterDto.getPartnerId(), effectivePartnerType, filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
+					filterDto.getPartnerId(), partnerType, filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
 					filterDto.getPolicyGroupName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
 					expiryEndDate, filterDto.getExpiryPeriod(), pageable
 			);
