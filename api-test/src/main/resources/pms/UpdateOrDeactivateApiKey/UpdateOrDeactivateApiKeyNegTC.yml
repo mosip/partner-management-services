@@ -192,7 +192,7 @@ UpdateOrDeactivateApiKeyNegTC:
     output: '{
            "errors": [
                 {
-                     "errorCode": "PMS_PRT_111"
+                     "errorCode": "PMS_PMP_005"
                 }
         ]
 }'
@@ -317,7 +317,7 @@ UpdateOrDeactivateApiKeyNegTC:
     output: '{
        "errors": [
          {
-            "errorCode": "PMS_PMS_022"
+            "errorCode": "PMS_PMS_023"
           }
      ]
 }'
