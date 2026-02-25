@@ -1385,6 +1385,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						io.mosip.pms.partner.constant.ErrorCode.PARTNER_TYPE_FILTER_NOT_ALLOWED.getErrorCode(),
 						io.mosip.pms.partner.constant.ErrorCode.PARTNER_TYPE_FILTER_NOT_ALLOWED.getErrorMessage());
 			}
+
+			if (isPartnerAdmin && partnerType == null) {
+				partnerType = PartnerConstants.AUTH_PARTNER_TYPE.toLowerCase();
+			}
 			if (!isPartnerAdmin) {
 				String userId = getUserId();
 				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
