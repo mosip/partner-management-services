@@ -560,7 +560,7 @@ public class PartnerManagementController {
 		if (status != null) filterDto.setStatus(status);
 		if (policyName != null) filterDto.setPolicyName(policyName.toLowerCase());
 		if (policyGroupName != null) filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
-		if (partnerType != null) filterDto.setPartnerType(partnerType.toLowerCase());
+		if (partnerType != null && !partnerType.isBlank()) filterDto.setPartnerType(partnerType.toLowerCase());
 		if (expiryPeriod != null) filterDto.setExpiryPeriod(expiryPeriod);
 		return filterDto;
 	}
