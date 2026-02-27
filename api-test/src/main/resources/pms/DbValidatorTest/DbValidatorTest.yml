@@ -27,7 +27,7 @@ DBValidator:
       outputTemplate: pms/DbValidatorTest/DbValidatorResult
       input: '{
     "partner_id": "$REMOVE$",
-    "policy_name": "mosip data share policy",
+    "policy_name": "$RUNCONTEXT$mosip data share policy",
     "api_key_id": "$REMOVE$",
     "license_key": "$REMOVE$"
 }'
