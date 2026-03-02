@@ -3,6 +3,7 @@ package io.mosip.pms.partner.manager.controller;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
@@ -501,7 +502,7 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null);
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
@@ -530,6 +531,8 @@ public class PartnerManagementController {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@Parameter(description = "Filter by partner type (e.g. Auth_Partner, Manual_Adjudication)", in = ParameterIn.QUERY)
+			@RequestParam(value = "partnerType", required = false) String partnerType,
 			@RequestParam(value = "expiryPeriod", required = false)
 			@Min(value = 1, message = "Expiry period must be at least 1 day.")
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
@@ -543,12 +546,13 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
+		inputValidator.validateRequestInput("partnerType", partnerType);
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
 		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	private ApiKeyFilterDto populateApiKeyFilterDto(String partnerId, String apiKeyLabel, String orgName, String status,
-													String policyName, String policyGroupName, Integer expiryPeriod) {
+													String policyName, String policyGroupName, String partnerType, Integer expiryPeriod) {
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) filterDto.setPartnerId(partnerId.toLowerCase());
 		if (apiKeyLabel != null) filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
@@ -556,6 +560,7 @@ public class PartnerManagementController {
 		if (status != null) filterDto.setStatus(status);
 		if (policyName != null) filterDto.setPolicyName(policyName.toLowerCase());
 		if (policyGroupName != null) filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		if (partnerType != null && !partnerType.isBlank()) filterDto.setPartnerType(partnerType.toLowerCase());
 		if (expiryPeriod != null) filterDto.setExpiryPeriod(expiryPeriod);
 		return filterDto;
 	}
