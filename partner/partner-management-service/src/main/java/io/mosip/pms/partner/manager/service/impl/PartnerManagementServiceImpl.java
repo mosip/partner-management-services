@@ -1377,7 +1377,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			PageResponseV2Dto<D> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			String partnerType = filterDto.getPartnerType();
 			List<String> partnerIdList = null;
+
 			if (!isPartnerAdmin) {
 				String userId = getUserId();
 				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
@@ -1390,7 +1392,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				for (Partner partner : partnerList) {
 					partnerHelper.validatePartnerId(partner, userId);
 					partnerHelper.validatePolicyGroupId(partner, userId);
-					partnerHelper.validatePolicyGroup(partner);
 					partnerIdList.add(partner.getId());
 				}
 			}
@@ -1421,7 +1422,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(
-					filterDto.getPartnerId(), filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
+					filterDto.getPartnerId(), partnerType, filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
 					filterDto.getPolicyGroupName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
 					expiryEndDate, filterDto.getExpiryPeriod(), pageable
 			);

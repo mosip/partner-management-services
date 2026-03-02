@@ -161,6 +161,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	public static final String ACTIVE = "ACTIVE";
 	public static final String INACTIVE = "INACTIVE";
 	public static final String NOTACTIVE = "NOT_ACTIVE";
+	private static final String LICENSE_KEY_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 	/**
 	 *
@@ -243,9 +245,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 * @return
 	 */
 	private String generateLicenseKey() {
-		String chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		SecureRandom secureRandom = new SecureRandom();
-		String licenseKey = secureRandom.ints(licenseKeyLength, 0, chrs.length()).mapToObj(i -> chrs.charAt(i))
+		String licenseKey = SECURE_RANDOM.ints(licenseKeyLength, 0, LICENSE_KEY_CHARS.length())
+				.mapToObj(i -> LICENSE_KEY_CHARS.charAt(i))
 				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
 		return licenseKey;
 	}

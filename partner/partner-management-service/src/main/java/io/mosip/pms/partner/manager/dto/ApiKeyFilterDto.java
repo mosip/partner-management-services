@@ -9,6 +9,8 @@ public class ApiKeyFilterDto {
 
     private String partnerId;
 
+    private String partnerType;
+
     private String apiKeyLabel;
 
     private String orgName;
