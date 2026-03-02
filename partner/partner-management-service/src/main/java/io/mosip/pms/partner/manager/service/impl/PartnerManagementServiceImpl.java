@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1379,19 +1380,17 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			String partnerType = filterDto.getPartnerType();
 			List<String> partnerIdList = null;
-			if (partnerType != null && !isPartnerAdmin) {
-				LOGGER.error("Non-admin user attempted to filter by partnerType. Only PARTNER_ADMIN can use this filter.");
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.PARTNER_TYPE_FILTER_NOT_ALLOWED.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.PARTNER_TYPE_FILTER_NOT_ALLOWED.getErrorMessage());
-			}
-
-			if (isPartnerAdmin && partnerType != null) {
-				List<String> validPartnerTypes = List.of(PartnerConstants.AUTH_PARTNER_TYPE.toLowerCase(), PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.toLowerCase());
+			if (partnerType != null && !partnerType.isBlank()) {
+				List<String> validPartnerTypes = List.of(
+						PartnerConstants.AUTH_PARTNER_TYPE.toLowerCase(),
+						PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.toLowerCase());
 				if (!validPartnerTypes.contains(partnerType)) {
-					throw new PartnerServiceException(
-							io.mosip.pms.partner.constant.ErrorCode.INVALID_PARTNER_TYPE_FOR_FILTER.getErrorCode(),
-							String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_PARTNER_TYPE_FOR_FILTER.getErrorMessage(), partnerType));
+					pageResponseV2Dto.setPageNo(pageNo != null ? pageNo : 0);
+					pageResponseV2Dto.setPageSize(pageSize != null ? pageSize : 0);
+					pageResponseV2Dto.setTotalResults(0L);
+					pageResponseV2Dto.setData(Collections.emptyList());
+					responseWrapper.setResponse(pageResponseV2Dto);
+					return responseWrapper;
 				}
 			}
 
