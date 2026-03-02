@@ -27,6 +27,7 @@ import java.util.Date;
                                 @ColumnResult(name = "policyGroupId", type = String.class),
                                 @ColumnResult(name = "policyGroupName", type = String.class),
                                 @ColumnResult(name = "policyGroupDescription", type = String.class),
+                                @ColumnResult(name = "partnerType", type = String.class),
                                 @ColumnResult(name = "status", type = String.class),
                                 @ColumnResult(name = "createdDateTime", type = Date.class),
                                 @ColumnResult(name = "apiKeyExpiryDateTime", type = Date.class),
@@ -40,7 +41,7 @@ public class ApiKeyRequestsSummaryEntity {
     public ApiKeyRequestsSummaryEntity(
             String apiKeyId, String partnerId, String apiKeyLabel, String orgName, String policyId,
             String policyName, String policyDescription, String policyGroupId, String policyGroupName, String policyGroupDescription,
-            String status, Date createdDateTime, Date apiKeyExpiryDateTime, Boolean isApiKeyExpiredStatus) {
+            String partnerType, String status, Date createdDateTime, Date apiKeyExpiryDateTime, Boolean isApiKeyExpiredStatus) {
         this.apiKeyId = apiKeyId;
         this.partnerId = partnerId;
         this.apiKeyLabel = apiKeyLabel;
@@ -51,6 +52,7 @@ public class ApiKeyRequestsSummaryEntity {
         this.policyGroupId = policyGroupId;
         this.policyGroupDescription = policyGroupDescription;
         this.policyGroupName = policyGroupName;
+        this.partnerType = partnerType;
         this.status = status;
         this.createdDateTime = createdDateTime;
         this.apiKeyExpiryDateTime = apiKeyExpiryDateTime;
@@ -82,6 +84,8 @@ public class ApiKeyRequestsSummaryEntity {
     private String policyGroupName;
 
     private String policyGroupDescription;
+
+    private String partnerType;
 
     private String status;
 

@@ -1645,7 +1645,7 @@ public class PartnerManagementServiceImplTest {
 		apiKeyRequestsSummaryEntity.setApiKeyId("12345");
 		Page<ApiKeyRequestsSummaryEntity> page = new PageImpl<>(List.of(apiKeyRequestsSummaryEntity), pageable, 1);
 
-		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any(), any(), any(), any())).thenReturn(page);
+		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto);
 	}
 
@@ -1692,7 +1692,7 @@ public class PartnerManagementServiceImplTest {
 		apiKeyRequestsSummaryEntity.setApiKeyId("12345");
 		Page<ApiKeyRequestsSummaryEntity> page = new PageImpl<>(List.of(apiKeyRequestsSummaryEntity), pageable, 1);
 
-		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any(), any(), any(), any())).thenReturn(page);
+		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyList(), anyBoolean(), any(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto);
 	}
 
