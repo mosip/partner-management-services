@@ -865,7 +865,9 @@
                                     },
                                     "request": {
                                         "type": "object",
-                                        "required": ["apiKeyName"],
+                                        "required": [
+                                            "apiKeyName"
+                                        ],
                                         "properties": {
                                             "apiKeyName": {
                                                 "type": "string",
@@ -874,7 +876,12 @@
                                         }
                                     }
                                 },
-                                "required": ["id", "version", "requesttime", "request"]
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requesttime",
+                                    "request"
+                                ]
                             }
                         }
                     }
@@ -1349,57 +1356,6 @@
                 },
                 "x-stoplight": {
                     "id": "u3in13gobc6up"
-                }
-            }
-        },
-        "/partners/{partnerId}/generate/apikey": {
-            "patch": {
-                "tags": [
-                    "partner-service-controller"
-                ],
-                "summary": "EXISTING: To generate apiKeys for approved policies",
-                "description": "To generate apiKeys for approved policies",
-                "operationId": "generateAPIKey",
-                "parameters": [
-                    {
-                        "name": "partnerId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RequestWrapperAPIKeyGenerateRequestDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ResponseWrapperAPIKeyGenerateResponseDto"
-                                }
-                            }
-                        }
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
-                "x-stoplight": {
-                    "id": "z97y2su9clt6s"
                 }
             }
         },
