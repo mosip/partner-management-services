@@ -865,7 +865,9 @@
                                     },
                                     "request": {
                                         "type": "object",
-                                        "required": ["apiKeyName"],
+                                        "required": [
+                                            "apiKeyName"
+                                        ],
                                         "properties": {
                                             "apiKeyName": {
                                                 "type": "string",
@@ -874,7 +876,12 @@
                                         }
                                     }
                                 },
-                                "required": ["id", "version", "requesttime", "request"]
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requesttime",
+                                    "request"
+                                ]
                             }
                         }
                     }
