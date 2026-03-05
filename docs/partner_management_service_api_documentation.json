@@ -815,6 +815,7 @@
                         "name": "Cookie",
                         "in": "header",
                         "description": "Authorization={jwt_token}",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
