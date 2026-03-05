@@ -801,6 +801,174 @@
                 }
             }
         },
+        "/partners/{partnerId}/policies/{policyId}/api-keys": {
+            "post": {
+                "tags": [
+                    "partner-service-controller",
+                    "NEW"
+                ],
+                "summary": "NEW: Generate API key for a given partner and policy",
+                "description": "Available since release-1.3.0. This endpoint is used to generate an API key for a given partner and policy. Partner Admin can generate API keys on behalf of Manual Adjudication partners. Auth Partner can generate API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN, AUTH_PARTNER",
+                "operationId": "generate-api-key-post",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Unique identifier for the Partner",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Unique identifier for the Policy",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "Unique id required to access this endpoint"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "description": "Version of this endpoint"
+                                    },
+                                    "requesttime": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Request timestamp in ISO format"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "description": "Optional metadata"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "required": ["apiKeyName"],
+                                        "properties": {
+                                            "apiKeyName": {
+                                                "type": "string",
+                                                "description": "Name/label for the API key"
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": ["id", "version", "requesttime", "request"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique id of the endpoint"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of the endpoint"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Response timestamp in ISO format"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "properties": {
+                                                "partnerId": {
+                                                    "type": "string",
+                                                    "description": "Partner ID"
+                                                },
+                                                "policyId": {
+                                                    "type": "string",
+                                                    "description": "Policy ID"
+                                                },
+                                                "apiKey": {
+                                                    "type": "string",
+                                                    "description": "Generated API key"
+                                                },
+                                                "apiKeyName": {
+                                                    "type": "string",
+                                                    "description": "Name/label of the API key"
+                                                },
+                                                "validityTill": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "description": "API key expiry date in ISO format"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Error code"
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Error message"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "kp9mz4xw7hn2q"
+                }
+            }
+        },
         "/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}": {
             "patch": {
                 "tags": [
@@ -6981,7 +7149,7 @@
                 "tags": [
                     "partner-management-controller"
                 ],
-                "summary": "NEW: V2 version of get the list of all the API keys created by all the Auth Partners",
+                "summary": "NEW: V2 version of get the list of all the API keys created by Authentication Partners and Manual Adjudication Partners",
                 "description": "Added in PMS Release 1.3.x, this V2 version of endpoint `/partner-api-keys` which includes below new attributes added in the response:\r\n1. `apiKeyExpiryDateTime`\r\n2. `isApiKeyExpiredStatus`\r\n3. `partnerType` (e.g. Auth_Partner, Manual_Adjudication)\r\nAlso this endpoint will also be used to populate the Count of expiring API keys in the corresponding Dashboard Card \r\nby passing the `expiryPeriod` optional request parameter.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters including `partnerType`. Filter by partnerType=Auth_Partner for Auth Services API keys list; filter by partnerType=Manual_Adjudication for Manual Adjudication Services API keys list. API keys for Manual Adjudication partners (e.g. on DataShare policy) are included when no partnerType filter is applied or when partnerType=Manual_Adjudication.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN,AUTH_PARTNER\r\n",
                 "operationId": "get-auth-partners-apikeys-v2",
                 "parameters": [
