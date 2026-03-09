@@ -1,6 +1,5 @@
 package io.mosip.testrig.apirig.partner.testscripts;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,14 +13,11 @@ import org.json.JSONObject;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
-import org.testng.Reporter;
 import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.internal.BaseTestMethod;
-import org.testng.internal.TestResult;
 
 import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.dto.OutputValidationDto;
