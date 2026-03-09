@@ -133,7 +133,7 @@ To execute the tests using Eclipse IDE, use the following steps:
      - **VM Arguments**:
        ```
        -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression```
-	   (example : -Dmodules=Partner -Denv.user=api-internal.test-env -Denv.endpoint=https://api-internal.test-env.mosip.net -Denv.testLevel=smokeAndRegression).
+	   (example : -Dmodules=Partner -Denv.user=api-internal.test-env -Denv.endpoint=https://api-internal.test-env.mosip.net -Denv.testLevel=smokeAndRegression)
 	   
 ## 5. **Update the property file**
       
