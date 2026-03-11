@@ -757,12 +757,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
                 LOGGER.error("Policy {} does not belong to partner's policy group", policyId);
                 auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
                 throw new PartnerManagerServiceException(
-                        ErrorCode.POLICY_NOT_BELONGS_TO_POLICY_GROUP.getErrorCode(),
-                        ErrorCode.POLICY_NOT_BELONGS_TO_POLICY_GROUP.getErrorMessage());
+                        "PMS_POL_015",
+                        "Policy group and policy not mapped.");
             }
 			String apiKeyName = PartnerUtil.trimAndReplace(request.getApiKeyName());
 			validateApiKeyNameNotExist(partnerId, authPolicy.getId(), apiKeyName,
-					ErrorCode.PARTNER_POLICY_APIKEY_NAME_EXISTS);
+					ErrorCode.PARTNER_POLICY_LABEL_EXISTS);
 
 			APIKeyGenerateResponseDto response = createApiKey(partnerId, authPolicy, apiKeyName);
 
