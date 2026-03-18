@@ -13,7 +13,8 @@ CREATE TABLE pms.bioextractor_configuration(
 	bio_modality character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
-	CONSTRAINT pk_bioextractor_configuration PRIMARY KEY (id)
+	CONSTRAINT pk_bioextractor_configuration PRIMARY KEY (id),
+	CONSTRAINT uq_bioextractor_configuration_config_name UNIQUE (config_name)
 );
 -- ddl-end --
 COMMENT ON TABLE pms.bioextractor_configuration IS 'Bioextractor Configuration: Stores biometric extractor configuration details.';
