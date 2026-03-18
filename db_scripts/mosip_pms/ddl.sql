@@ -12,6 +12,7 @@
 \ir ddl/pms-partner_h.sql
 \ir ddl/pms-partner_policy.sql
 \ir ddl/pms-partner_policy_bioextract.sql
+\ir ddl/pms-bioextractor_configuration.sql
 \ir ddl/pms-partner_policy_credential_type.sql
 \ir ddl/pms-partner_policy_request.sql
 \ir ddl/pms-partner_type.sql

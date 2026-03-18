@@ -225,4 +225,7 @@ public class AuthorizedRolesDto {
 
 	private List<String> patchdismissnotification;
 
+	// Bioextractor Configuration
+	private List<String> postbioextractorconfigurations;
+
 }

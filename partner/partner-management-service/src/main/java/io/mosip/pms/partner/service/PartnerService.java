@@ -30,8 +30,10 @@ import io.mosip.pms.partner.request.dto.PartnerSearchDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateDto;
 import io.mosip.pms.partner.request.dto.PartnerUpdateRequest;
 import io.mosip.pms.partner.request.dto.PartnerExistsRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationCreateRequestDto;
 import io.mosip.pms.partner.response.dto.PartnerExistsResponseDto;
 import io.mosip.pms.partner.response.dto.APIkeyRequests;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationCreateResponseDto;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
@@ -241,4 +243,6 @@ public interface PartnerService {
 	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequest partnerRequest);
 
     ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request);
+
+	ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> createBioextractorConfiguration(BioextractorConfigurationCreateRequestDto request);
 }

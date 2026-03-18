@@ -223,7 +223,9 @@ public enum ErrorCode {
 	EMAIL_PARTNER_CONFLICT("PMS_PRT_268", "Email already registered with a different partnerId"),
 	PARTNER_VERIFICATION_ERROR("PMS_PRT_269", "Error while verifying partner"),
 	PARTNER_TYPE_FILTER_NOT_ALLOWED("PMS_PRT_270", "partnerType filter is allowed only for PARTNER_ADMIN users."),
-	INVALID_PARTNER_TYPE_FOR_FILTER("PMS_PRT_271", "Invalid partnerType '%s'. Valid values are: Auth_Partner, Manual_Adjudication.");
+	INVALID_PARTNER_TYPE_FOR_FILTER("PMS_PRT_271", "Invalid partnerType '%s'. Valid values are: Auth_Partner, Manual_Adjudication."),
+	DUPLICATE_BIOEXTRACTOR_CONFIGURATION_NAME("PMS_PRT_272", "Bioextractor configuration already exists with the same name."),
+	CREATE_BIOEXTRACTOR_CONFIGURATION_ERROR("PMS_PRT_273", "Error while creating bioextractor configuration.");
 	/**
 	 * The error code.
 	 */
