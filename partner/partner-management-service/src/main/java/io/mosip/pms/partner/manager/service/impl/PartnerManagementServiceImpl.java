@@ -79,6 +79,9 @@ import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
+import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME;
+import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
+import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 
 @Service
@@ -1671,23 +1674,23 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (request == null) {
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			throw new PartnerServiceException(
+					INVALID_REQUEST_PARAM.getErrorCode(),
+					INVALID_REQUEST_PARAM.getErrorMessage());
 			}
 			if (request.getConfigName() == null || request.getConfigName().isBlank()
 					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
 					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
+			throw new PartnerServiceException(
+					MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+					MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
 			}
 
 			String normalizedConfigName = PartnerUtil.trimAndReplace(request.getConfigName()).toLowerCase();
 			if (bioextractorConfigurationRepository.existsByConfigName(normalizedConfigName)) {
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorMessage());
+			throw new PartnerServiceException(
+					DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
+					DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorMessage());
 			}
 
 			BioextractorConfiguration entity = new BioextractorConfiguration();
