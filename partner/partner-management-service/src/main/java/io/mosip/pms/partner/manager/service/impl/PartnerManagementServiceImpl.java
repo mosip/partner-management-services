@@ -1676,23 +1676,29 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (request == null) {
-			throw new PartnerServiceException(
-					INVALID_REQUEST_PARAM.getErrorCode(),
-					INVALID_REQUEST_PARAM.getErrorMessage());
+				LOGGER.info("sessionId", "idType", "id", "Request is null in createBioextractorConfiguration.");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
 			}
 			if (request.getConfigName() == null || request.getConfigName().isBlank()
 					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
 					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
-			throw new PartnerServiceException(
-					MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
-					MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
+				LOGGER.info("sessionId", "idType", "id", "Required fields are missing in createBioextractorConfiguration.");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+						MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
 			}
 
 			String normalizedConfigName = PartnerUtil.trimAndReplace(request.getConfigName()).toLowerCase();
 			if (bioextractorConfigurationRepository.existsByConfigName(normalizedConfigName)) {
-			throw new PartnerServiceException(
-					DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
-					DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorMessage());
+				LOGGER.info("sessionId", "idType", "id", "Duplicate config name found: " + normalizedConfigName);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
+						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorMessage());
 			}
 
 			BioextractorConfiguration entity = new BioextractorConfiguration();
@@ -1702,11 +1708,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				if (attempts >= maxRetries) {
 					LOGGER.error("sessionId", "idType", "id",
 							"Failed to generate unique ID for BioextractorConfiguration after " + maxRetries + " attempts.");
-				throw new PartnerServiceException(
-						UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-								"Bioextractor Configuration ID", "id",
-								entity.getClass().getSimpleName(), maxRetries));
+					auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+					throw new PartnerServiceException(
+							UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+							String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+									"Bioextractor Configuration ID", "id",
+									entity.getClass().getSimpleName(), maxRetries));
 				}
 				id = PartnerUtil.generateId();
 				attempts++;
@@ -1724,6 +1731,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			bioextractorConfigurationRepository.save(entity);
 
+			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_SUCCESS);
 			BioextractorConfigurationResponseDto response = new BioextractorConfigurationResponseDto();
 			response.setId(id);
 			response.setStatus("SUCCESS");
@@ -1733,11 +1741,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
 		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
-		responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-				CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
-				CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
+			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(postBioextractorConfigurationsId);
 		responseWrapper.setVersion(VERSION);
