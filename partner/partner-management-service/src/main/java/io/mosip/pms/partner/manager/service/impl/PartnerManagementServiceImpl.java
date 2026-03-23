@@ -79,9 +79,11 @@ import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
+import static io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME;
 import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
 import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
+import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 
 @Service
@@ -833,10 +835,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			if (attempts >= maxRetries) {
 				LOGGER.error("Failed to generate unique API Key ID after {} attempts", maxRetries);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-								"API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries));
+			throw new PartnerServiceException(
+					UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+					String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+							"API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries));
 			}
 			apiKeyId = PartnerUtil.createPartnerApiKey();
 			attempts++;
@@ -1700,11 +1702,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				if (attempts >= maxRetries) {
 					LOGGER.error("sessionId", "idType", "id",
 							"Failed to generate unique ID for BioextractorConfiguration after " + maxRetries + " attempts.");
-					throw new PartnerServiceException(
-							io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-							String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-									"Bioextractor Configuration ID", "id",
-									entity.getClass().getSimpleName(), maxRetries));
+				throw new PartnerServiceException(
+						UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+								"Bioextractor Configuration ID", "id",
+								entity.getClass().getSimpleName(), maxRetries));
 				}
 				id = PartnerUtil.generateId();
 				attempts++;
@@ -1733,9 +1735,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		} catch (Exception ex) {
 			LOGGER.error("sessionId", "idType", "id",
 					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-					io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
+		responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+				CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+				CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(postBioextractorConfigurationsId);
 		responseWrapper.setVersion(VERSION);
