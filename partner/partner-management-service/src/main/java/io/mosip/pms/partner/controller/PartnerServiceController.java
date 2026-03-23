@@ -187,7 +187,6 @@ public class PartnerServiceController {
 		response.setResponse(extractors);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 	/**
 	 * 
 	 * @param partnerId
