@@ -43,7 +43,6 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
-import io.mosip.pms.partner.request.dto.BioextractorConfigurationCreateRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
@@ -63,7 +62,6 @@ import io.mosip.pms.partner.response.dto.APIkeyRequests;
 import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.response.dto.BioextractorConfigurationCreateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
@@ -87,9 +85,6 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.generate.api.key.post}")
 	private String postGenerateApiKeyId;
-
-	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
-	private String postBioextractorConfigurationsId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -193,27 +188,6 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostbioextractorconfigurations())")
-	@PostMapping(value = "/bioextractor-configurations")
-	@Operation(summary = "Create a new bioextractor configuration",
-			description = "Creates a new bioextractor configuration. Config name must be unique. Configured for PARTNER_ADMIN role.")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> createBioextractorConfiguration(
-			@RequestBody @Valid RequestWrapperV2<BioextractorConfigurationCreateRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<BioextractorConfigurationCreateResponseDto>> validationResponse =
-				requestValidator.validate(postBioextractorConfigurationsId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		inputValidator.validateRequestInput("configName", requestWrapper.getRequest().getConfigName());
-		inputValidator.validateRequestInput("bioextractorProviderName", requestWrapper.getRequest().getBioextractorProviderName());
-		inputValidator.validateRequestInput("bioextractorProviderVersion", requestWrapper.getRequest().getBioextractorProviderVersion());
-		inputValidator.validateRequestInput("bioModality", requestWrapper.getRequest().getBioModality());
-		return partnerService.createBioextractorConfiguration(requestWrapper.getRequest());
-	}
-	
 	/**
 	 * 
 	 * @param partnerId

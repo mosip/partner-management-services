@@ -67,7 +67,9 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationCreateRequestDto;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationCreateResponseDto;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
 @SpringBootTest
@@ -105,7 +107,10 @@ public class PartnerManagementServiceImplTest {
 	
 	@Mock
 	BiometricExtractorProviderRepository extractorProviderRepository;
-	
+
+	@Mock
+	BioextractorConfigurationRepository bioextractorConfigurationRepository;
+
 	@Mock
 	private WebSubPublisher webSubPublisher;
 
@@ -155,6 +160,8 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 100);
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);
@@ -2655,5 +2662,177 @@ public class PartnerManagementServiceImplTest {
 				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
 		assertNotNull(response);
 		assertNotNull(response.getErrors());
+	}
+
+	@Test
+	public void createBioextractorConfigurationTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName(" Config One ");
+		req.setBioextractorProviderName("Acme Provider");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("SUCCESS", resp.getResponse().getStatus());
+		assertNotNull(resp.getResponse().getId());
+	}
+
+	@Test
+	public void createBioextractorConfigurationNullRequestTest() {
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(null);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationBlankConfigNameTest() {
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName("   ");
+		req.setBioextractorProviderName("Acme");
+		req.setBioModality("face");
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationNullProviderNameTest() {
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName("config");
+		req.setBioextractorProviderName(null);
+		req.setBioModality("face");
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationNullModalityTest() {
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName("config");
+		req.setBioextractorProviderName("Acme");
+		req.setBioModality(null);
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationDuplicateNameTest() {
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName(" My Config ");
+		req.setBioextractorProviderName("Acme");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(true);
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIGURATION_NAME.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationIdCollisionRetryTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName("config");
+		req.setBioextractorProviderName("Acme");
+		req.setBioModality("face");
+		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true).thenReturn(false);
+		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("SUCCESS", resp.getResponse().getStatus());
+	}
+
+	@Test
+	public void createBioextractorConfigurationMaxRetriesExceededTest() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 0);
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName("config");
+		req.setBioextractorProviderName("Acme");
+		req.setBioModality("face");
+		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true);
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationSaveExceptionTest() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
+		req.setConfigName("config");
+		req.setBioextractorProviderName("Acme");
+		req.setBioModality("face");
+		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.save(any())).thenThrow(new RuntimeException("DB error"));
+
+		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
 	}
 }

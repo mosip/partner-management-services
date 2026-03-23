@@ -119,8 +119,6 @@ public class PartnerServiceImplTest {
 	@MockBean 
 	BiometricExtractorProviderRepository extractorProviderRepository;
 	@MockBean
-	BioextractorConfigurationRepository bioextractorConfigurationRepository;
-	@MockBean
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
 	@MockBean
 	private WebSubPublisher webSubPublisher;
@@ -165,7 +163,6 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerTypeRepository", partnerTypeRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerHRepository", partnerHRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
-		ReflectionTestUtils.setField(pserviceImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "maxRetries", 100);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerCredentialTypePolicyRepo", partnerCredentialTypePolicyRepo);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerContactRepository", partnerContactRepository);
@@ -1994,130 +1991,4 @@ public class PartnerServiceImplTest {
 		pserviceImpl.checkPartnerExists(partnerExistsRequestDto);
 	}
 
-	@Test
-	public void createBioextractorConfigurationTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName(" Config One ");
-		req.setBioextractorProviderName("Acme Provider");
-		req.setBioextractorProviderVersion("1.0");
-		req.setBioModality("face");
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
-		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
-		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertNotNull(resp.getResponse());
-		assertEquals("SUCCESS", resp.getResponse().getStatus());
-		assertNotNull(resp.getResponse().getId());
-	}
-
-	@Test
-	public void createBioextractorConfigurationNullRequestTest() {
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(null);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(), resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void createBioextractorConfigurationBlankConfigNameTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName("   ");
-		req.setBioextractorProviderName("Acme");
-		req.setBioModality("face");
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(), resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void createBioextractorConfigurationNullProviderNameTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName("config");
-		req.setBioextractorProviderName(null);
-		req.setBioModality("face");
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(), resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void createBioextractorConfigurationNullModalityTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName("config");
-		req.setBioextractorProviderName("Acme");
-		req.setBioModality(null);
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(), resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void createBioextractorConfigurationDuplicateNameTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName(" My Config ");
-		req.setBioextractorProviderName("Acme");
-		req.setBioextractorProviderVersion("1.0");
-		req.setBioModality("face");
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(true);
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIGURATION_NAME.getErrorCode(), resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void createBioextractorConfigurationIdCollisionRetryTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName("config");
-		req.setBioextractorProviderName("Acme");
-		req.setBioModality("face");
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
-		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true).thenReturn(false);
-		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertNotNull(resp.getResponse());
-		assertEquals("SUCCESS", resp.getResponse().getStatus());
-	}
-
-	@Test
-	public void createBioextractorConfigurationMaxRetriesExceededTest() {
-		ReflectionTestUtils.setField(pserviceImpl, "maxRetries", 0);
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName("config");
-		req.setBioextractorProviderName("Acme");
-		req.setBioModality("face");
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
-		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true);
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(), resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void createBioextractorConfigurationSaveExceptionTest() {
-		BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-		req.setConfigName("config");
-		req.setBioextractorProviderName("Acme");
-		req.setBioModality("face");
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
-		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
-		when(bioextractorConfigurationRepository.save(any())).thenThrow(new RuntimeException("DB error"));
-
-		ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> resp = pserviceImpl.createBioextractorConfiguration(req);
-		assertNotNull(resp);
-		assertFalse(resp.getErrors().isEmpty());
-	}
 }

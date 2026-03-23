@@ -808,53 +808,5 @@ public class PartnerServiceControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
-    @WithMockUser(roles = {"PARTNER_ADMIN"})
-    public void createBioextractorConfigurationTest() throws Exception {
-        ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        BioextractorConfigurationCreateResponseDto resp = new BioextractorConfigurationCreateResponseDto();
-        resp.setId("123456");
-        resp.setStatus("SUCCESS");
-        responseWrapper.setResponse(resp);
-        when(partnerService.createBioextractorConfiguration(any())).thenReturn(responseWrapper);
-
-        mockMvc.perform(post("/partners/bioextractor-configurations")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(createBioextractorConfigurationRequestWrapper())))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER_ADMIN"})
-    public void createBioextractorConfigurationValidationErrorTest() throws Exception {
-        RequestWrapperV2<BioextractorConfigurationCreateRequestDto> wrapper = new RequestWrapperV2<>();
-        wrapper.setId("wrong.id");
-        wrapper.setVersion("1.0");
-        wrapper.setRequestTime(LocalDateTime.now());
-        BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-        req.setConfigName("cfg1");
-        req.setBioextractorProviderName("prov");
-        req.setBioModality("face");
-        wrapper.setRequest(req);
-
-        mockMvc.perform(post("/partners/bioextractor-configurations")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(wrapper)))
-                .andExpect(status().isOk());
-    }
-
-    private RequestWrapperV2<BioextractorConfigurationCreateRequestDto> createBioextractorConfigurationRequestWrapper() {
-        RequestWrapperV2<BioextractorConfigurationCreateRequestDto> wrapper = new RequestWrapperV2<>();
-        wrapper.setId("mosip.pms.bioextractor.configurations.post");
-        wrapper.setVersion("1.0");
-        wrapper.setRequestTime(LocalDateTime.now());
-        BioextractorConfigurationCreateRequestDto req = new BioextractorConfigurationCreateRequestDto();
-        req.setConfigName("cfg1");
-        req.setBioextractorProviderName("prov");
-        req.setBioextractorProviderVersion("1.0");
-        req.setBioModality("face");
-        wrapper.setRequest(req);
-        return wrapper;
-    }
 
 }

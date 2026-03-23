@@ -12,10 +12,12 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationCreateRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationCreateResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -118,4 +120,6 @@ public interface PartnerManagerService {
 	ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, @NotNull @Valid APIKeyUpdateRequestDto request);
 
 	ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(String partnerId, String policyId, @NotNull @Valid GenerateAPIKeyRequestDto request);
+
+	ResponseWrapperV2<BioextractorConfigurationCreateResponseDto> createBioextractorConfiguration(BioextractorConfigurationCreateRequestDto request);
 }
