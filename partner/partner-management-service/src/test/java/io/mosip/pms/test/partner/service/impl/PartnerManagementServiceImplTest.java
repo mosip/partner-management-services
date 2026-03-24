@@ -2807,6 +2807,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getBioextractorConfigurationsSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		BioextractorConfiguration config = new BioextractorConfiguration();
@@ -2821,7 +2822,6 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
 				1
 		);
-		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by("crDtimes").descending());
 		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
 				.thenReturn(page);
 
@@ -2841,6 +2841,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getBioextractorConfigurationsEmptyList() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		Page<BioextractorConfiguration> emptyPage = new PageImpl<>(
@@ -2848,7 +2849,6 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
 				0
 		);
-		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by("crDtimes").descending());
 		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
 				.thenReturn(emptyPage);
 
@@ -2884,6 +2884,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getBioextractorConfigurationsWithFiltersAndPagination() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		BioextractorConfiguration config = new BioextractorConfiguration();
@@ -2898,7 +2899,6 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 5, Sort.by("configName").ascending()),
 				1
 		);
-		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by("configName").ascending());
 		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
 				.thenReturn(page);
 
