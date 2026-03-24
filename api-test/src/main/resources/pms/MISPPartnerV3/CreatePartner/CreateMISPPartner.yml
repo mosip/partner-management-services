@@ -231,3 +231,228 @@ CreateMISPPartner:
         "partnerId": "$RUNCONTEXT$pms-112211",
         "status": "InProgress"
 }'
+   Pms_MISPPartnerRegistration_For_With_SpecialCharacter_Address_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_10
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with address containing special character
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-112222",
+        "organizationName": "$RUNCONTEXT$pms-112222",
+        "address": "Bangalore@%",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner04@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-112222",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Invalid_ContactNumber_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_11
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with an invalid contact number
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-113333",
+        "organizationName": "$RUNCONTEXT$pms-113333",
+        "address": "Bangalore",
+        "contactNumber": "-91118553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner05@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-113333",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Special_Character_ContactNumber_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_12
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with contact number contains special character
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-114444",
+        "organizationName": "$RUNCONTEXT$pms-114444",
+        "address": "Bangalore",
+        "contactNumber": "@%8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner06@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-114444",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Special_Character_partnerId_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_13
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with emailid contains special character
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$@%invalid**",
+        "organizationName": "$RUNCONTEXT$pms-115555",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner006@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$@%invalid**",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Empty_logoUrl_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_14
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with empty logourl
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-116666",
+        "organizationName": "$RUNCONTEXT$pms-116666",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner07@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-116666",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_invalid_Format_logoUrl_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_15
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with invalid format logourl
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-117777",
+        "organizationName": "$RUNCONTEXT$pms-117777",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner08@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https:example.com logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-117777",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Special_Character_logoUrl_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_16
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with logourl contains special character
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-118888",
+        "organizationName": "$RUNCONTEXT$pms-118888",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner09@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https:&&%%@@example.com logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-118888",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Special_Character_OrganizationName_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_17
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with organization name contains special character
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-119999",
+        "organizationName": "@%orgname**",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner009@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-119999",
+        "status": "InProgress"
+}'
+   Pms_MISPPartnerRegistration_For_With_Invalid_PartnerId_Field_Smoke_Sid:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_18
+      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with invalid partnerId
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartnerResult
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$invalid_PartnerId",
+        "organizationName": "$RUNCONTEXT$pms-115555",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "$RUNCONTEXT$newmisppartner019@gmail.com",
+        "partnerType": "MISP_Partner",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$invalid_PartnerId",
+        "status": "InProgress"
+}'
