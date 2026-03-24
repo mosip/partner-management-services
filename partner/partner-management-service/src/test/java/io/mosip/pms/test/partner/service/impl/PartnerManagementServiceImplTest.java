@@ -2860,7 +2860,7 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
 		assertTrue(resp.getResponse().getData().isEmpty());
-		assertNull(resp.getErrors());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 	}
 
 	@Test

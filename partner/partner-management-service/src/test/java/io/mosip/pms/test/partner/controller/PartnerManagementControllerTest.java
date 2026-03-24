@@ -883,13 +883,10 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getBioextractorConfigurationsForbiddenForNonAdminTest() throws Exception {
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
-		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class)))
-				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1))
+				.andExpect(status().isForbidden());
+		verify(partnerManagementService, never())
 				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
 	}
 
