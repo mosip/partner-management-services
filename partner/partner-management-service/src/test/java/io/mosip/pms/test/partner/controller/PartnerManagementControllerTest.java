@@ -1,8 +1,10 @@
 package io.mosip.pms.test.partner.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,8 +21,10 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -811,5 +815,49 @@ public class PartnerManagementControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value("mosip.partnermanagement.partners.retrieve"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.version").value("1.0"));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void createBioextractorConfigurationSuccessTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationResponseDto responseDto = new BioextractorConfigurationResponseDto();
+		responseDto.setId("123456");
+		responseDto.setStatus("SUCCESS");
+		responseWrapper.setResponse(responseDto);
+
+		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
+		Mockito.when(partnerManagementService.createBioextractorConfiguration(any())).thenReturn(responseWrapper);
+
+		mockMvc.perform(post("/bio-extractor-configurations")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void createBioextractorConfigurationValidationFailTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> errorWrapper = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.of(errorWrapper)).when(requestValidator).validate(anyString(), any());
+
+		mockMvc.perform(post("/bio-extractor-configurations")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
+				.andExpect(status().isOk());
+	}
+
+	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
+		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = new RequestWrapperV2<>();
+		wrapper.setId("mosip.pms.bioextractor.configurations.post");
+		wrapper.setVersion("1.0");
+		wrapper.setRequestTime(LocalDateTime.now());
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("testConfig");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		wrapper.setRequest(req);
+		return wrapper;
 	}
 }

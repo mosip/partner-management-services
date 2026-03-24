@@ -28,3 +28,5 @@ UPDATE pms.auth_policy_h
 SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"Data Share"', '"typeOfShare":"direct"')
 WHERE id='mpolicy-default-PDFCard'
 AND eff_dtimes='2023-11-14 05:59:00.000';
+
+DROP TABLE IF EXISTS pms.bioextractor_configuration;

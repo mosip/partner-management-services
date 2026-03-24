@@ -12,6 +12,8 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -93,6 +95,9 @@ public class PartnerManagementController {
 
     @Value("${mosip.pms.api.id.update.api.key.patch}")
     private String patchUpdateApiKey;
+
+	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
+	private String postBioextractorConfigurationsId;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -696,5 +701,28 @@ public class PartnerManagementController {
             return validationResponse.get();
         }
 		return partnerManagementService.updateAPIKey(partnerId, policyId, apiKeyName, requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostbioextractorconfigurations())")
+	@PostMapping(value = "/bio-extractor-configurations")
+	@Operation(summary = "Create a new bio-extractor configuration",
+			description = "Creates a new bio-extractor configuration. Config name must be unique. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(
+			@RequestBody @Valid RequestWrapperV2<BioextractorConfigurationRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<BioextractorConfigurationResponseDto>> validationResponse =
+				requestValidator.validate(postBioextractorConfigurationsId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput("configName", requestWrapper.getRequest().getConfigName());
+		inputValidator.validateRequestInput("bioextractorProviderName", requestWrapper.getRequest().getBioextractorProviderName());
+		inputValidator.validateRequestInput("bioextractorProviderVersion", requestWrapper.getRequest().getBioextractorProviderVersion());
+		inputValidator.validateRequestInput("bioModality", requestWrapper.getRequest().getBioModality());
+		return partnerManagementService.createBioextractorConfiguration(requestWrapper.getRequest());
 	}
 }
