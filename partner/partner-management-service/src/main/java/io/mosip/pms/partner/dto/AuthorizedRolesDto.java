@@ -151,6 +151,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> postlinkpolicygrouptopartner;
 
+	private List<String> postbioextractorconfigurations;
+
 	//MISP License controller
 	
 	private List<String> postmisplicense;

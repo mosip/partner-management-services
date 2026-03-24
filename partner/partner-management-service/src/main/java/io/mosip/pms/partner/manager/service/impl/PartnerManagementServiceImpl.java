@@ -69,14 +69,21 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
+import static io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR;
+import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME;
+import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
+import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
+import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 
 @Service
@@ -116,6 +123,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.generate.api.key.post}")
 	private String postGenerateApiKeyId;
 
+	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
+	private String postBioextractorConfigurationsId;
+
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
 
@@ -139,6 +149,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	BiometricExtractorProviderRepository extractorProviderRepository;
+
+	@Autowired
+	BioextractorConfigurationRepository bioextractorConfigurationRepository;
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
@@ -822,10 +835,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			if (attempts >= maxRetries) {
 				LOGGER.error("Failed to generate unique API Key ID after {} attempts", maxRetries);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-								"API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries));
+			throw new PartnerServiceException(
+					UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+					String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+							"API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries));
 			}
 			apiKeyId = PartnerUtil.createPartnerApiKey();
 			attempts++;
@@ -1653,6 +1666,90 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
 		responseWrapper.setId(postLinkPolicyGroup);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(
+			BioextractorConfigurationRequestDto request) {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (request == null) {
+				LOGGER.info("sessionId", "idType", "id", "Request is null in createBioextractorConfiguration.");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			if (request.getConfigName() == null || request.getConfigName().isBlank()
+					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
+					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
+				LOGGER.info("sessionId", "idType", "id", "Required fields are missing in createBioextractorConfiguration.");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+						MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
+			}
+
+			String normalizedConfigName = PartnerUtil.trimAndReplace(request.getConfigName()).toLowerCase();
+			if (bioextractorConfigurationRepository.existsByConfigName(normalizedConfigName)) {
+				LOGGER.info("sessionId", "idType", "id", "Duplicate config name found: " + normalizedConfigName);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
+						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorMessage());
+			}
+
+			BioextractorConfiguration entity = new BioextractorConfiguration();
+			String id = PartnerUtil.generateId();
+			int attempts = 0;
+			while (bioextractorConfigurationRepository.existsById(id)) {
+				if (attempts >= maxRetries) {
+					LOGGER.error("sessionId", "idType", "id",
+							"Failed to generate unique ID for BioextractorConfiguration after " + maxRetries + " attempts.");
+					auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+					throw new PartnerServiceException(
+							UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+							String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+									"Bioextractor Configuration ID", "id",
+									entity.getClass().getSimpleName(), maxRetries));
+				}
+				id = PartnerUtil.generateId();
+				attempts++;
+			}
+
+			entity.setId(id);
+			entity.setConfigName(normalizedConfigName);
+			entity.setBioextractorProviderName(
+					PartnerUtil.trimAndReplace(request.getBioextractorProviderName()).toLowerCase());
+			entity.setBioextractorProviderVersion(
+					PartnerUtil.trimAndReplace(request.getBioextractorProviderVersion()));
+			entity.setBioModality(PartnerUtil.trimAndReplace(request.getBioModality()).toLowerCase());
+			entity.setCrBy(getUserId());
+			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+
+			bioextractorConfigurationRepository.save(entity);
+
+			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_SUCCESS);
+			BioextractorConfigurationResponseDto response = new BioextractorConfigurationResponseDto();
+			response.setId(id);
+			response.setStatus("SUCCESS");
+			responseWrapper.setResponse(response);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
+			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(postBioextractorConfigurationsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

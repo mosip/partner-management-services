@@ -75,6 +75,12 @@ public enum PartnerManageEnum {
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
 	GENERATE_API_KEY_FAILURE("PMS_PRT_779", AuditConstant.AUDIT_SYSTEM, "PATCH GENERATE API KEY",
 			"Generate API Key failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	CREATE_BIOEXTRACTOR_CONFIG_SUCCESS("PMS_PRT_282", AuditConstant.AUDIT_SYSTEM, "POST BIO-EXTRACTOR CONFIGURATION",
+			"Create bio-extractor configuration success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
+			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	CREATE_BIOEXTRACTOR_CONFIG_FAILURE("PMS_PRT_782", AuditConstant.AUDIT_SYSTEM, "POST BIO-EXTRACTOR CONFIGURATION",
+			"Create bio-extractor configuration failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME, "NO_ID",
 			"NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
 
 	private final String eventId;
