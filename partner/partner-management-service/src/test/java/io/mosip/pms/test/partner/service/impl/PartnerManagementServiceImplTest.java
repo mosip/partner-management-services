@@ -2821,6 +2821,7 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
 				1
 		);
+		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by("crDtimes").descending());
 		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
 				.thenReturn(page);
 
@@ -2847,6 +2848,7 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
 				0
 		);
+		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by("crDtimes").descending());
 		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
 				.thenReturn(emptyPage);
 
@@ -2896,6 +2898,7 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 5, Sort.by("configName").ascending()),
 				1
 		);
+		when(partnerHelper.getSortingRequest(anyString(), anyString())).thenReturn(Sort.by("configName").ascending());
 		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
 				.thenReturn(page);
 
