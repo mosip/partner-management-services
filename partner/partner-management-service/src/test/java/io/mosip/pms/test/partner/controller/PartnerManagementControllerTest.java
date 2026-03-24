@@ -24,6 +24,7 @@ import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
@@ -845,6 +846,48 @@ public class PartnerManagementControllerTest {
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
 				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationsSuccessTest() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setId("cfg-id-1");
+		dto.setConfigName("config-one");
+		dto.setBioextractorProviderName("provider-a");
+		dto.setBioextractorProviderVersion("1.0");
+		dto.setBioModality("face");
+		PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(Collections.singletonList(dto));
+		pageResponse.setPageNo(0);
+		pageResponse.setPageSize(10);
+		pageResponse.setTotalResults(1L);
+		responseWrapper.setResponse(pageResponse);
+
+		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class)))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.param("sortFieldName", "createdDateTime")
+						.param("sortType", "desc")
+						.param("pageNo", "0")
+						.param("pageSize", "10")
+						.param("configName", "config")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1))
+				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
+	public void getBioextractorConfigurationsForbiddenForNonAdminTest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isForbidden());
+		verify(partnerManagementService, never())
+				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
 	}
 
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {

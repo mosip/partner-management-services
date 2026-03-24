@@ -42,6 +42,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,7 @@ import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
@@ -125,6 +127,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
 	private String postBioextractorConfigurationsId;
+
+	@Value("${mosip.pms.api.id.bioextractor.configurations.get}")
+	private String getBioextractorConfigurationsId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -1752,6 +1757,87 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(postBioextractorConfigurationsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
+			BioextractorConfigurationFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
+					sortFieldName, sortType, pageNo, pageSize);
+
+			Pageable pageable = Pageable.unpaged();
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(
+						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Specification<BioextractorConfiguration> specification = (root, query, cb) -> {
+				List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
+				if (filterDto.getConfigName() != null && !filterDto.getConfigName().isBlank()) {
+					predicates.add(cb.like(cb.lower(root.get("configName")), "%" + filterDto.getConfigName() + "%"));
+				}
+				if (filterDto.getBioextractorProviderName() != null && !filterDto.getBioextractorProviderName().isBlank()) {
+					predicates.add(cb.like(cb.lower(root.get("bioextractorProviderName")),
+							"%" + filterDto.getBioextractorProviderName() + "%"));
+				}
+				if (filterDto.getBioextractorProviderVersion() != null && !filterDto.getBioextractorProviderVersion().isBlank()) {
+					predicates.add(cb.like(cb.lower(root.get("bioextractorProviderVersion")),
+							"%" + filterDto.getBioextractorProviderVersion() + "%"));
+				}
+				if (filterDto.getBioModality() != null && !filterDto.getBioModality().isBlank()) {
+					predicates.add(cb.like(cb.lower(root.get("bioModality")), "%" + filterDto.getBioModality() + "%"));
+				}
+				return cb.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
+			};
+
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.findAll(specification, pageable);
+			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
+			for (BioextractorConfiguration configuration : configurations.getContent()) {
+				response.add(mapToBioextractorConfigurationDetailDto(configuration));
+			}
+			pageResponse.setData(response);
+			pageResponse.setTotalResults(configurations.getTotalElements());
+			pageResponse.setPageNo(configurations.getNumber());
+			pageResponse.setPageSize(configurations.getSize());
+			responseWrapper.setResponse(pageResponse);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(getBioextractorConfigurationsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private BioextractorConfigurationDetailDto mapToBioextractorConfigurationDetailDto(
+			BioextractorConfiguration configuration) {
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setId(configuration.getId());
+		dto.setConfigName(configuration.getConfigName());
+		dto.setBioextractorProviderName(configuration.getBioextractorProviderName());
+		dto.setBioextractorProviderVersion(configuration.getBioextractorProviderVersion());
+		dto.setBioModality(configuration.getBioModality());
+		if (configuration.getCrDtimes() != null) {
+			dto.setCreatedDateTime(configuration.getCrDtimes().toLocalDateTime());
+		}
+		return dto;
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

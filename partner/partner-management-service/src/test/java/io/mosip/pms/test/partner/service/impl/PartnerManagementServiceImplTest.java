@@ -44,6 +44,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -69,6 +70,7 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
@@ -2801,6 +2803,116 @@ public class PartnerManagementServiceImplTest {
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getBioextractorConfigurationsSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-1");
+		config.setConfigName("config-one");
+		config.setBioextractorProviderName("provider-a");
+		config.setBioextractorProviderVersion("1.0");
+		config.setBioModality("face");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 1, 1, 10, 30)));
+		Page<BioextractorConfiguration> page = new PageImpl<>(
+				Collections.singletonList(config),
+				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
+				1
+		);
+		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"createdDateTime", "desc", 0, 10,
+						new BioextractorConfigurationFilterDto());
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals(1, resp.getResponse().getData().size());
+		assertEquals("cfg-id-1", resp.getResponse().getData().get(0).getId());
+		assertEquals("config-one", resp.getResponse().getData().get(0).getConfigName());
+		assertEquals(LocalDateTime.of(2026, 1, 1, 10, 30), resp.getResponse().getData().get(0).getCreatedDateTime());
+		assertEquals("mosip.pms.bioextractor.configurations.get", resp.getId());
+	}
+
+	@Test
+	public void getBioextractorConfigurationsEmptyList() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+		Page<BioextractorConfiguration> emptyPage = new PageImpl<>(
+				Collections.emptyList(),
+				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
+				0
+		);
+		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+				.thenReturn(emptyPage);
+
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"createdDateTime", "desc", 0, 10,
+						new BioextractorConfigurationFilterDto());
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertTrue(resp.getResponse().getData().isEmpty());
+		assertNull(resp.getErrors());
+	}
+
+	@Test
+	public void getBioextractorConfigurationsRepositoryException() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+				.thenThrow(new RuntimeException("DB error"));
+
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						null, null, null, null,
+						new BioextractorConfigurationFilterDto());
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getBioextractorConfigurationsWithFiltersAndPagination() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-2");
+		config.setConfigName("face-config");
+		config.setBioextractorProviderName("provider-b");
+		config.setBioextractorProviderVersion("2.0");
+		config.setBioModality("face");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 2, 2, 12, 0)));
+		Page<BioextractorConfiguration> page = new PageImpl<>(
+				Collections.singletonList(config),
+				PageRequest.of(0, 5, Sort.by("configName").ascending()),
+				1
+		);
+		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+				.thenReturn(page);
+
+		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
+		filterDto.setConfigName("face");
+		filterDto.setBioextractorProviderName("provider");
+		filterDto.setBioextractorProviderVersion("2.0");
+		filterDto.setBioModality("face");
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"configName", "asc", 0, 5,
+						filterDto);
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals(1, resp.getResponse().getData().size());
+		assertEquals(1L, resp.getResponse().getTotalResults());
 	}
 
 	private void setupSecurityContextForBioextractor() throws Exception {
