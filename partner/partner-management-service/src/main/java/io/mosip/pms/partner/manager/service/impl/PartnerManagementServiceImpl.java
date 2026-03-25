@@ -42,7 +42,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -1780,27 +1779,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
-
-			Specification<BioextractorConfiguration> specification = (root, query, cb) -> {
-				List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
-				if (filterDto.getConfigName() != null && !filterDto.getConfigName().isBlank()) {
-					predicates.add(cb.like(cb.lower(root.get("configName")), "%" + filterDto.getConfigName() + "%"));
-				}
-				if (filterDto.getBioextractorProviderName() != null && !filterDto.getBioextractorProviderName().isBlank()) {
-					predicates.add(cb.like(cb.lower(root.get("bioextractorProviderName")),
-							"%" + filterDto.getBioextractorProviderName() + "%"));
-				}
-				if (filterDto.getBioextractorProviderVersion() != null && !filterDto.getBioextractorProviderVersion().isBlank()) {
-					predicates.add(cb.like(cb.lower(root.get("bioextractorProviderVersion")),
-							"%" + filterDto.getBioextractorProviderVersion() + "%"));
-				}
-				if (filterDto.getBioModality() != null && !filterDto.getBioModality().isBlank()) {
-					predicates.add(cb.like(cb.lower(root.get("bioModality")), "%" + filterDto.getBioModality() + "%"));
-				}
-				return cb.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
-			};
-
-			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.findAll(specification, pageable);
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+					filterDto.getConfigName(),
+					filterDto.getBioextractorProviderName(),
+					filterDto.getBioextractorProviderVersion(),
+					filterDto.getBioModality(),
+					pageable
+			);
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
 			for (BioextractorConfiguration configuration : configurations.getContent()) {
 				response.add(mapToBioextractorConfigurationDetailDto(configuration));

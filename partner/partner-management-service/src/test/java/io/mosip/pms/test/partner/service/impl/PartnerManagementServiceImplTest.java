@@ -2822,7 +2822,8 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
 				1
 		);
-		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2849,7 +2850,8 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
 				0
 		);
-		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(emptyPage);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2867,7 +2869,8 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationsRepositoryException() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
-		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2899,7 +2902,8 @@ public class PartnerManagementServiceImplTest {
 				PageRequest.of(0, 5, Sort.by("configName").ascending()),
 				1
 		);
-		when(bioextractorConfigurationRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class), any(Pageable.class)))
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
