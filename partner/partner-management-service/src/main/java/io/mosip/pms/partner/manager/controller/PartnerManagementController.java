@@ -735,7 +735,7 @@ public class PartnerManagementController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+	public ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
 	) {
 		return partnerManagementService.getBioextractorConfigurations();
 	}

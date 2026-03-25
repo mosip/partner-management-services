@@ -1760,20 +1760,15 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations() {
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> getBioextractorConfigurations() {
+		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
 			List<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.findAll();
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
 			for (BioextractorConfiguration configuration : configurations) {
 				response.add(mapToBioextractorConfigurationDetailDto(configuration));
 			}
-			pageResponse.setData(response);
-			pageResponse.setTotalResults(response.size());
-			pageResponse.setPageNo(0);
-			pageResponse.setPageSize(response.size());
-			responseWrapper.setResponse(pageResponse);
+			responseWrapper.setResponse(response);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id",
 					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());

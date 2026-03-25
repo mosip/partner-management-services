@@ -2819,15 +2819,15 @@ public class PartnerManagementServiceImplTest {
 		when(bioextractorConfigurationRepository.findAll())
 				.thenReturn(Collections.singletonList(config));
 
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> resp =
 				partnerManagementImpl.getBioextractorConfigurations();
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
-		assertEquals(1, resp.getResponse().getData().size());
-		assertEquals("cfg-id-1", resp.getResponse().getData().get(0).getId());
-		assertEquals("config-one", resp.getResponse().getData().get(0).getConfigName());
-		assertEquals(LocalDateTime.of(2026, 1, 1, 10, 30), resp.getResponse().getData().get(0).getCreatedDateTime());
+		assertEquals(1, resp.getResponse().size());
+		assertEquals("cfg-id-1", resp.getResponse().get(0).getId());
+		assertEquals("config-one", resp.getResponse().get(0).getConfigName());
+		assertEquals(LocalDateTime.of(2026, 1, 1, 10, 30), resp.getResponse().get(0).getCreatedDateTime());
 		assertEquals("mosip.pms.bioextractor.configurations.get", resp.getId());
 	}
 
@@ -2838,12 +2838,12 @@ public class PartnerManagementServiceImplTest {
 		when(bioextractorConfigurationRepository.findAll())
 				.thenReturn(Collections.emptyList());
 
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> resp =
 				partnerManagementImpl.getBioextractorConfigurations();
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
-		assertTrue(resp.getResponse().getData().isEmpty());
+		assertTrue(resp.getResponse().isEmpty());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 	}
 
@@ -2854,7 +2854,7 @@ public class PartnerManagementServiceImplTest {
 		when(bioextractorConfigurationRepository.findAll())
 				.thenThrow(new RuntimeException("DB error"));
 
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> resp =
 				partnerManagementImpl.getBioextractorConfigurations();
 
 		assertNotNull(resp);

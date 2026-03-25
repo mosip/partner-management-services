@@ -851,19 +851,14 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getBioextractorConfigurationsSuccessTest() throws Exception {
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
 		dto.setId("cfg-id-1");
 		dto.setConfigName("config-one");
 		dto.setBioextractorProviderName("provider-a");
 		dto.setBioextractorProviderVersion("1.0");
 		dto.setBioModality("face");
-		PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
-		pageResponse.setData(Collections.singletonList(dto));
-		pageResponse.setPageNo(0);
-		pageResponse.setPageSize(10);
-		pageResponse.setTotalResults(1L);
-		responseWrapper.setResponse(pageResponse);
+		responseWrapper.setResponse(Collections.singletonList(dto));
 
 		Mockito.when(partnerManagementService.getBioextractorConfigurations())
 				.thenReturn(responseWrapper);

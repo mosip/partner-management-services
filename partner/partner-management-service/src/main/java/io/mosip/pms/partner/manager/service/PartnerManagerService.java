@@ -124,5 +124,5 @@ public interface PartnerManagerService {
 
 	ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(BioextractorConfigurationRequestDto request);
 
-	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations();
+	ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> getBioextractorConfigurations();
 }
