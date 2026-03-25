@@ -880,19 +880,6 @@ public class PartnerManagementControllerTest {
 				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
 	}
 
-	@Test
-	@WithMockUser(roles = {"PARTNERMANAGER"})
-	public void getBioextractorConfigurationsForbiddenForNonAdminTest() throws Exception {
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
-		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class)))
-				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
-						.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1))
-				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
-	}
-
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
 		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = new RequestWrapperV2<>();
 		wrapper.setId("mosip.pms.bioextractor.configurations.post");

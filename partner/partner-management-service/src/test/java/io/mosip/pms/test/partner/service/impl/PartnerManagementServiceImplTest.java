@@ -2878,7 +2878,7 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
 	}
 

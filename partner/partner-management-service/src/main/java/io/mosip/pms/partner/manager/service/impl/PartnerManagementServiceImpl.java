@@ -87,6 +87,7 @@ import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
 import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
 import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
+import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR;
 
 @Service
 @Transactional
@@ -1818,8 +1819,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LOGGER.error("sessionId", "idType", "id",
 					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
-					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
+					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorCode(),
+					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(getBioextractorConfigurationsId);
 		responseWrapper.setVersion(VERSION);
