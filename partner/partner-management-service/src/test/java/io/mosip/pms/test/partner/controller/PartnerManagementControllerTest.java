@@ -865,19 +865,14 @@ public class PartnerManagementControllerTest {
 		pageResponse.setTotalResults(1L);
 		responseWrapper.setResponse(pageResponse);
 
-		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class)))
+		Mockito.when(partnerManagementService.getBioextractorConfigurations())
 				.thenReturn(responseWrapper);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
-						.param("sortFieldName", "createdDateTime")
-						.param("sortType", "desc")
-						.param("pageNo", "0")
-						.param("pageSize", "10")
-						.param("configName", "config")
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
 		verify(partnerManagementService, times(1))
-				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
+				.getBioextractorConfigurations();
 	}
 
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {

@@ -124,5 +124,5 @@ public interface PartnerManagerService {
 
 	ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(BioextractorConfigurationRequestDto request);
 
-	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, BioextractorConfigurationFilterDto filterDto);
+	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations();
 }

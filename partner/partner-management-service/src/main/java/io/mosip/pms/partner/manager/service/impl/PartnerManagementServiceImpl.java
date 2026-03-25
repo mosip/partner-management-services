@@ -1760,40 +1760,19 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
-			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
-			BioextractorConfigurationFilterDto filterDto) {
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations() {
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
-			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
-					sortFieldName, sortType, pageNo, pageSize);
-
-			Pageable pageable = Pageable.unpaged();
-			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
-			if (isPaginationEnabled) {
-				pageable = PageRequest.of(pageNo, pageSize);
-			}
-			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
-				Sort sort = partnerHelper.getSortingRequest(
-						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
-				pageable = PageRequest.of(pageNo, pageSize, sort);
-			}
-			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					filterDto.getConfigName(),
-					filterDto.getBioextractorProviderName(),
-					filterDto.getBioextractorProviderVersion(),
-					filterDto.getBioModality(),
-					pageable
-			);
+			List<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.findAll();
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
-			for (BioextractorConfiguration configuration : configurations.getContent()) {
+			for (BioextractorConfiguration configuration : configurations) {
 				response.add(mapToBioextractorConfigurationDetailDto(configuration));
 			}
 			pageResponse.setData(response);
-			pageResponse.setTotalResults(configurations.getTotalElements());
-			pageResponse.setPageNo(configurations.getNumber());
-			pageResponse.setPageSize(configurations.getSize());
+			pageResponse.setTotalResults(response.size());
+			pageResponse.setPageNo(0);
+			pageResponse.setPageSize(response.size());
 			responseWrapper.setResponse(pageResponse);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id",

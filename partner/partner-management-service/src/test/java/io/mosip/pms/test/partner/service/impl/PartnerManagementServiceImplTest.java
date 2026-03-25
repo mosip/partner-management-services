@@ -2807,7 +2807,6 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getBioextractorConfigurationsSuccess() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		BioextractorConfiguration config = new BioextractorConfiguration();
@@ -2817,19 +2816,11 @@ public class PartnerManagementServiceImplTest {
 		config.setBioextractorProviderVersion("1.0");
 		config.setBioModality("face");
 		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 1, 1, 10, 30)));
-		Page<BioextractorConfiguration> page = new PageImpl<>(
-				Collections.singletonList(config),
-				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
-				1
-		);
-		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
-				.thenReturn(page);
+		when(bioextractorConfigurationRepository.findAll())
+				.thenReturn(Collections.singletonList(config));
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations(
-						"createdDateTime", "desc", 0, 10,
-						new BioextractorConfigurationFilterDto());
+				partnerManagementImpl.getBioextractorConfigurations();
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
@@ -2842,22 +2833,13 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getBioextractorConfigurationsEmptyList() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
-		Page<BioextractorConfiguration> emptyPage = new PageImpl<>(
-				Collections.emptyList(),
-				PageRequest.of(0, 10, Sort.by("crDtimes").descending()),
-				0
-		);
-		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
-				.thenReturn(emptyPage);
+		when(bioextractorConfigurationRepository.findAll())
+				.thenReturn(Collections.emptyList());
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations(
-						"createdDateTime", "desc", 0, 10,
-						new BioextractorConfigurationFilterDto());
+				partnerManagementImpl.getBioextractorConfigurations();
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
@@ -2869,57 +2851,17 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationsRepositoryException() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
-		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+		when(bioextractorConfigurationRepository.findAll())
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations(
-						null, null, null, null,
-						new BioextractorConfigurationFilterDto());
+				partnerManagementImpl.getBioextractorConfigurations();
 
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void getBioextractorConfigurationsWithFiltersAndPagination() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
-		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
-				"mosip.pms.bioextractor.configurations.get");
-		BioextractorConfiguration config = new BioextractorConfiguration();
-		config.setId("cfg-id-2");
-		config.setConfigName("face-config");
-		config.setBioextractorProviderName("provider-b");
-		config.setBioextractorProviderVersion("2.0");
-		config.setBioModality("face");
-		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 2, 2, 12, 0)));
-		Page<BioextractorConfiguration> page = new PageImpl<>(
-				Collections.singletonList(config),
-				PageRequest.of(0, 5, Sort.by("configName").ascending()),
-				1
-		);
-		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
-				.thenReturn(page);
-
-		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
-		filterDto.setConfigName("face");
-		filterDto.setBioextractorProviderName("provider");
-		filterDto.setBioextractorProviderVersion("2.0");
-		filterDto.setBioModality("face");
-		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations(
-						"configName", "asc", 0, 5,
-						filterDto);
-
-		assertNotNull(resp);
-		assertNotNull(resp.getResponse());
-		assertEquals(1, resp.getResponse().getData().size());
-		assertEquals(1L, resp.getResponse().getTotalResults());
 	}
 
 	private void setupSecurityContextForBioextractor() throws Exception {

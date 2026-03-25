@@ -736,45 +736,7 @@ public class PartnerManagementController {
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
 	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
-			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
-			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
-			@RequestParam(value = "configName", required = false) String configName,
-			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
-			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
-			@RequestParam(value = "bioModality", required = false) String bioModality
 	) {
-		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
-				sortFieldName, sortType, pageNo, pageSize, configName, bioextractorProviderName,
-				bioextractorProviderVersion, bioModality);
-		return partnerManagementService.getBioextractorConfigurations(
-				sortFieldName, sortType, pageNo, pageSize, filterDto);
-	}
-
-	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
-			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
-			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
-			String bioModality) {
-		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
-		inputValidator.validateRequestInput("sortType", sortType);
-		inputValidator.validateRequestInput("configName", configName);
-		inputValidator.validateRequestInput("bioextractorProviderName", bioextractorProviderName);
-		inputValidator.validateRequestInput("bioextractorProviderVersion", bioextractorProviderVersion);
-		inputValidator.validateRequestInput("bioModality", bioModality);
-		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
-		if (configName != null) {
-			filterDto.setConfigName(configName.toLowerCase());
-		}
-		if (bioextractorProviderName != null) {
-			filterDto.setBioextractorProviderName(bioextractorProviderName.toLowerCase());
-		}
-		if (bioextractorProviderVersion != null) {
-			filterDto.setBioextractorProviderVersion(bioextractorProviderVersion.toLowerCase());
-		}
-		if (bioModality != null) {
-			filterDto.setBioModality(bioModality.toLowerCase());
-		}
-		return filterDto;
+		return partnerManagementService.getBioextractorConfigurations();
 	}
 }
