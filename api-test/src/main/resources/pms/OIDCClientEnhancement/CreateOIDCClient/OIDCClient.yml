@@ -1901,3 +1901,468 @@ CreateOIDCClient:
        }
        ]
 }'
+   Pms_CreateOIDCClient_With_Exceeding_ClientName_Length_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when the client name field exceeds the maximum allowed length.
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_55
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766 - Advanced Integration Validation Client for Secure Authentication and Authorization Testing Across Multiple Environments Including QA, UAT, and Production with Extended Logging, Monitoring, Error Handling, Token Lifecycle Management and Compliance Verification Suite, OIDC TEST CLIENT 89766 - Advanced Integration Validation Client for Secure Authentication and Authorization Testing Across Multiple Environments Including QA, UAT, and Production with Extended Logging, Monitoring, Error Handling, Token Lifecycle Management and Compliance Verification Suite",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+     ]
+}'
+   Pms_CreateOIDCClient_With_Exceeding_AuthPartnerId_Length_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when the authPartnerId exceeds the maximum allowed length.
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_56
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "AUTHPRTNRID89766XYZSECURECLIENTINTEGRATIONABC123",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_009"
+        }
+     ]
+}'
+   Pms_CreateOIDCClient_With_Duplicate_ClientAuthMethods_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when duplicate values are provided in the clientAuthMethods field.
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_57
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "[private_key_jwt, private_key_jwt]",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_ESI_010"
+        }
+     ]
+}'
+   Pms_CreateOIDCClient_With_Multiple_Valid_LanguageCodes_Sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that the OIDC client is created successfully when clientNameLangMap contains multiple valid language codes
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_58
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+        "name": "OIDC TEST CLIENT 89767",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+        "clientNameLangMap": "{\"eng\":\"Health Service Client\",\"fra\":\"Client de service de santé\",\"ara\":\"عميل الخدمة الصحية\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "status": "ACTIVE"
+}'
+   Pms_CreateOIDCClient_With_Invalid_ClientNameLangMap_Format_SpaceSeparated_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when clientNameLangMap contains multiple language codes with invalid format separated by spaces
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_59
+      role: partnerauth
+      checkOnlyStatusCodeInResponse: true
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/responseCode
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89767",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"ara\":\"Health Service Client\" \"eng\":\"Client de service de santé\" \"fra\":\"عميل الخدمة الصحية\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "responseCode": "400"
+}'
+   Pms_CreateOIDCClient_With_UpperCase_ClientNameLangMap_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when clientNameLangMap contains an uppercase language code (ARA) instead of the expected lowercase ISO language code format
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_60
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "عميل اختبار المصادقة المفتوحة",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"ARA\":\"المفتوحة\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_POLICY_ERROR_019"
+       }
+     ]
+}'
+   Pms_CreateOIDCClient_With_Unsupported_ClientNameLangMap_LanguageCode_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when clientNameLangMap contains an unsupported or invalid language code
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_61
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "عميل اختبار المصادقة المفتوحة",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"EEEE\":\"المفتوحة\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_POLICY_ERROR_019"
+       }
+     ]
+}'
+   Pms_CreateOIDCClient_With_Empty_ClientName_For_Valid_LanguageKey_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when clientNameLangMap contains a valid language key (eng) with an empty value
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_62
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC CLIENT 845332",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"eng\":\"\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_ESI_018"
+       }
+     ]
+}'
+   Pms_CreateOIDCClient_With_Invalid_LanguageKey_In_Title_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when the title field contains an invalid language key (@nonee) instead of the supported @none
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_63
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"eng\":\"OIDC TEST CLIENT 89766\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@nonee\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_POLICY_ERROR_019"
+       }
+     ]
+}'
+   Pms_CreateOIDCClient_Maximum_ALlowed_ConsentExpire_sid:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that an OIDC client creation fails when the consentExpireInMins exceed the maximum allowed limits "10"
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_64
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "Title",
+      	"type": "verify",
+      	"subTitle": "subTitle",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "14440"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_015"
+         }
+      ]
+}'
+   Pms_CreateOIDCClient_With_Invalid_LanguageKey_In_SubTitle_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when the subTitle field contains an invalid language key (@nonee) instead of the supported @none
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_65
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"eng\":\"OIDC TEST CLIENT 89766\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@nonee\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_019"
+         }
+      ]
+}'
+   Pms_CreateOIDCClient_With_Invalid_SubTitle_Language_Code_With_Multilingual_Values_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when the subTitle field contains an invalid language key (@noneee) along with multiple valid language codes
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_66
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"eng\":\"OIDC TEST CLIENT 89766\"}",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\"}",
+        "type": "verify",
+        "subTitle": "{\"@noneee\":\"Login\",\"fra\":\"Connexion\",\"ara\":\"تسجيل الدخول\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_019"
+         }
+      ]
+}'
+   Pms_CreateOIDCClient_With_Invalid_Title_Language_Code_With_Multiple_Valid_Languages_Neg:
+      endPoint: /v1/partnermanager/oidc-clients
+      description: Validate that OIDC client creation fails when the title field contains an invalid language code (@noneee) along with multiple valid language codes in the clientNameLangMap
+      uniqueIdentifier: TC_PMS_CreateOIDCClient_67
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
+      outputTemplate: pms/error
+      input: '{
+      	"id": "mosip.pms.create.oidc.client.post",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"name": "OIDC TEST CLIENT 89766",
+      	"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+      	"publicKey": "$JWKKEY$",
+      	"authPartnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "{\"eng\":\"Health Service Client\",\"fra\":\"Client de service de santé\",\"ara\":\"عميل الخدمة الصحية\"}",
+      	"userinfoResponseType": "JWS",
+        "title": "{\"@noneee\":\"Login\",\"fra\":\"Connexion\",\"ara\":\"تسجيل الدخول\"}",
+      	"type": "verify",
+      	"subTitle": "{\"@none\":\"subTitle\"}",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_POLICY_ERROR_019"
+       }
+     ]
+}'
