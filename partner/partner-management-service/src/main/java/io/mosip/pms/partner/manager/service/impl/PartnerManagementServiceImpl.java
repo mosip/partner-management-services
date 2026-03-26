@@ -1760,15 +1760,38 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> getBioextractorConfigurations() {
-		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
+			BioextractorConfigurationFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			List<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.findAll();
+			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
+					sortFieldName, sortType, pageNo, pageSize);
+
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(
+						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+					filterDto.getConfigName(),
+					filterDto.getBioextractorProviderName(),
+					filterDto.getBioextractorProviderVersion(),
+					filterDto.getBioModality(),
+					pageable
+			);
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
-			for (BioextractorConfiguration configuration : configurations) {
+			for (BioextractorConfiguration configuration : configurations.getContent()) {
 				response.add(mapToBioextractorConfigurationDetailDto(configuration));
 			}
-			responseWrapper.setResponse(response);
+			pageResponse.setData(response);
+			pageResponse.setTotalResults(configurations.getTotalElements());
+			pageResponse.setPageNo(configurations.getNumber());
+			pageResponse.setPageSize(configurations.getSize());
+			responseWrapper.setResponse(pageResponse);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id",
 					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());

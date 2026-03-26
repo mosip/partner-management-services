@@ -2807,6 +2807,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getBioextractorConfigurationsSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		BioextractorConfiguration config = new BioextractorConfiguration();
@@ -2816,34 +2817,51 @@ public class PartnerManagementServiceImplTest {
 		config.setBioextractorProviderVersion("1.0");
 		config.setBioModality("face");
 		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 1, 1, 10, 30)));
-		when(bioextractorConfigurationRepository.findAll())
-				.thenReturn(Collections.singletonList(config));
+		Page<BioextractorConfiguration> page = new PageImpl<>(
+				Collections.singletonList(config),
+				PageRequest.of(0, 8),
+				1
+		);
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
+				.thenReturn(page);
 
-		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations();
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"createdDateTime", "desc", 0, 8,
+						new BioextractorConfigurationFilterDto());
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
-		assertEquals(1, resp.getResponse().size());
-		assertEquals("cfg-id-1", resp.getResponse().get(0).getId());
-		assertEquals("config-one", resp.getResponse().get(0).getConfigName());
-		assertEquals(LocalDateTime.of(2026, 1, 1, 10, 30), resp.getResponse().get(0).getCreatedDateTime());
+		assertEquals(1, resp.getResponse().getData().size());
+		assertEquals("cfg-id-1", resp.getResponse().getData().get(0).getId());
+		assertEquals("config-one", resp.getResponse().getData().get(0).getConfigName());
+		assertEquals(LocalDateTime.of(2026, 1, 1, 10, 30), resp.getResponse().getData().get(0).getCreatedDateTime());
 		assertEquals("mosip.pms.bioextractor.configurations.get", resp.getId());
 	}
 
 	@Test
 	public void getBioextractorConfigurationsEmptyList() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
-		when(bioextractorConfigurationRepository.findAll())
-				.thenReturn(Collections.emptyList());
+		Page<BioextractorConfiguration> page = new PageImpl<>(
+				Collections.emptyList(),
+				PageRequest.of(0, 8),
+				0
+		);
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
+				.thenReturn(page);
 
-		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations();
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"createdDateTime", "desc", 0, 8,
+						new BioextractorConfigurationFilterDto());
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
-		assertTrue(resp.getResponse().isEmpty());
+		assertTrue(resp.getResponse().getData().isEmpty());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 	}
 
@@ -2851,11 +2869,14 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationsRepositoryException() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
-		when(bioextractorConfigurationRepository.findAll())
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(Pageable.class)))
 				.thenThrow(new RuntimeException("DB error"));
 
-		ResponseWrapperV2<List<BioextractorConfigurationDetailDto>> resp =
-				partnerManagementImpl.getBioextractorConfigurations();
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						null, null, 0, 8,
+						new BioextractorConfigurationFilterDto());
 
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
