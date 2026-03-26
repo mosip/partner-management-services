@@ -414,7 +414,8 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")
 	@GetMapping(value = "/v3")
 	@Operation(summary = "This endpoint retrieves a list of partners",
-			description = "Available since release-1.2.2.0. This endpoint retrieves a list of partners associated with the logged-in user based on the provided query parameters. If the partner type is MISP_Partner, it fetches all MISP partners instead of only those linked to the user. It is configured for role any of the partner type or PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. This endpoint retrieves a list of partners associated with the logged-in user based on the provided query parameters. If the partner type is MISP_Partner, ABIS_Partner, or Manual_Adjudication, Partner Admin fetches all partners instead of only those linked to the user. It is configured for role any of the partner type or PARTNER_ADMIN."
+	)
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
