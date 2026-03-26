@@ -1769,8 +1769,12 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
 					sortFieldName, sortType, pageNo, pageSize);
 
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
-			if (Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+			Pageable pageable = Pageable.unpaged();
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
 				Sort sort = partnerHelper.getSortingRequest(
 						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
 				pageable = PageRequest.of(pageNo, pageSize, sort);
