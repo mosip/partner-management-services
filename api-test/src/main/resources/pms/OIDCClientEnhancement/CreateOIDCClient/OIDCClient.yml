@@ -1992,7 +1992,7 @@ CreateOIDCClient:
       	"logoUri": "https://health-services.com/logo.png",
       	"redirectUris": "$IDPREDIRECTURI$",
       	"grantTypes": "authorization_code",
-      	"clientAuthMethods": "[private_key_jwt, private_key_jwt]",
+      	"clientAuthMethods": "private_key_jwt, private_key_jwt",
       	"clientNameLangMap": "OIDC TEST CLIENT",
       	"userinfoResponseType": "JWS",
       	"title": "Title",
