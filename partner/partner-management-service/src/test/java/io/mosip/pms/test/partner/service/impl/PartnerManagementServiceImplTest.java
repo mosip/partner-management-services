@@ -2885,6 +2885,93 @@ public class PartnerManagementServiceImplTest {
 				resp.getErrors().get(0).getErrorCode());
 	}
 
+	@Test
+	public void getBioextractorConfigurationByIdSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-1");
+		config.setConfigName("config-one");
+		config.setBioextractorProviderName("provider-a");
+		config.setBioextractorProviderVersion("1.0");
+		config.setBioModality("face");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 1, 1, 10, 30)));
+		when(bioextractorConfigurationRepository.findById("cfg-id-1")).thenReturn(Optional.of(config));
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById("cfg-id-1");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("cfg-id-1", resp.getResponse().getId());
+		assertEquals("config-one", resp.getResponse().getConfigName());
+		assertEquals("mosip.pms.bioextractor.configuration.details.get", resp.getId());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getBioextractorConfigurationByIdNullId() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById(null);
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getBioextractorConfigurationByIdBlankId() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById("   ");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getBioextractorConfigurationByIdNotFound() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+		when(bioextractorConfigurationRepository.findById("missing-id")).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById("missing-id");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getBioextractorConfigurationByIdRepositoryException() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+		when(bioextractorConfigurationRepository.findById("cfg-id-1"))
+				.thenThrow(new RuntimeException("DB error"));
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById("cfg-id-1");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
 	private void setupSecurityContextForBioextractor() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
