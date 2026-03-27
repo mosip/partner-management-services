@@ -880,6 +880,47 @@ public class PartnerManagementControllerTest {
 				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
 	}
 
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationByIdSuccessTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setConfigName("config-one");
+		dto.setBioextractorProviderName("provider-a");
+		dto.setBioextractorProviderVersion("1.0");
+		dto.setBioModality("face");
+		responseWrapper.setResponse(dto);
+		Mockito.when(partnerManagementService.getBioextractorConfigurationById("cfg-id-1"))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).getBioextractorConfigurationById("cfg-id-1");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationByIdErrorResponseTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> errorWrapper = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getBioextractorConfigurationById("missing-id"))
+				.thenReturn(errorWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "missing-id")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).getBioextractorConfigurationById("missing-id");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
+	public void getBioextractorConfigurationByIdForbiddenForInvalidRoleTest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isForbidden());
+		verify(partnerManagementService, never()).getBioextractorConfigurationById(anyString());
+	}
+
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
 		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = new RequestWrapperV2<>();
 		wrapper.setId("mosip.pms.bioextractor.configurations.post");
