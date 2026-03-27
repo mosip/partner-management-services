@@ -752,6 +752,21 @@ public class PartnerManagementController {
 				sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurationdetails())")
+	@GetMapping(value = "/bio-extractor-configurations/{bioExtractorConfigurationId}")
+	@Operation(summary = "Get bio-extractor configuration details by ID",
+			description = "Fetches bio-extractor configuration details for the given configuration ID. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(
+			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId) {
+		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
+		return partnerManagementService.getBioextractorConfigurationById(bioExtractorConfigurationId);
+	}
+
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
 			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
 			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
