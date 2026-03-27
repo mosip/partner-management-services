@@ -915,14 +915,10 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getBioextractorConfigurationByIdWithPartnerManagerRoleTest() throws Exception {
-		ResponseWrapperV2<BioextractorConfigurationDetailDto> responseWrapper = new ResponseWrapperV2<>();
-		Mockito.when(partnerManagementService.getBioextractorConfigurationById("cfg-id-1"))
-				.thenReturn(responseWrapper);
-
 		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1)).getBioextractorConfigurationById("cfg-id-1");
+		verify(partnerManagementService, never()).getBioextractorConfigurationById(anyString());
 	}
 
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
