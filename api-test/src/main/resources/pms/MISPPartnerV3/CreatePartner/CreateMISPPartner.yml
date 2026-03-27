@@ -234,7 +234,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_SpecialCharacter_Address_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_10
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with address containing special character
+      description: Validate that a MISP partner is successfully registered with address containing special character
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -259,7 +259,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Invalid_ContactNumber_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_11
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with an invalid contact number
+      description: Validate that a MISP partner is successfully registered with an invalid contact number
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -284,7 +284,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Special_Character_ContactNumber_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_12
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with contact number contains special character
+      description: Validate that a MISP partner is successfully registered with contact number contains special character
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -309,7 +309,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Special_Character_partnerId_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_13
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with emailid contains special character
+      description: Validate that a MISP partner is successfully registered with partnerId contains special character
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -334,7 +334,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Empty_logoUrl_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_14
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with empty logourl
+      description: Validate that a MISP partner is successfully registered with empty logourl
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -359,7 +359,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_invalid_Format_logoUrl_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_15
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with invalid format logourl
+      description: Validate that a MISP partner is successfully registered with invalid format logourl
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -384,7 +384,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Special_Character_logoUrl_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_16
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with logourl contains special character
+      description: Validate that a MISP partner is successfully registered with logourl contains special character
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -409,7 +409,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Special_Character_OrganizationName_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_17
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with organization name contains special character
+      description: Validate that a MISP partner is successfully registered with organization name contains special character
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
@@ -434,7 +434,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_With_Invalid_PartnerId_Field_Smoke_Sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_18
-      description: Validate that the API returns an error or handles appropriately when attempting to register a MISP partner with invalid partnerId
+      description: Validate that a MISP partner is successfully registered with invalid partnerId
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
