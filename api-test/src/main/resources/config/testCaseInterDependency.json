@@ -1,16 +1,80 @@
 {
     "TC_PMS_DeviceDetailsFilter_03": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
     "TC_PMS_DeviceDetailsFilter_01": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
+    "TC_PMS_CreateOIDCClient_66": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_67": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_64": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_GetNotificationsSeenTimestamp_01": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_CreateOIDCClient_65": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_UploadMISPPartnerCertificate_02": [
         "TC_PMS_UploadCertificateMISPCASUBCA_01",
         "TC_PMS_UploadCertificateMISPCASUBCA_02",
         "TC_PMS_CreateMISPPartnerRegistration_02"
     ],
+    "TC_PMS_CreateOIDCClient_62": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_UploadMISPPartnerCertificate_01": [
         "TC_PMS_UploadCertificateMISPCASUBCA_03",
         "TC_PMS_UploadCertificateMISPCASUBCA_04",
         "TC_PMS_CreateMISPPartnerRegistration_01"
+    ],
+    "TC_PMS_CreateOIDCClient_63": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_60": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_61": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_16": ["TC_PMS_DefineMISPPolicy_01"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_17": ["TC_PMS_DefineMISPPolicy_01"],
@@ -43,29 +107,82 @@
         "TC_PMS_CreateMISPPartnerRegistration_01",
         "TC_PMS_DefineMISPPolicy_01"
     ],
+    "TC_PMS_CreateOIDCClient_59": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_GetFTPChipDetail_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_CreateOIDCClient_57": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_58": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_55": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_createApproveRejectDeviceDetail_01": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
+    "TC_PMS_CreateOIDCClient_56": ["TC_PMS_definePolicy_01"],
     "TC_PMS_createApproveRejectDeviceDetail_02": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
     "TC_PMS_CreateOIDCClient_53": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_33": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateOIDCClient_54": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_51": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_52": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_50": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_05": ["TC_PMS_DefineMISPPolicy_01"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_06": ["TC_PMS_DefineMISPPolicy_01"],
@@ -97,11 +214,18 @@
     "TC_PMS_GetOriginalFtmCertifacte_BeforecertUpload_01": ["TC_PMS_createFtmChipDetails_01"],
     "TC_PMS_DBValidator_04": ["TC_PMS_GenerateMISPPartnerLicense_01"],
     "TC_PMS_uploadCredentialPartnerCACert_02": ["TC_PMS_createCredentialPartnerSelfRegistration_01"],
+    "TC_PMS_UploadABISPartnerCertificate_01": [
+        "TC_PMS_CreateABISPartnerRegistration_01",
+        "TC_PMS_UploadCertificateABISCASUBCA_02",
+        "TC_PMS_UploadCertificateABISCASUBCA_01"
+    ],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_20": [
         "TC_PMS_CreateMISPPartnerRegistration_01",
         "TC_PMS_DefineMISPPolicy_01",
         "TC_PMS_GenerateMISPPartnerLicense_01"
     ],
+    "TC_PMS_UploadCertificateABISCASUBCA_02": ["TC_PMS_CreateABISPartnerRegistration_01"],
+    "TC_PMS_UploadCertificateABISCASUBCA_01": ["TC_PMS_CreateABISPartnerRegistration_01"],
     "TC_PMS_RejectMappingDeviceToSbi_01": [
         "TC_PMS_SaveDeviceDetails_02",
         "TC_PMS_createSaveSecureBiometricInterface_01",
@@ -110,56 +234,93 @@
     "TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_15": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_16": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_uploadcaCertMisp_05": ["TC_PMS_createPartnerSelfRegistration_misp_03"],
+    "TC_PMS_uploadCACert_printpartner_02": ["TC_PMS_createPartnerSelfRegistration_printpartner_01"],
     "TC_PMS_CreateOIDCClient_28": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadCACert_printpartner_01": ["TC_PMS_createPartnerSelfRegistration_printpartner_01"],
     "TC_PMS_CreateOIDCClient_29": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadcaCertMisp_03": ["TC_PMS_createPartnerSelfRegistration_misp_02"],
     "TC_PMS_CreateOIDCClient_26": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_27": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadcaCertMisp_01": ["TC_PMS_createPartnerSelfRegistration_misp__01"],
     "TC_PMS_CreateOIDCClient_24": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_25": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_RequestAPIKeyForAuthPartner_04": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_02"
     ],
     "TC_PMS_CreateOIDCClient_22": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_RequestAPIKeyForAuthPartner_03": [
         "TC_PMS_defineDataSharePolicy_02",
         "TC_PMS_createPartnerSelfRegistration_10"
     ],
     "TC_PMS_CreateOIDCClient_23": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_RequestAPIKeyForAuthPartner_06": [
         "TC_PMS_CreateMISPPartnerRegistration_01",
         "TC_PMS_DefineMISPPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_20": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_DefineMISPPolicy_01": ["TC_PMS_definePolicyGroup_20"],
     "TC_PMS_RequestAPIKeyForAuthPartner_05": [
@@ -167,8 +328,12 @@
         "TC_PMS_definePolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_21": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_RequestAPIKeyForAuthPartner_08": ["TC_PMS_definePolicy_01"],
     "TC_PMS_RequestAPIKeyForAuthPartner_07": ["TC_PMS_createPartnerSelfRegistration_01"],
@@ -187,34 +352,64 @@
     "TC_PMS_createUpdateSecureBiometricInterface_04": ["TC_PMS_createSaveSecureBiometricInterface_08"],
     "TC_PMS_updatePolicyGroup_03": ["TC_PMS_definePolicyGroup_17"],
     "TC_PMS_CreateOIDCClient_19": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_updatePolicyGroup_02": ["TC_PMS_definePolicyGroup_17"],
     "TC_PMS_updatePolicyGroup_01": ["TC_PMS_definePolicyGroup_17"],
     "TC_PMS_CreateOIDCClient_17": ["TC_PMS_definePolicy_01"],
     "TC_PMS_CreateOIDCClient_18": ["TC_PMS_definePolicy_01"],
     "TC_PMS_CreateOIDCClient_15": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_16": ["TC_PMS_definePolicy_01"],
     "TC_PMS_CreateOIDCClient_13": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_14": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_11": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
-    "TC_PMS_CreateOIDCClient_12": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_CreateOIDCClient_12": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_CreateOIDCClient_10": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_updatePolicyGroup_07": ["TC_PMS_definePolicyGroup_12"],
     "TC_PMS_updatePolicyGroup_06": ["TC_PMS_definePolicyGroup_12"],
@@ -262,8 +457,12 @@
     "TC_PMS_addBioExtractors_03": ["TC_PMS_createCredentialPartnerSelfRegistration_01"],
     "TC_PMS_ApproveAPIKey_03": ["TC_PMS_RequestAPIKeyForAuthPartner_06"],
     "TC_PMS_CreateOIDCClient_48": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_addBioExtractors_02": [
         "TC_PMS_createPartnerSelfRegistration_01",
@@ -271,8 +470,12 @@
     ],
     "TC_PMS_ApproveAPIKey_02": ["TC_PMS_RequestAPIKeyForAuthPartner_05"],
     "TC_PMS_CreateOIDCClient_49": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_addBioExtractors_01": [
         "TC_PMS_defineDataSharePolicy_01",
@@ -280,19 +483,31 @@
     ],
     "TC_PMS_ApproveAPIKey_05": ["TC_PMS_RequestAPIKeyForAuthPartner_05"],
     "TC_PMS_CreateOIDCClient_46": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_ApproveAPIKey_04": ["TC_PMS_RequestAPIKeyForAuthPartner_05"],
     "TC_PMS_CreateOIDCClient_47": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadPartnerCert_04": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_RejectAPIKey_02": ["TC_PMS_RequestAPIKeyForAuthPartner_01"],
     "TC_PMS_CreateOIDCClient_44": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadPartnerCert_03": [
         "TC_PMS_UploadCACertificate_03",
@@ -300,21 +515,31 @@
         "TC_PMS_createPartnerSelfRegistration_06"
     ],
     "TC_PMS_CreateOIDCClient_45": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadPartnerCert_06": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_ApproveAPIKey_01": ["TC_PMS_RequestAPIKeyForAuthPartner_02"],
     "TC_PMS_CreateOIDCClient_42": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadPartnerCert_05": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_CreateOIDCClient_43": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadPartnerCert_08": [
         "TC_PMS_UploadCACertificate_06",
@@ -322,9 +547,12 @@
         "TC_PMS_createPartnerSelfRegistration_07"
     ],
     "TC_PMS_CreateOIDCClient_40": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_uploadPartnerCert_07": [
         "TC_PMS_UploadCACertificate_02",
@@ -332,8 +560,12 @@
         "TC_PMS_createPartnerSelfRegistration_01"
     ],
     "TC_PMS_CreateOIDCClient_41": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_09": [
         "TC_PMS_SaveDeviceDetails_01",
@@ -359,8 +591,8 @@
         "TC_PMS_createSaveSecureBiometricInterface_01"
     ],
     "TC_PMS_UploadPartnerCert_Printpartner_01": [
-        "TC_PMS_uploadCACert_printpartner_01",
-		"TC_PMS_uploadCACert_printpartner_02",
+        "TC_PMS_UploadCACertificate_01",
+        "TC_PMS_uploadCACert_printpartner_02",
         "TC_PMS_createPartnerSelfRegistration_printpartner_01"
     ],
     "TC_PMS_ApproveMappingDevice_02": [
@@ -401,57 +633,96 @@
     ],
     "TC_UpdateSBID_InsertQuery_03": ["TC_PMS_createSaveSecureBiometricInterface_02"],
     "TC_PMS_CreateOIDCClient_39": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_LinkPolicyGroupToMISPPartnerNegTC_20": [
         "TC_PMS_CreateMISPPartnerRegistration_03",
         "TC_PMS_definePolicyGroup_20"
     ],
     "TC_PMS_CreateOIDCClient_37": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_38": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_35": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_36": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_AddContact_03": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_CreateOIDCClient_33": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_DeactivateOIDCClient_02": ["TC_PMS_CreateOIDCClient_01"],
     "TC_PMS_AddContact_04": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_CreateOIDCClient_34": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_DeactivateOIDCClient_03": ["TC_PMS_CreateOIDCClient_02"],
     "TC_PMS_AddContact_01": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_CreateOIDCClient_31": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_AddContact_02": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_CreateOIDCClient_32": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_DeactivateOIDCClient_05": ["TC_PMS_CreateOIDCClient_01"],
     "TC_PMS_DeactivateOIDCClient_06": ["TC_PMS_CreateOIDCClient_01"],
     "TC_PMS_CreateOIDCClient_30": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_DeactivateOIDCClient_07": ["TC_PMS_CreateOIDCClient_01"],
     "TC_PMS_DeactivateOIDCClient_08": ["TC_PMS_CreateOIDCClient_01"],
@@ -783,6 +1054,22 @@
     "TC_PMS_createPartnerSelfRegistration_misp_03": ["TC_PMS_updatePolicyGroup_03"],
     "TC_PMS_GetOIDCClientV2_04": ["TC_PMS_definePolicy_01"],
     "TC_PMS_createPartnerSelfRegistration_misp_02": ["TC_PMS_updatePolicyGroup_03"],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_14": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_13": [
+        "TC_PMS_GenerateApikey_01",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_16": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_15": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_UpdateOIDCClient_18": ["TC_PMS_CreateOIDCClient_07"],
     "TC_PMS_GetPartnerExpiringCertificate_04": ["TC_PMS_createPartnerSelfRegistration_06"],
     "TC_PMS_GetPartnerExpiringCertificate_03": ["TC_PMS_createPartnerSelfRegistration_06"],
@@ -793,33 +1080,75 @@
         "TC_PMS_definePolicy_01",
         "TC_PMS_definePolicyGroup_01"
     ],
+    "TC_PMS_GenerateApikey_09": [
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_02"
+    ],
     "TC_PMS_GenerateApikey_08": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_02"
     ],
     "TC_PMS_GenerateApikey_05": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_10": ["TC_PMS_GenerateApikey_09"],
     "TC_PMS_GenerateApikey_04": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01"
     ],
     "TC_PMS_GenerateApikey_07": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_12": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_GenerateApikey_06": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_11": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_GenerateApikey_01": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01"
     ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_03": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_02": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_GenerateApikey_03": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_05": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
     ],
     "TC_PMS_createServiceToSaveDeviceDetail_08": ["TC_PMS_createPartnerSelfRegistration_06"],
     "TC_PMS_GenerateApikey_02": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01"
     ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_04": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_createServiceToSaveDeviceDetail_09": ["TC_PMS_createPartnerSelfRegistration_06"],
     "TC_PMS_MISPPartnerExistsNegTC_08": ["TC_PMS_CreateMISPPartnerRegistration_01"],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_07": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_06": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_MISPPartnerExistsNegTC_06": ["TC_PMS_CreateMISPPartnerRegistration_01"],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_09": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_08": ["TC_PMS_GenerateApikey_09"],
     "TC_PMS_MISPPartnerExistsNegTC_04": ["TC_PMS_CreateMISPPartnerRegistration_01"],
     "TC_PMS_createServiceToSaveDeviceDetail_02": ["TC_PMS_createPartnerSelfRegistration_06"],
     "TC_PMS_MISPPartnerExistsNegTC_05": ["TC_PMS_CreateMISPPartnerRegistration_01"],
@@ -846,6 +1175,10 @@
         "TC_PMS_CreateMISPPartnerRegistration_01",
         "TC_PMS_DefineMISPPolicy_01"
     ],
+    "TC_PMS_UpdateOrDeactivateApiKeyNegTC_01": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_GenerateMISPPartnerLicense_04": ["TC_PMS_CreateMISPPartnerRegistration_04"],
     "TC_PMS_GenerateMISPPartnerLicense_03": ["TC_PMS_CreateMISPPartnerRegistration_02"],
     "TC_PMS_DeactivateMISPPartnerLicense_01": [
@@ -861,6 +1194,7 @@
     "TC_PMS_deactivate_policy_group_08": ["TC_PMS_definePolicyGroup_21"],
     "TC_PMS_deactivate_policy_group_05": ["TC_PMS_definePolicyGroup_21"],
     "TC_PMS_deactivate_policy_group_06": ["TC_PMS_definePolicyGroup_21"],
+    "TC_PMS_createPartnerSelfRegistration_21": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_publishPolicy_09": [
         "TC_PMS_definePolicyGroup_10",
         "TC_PMS_definePolicy_28"
@@ -1088,6 +1422,14 @@
         "TC_PMS_createSaveSecureBiometricInterface_10",
         "TC_PMS_createPartnerSelfRegistration_06"
     ],
+    "TC_PMS_UpdateOrDeactivateApiKey_04": [
+        "TC_PMS_GenerateApikey_09",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKey_03": [
+        "TC_PMS_GenerateApikey_01",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
     "TC_PMS_rejectDeviceDetail_01": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
     "TC_PMS_rejectDeviceDetail_02": ["TC_PMS_createServiceToSaveDeviceDetail_02"],
     "TC_PMS_UpdatePolicyAgainstApiKey_02": [
@@ -1101,6 +1443,15 @@
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01",
         "TC_PMS_definePolicy_02"
+    ],
+    "TC_PMS_CreateABISPartnerRegistration_01": ["TC_PMS_definePolicyGroup_13"],
+    "TC_PMS_UpdateOrDeactivateApiKey_02": [
+        "TC_PMS_GenerateApikey_01",
+        "TC_PMS_createPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_UpdateOrDeactivateApiKey_01": [
+        "TC_PMS_GenerateApikey_01",
+        "TC_PMS_createPartnerSelfRegistration_01"
     ],
     "TC_PMS_DeactivateSBIWithAssociatedDevices_02": ["TC_PMS_createSaveSecureBiometricInterface_01"],
     "TC_PMS_DeactivateSBIWithAssociatedDevices_01": [
@@ -1174,49 +1525,79 @@
         "TC_PMS_definePolicy_02"
     ],
     "TC_PMS_CreateOIDCClient_08": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_pms_GetUserConsent_05": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_GetAllNotifications_52": ["TC_PMS_CreateMISPPartnerRegistration_01"],
     "TC_PMS_CreateOIDCClient_09": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetAllNotifications_53": ["TC_PMS_GenerateMISPPartnerLicense_01"],
     "TC_PMS_CreateOIDCClient_06": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetAllNotifications_54": ["TC_PMS_GenerateApikey_01"],
     "TC_PMS_CreateOIDCClient_07": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetAllNotifications_55": ["TC_PMS_GenerateApikey_01"],
     "TC_PMS_CreateOIDCClient_04": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetAllNotifications_56": ["TC_PMS_GenerateApikey_01"],
     "TC_PMS_UpdatePrintPartner_01": ["TC_PMS_createPartnerSelfRegistration_printpartner_01"],
     "TC_PMS_CreateOIDCClient_05": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetAllNotifications_57": ["TC_PMS_SBI_List_22"],
     "TC_PMS_CreateOIDCClient_02": [
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_definePolicy_02"
+        "TC_PMS_definePolicy_02",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_DeactivateOIDCClientV2NegTC_12": ["TC_PMS_CreateOIDCClient_07"],
     "TC_PMS_GetAllNotifications_58": ["TC_PMS_SBI_List_22"],
     "TC_PMS_CreateOIDCClient_03": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_createPartnerSelfRegistration_01",
-        "TC_PMS_definePolicy_01"
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetAllNotifications_59": ["TC_PMS_SBI_List_22"],
     "TC_DBDependent_InsertQuery_02": [
@@ -1228,9 +1609,12 @@
         "TC_PMS_definePolicy_01"
     ],
     "TC_PMS_CreateOIDCClient_01": [
-        "TC_PMS_RequestAPIKeyForAuthPartner_02",
+        "TC_PMS_ApproveAPIKey_02",
+        "TC_PMS_uploadPartnerCert_01",
         "TC_PMS_definePolicy_01",
-        "TC_PMS_createPartnerSelfRegistration_01"
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_RequestAPIKeyForAuthPartner_05",
+        "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_definePolicy_01": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_definePolicy_02": ["TC_PMS_definePolicyGroup_01"],
@@ -1319,6 +1703,7 @@
     "TC_PMS_DeactivateDevice_01": ["TC_PMS_SaveDeviceDetails_04"],
     "TC_PMS_createServiceToUpdateDeviceDetail_01": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
     "TC_PMS_createServiceToUpdateDeviceDetail_02": ["TC_PMS_createServiceToSaveDeviceDetail_02"],
+    "TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_10": ["TC_PMS_GenerateMISPPartnerLicense_01"],
     "TC_PMS_createServiceToUpdateDeviceDetail_04": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
     "TC_PMS_ActivateDeactivatePartner_04": ["TC_PMS_createPartnerSelfRegistration_09"],
     "TC_PMS_createServiceToUpdateDeviceDetail_05": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
@@ -1344,6 +1729,7 @@
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_GenerateMISPPartnerLicense_01"
     ],
+    "TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_09": ["TC_PMS_CreateMISPPartnerRegistration_07"],
     "TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_07": ["TC_PMS_createPartnerSelfRegistration_06"],
     "TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_08": ["TC_PMS_CreateMISPPartnerRegistration_08"],
     "TC_PMS_GetMISPPartnerLicense_21": [
@@ -1352,26 +1738,14 @@
     ],
     "TC_PMS_GetMISPPartnerLicense_20": ["TC_PMS_CreateMISPPartnerRegistration_01"],
     "TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_01": ["TC_PMS_GenerateMISPPartnerLicense_01"],
-    "TC_PMS_ActivateDeactivatePartnerApiKey_06": ["TC_PMS_defineDataSharePolicy_01"],
     "TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_02": ["TC_PMS_GenerateMISPPartnerLicense_01"],
-    "TC_PMS_ActivateDeactivatePartnerApiKey_08": ["TC_PMS_defineDataSharePolicy_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_25": ["TC_PMS_definePolicyGroup_01"],
-    "TC_PMS_ActivateDeactivatePartnerApiKey_03": [
-        "TC_PMS_createPartnerSelfRegistration_01",
-        "TC_PMS_definePolicy_01"
-    ],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_24": ["TC_PMS_definePolicyGroup_01"],
-    "TC_PMS_ActivateDeactivatePartnerApiKey_02": ["TC_PMS_createPartnerSelfRegistration_10"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_23": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_22": ["TC_PMS_definePolicyGroup_01"],
-    "TC_PMS_ActivateDeactivatePartnerApiKey_04": ["TC_PMS_defineDataSharePolicy_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_29": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_28": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_27": ["TC_PMS_definePolicyGroup_01"],
-    "TC_PMS_ActivateDeactivatePartnerApiKey_01": [
-        "TC_PMS_createPartnerSelfRegistration_01",
-        "TC_PMS_definePolicy_01"
-    ],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_26": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_21": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_20": ["TC_PMS_definePolicyGroup_01"],

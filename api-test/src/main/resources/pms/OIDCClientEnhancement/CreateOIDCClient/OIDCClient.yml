@@ -5,7 +5,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_01
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -38,6 +38,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_02
       role: invalidtoken
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -74,7 +75,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_03
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -107,6 +108,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_04
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -143,6 +145,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_05
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -179,6 +182,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_06
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -215,7 +219,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_07
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -248,6 +252,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_08
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/responseCode
@@ -281,6 +286,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_09
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -317,6 +323,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_10
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -353,6 +360,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_11
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -389,6 +397,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_12
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -425,6 +434,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_13
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient2
       outputTemplate: pms/responseCode
@@ -458,6 +468,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_14
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -494,6 +505,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_15
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -638,6 +650,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_19
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -674,6 +687,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_20
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -710,6 +724,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_21
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -746,6 +761,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_22
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -782,6 +798,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_23
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -818,6 +835,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_24
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -854,6 +872,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_25
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -890,6 +909,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_26
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -926,6 +946,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_27
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -962,6 +983,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_28
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -998,6 +1020,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_29
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1034,6 +1057,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_30
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1070,6 +1094,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_31
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1102,6 +1127,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_32
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1138,6 +1164,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_33
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1174,6 +1201,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_34
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1210,6 +1238,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_35
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1242,6 +1271,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_36
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1278,6 +1308,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_37
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1314,6 +1345,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_38
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1350,7 +1382,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_39
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1383,7 +1415,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_40
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1416,6 +1448,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_41
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1452,7 +1485,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_42
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1485,7 +1518,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_43
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1518,6 +1551,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_44
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1554,6 +1588,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_45
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/responseCode
@@ -1587,6 +1622,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_46
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -1619,6 +1655,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_47
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1655,6 +1692,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_48
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1691,6 +1729,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_49
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1727,6 +1766,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_50
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1763,6 +1803,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_51
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1799,6 +1840,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_52
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1835,6 +1877,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_53
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1871,6 +1914,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_54
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1907,6 +1951,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_55
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1979,6 +2024,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_57
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -2015,7 +2061,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_58
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClientResult
       input: '{
@@ -2049,6 +2095,7 @@ CreateOIDCClient:
       role: partnerauth
       checkOnlyStatusCodeInResponse: true
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/responseCode
       input: '{
@@ -2081,6 +2128,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_60
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
@@ -2117,6 +2165,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_61
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
@@ -2153,6 +2202,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_62
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
@@ -2189,6 +2239,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_63
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
@@ -2219,13 +2270,13 @@ CreateOIDCClient:
        }
      ]
 }'
-   Pms_CreateOIDCClient_Maximum_ALlowed_ConsentExpire_sid:
+   Pms_CreateOIDCClient_Maximum_Allowed_ConsentExpire_sid:
       endPoint: /v1/partnermanager/oidc-clients
       description: Validate that an OIDC client creation fails when the consentExpireInMins exceed the maximum allowed limits "10"
       uniqueIdentifier: TC_PMS_CreateOIDCClient_64
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -2262,7 +2313,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_65
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
@@ -2299,7 +2350,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_66
       role: partnerauth
       restMethod: post
-      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_02
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
@@ -2336,6 +2387,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_67
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient3
       outputTemplate: pms/error
       input: '{
