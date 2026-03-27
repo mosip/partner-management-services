@@ -82,10 +82,12 @@ import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
 import static io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME;
+import static io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACTOR_CONFIGURATION_NOT_FOUND;
 import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
 import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
 import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
+import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR;
 
 @Service
@@ -130,6 +132,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.bioextractor.configurations.get}")
 	private String getBioextractorConfigurationsId;
+
+	@Value("${mosip.pms.api.id.bioextractor.configuration.details.get}")
+	private String getBioextractorConfigurationDetailsId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -1809,6 +1814,37 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(getBioextractorConfigurationsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(
+			String bioExtractorConfigurationId) {
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(bioExtractorConfigurationId) || bioExtractorConfigurationId.isBlank()) {
+				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			BioextractorConfiguration configuration = bioextractorConfigurationRepository.findById(bioExtractorConfigurationId)
+					.orElseThrow(() -> new PartnerServiceException(
+							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
+							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorMessage()));
+			responseWrapper.setResponse(mapToBioextractorConfigurationDetailDto(configuration));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getBioextractorConfigurationById method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getBioextractorConfigurationById method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
+					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(getBioextractorConfigurationDetailsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
