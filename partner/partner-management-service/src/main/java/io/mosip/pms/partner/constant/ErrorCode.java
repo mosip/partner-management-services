@@ -225,7 +225,8 @@ public enum ErrorCode {
 	PARTNER_TYPE_FILTER_NOT_ALLOWED("PMS_PRT_270", "partnerType filter is allowed only for PARTNER_ADMIN users."),
 	INVALID_PARTNER_TYPE_FOR_FILTER("PMS_PRT_271", "Invalid partnerType '%s'. Valid values are: Auth_Partner, Manual_Adjudication."),
 	DUPLICATE_BIOEXTRACTOR_CONFIG_NAME("PMS_PRT_272", "Bioextractor configuration with the same config name already exists."),
-	CREATE_BIOEXTRACTOR_CONFIG_ERROR("PMS_PRT_273", "Error occurred while creating bioextractor configuration.");
+	CREATE_BIOEXTRACTOR_CONFIG_ERROR("PMS_PRT_273", "Error occurred while creating bioextractor configuration."),
+	FETCH_BIOEXTRACTOR_CONFIGS_ERROR("PMS_PRT_274", "Error occurred while fetching bioextractor configurations.");
 	/**
 	 * The error code.
 	 */
