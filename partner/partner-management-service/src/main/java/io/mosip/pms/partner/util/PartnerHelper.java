@@ -92,6 +92,16 @@ public class PartnerHelper {
         oidcClientsAliasToColumnMap.put("createdDateTime", "createdDateTime");
     }
 
+    public final Map<String, String> bioextractorConfigurationAliasToColumnMap = new HashMap<>();
+    {
+        bioextractorConfigurationAliasToColumnMap.put("id", "id");
+        bioextractorConfigurationAliasToColumnMap.put("configName", "configName");
+        bioextractorConfigurationAliasToColumnMap.put("bioextractorProviderName", "bioextractorProviderName");
+        bioextractorConfigurationAliasToColumnMap.put("bioextractorProviderVersion", "bioextractorProviderVersion");
+        bioextractorConfigurationAliasToColumnMap.put("bioModality", "bioModality");
+        bioextractorConfigurationAliasToColumnMap.put("createdDateTime", "crDtimes");
+    }
+
     public final Map<String, String> apiKeyAliasToColumnMap = new HashMap<>();
     {
         apiKeyAliasToColumnMap.put("partnerId", "partnerId");

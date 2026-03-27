@@ -3,7 +3,6 @@ package io.mosip.pms.partner.manager.controller;
 import java.util.List;
 import java.util.Optional;
 
-import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
@@ -13,6 +12,7 @@ import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
@@ -724,5 +724,50 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("bioextractorProviderVersion", requestWrapper.getRequest().getBioextractorProviderVersion());
 		inputValidator.validateRequestInput("bioModality", requestWrapper.getRequest().getBioModality());
 		return partnerManagementService.createBioextractorConfiguration(requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurations())")
+	@GetMapping(value = "/bio-extractor-configurations")
+	@Operation(summary = "Get all bio-extractor configurations",
+			description = "Fetches all bio-extractor configurations available in the database. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "configName", required = false) String configName,
+			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
+			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
+			@RequestParam(value = "bioModality", required = false) String bioModality
+	) {
+		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
+				sortFieldName, sortType, pageNo, pageSize, configName, bioextractorProviderName,
+				bioextractorProviderVersion, bioModality);
+		return partnerManagementService.getBioextractorConfigurations(
+				sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
+			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
+			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
+			String bioModality) {
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("configName", configName);
+		inputValidator.validateRequestInput("bioextractorProviderName", bioextractorProviderName);
+		inputValidator.validateRequestInput("bioextractorProviderVersion", bioextractorProviderVersion);
+		inputValidator.validateRequestInput("bioModality", bioModality);
+
+		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
+		if (configName != null) filterDto.setConfigName(configName.toLowerCase());
+		if (bioextractorProviderName != null) filterDto.setBioextractorProviderName(bioextractorProviderName.toLowerCase());
+		if (bioextractorProviderVersion != null) filterDto.setBioextractorProviderVersion(bioextractorProviderVersion.toLowerCase());
+		if (bioModality != null) filterDto.setBioModality(bioModality.toLowerCase());
+		return filterDto;
 	}
 }

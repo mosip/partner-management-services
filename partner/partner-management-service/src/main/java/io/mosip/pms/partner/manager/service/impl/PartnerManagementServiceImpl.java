@@ -74,6 +74,7 @@ import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
@@ -85,6 +86,7 @@ import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
 import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
 import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
+import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR;
 
 @Service
 @Transactional
@@ -125,6 +127,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
 	private String postBioextractorConfigurationsId;
+
+	@Value("${mosip.pms.api.id.bioextractor.configurations.get}")
+	private String getBioextractorConfigurationsId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -1752,6 +1757,74 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(postBioextractorConfigurationsId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
+			BioextractorConfigurationFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
+					sortFieldName, sortType, pageNo, pageSize);
+
+			Pageable pageable = Pageable.unpaged();
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(
+						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+					filterDto.getConfigName(),
+					filterDto.getBioextractorProviderName(),
+					filterDto.getBioextractorProviderVersion(),
+					filterDto.getBioModality(),
+					pageable
+			);
+			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
+			for (BioextractorConfiguration configuration : configurations.getContent()) {
+				response.add(mapToBioextractorConfigurationDetailDto(configuration));
+			}
+			pageResponse.setData(response);
+			pageResponse.setTotalResults(configurations.getTotalElements());
+			pageResponse.setPageNo(configurations.getNumber());
+			pageResponse.setPageSize(configurations.getSize());
+			responseWrapper.setResponse(pageResponse);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorCode(),
+					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(getBioextractorConfigurationsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private BioextractorConfigurationDetailDto mapToBioextractorConfigurationDetailDto(
+			BioextractorConfiguration configuration) {
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setId(configuration.getId());
+		dto.setConfigName(configuration.getConfigName());
+		dto.setBioextractorProviderName(configuration.getBioextractorProviderName());
+		dto.setBioextractorProviderVersion(configuration.getBioextractorProviderVersion());
+		dto.setBioModality(configuration.getBioModality());
+		if (configuration.getCrDtimes() != null) {
+			dto.setCreatedDateTime(configuration.getCrDtimes().toLocalDateTime());
+		}
+		return dto;
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {
