@@ -157,6 +157,8 @@ public class AuthorizedRolesDto {
 
 	private List<String> getbioextractorconfigurationdetails;
 
+	private List<String> getpartnerpolicycredentialtype;
+
 	//MISP License controller
 	
 	private List<String> postmisplicense;
