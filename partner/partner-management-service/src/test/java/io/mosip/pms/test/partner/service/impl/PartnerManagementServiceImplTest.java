@@ -72,6 +72,7 @@ import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
+import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
 @SpringBootTest
@@ -109,6 +110,9 @@ public class PartnerManagementServiceImplTest {
 	
 	@Mock
 	BiometricExtractorProviderRepository extractorProviderRepository;
+
+	@Mock
+	PartnerPolicyCredentialTypeRepository partnerPolicyCredentialTypeRepository;
 
 	@Mock
 	BioextractorConfigurationRepository bioextractorConfigurationRepository;
@@ -162,6 +166,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRepository", partnerPolicyCredentialTypeRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 100);
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
@@ -2969,6 +2974,118 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnerPolicyCredentialTypeSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
+				"mosip.pms.partner.policy.credential.type.get");
+		PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
+		pk.setPartId("partner-1");
+		pk.setPolicyId("policy-1");
+		pk.setCredentialType("euin");
+		PartnerPolicyCredentialType mapping = new PartnerPolicyCredentialType();
+		mapping.setId(pk);
+		mapping.setIsActive(true);
+		mapping.setIsDeleted(false);
+		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
+				.thenReturn(List.of(mapping));
+
+		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
+				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("partner-1", resp.getResponse().getPartnerId());
+		assertEquals("policy-1", resp.getResponse().getPolicyId());
+		assertNotNull(resp.getResponse().getCredentialTypes());
+		assertEquals(1, resp.getResponse().getCredentialTypes().size());
+		assertEquals("euin", resp.getResponse().getCredentialTypes().get(0));
+		assertEquals("mosip.pms.partner.policy.credential.type.get", resp.getId());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getPartnerPolicyCredentialTypeInvalidRequest() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
+				"mosip.pms.partner.policy.credential.type.get");
+		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
+				partnerManagementImpl.getPartnerPolicyCredentialType(null, "policy-1");
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnerPolicyCredentialTypeNotFound() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
+				"mosip.pms.partner.policy.credential.type.get");
+		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
+				.thenReturn(Collections.emptyList());
+
+		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
+				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnerPolicyCredentialTypeMultipleMappingsReturnsDistinctTypes() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
+				"mosip.pms.partner.policy.credential.type.get");
+		PartnerPolicyCredentialTypePK pk1 = new PartnerPolicyCredentialTypePK();
+		pk1.setPartId("partner-1");
+		pk1.setPolicyId("policy-1");
+		pk1.setCredentialType("euin");
+		PartnerPolicyCredentialTypePK pk2 = new PartnerPolicyCredentialTypePK();
+		pk2.setPartId("partner-1");
+		pk2.setPolicyId("policy-1");
+		pk2.setCredentialType("vid");
+		PartnerPolicyCredentialTypePK pk3 = new PartnerPolicyCredentialTypePK();
+		pk3.setPartId("partner-1");
+		pk3.setPolicyId("policy-1");
+		pk3.setCredentialType("euin"); // duplicate
+		PartnerPolicyCredentialType m1 = new PartnerPolicyCredentialType();
+		m1.setId(pk1);
+		PartnerPolicyCredentialType m2 = new PartnerPolicyCredentialType();
+		m2.setId(pk2);
+		PartnerPolicyCredentialType m3 = new PartnerPolicyCredentialType();
+		m3.setId(pk3);
+		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
+				.thenReturn(List.of(m1, m2, m3));
+
+		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
+				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertNotNull(resp.getResponse().getCredentialTypes());
+		assertEquals(2, resp.getResponse().getCredentialTypes().size());
+		assertTrue(resp.getResponse().getCredentialTypes().contains("euin"));
+		assertTrue(resp.getResponse().getCredentialTypes().contains("vid"));
+	}
+
+	@Test
+	public void getPartnerPolicyCredentialTypeRepositoryException() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
+				"mosip.pms.partner.policy.credential.type.get");
+		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
+				.thenThrow(new RuntimeException("DB error"));
+
+		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
+				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
 	}
 
