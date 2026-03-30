@@ -1865,21 +1865,24 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
 						INVALID_REQUEST_PARAM.getErrorMessage());
 			}
-			PartnerPolicyCredentialType mapping =
+			List<PartnerPolicyCredentialType> mappings =
 					partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
-			if (mapping == null) {
+			if (mappings == null || mappings.isEmpty()) {
 				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 			}
 			PartnerPolicyCredentialTypeResponseDto dto = new PartnerPolicyCredentialTypeResponseDto();
 			dto.setPartnerId(partnerId);
 			dto.setPolicyId(policyId);
-			String credentialType = (mapping.getId() == null) ? null : mapping.getId().getCredentialType();
-			if (credentialType == null || credentialType.isBlank()) {
-				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
-			}
-			credentialType = credentialType.trim();
+			String credentialType = mappings.stream()
+					.map(m -> m.getId() == null ? null : m.getId().getCredentialType())
+					.filter(Objects::nonNull)
+					.map(String::trim)
+					.filter(ct -> !ct.isBlank())
+					.findFirst()
+					.orElseThrow(() -> new PartnerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage()));
 			dto.setCredentialType(credentialType);
 			responseWrapper.setResponse(dto);
 		} catch (PartnerServiceException ex) {

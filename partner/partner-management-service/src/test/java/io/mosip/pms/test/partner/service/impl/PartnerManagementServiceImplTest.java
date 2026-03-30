@@ -2990,7 +2990,7 @@ public class PartnerManagementServiceImplTest {
 		mapping.setIsActive(true);
 		mapping.setIsDeleted(false);
 		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(mapping);
+				.thenReturn(List.of(mapping));
 
 		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
 				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
@@ -3079,7 +3079,7 @@ public class PartnerManagementServiceImplTest {
 		PartnerPolicyCredentialType m2 = new PartnerPolicyCredentialType();
 		m2.setId(pk);
 		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(m2);
+				.thenReturn(List.of(m2));
 
 		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
 				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
