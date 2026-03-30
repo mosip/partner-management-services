@@ -2990,7 +2990,7 @@ public class PartnerManagementServiceImplTest {
 		mapping.setIsActive(true);
 		mapping.setIsDeleted(false);
 		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(List.of(mapping));
+				.thenReturn(mapping);
 
 		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
 				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
@@ -3022,7 +3022,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
 				"mosip.pms.partner.policy.credential.type.get");
 		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(Collections.emptyList());
+				.thenReturn(null);
 
 		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
 				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
@@ -3072,15 +3072,14 @@ public class PartnerManagementServiceImplTest {
 	public void getPartnerPolicyCredentialTypeNoNonBlankCredentialTypes() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
 				"mosip.pms.partner.policy.credential.type.get");
-		PartnerPolicyCredentialType m1 = new PartnerPolicyCredentialType();
-		PartnerPolicyCredentialType m2 = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
 		pk.setPartId("partner-1");
 		pk.setPolicyId("policy-1");
 		pk.setCredentialType("   "); // blank
+		PartnerPolicyCredentialType m2 = new PartnerPolicyCredentialType();
 		m2.setId(pk);
 		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(List.of(m1, m2));
+				.thenReturn(m2);
 
 		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
 				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
