@@ -1891,8 +1891,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LOGGER.error("sessionId", "idType", "id",
 					"In getPartnerPolicyCredentialType method of PartnerManagementServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-					io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage()));
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(getPartnerPolicyCredentialTypeId);
 		responseWrapper.setVersion(VERSION);

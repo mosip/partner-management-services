@@ -3047,7 +3047,7 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
 	}
 
