@@ -929,7 +929,7 @@ public class PartnerManagementControllerTest {
 		PartnerPolicyCredentialTypeResponseDto dto = new PartnerPolicyCredentialTypeResponseDto();
 		dto.setPartnerId("partner-1");
 		dto.setPolicyId("policy-1");
-		dto.setCredentialTypes(Collections.singletonList("euin"));
+		dto.setCredentialType("euin");
 		responseWrapper.setResponse(dto);
 		Mockito.when(partnerManagementService.getPartnerPolicyCredentialType("partner-1", "policy-1"))
 				.thenReturn(responseWrapper);

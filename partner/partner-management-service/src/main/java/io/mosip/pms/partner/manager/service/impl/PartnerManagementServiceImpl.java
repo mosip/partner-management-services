@@ -1874,18 +1874,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			PartnerPolicyCredentialTypeResponseDto dto = new PartnerPolicyCredentialTypeResponseDto();
 			dto.setPartnerId(partnerId);
 			dto.setPolicyId(policyId);
-			List<String> credentialTypes = mappings.stream()
+			String credentialType = mappings.stream()
 					.map(m -> m.getId() == null ? null : m.getId().getCredentialType())
 					.filter(Objects::nonNull)
 					.map(String::trim)
 					.filter(ct -> !ct.isBlank())
-					.distinct()
-					.toList();
-			if (credentialTypes.isEmpty()) {
-				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
-			}
-			dto.setCredentialTypes(credentialTypes);
+					.findFirst()
+					.orElseThrow(() -> new PartnerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage()));
+			dto.setCredentialType(credentialType);
 			responseWrapper.setResponse(dto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id",
