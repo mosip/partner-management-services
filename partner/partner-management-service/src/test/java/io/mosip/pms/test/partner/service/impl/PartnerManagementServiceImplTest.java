@@ -2997,9 +2997,8 @@ public class PartnerManagementServiceImplTest {
 
 		assertNotNull(resp);
 		assertNotNull(resp.getResponse());
-		assertEquals("partner-1", resp.getResponse().getPartnerId());
-		assertEquals("policy-1", resp.getResponse().getPolicyId());
-		assertEquals("euin", resp.getResponse().getCredentialType());
+		assertNotNull(resp.getResponse().getCredentialTypes());
+		assertEquals(List.of("euin"), resp.getResponse().getCredentialTypes());
 		assertEquals("mosip.pms.partner.policy.credential.type.get", resp.getId());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 	}
