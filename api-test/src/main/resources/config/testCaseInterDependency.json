@@ -141,7 +141,11 @@
         "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_createApproveRejectDeviceDetail_01": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
-    "TC_PMS_CreateOIDCClient_56": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_CreateOIDCClient_56": [
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_createApproveRejectDeviceDetail_02": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
     "TC_PMS_CreateOIDCClient_53": [
         "TC_PMS_ApproveAPIKey_02",
@@ -361,8 +365,16 @@
     ],
     "TC_PMS_updatePolicyGroup_02": ["TC_PMS_definePolicyGroup_17"],
     "TC_PMS_updatePolicyGroup_01": ["TC_PMS_definePolicyGroup_17"],
-    "TC_PMS_CreateOIDCClient_17": ["TC_PMS_definePolicy_01"],
-    "TC_PMS_CreateOIDCClient_18": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_CreateOIDCClient_17": [
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_publishPolicy_01"
+    ],
+    "TC_PMS_CreateOIDCClient_18": [
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_CreateOIDCClient_15": [
         "TC_PMS_ApproveAPIKey_02",
         "TC_PMS_uploadPartnerCert_01",
@@ -371,7 +383,11 @@
         "TC_PMS_RequestAPIKeyForAuthPartner_05",
         "TC_PMS_publishPolicy_01"
     ],
-    "TC_PMS_CreateOIDCClient_16": ["TC_PMS_definePolicy_01"],
+    "TC_PMS_CreateOIDCClient_16": [
+        "TC_PMS_createPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_01",
+        "TC_PMS_publishPolicy_01"
+    ],
     "TC_PMS_CreateOIDCClient_13": [
         "TC_PMS_ApproveAPIKey_02",
         "TC_PMS_uploadPartnerCert_01",

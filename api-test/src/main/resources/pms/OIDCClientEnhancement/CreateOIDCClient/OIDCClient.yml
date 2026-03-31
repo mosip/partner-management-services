@@ -542,6 +542,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_16
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_publishPolicy_01,TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -578,6 +579,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_17
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_publishPolicy_01,TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -614,6 +616,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_18
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_publishPolicy_01,TC_PMS_createPartnerSelfRegistration_01
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
@@ -1988,6 +1991,7 @@ CreateOIDCClient:
       uniqueIdentifier: TC_PMS_CreateOIDCClient_56
       role: partnerauth
       restMethod: post
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01,TC_PMS_publishPolicy_01
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
       outputTemplate: pms/error
       input: '{
