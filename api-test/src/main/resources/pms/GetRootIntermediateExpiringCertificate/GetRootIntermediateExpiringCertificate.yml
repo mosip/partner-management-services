@@ -4,58 +4,58 @@ GetRootIntermediateExpiringCertificate:
       role: partneradmin
       description: Validate that all root and intermediate certificates nearing expiry are retrieved successfully for a valid request
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_01
-      checkErrorsOnlyInResponse: true
       restMethod: get
+      checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
       outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
       input: '{
+      "caCertificateType": "$REMOVE$",
       "expiryPeriod": "30"
 }'
       output: '{
-      "status": true
 }'
    Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_30_Smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
       description: Validate that root and intermediate certificates expiring within the next 30 days are retrieved successfully
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_02
-      checkErrorsOnlyInResponse: true
       restMethod: get
+      checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
       outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
       input: '{
+      "caCertificateType": "$REMOVE$",
       "expiryPeriod": "30"
 }'
       output: '{
-      "status": true
 }'
    Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_15_Smoke:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
       description: Validate that root and intermediate certificates expiring exactly 15 days from today are retrieved successfully
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_03
-      checkErrorsOnlyInResponse: true
       restMethod: get
+      checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
       outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
       input: '{
+      "caCertificateType": "$REMOVE$",
       "expiryPeriod": "15"
 }'
       output: '{
-      "status": true
 }'
-   Pms_GetRootIntermediateExpiringCertificate_Expiry_Date_10_Smoke:
+   Pms_GetRootIntermediateExpiringCertificate_With_caCertificateType_As_Intermediate_With_ExpiryPeriod:
       endPoint: /v1/partnermanager/trust-chain-certificates
       role: partneradmin
-      description: Validate that root and intermediate certificates expiring exactly 10 days from today are retrieved successfully
+      description: Validate that the API successfully retrieves intermediate certificates expiring within the specified expiry period (30 days)
       uniqueIdentifier: TC_PMS_GetRootIntermediateExpiringCertificate_04
-      checkErrorsOnlyInResponse: true
       restMethod: get
+      checkErrorsOnlyInResponse: true
       inputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate
       outputTemplate: pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificateResult
       input: '{
-      "expiryPeriod": "10"
+      "caCertificateType": "INTERMEDIATE",
+      "expiryPeriod": "30"
 }'
       output: '{
-      "status": true
 }'

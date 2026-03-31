@@ -8,6 +8,7 @@ GetRootIntermediateExpiringCertificateNegativeScenarios:
       inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
       outputTemplate: pms/error
       input: '{
+      "caCertificateType": "INTERMEDIATE",
       "expiryPeriod": "30"
 }'
       output: '{
@@ -26,6 +27,7 @@ GetRootIntermediateExpiringCertificateNegativeScenarios:
       inputTemplate: pms/GetRootIntermediateExpiringCertificateRootIntermediate/GetRootIntermediateExpiringCertificateRootIntermediate
       outputTemplate: pms/error
       input: '{
+      "caCertificateType": "INTERMEDIATE",
       "expiryPeriod": "30"
 }'
       output: '{

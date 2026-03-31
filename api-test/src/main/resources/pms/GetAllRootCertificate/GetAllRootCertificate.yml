@@ -1,6 +1,6 @@
 GetAllRootCertificate:
    Pms_GetAllRootCertificate_allValid_smoke:
-      endPoint: /v1/partnermanager/trust-chain-certificates
+      endPoint: /v1/partnermanager/trust-chain-certificates?caCertificateType=ROOT
       description: Validate that all root certificates are successfully retrieved with valid inputs
       uniqueIdentifier: TC_PMS_getAllRootCertificate_01
       role: partneradmin
@@ -11,4 +11,18 @@ GetAllRootCertificate:
 }'
       output: '{
       "caCertificateType": "ROOT"
+}'
+   Pms_GetAllRootCertificate_With_caCertificateType_As_Root_With_ExpiryPeriod:
+      endPoint: /v1/partnermanager/trust-chain-certificates?caCertificateType=ROOT&expiryPeriod=30
+      description: Validate that all root certificates are successfully retrieved with expiryPeriod as 30
+      uniqueIdentifier: TC_PMS_getAllRootCertificate_02
+      role: partneradmin
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllRootCertificate/getAllRootCertificate
+      outputTemplate: pms/GetAllRootCertificate/getAllRootCertificateResult
+      input: '{
+}'
+      output: '{
+      "caCertificateType": "$REMOVE$"
 }'
