@@ -769,7 +769,8 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerpolicycredentialtype())")
-	@GetMapping(value = "/partners/{partnerId}/policies/{policyId}/credential-type")
+	@GetMapping(value = {"/partners/{partnerId}/policies/{policyId}/credential-types",
+			"/partners/{partnerId}/policies/{policyId}/credential-type"})
 	@Operation(summary = "Get credential types mapped to partner-policy",
 			description = "Fetches credential types mapped to the given partner and policy. Available for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
