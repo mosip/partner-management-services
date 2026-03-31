@@ -769,8 +769,7 @@ public class PartnerManagementController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerpolicycredentialtype())")
-	@GetMapping(value = {"/partners/{partnerId}/policies/{policyId}/credential-types",
-			"/partners/{partnerId}/policies/{policyId}/credential-type"})
+	@GetMapping(value = "/partners/{partnerId}/policies/{policyId}/credential-types")
 	@Operation(summary = "Get credential types mapped to partner-policy",
 			description = "Fetches credential types mapped to the given partner and policy. Available for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
@@ -784,6 +783,20 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("partnerId", partnerId);
 		inputValidator.validateRequestInput("policyId", policyId);
 		return partnerManagementService.getPartnerPolicyCredentialType(partnerId, policyId);
+	}
+
+	/**
+	 * Backward compatible alias for {@link #getPartnerPolicyCredentialType(String, String)}.
+	 * Hidden from OpenAPI to avoid exposing the deprecated path.
+	 */
+	@Deprecated
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerpolicycredentialtype())")
+	@GetMapping(value = "/partners/{partnerId}/policies/{policyId}/credential-type")
+	@io.swagger.v3.oas.annotations.Hidden
+	public ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialTypeDeprecated(
+			@PathVariable("partnerId") String partnerId,
+			@PathVariable("policyId") String policyId) {
+		return getPartnerPolicyCredentialType(partnerId, policyId);
 	}
 
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
