@@ -19,6 +19,7 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
+import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -127,4 +128,6 @@ public interface PartnerManagerService {
 	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, BioextractorConfigurationFilterDto filterDto);
 
 	ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(String bioExtractorConfigurationId);
+
+	ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialType(String partnerId, String policyId);
 }

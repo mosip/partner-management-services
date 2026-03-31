@@ -228,7 +228,9 @@ public enum ErrorCode {
 	CREATE_BIOEXTRACTOR_CONFIG_ERROR("PMS_PRT_273", "Error occurred while creating bioextractor configuration."),
 	FETCH_BIOEXTRACTOR_CONFIGS_ERROR("PMS_PRT_274", "Error occurred while fetching bioextractor configurations."),
 	BIOEXTRACTOR_CONFIGURATION_NOT_FOUND("PMS_PRT_275", "Bioextractor configuration not found for the given id."),
-	FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR("PMS_PRT_276", "Error occurred while fetching bioextractor configuration details.");
+	FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR("PMS_PRT_276", "Error occurred while fetching bioextractor configuration details."),
+	FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR("PMS_PRT_277",
+			"Error occurred while fetching partner policy credential type.");
 	/**
 	 * The error code.
 	 */
