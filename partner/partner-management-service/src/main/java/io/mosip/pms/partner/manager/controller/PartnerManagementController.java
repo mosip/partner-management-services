@@ -785,20 +785,6 @@ public class PartnerManagementController {
 		return partnerManagementService.getPartnerPolicyCredentialType(partnerId, policyId);
 	}
 
-	/**
-	 * Backward compatible alias for {@link #getPartnerPolicyCredentialType(String, String)}.
-	 * Hidden from OpenAPI to avoid exposing the deprecated path.
-	 */
-	@Deprecated
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerpolicycredentialtype())")
-	@GetMapping(value = "/partners/{partnerId}/policies/{policyId}/credential-type")
-	@io.swagger.v3.oas.annotations.Hidden
-	public ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialTypeDeprecated(
-			@PathVariable("partnerId") String partnerId,
-			@PathVariable("policyId") String policyId) {
-		return getPartnerPolicyCredentialType(partnerId, policyId);
-	}
-
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
 			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
 			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
