@@ -767,9 +767,10 @@ public class PolicyManagementService {
 	 */
 	public PolicyResponseDto getPartnerMappedPolicy(String partnerId, String policyId)
 			throws JsonParseException, JsonMappingException, IOException {
-		List<PartnerPolicy> partnerPolicy = partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
-		if (partnerPolicy.isEmpty()) {
-			logger.error("Policy is not mapped for given partner {} and policy {}", partnerId, policyId);
+		List<PartnerPolicyRequest> partnerPolicyRequest = partnerPolicyRequestRepository
+				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, APPROVED);
+		if (partnerPolicyRequest.isEmpty()) {
+			logger.error("Policy is not mapped (approved) for given partner {} and policy {}", partnerId, policyId);
 			throw new PolicyManagementServiceException(ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorCode(),
 					ErrorMessages.NO_POLICY_AGAINST_PARTNER.getErrorMessage());
 		}
