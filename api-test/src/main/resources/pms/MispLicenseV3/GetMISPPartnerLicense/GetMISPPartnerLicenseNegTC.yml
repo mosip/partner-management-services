@@ -1080,3 +1080,112 @@ GetMISPPartnerLicenseNegTC:
 }'
     output: '{
 }'
+  Pms_GetMISPPartnerLicenseNegTC_With_Both_sortFieldName_And_sortType_Invalid_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_42
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with invalid sortFieldName and sortType
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "0",
+    "pageSize": "8",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "Invalid",
+    "sortType": "Invalid",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PRT_357"
+          }
+      ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_With_MispLicenseKeyName_And_ASC_Order_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_43
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with MispLicenseKeyName and asc Order
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_with_Numeric_MisplicenseKeyName_sid_licenseKeyName$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "asc",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PS_ERROR_007"
+          }
+      ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_With_MispLicenseKeyName_And_DESC_Order_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_44
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with MispLicenseKeyName and desc Order
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_with_Numeric_MisplicenseKeyName_sid_licenseKeyName$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "desc",
+    "status": "$REMOVE$",
+    "expiryPeriod": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+          {
+              "errorCode": "PMS_PS_ERROR_007"
+          }
+      ]
+}'
+  Pms_GetMISPPartnerLicenseNegTC_With_Status_Activated_And_ExpiryPeriod_0_Neg:
+    endPoint: /v1/partnermanager/misp-licenses
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseNegTC_45
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses where status is activated and expiryPeriod is 
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+    outputTemplate: pms/responseCode
+    input: '{
+    "pageNo": "$REMOVE$",
+    "pageSize": "$REMOVE$",
+    "partnerId": "$REMOVE$",
+    "orgName": "$REMOVE$",
+    "policyGroupName": "$REMOVE$",
+    "policyName": "$REMOVE$",
+    "mispLicenseKeyName": "$REMOVE$",
+    "sortFieldName": "$REMOVE$",
+    "sortType": "$REMOVE$",
+    "status": "activated",
+    "expiryPeriod": "0"
+}'
+    output: '{
+    "responseCode": "400"
+}'
