@@ -47,6 +47,7 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_03
+      additionalDependencies: TC_PMS_uploadPartnerCert_03
       description: Validate that device details can be saved successfully by a device provider for pending approval with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -85,4 +86,30 @@ SaveDeviceDetails:
 }'
       output: '{
           
+}'
+
+   Pms_SaveDeviceDetails_DeviceProviderForPendingApproval_With_SbiId_Which_Is_Not_Approved_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevicenew
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_05
+      description: Validate that saving device details by a device provider FAILS when using an SBI ID that is not approved
+      restMethod: post
+      additionalDependencies: TC_PMS_uploadPartnerCert_09
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+    "make": "AcmeCorpApprovalPending",
+    "model": "X1000ApprovalPending",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_DEVICE_ERROR_009"
+         }
+      ]
 }'

@@ -83,6 +83,9 @@ public class PostWithBodyAndPathParamsAndAutoGenId extends PMSUtil implements IT
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException, SecurityXSSException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
+		if(testCaseDTO.getUniqueIdentifier().contains("TC_PMS_SaveDeviceDetails_05") || testCaseDTO.getUniqueIdentifier().contains("TC_PMS_SaveDeviceDetails_01")) {
+			System.out.println("Debug");
+		}
 		String[] templateFields = testCaseDTO.getTemplateFields();
 
 		if (HealthChecker.signalTerminateExecution) {

@@ -1135,3 +1135,50 @@ GetAllNotifications:
 }'
       output: '{
 }'
+   Pms_GetAllNotifications_with_Weekly_NotificationType_With_CertificateId:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that notifications retrieval when filtering by Weekly notification type with CertificateId
+      uniqueIdentifier: TC_PMS_GetAllNotifications_67
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
+      outputTemplate: pms/error
+      input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "weekly"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_NOTIFICATION_ERROR_021"
+       }
+     ]
+}'
+   Pms_GetAllNotifications_with_Weekly_NotificationType_And_createdFromDate_And_createdToDate:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that notifications retrieval fails when filtering by Weekly notification type with invalid createdFromDate or createdToDate
+      uniqueIdentifier: TC_PMS_GetAllNotifications_68
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "partner"
+}'
+      output: '{
+}'
