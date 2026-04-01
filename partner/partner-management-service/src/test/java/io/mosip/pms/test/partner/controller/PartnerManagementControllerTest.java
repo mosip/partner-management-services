@@ -927,14 +927,12 @@ public class PartnerManagementControllerTest {
 	public void getPartnerPolicyCredentialTypeSuccessTest() throws Exception {
 		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		PartnerPolicyCredentialTypeResponseDto dto = new PartnerPolicyCredentialTypeResponseDto();
-		dto.setPartnerId("partner-1");
-		dto.setPolicyId("policy-1");
-		dto.setCredentialType("euin");
+		dto.setCredentialTypes(List.of("euin"));
 		responseWrapper.setResponse(dto);
 		Mockito.when(partnerManagementService.getPartnerPolicyCredentialType("partner-1", "policy-1"))
 				.thenReturn(responseWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/{partnerId}/policies/{policyId}/credential-type", "partner-1", "policy-1")
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/{partnerId}/policies/{policyId}/credential-types", "partner-1", "policy-1")
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
 		verify(partnerManagementService, times(1)).getPartnerPolicyCredentialType("partner-1", "policy-1");
