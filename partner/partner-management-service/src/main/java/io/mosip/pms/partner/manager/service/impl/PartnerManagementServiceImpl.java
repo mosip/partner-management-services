@@ -79,7 +79,6 @@ import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
-import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 
 import static io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME;
@@ -124,9 +123,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.update.api.key.patch}")
 	private String patchUpdateApiKey;
-
-	@Value("${mosip.pms.api.id.generate.api.key.post}")
-	private String postGenerateApiKeyId;
 
 	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
 	private String postBioextractorConfigurationsId;
@@ -723,97 +719,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
 		return response;
-	}
-
-	@Override
-	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(
-			String partnerId, String policyId, GenerateAPIKeyRequestDto request) {
-
-		ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			if (Objects.isNull(partnerId) || partnerId.isBlank()) {
-				LOGGER.info("sessionId", "idType", "id", "Partner Id is null or empty");
-				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
-						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "partnerId"));
-			}
-			if (Objects.isNull(policyId) || policyId.isBlank()) {
-				LOGGER.info("sessionId", "idType", "id", "Policy Id is null or empty");
-				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-				throw new PartnerManagerServiceException(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorCode(),
-						String.format(ErrorCode.FIELD_NULL_OR_EMPTY.getErrorMessage(), "policyId"));
-			}
-
-            Partner partner = partnerServiceRepository.findById(partnerId)
-                    .orElseThrow(() -> {
-                        LOGGER.error("Partner ID does not exist: {}", partnerId);
-                        auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-                        return new PartnerManagerServiceException(
-                                ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-                                ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-                    });
-
-            boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-
-            if (!isPartnerAdmin && !getUser().equals(partnerId)) {
-                LOGGER.error("Logged-in user {} does not match the requested partner {}", getUser(), partnerId);
-                auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-                throw new PartnerManagerServiceException(
-                        ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-                        ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()
-                );
-            }
-
-            if (isPartnerAdmin && !PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partner.getPartnerTypeCode())) {
-                LOGGER.error("Partner Admin can only generate API keys for Manual Adjudication partners. Partner type: {}",
-                        partner.getPartnerTypeCode());
-                auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-                throw new PartnerManagerServiceException(
-                        ErrorCode.PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION.getErrorCode(),
-                        ErrorCode.PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION.getErrorMessage()
-                );
-            }
-
-            if (!partner.getIsActive()) {
-                LOGGER.error("Partner is not active with id: {}", partnerId);
-                auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-                throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-            }
-
-            AuthPolicy authPolicy = validatePolicy(policyId);
-            if (partner.getPolicyGroupId() == null
-                    || !partner.getPolicyGroupId().equals(authPolicy.getPolicyGroup().getId())) {
-                LOGGER.error("Policy {} does not belong to partner's policy group", policyId);
-                auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-                throw new PartnerManagerServiceException(
-                        "PMS_POL_015",
-                        "Policy group and policy not mapped.");
-            }
-			String apiKeyName = PartnerUtil.trimAndReplace(request.getApiKeyName());
-			validateApiKeyNameNotExist(partnerId, authPolicy.getId(), apiKeyName,
-					ErrorCode.PARTNER_POLICY_LABEL_EXISTS);
-
-			APIKeyGenerateResponseDto response = createApiKey(partnerId, authPolicy, apiKeyName);
-
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
-			responseWrapper.setResponse(response);
-
-		} catch (PartnerManagerServiceException | PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id",
-					"In generateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In generateAPIKey method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-					ErrorCode.GENERATE_API_KEY_ERROR.getErrorCode(),
-					ErrorCode.GENERATE_API_KEY_ERROR.getErrorMessage()));
-		}
-		responseWrapper.setId(postGenerateApiKeyId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
 	}
 
 	/**

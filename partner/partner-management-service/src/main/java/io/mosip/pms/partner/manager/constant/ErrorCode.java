@@ -74,11 +74,7 @@ public enum ErrorCode {
     INVALID_CERTIFICATE_TYPE("PMS-BJ-011", "Invalid certificate type"),
     INVALID_NOTIFICATION_TYPE("PMS-BJ-012", "Invalid notification type"),
 	DECRYPT_DATA_ERROR("PMS-BJ-013", "Failed to decrypt data using Key Manager"),
-	ENCRYPT_DATA_ERROR("PMS-BJ-014", "Failed to encrypt data using Key Manager"),
-	PARTNER_ADMIN_ONLY_FOR_MANUAL_ADJUDICATION("PMS_PM_074", "Partner Admin can only generate API keys on behalf of Manual Adjudication partners."),
-	PARTNER_TYPE_NOT_ELIGIBLE_FOR_API_KEY("PMS_PM_075", "The partner type is not eligible for API key generation via this endpoint."),
-	GENERATE_API_KEY_ERROR("PMS_PM_077", "Error while generating API key.");
-	
+	ENCRYPT_DATA_ERROR("PMS-BJ-014", "Failed to encrypt data using Key Manager");
 
 	/**
 	 * The error code.
