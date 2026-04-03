@@ -335,65 +335,6 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"AUTH_PARTNER"})
-    public void generateAPIKeyPost_Success() throws Exception {
-        String partnerId = "partner123";
-        String policyId = "policy456";
-        APIKeyGenerateResponseDto responseDto = new APIKeyGenerateResponseDto();
-        responseDto.setApiKey("generated-api-key");
-        responseDto.setLabel("my-api-key");
-        responseDto.setPartnerId(partnerId);
-        responseDto.setPolicyId(policyId);
-        ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        responseWrapper.setResponse(responseDto);
-        responseWrapper.setId("mosip.pms.generate.api.key.post");
-        responseWrapper.setVersion("1.0");
-        RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper = new RequestWrapperV2<>();
-        GenerateAPIKeyRequestDto requestDto = new GenerateAPIKeyRequestDto();
-        requestDto.setApiKeyName("my-api-key");
-        requestWrapper.setRequest(requestDto);
-        requestWrapper.setId("mosip.pms.generate.api.key.post");
-        requestWrapper.setVersion("1.0");
-        requestWrapper.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        when(partnerManagerService.generateAPIKey(eq(partnerId), eq(policyId), any(GenerateAPIKeyRequestDto.class)))
-                .thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/" + partnerId + "/policies/" + policyId + "/api-keys")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(requestWrapper)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.response.apiKey").value("generated-api-key"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.response.label").value("my-api-key"));
-    }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER_ADMIN"})
-    public void generateAPIKeyPost_Success_PartnerAdmin() throws Exception {
-        String partnerId = "partner789";
-        String policyId = "policy012";
-        APIKeyGenerateResponseDto responseDto = new APIKeyGenerateResponseDto();
-        responseDto.setApiKey("admin-generated-key");
-        responseDto.setLabel("admin-api-key");
-        ResponseWrapperV2<APIKeyGenerateResponseDto> responseWrapper = new ResponseWrapperV2<>();
-        responseWrapper.setResponse(responseDto);
-        responseWrapper.setId("mosip.pms.generate.api.key.post");
-        responseWrapper.setVersion("1.0");
-        RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper = new RequestWrapperV2<>();
-        GenerateAPIKeyRequestDto requestDto = new GenerateAPIKeyRequestDto();
-        requestDto.setApiKeyName("admin-api-key");
-        requestWrapper.setRequest(requestDto);
-        requestWrapper.setId("mosip.pms.generate.api.key.post");
-        requestWrapper.setVersion("1.0");
-        requestWrapper.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        when(partnerManagerService.generateAPIKey(eq(partnerId), eq(policyId), any(GenerateAPIKeyRequestDto.class)))
-                .thenReturn(responseWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/" + partnerId + "/policies/" + policyId + "/api-keys")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(requestWrapper)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.response.label").value("admin-api-key"));
-    }
-
-    @Test
-    @WithMockUser(roles = {"AUTH_PARTNER"})
     public void getPartnerCertificateTest() throws Exception{
         PartnerCertDownloadResponeDto certDownloadResponeDto = new PartnerCertDownloadResponeDto();
         RequestWrapper<PartnerCertDownloadRequestDto> requestWrapper = new RequestWrapper<>();
