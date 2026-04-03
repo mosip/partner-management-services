@@ -44,7 +44,6 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
-import io.mosip.pms.partner.request.dto.GenerateAPIKeyRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -82,9 +81,6 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
-
-	@Value("${mosip.pms.api.id.generate.api.key.post}")
-	private String postGenerateApiKeyId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -588,16 +584,9 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	/*
-	 * This endpoint has been deprecated since the 1.3.0
-	 * It has been replaced by the new POST /partners/{partnerId}/policies/{policyId}/api-keys endpoint.
-	 * The functionality provided by this API is now available in the new endpoint.
-	 * Please use the new endpoint for all future requests.
-	 */
-	@Deprecated(since = "1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersgenerateapikey())")
-	@Operation(summary = "To generate API Key for approved policies - deprecated",
-			description = "This endpoint has been deprecated and replaced by the POST /partners/{partnerId}/policies/{policyId}/api-keys endpoint.")
+	@Operation(summary = "To generate API Key for approved policies",
+			description = "Generates an API key for an approved policy mapping. Configured for AUTH_PARTNER and PARTNER_ADMIN roles.")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,
@@ -609,31 +598,6 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersgenerateapikey())")
-	@PostMapping(value = "/{partnerId}/policies/{policyId}/api-keys")
-	@Operation(summary = "This endpoint is used to generate an API key for a given partner and policy.",
-			description = "Available since 1.3.0 Partner Admin can generate API keys on behalf of Manual Adjudication partners. Auth Partner can generate API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<APIKeyGenerateResponseDto> generateAPIKey(
-			@PathVariable("partnerId") String partnerId,
-			@PathVariable("policyId") String policyId,
-			@RequestBody @Valid RequestWrapperV2<GenerateAPIKeyRequestDto> requestWrapper) {
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		inputValidator.validateRequestInput("apiKeyName", requestWrapper.getRequest().getApiKeyName());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
-		Optional<ResponseWrapperV2<APIKeyGenerateResponseDto>> validationResponse =
-				requestValidator.validate(postGenerateApiKeyId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		return partnerManagerService.generateAPIKey(partnerId, policyId, requestWrapper.getRequest());
 	}
 
 	@PostMapping(value = "/v3")
