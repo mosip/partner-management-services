@@ -44,8 +44,11 @@
         "TC_PMS_DefineMISPPolicy_01"
     ],
     "TC_PMS_GetFTPChipDetail_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_36": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_createApproveRejectDeviceDetail_01": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
+    "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_35": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_createApproveRejectDeviceDetail_02": ["TC_PMS_createServiceToSaveDeviceDetail_01"],
+    "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_34": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_CreateOIDCClient_53": [
         "TC_PMS_definePolicy_01",
         "TC_PMS_createPartnerSelfRegistration_01"
@@ -1253,15 +1256,18 @@
     "TC_PMS_definePolicy_27": ["TC_PMS_definePolicyGroup_09"],
     "TC_PMS_definePolicy_28": ["TC_PMS_definePolicyGroup_10"],
     "TC_PMS_definePolicy_18": ["TC_PMS_definePolicyGroup_08"],
+    "TC_PMS_GetMISPPartnerLicenseNegTC_43": ["TC_PMS_GenerateMISPPartnerLicense_04"],
     "TC_PMS_definePolicy_19": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_RemoveMapDeviceWithSBI_01": [
         "TC_PMS_createSaveSecureBiometricInterface_10",
         "TC_PMS_createServiceToSaveDeviceDetail_01"
     ],
+    "TC_PMS_GetMISPPartnerLicenseNegTC_44": ["TC_PMS_GenerateMISPPartnerLicense_04"],
     "TC_PMS_GetMISPPartnerLicenseNegTC_41": ["TC_PMS_CreateMISPPartnerRegistration_07"],
     "TC_PMS_DeactivateOIDCClient_10": ["TC_PMS_CreateOIDCClient_01"],
     "TC_PMS_DeactivateOIDCClient_11": ["TC_PMS_CreateOIDCClient_02"],
     "TC_PMS_GetAllNotifications_63": ["TC_PMS_createSaveSecureBiometricInterface_01"],
+    "TC_PMS_GetMISPPartnerLicense_31": ["TC_PMS_GenerateMISPPartnerLicense_04"],
     "TC_PMS_GetAllNotifications_66": ["TC_PMS_createFtmChipDetails_01"],
     "TC_PMS_GetAllNotifications_67": ["TC_PMS_uploadPartnerCert_01"],
     "TC_PMS_GetAllNotifications_68": ["TC_PMS_uploadPartnerCert_01"],
@@ -1284,6 +1290,7 @@
         "TC_PMS_definePolicy_09",
         "TC_PMS_createPartnerSelfRegistration_01"
     ],
+    "TC_PMS_GetMISPPartnerLicense_33": ["TC_PMS_definePolicyGroup_23"],
     "TC_PMS_MapPartnerAndPolicytoCredentialType_01": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_02"
@@ -1327,6 +1334,7 @@
         "TC_PMS_definePolicy_02"
     ],
     "TC_PMS_DeactivateOIDCClientV2NegTC_12": ["TC_PMS_CreateOIDCClient_07"],
+    "TC_PMS_GetAllNotifications_58": ["TC_PMS_SBI_List_22"],
     "TC_PMS_CreateOIDCClient_03": [
         "TC_PMS_RequestAPIKeyForAuthPartner_02",
         "TC_PMS_createPartnerSelfRegistration_01",

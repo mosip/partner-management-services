@@ -993,7 +993,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_NotificationType_As_validapikey_And_Valid_ApiKeyName_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Validate that notifications retrieval fails when filtering by Partner notification type with an invalid createdToDate
+      description: Validate that notifications retrieval fails when filtering by invalid notification type with valid apiKeyName
       uniqueIdentifier: TC_PMS_GetAllNotifications_60
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -1018,7 +1018,7 @@ GetAllNotifications:
    Pms_GetAllNotifications_With_Invalid_ExpiryDate_Neg:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Validate that notifications retrieval fails when filtering by Partner notification type with an invalid createdToDate
+      description: Validate that notifications retrieval fails when filtering by root notification type with an invalid expiryDate
       uniqueIdentifier: TC_PMS_GetAllNotifications_61
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
@@ -1161,10 +1161,10 @@ GetAllNotifications:
        }
      ]
 }'
-   Pms_GetAllNotifications_with_Weekly_NotificationType_And_createdFromDate_And_createdToDate:
+   Pms_GetAllNotifications_with_Partner_NotificationType_And_certificateId:
       endPoint: /v1/partnermanager/notifications
       role: partneradmin
-      description: Validate that notifications retrieval fails when filtering by Weekly notification type with invalid createdFromDate or createdToDate
+      description: Validate that notifications retrieval fails when filtering by Partner notification type with certificateId
       uniqueIdentifier: TC_PMS_GetAllNotifications_68
       restMethod: get
       checkErrorsOnlyInResponse: true

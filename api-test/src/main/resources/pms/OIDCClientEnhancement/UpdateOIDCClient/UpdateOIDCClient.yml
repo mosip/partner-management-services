@@ -637,7 +637,7 @@ UpdateOIDCClient:
     	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
     	"status": "ACTIVE"
 }'
-   Pms_UpdateOIDCClient_With_Diff_ClientId_And_Diff_ClientDetails_Neg:
+   Pms_UpdateOIDCClient_With_Diff_ClientId_And_Diff_ClientDetails:
       endPoint: /v1/partnermanager/oidc-clients/{clientId}
       description: Updating OAUTH Client
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_20
