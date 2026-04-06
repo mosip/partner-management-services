@@ -1919,6 +1919,16 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	<test name="SaveDeviceDetailsWithDeactivateSBI">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/SaveDeviceDetailsWithDeactivateSBI.yml" />
+		<parameter name="pathParams" value="sbiId" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
+		</classes>
+	</test>
 	<test name="ApproveMappingDeviceToSbiwhenSBIisDeactivated">
 		<parameter name="ymlFile"
 			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiwhenSBIisDeactivated.yml" />

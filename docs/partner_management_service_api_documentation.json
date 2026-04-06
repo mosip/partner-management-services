@@ -801,15 +801,16 @@
                 }
             }
         },
-        "/partners/{partnerId}/policies/{policyId}/api-keys": {
-            "post": {
+        "/partners/{partnerId}/generate/apikey": {
+            "patch": {
                 "tags": [
                     "partner-service-controller",
-                    "NEW"
+                    "EXISTING"
                 ],
-                "summary": "NEW: Generate API key for a given partner and policy",
-                "description": "Available since release-1.3.0. This endpoint is used to generate an API key for a given partner and policy. Partner Admin can generate API keys on behalf of Manual Adjudication partners. Auth Partner can generate API keys for their own partner account. It validates the partner-policy association and follows existing API key generation standards.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN, AUTH_PARTNER",
-                "operationId": "generate-api-key-post",
+                "summary": "Generate API key for an approved policy mapping",
+                "description": "Generates an API key after the partner policy mapping is approved. The JSON body wraps `policyName` and `label` in the standard request envelope (`id`, `version`, `requesttime`, `request`).\r\n\r\n**Removed endpoint (not available):** `POST /partners/{partnerId}/policies/{policyId}/api-keys` was removed from the product; clients must use this `PATCH` endpoint instead.\r\n\r\nConfigure access roles per deployment (for example AUTH_PARTNER, PARTNER_ADMIN).",
+                "operationId": "generateApiKey",
+                "deprecated": false,
                 "parameters": [
                     {
                         "name": "Cookie",
@@ -824,16 +825,7 @@
                         "name": "partnerId",
                         "in": "path",
                         "required": true,
-                        "description": "Unique identifier for the Partner",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Unique identifier for the Policy",
+                        "description": "Partner identifier",
                         "schema": {
                             "type": "string"
                         }
@@ -851,27 +843,29 @@
                                         "description": "Unique id required to access this endpoint"
                                     },
                                     "version": {
-                                        "type": "string",
-                                        "description": "Version of this endpoint"
+                                        "type": "string"
                                     },
                                     "requesttime": {
                                         "type": "string",
-                                        "format": "date-time",
-                                        "description": "Request timestamp in ISO format"
+                                        "format": "date-time"
                                     },
                                     "metadata": {
-                                        "type": "object",
-                                        "description": "Optional metadata"
+                                        "type": "object"
                                     },
                                     "request": {
                                         "type": "object",
                                         "required": [
-                                            "apiKeyName"
+                                            "policyName",
+                                            "label"
                                         ],
                                         "properties": {
-                                            "apiKeyName": {
+                                            "policyName": {
                                                 "type": "string",
-                                                "description": "Name/label for the API key"
+                                                "description": "Approved policy name"
+                                            },
+                                            "label": {
+                                                "type": "string",
+                                                "description": "Label for the generated API key"
                                             }
                                         }
                                     }
@@ -892,68 +886,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "Unique id of the endpoint"
-                                        },
-                                        "version": {
-                                            "type": "string",
-                                            "description": "Version of the endpoint"
-                                        },
-                                        "responseTime": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "description": "Response timestamp in ISO format"
-                                        },
-                                        "metadata": {
-                                            "type": "object",
-                                            "description": "Optional metadata"
-                                        },
-                                        "response": {
-                                            "type": "object",
-                                            "properties": {
-                                                "partnerId": {
-                                                    "type": "string",
-                                                    "description": "Partner ID"
-                                                },
-                                                "policyId": {
-                                                    "type": "string",
-                                                    "description": "Policy ID"
-                                                },
-                                                "apiKey": {
-                                                    "type": "string",
-                                                    "description": "Generated API key"
-                                                },
-                                                "apiKeyName": {
-                                                    "type": "string",
-                                                    "description": "Name/label of the API key"
-                                                },
-                                                "validityTill": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "description": "API key expiry date in ISO format"
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "errorCode": {
-                                                        "type": "string",
-                                                        "description": "Error code"
-                                                    },
-                                                    "message": {
-                                                        "type": "string",
-                                                        "description": "Error message"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/ResponseWrapperAPIKeyGenerateResponseDto"
                                 }
                             }
                         }
@@ -972,7 +905,7 @@
                     }
                 ],
                 "x-stoplight": {
-                    "id": "kp9mz4xw7hn2q"
+                    "id": "pms-partner-generate-apikey-patch"
                 }
             }
         },

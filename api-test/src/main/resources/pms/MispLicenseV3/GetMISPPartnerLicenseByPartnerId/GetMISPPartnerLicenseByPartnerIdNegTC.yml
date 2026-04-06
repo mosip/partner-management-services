@@ -160,6 +160,46 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
         }
     ]
 }'
+  Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Deactivated_PartnerId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_09
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with deactivated partnerId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
+    outputTemplate: pms/error
+    input: '{
+      "partnerId": "$ID:MISPPartnerRegistration_valid_langcode_Arabic_sid_partnerId$",
+      "licenseKeyName": "$REMOVE$",
+      "policyId": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_MSP_427"
+        }
+    ]
+}'
+  Pms_GetMISPPartnerLicenseByPartnerIdNegTC_Null_QueryParam_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_10
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses with Null Query Parameter
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
+    outputTemplate: pms/error
+    input: '{
+      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
+      "licenseKeyName": "null",
+      "policyId": "null"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_MSP_427"
+        }
+    ]
+}'
   Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Null_In_Request_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_11
