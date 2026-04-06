@@ -788,77 +788,185 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerCertificateResponseDto uploadPartnerCertificate(
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
+
+		System.out.println("==== uploadPartnerCertificate START ====");
+
+		System.out.println("partnerCertRequesteDto: " + partnerCertRequesteDto);
+		System.out.println("PartnerId: " + partnerCertRequesteDto.getPartnerId());
+		System.out.println("PartnerDomain: " + partnerCertRequesteDto.getPartnerDomain());
+
 		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
+
 		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		System.out.println("Partner object: " + partner);
+		System.out.println("Partner Approval Status: " + partner.getApprovalStatus());
+		System.out.println("Partner IsActive: " + partner.getIsActive());
+
 		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+			System.out.println("Partner not active condition hit");
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE,
+					partnerCertRequesteDto.getPartnerId(), "partnerId");
+
+			throw new PartnerServiceException(
+					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
+
 		PartnerType partnerType = validateAndGetPartnerType(partner.getPartnerTypeCode());
+		System.out.println("PartnerType: " + partnerType);
+		System.out.println("Policy Required: " + partnerType.getIsPolicyRequired());
+		System.out.println("PolicyGroupId: " + partner.getPolicyGroupId());
+
 		if (partnerType.getIsPolicyRequired() && partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
-			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorCode(),
+			System.out.println("Policy group not mapped condition hit");
+
+			auditUtil.setAuditRequestDto(
+					PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE,
+					partnerCertRequesteDto.getPartnerId(),
+					"partnerId");
+
+			throw new PartnerServiceException(
+					ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorCode(),
 					ErrorCode.POLICY_GROUP_NOT_MAPPED_PARTNER.getErrorMessage());
 		}
+
 		PartnerCertificateRequestDto uploadRequest = new PartnerCertificateRequestDto();
+
 		uploadRequest.setPartnerId(partnerCertRequesteDto.getPartnerId());
 		uploadRequest.setOrganizationName(partner.getName());
 		uploadRequest.setPartnerDomain(partnerCertRequesteDto.getPartnerDomain());
 		uploadRequest.setPartnerType(partner.getPartnerTypeCode());
 		uploadRequest.setCertificateData(partnerCertRequesteDto.getCertificateData());
+
+		System.out.println("Upload Request: " + uploadRequest);
+
 		RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<>();
 		request.setRequest(uploadRequest);
+
+		System.out.println("Final RequestWrapper: " + request);
+
 		PartnerCertificateResponseDto responseObject = null;
+
+		String uploadUrl = environment.getProperty("pmp.partner.certificaticate.upload.rest.uri");
+		System.out.println("Upload API URL: " + uploadUrl);
+
 		Map<String, Object> uploadApiResponse = restUtil.postApi(
-				environment.getProperty("pmp.partner.certificaticate.upload.rest.uri"), null, "", "",
-				MediaType.APPLICATION_JSON, request, Map.class);
-		responseObject = mapper.readValue(mapper.writeValueAsString(uploadApiResponse.get("response")),
+				uploadUrl,
+				null,
+				"",
+				"",
+				MediaType.APPLICATION_JSON,
+				request,
+				Map.class);
+
+		System.out.println("Upload API Response: " + uploadApiResponse);
+
+		responseObject = mapper.readValue(
+				mapper.writeValueAsString(uploadApiResponse.get("response")),
 				PartnerCertificateResponseDto.class);
+
+		System.out.println("Response Object: " + responseObject);
+
 		if (responseObject == null && uploadApiResponse.containsKey(PartnerConstants.ERRORS)) {
-			List<Map<String, Object>> certServiceErrorList = (List<Map<String, Object>>) uploadApiResponse
-					.get(PartnerConstants.ERRORS);
+
+			System.out.println("Errors present in response");
+
+			List<Map<String, Object>> certServiceErrorList =
+					(List<Map<String, Object>>) uploadApiResponse.get(PartnerConstants.ERRORS);
+
+			System.out.println("Error List: " + certServiceErrorList);
+
 			if (!certServiceErrorList.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
-				throw new ApiAccessibleException(certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
+
+				System.out.println("First Error: " + certServiceErrorList.get(0));
+
+				throw new ApiAccessibleException(
+						certServiceErrorList.get(0).get(PartnerConstants.ERRORCODE).toString(),
 						certServiceErrorList.get(0).get(PartnerConstants.ERRORMESSAGE).toString());
 			} else {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
-				throw new ApiAccessibleException(ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
+
+				throw new ApiAccessibleException(
+						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorCode(),
 						ApiAccessibleExceptionConstant.UNABLE_TO_PROCESS.getErrorMessage());
 			}
 		}
+
 		if (responseObject == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
-			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
+			System.out.println("Response object is null");
+
+			throw new ApiAccessibleException(
+					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorCode(),
 					ApiAccessibleExceptionConstant.API_NULL_RESPONSE_EXCEPTION.getErrorMessage());
 		}
 
 		String signedPartnerCert = null;
+
 		try {
-			signedPartnerCert = getPartnerCertFromChain(responseObject.getSignedCertificateData());
+			System.out.println("Signed Certificate Data: " + responseObject.getSignedCertificateData());
+
+			signedPartnerCert =
+					getPartnerCertFromChain(responseObject.getSignedCertificateData());
+
+			System.out.println("Extracted Signed Partner Cert: " + signedPartnerCert);
+
 		} catch (Exception ex) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
-			LOGGER.error("Error occured while extracting the leaf cert", ex);
-			throw new PartnerServiceException(ErrorCode.P7B_CERTDATA_ERROR.getErrorCode(),
+
+			System.out.println("Exception while extracting cert: " + ex.getMessage());
+			ex.printStackTrace();
+
+			throw new PartnerServiceException(
+					ErrorCode.P7B_CERTDATA_ERROR.getErrorCode(),
 					ErrorCode.P7B_CERTDATA_ERROR.getErrorMessage());
 		}
-		if (!partnerCertRequesteDto.getPartnerDomain().equals(FTM)){
-			uploadOtherDomainCertificate(signedPartnerCert, partnerCertRequesteDto.getPartnerId());
+
+		System.out.println("Partner Domain Comparison: " +
+				partnerCertRequesteDto.getPartnerDomain());
+
+		if (!partnerCertRequesteDto.getPartnerDomain().equals(FTM)) {
+
+			System.out.println("Uploading other domain certificate");
+
+			uploadOtherDomainCertificate(
+					signedPartnerCert,
+					partnerCertRequesteDto.getPartnerId());
 		}
+
 		Partner updateObject = partner;
+
+		System.out.println("Update Object before save: " + updateObject);
+
 		updateObject.setUpdBy(getLoggedInUserId());
 		updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		updateObject.setCertificateAlias(responseObject.getCertificateId());
 		updateObject.setIsActive(true);
 		updateObject.setApprovalStatus(PartnerConstants.APPROVED);
+
+		System.out.println("Update Object after modification: " + updateObject);
+
 		partnerRepository.save(updateObject);
-		notify(MapperUtils.mapDataToPublishDto(updateObject, signedPartnerCert), EventType.PARTNER_UPDATED);
-		notify(getDataShareurl(responseObject.getSignedCertificateData()), partnerCertRequesteDto.getPartnerDomain());
+
+		System.out.println("Partner saved successfully");
+
+		notify(
+				MapperUtils.mapDataToPublishDto(updateObject, signedPartnerCert),
+				EventType.PARTNER_UPDATED);
+
+		System.out.println("Notify partner updated event sent");
+
+		notify(
+				getDataShareurl(responseObject.getSignedCertificateData()),
+				partnerCertRequesteDto.getPartnerDomain());
+
+		System.out.println("Notify data share url event sent");
+
 		responseObject.setSignedCertificateData(signedPartnerCert);
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPLOAD_PARTNER_CERT_SUCCESS, partnerCertRequesteDto.getPartnerId(), "partnerId");
+
+		System.out.println("Final Response Object: " + responseObject);
+
+		System.out.println("==== uploadPartnerCertificate END ====");
+
 		return responseObject;
-	}	
+	}
 
 	/**
 	 * Uploading other domain certs
