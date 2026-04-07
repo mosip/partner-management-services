@@ -10739,6 +10739,7 @@
                 "properties": {
                     "extractors": {
                         "type": "array",
+                        "minItems": 1,
                         "items": {
                             "$ref": "#/components/schemas/ExtractorDto"
                         }

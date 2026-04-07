@@ -12,7 +12,7 @@ CREATE TABLE pms.partner_policy_bioextract_request (
     policy_id character varying(36) NOT NULL,
     attribute_name character varying(128) NOT NULL,
     extractor_provider character varying(128) NOT NULL,
-    extractor_provider_version character varying(8),
+    extractor_provider_version character varying(36),
     biometric_modality character varying(64) NOT NULL,
     biometric_sub_types character varying(64),
     status_code character varying(20) NOT NULL DEFAULT 'InProgress',
