@@ -234,7 +234,7 @@ public enum ErrorCode {
 	PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS("PMS_PRT_278",
 			"Policy request has not been sent for the given Partner ID and Policy ID."),
 	DUPLICATE_BIOEXTRACT_REQUEST("PMS_PRT_279",
-			"Bio extractor request is already submitted for this policy mapping request. You can submit again only after it is rejected.");
+			"Unable to submit bio extractor request. Please verify the request payload and ensure no duplicate or conflicting request/configuration already exists for the given partner and policy.");
 	/**
 	 * The error code.
 	 */
