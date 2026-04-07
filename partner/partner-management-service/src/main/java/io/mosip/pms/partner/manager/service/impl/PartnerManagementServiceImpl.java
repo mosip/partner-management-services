@@ -803,7 +803,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setUpdBy(getUser());
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
-			partnerPolicyRequestRepository.save(updateObject);
+			partnerPolicyRequestRepository.save(updateObject);			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping approved successfully";
 		}
@@ -811,7 +811,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setUpdBy(getUser());
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			updateObject.setStatusCode(PartnerConstants.REJECTED);
-			partnerPolicyRequestRepository.save(updateObject);
+			partnerPolicyRequestRepository.save(updateObject);			
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping rejected successfully";
 		}
