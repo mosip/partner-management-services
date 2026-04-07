@@ -1257,6 +1257,65 @@
                 }
             }
         },
+        "/partners/{partnerId}/policies/{policyId}/bio-extractors-request": {
+            "post": {
+                "tags": [
+                    "partner-service-controller"
+                ],
+                "summary": "NEW: Submit bio extractors request",
+                "description": "Persists bio extractor requests against an in-progress partner policy mapping request",
+                "operationId": "submitBioExtractorsRequest",
+                "parameters": [
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestWrapperExtractorsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapperString"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "p1p7qg4e8d2ss"
+                }
+            }
+        },
         "/partners/partnertype/search": {
             "post": {
                 "tags": [
@@ -10626,6 +10685,103 @@
                         ],
                         "description": "Status of the partner"
                     }
+                }
+            },
+            "RequestWrapperExtractorsDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Request id. Expected value: mosip.pms.partners.bioextractors.request.post"
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Request version. Expected value: 1.0"
+                    },
+                    "requesttime": {
+                        "type": "string",
+                        "description": "Current date time in ISO format, when request is being sent.",
+                        "format": "date-time"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "description": "Optional metadata about the request"
+                    },
+                    "request": {
+                        "$ref": "#/components/schemas/ExtractorsDto"
+                    }
+                },
+                "required": [
+                    "id",
+                    "version",
+                    "requesttime",
+                    "request"
+                ],
+                "x-stoplight": {
+                    "id": "q8x1m0c4j2z9a"
+                }
+            },
+            "ExtractorsDto": {
+                "type": "object",
+                "properties": {
+                    "extractors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ExtractorDto"
+                        }
+                    }
+                },
+                "required": [
+                    "extractors"
+                ],
+                "x-stoplight": {
+                    "id": "a7k2n1m0b9v8c"
+                }
+            },
+            "ExtractorDto": {
+                "type": "object",
+                "properties": {
+                    "attributeName": {
+                        "type": "string"
+                    },
+                    "biometric": {
+                        "type": "string",
+                        "description": "Biometric modality, e.g. face, iris, finger"
+                    },
+                    "biometricSubTypes": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional biometric sub types"
+                    },
+                    "extractor": {
+                        "$ref": "#/components/schemas/ExtractorProviderDto"
+                    }
+                },
+                "required": [
+                    "attributeName",
+                    "biometric",
+                    "extractor"
+                ],
+                "x-stoplight": {
+                    "id": "v1c2x3z4b5n6m"
+                }
+            },
+            "ExtractorProviderDto": {
+                "type": "object",
+                "properties": {
+                    "provider": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "provider"
+                ],
+                "x-stoplight": {
+                    "id": "m6n5b4v3c2x1z"
                 }
             },
             "ResponseWrapperListCertificateDto": {

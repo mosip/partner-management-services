@@ -67,6 +67,8 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
+import io.mosip.pms.common.constant.ValidationErrorCode;
+import io.mosip.pms.common.exception.RequestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,6 +83,9 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
+
+	@Value("${mosip.pms.api.id.partners.bioextractors.request.post}")
+	private String postPartnerBioextractorsRequestId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -166,6 +171,30 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);		
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/bio-extractors-request", method = RequestMethod.POST)
+	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
+	public ResponseEntity<ResponseWrapper<String>> submitBioExtractorsRequest(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<ExtractorsDto> request) {
+		validateRequestIdAndVersion(postPartnerBioextractorsRequestId, request.getId(), request.getVersion());
+		requestValidator.validateReqTime(request.getRequesttime());
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	private void validateRequestIdAndVersion(String operation, String requestId, String version) {
+		requestValidator.validateId(operation, requestId);
+		if (version == null || !RequestValidator.VERSION.equalsIgnoreCase(version)) {
+			throw new RequestException(ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorMessage());
+		}
 	}
 	
 	/**

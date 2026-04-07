@@ -8,6 +8,11 @@ public class ExtractorDto {
 	private String attributeName;
 	
 	private String biometric;
+
+	/**
+	 * Optional biometric sub types.
+	 */
+	private String biometricSubTypes;
 	
 	private ExtractorProviderDto extractor;
 }

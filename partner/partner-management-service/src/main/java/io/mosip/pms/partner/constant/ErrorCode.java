@@ -230,7 +230,11 @@ public enum ErrorCode {
 	BIOEXTRACTOR_CONFIGURATION_NOT_FOUND("PMS_PRT_275", "Bioextractor configuration not found for the given id."),
 	FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR("PMS_PRT_276", "Error occurred while fetching bioextractor configuration details."),
 	FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR("PMS_PRT_277",
-			"Error occurred while fetching partner policy credential type.");
+			"Error occurred while fetching partner policy credential type."),
+	PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS("PMS_PRT_278",
+			"No in-progress policy mapping request exists for this partner and policy. Submit a policy mapping request first."),
+	DUPLICATE_BIOEXTRACT_REQUEST("PMS_PRT_279",
+			"Bio extractor request is already submitted for this policy mapping request. You can submit again only after it is rejected.");
 	/**
 	 * The error code.
 	 */

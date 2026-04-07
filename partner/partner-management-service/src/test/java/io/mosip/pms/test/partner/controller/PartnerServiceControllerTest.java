@@ -155,6 +155,16 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(post("/partners/123456/bioextractors/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void submitBioExtractorsRequestTest() throws Exception {
+    	String responseDto = "ok";
+    	when(partnerService.submitBioExtractorsRequest(eq("123456"), eq("12345"), any(ExtractorsDto.class)))
+    			.thenReturn(responseDto);
+    	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
+    			.content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
+    }
     
     @Test
     @WithMockUser(roles = {"PARTNER"})

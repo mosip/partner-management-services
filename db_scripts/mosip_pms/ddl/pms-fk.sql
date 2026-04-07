@@ -46,6 +46,34 @@ ALTER TABLE pms.reg_device_sub_type ADD CONSTRAINT fk_rdstyp_dtype_code FOREIGN 
 REFERENCES pms.reg_device_type (code) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_request FOREIGN KEY (partner_policy_request_id)
+REFERENCES pms.partner_policy_request (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_part FOREIGN KEY (part_id)
+REFERENCES pms.partner (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_policy FOREIGN KEY (policy_id)
+REFERENCES pms.auth_policy (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE UNIQUE INDEX uniq_ppber_inprogress
+ON pms.partner_policy_bioextract_request (
+  partner_policy_request_id,
+  biometric_modality
+)
+WHERE status_code = 'InProgress'
+  AND is_deleted = FALSE;
+
+CREATE UNIQUE INDEX uniq_ppber_approved
+ON pms.partner_policy_bioextract_request (
+  partner_policy_request_id,
+  biometric_modality
+)
+WHERE status_code = 'approved'
+  AND is_deleted = FALSE;
+
 -- Creating unique index for make, model, and approval status
 CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status
 ON pms.device_detail (dprovider_id,dtype_code,dstype_code,make,model)
