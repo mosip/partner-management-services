@@ -19,7 +19,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -54,23 +53,18 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@Override
 	protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
-		populateIdVersionFromRequestIfAvailable(body, request);
+		body.put("id", null);
+		body.put("version", null);
 		body.put("metadata", null);
 		body.put("response", null);
 		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
 
-		FieldError fieldError = null;
-		if (ex.getAllErrors() != null && !ex.getAllErrors().isEmpty() && ex.getAllErrors().get(0) instanceof FieldError) {
-			fieldError = (FieldError) ex.getAllErrors().get(0);
-		}
+		List<FieldError> fieldErrors = (List<FieldError>) ex.getAllErrors();
+		FieldError fieldError = fieldErrors.get(0);
 
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode());
-		if (fieldError != null) {
-			errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
-		} else {
-			errorResponse.setMessage("Invalid request parameter");
-		}
+		errorResponse.setMessage("Invalid request parameter - " + fieldError.getDefaultMessage() + " :" + fieldError.getField());
 		List<ErrorResponse> errors = new ArrayList<>();
 		errors.add(errorResponse);
 		body.put("errors", errors);
@@ -80,7 +74,8 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
-		populateIdVersionFromRequestIfAvailable(body, request);
+		body.put("id", null);
+		body.put("version", null);
 		body.put("metadata", null);
 		body.put("response", null);
 		body.put("responsetime", LocalDateTime.now(ZoneId.of("UTC")));
@@ -101,22 +96,26 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(MISPServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final MISPServiceException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
 		responseError.getErrors().add(errorResponse);
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 	
 	@ExceptionHandler(PartnerServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionMassages(
 			final HttpServletRequest httpServletRequest, final PartnerServiceException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
 		responseError.getErrors().add(errorResponse);
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 
@@ -132,10 +131,12 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(PartnerManagerServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getExcepionsMassages(
 			final HttpServletRequest httpServletRequest, final PartnerManagerServiceException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.getErrors().add(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
@@ -143,7 +144,7 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final ValidationException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		List<ErrorResponse> errors = new ArrayList<>();		
 		for (ServiceError serviceError : exception.getErrors()) {
 			ErrorResponse errorResponse = new ErrorResponse();
@@ -151,6 +152,8 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 			errorResponse.setMessage(serviceError.getMessage());
 			errors.add(errorResponse);
 		}
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.setErrors(errors);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
@@ -175,10 +178,12 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(DeviceServiceException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final DeviceServiceException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.getErrors().add(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
@@ -186,10 +191,12 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(ApiAccessibleException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final ApiAccessibleException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getErrorCode());
 		errorResponse.setMessage(exception.getErrorText());
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.getErrors().add(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
@@ -197,10 +204,12 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(AuthZException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final AuthZException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode(exception.getList().get(0).getErrorCode());
 		errorResponse.setMessage(exception.getList().get(0).getMessage());
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.getErrors().add(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
@@ -208,7 +217,7 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(io.mosip.pms.common.exception.RequestException.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getPartnerServiceExceptionMassages(
 			final HttpServletRequest httpServletRequest, final io.mosip.pms.common.exception.RequestException exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		List<ErrorResponse> errors = new ArrayList<>();		
 		for (ServiceError serviceError : exception.getErrors()) {
 			ErrorResponse errorResponse = new ErrorResponse();
@@ -216,6 +225,8 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 			errorResponse.setMessage(serviceError.getMessage());
 			errors.add(errorResponse);
 		}
+		responseError.setId(msg);
+		responseError.setVersion(version);
 		responseError.setErrors(errors);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
@@ -233,31 +244,13 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ResponseWrapper<ErrorResponse>> getAllExcepionMassage(
 			final HttpServletRequest httpServletRequest, final Exception exception) {
-		ResponseWrapper<ErrorResponse> responseError = getResponseWrapperFromRequestOrDefault(httpServletRequest);
+		ResponseWrapper<ErrorResponse> responseError = new ResponseWrapper<>();
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setMessage(exception.getMessage());
 		responseError.getErrors().add(errorResponse);
 		return new ResponseEntity<>(responseError, HttpStatus.OK);
 	}
 
-	private ResponseWrapper<ErrorResponse> getResponseWrapperFromRequestOrDefault(HttpServletRequest httpServletRequest) {
-		try {
-			ResponseWrapper<ErrorResponse> wrapper = setErrors(httpServletRequest);
-			// Fallback when request body not present / id missing
-			if (wrapper.getId() == null || wrapper.getId().isBlank()) {
-				wrapper.setId(msg);
-			}
-			if (wrapper.getVersion() == null || wrapper.getVersion().isBlank()) {
-				wrapper.setVersion(version);
-			}
-			return wrapper;
-		} catch (Exception ex) {
-			ResponseWrapper<ErrorResponse> wrapper = new ResponseWrapper<>();
-			wrapper.setId(msg);
-			wrapper.setVersion(version);
-			return wrapper;
-		}
-	}
 	/**
 	 * @param httpServletRequest
 	 *            this class contains servlet request
@@ -277,23 +270,6 @@ public class PartnerServiceResponseExceptionHandler extends ResponseEntityExcept
 		responseWrapper.setId(reqNode.path("id").asText());
 		responseWrapper.setVersion(reqNode.path("version").asText());
 		return responseWrapper;
-	}
-
-	private void populateIdVersionFromRequestIfAvailable(Map<String, Object> body, WebRequest webRequest) {
-		String requestId = null;
-		String requestVersion = null;
-		try {
-			if (webRequest instanceof ServletWebRequest) {
-				HttpServletRequest servletRequest = ((ServletWebRequest) webRequest).getRequest();
-				ResponseWrapper<ErrorResponse> wrapper = getResponseWrapperFromRequestOrDefault(servletRequest);
-				requestId = wrapper.getId();
-				requestVersion = wrapper.getVersion();
-			}
-		} catch (Exception ex) {
-			// ignore and fallback to defaults below
-		}
-		body.put("id", (requestId == null || requestId.isBlank()) ? msg : requestId);
-		body.put("version", (requestVersion == null || requestVersion.isBlank()) ? version : requestVersion);
 	}
 
 }
