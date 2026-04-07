@@ -101,7 +101,7 @@ ON pms.partner_policy_bioextract_request (
   biometric_modality
 )
 WHERE status_code = 'InProgress'
-  AND is_deleted = FALSE;
+  AND is_deleted IS NOT TRUE;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_ppber_approved
 ON pms.partner_policy_bioextract_request (
@@ -109,4 +109,4 @@ ON pms.partner_policy_bioextract_request (
   biometric_modality
 )
 WHERE status_code = 'approved'
-  AND is_deleted = FALSE;
+  AND is_deleted IS NOT TRUE;

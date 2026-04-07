@@ -1289,6 +1289,15 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/RequestWrapperExtractorsDto"
+                            },
+                            "example": {
+                                "id": "mosip.pms.partners.bioextractors.request.post",
+                                "version": "1.0",
+                                "requesttime": "2026-01-01T00:00:00.000Z",
+                                "metadata": null,
+                                "request": {
+                                    "extractors": []
+                                }
                             }
                         }
                     }
@@ -10692,11 +10701,15 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "description": "Request id. Expected value: mosip.pms.partners.bioextractors.request.post"
+                        "description": "Request id. Expected value: mosip.pms.partners.bioextractors.request.post",
+                        "example": "mosip.pms.partners.bioextractors.request.post",
+                        "default": "mosip.pms.partners.bioextractors.request.post"
                     },
                     "version": {
                         "type": "string",
-                        "description": "Request version. Expected value: 1.0"
+                        "description": "Request version. Expected value: 1.0",
+                        "example": "1.0",
+                        "default": "1.0"
                     },
                     "requesttime": {
                         "type": "string",

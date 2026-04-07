@@ -1088,7 +1088,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		Partner partner = getValidPartner(partnerId, false);
 		validateActivePolicyForPartner(partner, policyId);
-		// Use InProgress policy mapping request as the parent for bioextract requests
+
 		List<PartnerPolicyRequest> inProgressPolicyRequests = partnerPolicyRequestRepository
 				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, PartnerConstants.IN_PROGRESS);
 		if (inProgressPolicyRequests == null || inProgressPolicyRequests.isEmpty()) {
