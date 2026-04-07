@@ -1086,8 +1086,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
-		Partner partner = getValidPartner(partnerId, false);
-		validateActivePolicyForPartner(partner, policyId);
+		getValidPartner(partnerId, false);
 
 		List<PartnerPolicyRequest> inProgressPolicyRequests = partnerPolicyRequestRepository
 				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, PartnerConstants.IN_PROGRESS);
@@ -1165,35 +1164,6 @@ public class PartnerServiceImpl implements PartnerService {
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
-		}
-	}
-
-	private void validateActivePolicyForPartner(Partner partner, String policyId) {
-		if (partner.getPolicyGroupId() == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partner.getId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorCode(),
-					ErrorCode.PARTNER_NOT_MAPPED_TO_POLICY_GROUP.getErrorMessage());
-		}
-		AuthPolicy policy = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(),
-				policyId);
-		if (policy == null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partner.getId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
-					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorMessage());
-		}
-		if (policy.getValidToDate() != null && policy.getValidToDate().isBefore(LocalDateTime.now())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partner.getId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorCode(),
-					ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorMessage());
-		}
-		if (policy.getPolicyGroup() != null && Boolean.FALSE.equals(policy.getPolicyGroup().getIsActive())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partner.getId(),
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(),
-					ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorMessage());
 		}
 	}
 

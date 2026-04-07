@@ -1,12 +1,14 @@
 package io.mosip.pms.common.util;
 
-import io.micrometer.core.lang.NonNull;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ValidationErrorCode;
 import io.mosip.pms.common.exception.RequestException;
 import io.mosip.pms.common.request.dto.ErrorResponse;
+import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
+import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -43,6 +45,22 @@ public class RequestValidator {
             validateRequest(requestWrapper.getRequest());
         } catch (RequestException ex) {
             ResponseWrapperV2<T> responseWrapper = new ResponseWrapperV2<>();
+            responseWrapper.setId(operation);
+            responseWrapper.setVersion(VERSION);
+            responseWrapper.setErrors(setErrorResponse(ex.getErrors().get(0).getErrorCode(), ex.getErrors().get(0).getMessage()));
+            return Optional.of(responseWrapper);
+        }
+        return Optional.empty();
+    }
+
+    public <T> Optional<ResponseWrapper<T>> validate(@NonNull String operation, RequestWrapper<?> requestWrapper) {
+        try {
+            validateId(operation, requestWrapper.getId());
+            validateReqTime(requestWrapper.getRequesttime());
+            validateVersion(requestWrapper.getVersion());
+            validateRequest(requestWrapper.getRequest());
+        } catch (RequestException ex) {
+            ResponseWrapper<T> responseWrapper = new ResponseWrapper<>();
             responseWrapper.setId(operation);
             responseWrapper.setVersion(VERSION);
             responseWrapper.setErrors(setErrorResponse(ex.getErrors().get(0).getErrorCode(), ex.getErrors().get(0).getMessage()));
