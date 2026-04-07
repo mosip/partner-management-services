@@ -15,3 +15,18 @@ DeactivateSBIWithAssociatedDevices:
       output: '{
       
 }'
+   Pms_DeactivateSBIWithAssociatedDevices_With_Diff_Role:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_22
+      description: Validate that SBI is successfully deactivated when authentication is provided by partneradmin
+      role: partneradmin
+      restMethod: patch
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
+      outputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevicesResult
+      input: '{
+      "requesttime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+}'

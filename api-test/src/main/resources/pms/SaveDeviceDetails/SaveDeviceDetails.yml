@@ -154,7 +154,7 @@ SaveDeviceDetails:
     "deviceSubTypeCode": "Full face",
     "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "make": "AcmeCorpApprovalPending",
-    "model": "X1000ApprovalPending",
+    "model": "X5000ApprovalPending",
     "requestTime": "$TIMESTAMP$",
     "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_ForReject_sid_id$"
 }'
@@ -196,12 +196,11 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_09
-      checkErrorsOnlyInResponse: true
-      description: Validate that device details are successfully saved when a device provider submits valid input data, even if the same device (same make, model, type, subtype, and SBI) is registered again
+      description: Validate that the system correctly rejects duplicate device registration when a device provider attempts to save device details with the same combination of make, model, device type, device subtype, and SBI ID that has already been registered
       restMethod: post
       additionalDependencies: TC_PMS_uploadPartnerCert_03,TC_PMS_createUpdateSecureBiometricInterface_01
       inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
-      outputTemplate: pms/SaveDeviceDetails/SaveDeviceDetailsResult
+      outputTemplate: pms/error
       input: '{
     "deviceTypeCode": "Face",
     "deviceSubTypeCode": "Full face",
@@ -212,7 +211,11 @@ SaveDeviceDetails:
     "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
 }'
       output: '{
-          
+      "errors": [
+        {
+           "errorCode": "PMS_AUT_003"
+        }
+     ]
 }'
 
    Pms_SaveDeviceDetails_DeviceProvider_With_Same_Device_And_Diff_Sbi_Neg:
@@ -229,7 +232,7 @@ SaveDeviceDetails:
     "deviceSubTypeCode": "Full face",
     "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
     "make": "AcmeCorp",
-    "model": "X1000",
+    "model": "X9000",
     "requestTime": "$TIMESTAMP$",
     "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid_id$"
 }'

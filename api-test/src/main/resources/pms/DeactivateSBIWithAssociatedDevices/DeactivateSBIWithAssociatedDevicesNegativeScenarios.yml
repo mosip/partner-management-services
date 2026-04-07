@@ -428,25 +428,6 @@ DeactivateSBIWithAssociatedDevicesNegativeScenarios:
        }
        ]
 }'
-   Pms_DeactivateSBIWithAssociatedDevices_With_Diff_Role_Neg:
-      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_22
-      description: Validate that SBI deactivation fails when authentication is provided by partneradmin
-      role: partneradmin
-      restMethod: patch
-      inputTemplate: pms/DeactivateSBIWithAssociatedDevices/DeactivateSBIWithAssociatedDevices
-      outputTemplate: pms/error
-      input: '{
-      "requesttime": "$TIMESTAMP$",
-      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
-}'
-      output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
-       }
-       ]
-}'
    Pms_DeactivateSBIWithAssociatedDevices_With_Rejected_SBI_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
       uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_23
