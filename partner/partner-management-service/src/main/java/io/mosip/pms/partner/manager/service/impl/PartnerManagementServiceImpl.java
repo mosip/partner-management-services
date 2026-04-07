@@ -161,9 +161,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	BiometricExtractorProviderRepository extractorProviderRepository;
 
 	@Autowired
-	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
-
-	@Autowired
 	PartnerPolicyCredentialTypeRepository partnerPolicyCredentialTypeRepository;
 
 	@Autowired
@@ -807,7 +804,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(updateObject);
-			approvePartnerPolicyBioextractRequestsAndMove(updateObject);
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping approved successfully";
 		}
@@ -816,7 +812,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
 			updateObject.setStatusCode(PartnerConstants.REJECTED);
 			partnerPolicyRequestRepository.save(updateObject);
-			rejectPartnerPolicyBioextractRequests(updateObject);
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping rejected successfully";
 		}
@@ -824,72 +819,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
-	}
-
-	private void rejectPartnerPolicyBioextractRequests(PartnerPolicyRequest policyRequest) {
-		List<PartnerPolicyBioextractRequest> requests = partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(policyRequest.getId(),
-						PartnerConstants.IN_PROGRESS);
-		if (requests == null || requests.isEmpty()) {
-			return;
-		}
-		for (PartnerPolicyBioextractRequest req : requests) {
-			req.setStatusCode(PartnerConstants.REJECTED);
-			req.setUpdBy(getUser());
-			req.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		}
-		partnerPolicyBioextractRequestRepository.saveAll(requests);
-	}
-
-	private void approvePartnerPolicyBioextractRequestsAndMove(PartnerPolicyRequest policyRequest) {
-		List<PartnerPolicyBioextractRequest> requests = partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(policyRequest.getId(),
-						PartnerConstants.IN_PROGRESS);
-		if (requests == null || requests.isEmpty()) {
-			return;
-		}
-		for (PartnerPolicyBioextractRequest req : requests) {
-			req.setStatusCode(PartnerConstants.APPROVED);
-			req.setUpdBy(getUser());
-			req.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		}
-		partnerPolicyBioextractRequestRepository.saveAll(requests);
-
-		for (PartnerPolicyBioextractRequest req : requests) {
-			BiometricExtractorProvider existing = extractorProviderRepository
-					.findByPartnerAndPolicyIdAndAttributeName(req.getPartId(), req.getPolicyId(), req.getAttributeName());
-			BiometricExtractorProvider target = existing != null ? existing : new BiometricExtractorProvider();
-			if (existing == null) {
-				String id = PartnerUtil.generateId();
-				int attempts = 0;
-				while (extractorProviderRepository.existsById(id)) {
-					if (attempts >= maxRetries) {
-						throw new PartnerServiceException(
-								UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-								String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-										"Biometric Extractor Provider ID", "id", target.getClass().getSimpleName(),
-										maxRetries));
-					}
-					id = PartnerUtil.generateId();
-					attempts++;
-				}
-				target.setId(id);
-				target.setCrBy(getUser());
-				target.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-				target.setIsDeleted(false);
-			} else {
-				target.setUpdBy(getUser());
-				target.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			}
-			target.setPartnerId(req.getPartId());
-			target.setPolicyId(req.getPolicyId());
-			target.setAttributeName(req.getAttributeName());
-			target.setExtractorProvider(req.getExtractorProvider());
-			target.setExtractorProviderVersion(req.getExtractorProviderVersion());
-			target.setBiometricModality(req.getBiometricModality());
-			target.setBiometricSubTypes(req.getBiometricSubTypes());
-			extractorProviderRepository.save(target);
-		}
 	}
 
 	@Override

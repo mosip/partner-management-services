@@ -1100,8 +1100,11 @@ public class PartnerServiceImpl implements PartnerService {
 		List<String> createdIds = new ArrayList<>();
 		List<String> activeStatuses = List.of(PartnerConstants.IN_PROGRESS, PartnerConstants.APPROVED);
 
+		List<String> attributeNames = extractors.getExtractors().stream().map(ExtractorDto::getAttributeName).toList();
 		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCodeIn(
-				parentPolicyRequest.getId(), activeStatuses)) {
+				parentPolicyRequest.getId(), activeStatuses)
+				|| extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(partnerId,
+						policyId, attributeNames)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
