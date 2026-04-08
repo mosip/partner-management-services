@@ -6,7 +6,6 @@ import java.util.Date;
 
 @Data
 public class PartnerPolicyBioextractorRequestDto {
-	private String id;
 	private String partnerPolicyRequestId;
 	private String partId;
 	private String policyId;
@@ -16,9 +15,7 @@ public class PartnerPolicyBioextractorRequestDto {
 	private String biometricModality;
 	private String biometricSubTypes;
 	private String statusCode;
-	private String crBy;
 	private Date crDtimes;
-	private String updBy;
 	private Date updDtimes;
 }
 

@@ -352,7 +352,6 @@ public class PartnerServiceImplTest {
 		assertEquals(requestId, resp.getResponse().getRequestId());
 		assertNotNull(resp.getResponse().getBioExtractors());
 		assertEquals(1, resp.getResponse().getBioExtractors().size());
-		assertEquals("row-1", resp.getResponse().getBioExtractors().get(0).getId());
 		assertEquals("face", resp.getResponse().getBioExtractors().get(0).getAttributeName());
 	}
 

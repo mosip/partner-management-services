@@ -1191,7 +1191,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 			List<PartnerPolicyBioextractorRequestDto> bioExtractors = rows.stream().map(r -> {
 				PartnerPolicyBioextractorRequestDto dto = new PartnerPolicyBioextractorRequestDto();
-				dto.setId(r.getId());
 				dto.setPartnerPolicyRequestId(r.getPartnerPolicyRequestId());
 				dto.setPartId(r.getPartId());
 				dto.setPolicyId(r.getPolicyId());
@@ -1201,9 +1200,7 @@ public class PartnerServiceImpl implements PartnerService {
 				dto.setBiometricModality(r.getBiometricModality());
 				dto.setBiometricSubTypes(r.getBiometricSubTypes());
 				dto.setStatusCode(r.getStatusCode());
-				dto.setCrBy(r.getCrBy());
 				dto.setCrDtimes(r.getCrDtimes());
-				dto.setUpdBy(r.getUpdBy());
 				dto.setUpdDtimes(r.getUpdDtimes());
 				return dto;
 			}).toList();

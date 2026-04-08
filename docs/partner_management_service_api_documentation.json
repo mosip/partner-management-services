@@ -7467,7 +7467,6 @@
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "id": { "type": "string" },
                                                             "partnerPolicyRequestId": { "type": "string" },
                                                             "partId": { "type": "string" },
                                                             "policyId": { "type": "string" },
@@ -7477,9 +7476,7 @@
                                                             "biometricModality": { "type": "string" },
                                                             "biometricSubTypes": { "type": "string" },
                                                             "statusCode": { "type": "string" },
-                                                            "crBy": { "type": "string" },
                                                             "crDtimes": { "type": "string" },
-                                                            "updBy": { "type": "string" },
                                                             "updDtimes": { "type": "string" }
                                                         }
                                                     }
