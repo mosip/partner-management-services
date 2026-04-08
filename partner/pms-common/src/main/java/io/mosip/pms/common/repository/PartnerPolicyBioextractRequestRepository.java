@@ -14,4 +14,7 @@ public interface PartnerPolicyBioextractRequestRepository extends JpaRepository<
 
 	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(
 			String partnerPolicyRequestId, String statusCode);
+
+	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(
+			String partnerPolicyRequestId);
 }

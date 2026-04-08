@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -19,6 +20,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
+import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
@@ -78,6 +80,7 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import org.springframework.security.access.prepost.PreAuthorize;
  
 
 @RunWith(SpringRunner.class)
@@ -165,6 +168,29 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
+
+	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
+		String requestId = "123e4567-e89b-12d3-a456-426614174000";
+		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
+		responseDto.setRequestId(requestId);
+		responseWrapper.setResponse(responseDto);
+		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
+		PreAuthorize preAuthorize = PartnerServiceController.class
+				.getMethod("getPartnerPolicyRequestBioExtractors", String.class)
+				.getAnnotation(PreAuthorize.class);
+		assertNotNull(preAuthorize);
+		assertEquals("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())", preAuthorize.value());
+	}
     
     @Test
     @WithMockUser(roles = {"PARTNER"})

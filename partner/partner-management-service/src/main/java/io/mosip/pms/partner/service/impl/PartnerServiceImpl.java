@@ -108,6 +108,8 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestDto;
+import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
@@ -1156,6 +1158,65 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_SUCCESS, partnerId, "partnerId");
 		return "Bio extract request submitted successfully.";
+	}
+
+	@Override
+	public ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> getPartnerPolicyRequestBioExtractors(
+			String requestId) {
+		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (requestId == null || requestId.isBlank()) {
+				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+
+			PartnerPolicyRequest parentRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+			if (parentRequest == null || parentRequest.getPartner() == null || parentRequest.getPartner().getId() == null) {
+				throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+						ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+			}
+			String partnerId = parentRequest.getPartner().getId();
+			validateLoggedInUserAuthorization(partnerId);
+
+			List<PartnerPolicyBioextractRequest> rows =
+					partnerPolicyBioextractRequestRepository
+							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentRequest.getId());
+			PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
+			responseDto.setRequestId(requestId);
+
+			List<PartnerPolicyBioextractorRequestDto> bioExtractors = (rows == null ? List.<PartnerPolicyBioextractorRequestDto>of() :
+					rows.stream().map(r -> {
+				PartnerPolicyBioextractorRequestDto dto = new PartnerPolicyBioextractorRequestDto();
+				dto.setPartnerPolicyRequestId(r.getPartnerPolicyRequestId());
+				dto.setPartId(r.getPartId());
+				dto.setPolicyId(r.getPolicyId());
+				dto.setAttributeName(r.getAttributeName());
+				dto.setExtractorProvider(r.getExtractorProvider());
+				dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+				dto.setBiometricModality(r.getBiometricModality());
+				dto.setBiometricSubTypes(r.getBiometricSubTypes());
+				dto.setStatusCode(r.getStatusCode());
+				dto.setCrDtimes(r.getCrDtimes());
+				dto.setUpdDtimes(r.getUpdDtimes());
+				return dto;
+			}).toList());
+			responseDto.setBioExtractors(bioExtractors);
+
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestBioExtractors method of PartnerServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestBioExtractors method of PartnerServiceImpl - " + ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorCode(),
+					ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId("mosip.pms.partner.policy.request.bioextractors.get");
+		responseWrapper.setVersion("1.0");
+		return responseWrapper;
 	}
 
 	private void validateExtractorForBioExtractRequest(String partnerId, ExtractorDto extractor) {
