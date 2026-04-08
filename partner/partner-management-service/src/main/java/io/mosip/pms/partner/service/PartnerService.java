@@ -136,6 +136,16 @@ public interface PartnerService {
      * @return
      */
     public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors);
+
+	/**
+	 * Submit bio extractor configuration requests against an in-progress partner policy mapping request.
+	 *
+	 * @param partnerId partner identifier
+	 * @param policyId  auth policy identifier
+	 * @param extractors extractor payload (same shape as {@link #addBiometricExtractors})
+	 * @return created request row identifiers
+	 */
+	String submitBioExtractorsRequest(String partnerId, String policyId, ExtractorsDto extractors);
     
     /**
      * Function to get biometric extractors of partner and policy

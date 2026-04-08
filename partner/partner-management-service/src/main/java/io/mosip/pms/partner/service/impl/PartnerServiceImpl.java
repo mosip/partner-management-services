@@ -33,6 +33,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
@@ -65,6 +66,7 @@ import io.mosip.pms.common.dto.Type;
 import io.mosip.pms.common.dto.OriginalCertDownloadResponseDto;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
+import io.mosip.pms.common.entity.PartnerPolicyBioextractRequest;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PartnerContact;
 import io.mosip.pms.common.entity.PartnerH;
@@ -81,6 +83,7 @@ import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.repository.AuthPolicyRepository;
 import io.mosip.pms.common.repository.BiometricExtractorProviderRepository;
+import io.mosip.pms.common.repository.PartnerPolicyBioextractRequestRepository;
 import io.mosip.pms.common.repository.PartnerContactRepository;
 import io.mosip.pms.common.repository.PartnerHRepository;
 import io.mosip.pms.common.repository.PartnerPolicyCredentialTypeRepository;
@@ -194,6 +197,9 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Autowired
 	BiometricExtractorProviderRepository extractorProviderRepository;
+
+	@Autowired
+	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
 
 	@Autowired
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
@@ -1068,6 +1074,100 @@ public class PartnerServiceImpl implements PartnerService {
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_SUCCESS, partnerId, "partnerId");
 		return "Extractors added successfully.";
 
+	}
+
+	@Override
+	public String submitBioExtractorsRequest(String partnerId, String policyId,
+			ExtractorsDto extractors) {
+		validateLoggedInUserAuthorization(partnerId);
+		if (extractors == null || extractors.getExtractors() == null || extractors.getExtractors().isEmpty()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
+					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		}
+		getValidPartner(partnerId, false);
+
+		List<PartnerPolicyRequest> inProgressPolicyRequests = partnerPolicyRequestRepository
+				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, PartnerConstants.IN_PROGRESS);
+		if (inProgressPolicyRequests == null || inProgressPolicyRequests.isEmpty()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
+					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
+		}
+		PartnerPolicyRequest parentPolicyRequest = inProgressPolicyRequests.get(0);
+		List<String> createdIds = new ArrayList<>();
+		List<String> activeStatuses = List.of(PartnerConstants.IN_PROGRESS, PartnerConstants.APPROVED);
+
+		List<String> attributeNames = extractors.getExtractors().stream().map(ExtractorDto::getAttributeName).toList();
+		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCodeIn(
+				parentPolicyRequest.getId(), activeStatuses)
+				|| extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(partnerId,
+						policyId, attributeNames)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
+					ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorMessage());
+		}
+		for (ExtractorDto extractor : extractors.getExtractors()) {
+			validateExtractorForBioExtractRequest(partnerId, extractor);
+			PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
+			row.setPartnerPolicyRequestId(parentPolicyRequest.getId());
+			row.setPartId(partnerId);
+			row.setPolicyId(policyId);
+			row.setAttributeName(extractor.getAttributeName());
+			row.setBiometricModality(extractor.getBiometric());
+			if (extractor.getBiometricSubTypes() != null && !extractor.getBiometricSubTypes().isBlank()) {
+				row.setBiometricSubTypes(extractor.getBiometricSubTypes());
+			}
+			row.setExtractorProvider(extractor.getExtractor().getProvider());
+			row.setExtractorProviderVersion(extractor.getExtractor().getVersion());
+			row.setStatusCode(PartnerConstants.IN_PROGRESS);
+			row.setCrBy(getLoggedInUserId());
+			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			row.setIsDeleted(false);
+			String id = PartnerUtil.generateId();
+			int attempts = 0;
+			while (partnerPolicyBioextractRequestRepository.existsById(id)) {
+				if (attempts >= maxRetries) {
+					LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts",
+							"Partner Policy Bioextract Request ID", "id", row.getClass().getSimpleName(), maxRetries);
+					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+							"partnerId");
+					throw new PartnerServiceException(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+							String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+									"Partner Policy Bioextract Request ID", "id", row.getClass().getSimpleName(),
+									maxRetries));
+				}
+				id = PartnerUtil.generateId();
+				attempts++;
+			}
+			row.setId(id);
+			try {
+				partnerPolicyBioextractRequestRepository.saveAndFlush(row);
+			} catch (DataIntegrityViolationException ex) {
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+						"partnerId");
+				throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
+						ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorMessage());
+			}
+			createdIds.add(id);
+		}
+		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_SUCCESS, partnerId, "partnerId");
+		return "Bio extract request submitted successfully.";
+	}
+
+	private void validateExtractorForBioExtractRequest(String partnerId, ExtractorDto extractor) {
+		if (extractor == null || extractor.getAttributeName() == null || extractor.getAttributeName().isBlank()
+				|| extractor.getBiometric() == null || extractor.getBiometric().isBlank()
+				|| extractor.getExtractor() == null || extractor.getExtractor().getProvider() == null
+				|| extractor.getExtractor().getProvider().isBlank()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
+					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		}
 	}
 
 	/**
