@@ -82,6 +82,9 @@ public class PartnerServiceController {
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
 
+	@Value("${mosip.pms.api.id.partners.bioextractors.request.post:mosip.pms.partners.bioextractors.request.post}")
+	private String postPartnerBioextractorsRequestId;
+
 	@Autowired
 	PartnerService partnerService;
 	
@@ -166,6 +169,20 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);		
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/bio-extractors-request", method = RequestMethod.POST)
+	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
+	public ResponseEntity<ResponseWrapper<String>> submitBioExtractorsRequest(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<ExtractorsDto> request) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/**

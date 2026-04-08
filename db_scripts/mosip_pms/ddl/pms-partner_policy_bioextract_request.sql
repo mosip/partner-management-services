@@ -1,50 +1,11 @@
-\c mosip_pms
-
--- Updated type of share from direct to data share for the below policies
-UPDATE pms.auth_policy
-SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
-WHERE id='mpolicy-default-eUIN_with_faceQR';
-
-
-UPDATE pms.auth_policy
-SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
-WHERE id='mpolicy-default-eUIN_with_QR';
-
-
-UPDATE pms.auth_policy_h
-SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
-WHERE id='mpolicy-default-eUIN_with_faceQR'
-AND eff_dtimes='2020-11-13 05:58:00.000';
-
-
-UPDATE pms.auth_policy_h
-SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
-WHERE id='mpolicy-default-eUIN_with_QR'
-AND eff_dtimes='2020-11-13 05:58:00.000';
-
-
-UPDATE pms.auth_policy_h
-SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
-WHERE id='mpolicy-default-PDFCard'
-AND eff_dtimes='2023-11-14 05:59:00.000';
-
-CREATE TABLE IF NOT EXISTS pms.bioextractor_configuration(
-                                                             id character varying(36) NOT NULL,
-    config_name character varying(128) NOT NULL,
-    bioextractor_provider_name character varying(128) NOT NULL,
-    bioextractor_provider_version character varying(36),
-    bio_modality character varying(64) NOT NULL,
-    cr_by character varying(256) NOT NULL,
-    cr_dtimes timestamp NOT NULL,
-    CONSTRAINT pk_bioextractor_configuration PRIMARY KEY (id),
-    CONSTRAINT uq_bioextractor_configuration_config_name UNIQUE (config_name)
-    );
-
 -- -------------------------------------------------------------------------------------------------
--- Partner policy bio extract request table for 1.3.0-beta.5
--- -------------------------------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS pms.partner_policy_bioextract_request (
+-- Database Name: mosip_pms
+-- Table Name : pms.partner_policy_bioextract_request
+-- Purpose    : Partner Policy Bio Extract Request: Stores partner requests for biometric extraction configuration.
+--
+-- object: pms.partner_policy_bioextract_request | type: TABLE --
+-- DROP TABLE IF EXISTS pms.partner_policy_bioextract_request CASCADE;
+CREATE TABLE pms.partner_policy_bioextract_request (
     id character varying(36) NOT NULL,
     partner_policy_request_id character varying(36) NOT NULL,
     part_id character varying(36) NOT NULL,
@@ -64,6 +25,7 @@ CREATE TABLE IF NOT EXISTS pms.partner_policy_bioextract_request (
     CONSTRAINT pk_ppber_id PRIMARY KEY (id),
     CONSTRAINT chk_ppber_status CHECK (status_code IN ('InProgress', 'approved', 'rejected'))
 );
+-- ddl-end --
 
 COMMENT ON TABLE pms.partner_policy_bioextract_request IS 'Partner Policy Bio Extract Request: Stores partner requests for biometric extraction configuration.';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.id IS 'ID: Unique id for partner policy bio extract request.';
@@ -83,30 +45,3 @@ COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_dtimes IS 'Updated D
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 
-ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_request FOREIGN KEY (partner_policy_request_id)
-REFERENCES pms.partner_policy_request (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_part FOREIGN KEY (part_id)
-REFERENCES pms.partner (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_policy FOREIGN KEY (policy_id)
-REFERENCES pms.auth_policy (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-CREATE UNIQUE INDEX IF NOT EXISTS uniq_ppber_inprogress
-ON pms.partner_policy_bioextract_request (
-  partner_policy_request_id,
-  biometric_modality
-)
-WHERE status_code = 'InProgress'
-  AND is_deleted IS NOT TRUE;
-
-CREATE UNIQUE INDEX IF NOT EXISTS uniq_ppber_approved
-ON pms.partner_policy_bioextract_request (
-  partner_policy_request_id,
-  biometric_modality
-)
-WHERE status_code = 'approved'
-  AND is_deleted IS NOT TRUE;
