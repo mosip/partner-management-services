@@ -180,6 +180,21 @@ public class PartnerServiceControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
+
+	@Test
+	@WithMockUser(roles = {"AUTH_PARTNER"})
+	public void getPartnerPolicyRequestBioExtractors_forbiddenForUnauthorizedRole() throws Exception {
+		String requestId = "123e4567-e89b-12d3-a456-426614174000";
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
+				.andExpect(MockMvcResultMatchers.status().isForbidden());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_unauthorizedWhenNoAuth() throws Exception {
+		String requestId = "123e4567-e89b-12d3-a456-426614174000";
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
+				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	}
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
