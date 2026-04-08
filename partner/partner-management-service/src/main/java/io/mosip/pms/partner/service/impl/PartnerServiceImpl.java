@@ -1090,23 +1090,67 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		getValidPartner(partnerId, false);
 
-		List<PartnerPolicyRequest> inProgressPolicyRequests = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, policyId, PartnerConstants.IN_PROGRESS);
-		if (inProgressPolicyRequests == null || inProgressPolicyRequests.isEmpty()) {
+		if (extractors.getPartnerPolicyRequestId() == null || extractors.getPartnerPolicyRequestId().isBlank()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
+					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		}
+
+		String requestId = extractors.getPartnerPolicyRequestId().trim();
+		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
+				requestId);
+		boolean invalidParent = parentPolicyRequest == null
+				|| Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
+				|| parentPolicyRequest.getPolicyId() == null
+				|| !policyId.equals(parentPolicyRequest.getPolicyId());
+		if (invalidParent) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
 		}
-		PartnerPolicyRequest parentPolicyRequest = inProgressPolicyRequests.get(0);
+
+		String parentStatus = parentPolicyRequest.getStatusCode();
+		if (parentStatus == null || parentStatus.isBlank()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
+					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
+		}
+		if (PartnerConstants.APPROVED.equalsIgnoreCase(parentStatus)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_APPROVED.getErrorCode(),
+					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_APPROVED.getErrorMessage());
+		}
+		if (PartnerConstants.REJECTED.equalsIgnoreCase(parentStatus)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(
+					ErrorCode.BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
+					ErrorCode.BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
+		}
+		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
+					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
+		}
+
 		List<String> createdIds = new ArrayList<>();
-		List<String> activeStatuses = List.of(PartnerConstants.IN_PROGRESS, PartnerConstants.APPROVED);
 
 		List<String> attributeNames = extractors.getExtractors().stream().map(ExtractorDto::getAttributeName).toList();
+		List<String> activeStatuses = List.of(PartnerConstants.IN_PROGRESS, PartnerConstants.APPROVED);
 		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCodeIn(
-				parentPolicyRequest.getId(), activeStatuses)
-				|| extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(partnerId,
-						policyId, attributeNames)) {
+				parentPolicyRequest.getId(), activeStatuses)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_INPROGRESS.getErrorCode(),
+					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_INPROGRESS.getErrorMessage());
+		}
+		if (extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(partnerId,
+				policyId, attributeNames)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),

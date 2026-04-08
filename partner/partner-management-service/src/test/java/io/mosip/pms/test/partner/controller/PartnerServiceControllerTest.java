@@ -560,6 +560,7 @@ public class PartnerServiceControllerTest {
     
     private ExtractorsDto getExtractorsInput() {
     	ExtractorsDto request = new ExtractorsDto();
+    	request.setPartnerPolicyRequestId("req-1");
     	List<ExtractorDto> extractors = new ArrayList<>();
     	ExtractorDto dto = new ExtractorDto();
     	dto.setAttributeName("face");
