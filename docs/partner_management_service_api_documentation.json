@@ -7409,6 +7409,110 @@
                 ]
             }
         },
+        "/partners/partner-policy-requests/{requestId}/bio-extractors": {
+            "get": {
+                "tags": [
+                    "partner-service-controller"
+                ],
+                "summary": "NEW: Get bio-extractor requests for a partner-policy request",
+                "description": "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.\r\n\r\nThis endpoint uses the same role configuration as GET /partners/{partnerId}/bioextractors/{policyId} (mosip.role.pms.getpartnersbioextractors).",
+                "operationId": "get-partner-policy-request-bio-extractors",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner policy request id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "responsetime": {
+                                            "type": "string"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "properties": {
+                                                "requestId": {
+                                                    "type": "string"
+                                                },
+                                                "bioExtractors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": { "type": "string" },
+                                                            "partnerPolicyRequestId": { "type": "string" },
+                                                            "partId": { "type": "string" },
+                                                            "policyId": { "type": "string" },
+                                                            "attributeName": { "type": "string" },
+                                                            "extractorProvider": { "type": "string" },
+                                                            "extractorProviderVersion": { "type": "string" },
+                                                            "biometricModality": { "type": "string" },
+                                                            "biometricSubTypes": { "type": "string" },
+                                                            "statusCode": { "type": "string" },
+                                                            "crBy": { "type": "string" },
+                                                            "crDtimes": { "type": "string" },
+                                                            "updBy": { "type": "string" },
+                                                            "updDtimes": { "type": "string" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": { "type": "string" },
+                                                    "message": { "type": "string" }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            }
+        },
         "/partner-api-keys": {
             "get": {
                 "tags": [

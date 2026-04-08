@@ -19,6 +19,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
+import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
@@ -165,6 +166,20 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
+
+	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
+		String requestId = "123e4567-e89b-12d3-a456-426614174000";
+		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
+		responseDto.setRequestId(requestId);
+		responseWrapper.setResponse(responseDto);
+		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
     
     @Test
     @WithMockUser(roles = {"PARTNER"})
