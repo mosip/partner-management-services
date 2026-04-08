@@ -21,6 +21,7 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -147,6 +148,16 @@ public interface PartnerService {
 	 * @return created request row identifiers
 	 */
 	String submitBioExtractorsRequest(String partnerId, String policyId, ExtractorsDto extractors);
+
+	/**
+	 * Submit credential type request against an in-progress partner policy mapping request.
+	 *
+	 * @param partnerId partner identifier
+	 * @param policyId  auth policy identifier
+	 * @param request   credential type payload
+	 * @return status message
+	 */
+	String submitCredentialTypesRequest(String partnerId, String policyId, CredentialTypeRequestDto request);
 
 	ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> getPartnerPolicyRequestBioExtractors(String requestId);
     

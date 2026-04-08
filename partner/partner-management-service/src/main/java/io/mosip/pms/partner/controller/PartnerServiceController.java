@@ -45,6 +45,7 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
@@ -181,6 +182,21 @@ public class PartnerServiceController {
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credential-types-request", method = RequestMethod.POST)
+	@Operation(summary = "Service to submit credential type request",
+			description = "Persists credential type requests against an in-progress partner policy mapping request")
+	public ResponseEntity<ResponseWrapper<String>> submitCredentialTypesRequest(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<CredentialTypeRequestDto> request) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.submitCredentialTypesRequest(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);

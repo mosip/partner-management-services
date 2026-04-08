@@ -121,6 +121,8 @@ public class PartnerServiceImplTest {
 	@MockBean
 	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
 	@MockBean
+	PartnerPolicyCredentialTypeRequestRepository partnerPolicyCredentialTypeRequestRepository;
+	@MockBean
 	PartnerPolicyCredentialTypeRepository partnerCredentialTypePolicyRepo;
 	@MockBean
 	private WebSubPublisher webSubPublisher;
@@ -166,6 +168,7 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(pserviceImpl, "partnerHRepository", partnerHRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyBioextractRequestRepository", partnerPolicyBioextractRequestRepository);
+		ReflectionTestUtils.setField(pserviceImpl, "partnerPolicyCredentialTypeRequestRepository", partnerPolicyCredentialTypeRequestRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerCredentialTypePolicyRepo", partnerCredentialTypePolicyRepo);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerContactRepository", partnerContactRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "filterColumnValidator", filterColumnValidator);
@@ -1063,6 +1066,35 @@ public class PartnerServiceImplTest {
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
+	}
+
+	@Test
+	public void submitCredentialTypesRequest_success() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+
+		Optional<Partner> partner = Optional.of(createPartner(true));
+		when(partnerRepository.findById("12345")).thenReturn(partner);
+
+		PartnerPolicyRequest inProgressReq = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
+		inProgressReq.setId("req-1");
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("12345", "policy-1", PartnerConstants.IN_PROGRESS))
+				.thenReturn(List.of(inProgressReq));
+
+		when(partnerPolicyCredentialTypeRequestRepository
+				.existsByPartIdAndCredentialTypeAndIsDeletedFalseAndStatusCodeIn(eq("12345"), eq("euin"), anyList()))
+				.thenReturn(false);
+		when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "policy-1"))
+				.thenReturn(List.of());
+
+		// Make the generated ID unique immediately
+		when(partnerPolicyCredentialTypeRequestRepository.existsById(anyString())).thenReturn(false);
+		when(partnerPolicyCredentialTypeRequestRepository.saveAndFlush(any())).thenAnswer(inv -> inv.getArgument(0));
+
+		CredentialTypeRequestDto dto = new CredentialTypeRequestDto();
+		dto.setCredentialType("euin");
+
+		String resp = pserviceImpl.submitCredentialTypesRequest("12345", "policy-1", dto);
+		assertNotNull(resp);
 	}
 	
 	@Test

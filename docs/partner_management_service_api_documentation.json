@@ -1327,6 +1327,74 @@
                 }
             }
         },
+        "/partners/{partnerId}/policies/{policyId}/credential-types-request": {
+            "post": {
+                "tags": [
+                    "partner-service-controller"
+                ],
+                "summary": "NEW: Submit credential type request",
+                "description": "Persists credential type requests against an in-progress partner policy mapping request",
+                "operationId": "submitCredentialTypesRequest",
+                "parameters": [
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestWrapperCredentialTypeRequestDto"
+                            },
+                            "example": {
+                                "id": "mosip.pms.partners.credentialtypes.request.post",
+                                "version": "1.0",
+                                "requesttime": "2026-01-01T00:00:00.000Z",
+                                "metadata": null,
+                                "request": {
+                                    "credentialType": "euin"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapperString"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "f2k7qg4e8d2tt"
+                }
+            }
+        },
         "/partners/partnertype/search": {
             "post": {
                 "tags": [
@@ -10836,6 +10904,59 @@
                 ],
                 "x-stoplight": {
                     "id": "q8x1m0c4j2z9a"
+                }
+            },
+            "RequestWrapperCredentialTypeRequestDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Request id. Expected value: mosip.pms.partners.credentialtypes.request.post",
+                        "example": "mosip.pms.partners.credentialtypes.request.post",
+                        "default": "mosip.pms.partners.credentialtypes.request.post"
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Request version. Expected value: 1.0",
+                        "example": "1.0",
+                        "default": "1.0"
+                    },
+                    "requesttime": {
+                        "type": "string",
+                        "description": "Current date time in ISO format, when request is being sent.",
+                        "format": "date-time"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "description": "Optional metadata about the request"
+                    },
+                    "request": {
+                        "$ref": "#/components/schemas/CredentialTypeRequestDto"
+                    }
+                },
+                "required": [
+                    "id",
+                    "version",
+                    "requesttime",
+                    "request"
+                ],
+                "x-stoplight": {
+                    "id": "s8x1m0c4j2z9b"
+                }
+            },
+            "CredentialTypeRequestDto": {
+                "type": "object",
+                "properties": {
+                    "credentialType": {
+                        "type": "string",
+                        "maxLength": 128
+                    }
+                },
+                "required": [
+                    "credentialType"
+                ],
+                "x-stoplight": {
+                    "id": "b7k2n1m0b9v8d"
                 }
             },
             "ExtractorsDto": {

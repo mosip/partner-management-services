@@ -63,6 +63,7 @@ import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
@@ -168,6 +169,18 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
+
+	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void submitCredentialTypesRequestTest() throws Exception {
+		String responseDto = "ok";
+		when(partnerService.submitCredentialTypesRequest(eq("123456"), eq("12345"), any(CredentialTypeRequestDto.class)))
+				.thenReturn(responseDto);
+		mockMvc.perform(post("/partners/123456/policies/12345/credential-types-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(createCredentialTypeRequest())))
+				.andExpect(status().isOk());
+	}
 
 	@Test
 	@WithMockUser(roles = {"PARTNER"})
@@ -550,6 +563,18 @@ public class PartnerServiceControllerTest {
         request.setMetadata("{}");
         return request;
     }
+
+	private RequestWrapper<CredentialTypeRequestDto> createCredentialTypeRequest() {
+		RequestWrapper<CredentialTypeRequestDto> request = new RequestWrapper<>();
+		CredentialTypeRequestDto dto = new CredentialTypeRequestDto();
+		dto.setCredentialType("euin");
+		request.setRequest(dto);
+		request.setId("mosip.partnermanagement.partners.create");
+		request.setVersion("1.0");
+		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		request.setMetadata("{}");
+		return request;
+	}
     
     private CACertificateRequestDto cACertificateRequest() {
     	CACertificateRequestDto dto = new CACertificateRequestDto();
