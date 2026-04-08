@@ -110,7 +110,3 @@ ON pms.partner_policy_bioextract_request (
 )
 WHERE status_code = 'approved'
   AND is_deleted IS NOT TRUE;
-
--- Align existing effective table column length with request/config tables
-ALTER TABLE IF EXISTS pms.partner_policy_bioextract
-ALTER COLUMN extractor_provider_version TYPE character varying(36);
