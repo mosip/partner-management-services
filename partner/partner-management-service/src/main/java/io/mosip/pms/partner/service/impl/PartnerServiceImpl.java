@@ -1180,7 +1180,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 			List<PartnerPolicyBioextractRequest> rows =
 					partnerPolicyBioextractRequestRepository
-							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId);
+							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentRequest.getId());
 			PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
 			responseDto.setRequestId(requestId);
 
