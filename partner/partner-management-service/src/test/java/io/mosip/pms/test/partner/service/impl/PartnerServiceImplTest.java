@@ -291,7 +291,7 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
-	public void getPartnerPolicyRequestBioExtractors_rowsMissing_setsNoDetailsFound() {
+	public void getPartnerPolicyRequestBioExtractors_rowsMissing_returnsEmptyArray() {
 		String requestId = "req-4";
 		Partner partner = new Partner();
 		partner.setId("123"); // same as setUp logged-in user
@@ -309,8 +309,11 @@ public class PartnerServiceImplTest {
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(ErrorCode.NO_DETAILS_FOUND.getErrorCode(), resp.getErrors().get(0).getErrorCode());
+		assertTrue(resp.getErrors().isEmpty());
+		assertNotNull(resp.getResponse());
+		assertEquals(requestId, resp.getResponse().getRequestId());
+		assertNotNull(resp.getResponse().getBioExtractors());
+		assertTrue(resp.getResponse().getBioExtractors().isEmpty());
 	}
 
 	@Test

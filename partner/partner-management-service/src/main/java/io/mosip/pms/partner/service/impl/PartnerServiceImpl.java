@@ -1181,15 +1181,11 @@ public class PartnerServiceImpl implements PartnerService {
 			List<PartnerPolicyBioextractRequest> rows =
 					partnerPolicyBioextractRequestRepository
 							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId);
-			if (rows == null || rows.isEmpty()) {
-				throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-						ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
-			}
-
 			PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
 			responseDto.setRequestId(requestId);
 
-			List<PartnerPolicyBioextractorRequestDto> bioExtractors = rows.stream().map(r -> {
+			List<PartnerPolicyBioextractorRequestDto> bioExtractors = (rows == null ? List.<PartnerPolicyBioextractorRequestDto>of() :
+					rows.stream().map(r -> {
 				PartnerPolicyBioextractorRequestDto dto = new PartnerPolicyBioextractorRequestDto();
 				dto.setPartnerPolicyRequestId(r.getPartnerPolicyRequestId());
 				dto.setPartId(r.getPartId());
@@ -1203,7 +1199,7 @@ public class PartnerServiceImpl implements PartnerService {
 				dto.setCrDtimes(r.getCrDtimes());
 				dto.setUpdDtimes(r.getUpdDtimes());
 				return dto;
-			}).toList();
+			}).toList());
 			responseDto.setBioExtractors(bioExtractors);
 
 			responseWrapper.setResponse(responseDto);

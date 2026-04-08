@@ -7417,7 +7417,7 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get bio-extractor requests for a partner-policy request",
-                "description": "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.\r\n\r\nThis endpoint uses the same role configuration as GET /partners/{partnerId}/bioextractors/{policyId} (mosip.role.pms.getpartnersbioextractors).",
+                "description": "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.\r\n\r\nIf there are no bio-extractor requests for the given requestId, it returns an empty array for 'bioExtractors'.\r\n\r\nThis endpoint uses the same role configuration as GET /partners/{partnerId}/bioextractors/{policyId} (mosip.role.pms.getpartnersbioextractors).",
                 "operationId": "get-partner-policy-request-bio-extractors",
                 "parameters": [
                     {
