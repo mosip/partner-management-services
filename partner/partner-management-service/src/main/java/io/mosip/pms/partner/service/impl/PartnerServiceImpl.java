@@ -1175,6 +1175,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
+		validateCredentialTypes(request.getCredentialType().trim());
 		Partner partner = getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {

@@ -74,6 +74,28 @@ ON pms.partner_policy_bioextract_request (
 WHERE status_code = 'approved'
   AND is_deleted IS NOT TRUE;
 
+ALTER TABLE pms.partner_policy_credential_type_request ADD CONSTRAINT fk_ppctr_request FOREIGN KEY (partner_policy_request_id)
+REFERENCES pms.partner_policy_request (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE pms.partner_policy_credential_type_request ADD CONSTRAINT fk_ppctr_part FOREIGN KEY (part_id)
+REFERENCES pms.partner (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE pms.partner_policy_credential_type_request ADD CONSTRAINT fk_ppctr_policy FOREIGN KEY (policy_id)
+REFERENCES pms.auth_policy (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE UNIQUE INDEX uniq_partner_cred_inprogress
+ON pms.partner_policy_credential_type_request (part_id, credential_type)
+WHERE status_code = 'InProgress'
+  AND is_deleted IS NOT TRUE;
+
+CREATE UNIQUE INDEX uniq_partner_cred_approved
+ON pms.partner_policy_credential_type_request (part_id, credential_type)
+WHERE status_code = 'approved'
+  AND is_deleted IS NOT TRUE;
+
 -- Creating unique index for make, model, and approval status
 CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status
 ON pms.device_detail (dprovider_id,dtype_code,dstype_code,make,model)
