@@ -67,6 +67,7 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
+import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
@@ -183,6 +184,21 @@ public class PartnerServiceController {
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors")
+	@Operation(summary = "Get bio-extractor requests for a partner-policy request",
+			description = "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> getPartnerPolicyRequestBioExtractors(
+			@PathVariable("requestId") String requestId) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		return partnerService.getPartnerPolicyRequestBioExtractors(requestId);
 	}
 	
 	/**
