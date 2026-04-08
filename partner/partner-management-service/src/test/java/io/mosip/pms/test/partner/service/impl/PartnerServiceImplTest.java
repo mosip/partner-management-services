@@ -346,7 +346,8 @@ public class PartnerServiceImplTest {
 		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
-		assertNull(resp.getErrors());
+		assertNotNull(resp.getErrors());
+		assertTrue(resp.getErrors().isEmpty());
 		assertNotNull(resp.getResponse());
 		assertEquals(requestId, resp.getResponse().getRequestId());
 		assertNotNull(resp.getResponse().getBioExtractors());

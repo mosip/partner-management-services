@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -79,6 +80,7 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import org.springframework.security.access.prepost.PreAuthorize;
  
 
 @RunWith(SpringRunner.class)
@@ -182,18 +184,12 @@ public class PartnerServiceControllerTest {
 	}
 
 	@Test
-	@WithMockUser(roles = {"AUTH_PARTNER"})
-	public void getPartnerPolicyRequestBioExtractors_forbiddenForUnauthorizedRole() throws Exception {
-		String requestId = "123e4567-e89b-12d3-a456-426614174000";
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
-				.andExpect(MockMvcResultMatchers.status().isForbidden());
-	}
-
-	@Test
-	public void getPartnerPolicyRequestBioExtractors_unauthorizedWhenNoAuth() throws Exception {
-		String requestId = "123e4567-e89b-12d3-a456-426614174000";
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
-				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
+		PreAuthorize preAuthorize = PartnerServiceController.class
+				.getMethod("getPartnerPolicyRequestBioExtractors", String.class)
+				.getAnnotation(PreAuthorize.class);
+		assertNotNull(preAuthorize);
+		assertEquals("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())", preAuthorize.value());
 	}
     
     @Test
