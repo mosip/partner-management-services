@@ -45,6 +45,7 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
@@ -178,7 +179,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> submitBioExtractorsRequest(
 			@PathVariable String partnerId,
 			@PathVariable String policyId,
-			@RequestBody @Valid RequestWrapper<ExtractorsDto> request) {
+			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());

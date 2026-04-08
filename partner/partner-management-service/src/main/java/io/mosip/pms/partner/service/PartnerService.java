@@ -20,6 +20,7 @@ import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponse
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
@@ -143,10 +144,10 @@ public interface PartnerService {
 	 *
 	 * @param partnerId partner identifier
 	 * @param policyId  auth policy identifier
-	 * @param extractors extractor payload (same shape as {@link #addBiometricExtractors})
+	 * @param request bio-extractor request payload (includes partnerPolicyRequestId)
 	 * @return created request row identifiers
 	 */
-	String submitBioExtractorsRequest(String partnerId, String policyId, ExtractorsDto extractors);
+	String submitBioExtractorsRequest(String partnerId, String policyId, BioExtractorsRequestDto request);
 
 	ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> getPartnerPolicyRequestBioExtractors(String requestId);
     
