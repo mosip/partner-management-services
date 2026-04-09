@@ -303,7 +303,7 @@ public class PartnerServiceImplTest {
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
 
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenReturn(Collections.emptyList());
 
 		BioExtractorsResponseWrapperV2 resp =
@@ -343,10 +343,9 @@ public class PartnerServiceImplTest {
 		row.setStatusCode("InProgress");
 		row.setCrBy("123");
 		row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		row.setIsDeleted(false);
 
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenReturn(List.of(row));
 
 		BioExtractorsResponseWrapperV2 resp =
@@ -374,7 +373,7 @@ public class PartnerServiceImplTest {
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
 
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenThrow(new RuntimeException("db down"));
 
 		BioExtractorsResponseWrapperV2 resp =
@@ -409,9 +408,8 @@ public class PartnerServiceImplTest {
 		PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
 		row.setId("row-1");
 		row.setPartnerPolicyRequestId(requestId);
-		row.setIsDeleted(false);
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenReturn(List.of(row));
 
 		BioExtractorsRequestDto req = new BioExtractorsRequestDto();

@@ -9,15 +9,11 @@ import io.mosip.pms.common.entity.PartnerPolicyBioextractRequest;
 
 @Repository
 public interface PartnerPolicyBioextractRequestRepository extends JpaRepository<PartnerPolicyBioextractRequest, String> {
-	boolean existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCodeIn(
-			String partnerPolicyRequestId, List<String> statusCode);
+	boolean existsByPartnerPolicyRequestId(String partnerPolicyRequestId);
 
-	boolean existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(
+	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdAndStatusCode(
 			String partnerPolicyRequestId, String statusCode);
 
-	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(
-			String partnerPolicyRequestId, String statusCode);
-
-	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(
+	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdOrderByCrDtimesAsc(
 			String partnerPolicyRequestId);
 }

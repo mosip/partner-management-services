@@ -1103,46 +1103,24 @@ public class PartnerServiceImpl implements PartnerService {
 		if (invalidParent) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
+			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
+					ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
 		}
 
 		String parentStatus = parentPolicyRequest.getStatusCode();
-		if (parentStatus == null || parentStatus.isBlank()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
-		}
-		if (PartnerConstants.APPROVED.equalsIgnoreCase(parentStatus)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_APPROVED.getErrorCode(),
-					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_APPROVED.getErrorMessage());
-		}
-		if (PartnerConstants.REJECTED.equalsIgnoreCase(parentStatus)) {
+		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(
 					ErrorCode.BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
 					ErrorCode.BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
 		}
-		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_REQUEST_NOT_IN_PROGRESS.getErrorMessage());
-		}
 
 		List<String> createdIds = new ArrayList<>();
 
 		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
 		// Reject duplicates for this partner-policy request id (no status-based child validation).
-		if (partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentPolicyRequest.getId())
-				.stream()
-				.findAny()
-				.isPresent()) {
+		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(),
@@ -1168,10 +1146,9 @@ public class PartnerServiceImpl implements PartnerService {
 			}
 			row.setExtractorProvider(extractor.getExtractorProvider());
 			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion());
-			row.setStatusCode(PartnerConstants.IN_PROGRESS);
+			row.setStatusCode(parentStatus);
 			row.setCrBy(getLoggedInUserId());
 			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			row.setIsDeleted(false);
 			String id = PartnerUtil.generateId();
 			int attempts = 0;
 			while (partnerPolicyBioextractRequestRepository.existsById(id)) {
@@ -1223,7 +1200,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 			List<PartnerPolicyBioextractRequest> rows =
 					partnerPolicyBioextractRequestRepository
-							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentRequest.getId());
+							.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
 			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
 			responseWrapper.setStatusCode(parentRequest.getStatusCode());
 
