@@ -311,7 +311,6 @@ public class PartnerServiceImplTest {
 		assertNotNull(resp.getErrors());
 		assertTrue(resp.getErrors().isEmpty());
 		assertNotNull(resp.getResponse());
-		assertEquals(requestId, resp.getResponse().getRequestId());
 		assertNotNull(resp.getResponse().getBioExtractors());
 		assertTrue(resp.getResponse().getBioExtractors().isEmpty());
 	}
@@ -352,7 +351,6 @@ public class PartnerServiceImplTest {
 		assertNotNull(resp.getErrors());
 		assertTrue(resp.getErrors().isEmpty());
 		assertNotNull(resp.getResponse());
-		assertEquals(requestId, resp.getResponse().getRequestId());
 		assertNotNull(resp.getResponse().getBioExtractors());
 		assertEquals(1, resp.getResponse().getBioExtractors().size());
 		assertEquals("face", resp.getResponse().getBioExtractors().get(0).getAttributeName());

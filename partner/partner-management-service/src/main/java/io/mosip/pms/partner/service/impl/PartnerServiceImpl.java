@@ -1227,7 +1227,6 @@ public class PartnerServiceImpl implements PartnerService {
 					partnerPolicyBioextractRequestRepository
 							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentRequest.getId());
 			PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
-			responseDto.setRequestId(requestId);
 
 			List<PartnerPolicyBioextractorRequestDto> bioExtractors = (rows == null ? List.<PartnerPolicyBioextractorRequestDto>of() :
 					rows.stream().map(r -> {

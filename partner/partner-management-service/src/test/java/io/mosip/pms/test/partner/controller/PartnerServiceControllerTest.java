@@ -176,7 +176,6 @@ public class PartnerServiceControllerTest {
 		String requestId = "123e4567-e89b-12d3-a456-426614174000";
 		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
-		responseDto.setRequestId(requestId);
 		responseWrapper.setResponse(responseDto);
 		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
 
