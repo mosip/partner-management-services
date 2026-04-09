@@ -408,9 +408,7 @@ public class PartnerServiceImplTest {
 		PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
 		row.setId("row-1");
 		row.setPartnerPolicyRequestId(requestId);
-		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
-				.thenReturn(List.of(row));
+		when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
 
 		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
 		req.setPartnerPolicyRequestId(requestId);

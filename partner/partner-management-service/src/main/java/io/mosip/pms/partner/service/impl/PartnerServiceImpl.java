@@ -1112,14 +1112,14 @@ public class PartnerServiceImpl implements PartnerService {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(
-					ErrorCode.BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
-					ErrorCode.BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
+					ErrorCode.BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
+					ErrorCode.BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
 		}
 
 		List<String> createdIds = new ArrayList<>();
 
 		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
-		// Reject duplicates for this partner-policy request id (no status-based child validation).
+
 		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
