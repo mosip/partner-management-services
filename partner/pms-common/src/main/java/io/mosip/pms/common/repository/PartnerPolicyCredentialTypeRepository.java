@@ -15,4 +15,9 @@ public interface PartnerPolicyCredentialTypeRepository extends JpaRepository<Par
 
 	@Query(value = "select * from partner_policy_credential_type pc where pc.part_id =?1 and pc.policy_id =?2 and (pc.is_deleted is null or pc.is_deleted = false) and pc.is_active=true",nativeQuery = true)
 	List<PartnerPolicyCredentialType> findByPartnerIdAndPolicyIdAndIsActiveTrue(String partnerId, String policyId);
+
+	@Query(value = "select case when count(1) > 0 then true else false end from partner_policy_credential_type pc "
+			+ "where pc.part_id = ?1 and pc.policy_id = ?2 and pc.credential_type = ?3 "
+			+ "and (pc.is_deleted is null or pc.is_deleted = false) and pc.is_active = true", nativeQuery = true)
+	boolean existsActiveByPartnerIdAndPolicyIdAndCredentialType(String partnerId, String policyId, String credentialType);
 }
