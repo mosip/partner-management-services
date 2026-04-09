@@ -80,6 +80,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -175,7 +176,7 @@ public class PartnerServiceControllerTest {
 	@WithMockUser(roles = {"PARTNER"})
 	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
 		String requestId = "123e4567-e89b-12d3-a456-426614174000";
-		ResponseWrapperV2<BioExtractorsResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
 		responseWrapper.setResponse(new BioExtractorsResponseDto());
 		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
 

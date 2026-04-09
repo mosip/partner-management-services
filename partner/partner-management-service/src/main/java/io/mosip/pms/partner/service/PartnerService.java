@@ -41,7 +41,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
-import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 
 public interface PartnerService {
 	
@@ -149,7 +149,7 @@ public interface PartnerService {
 	 */
 	String submitBioExtractorsRequest(String partnerId, String policyId, BioExtractorsRequestDto request);
 
-	ResponseWrapperV2<BioExtractorsResponseDto> getPartnerPolicyRequestBioExtractors(String requestId);
+	BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId);
     
     /**
      * Function to get biometric extractors of partner and policy

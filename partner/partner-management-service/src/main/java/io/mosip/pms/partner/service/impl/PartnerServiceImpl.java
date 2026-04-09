@@ -137,6 +137,7 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -1203,9 +1204,9 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<BioExtractorsResponseDto> getPartnerPolicyRequestBioExtractors(
+	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(
 			String requestId) {
-		ResponseWrapperV2<BioExtractorsResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
 		try {
 			if (requestId == null || requestId.isBlank()) {
 				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
