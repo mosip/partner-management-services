@@ -108,10 +108,9 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.exception.PartnerServiceException;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestDto;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
@@ -137,6 +136,7 @@ import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -1135,20 +1135,17 @@ public class PartnerServiceImpl implements PartnerService {
 
 		List<String> createdIds = new ArrayList<>();
 
-		List<String> attributeNames = extractors.getExtractors().stream().map(ExtractorDto::getAttributeName).toList();
-		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(
-				parentPolicyRequest.getId(), PartnerConstants.IN_PROGRESS)) {
+		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
+		// Reject duplicates for this partner-policy request id (no status-based child validation).
+		if (partnerPolicyBioextractRequestRepository
+				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentPolicyRequest.getId())
+				.stream()
+				.findAny()
+				.isPresent()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
-			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_INPROGRESS.getErrorCode(),
-					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_INPROGRESS.getErrorMessage());
-		}
-		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestIdAndIsDeletedFalseAndStatusCode(
-				parentPolicyRequest.getId(), PartnerConstants.APPROVED)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_APPROVED.getErrorCode(),
-					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_APPROVED.getErrorMessage());
+			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(),
+					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorMessage());
 		}
 		if (extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(partnerId,
 				policyId, attributeNames)) {
@@ -1157,7 +1154,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
 					ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorMessage());
 		}
-		for (ExtractorDto extractor : extractors.getExtractors()) {
+		for (BioExtractorsDto extractor : extractors.getExtractors()) {
 			validateExtractorForBioExtractRequest(partnerId, extractor);
 			PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
 			row.setPartnerPolicyRequestId(parentPolicyRequest.getId());
@@ -1168,8 +1165,8 @@ public class PartnerServiceImpl implements PartnerService {
 			if (extractor.getBiometricSubTypes() != null && !extractor.getBiometricSubTypes().isBlank()) {
 				row.setBiometricSubTypes(extractor.getBiometricSubTypes());
 			}
-			row.setExtractorProvider(extractor.getExtractor().getProvider());
-			row.setExtractorProviderVersion(extractor.getExtractor().getVersion());
+			row.setExtractorProvider(extractor.getExtractorProvider());
+			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion());
 			row.setStatusCode(PartnerConstants.IN_PROGRESS);
 			row.setCrBy(getLoggedInUserId());
 			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -1206,9 +1203,9 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> getPartnerPolicyRequestBioExtractors(
+	public ResponseWrapperV2<BioExtractorsResponseDto> getPartnerPolicyRequestBioExtractors(
 			String requestId) {
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<BioExtractorsResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (requestId == null || requestId.isBlank()) {
 				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
@@ -1226,26 +1223,22 @@ public class PartnerServiceImpl implements PartnerService {
 			List<PartnerPolicyBioextractRequest> rows =
 					partnerPolicyBioextractRequestRepository
 							.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(parentRequest.getId());
-			PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
+			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
+			responseWrapper.setStatusCode(parentRequest.getStatusCode());
 
-			List<PartnerPolicyBioextractorRequestDto> bioExtractors = (rows == null ? List.<PartnerPolicyBioextractorRequestDto>of() :
+			List<BioExtractorsDto> extractors = (rows == null ? List.<BioExtractorsDto>of() :
 					rows.stream().map(r -> {
-				PartnerPolicyBioextractorRequestDto dto = new PartnerPolicyBioextractorRequestDto();
-				dto.setPartnerPolicyRequestId(r.getPartnerPolicyRequestId());
-				dto.setPartId(r.getPartId());
-				dto.setPolicyId(r.getPolicyId());
-				dto.setAttributeName(r.getAttributeName());
-				dto.setExtractorProvider(r.getExtractorProvider());
-				dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
-				dto.setBiometricModality(r.getBiometricModality());
-				dto.setBiometricSubTypes(r.getBiometricSubTypes());
-				dto.setStatusCode(r.getStatusCode());
-				dto.setCrDtimes(r.getCrDtimes());
-				dto.setUpdDtimes(r.getUpdDtimes());
-				return dto;
-			}).toList());
-			responseDto.setBioExtractors(bioExtractors);
+						BioExtractorsDto dto = new BioExtractorsDto();
+						dto.setAttributeName(r.getAttributeName());
+						dto.setBiometric(r.getBiometricModality());
+						dto.setBiometricSubTypes(r.getBiometricSubTypes());
+						dto.setExtractorProvider(r.getExtractorProvider());
+						dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+						return dto;
+					}).toList());
 
+			BioExtractorsResponseDto responseDto = new BioExtractorsResponseDto();
+			responseDto.setExtractors(extractors);
 			responseWrapper.setResponse(responseDto);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id",
@@ -1263,11 +1256,10 @@ public class PartnerServiceImpl implements PartnerService {
 		return responseWrapper;
 	}
 
-	private void validateExtractorForBioExtractRequest(String partnerId, ExtractorDto extractor) {
+	private void validateExtractorForBioExtractRequest(String partnerId, BioExtractorsDto extractor) {
 		if (extractor == null || extractor.getAttributeName() == null || extractor.getAttributeName().isBlank()
 				|| extractor.getBiometric() == null || extractor.getBiometric().isBlank()
-				|| extractor.getExtractor() == null || extractor.getExtractor().getProvider() == null
-				|| extractor.getExtractor().getProvider().isBlank()) {
+				|| extractor.getExtractorProvider() == null || extractor.getExtractorProvider().isBlank()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),

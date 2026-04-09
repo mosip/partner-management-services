@@ -241,7 +241,9 @@ public enum ErrorCode {
 	BIOEXTRACT_REQUEST_ALREADY_APPROVED("PMS_PRT_281",
 			"Bio extractor request is already approved for the given partner policy request id."),
 	BIOEXTRACT_REQUEST_REJECTED_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_282",
-			"Bio extractor request was rejected. Please send partner policy request first.");
+			"Bio extractor request was rejected. Please send partner policy request first."),
+	BIOEXTRACT_REQUEST_ALREADY_EXISTS("PMS_PRT_283",
+			"Bio extractor request already submitted for the given partner policy request id.");
 	/**
 	 * The error code.
 	 */
