@@ -161,8 +161,12 @@ public class PartnerServiceController {
 	 * @return
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@Deprecated(since = "release-1.3.0-beta.5")
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
-	@Operation(summary = "Service to add bio extractors", description = "Service to add bio extractors")
+	@Operation(
+			summary = "Service to add bio extractors - deprecated since release-1.3.0-beta.5",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partners/{partnerId}/policies/{policyId}/bio-extractors-request endpoint.",
+			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();

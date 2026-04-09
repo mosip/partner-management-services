@@ -58,21 +58,11 @@ ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_policy
 REFERENCES pms.auth_policy (id) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-CREATE UNIQUE INDEX uniq_ppber_inprogress
-ON pms.partner_policy_bioextract_request (
-  partner_policy_request_id,
-  biometric_modality
-)
-WHERE status_code = 'InProgress'
-  ;
-
-CREATE UNIQUE INDEX uniq_ppber_approved
-ON pms.partner_policy_bioextract_request (
-  partner_policy_request_id,
-  biometric_modality
-)
-WHERE status_code = 'approved'
-  ;
+CREATE UNIQUE INDEX uniq_ppber_modality
+    ON pms.partner_policy_bioextract_request (
+    partner_policy_request_id,
+    biometric_modality
+    );
 
 -- Creating unique index for make, model, and approval status
 CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status
