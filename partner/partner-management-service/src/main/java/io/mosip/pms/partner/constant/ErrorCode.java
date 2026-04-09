@@ -245,7 +245,7 @@ public enum ErrorCode {
 	BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_285",
 			"Partner policy request is not in progress for the given partner policy request id. Please send partner policy request first."),
 	DUPLICATE_CREDENTIAL_TYPE_REQUEST("PMS_PRT_287",
-			"Credential type mapping already exists for the given partner."),
+			"Credential type request or mapping already exists for the given partner."),
 	CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_288",
 			"Partner policy request is not in progress for the given partner policy request id. Please send partner policy request first.");
 	/**
