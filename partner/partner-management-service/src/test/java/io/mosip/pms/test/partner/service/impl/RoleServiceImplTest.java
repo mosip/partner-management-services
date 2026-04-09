@@ -26,5 +26,6 @@ public class RoleServiceImplTest {
 		dto = roleServiceImpl.getUIRequiredRoles();
 		List<String> roles = dto.getRoles();
 		assertTrue(roles != null && !roles.isEmpty());
+		assertTrue(roles.contains("MISP_Partner"));
 	}
 }

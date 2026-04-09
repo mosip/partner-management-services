@@ -1295,7 +1295,7 @@
                                     "id": { "type": "string" },
                                     "version": { "type": "string" },
                                     "requesttime": { "type": "string" },
-                                    "metadata": { "type": "object" },
+                                    "metadata": { "type": "object", "nullable": true },
                                     "request": {
                                         "type": "object",
                                         "properties": {
@@ -7494,6 +7494,7 @@
                                         "statusCode": { "type": "string" },
                                         "response": {
                                             "type": "object",
+                                            "nullable": true,
                                             "properties": {
                                                 "extractors": {
                                                     "type": "array",
