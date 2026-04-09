@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.mosip.pms.common.dto.RoleExtnDto;
@@ -19,12 +20,20 @@ public class RoleServiceImplTest {
 
 	@Autowired
 	RoleServiceImpl roleServiceImpl;
+
+	@Autowired
+	private Environment environment;
 	
 	@Test
 	public void getUIRequiredRoles() {
 		RoleExtnDto dto = new RoleExtnDto();
 		dto = roleServiceImpl.getUIRequiredRoles();
 		List<String> roles = dto.getRoles();
-		assertTrue(roles.contains("MISP_Partner"));
+		assertTrue(roles != null && !roles.isEmpty());
+		String required = environment.getProperty("mosip.pms.ui.required.roles");
+		assertTrue(required != null && !required.isBlank());
+		for (String expected : required.split(",")) {
+			assertTrue(roles.contains(expected));
+		}
 	}
 }

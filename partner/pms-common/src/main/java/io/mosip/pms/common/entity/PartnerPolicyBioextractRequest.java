@@ -61,10 +61,4 @@ public class PartnerPolicyBioextractRequest implements Serializable {
 
 	@Column(name = "upd_dtimes")
 	private Timestamp updDtimes;
-
-	@Column(name = "is_deleted")
-	private Boolean isDeleted;
-
-	@Column(name = "del_dtimes")
-	private Timestamp delDtimes;
 }

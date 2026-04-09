@@ -20,7 +20,6 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
@@ -63,6 +62,8 @@ import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
@@ -78,6 +79,8 @@ import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -163,20 +166,18 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void submitBioExtractorsRequestTest() throws Exception {
     	String responseDto = "ok";
-    	when(partnerService.submitBioExtractorsRequest(eq("123456"), eq("12345"), any(ExtractorsDto.class)))
+    	when(partnerService.submitBioExtractorsRequest(eq("123456"), eq("12345"), any(BioExtractorsRequestDto.class)))
     			.thenReturn(responseDto);
     	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
+    			.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest()))).andExpect(status().isOk());
     }
 
 	@Test
 	@WithMockUser(roles = {"PARTNER"})
 	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
 		String requestId = "123e4567-e89b-12d3-a456-426614174000";
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		PartnerPolicyBioextractorRequestResponseDto responseDto = new PartnerPolicyBioextractorRequestResponseDto();
-		responseDto.setRequestId(requestId);
-		responseWrapper.setResponse(responseDto);
+		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
+		responseWrapper.setResponse(new BioExtractorsResponseDto());
 		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
@@ -571,6 +572,28 @@ public class PartnerServiceControllerTest {
     	extractors.add(dto);
     	request.setExtractors(extractors);
     	return request;
+    }
+
+    private BioExtractorsRequestDto getBioExtractorsRequestInput() {
+        BioExtractorsRequestDto request = new BioExtractorsRequestDto();
+        request.setPartnerPolicyRequestId("req-1");
+        BioExtractorsDto dto = new BioExtractorsDto();
+        dto.setAttributeName("face");
+        dto.setBiometric("face");
+        dto.setExtractorProvider("t5");
+        dto.setExtractorProviderVersion("1.1");
+        request.setExtractors(List.of(dto));
+        return request;
+    }
+
+    private RequestWrapper<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
+        RequestWrapper<BioExtractorsRequestDto> request = new RequestWrapper<BioExtractorsRequestDto>();
+        request.setRequest(getBioExtractorsRequestInput());
+        request.setId("mosip.partnermanagement.partners.create");
+        request.setVersion("1.0");
+        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+        request.setMetadata("{}");
+        return request;
     }
     
     private RequestWrapper<PartnerCertificateRequestDto> partnerCertificateRequest() {

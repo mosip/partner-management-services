@@ -45,6 +45,7 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
@@ -67,7 +68,7 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
@@ -178,7 +179,7 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<String>> submitBioExtractorsRequest(
 			@PathVariable String partnerId,
 			@PathVariable String policyId,
-			@RequestBody @Valid RequestWrapper<ExtractorsDto> request) {
+			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());
@@ -195,7 +196,7 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> getPartnerPolicyRequestBioExtractors(
+	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(
 			@PathVariable("requestId") String requestId) {
 		inputValidator.validateRequestInput("requestId", requestId);
 		return partnerService.getPartnerPolicyRequestBioExtractors(requestId);
