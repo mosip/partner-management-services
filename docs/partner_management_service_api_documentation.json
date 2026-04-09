@@ -1299,21 +1299,24 @@
                                     "request": {
                                         "type": "object",
                                         "properties": {
-                                            "partnerPolicyRequestId": { "type": "string" },
+                                            "partnerPolicyRequestId": { "type": "string", "minLength": 1, "maxLength": 36 },
                                             "extractors": {
                                                 "type": "array",
+                                                "minItems": 1,
                                                 "items": {
                                                     "type": "object",
                                                     "properties": {
-                                                        "attributeName": { "type": "string" },
-                                                        "biometric": { "type": "string" },
-                                                        "biometricSubTypes": { "type": "string" },
-                                                        "extractorProvider": { "type": "string" },
-                                                        "extractorProviderVersion": { "type": "string" }
-                                                    }
+                                                        "attributeName": { "type": "string", "minLength": 1, "maxLength": 128 },
+                                                        "biometric": { "type": "string", "minLength": 1, "maxLength": 64 },
+                                                        "biometricSubTypes": { "type": "string", "maxLength": 64 },
+                                                        "extractorProvider": { "type": "string", "minLength": 1, "maxLength": 128 },
+                                                        "extractorProviderVersion": { "type": "string", "maxLength": 8 }
+                                                    },
+                                                    "required": [ "attributeName", "biometric", "extractorProvider" ]
                                                 }
                                             }
-                                        }
+                                        },
+                                        "required": [ "partnerPolicyRequestId", "extractors" ]
                                     }
                                 }
                             },
