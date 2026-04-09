@@ -1130,8 +1130,8 @@ public class PartnerServiceImpl implements PartnerService {
 				policyId, attributeNames)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
-					ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorMessage());
+			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_DETAIL.getErrorCode(),
+					ErrorCode.DUPLICATE_BIOEXTRACT_DETAIL.getErrorMessage());
 		}
 		for (BioExtractorsDto extractor : extractors.getExtractors()) {
 			validateExtractorForBioExtractRequest(partnerId, extractor);
