@@ -21,8 +21,8 @@ import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.dto.UploadCertificateRequestDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
-import io.mosip.pms.partner.manager.dto.PartnerPolicyBioextractorRequestResponseDto;
 import io.mosip.pms.partner.request.dto.*;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
@@ -223,7 +223,7 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_nullRequestId_setsInvalidRequestError() {
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(null);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
@@ -233,7 +233,7 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_blankRequestId_setsInvalidRequestError() {
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors("   ");
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
@@ -246,7 +246,7 @@ public class PartnerServiceImplTest {
 		String requestId = "req-1";
 		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(null);
 
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
@@ -262,7 +262,7 @@ public class PartnerServiceImplTest {
 		parent.setPartner(null);
 		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
 
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
@@ -282,7 +282,7 @@ public class PartnerServiceImplTest {
 
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
 
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
@@ -298,22 +298,24 @@ public class PartnerServiceImplTest {
 		PartnerPolicyRequest parent = new PartnerPolicyRequest();
 		parent.setId(requestId);
 		parent.setPartner(partner);
+		parent.setStatusCode("InProgress");
 		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
 
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenReturn(Collections.emptyList());
 
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
 		assertTrue(resp.getErrors().isEmpty());
+		assertEquals(requestId, resp.getPartnerPolicyRequestId());
+		assertNotNull(resp.getStatusCode());
 		assertNotNull(resp.getResponse());
-		assertEquals(requestId, resp.getResponse().getRequestId());
-		assertNotNull(resp.getResponse().getBioExtractors());
-		assertTrue(resp.getResponse().getBioExtractors().isEmpty());
+		assertNotNull(resp.getResponse().getExtractors());
+		assertTrue(resp.getResponse().getExtractors().isEmpty());
 	}
 
 	@Test
@@ -324,6 +326,7 @@ public class PartnerServiceImplTest {
 		PartnerPolicyRequest parent = new PartnerPolicyRequest();
 		parent.setId(requestId);
 		parent.setPartner(partner);
+		parent.setStatusCode("InProgress");
 		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
 
@@ -340,22 +343,22 @@ public class PartnerServiceImplTest {
 		row.setStatusCode("InProgress");
 		row.setCrBy("123");
 		row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		row.setIsDeleted(false);
 
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenReturn(List.of(row));
 
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
 		assertTrue(resp.getErrors().isEmpty());
+		assertEquals(requestId, resp.getPartnerPolicyRequestId());
+		assertNotNull(resp.getStatusCode());
 		assertNotNull(resp.getResponse());
-		assertEquals(requestId, resp.getResponse().getRequestId());
-		assertNotNull(resp.getResponse().getBioExtractors());
-		assertEquals(1, resp.getResponse().getBioExtractors().size());
-		assertEquals("face", resp.getResponse().getBioExtractors().get(0).getAttributeName());
+		assertNotNull(resp.getResponse().getExtractors());
+		assertEquals(1, resp.getResponse().getExtractors().size());
+		assertEquals("face", resp.getResponse().getExtractors().get(0).getAttributeName());
 	}
 
 	@Test
@@ -370,15 +373,58 @@ public class PartnerServiceImplTest {
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
 
 		when(partnerPolicyBioextractRequestRepository
-				.findByPartnerPolicyRequestIdAndIsDeletedFalseOrderByCrDtimesAsc(requestId))
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(requestId))
 				.thenThrow(new RuntimeException("db down"));
 
-		ResponseWrapperV2<PartnerPolicyBioextractorRequestResponseDto> resp =
+		BioExtractorsResponseWrapperV2 resp =
 				pserviceImpl.getPartnerPolicyRequestBioExtractors(requestId);
 		assertNotNull(resp);
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorCode(), resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void submitBioExtractorsRequest_whenChildRowsExist_returnsAlreadyExistsError() {
+		String partnerId = "p1";
+		String policyId = "pol-1";
+		String requestId = "req-1";
+
+		Partner partner = new Partner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partner.setApprovalStatus(PartnerConstants.APPROVED);
+
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId(requestId);
+		parent.setPartner(partner);
+		parent.setPolicyId(policyId);
+		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
+		parent.setIsDeleted(false);
+
+		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId, requestId)).thenReturn(parent);
+		when(partnerRepository.findById(partnerId)).thenReturn(java.util.Optional.of(partner));
+
+		PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
+		row.setId("row-1");
+		row.setPartnerPolicyRequestId(requestId);
+		when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
+
+		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
+		req.setPartnerPolicyRequestId(requestId);
+		BioExtractorsDto extractor = new BioExtractorsDto();
+		extractor.setAttributeName("face");
+		extractor.setBiometric("face");
+		extractor.setExtractorProvider("prov");
+		extractor.setExtractorProviderVersion("1.0");
+		req.setExtractors(List.of(extractor));
+
+		try {
+			pserviceImpl.submitBioExtractorsRequest(partnerId, policyId, req);
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(), ex.getErrorCode());
+		}
 	}
 
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

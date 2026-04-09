@@ -64,7 +64,7 @@ ON pms.partner_policy_bioextract_request (
   biometric_modality
 )
 WHERE status_code = 'InProgress'
-  AND is_deleted IS NOT TRUE;
+  ;
 
 CREATE UNIQUE INDEX uniq_ppber_approved
 ON pms.partner_policy_bioextract_request (
@@ -72,7 +72,7 @@ ON pms.partner_policy_bioextract_request (
   biometric_modality
 )
 WHERE status_code = 'approved'
-  AND is_deleted IS NOT TRUE;
+  ;
 
 -- Creating unique index for make, model, and approval status
 CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status

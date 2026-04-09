@@ -1290,7 +1290,35 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RequestWrapperExtractorsDto"
+                                "type": "object",
+                                "properties": {
+                                    "id": { "type": "string" },
+                                    "version": { "type": "string" },
+                                    "requesttime": { "type": "string" },
+                                    "metadata": { "type": "object", "nullable": true },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partnerPolicyRequestId": { "type": "string", "minLength": 1, "maxLength": 36 },
+                                            "extractors": {
+                                                "type": "array",
+                                                "minItems": 1,
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "attributeName": { "type": "string", "minLength": 1, "maxLength": 128 },
+                                                        "biometric": { "type": "string", "minLength": 1, "maxLength": 64 },
+                                                        "biometricSubTypes": { "type": "string", "maxLength": 64 },
+                                                        "extractorProvider": { "type": "string", "minLength": 1, "maxLength": 128 },
+                                                        "extractorProviderVersion": { "type": "string", "maxLength": 8 }
+                                                    },
+                                                    "required": [ "attributeName", "biometric", "extractorProvider" ]
+                                                }
+                                            }
+                                        },
+                                        "required": [ "partnerPolicyRequestId", "extractors" ]
+                                    }
+                                }
                             },
                             "example": {
                                 "id": "mosip.pms.partners.bioextractors.request.post",
@@ -1298,7 +1326,16 @@
                                 "requesttime": "2026-01-01T00:00:00.000Z",
                                 "metadata": null,
                                 "request": {
-                                    "extractors": []
+                                    "partnerPolicyRequestId": "179392",
+                                    "extractors": [
+                                        {
+                                            "attributeName": "photo",
+                                            "biometric": "face",
+                                            "biometricSubTypes": "left",
+                                            "extractorProvider": "abcdf",
+                                            "extractorProviderVersion": "1.0"
+                                        }
+                                    ]
                                 }
                             }
                         }
@@ -7456,28 +7493,22 @@
                                         "responsetime": {
                                             "type": "string"
                                         },
+                                        "partnerPolicyRequestId": { "type": "string" },
+                                        "statusCode": { "type": "string" },
                                         "response": {
                                             "type": "object",
+                                            "nullable": true,
                                             "properties": {
-                                                "requestId": {
-                                                    "type": "string"
-                                                },
-                                                "bioExtractors": {
+                                                "extractors": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "partnerPolicyRequestId": { "type": "string" },
-                                                            "partId": { "type": "string" },
-                                                            "policyId": { "type": "string" },
                                                             "attributeName": { "type": "string" },
-                                                            "extractorProvider": { "type": "string" },
-                                                            "extractorProviderVersion": { "type": "string" },
-                                                            "biometricModality": { "type": "string" },
+                                                            "biometric": { "type": "string" },
                                                             "biometricSubTypes": { "type": "string" },
-                                                            "statusCode": { "type": "string" },
-                                                            "crDtimes": { "type": "string" },
-                                                            "updDtimes": { "type": "string" }
+                                                            "extractorProvider": { "type": "string" },
+                                                            "extractorProviderVersion": { "type": "string" }
                                                         }
                                                     }
                                                 }

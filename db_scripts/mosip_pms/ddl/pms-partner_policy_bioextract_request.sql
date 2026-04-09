@@ -20,8 +20,6 @@ CREATE TABLE pms.partner_policy_bioextract_request (
     cr_dtimes timestamp NOT NULL,
     upd_by character varying(256),
     upd_dtimes timestamp,
-    is_deleted boolean DEFAULT FALSE,
-    del_dtimes timestamp,
     CONSTRAINT pk_ppber_id PRIMARY KEY (id),
     CONSTRAINT chk_ppber_status CHECK (status_code IN ('InProgress', 'approved', 'rejected'))
 );
@@ -42,6 +40,4 @@ COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_by IS 'Created By : I
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
-COMMENT ON COLUMN pms.partner_policy_bioextract_request.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
-COMMENT ON COLUMN pms.partner_policy_bioextract_request.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 
