@@ -9,13 +9,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.mosip.pms.common.request.dto.ErrorResponse;
 import lombok.Data;
 
 @Data
-@JsonPropertyOrder({ "id", "version", "responseTime", "metadata", "response", "errors" })
 public class ResponseWrapperV2<T> {
     private String id;
     private String version;
