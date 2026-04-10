@@ -15,6 +15,7 @@
 \ir ddl/pms-partner_policy_credential_type.sql
 \ir ddl/pms-partner_policy_request.sql
 \ir ddl/pms-partner_policy_bioextract_request.sql
+\ir ddl/pms-partner_policy_credential_type_request.sql
 \ir ddl/pms-partner_type.sql
 \ir ddl/pms-policy_group.sql
 \ir ddl/pms-reg_device_sub_type.sql
