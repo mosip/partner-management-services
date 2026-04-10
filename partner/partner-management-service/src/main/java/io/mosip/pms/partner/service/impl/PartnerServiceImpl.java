@@ -141,6 +141,8 @@ import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -1321,6 +1323,55 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId("mosip.pms.partner.policy.request.bioextractors.get");
+		responseWrapper.setVersion("1.0");
+		return responseWrapper;
+	}
+
+	@Override
+	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId) {
+		CredentialTypesResponseWrapperV2 responseWrapper = new CredentialTypesResponseWrapperV2();
+		try {
+			if (requestId == null || requestId.isBlank()) {
+				throw new PartnerServiceException(ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+
+			PartnerPolicyRequest parentRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+			if (parentRequest == null || parentRequest.getPartner() == null || parentRequest.getPartner().getId() == null) {
+				throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+						ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+			}
+			String partnerId = parentRequest.getPartner().getId();
+			validateLoggedInUserAuthorization(partnerId);
+
+			Optional<PartnerPolicyCredentialTypeRequest> row =
+					partnerPolicyCredentialTypeRequestRepository
+							.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
+			responseWrapper.setStatusCode(parentRequest.getStatusCode());
+
+			CredentialTypesResponseDto responseDto = new CredentialTypesResponseDto();
+			String credentialType = null;
+			if (row.isPresent()) {
+				credentialType = row.get().getCredentialType();
+				if (credentialType != null) {
+					credentialType = credentialType.trim().isEmpty() ? null : credentialType.trim();
+				}
+			}
+			responseDto.setCredentialType(credentialType);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestCredentialTypes method of PartnerServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestCredentialTypes method of PartnerServiceImpl - " + ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
+					ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId("mosip.pms.partner.policy.request.credential.types.get");
 		responseWrapper.setVersion("1.0");
 		return responseWrapper;
 	}

@@ -70,6 +70,7 @@ import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
@@ -208,7 +209,7 @@ public class PartnerServiceController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
-	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
 	@Operation(summary = "Get bio-extractor requests for a partner-policy request",
 			description = "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.")
 	@ApiResponses(value = {
@@ -220,6 +221,14 @@ public class PartnerServiceController {
 			@PathVariable("requestId") String requestId) {
 		inputValidator.validateRequestInput("requestId", requestId);
 		return partnerService.getPartnerPolicyRequestBioExtractors(requestId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
+	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(
+			@PathVariable("requestId") String requestId) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		return partnerService.getPartnerPolicyRequestCredentialTypes(requestId);
 	}
 	
 	/**

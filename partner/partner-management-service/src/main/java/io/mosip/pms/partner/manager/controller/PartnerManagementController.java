@@ -14,7 +14,6 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -766,23 +765,6 @@ public class PartnerManagementController {
 			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId) {
 		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
 		return partnerManagementService.getBioextractorConfigurationById(bioExtractorConfigurationId);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerpolicycredentialtype())")
-	@GetMapping(value = "/partners/{partnerId}/policies/{policyId}/credential-types")
-	@Operation(summary = "Get credential types mapped to partner-policy",
-			description = "Fetches credential types mapped to the given partner and policy. Available for PARTNER_ADMIN role.")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialType(
-			@PathVariable("partnerId") String partnerId,
-			@PathVariable("policyId") String policyId) {
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		return partnerManagementService.getPartnerPolicyCredentialType(partnerId, policyId);
 	}
 
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(

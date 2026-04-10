@@ -79,6 +79,18 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 CREATE UNIQUE INDEX uniq_ppctr_request
 ON pms.partner_policy_credential_type_request (partner_policy_request_id);
 
+-- Only one InProgress per (partner, credential_type)
+CREATE UNIQUE INDEX uniq_partner_cred_inprogress
+ON pms.partner_policy_credential_type_request (part_id, credential_type)
+WHERE status_code = 'InProgress'
+;
+
+-- Only one approved per (partner, credential_type)
+CREATE UNIQUE INDEX uniq_partner_cred_approved
+ON pms.partner_policy_credential_type_request (part_id, credential_type)
+WHERE status_code = 'approved'
+;
+
 -- Creating unique index for make, model, and approval status
 CREATE UNIQUE INDEX uk_devdtl_make_model_approval_status
 ON pms.device_detail (dprovider_id,dtype_code,dstype_code,make,model)
