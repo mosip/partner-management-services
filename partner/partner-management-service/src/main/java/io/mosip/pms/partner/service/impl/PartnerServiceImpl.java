@@ -1234,11 +1234,7 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
 		}
 
-		boolean activeMappingExists = partnerCredentialTypePolicyRepo
-				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId)
-				.stream()
-				.anyMatch(m -> m.getId() != null && credentialType.equals(m.getId().getCredentialType()));
-		if (activeMappingExists) {
+		if (partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType) != null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
 					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
