@@ -795,9 +795,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 			String currentUser = getUser();
 
-			// For partner types that require bio-extractors, ensure at least one InProgress extractor exists before approving
-			if (Arrays.stream(policyRequiredPartnerTypes.split(","))
-					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {
+			boolean isPolicyRequiredPartnerType = Arrays.stream(policyRequiredPartnerTypes.split(","))
+					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
+
+			if (isPolicyRequiredPartnerType) {
+				// For partner types that require bio-extractors, ensure at least one InProgress extractor exists before approving
 				List<PartnerPolicyBioextractRequest> inProgressExtractors =
 						partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
 								mappingkey, PartnerConstants.IN_PROGRESS);
@@ -806,11 +808,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					throw new PartnerManagerServiceException(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode(),
 							ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorMessage());
 				}
-			}
 
-			// Ensure at least one InProgress credential type exists before approving (only for applicable partner types)
-			if (Arrays.stream(policyRequiredPartnerTypes.split(","))
-					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {
+				// Ensure at least one InProgress credential type exists before approving (only for applicable partner types)
 				List<PartnerPolicyCredentialTypeRequest> inProgressCredentialTypes =
 						partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
 								mappingkey, PartnerConstants.IN_PROGRESS);
@@ -828,52 +827,54 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(updateObject);
 
-			// Update status in partner_policy_bioextract_request to Approved and copy records to partner_policy_bioextract
-			List<PartnerPolicyBioextractRequest> bioextractRequests =
-					partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-			for (PartnerPolicyBioextractRequest req : bioextractRequests) {
-				req.setStatusCode(PartnerConstants.APPROVED);
-				req.setUpdBy(currentUser);
-				req.setUpdDtimes(now);
-				partnerPolicyBioextractRequestRepository.save(req);
+			if (isPolicyRequiredPartnerType) {
+				// Update status in partner_policy_bioextract_request to Approved and copy records to partner_policy_bioextract
+				List<PartnerPolicyBioextractRequest> bioextractRequests =
+						partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+				for (PartnerPolicyBioextractRequest req : bioextractRequests) {
+					req.setStatusCode(PartnerConstants.APPROVED);
+					req.setUpdBy(currentUser);
+					req.setUpdDtimes(now);
+					partnerPolicyBioextractRequestRepository.save(req);
 
-				// Copy to partner_policy_bioextract table
-				BiometricExtractorProvider extractorProvider = new BiometricExtractorProvider();
-				extractorProvider.setId(req.getId());
-				extractorProvider.setPartnerId(req.getPartId());
-				extractorProvider.setPolicyId(req.getPolicyId());
-				extractorProvider.setAttributeName(req.getAttributeName());
-				extractorProvider.setExtractorProvider(req.getExtractorProvider());
-				extractorProvider.setExtractorProviderVersion(req.getExtractorProviderVersion());
-				extractorProvider.setBiometricModality(req.getBiometricModality());
-				extractorProvider.setBiometricSubTypes(req.getBiometricSubTypes());
-				extractorProvider.setCrBy(currentUser);
-				extractorProvider.setCrDtimes(now);
-				extractorProvider.setIsDeleted(false);
-				extractorProviderRepository.save(extractorProvider);
-			}
+					// Copy to partner_policy_bioextract table
+					BiometricExtractorProvider extractorProvider = new BiometricExtractorProvider();
+					extractorProvider.setId(req.getId());
+					extractorProvider.setPartnerId(req.getPartId());
+					extractorProvider.setPolicyId(req.getPolicyId());
+					extractorProvider.setAttributeName(req.getAttributeName());
+					extractorProvider.setExtractorProvider(req.getExtractorProvider());
+					extractorProvider.setExtractorProviderVersion(req.getExtractorProviderVersion());
+					extractorProvider.setBiometricModality(req.getBiometricModality());
+					extractorProvider.setBiometricSubTypes(req.getBiometricSubTypes());
+					extractorProvider.setCrBy(currentUser);
+					extractorProvider.setCrDtimes(now);
+					extractorProvider.setIsDeleted(false);
+					extractorProviderRepository.save(extractorProvider);
+				}
 
-			// Update status in partner_policy_credential_type_request to Approved and copy records to partner_policy_credential_type
-			List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
-					partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-			for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
-				req.setStatusCode(PartnerConstants.APPROVED);
-				req.setUpdBy(currentUser);
-				req.setUpdDtimes(now);
-				partnerPolicyCredentialTypeRequestRepository.save(req);
+				// Update status in partner_policy_credential_type_request to Approved and copy records to partner_policy_credential_type
+				List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
+						partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+				for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
+					req.setStatusCode(PartnerConstants.APPROVED);
+					req.setUpdBy(currentUser);
+					req.setUpdDtimes(now);
+					partnerPolicyCredentialTypeRequestRepository.save(req);
 
-				// Copy to partner_policy_credential_type table
-				PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
-				pk.setPartId(req.getPartId());
-				pk.setPolicyId(req.getPolicyId());
-				pk.setCredentialType(req.getCredentialType());
-				PartnerPolicyCredentialType credentialType = new PartnerPolicyCredentialType();
-				credentialType.setId(pk);
-				credentialType.setIsActive(true);
-				credentialType.setIsDeleted(false);
-				credentialType.setCrBy(currentUser);
-				credentialType.setCrDtimes(now);
-				partnerPolicyCredentialTypeRepository.save(credentialType);
+					// Copy to partner_policy_credential_type table
+					PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
+					pk.setPartId(req.getPartId());
+					pk.setPolicyId(req.getPolicyId());
+					pk.setCredentialType(req.getCredentialType());
+					PartnerPolicyCredentialType credentialType = new PartnerPolicyCredentialType();
+					credentialType.setId(pk);
+					credentialType.setIsActive(true);
+					credentialType.setIsDeleted(false);
+					credentialType.setCrBy(currentUser);
+					credentialType.setCrDtimes(now);
+					partnerPolicyCredentialTypeRepository.save(credentialType);
+				}
 			}
 
 				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
@@ -903,24 +904,29 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		updateObject.setStatusCode(PartnerConstants.REJECTED);
 		partnerPolicyRequestRepository.save(updateObject);
 
-		// Update status in partner_policy_bioextract_request to Rejected
-		List<PartnerPolicyBioextractRequest> bioextractRequests =
-				partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-		for (PartnerPolicyBioextractRequest req : bioextractRequests) {
-			req.setStatusCode(PartnerConstants.REJECTED);
-			req.setUpdBy(currentUser);
-			req.setUpdDtimes(now);
-			partnerPolicyBioextractRequestRepository.save(req);
-		}
+		boolean isPolicyRequiredPartnerType = Arrays.stream(policyRequiredPartnerTypes.split(","))
+				.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
 
-		// Update status in partner_policy_credential_type_request to Rejected
-		List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
-				partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-		for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
-			req.setStatusCode(PartnerConstants.REJECTED);
-			req.setUpdBy(currentUser);
-			req.setUpdDtimes(now);
-			partnerPolicyCredentialTypeRequestRepository.save(req);
+		if (isPolicyRequiredPartnerType) {
+			// Update status in partner_policy_bioextract_request to Rejected
+			List<PartnerPolicyBioextractRequest> bioextractRequests =
+					partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+			for (PartnerPolicyBioextractRequest req : bioextractRequests) {
+				req.setStatusCode(PartnerConstants.REJECTED);
+				req.setUpdBy(currentUser);
+				req.setUpdDtimes(now);
+				partnerPolicyBioextractRequestRepository.save(req);
+			}
+
+			// Update status in partner_policy_credential_type_request to Rejected
+			List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
+					partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+			for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
+				req.setStatusCode(PartnerConstants.REJECTED);
+				req.setUpdBy(currentUser);
+				req.setUpdDtimes(now);
+				partnerPolicyCredentialTypeRequestRepository.save(req);
+			}
 		}
 	}
 
