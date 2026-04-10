@@ -1234,12 +1234,6 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
 		}
 
-		if (partnerCredentialTypePolicyRepo.existsActiveByPartnerIdAndPolicyIdAndCredentialType(partnerId, policyId, credentialType)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
-		}
-
 		PartnerPolicyCredentialTypeRequest row = new PartnerPolicyCredentialTypeRequest();
 		row.setPartnerPolicyRequestId(parentPolicyRequest.getId());
 		row.setPartId(partnerId);

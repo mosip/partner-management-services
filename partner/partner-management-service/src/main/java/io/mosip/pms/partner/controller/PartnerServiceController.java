@@ -239,15 +239,15 @@ public class PartnerServiceController {
 	}
 	
 	/**
-	 * 
-	 * @param partnerId
-	 * @param policyId
-	 * @param credentialType
-	 * @return
+	 * @deprecated Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.
 	 */
+	@Deprecated(since = "release-1.3.0-beta.5")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies/{policyName}",method = RequestMethod.POST)
-	@Operation(summary = "Service to map partner and policy to a credential type", description = "Service to map partner and policy to a credential type")
+	@Operation(
+			summary = "Service to map partner and policy to a credential type — deprecated since release-1.3.0-beta.5",
+			description = "Deprecated since release-1.3.0-beta.5. Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.",
+			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
