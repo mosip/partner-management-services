@@ -239,7 +239,7 @@ public enum ErrorCode {
 	DUPLICATE_BIOEXTRACT_DETAIL("PMS_PRT_286",
 			"Bio Extractors are already mapped to this partner id and policy id in partner_policy_bioextract table."),
 	DUPLICATE_BIOEXTRACT_REQUEST("PMS_PRT_279",
-			"Bio extractor request already exists for this partner and policy. Same modality cannot be added more than once."),
+			"Unable to submit bio extractor request. Please verify the request payload and ensure no duplicate or conflicting request/configuration already exists for the given partner and policy."),
 	BIOEXTRACT_REQUEST_ALREADY_EXISTS("PMS_PRT_283",
 			"Bio extractor request already mapped for the given partner policy request id."),
 	BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_285",

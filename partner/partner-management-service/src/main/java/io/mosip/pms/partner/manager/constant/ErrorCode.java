@@ -7,6 +7,7 @@ public enum ErrorCode {
 	POLICY_REQUEST_ALREADY_REJECTED("PMS_PM_035", "Policy request already rejected."),
 	INVALID_STATUS_CODE("PMS_PM_045", "Status should be either Approved or Rejected"),
 	EXTRACTORS_NOT_PRESENT("PMS_PM_051", "Extractors are not present. Please add extractors."),
+	CREDENTIAL_TYPES_NOT_PRESENT("PMS_PM_074", "Credential types are not present. Please add credential types."),
 	INVALID_STATUS_CODE_ACTIVE_DEACTIVE("PMS_PM_058", "Status should be either Active or De-Active"),
 	NEW_POLICY_ID_NOT_EXIST("PMS_PMP_010","Policy does not belong to the Policy Group of the Partner Manger"),
 	NO_PARTNER_API_KEY_REQUEST_EXCEPTION("PMS_PMP_015","No Partner api key requests for the Policy Group"),

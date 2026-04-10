@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -57,6 +58,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.service.NotificatonService;
@@ -126,6 +129,18 @@ public class PartnerManagementServiceImplTest {
 
 	@Mock
 	PartnerHelper partnerHelper;
+
+	@Mock
+	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
+
+	@Mock
+	PartnerPolicyCredentialTypeRequestRepository partnerPolicyCredentialTypeRequestRepository;
+
+	@Mock
+	EntityManager entityManager;
+
+	@Mock
+	Query nativeQuery;
 	
 	@Autowired
 	@Qualifier("selfTokenRestTemplate")
@@ -164,8 +179,12 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyBioextractRequestRepository", partnerPolicyBioextractRequestRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRequestRepository", partnerPolicyCredentialTypeRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRepository", partnerPolicyCredentialTypeRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "transactionManager", new ResourcelessTransactionManager());
+		ReflectionTestUtils.setField(partnerManagementImpl, "entityManager", entityManager);
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 100);
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
@@ -176,6 +195,10 @@ public class PartnerManagementServiceImplTest {
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class), anyString(), anyString());
 		Mockito.doNothing().when(notificationService).sendNotications(Mockito.any(), Mockito.any());
+
+		Mockito.when(entityManager.createNativeQuery(Mockito.anyString())).thenReturn(nativeQuery);
+		Mockito.when(nativeQuery.setParameter(Mockito.anyInt(), Mockito.any())).thenReturn(nativeQuery);
+		Mockito.when(nativeQuery.executeUpdate()).thenReturn(1);
 	}
 	
 	@Test(expected = PartnerManagerServiceException.class)
@@ -998,6 +1021,10 @@ public class PartnerManagementServiceImplTest {
 		request.setStatus("Approved");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyCredentialTypeRequest()));
 		partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 	}
 	
@@ -1007,6 +1034,10 @@ public class PartnerManagementServiceImplTest {
 		request.setStatus("Rejected");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyCredentialTypeRequest()));
 		partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 	}
 	
@@ -1016,6 +1047,10 @@ public class PartnerManagementServiceImplTest {
 		request.setStatus("Rejeted");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyCredentialTypeRequest()));
 		try {
 			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 		}catch (PartnerManagerServiceException e) {
@@ -1037,6 +1072,10 @@ public class PartnerManagementServiceImplTest {
 		PartnerPolicyRequest partnerPolicyRequestFromDb = getPartnerPolicyRequestData();
 		partnerPolicyRequestFromDb.setStatusCode("approved");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(partnerPolicyRequestFromDb));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyCredentialTypeRequest()));
 		try {
 			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 		}catch (PartnerManagerServiceException e) {
@@ -1051,13 +1090,32 @@ public class PartnerManagementServiceImplTest {
 		}		
 
 		PartnerPolicyRequest partnerPolicyRequestFromDb1 = getPartnerPolicyRequestData();
-		partnerPolicyRequestFromDb1.getPartner().setPartnerTypeCode("Credential_Partner");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(partnerPolicyRequestFromDb1));
-		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId(Mockito.any(),Mockito.any())).thenReturn(List.of());
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyCredentialTypeRequest()));
 		try {
 			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 		}catch (PartnerManagerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode()));
+		}
+	}
+
+	@Test
+	public void approveRejectPartnerPolicyMappingTest06_missingCredentialTypes() {
+		StatusRequestDto request = new StatusRequestDto();
+		request.setStatus("Rejected");
+		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of(getPartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any()))
+				.thenReturn(List.of());
+		try {
+			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
+		} catch (PartnerManagerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorCode()));
 		}
 	}
 	
@@ -1208,6 +1266,36 @@ public class PartnerManagementServiceImplTest {
 		partnerPolicyRequest.setPolicyId("2345");
 		partnerPolicyRequest.setStatusCode("in-progress");
 		return partnerPolicyRequest;
+	}
+
+	private PartnerPolicyBioextractRequest getPartnerPolicyBioextractRequest() {
+		PartnerPolicyBioextractRequest req = new PartnerPolicyBioextractRequest();
+		req.setId("1");
+		req.setPartnerPolicyRequestId("1234456");
+		req.setPartId("123456");
+		req.setPolicyId("2345");
+		req.setAttributeName("face");
+		req.setExtractorProvider("prov");
+		req.setExtractorProviderVersion("1");
+		req.setBiometricModality("FACE");
+		req.setBiometricSubTypes(null);
+		req.setStatusCode(PartnerConstants.IN_PROGRESS);
+		req.setCrBy("SYSTEM");
+		req.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		return req;
+	}
+
+	private PartnerPolicyCredentialTypeRequest getPartnerPolicyCredentialTypeRequest() {
+		PartnerPolicyCredentialTypeRequest req = new PartnerPolicyCredentialTypeRequest();
+		req.setId("1");
+		req.setPartnerPolicyRequestId("1234456");
+		req.setPartId("123456");
+		req.setPolicyId("2345");
+		req.setCredentialType("VID");
+		req.setStatusCode(PartnerConstants.IN_PROGRESS);
+		req.setCrBy("SYSTEM");
+		req.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		return req;
 	}
 	
 	private List<AuthPolicy> getAuthPolicies(){

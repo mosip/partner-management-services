@@ -8,7 +8,6 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,11 +41,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.pms.common.constant.ApiAccessibleExceptionConstant;
@@ -158,7 +163,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	BiometricExtractorProviderRepository extractorProviderRepository;
 
 	@Autowired
+	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
+
+	@Autowired
+	PartnerPolicyCredentialTypeRequestRepository partnerPolicyCredentialTypeRequestRepository;
+
+	@Autowired
 	PartnerPolicyCredentialTypeRepository partnerPolicyCredentialTypeRepository;
+
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
 	@Autowired
 	BioextractorConfigurationRepository bioextractorConfigurationRepository;
@@ -189,6 +203,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	private ObjectMapper mapper;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Autowired
 	PartnerHelper partnerHelper;
@@ -503,17 +520,21 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_REQUEST_ALREADY_REJECTED.getErrorCode(),
 					ErrorCode.POLICY_REQUEST_ALREADY_REJECTED.getErrorMessage());
 		}
-		if (Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
-				.anyMatch(partnerPolicyRequestFromDb.get().getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {
-			List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyId(
-					partnerPolicyRequestFromDb.get().getPartner().getId(),
-					partnerPolicyRequestFromDb.get().getPolicyId());
-			if (extractorsFromDb.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
-				throw new PartnerManagerServiceException(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode(),
-						ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorMessage());
-			}
-		}		
+		List<PartnerPolicyBioextractRequest> bioextractRequests =
+				partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+						partnerPolicyRequestFromDb.get().getId(),
+						PartnerConstants.IN_PROGRESS);
+
+		List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
+				partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+						partnerPolicyRequestFromDb.get().getId(),
+						PartnerConstants.IN_PROGRESS);
+
+		if (bioextractRequests.isEmpty() && credentialTypeRequests.isEmpty()) {
+			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
+			throw new PartnerManagerServiceException(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode(),
+					ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorMessage());
+		}
 
 		return partnerPolicyRequestFromDb.get();
 	}
@@ -796,19 +817,51 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest) {		
 		PartnerPolicyRequest updateObject = getValidApikeyRequestForStatusUpdate(mappingkey);
 		validatePolicy(updateObject.getPolicyId());		
+
+		List<PartnerPolicyBioextractRequest> bioextractRequests =
+				partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+						updateObject.getId(), PartnerConstants.IN_PROGRESS);
+		List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
+				partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+						updateObject.getId(), PartnerConstants.IN_PROGRESS);
+
+		Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+		String updBy = getUser();
+
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
-			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			updateObject.setStatusCode(PartnerConstants.APPROVED);
-			partnerPolicyRequestRepository.save(updateObject);			
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
-			return "Policy mapping approved successfully";
+			try {
+				insertPartnerPolicyBioextracts(bioextractRequests, updBy, now);
+				insertPartnerPolicyCredentialTypes(credentialTypeRequests, updBy, now);
+
+				updateMappingAndRequestStatuses(updateObject, bioextractRequests, credentialTypeRequests,
+						PartnerConstants.APPROVED, updBy, now);
+
+				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
+				return "Policy mapping approved successfully";
+			} catch (Exception e) {
+				LOGGER.error("Failed to approve policy mapping. Marking request rows as rejected.", e);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
+
+				// Prevent partial inserts from committing in the current transaction
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+				// Persist rejected status in a separate transaction
+				TransactionTemplate requiresNew = new TransactionTemplate(transactionManager);
+				requiresNew.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+				requiresNew.executeWithoutResult(status ->
+						updateMappingAndRequestStatuses(updateObject, bioextractRequests, credentialTypeRequests,
+								PartnerConstants.REJECTED, updBy, now));
+
+				throw new PartnerManagerServiceException(
+						ErrorCode.UNABLE_TO_PROCESS.getErrorCode(),
+						ErrorCode.UNABLE_TO_PROCESS.getErrorMessage()
+				);
+			}
 		}
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
-			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			updateObject.setStatusCode(PartnerConstants.REJECTED);
-			partnerPolicyRequestRepository.save(updateObject);			
+			updateMappingAndRequestStatuses(updateObject, bioextractRequests, credentialTypeRequests,
+					PartnerConstants.REJECTED, updBy, now);
+
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping rejected successfully";
 		}
@@ -816,6 +869,79 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
+	}
+
+	private void updateMappingAndRequestStatuses(PartnerPolicyRequest mappingRequest,
+			List<PartnerPolicyBioextractRequest> bioextractRequests,
+			List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests,
+			String statusCode,
+			String updBy,
+			Timestamp now) {
+		for (PartnerPolicyBioextractRequest req : bioextractRequests) {
+			req.setStatusCode(statusCode);
+			req.setUpdBy(updBy);
+			req.setUpdDtimes(now);
+		}
+		partnerPolicyBioextractRequestRepository.saveAll(bioextractRequests);
+
+		for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
+			req.setStatusCode(statusCode);
+			req.setUpdBy(updBy);
+			req.setUpdDtimes(now);
+		}
+		partnerPolicyCredentialTypeRequestRepository.saveAll(credentialTypeRequests);
+
+		mappingRequest.setUpdBy(updBy);
+		mappingRequest.setUpdDtimes(now);
+		mappingRequest.setStatusCode(statusCode);
+		partnerPolicyRequestRepository.save(mappingRequest);
+	}
+
+	private void insertPartnerPolicyBioextracts(List<PartnerPolicyBioextractRequest> bioextractRequests,
+			String crBy, Timestamp crDtimes) {
+		for (PartnerPolicyBioextractRequest req : bioextractRequests) {
+			entityManager.createNativeQuery("""
+					insert into partner_policy_bioextract
+					(id, part_id, policy_id, attribute_name, extractor_provider, extractor_provider_version,
+					 biometric_modality, biometric_sub_types, cr_by, cr_dtimes, upd_by, upd_dtimes, is_deleted, del_dtimes)
+					values
+					(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)
+					""")
+					.setParameter(1, PartnerUtil.generateId())
+					.setParameter(2, req.getPartId())
+					.setParameter(3, req.getPolicyId())
+					.setParameter(4, req.getAttributeName())
+					.setParameter(5, req.getExtractorProvider())
+					.setParameter(6, req.getExtractorProviderVersion())
+					.setParameter(7, req.getBiometricModality())
+					.setParameter(8, req.getBiometricSubTypes())
+					.setParameter(9, crBy)
+					.setParameter(10, crDtimes)
+					.setParameter(11, null)
+					.setParameter(12, null)
+					.setParameter(13, false)
+					.setParameter(14, null)
+					.executeUpdate();
+		}
+	}
+
+	private void insertPartnerPolicyCredentialTypes(List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests,
+			String crBy, Timestamp crDtimes) {
+		List<PartnerPolicyCredentialType> credentialTypesToInsert = new ArrayList<>();
+		for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
+			PartnerPolicyCredentialType entity = new PartnerPolicyCredentialType();
+			PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
+			pk.setPartId(req.getPartId());
+			pk.setPolicyId(req.getPolicyId());
+			pk.setCredentialType(req.getCredentialType());
+			entity.setId(pk);
+			entity.setCrBy(crBy);
+			entity.setCrDtimes(crDtimes);
+			entity.setIsActive(true);
+			entity.setIsDeleted(false);
+			credentialTypesToInsert.add(entity);
+		}
+		partnerPolicyCredentialTypeRepository.saveAll(credentialTypesToInsert);
 	}
 
 	@Override
