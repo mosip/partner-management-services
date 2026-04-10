@@ -832,7 +832,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				List<PartnerPolicyBioextractRequest> bioextractRequests =
 						partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
 				for (PartnerPolicyBioextractRequest req : bioextractRequests) {
-					req.setStatusCode(PartnerConstants.APPROVED);
+					req.setStatusCode(updateObject.getStatusCode());
 					req.setUpdBy(currentUser);
 					req.setUpdDtimes(now);
 					partnerPolicyBioextractRequestRepository.save(req);
@@ -857,7 +857,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
 						partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
 				for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
-					req.setStatusCode(PartnerConstants.APPROVED);
+					req.setStatusCode(updateObject.getStatusCode());
 					req.setUpdBy(currentUser);
 					req.setUpdDtimes(now);
 					partnerPolicyCredentialTypeRequestRepository.save(req);
@@ -912,7 +912,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			List<PartnerPolicyBioextractRequest> bioextractRequests =
 					partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
 			for (PartnerPolicyBioextractRequest req : bioextractRequests) {
-				req.setStatusCode(PartnerConstants.REJECTED);
+				req.setStatusCode(updateObject.getStatusCode());
 				req.setUpdBy(currentUser);
 				req.setUpdDtimes(now);
 				partnerPolicyBioextractRequestRepository.save(req);
@@ -922,7 +922,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
 					partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
 			for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
-				req.setStatusCode(PartnerConstants.REJECTED);
+				req.setStatusCode(updateObject.getStatusCode());
 				req.setUpdBy(currentUser);
 				req.setUpdDtimes(now);
 				partnerPolicyCredentialTypeRequestRepository.save(req);
