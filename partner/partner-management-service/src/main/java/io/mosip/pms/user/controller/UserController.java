@@ -87,6 +87,9 @@ public class UserController {
 	@Value("${mosip.pms.oidc.client.additional.info.required}")
 	private String isOidcClientAdditionalInfoRequired;
 
+	@Value("${pmp.allowed.credential.types}")
+	private String allowedCredentialTypes;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -154,6 +157,7 @@ public class UserController {
 		configMap.put("phoneNumberMaxLength", phoneNumberMaxLength);
 		configMap.put("supportedOidcLanguages", supportedOidcLanguages);
 		configMap.put("isOidcClientAdditionalInfoRequired", isOidcClientAdditionalInfoRequired);
+		configMap.put("allowedCredentialTypes", allowedCredentialTypes);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;
