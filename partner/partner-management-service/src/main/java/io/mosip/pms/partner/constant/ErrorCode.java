@@ -239,7 +239,7 @@ public enum ErrorCode {
 	DUPLICATE_BIOEXTRACT_DETAIL("PMS_PRT_286",
 			"Bio Extractors are already mapped to this partner id and policy id in partner_policy_bioextract table."),
 	DUPLICATE_BIOEXTRACT_REQUEST("PMS_PRT_279",
-			"Bio extractor request already exists for this partner and policy. Same modality cannot be added more than once."),
+			"Unable to submit the bio-extractor request. A configuration already exists or conflicts with an existing request for the specified partner and policy. Please review and try again."),
 	BIOEXTRACT_REQUEST_ALREADY_EXISTS("PMS_PRT_283",
 			"Bio extractor request already mapped for the given partner policy request id."),
 	BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_285",
@@ -249,7 +249,9 @@ public enum ErrorCode {
 	CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_288",
 			"Partner policy request is not in progress for the given partner policy request id. Please send partner policy request first."),
 	CREDENTIAL_TYPES_NOT_PRESENT("PMS_PRT_289",
-			"Credential types are not present. Please add credential types before approving.");
+			"Credential types are not present. Please add credential types before approving."),
+	DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST("PMS_PRT_290",
+			"Duplicate bio-extractor configurations found in the request payload. Both attribute name and biometric modality must be unique.");
 	/**
 	 * The error code.
 	 */
