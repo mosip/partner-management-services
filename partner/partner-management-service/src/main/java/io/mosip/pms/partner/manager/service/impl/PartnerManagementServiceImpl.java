@@ -206,7 +206,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	KeyManagerHelper keyManagerHelper;
 
 	@Value("${pmp.bioextractors.required.partner.types}")
-	private String biometricExtractorsRequiredPartnerTypes;
+	private String policyRequiredPartnerTypes;
 
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays:36500}")
 	private int partnerPolicyExpiryInDays;
@@ -789,15 +789,15 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Override
 	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest) {
 		PartnerPolicyRequest updateObject = getValidApikeyRequestForStatusUpdate(mappingkey);
-		validatePolicy(updateObject.getPolicyId());
 
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
+			validatePolicy(updateObject.getPolicyId());
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 			String currentUser = getUser();
 			try {
 
 			// For partner types that require bio-extractors, ensure at least one InProgress extractor exists before approving
-			if (Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
+			if (Arrays.stream(policyRequiredPartnerTypes.split(","))
 					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {
 				List<PartnerPolicyBioextractRequest> inProgressExtractors =
 						partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
@@ -809,15 +809,18 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				}
 			}
 
-			// Ensure at least one InProgress credential type exists before approving
-			List<PartnerPolicyCredentialTypeRequest> inProgressCredentialTypes =
-					partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
-							mappingkey, PartnerConstants.IN_PROGRESS);
-			if (inProgressCredentialTypes.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
-				throw new PartnerManagerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorMessage());
+			// Ensure at least one InProgress credential type exists before approving (only for applicable partner types)
+			if (Arrays.stream(policyRequiredPartnerTypes.split(","))
+					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {
+				List<PartnerPolicyCredentialTypeRequest> inProgressCredentialTypes =
+						partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+								mappingkey, PartnerConstants.IN_PROGRESS);
+				if (inProgressCredentialTypes.isEmpty()) {
+					auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
+					throw new PartnerManagerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorMessage());
+				}
 			}
 
 				// Mark partner policy request as Approved
