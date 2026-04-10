@@ -247,7 +247,9 @@ public enum ErrorCode {
 	DUPLICATE_CREDENTIAL_TYPE_REQUEST("PMS_PRT_287",
 			"Credential type request or mapping already exists for the given partner."),
 	CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST("PMS_PRT_288",
-			"Partner policy request is not in progress for the given partner policy request id. Please send partner policy request first.");
+			"Partner policy request is not in progress for the given partner policy request id. Please send partner policy request first."),
+	CREDENTIAL_TYPES_NOT_PRESENT("PMS_PRT_289",
+			"Credential types are not present. Please add credential types before approving.");
 	/**
 	 * The error code.
 	 */
