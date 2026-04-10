@@ -142,3 +142,13 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_ppctr_request
 ON pms.partner_policy_credential_type_request (partner_policy_request_id);
+
+-- Only one InProgress per (partner, credential_type)
+CREATE UNIQUE INDEX IF NOT EXISTS uniq_partner_cred_inprogress
+ON pms.partner_policy_credential_type_request (part_id, credential_type)
+WHERE status_code = 'InProgress';
+
+-- Only one approved per (partner, credential_type)
+CREATE UNIQUE INDEX IF NOT EXISTS uniq_partner_cred_approved
+ON pms.partner_policy_credential_type_request (part_id, credential_type)
+WHERE status_code = 'approved';

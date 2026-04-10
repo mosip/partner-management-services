@@ -180,7 +180,7 @@ public class PartnerServiceControllerTest {
 		responseWrapper.setResponse(new BioExtractorsResponseDto());
 		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors-request"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 

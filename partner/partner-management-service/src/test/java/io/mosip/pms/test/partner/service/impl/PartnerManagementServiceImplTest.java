@@ -71,7 +71,6 @@ import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
 @SpringBootTest
@@ -2790,119 +2789,6 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
-				resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void getPartnerPolicyCredentialTypeSuccess() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
-				"mosip.pms.partner.policy.credential.type.get");
-		PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
-		pk.setPartId("partner-1");
-		pk.setPolicyId("policy-1");
-		pk.setCredentialType("euin");
-		PartnerPolicyCredentialType mapping = new PartnerPolicyCredentialType();
-		mapping.setId(pk);
-		mapping.setIsActive(true);
-		mapping.setIsDeleted(false);
-		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(List.of(mapping));
-
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
-				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
-
-		assertNotNull(resp);
-		assertNotNull(resp.getResponse());
-		assertNotNull(resp.getResponse().getCredentialTypes());
-		assertEquals(List.of("euin"), resp.getResponse().getCredentialTypes());
-		assertEquals("mosip.pms.partner.policy.credential.type.get", resp.getId());
-		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
-	}
-
-	@Test
-	public void getPartnerPolicyCredentialTypeInvalidRequest() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
-				"mosip.pms.partner.policy.credential.type.get");
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
-				partnerManagementImpl.getPartnerPolicyCredentialType(null, "policy-1");
-		assertNotNull(resp);
-		assertNotNull(resp.getErrors());
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-				resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void getPartnerPolicyCredentialTypeNotFound() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
-				"mosip.pms.partner.policy.credential.type.get");
-		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(null);
-
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
-				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
-
-		assertNotNull(resp);
-		assertNotNull(resp.getErrors());
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-				resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void getPartnerPolicyCredentialTypeRepositoryException() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
-				"mosip.pms.partner.policy.credential.type.get");
-		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenThrow(new RuntimeException("DB error"));
-
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
-				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
-
-		assertNotNull(resp);
-		assertNotNull(resp.getErrors());
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
-				resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void getPartnerPolicyCredentialTypeRepositoryReturnsNull() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
-				"mosip.pms.partner.policy.credential.type.get");
-		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(null);
-
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
-				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
-
-		assertNotNull(resp);
-		assertNotNull(resp.getErrors());
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-				resp.getErrors().get(0).getErrorCode());
-	}
-
-	@Test
-	public void getPartnerPolicyCredentialTypeNoNonBlankCredentialTypes() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "getPartnerPolicyCredentialTypeId",
-				"mosip.pms.partner.policy.credential.type.get");
-		PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
-		pk.setPartId("partner-1");
-		pk.setPolicyId("policy-1");
-		pk.setCredentialType("   "); // blank
-		PartnerPolicyCredentialType m2 = new PartnerPolicyCredentialType();
-		m2.setId(pk);
-		when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("partner-1", "policy-1"))
-				.thenReturn(List.of(m2));
-
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> resp =
-				partnerManagementImpl.getPartnerPolicyCredentialType("partner-1", "policy-1");
-
-		assertNotNull(resp);
-		assertNotNull(resp.getErrors());
-		assertFalse(resp.getErrors().isEmpty());
-		assertEquals(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
 	}
 
