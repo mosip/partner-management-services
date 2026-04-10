@@ -819,10 +819,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 							io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorCode(),
 							io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorMessage());
 				}
-			}
 
-			// First perform data movement/subrequest updates BEFORE updating main partner policy request table
-			processSubRequests(mappingkey, PartnerConstants.APPROVED, currentUser, now, isPolicyRequiredPartnerType);
+				processSubRequests(mappingkey, PartnerConstants.APPROVED, currentUser, now);
+			}
 
 			// Mark partner policy request as Approved
 			updateObject.setUpdBy(currentUser);
@@ -833,6 +832,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping approved successfully";
 		}
+
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 			String currentUser = getUser();
@@ -841,7 +841,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
 
 			// First perform data movement/subrequest updates BEFORE updating main partner policy request table
-			processSubRequests(mappingkey, PartnerConstants.REJECTED, currentUser, now, isPolicyRequiredPartnerType);
+			if (isPolicyRequiredPartnerType) {
+				processSubRequests(mappingkey, PartnerConstants.REJECTED, currentUser, now);
+			}
 
 			// Mark partner policy request as Rejected
 			updateObject.setUpdBy(currentUser);
@@ -861,11 +863,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	/**
 	 * Abstraction to handle DB transfers of related pending child structures when the parent request status changes.
 	 */
-	private void processSubRequests(String mappingkey, String statusCode, String currentUser, Timestamp now, boolean isPolicyRequiredPartnerType) {
-		if (!isPolicyRequiredPartnerType) {
-			return; // No pending tables are required or queried for these partner types.
-		}
-
+	private void processSubRequests(String mappingkey, String statusCode, String currentUser, Timestamp now) {
 		// Process Bioextract requests
 		List<PartnerPolicyBioextractRequest> bioextractRequests =
 				partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
