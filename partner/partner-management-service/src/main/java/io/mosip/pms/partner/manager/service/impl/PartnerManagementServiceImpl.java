@@ -794,7 +794,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			validatePolicy(updateObject.getPolicyId());
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 			String currentUser = getUser();
-			try {
 
 			// For partner types that require bio-extractors, ensure at least one InProgress extractor exists before approving
 			if (Arrays.stream(policyRequiredPartnerTypes.split(","))
@@ -879,13 +878,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 				return "Policy mapping approved successfully";
-			} catch (Exception e) {
-				LOGGER.error("Error while approving partner policy mapping: {}, marking as Rejected. Error: {}",
-						mappingkey, e.getMessage());
-				rejectPartnerPolicyMapping(mappingkey, updateObject, now, currentUser);
-				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
-				throw e;
-			}
 		}
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
