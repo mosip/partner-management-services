@@ -1132,8 +1132,8 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(),
 					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorMessage());
 		}
-		if (extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(partnerId,
-				policyId, attributeNames)) {
+		if (extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameIn(partnerId, policyId,
+				attributeNames)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_DETAIL.getErrorCode(),

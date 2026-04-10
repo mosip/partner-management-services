@@ -17,9 +17,6 @@ public interface BiometricExtractorProviderRepository extends JpaRepository<Biom
 	@Query(value = "select * from partner_policy_bioextract ppb where ppb.part_id=?1 and ppb.policy_id = ?2 and ppb.attribute_name =?3",nativeQuery = true)
 	BiometricExtractorProvider findByPartnerAndPolicyIdAndAttributeName(String partnerId, String policyId, String attributeName);
 
-	boolean existsByPartnerIdAndPolicyIdAndAttributeNameAndIsDeletedFalse(String partnerId, String policyId, String attributeName);
-
-	boolean existsByPartnerIdAndPolicyIdAndAttributeNameInAndIsDeletedFalse(String partnerId, String policyId,
-			List<String> attributeName);
+	boolean existsByPartnerIdAndPolicyIdAndAttributeNameIn(String partnerId, String policyId, List<String> attributeName);
 
 } 
