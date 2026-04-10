@@ -206,7 +206,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	KeyManagerHelper keyManagerHelper;
 
 	@Value("${pmp.bioextractors.required.partner.types}")
-	private String policyRequiredPartnerTypes;
+	private String biometricExtractorsRequiredPartnerTypes;
 
 	@Value("${mosip.pmp.partner.policy.expiry.period.indays:36500}")
 	private int partnerPolicyExpiryInDays;
@@ -795,7 +795,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 			String currentUser = getUser();
 
-			boolean isPolicyRequiredPartnerType = Arrays.stream(policyRequiredPartnerTypes.split(","))
+			boolean isPolicyRequiredPartnerType = Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
 					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
 
 			if (isPolicyRequiredPartnerType) {
@@ -821,23 +821,62 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				}
 			}
 
-				// Mark partner policy request as Approved
+			// First perform data movement/subrequest updates BEFORE updating main partner policy request table
+			processSubRequests(mappingkey, PartnerConstants.APPROVED, currentUser, now, isPolicyRequiredPartnerType);
+
+			// Mark partner policy request as Approved
 			updateObject.setUpdBy(currentUser);
 			updateObject.setUpdDtimes(now);
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
 			partnerPolicyRequestRepository.save(updateObject);
 
-			if (isPolicyRequiredPartnerType) {
-				// Update status in partner_policy_bioextract_request to Approved and copy records to partner_policy_bioextract
-				List<PartnerPolicyBioextractRequest> bioextractRequests =
-						partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-				for (PartnerPolicyBioextractRequest req : bioextractRequests) {
-					req.setStatusCode(updateObject.getStatusCode());
-					req.setUpdBy(currentUser);
-					req.setUpdDtimes(now);
-					partnerPolicyBioextractRequestRepository.save(req);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
+			return "Policy mapping approved successfully";
+		}
+		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
+			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+			String currentUser = getUser();
 
-					// Copy to partner_policy_bioextract table
+			boolean isPolicyRequiredPartnerType = Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
+					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
+
+			// First perform data movement/subrequest updates BEFORE updating main partner policy request table
+			processSubRequests(mappingkey, PartnerConstants.REJECTED, currentUser, now, isPolicyRequiredPartnerType);
+
+			// Mark partner policy request as Rejected
+			updateObject.setUpdBy(currentUser);
+			updateObject.setUpdDtimes(now);
+			updateObject.setStatusCode(PartnerConstants.REJECTED);
+			partnerPolicyRequestRepository.save(updateObject);
+
+			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
+			return "Policy mapping rejected successfully";
+		}
+		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
+		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
+		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
+				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
+	}
+
+	/**
+	 * Abstraction to handle DB transfers of related pending child structures when the parent request status changes.
+	 */
+	private void processSubRequests(String mappingkey, String statusCode, String currentUser, Timestamp now, boolean isPolicyRequiredPartnerType) {
+		if (!isPolicyRequiredPartnerType) {
+			return; // No pending tables are required or queried for these partner types.
+		}
+
+		// Process Bioextract requests
+		List<PartnerPolicyBioextractRequest> bioextractRequests =
+				partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+		for (PartnerPolicyBioextractRequest req : bioextractRequests) {
+			req.setStatusCode(statusCode);
+			req.setUpdBy(currentUser);
+			req.setUpdDtimes(now);
+			partnerPolicyBioextractRequestRepository.save(req);
+
+			if (statusCode.equalsIgnoreCase(PartnerConstants.APPROVED)) {
+				try {
 					BiometricExtractorProvider extractorProvider = new BiometricExtractorProvider();
 					extractorProvider.setId(req.getId());
 					extractorProvider.setPartnerId(req.getPartId());
@@ -851,18 +890,27 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					extractorProvider.setCrDtimes(now);
 					extractorProvider.setIsDeleted(false);
 					extractorProviderRepository.save(extractorProvider);
+				} catch (Exception e) {
+					LOGGER.error("Failed to insert bio-extractor into final table, reverting to InProgress: " + e.getMessage());
+					req.setStatusCode(PartnerConstants.IN_PROGRESS);
+					partnerPolicyBioextractRequestRepository.save(req);
+					throw new PartnerManagerServiceException(CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+							"Failed to migrate bio-extractor configuration to production table");
 				}
+			}
+		}
 
-				// Update status in partner_policy_credential_type_request to Approved and copy records to partner_policy_credential_type
-				List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
-						partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-				for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
-					req.setStatusCode(updateObject.getStatusCode());
-					req.setUpdBy(currentUser);
-					req.setUpdDtimes(now);
-					partnerPolicyCredentialTypeRequestRepository.save(req);
+		// Process Credential Type requests
+		List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
+				partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+		for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
+			req.setStatusCode(statusCode);
+			req.setUpdBy(currentUser);
+			req.setUpdDtimes(now);
+			partnerPolicyCredentialTypeRequestRepository.save(req);
 
-					// Copy to partner_policy_credential_type table
+			if (statusCode.equalsIgnoreCase(PartnerConstants.APPROVED)) {
+				try {
 					PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
 					pk.setPartId(req.getPartId());
 					pk.setPolicyId(req.getPolicyId());
@@ -874,58 +922,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					credentialType.setCrBy(currentUser);
 					credentialType.setCrDtimes(now);
 					partnerPolicyCredentialTypeRepository.save(credentialType);
+				} catch (Exception e) {
+					LOGGER.error("Failed to insert credential type into final table, reverting to InProgress: " + e.getMessage());
+					req.setStatusCode(PartnerConstants.IN_PROGRESS);
+					partnerPolicyCredentialTypeRequestRepository.save(req);
+					throw new PartnerManagerServiceException(io.mosip.pms.partner.constant.ErrorCode.SERVER_ERROR.getErrorCode(),
+							"Failed to migrate credential type configuration to production table");
 				}
-			}
-
-				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
-				return "Policy mapping approved successfully";
-		}
-		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
-			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-			String currentUser = getUser();
-			rejectPartnerPolicyMapping(mappingkey, updateObject, now, currentUser);
-			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
-			return "Policy mapping rejected successfully";
-		}
-		auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
-		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
-		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
-				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
-	}
-
-	/**
-	 * Marks partner_policy_request, partner_policy_bioextract_request, and
-	 * partner_policy_credential_type_request as Rejected for the given mappingkey.
-	 */
-	private void rejectPartnerPolicyMapping(String mappingkey, PartnerPolicyRequest updateObject,
-			Timestamp now, String currentUser) {
-		updateObject.setUpdBy(currentUser);
-		updateObject.setUpdDtimes(now);
-		updateObject.setStatusCode(PartnerConstants.REJECTED);
-		partnerPolicyRequestRepository.save(updateObject);
-
-		boolean isPolicyRequiredPartnerType = Arrays.stream(policyRequiredPartnerTypes.split(","))
-				.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
-
-		if (isPolicyRequiredPartnerType) {
-			// Update status in partner_policy_bioextract_request to Rejected
-			List<PartnerPolicyBioextractRequest> bioextractRequests =
-					partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-			for (PartnerPolicyBioextractRequest req : bioextractRequests) {
-				req.setStatusCode(updateObject.getStatusCode());
-				req.setUpdBy(currentUser);
-				req.setUpdDtimes(now);
-				partnerPolicyBioextractRequestRepository.save(req);
-			}
-
-			// Update status in partner_policy_credential_type_request to Rejected
-			List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
-					partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
-			for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
-				req.setStatusCode(updateObject.getStatusCode());
-				req.setUpdBy(currentUser);
-				req.setUpdDtimes(now);
-				partnerPolicyCredentialTypeRequestRepository.save(req);
 			}
 		}
 	}
