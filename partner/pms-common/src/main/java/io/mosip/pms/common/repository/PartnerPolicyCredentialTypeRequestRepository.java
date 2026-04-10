@@ -11,7 +11,5 @@ import io.mosip.pms.common.entity.PartnerPolicyCredentialTypeRequest;
 public interface PartnerPolicyCredentialTypeRequestRepository extends JpaRepository<PartnerPolicyCredentialTypeRequest, String> {
 	boolean existsByPartnerPolicyRequestId(String partnerPolicyRequestId);
 
-	boolean existsByPartIdAndPolicyIdAndCredentialTypeAndStatusCodeIn(String partId, String policyId,
-			String credentialType, List<String> statusCode);
 }
 

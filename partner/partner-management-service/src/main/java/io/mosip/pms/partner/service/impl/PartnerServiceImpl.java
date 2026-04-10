@@ -1197,13 +1197,7 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
 
-		Partner partner = getValidPartner(partnerId, false);
-		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
-				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
-					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
-		}
+		getValidPartner(partnerId, false);
 
 		String credentialType = request.getCredentialType().trim();
 		validateCredentialTypes(credentialType);
@@ -1229,13 +1223,6 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		if (partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
-		}
-
-		if (partnerPolicyCredentialTypeRequestRepository.existsByPartIdAndPolicyIdAndCredentialTypeAndStatusCodeIn(
-				partnerId, policyId, credentialType, List.of(PartnerConstants.IN_PROGRESS, PartnerConstants.APPROVED))) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
 					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
