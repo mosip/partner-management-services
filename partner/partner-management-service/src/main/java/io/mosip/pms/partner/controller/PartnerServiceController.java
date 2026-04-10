@@ -46,6 +46,7 @@ import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
@@ -191,6 +192,21 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credential-types-request", method = RequestMethod.POST)
+	@Operation(summary = "Service to submit credential types request",
+			description = "Persists credential type request against an in-progress partner policy mapping request")
+	public ResponseEntity<ResponseWrapper<String>> submitCredentialTypesRequest(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<CredentialTypeRequestDto> request) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.submitCredentialTypesRequest(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
 	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors")
 	@Operation(summary = "Get bio-extractor requests for a partner-policy request",
@@ -223,15 +239,15 @@ public class PartnerServiceController {
 	}
 	
 	/**
-	 * 
-	 * @param partnerId
-	 * @param policyId
-	 * @param credentialType
-	 * @return
+	 * @deprecated Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.
 	 */
+	@Deprecated(since = "release-1.3.0-beta.5")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies/{policyName}",method = RequestMethod.POST)
-	@Operation(summary = "Service to map partner and policy to a credential type", description = "Service to map partner and policy to a credential type")
+	@Operation(
+			summary = "Service to map partner and policy to a credential type — deprecated since release-1.3.0-beta.5",
+			description = "Deprecated since release-1.3.0-beta.5. Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.",
+			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
