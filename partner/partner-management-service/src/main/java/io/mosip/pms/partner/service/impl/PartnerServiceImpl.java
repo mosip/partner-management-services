@@ -1133,11 +1133,16 @@ public class PartnerServiceImpl implements PartnerService {
 		Set<String> uniqueAttributeNames = new HashSet<>();
 		Set<String> uniqueModalities = new HashSet<>();
 		for (BioExtractorsDto extractor : extractors.getExtractors()) {
-			if (!uniqueAttributeNames.add(extractor.getAttributeName()) || !uniqueModalities.add(extractor.getBiometric())) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-						"partnerId");
-				throw new PartnerServiceException(ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorCode(),
-						ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorMessage());
+			String attrName = extractor.getAttributeName() != null ? extractor.getAttributeName().toLowerCase().trim() : null;
+			String biometric = extractor.getBiometric() != null ? extractor.getBiometric().toLowerCase().trim() : null;
+			
+			if (attrName != null && biometric != null) {
+				if (!uniqueAttributeNames.add(attrName) || !uniqueModalities.add(biometric)) {
+					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+							"partnerId");
+					throw new PartnerServiceException(ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorCode(),
+							ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorMessage());
+				}
 			}
 		}
 
