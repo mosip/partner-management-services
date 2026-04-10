@@ -794,6 +794,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
 			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 			String currentUser = getUser();
+			try {
 
 			// For partner types that require bio-extractors, ensure at least one InProgress extractor exists before approving
 			if (Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
@@ -819,8 +820,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorMessage());
 			}
 
-			try {
-			// Mark partner policy request as Approved
+				// Mark partner policy request as Approved
 			updateObject.setUpdBy(currentUser);
 			updateObject.setUpdDtimes(now);
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
