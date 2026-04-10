@@ -76,7 +76,6 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.util.PartnerUtil;
 
@@ -133,8 +132,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.bioextractor.configuration.details.get}")
 	private String getBioextractorConfigurationDetailsId;
 
-	@Value("${mosip.pms.api.id.partner.policy.credential.type.get}")
-	private String getPartnerPolicyCredentialTypeId;
 
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
@@ -1757,53 +1754,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(getBioextractorConfigurationDetailsId);
-		responseWrapper.setVersion(VERSION);
-		return responseWrapper;
-	}
-
-	@Override
-	public ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialType(
-			String partnerId, String policyId) {
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		try {
-			if (Objects.isNull(partnerId) || partnerId.isBlank() || Objects.isNull(policyId) || policyId.isBlank()) {
-				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
-						INVALID_REQUEST_PARAM.getErrorMessage());
-			}
-			List<PartnerPolicyCredentialType> mappings =
-					partnerPolicyCredentialTypeRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
-			if (mappings == null || mappings.isEmpty()) {
-				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
-			}
-			PartnerPolicyCredentialTypeResponseDto dto = new PartnerPolicyCredentialTypeResponseDto();
-			List<String> credentialTypes = mappings.stream()
-					.map(m -> m.getId() == null ? null : m.getId().getCredentialType())
-					.filter(Objects::nonNull)
-					.map(String::trim)
-					.filter(ct -> !ct.isBlank())
-					.distinct()
-					.toList();
-			if (credentialTypes.isEmpty()) {
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
-			}
-			dto.setCredentialTypes(credentialTypes);
-			responseWrapper.setResponse(dto);
-		} catch (PartnerServiceException ex) {
-			LOGGER.info("sessionId", "idType", "id",
-					"In getPartnerPolicyCredentialType method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
-		} catch (Exception ex) {
-			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
-			LOGGER.error("sessionId", "idType", "id",
-					"In getPartnerPolicyCredentialType method of PartnerManagementServiceImpl - " + ex.getMessage());
-			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
-					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorMessage()));
-		}
-		responseWrapper.setId(getPartnerPolicyCredentialTypeId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}

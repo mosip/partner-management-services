@@ -26,7 +26,6 @@ import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -920,22 +919,6 @@ public class PartnerManagementControllerTest {
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
 		verify(partnerManagementService, never()).getBioextractorConfigurationById(anyString());
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void getPartnerPolicyCredentialTypeSuccessTest() throws Exception {
-		ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		PartnerPolicyCredentialTypeResponseDto dto = new PartnerPolicyCredentialTypeResponseDto();
-		dto.setCredentialTypes(List.of("euin"));
-		responseWrapper.setResponse(dto);
-		Mockito.when(partnerManagementService.getPartnerPolicyCredentialType("partner-1", "policy-1"))
-				.thenReturn(responseWrapper);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/{partnerId}/policies/{policyId}/credential-types", "partner-1", "policy-1")
-						.contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1)).getPartnerPolicyCredentialType("partner-1", "policy-1");
 	}
 
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
