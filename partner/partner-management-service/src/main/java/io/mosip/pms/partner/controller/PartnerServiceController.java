@@ -225,6 +225,13 @@ public class PartnerServiceController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
 	@GetMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
+	@Operation(summary = "Get credential type request for a partner-policy request",
+			description = "Fetches the credential type request row (if any) submitted against the given partner policy mapping request id (`req_id`).")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
 	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(
 			@PathVariable("requestId") String requestId) {
 		inputValidator.validateRequestInput("requestId", requestId);
