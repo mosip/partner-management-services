@@ -9759,6 +9759,492 @@
                     "required": true
                 }
             ]
+        },
+        "/bio-extractor-configurations": {
+            "get": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "Get all bio-extractor configurations",
+                "description": "Returns bio-extractor configurations persisted in PMS (catalog entries used when partners submit bio-extractor requests against policies). Supports optional pagination, sorting, and filtering.\r\n\r\n**Query behaviour**\r\n- Optional filters (`configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`) are applied using **case-insensitive** matching on stored values (the service normalizes filter values to lower case).\r\n- When `pageNo` and `pageSize` are omitted, results are returned **unpaged** (all matching rows).\r\n- When pagination is used, `sortFieldName` and `sortType` may be supplied together to order the page. Allowed `sortFieldName` values: `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `createdDateTime`. `sortType` is `asc` or `desc`.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2` envelope. `response` is a page object with `pageNo`, `pageSize`, `totalResults`, and `data` (array of configuration rows). Business or validation failures may populate `errors` while still returning HTTP 200, consistent with other PMS V2 endpoints.\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurations`. Example roles in default configuration: PARTNER_ADMIN, CREDENTIAL_PARTNER.",
+                "operationId": "getBioextractorConfigurations",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "required": true,
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortFieldName",
+                        "in": "query",
+                        "description": "Optional. Sort field (use together with `sortType` when pagination is enabled). Allowed: id, configName, bioextractorProviderName, bioextractorProviderVersion, bioModality, createdDateTime.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortType",
+                        "in": "query",
+                        "description": "Optional. Sort order: asc or desc.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "pageNo",
+                        "in": "query",
+                        "description": "Optional. Page index starting at 0. Must be used together with `pageSize` for pagination.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Optional. Page size. Must be used together with `pageNo` for pagination.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "configName",
+                        "in": "query",
+                        "description": "Optional filter by configuration name (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioextractorProviderName",
+                        "in": "query",
+                        "description": "Optional filter by bio-extractor provider name (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioextractorProviderVersion",
+                        "in": "query",
+                        "description": "Optional filter by provider version.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioModality",
+                        "in": "query",
+                        "description": "Optional filter by biometric modality (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "API identifier",
+                                            "example": "mosip.pms.bioextractor.configurations.get"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "API version",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Response timestamp (UTC)"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "pageNo": {
+                                                    "type": "integer",
+                                                    "format": "int64",
+                                                    "description": "Page index from the underlying Spring Data page (0-based when pagination is used)."
+                                                },
+                                                "pageSize": {
+                                                    "type": "integer",
+                                                    "format": "int64",
+                                                    "description": "Page size from the underlying Spring Data page object (when no pagination parameters are sent, the query is unpaged and these fields still reflect that page metadata)."
+                                                },
+                                                "totalResults": {
+                                                    "type": "integer",
+                                                    "format": "int64",
+                                                    "description": "Total number of matching configurations."
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "description": "Generated configuration identifier"
+                                                            },
+                                                            "configName": {
+                                                                "type": "string",
+                                                                "description": "Unique configuration name (stored lower case)"
+                                                            },
+                                                            "bioextractorProviderName": {
+                                                                "type": "string"
+                                                            },
+                                                            "bioextractorProviderVersion": {
+                                                                "type": "string"
+                                                            },
+                                                            "bioModality": {
+                                                                "type": "string"
+                                                            },
+                                                            "createdDateTime": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "description": "Creation timestamp"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configurations-get"
+                }
+            },
+            "post": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "Create a new bio-extractor configuration",
+                "description": "Creates a new bio-extractor configuration row. **configName** must be **unique** after normalization (trimmed and compared in lower case). **configName**, **bioextractorProviderName**, **bioextractorProviderVersion**, and **bioModality** are required in the inner `request` object; the service stores normalized names/modality in lower case and preserves the provider version string as trimmed input.\r\n\r\n**Request envelope:** `RequestWrapperV2` with `id` set to `mosip.pms.bioextractor.configurations.post`.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2`; `response.id` is the new configuration id and `response.status` is `SUCCESS`.\r\n\r\n**Authorization:** `mosip.role.pms.postbioextractorconfigurations`. Example role in default configuration: PARTNER_ADMIN.",
+                "operationId": "createBioextractorConfiguration",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "required": true,
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "Request API id",
+                                        "example": "mosip.pms.bioextractor.configurations.post"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "example": "1.0"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Timestamp when the request is sent (UTC)"
+                                    },
+                                    "metadata": {
+                                        "type": "object"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "required": [
+                                            "configName",
+                                            "bioextractorProviderName",
+                                            "bioextractorProviderVersion",
+                                            "bioModality"
+                                        ],
+                                        "properties": {
+                                            "configName": {
+                                                "type": "string",
+                                                "description": "Unique logical name for this configuration"
+                                            },
+                                            "bioextractorProviderName": {
+                                                "type": "string"
+                                            },
+                                            "bioextractorProviderVersion": {
+                                                "type": "string"
+                                            },
+                                            "bioModality": {
+                                                "type": "string",
+                                                "description": "Biometric modality for this configuration"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "Create configuration": {
+                                    "value": {
+                                        "id": "mosip.pms.bioextractor.configurations.post",
+                                        "version": "1.0",
+                                        "requestTime": "2026-04-11T10:00:00.000Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "configName": "default-face-extractor",
+                                            "bioextractorProviderName": "MOSIP",
+                                            "bioextractorProviderVersion": "1.0",
+                                            "bioModality": "face"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "mosip.pms.bioextractor.configurations.post"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "description": "Newly created configuration id"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "SUCCESS"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configurations-post"
+                }
+            }
+        },
+        "/bio-extractor-configurations/{bioExtractorConfigurationId}": {
+            "get": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "Get bio-extractor configuration details by ID",
+                "description": "Returns a single bio-extractor configuration by its generated identifier.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2`; `response` contains `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, and `createdDateTime`. If the id does not exist, `errors` is populated (often still HTTP 200, depending on global exception handling).\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurationdetails`. Example role in default configuration: PARTNER_ADMIN.",
+                "operationId": "getBioextractorConfigurationById",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "required": true,
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioExtractorConfigurationId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Bio-extractor configuration id returned from create or list APIs.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "mosip.pms.bioextractor.configuration.details.get"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "configName": {
+                                                    "type": "string"
+                                                },
+                                                "bioextractorProviderName": {
+                                                    "type": "string"
+                                                },
+                                                "bioextractorProviderVersion": {
+                                                    "type": "string"
+                                                },
+                                                "bioModality": {
+                                                    "type": "string"
+                                                },
+                                                "createdDateTime": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configuration-by-id-get"
+                }
+            }
         }
     },
     "components": {
