@@ -9767,7 +9767,7 @@
                     "NEW"
                 ],
                 "summary": "Get all bio-extractor configurations",
-                "description": "Returns bio-extractor configurations persisted in PMS (catalog entries used when partners submit bio-extractor requests against policies). Supports optional pagination, sorting, and filtering.\r\n\r\n**Query behaviour**\r\n- Optional filters (`configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`) are applied using **case-insensitive** matching on stored values (the service normalizes filter values to lower case).\r\n- When `pageNo` and `pageSize` are omitted, results are returned **unpaged** (all matching rows).\r\n- When pagination is used, `sortFieldName` and `sortType` may be supplied together to order the page. Allowed `sortFieldName` values: `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `createdDateTime`. `sortType` is `asc` or `desc`.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2` envelope. `response` is a page object with `pageNo`, `pageSize`, `totalResults`, and `data` (array of configuration rows). Business or validation failures may populate `errors` while still returning HTTP 200, consistent with other PMS V2 endpoints.\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurations`. Example roles in default configuration: PARTNER_ADMIN, CREDENTIAL_PARTNER.",
+                "description": "Returns bio-extractor configurations persisted in PMS (catalog entries used when partners submit bio-extractor requests against policies). Supports optional pagination, sorting, and filtering.\r\n\r\n**Query behaviour**\r\n- Optional filters (`configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`) are applied using **case-insensitive** matching on stored values (the service normalizes filter values to lower case).\r\n- When `pageNo` and `pageSize` are omitted, results are returned **unpaged** (all matching rows).\r\n- When **both** `pageNo` and `pageSize` are sent, pagination is enabled; in that case `sortFieldName` and `sortType` may be sent **together** to sort that page (if omitted, the page uses the default sort from persistence). If pagination is not enabled, `sortFieldName` / `sortType` are **not** applied by the service. Allowed `sortFieldName` values: `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `createdDateTime`. `sortType` is `asc` or `desc`.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2` envelope. `response` is a page object with `pageNo`, `pageSize`, `totalResults`, and `data` (array of configuration rows). Business or validation failures may populate `errors` while still returning HTTP 200, consistent with other PMS V2 endpoints.\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurations`. Example roles in default configuration: PARTNER_ADMIN, CREDENTIAL_PARTNER.",
                 "operationId": "getBioextractorConfigurations",
                 "parameters": [
                     {
@@ -9782,7 +9782,7 @@
                     {
                         "name": "sortFieldName",
                         "in": "query",
-                        "description": "Optional. Sort field (use together with `sortType` when pagination is enabled). Allowed: id, configName, bioextractorProviderName, bioextractorProviderVersion, bioModality, createdDateTime.",
+                        "description": "Optional. Sort field; only used when **both** `pageNo` and `pageSize` are present—use together with `sortType` in that case. Allowed: id, configName, bioextractorProviderName, bioextractorProviderVersion, bioModality, createdDateTime.",
                         "schema": {
                             "type": "string"
                         }
@@ -9790,7 +9790,7 @@
                     {
                         "name": "sortType",
                         "in": "query",
-                        "description": "Optional. Sort order: asc or desc.",
+                        "description": "Optional. Sort order: asc or desc. Only used when **both** `pageNo` and `pageSize` are present (with `sortFieldName`).",
                         "schema": {
                             "type": "string",
                             "enum": [
