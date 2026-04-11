@@ -251,7 +251,11 @@ public enum ErrorCode {
 	CREDENTIAL_TYPES_NOT_PRESENT("PMS_PRT_289",
 			"Credential types are not present. Please add credential types before approving."),
 	DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST("PMS_PRT_290",
-			"Duplicate bio-extractor configurations found in the request payload. Both attribute name and biometric modality must be unique.");
+			"Duplicate bio-extractor configurations found in the request payload. Both attribute name and biometric modality must be unique."),
+	PARTNER_POLICY_BIO_EXTRACTOR_APPROVE_FAILED("PMS_PRT_362",
+			"Failed to approve the bio extractors associated with this partner policy request since duplicate bio extractors are already associated with this partner policy."),
+	PARTNER_POLICY_CREDENTIAL_TYPE_APPROVE_FAILED("PMS_PRT_363",
+			"Failed to approve the credential type associated with this partner policy request since duplicate credential type is already associated with this partner policy.");
 	/**
 	 * The error code.
 	 */
