@@ -1272,6 +1272,7 @@
                         "name": "Cookie",
                         "in": "header",
                         "description": "Authorization={jwt_token}",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1328,7 +1329,8 @@
                                         },
                                         "required": [ "partnerPolicyRequestId", "extractors" ]
                                     }
-                                }
+                                },
+                                "required": [ "request" ]
                             },
                             "example": {
                                 "id": "mosip.pms.partners.bioextractors.request.post",
@@ -1401,6 +1403,7 @@
                         "name": "Cookie",
                         "in": "header",
                         "description": "Authorization={jwt_token}",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1443,7 +1446,8 @@
                                         },
                                         "required": [ "partnerPolicyRequestId", "credentialType" ]
                                     }
-                                }
+                                },
+                                "required": [ "request" ]
                             },
                             "example": {
                                 "id": "mosip.pms.partners.credentialtypes.request.post",
