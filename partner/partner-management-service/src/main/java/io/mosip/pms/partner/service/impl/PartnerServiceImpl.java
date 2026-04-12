@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -21,6 +22,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.HashSet;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -1127,6 +1130,21 @@ public class PartnerServiceImpl implements PartnerService {
 		List<String> createdIds = new ArrayList<>();
 
 		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
+		Set<String> uniqueAttributeNames = new HashSet<>();
+		Set<String> uniqueModalities = new HashSet<>();
+		for (BioExtractorsDto extractor : extractors.getExtractors()) {
+			String attrName = extractor.getAttributeName() != null ? extractor.getAttributeName().toLowerCase().trim() : null;
+			String biometric = extractor.getBiometric() != null ? extractor.getBiometric().toLowerCase().trim() : null;
+			
+			if (attrName != null && biometric != null) {
+				if (!uniqueAttributeNames.add(attrName) || !uniqueModalities.add(biometric)) {
+					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+							"partnerId");
+					throw new PartnerServiceException(ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorCode(),
+							ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorMessage());
+				}
+			}
+		}
 
 		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
