@@ -11,6 +11,8 @@ import io.mosip.pms.common.entity.PartnerPolicyBioextractRequest;
 public interface PartnerPolicyBioextractRequestRepository extends JpaRepository<PartnerPolicyBioextractRequest, String> {
 	boolean existsByPartnerPolicyRequestId(String partnerPolicyRequestId);
 
+	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestId(String partnerPolicyRequestId);
+
 	List<PartnerPolicyBioextractRequest> findByPartnerPolicyRequestIdAndStatusCode(
 			String partnerPolicyRequestId, String statusCode);
 
