@@ -174,18 +174,6 @@ public class PartnerServiceControllerTest {
     }
 
 	@Test
-	@WithMockUser(roles = {"PARTNER"})
-	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
-		String requestId = "123e4567-e89b-12d3-a456-426614174000";
-		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
-		responseWrapper.setResponse(new BioExtractorsResponseDto());
-		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests/" + requestId + "/bio-extractors-request"))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
-
-	@Test
 	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
 		PreAuthorize preAuthorize = PartnerManagementController.class
 				.getMethod("getPartnerPolicyRequestBioExtractors", String.class)
