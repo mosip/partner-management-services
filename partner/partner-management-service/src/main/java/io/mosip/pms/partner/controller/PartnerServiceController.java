@@ -69,8 +69,6 @@ import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
 import io.mosip.pms.partner.response.dto.RetrievePartnerDetailsResponse;
 import io.mosip.pms.partner.service.PartnerService;
-import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
-import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
@@ -208,36 +206,6 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
-	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
-	@Operation(summary = "Get bio-extractor requests for a partner-policy request",
-			description = "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(
-			@PathVariable("requestId") String requestId) {
-		inputValidator.validateRequestInput("requestId", requestId);
-		return partnerService.getPartnerPolicyRequestBioExtractors(requestId);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
-	@GetMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
-	@Operation(summary = "Get credential type request for a partner-policy request",
-			description = "Fetches the credential type request row (if any) submitted against the given partner policy mapping request id (`req_id`).")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(
-			@PathVariable("requestId") String requestId) {
-		inputValidator.validateRequestInput("requestId", requestId);
-		return partnerService.getPartnerPolicyRequestCredentialTypes(requestId);
-	}
-	
 	/**
 	 * 
 	 * @param partnerId

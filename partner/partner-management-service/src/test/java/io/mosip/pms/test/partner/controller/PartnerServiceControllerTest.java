@@ -18,6 +18,7 @@ import java.util.List;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.controller.PartnerServiceController;
+import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.dto.CertificateDto;
 import io.mosip.pms.partner.dto.PartnerDtoV3;
 import io.mosip.pms.partner.request.dto.*;
@@ -173,20 +174,8 @@ public class PartnerServiceControllerTest {
     }
 
 	@Test
-	@WithMockUser(roles = {"PARTNER"})
-	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
-		String requestId = "123e4567-e89b-12d3-a456-426614174000";
-		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
-		responseWrapper.setResponse(new BioExtractorsResponseDto());
-		when(partnerService.getPartnerPolicyRequestBioExtractors(requestId)).thenReturn(responseWrapper);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/partners/partner-policy-requests/" + requestId + "/bio-extractors-request"))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-	}
-
-	@Test
 	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
-		PreAuthorize preAuthorize = PartnerServiceController.class
+		PreAuthorize preAuthorize = PartnerManagementController.class
 				.getMethod("getPartnerPolicyRequestBioExtractors", String.class)
 				.getAnnotation(PreAuthorize.class);
 		assertNotNull(preAuthorize);

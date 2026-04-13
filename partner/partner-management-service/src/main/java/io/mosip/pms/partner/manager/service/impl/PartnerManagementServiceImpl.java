@@ -55,6 +55,7 @@ import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.dto.NotificationDto;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
@@ -70,13 +71,18 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.mosip.pms.partner.util.PartnerUtil;
 
 import static io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR;
@@ -203,6 +209,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	PartnerServiceRepository partnerServiceRepository;
+
+	@Autowired
+	SearchHelper partnerSearchHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -862,6 +871,120 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
+	}
+
+	@Override
+	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId) {
+		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
+		try {
+			if (requestId == null || requestId.isBlank()) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+
+			PartnerPolicyRequest parentRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+			if (parentRequest == null || parentRequest.getPartner() == null || parentRequest.getPartner().getId() == null) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+			}
+			String partnerId = parentRequest.getPartner().getId();
+			validateLoggedInUserAuthorization(partnerId);
+
+			List<PartnerPolicyBioextractRequest> rows =
+					partnerPolicyBioextractRequestRepository
+							.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
+			responseWrapper.setStatusCode(parentRequest.getStatusCode());
+
+			List<BioExtractorsDto> extractors = (rows == null ? List.<BioExtractorsDto>of() :
+					rows.stream().map(r -> {
+						BioExtractorsDto dto = new BioExtractorsDto();
+						dto.setAttributeName(r.getAttributeName());
+						dto.setBiometric(r.getBiometricModality());
+						dto.setBiometricSubTypes(r.getBiometricSubTypes());
+						dto.setExtractorProvider(r.getExtractorProvider());
+						dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+						return dto;
+					}).toList());
+
+			BioExtractorsResponseDto responseDto = new BioExtractorsResponseDto();
+			responseDto.setExtractors(extractors);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestBioExtractors method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestBioExtractors method of PartnerManagementServiceImpl - " + ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId("mosip.pms.partner.policy.request.bioextractors.get");
+		responseWrapper.setVersion("1.0");
+		return responseWrapper;
+	}
+
+	@Override
+	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId) {
+		CredentialTypesResponseWrapperV2 responseWrapper = new CredentialTypesResponseWrapperV2();
+		try {
+			if (requestId == null || requestId.isBlank()) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+
+			PartnerPolicyRequest parentRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+			if (parentRequest == null || parentRequest.getPartner() == null || parentRequest.getPartner().getId() == null) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+			}
+			String partnerId = parentRequest.getPartner().getId();
+			validateLoggedInUserAuthorization(partnerId);
+
+			Optional<PartnerPolicyCredentialTypeRequest> row =
+					partnerPolicyCredentialTypeRequestRepository
+							.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
+			responseWrapper.setStatusCode(parentRequest.getStatusCode());
+
+			CredentialTypesResponseDto responseDto = new CredentialTypesResponseDto();
+			String credentialType = null;
+			if (row.isPresent()) {
+				credentialType = row.get().getCredentialType();
+				if (credentialType != null) {
+					credentialType = credentialType.trim().isEmpty() ? null : credentialType.trim();
+				}
+			}
+			responseDto.setCredentialType(credentialType);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestCredentialTypes method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestCredentialTypes method of PartnerManagementServiceImpl - " + ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId("mosip.pms.partner.policy.request.credential.types.get");
+		responseWrapper.setVersion("1.0");
+		return responseWrapper;
+	}
+
+	private void validateLoggedInUserAuthorization(String loggedInUserId) {
+		if (partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
+			throw new PartnerServiceException(
+					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
+	}
+
+	private String getLoggedInUserId() {
+		return UserDetailUtil.getLoggedInUserId();
 	}
 
 	/**
