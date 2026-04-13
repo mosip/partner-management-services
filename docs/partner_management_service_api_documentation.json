@@ -7539,7 +7539,7 @@
                                                                 "type": "string",
                                                                 "description": "Date in ISO format indicating when API key is going to expire"
                                                             },
-                                                            "isApiKeyExpiredStatus ": {
+                                                            "isApiKeyExpiredStatus": {
                                                                 "type": "boolean",
                                                                 "description": "Flag indicating if API key has expired or not"
                                                             }
@@ -7592,7 +7592,7 @@
                                                         "createdDateTime": "string",
                                                         "policyGroupId": "string",
                                                         "apiKeyExpiryDateTime": "string",
-                                                        "isApiKeyExpiredStatus ": true
+                                                        "isApiKeyExpiredStatus": true
                                                     }
                                                 ]
                                             },
@@ -9460,9 +9460,9 @@
                                             "responseTime": "2019-08-24T14:15:22Z",
                                             "metadata": {},
                                             "response": {
-                                                "pageNo": -9007199254740991,
-                                                "pageSize": -9007199254740991,
-                                                "totalResults": -9007199254740991,
+                                                "pageNo": 0,
+                                                "pageSize": 10,
+                                                "totalResults": 1,
                                                 "data": [
                                                     {
                                                         "id": "string",

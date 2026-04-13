@@ -48,7 +48,6 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
-import io.mosip.pms.partner.service.PartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -74,9 +73,6 @@ public class PartnerManagementController {
 	
 	@Autowired
 	PartnerManagerService partnerManagementService;
-
-	@Autowired
-	PartnerService partnerService;
 	
 	@Autowired
 	AuditUtil auditUtil;
@@ -490,7 +486,7 @@ public class PartnerManagementController {
 	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(
 			@PathVariable("requestId") String requestId) {
 		inputValidator.validateRequestInput("requestId", requestId);
-		return partnerService.getPartnerPolicyRequestBioExtractors(requestId);
+		return partnerManagementService.getPartnerPolicyRequestBioExtractors(requestId);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
@@ -505,7 +501,7 @@ public class PartnerManagementController {
 	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(
 			@PathVariable("requestId") String requestId) {
 		inputValidator.validateRequestInput("requestId", requestId);
-		return partnerService.getPartnerPolicyRequestCredentialTypes(requestId);
+		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
 	}
 
 	@Deprecated(since = "release-1.3.0-beta.2")
