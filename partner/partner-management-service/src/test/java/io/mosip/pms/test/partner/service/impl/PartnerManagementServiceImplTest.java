@@ -116,6 +116,12 @@ public class PartnerManagementServiceImplTest {
 	BioextractorConfigurationRepository bioextractorConfigurationRepository;
 
 	@Mock
+	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
+
+	@Mock
+	PartnerPolicyCredentialTypeRequestRepository partnerPolicyCredentialTypeRequestRepository;
+
+	@Mock
 	private WebSubPublisher webSubPublisher;
 
 	@Mock
@@ -165,6 +171,8 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyRepository", partnerPolicyRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRepository", partnerPolicyCredentialTypeRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyBioextractRequestRepository", partnerPolicyBioextractRequestRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRequestRepository", partnerPolicyCredentialTypeRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 100);
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
@@ -998,6 +1006,8 @@ public class PartnerManagementServiceImplTest {
 		request.setStatus("Approved");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any())).thenReturn(List.of(new PartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any())).thenReturn(List.of(new PartnerPolicyCredentialTypeRequest()));
 		partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 	}
 	
@@ -1053,7 +1063,7 @@ public class PartnerManagementServiceImplTest {
 		PartnerPolicyRequest partnerPolicyRequestFromDb1 = getPartnerPolicyRequestData();
 		partnerPolicyRequestFromDb1.getPartner().setPartnerTypeCode("Credential_Partner");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(partnerPolicyRequestFromDb1));
-		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId(Mockito.any(),Mockito.any())).thenReturn(List.of());
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(),Mockito.any())).thenReturn(Collections.emptyList());
 		try {
 			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);
 		}catch (PartnerManagerServiceException e) {
@@ -1066,6 +1076,8 @@ public class PartnerManagementServiceImplTest {
 		StatusRequestDto request = new StatusRequestDto();
 		request.setStatus("Approved");
 		Mockito.when(partnerPolicyRequestRepository.findById(Mockito.any())).thenReturn(Optional.of(getPartnerPolicyRequestData()));
+		Mockito.when(partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any())).thenReturn(List.of(new PartnerPolicyBioextractRequest()));
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(Mockito.any(), Mockito.any())).thenReturn(List.of(new PartnerPolicyCredentialTypeRequest()));
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.empty());
 		try {
 			partnerManagementImpl.approveRejectPartnerPolicyMapping("1234", request);

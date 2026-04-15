@@ -1,5 +1,6 @@
 package io.mosip.pms.common.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,9 @@ public interface PartnerPolicyCredentialTypeRequestRepository extends JpaReposit
 
 	Optional<PartnerPolicyCredentialTypeRequest> findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc(String partnerPolicyRequestId);
 
+	List<PartnerPolicyCredentialTypeRequest> findByPartnerPolicyRequestId(String partnerPolicyRequestId);
+
+	List<PartnerPolicyCredentialTypeRequest> findByPartnerPolicyRequestIdAndStatusCode(
+			String partnerPolicyRequestId, String statusCode);
 }
 
