@@ -19,7 +19,7 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Invalid_Token_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_02
-    description: Validate that the API returns an authentication error when attempting to retrieve the list of ABIS partners associated with the logged-in user using an invalid access token
+    description: Validate that the API returns an authentication error when attempting to retrieve the list of MA partners associated with the logged-in user using an invalid access token
     role: invalidtoken
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA

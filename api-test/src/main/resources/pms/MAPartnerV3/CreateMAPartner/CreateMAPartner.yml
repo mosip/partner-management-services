@@ -1,7 +1,7 @@
 CreateMAPartner:
   Pms_CreateMAPartner_All_Valid_Smoke_Sid:
     endPoint: /v1/partnermanager/partners/v3
-    uniqueIdentifier: TC_PMS_CreateMAPartner_01
+    uniqueIdentifier: TC_PMS_CreateMAPartnerRegistration_01
     description: Validate that an MA partner is successfully registered with all required valid inputs
     role: partneradmin
     restMethod: post

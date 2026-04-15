@@ -6,7 +6,7 @@ UploadMAPartnerCertificate:
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: post
-    additionalDependencies: TC_PMS_UploadCertificateABISCASUBCA_01,TC_PMS_UploadCertificateABISCASUBCA_02,TC_PMS_CreateABISPartnerRegistration_01
+    additionalDependencies: TC_PMS_UploadCertificateMACASUBCA_01,TC_PMS_UploadCertificateMACASUBCA_02,TC_PMS_CreateMAPartnerRegistration_01
     inputTemplate: pms/MAPartnerV3/UploadPartnerCertificateForMAPartner/UploadMAPartnerCertificate
     outputTemplate: pms/MAPartnerV3/UploadPartnerCertificateForMAPartner/UploadMAPartnerCertResult
     input: '{
