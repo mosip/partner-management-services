@@ -1,0 +1,27 @@
+CreateMAPartner:
+  Pms_CreateMAPartner_All_Valid_Smoke_Sid:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_PMS_CreateMAPartner_01
+    description: Validate that an MA partner is successfully registered with all required valid inputs
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/MAPartnerV3/CreateMAPartner/CreateMAPartner
+    outputTemplate: pms/MAPartnerV3/CreateMAPartner/CreateMAPartnerResult
+    input: '{
+      "id": "mosip.pms.create.partner.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$RUNCONTEXT$pms-111333",
+      "organizationName": "$RUNCONTEXT$pms-111333",
+      "address": "Bangalore",
+      "contactNumber": "9863967572",
+      "emailId": "$RUNCONTEXT$newmapartnerapiauto@gmail.com",
+      "partnerType": "Manual_Adjudication",
+      "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
+      "logoUrl": "https://example.com/logo.png",
+      "langCode": "eng"
+    }'
+    output: ' {
+      "partnerId": "$RUNCONTEXT$pms-111333",
+      "status": "InProgress"
+    }'

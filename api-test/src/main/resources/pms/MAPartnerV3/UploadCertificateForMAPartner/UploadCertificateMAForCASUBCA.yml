@@ -1,0 +1,35 @@
+UploadCertificateMACASUBCA:
+   Pms_UploadCACertificateForMA_All_Valid_Smoke:
+     endPoint: /v1/partnermanager/partners/certificate/ca/upload
+     uniqueIdentifier: TC_PMS_UploadCertificateMACASUBCA_01
+     description: Validate that a CA certificate is uploaded successfully for MA Partner with all required valid inputs
+     role: partneradmin
+     restMethod: post
+     inputTemplate: pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateCASUBCA
+     outputTemplate: pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateResult
+     input: '{
+       "requesttime": "$TIMESTAMP$",
+       "certificateData": "$CACERT$",
+       "partnerId": "$ID:CreateMAPartner_All_Valid_Smoke_Sid_partnerId$",
+       "partnerDomain": "AUTH"
+}'
+     output: '{
+       "status": "Upload Success."
+}'
+   Pms_UploadSUBCACertificateForMA_All_Valid_Smoke:
+     endPoint: /v1/partnermanager/partners/certificate/ca/upload
+     uniqueIdentifier: TC_PMS_UploadCertificateMACASUBCA_02
+     description: Validate that a Sub-CA certificate is uploaded successfully for MA Partner with all required valid inputs
+     role: partneradmin
+     restMethod: post
+     inputTemplate: pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateCASUBCA
+     outputTemplate: pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateResult
+     input: '{
+       "requesttime": "$TIMESTAMP$",
+       "certificateData": "$INTERCERT$",
+       "partnerId": "$ID:CreateMAPartner_All_Valid_Smoke_Sid_partnerId$",
+       "partnerDomain": "AUTH"
+}'
+     output: '{
+       "status": "Upload Success."
+}'
