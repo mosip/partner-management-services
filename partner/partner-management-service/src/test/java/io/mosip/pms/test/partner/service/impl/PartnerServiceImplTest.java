@@ -1821,6 +1821,62 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test
+	public void getPartnersV3Test_PartnerAdmin_MissingPartnerType() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("PARTNER_ADMIN")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, null);
+		assertNotNull(responseWrapper);
+		assertNotNull(responseWrapper.getErrors());
+		assertFalse(responseWrapper.getErrors().isEmpty());
+		assertEquals(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
+				responseWrapper.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnersV3Test_NonAdmin_PartnerTypeMismatch() throws Exception{
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(
+				new SimpleGrantedAuthority("AUTH_PARTNER")
+		);
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		List<Partner> partnerList = new ArrayList<>();
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setApprovalStatus("approved");
+		partnerList.add(partner);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
+
+		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Device_Provider");
+		assertNotNull(responseWrapper);
+		assertNotNull(responseWrapper.getErrors());
+		assertFalse(responseWrapper.getErrors().isEmpty());
+		assertEquals(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
+				responseWrapper.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
 	public void createPartnerTest_WithValidRequest() throws Exception {
 		PartnerRequest prequest = new PartnerRequest();
 		prequest.setAddress("blr");

@@ -448,7 +448,12 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")
 	@GetMapping(value = "/v3")
 	@Operation(summary = "This endpoint retrieves a list of partners",
-			description = "Available since release-1.2.2.0. This endpoint retrieves a list of partners associated with the logged-in user based on the provided query parameters. If the partner type is MISP_Partner, ABIS_Partner, or Manual_Adjudication, Partner Admin fetches all partners instead of only those linked to the user. It is configured for role any of the partner type or PARTNER_ADMIN."
+			description = "Available since release-1.2.2.0. Retrieves partners associated with the logged-in user based on filters status (mandatory), policyGroupAvailable (optional), and partnerType (optional). "
+					+ "If partnerType is omitted, results are limited to partners associated with the logged-in user (subject to status and policyGroupAvailable filters). "
+					+ "For Partner Admin to fetch all partners, partnerType must be explicitly set to one of MISP_Partner, ABIS_Partner, or Manual_Adjudication. "
+					+ "If partnerType is provided by a non-admin user and does not match any partnerTypeCode mapped to the logged-in user, the request will be rejected. "
+					+ "If you want the list of all partners, use the /admin-partners endpoint and do not use /partners/v3 for this purpose. "
+					+ "Accessible to partner-type roles and PARTNER_ADMIN."
 	)
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
