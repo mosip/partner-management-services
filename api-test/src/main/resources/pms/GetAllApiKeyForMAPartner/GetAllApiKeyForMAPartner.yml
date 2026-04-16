@@ -1,0 +1,498 @@
+GetAllApiKeyForMAPartnerV2:
+  Pms_GetAllApiKeyForMAPartnerV2_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_01
+    description: Validate that all API keys are successfully retrieved for an MA partner using the V2 API with valid inputs
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartnerResult
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "pageNo": "0"
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_Token_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_02
+    description: Verify that API returns an authentication error when an invalid token is used to fetch API keys for an MA partner.
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-401"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_AuthPartner_Role:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_03
+    description: Verify that API keys are successfully retrieved for an MA partner using V2 API with partnerauth role.
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartnerResult
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "pageNo": "0"
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_DevicePartner_Token_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_04
+    description: Verify that API returns an authorization error when a device partner token is used to fetch API keys for an MA partner.
+    role: partnerdevice
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_FTMPartner_Token_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_05
+    description: Verify that API returns an authorization error when an FTM partner token is used to fetch API keys for an MA partner.
+    role: partnerftm
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_06
+    description: Verify that API returns a request validation error when an invalid sort field name is provided.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "@%orgName",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_SortType_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_07
+    description: Verify that API returns a request validation error when an invalid sort type is provided.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$@%asc",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_SortType_And_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_08
+    description: Verify that API returns a request validation error when both sort field name and sort type are invalid.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "@%orgName",
+      "sortType": "$@%asc",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PageNo_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_09
+    description: Verify that API returns a bad request response when an invalid page number is provided.
+    role: partneradmin
+    checkOnlyStatusCodeInResponse: true
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/responseCode
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "invalid",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PageSize_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_10
+    description: Verify that API returns a bad request response when an invalid page size is provided.
+    role: partneradmin
+    checkOnlyStatusCodeInResponse: true
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/responseCode
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "invalid",
+      "partnerId": "$REMOVE$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Valid_PartnerId:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_11
+    description: Verify that API keys are successfully retrieved when a valid partner ID is provided for an MA partner.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartnerResult
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$ID:CreateMAPartner_All_Valid_Smoke_Sid_partnerId$",
+      "partnerType": "Manual_Adjudication",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "pageNo": "0"
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PartnerId_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_12
+    description: Verify that API returns a validation error when an invalid partner ID is provided in the request.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "@%Invalid",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_ApiKeyLabel_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_13
+    description: Verify that API returns a validation error when an invalid API key label is provided in the request.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "@%apikeylabel",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_OrgName_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_14
+    description: Verify that API returns a validation error when an invalid organization name is provided in the request.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "@%OrgName",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PolicyName_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_15
+    description: Verify that API returns a validation error when an invalid policy name is provided in the request.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "@%policyName",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PolicyGroupName_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_16
+    description: Verify that API returns a validation error when an invalid policy group name is provided in the request.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/error
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "@%policyGroupName",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+     ]
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PartnerType_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_17
+    description: Verify that when an invalid partner type is provided, the API returns a successful response with no data (zero records)
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartnerResult
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "invalid",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "pageNo": "0"
+}'
+  Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_ExpiryPeriod_Neg:
+    endPoint: /v1/partnermanager/partner-api-keys/v2
+    uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_18
+    description: Verify that API returns a bad request response when an invalid expiry period is provided.
+    role: partneradmin
+    checkOnlyStatusCodeInResponse: true
+    restMethod: get
+    inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
+    outputTemplate: pms/responseCode
+    input: '{
+      "apiKeyLabel": "$REMOVE$",
+      "expiryPeriod": "@abc%",
+      "orgName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "partnerType": "$REMOVE$",
+      "policyGroupName": "$REMOVE$",
+      "policyName": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "status": "$REMOVE$"
+    }'
+    output: '{
+      "responseCode": "400"
+}'

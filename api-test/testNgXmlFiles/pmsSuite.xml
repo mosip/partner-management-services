@@ -328,6 +328,39 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
+	<test name="MAPartnerV3">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/CreateMAPartner/CreateMAPartner.yml" />
+			<parameter name="idKeyName" value="id,partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateCASUBCAForMA">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateMAForCASUBCA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadMAPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/UploadPartnerCertificateForMAPartner/UploadMAPartnerCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUserMA">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
@@ -415,6 +448,14 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetAllApiKeyForMAPartnerV2">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 
@@ -622,10 +663,10 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
-	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has 
+	PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has 
 		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
-		Ticket ID: MOSIP-43700, Story ID: MOSIP-44155 -->
-	<!-- <test name="UpdateApiKeyExpiryDate">
+		Ticket ID: MOSIP-43700, Story ID: MOSIP-44155
+	<test name="UpdateApiKeyExpiryDate">
 		<parameter name="ymlFile"
 			value="pms/UpdateApiKeyExpiryDate/UpdateApiKeyExpiryDate.yml" />
 		<parameter name="pathParams" value="partnerId,policyId" />
@@ -642,11 +683,11 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
-	</test> -->
-	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/status has 
+	</test>
+	PATCH /partners/{partnerId}/policy/{policyId}/apiKey/status has 
 		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
-		Ticket ID: MOSIP-44170, Story ID: MOSIP-44155 -->
-	<!--<test name="ActivateDeactivatePartnerApiKey">
+		Ticket ID: MOSIP-44170, Story ID: MOSIP-44155
+	<test name="ActivateDeactivatePartnerApiKey">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
 		<parameter name="pathParams" value="partnerId,policyId" />
@@ -654,7 +695,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
-	</test>-->
+	</test>
 	<test name="InsertDBData">
 		<parameter name="ymlFile"
 			value="pms/InsertDBData/InsertAPIKeyData.yml" />
@@ -966,7 +1007,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<!-- POST /partners/search has been deprecated from release 1.2.2.0 onwards,
+	POST /partners/search has been deprecated from release 1.2.2.0 onwards,
 	replaced by GET /admin-partners with updated test cases.
 	<test name="SearchPartner">
 		<parameter name="ymlFile"
@@ -975,7 +1016,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
 		</classes>
-	</test> -->
+	</test>
 	<test name="CreateDeviceDetail">
 		<parameter name="ymlFile"
 			value="pms/device/makeAndModel/create/CreateDeviceDetail.yml" />
@@ -1570,7 +1611,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.DownloadRootCertificate" />
 		</classes>
 	</test>
-	<!-- POST /misps has been deprecated from release 1.3.x onwards, replaced
+	POST /misps has been deprecated from release 1.3.x onwards, replaced
 	by POST /misp-licenses with updated test cases. added in POST
 	/misp-licenses, Ticket ID: MOSIP-43118
 	<test name="CreateMispLicense">
@@ -1581,7 +1622,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
-	</test>  -->
+	</test> 
 	<test name="GenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense.yml" />
@@ -1654,7 +1695,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<!-- GET /misps has been deprecated from release 1.3.x onwards, replaced
+	GET /misps has been deprecated from release 1.3.x onwards, replaced
 	by GET /misp-licenses with updated test cases. added in GET
 	/misp-licenses, Ticket ID: MOSIP-43118
 	<test name="GetMispLicense">
@@ -1664,8 +1705,8 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>  -->
-	<!-- PUT /misps has been deprecated from release 1.3.x onwards, replaced
+	</test> 
+	PUT /misps has been deprecated from release 1.3.x onwards, replaced
 	by PUT /misp-licenses/{partnerId} with updated test cases. added in PUT
 	/misp-licenses/{partnerId}
 	Ticket ID: MOSIP-43118
@@ -1676,8 +1717,8 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePut" />
 		</classes>
-	</test> -->
-	<!-- GET /misps/{mispId}/licenseKey has been deprecated from release 1.3.x
+	</test>
+	GET /misps/{mispId}/licenseKey has been deprecated from release 1.3.x
 	onwards, replaced by GET /misp-licenses/{partnerId} with updated test
 	cases.
 	added in GET /misp-licenses/{partnerId} Ticket ID: MOSIP-43118
@@ -1688,7 +1729,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test>  -->
+	</test> 
 	<test name="SearchMispLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicense/SearchMispLicense/SearchMispLicense.yml" />
@@ -1755,7 +1796,7 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-	<!-- GET /partners has been deprecated from release 1.2.2.0 onwards,
+	GET /partners has been deprecated from release 1.2.2.0 onwards,
 	replaced
 	by GET /admin-partners with updated test cases. added in GET
 	/admin-partners
@@ -1766,7 +1807,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
-	</test> -->
+	</test>
 	<test name="ActivateDeactivatePartner">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartner/ActivateDeactivatePartner.yml" />
