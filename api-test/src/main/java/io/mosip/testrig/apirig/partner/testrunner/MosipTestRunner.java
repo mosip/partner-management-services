@@ -82,7 +82,7 @@ public class MosipTestRunner {
 			setLogLevels();
 
 			HealthChecker healthcheck = new HealthChecker();
-			healthcheck.setCurrentRunningModule(BaseTestCase.currentModule);
+			healthcheck.setCurrentRunningModule(GlobalConstants.PARTNER_MANAGEMENT_SERVICE);
 			Thread trigger = new Thread(healthcheck);
 			trigger.start();
 
