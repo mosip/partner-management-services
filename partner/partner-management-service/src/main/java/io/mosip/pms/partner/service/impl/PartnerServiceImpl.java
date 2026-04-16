@@ -2120,28 +2120,48 @@ public class PartnerServiceImpl implements PartnerService {
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			List<Partner> partners = new ArrayList<>();
-			// if not MISP_Partner and ABIS_Partner type, fetch partners for logged in user
-			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType)) {
-				if (!isPartnerAdmin) {
-					List<Partner> partnerList = partnerRepository.findByUserId(userId);
-					if (partnerList.isEmpty()) {
-						LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-						throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-								ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-					}
+			String userRoles = authUserDetails().getAuthorities().toString();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
+			List<Partner> partners;
+			boolean isAdminManagedPartnerType = PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) || PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType);
+
+			if (isPartnerAdmin) {
+				if (partnerType == null || partnerType.isBlank()) {
+					LOGGER.info("sessionId", "idType", "id", "Partner Admin must provide partnerType for /partners/v3.");
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
+							ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorMessage());
 				}
-				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
-			}
-			// if MISP_Partner/ABIS_Partner type and Partner_Admin, fetch all partners
-			else {
-				if (!isPartnerAdmin) {
-					LOGGER.info("sessionId", "idType", "id", "Only Partner Admin can fetch all partners for partner type: " + partnerType);
-					throw new PartnerServiceException(ErrorCode.UNABLE_TO_FETCH_PARTNERS_LIST.getErrorCode(),
-							ErrorCode.UNABLE_TO_FETCH_PARTNERS_LIST.getErrorMessage());
+				if (!isAdminManagedPartnerType) {
+					LOGGER.info("sessionId", "idType", "id",
+							"Partner Admin can fetch all partners only for partnerType: MISP_Partner, ABIS_Partner, or Manual_Adjudication.");
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
+							ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorMessage());
 				}
 				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
+			} else {
+				if (isAdminManagedPartnerType) {
+					LOGGER.info("sessionId", "idType", "id",
+							"Requested partnerType does not match any partnerTypeCode for user. partnerType: {}", partnerType);
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
+							String.format(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorMessage(), partnerType));
+				}
+
+				List<Partner> userPartners = partnerRepository.findByUserId(userId);
+				if (userPartners.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+
+				if (partnerType != null && !partnerType.isBlank()
+						&& userPartners.stream().noneMatch(p -> partnerType.equalsIgnoreCase(p.getPartnerTypeCode()))) {
+					LOGGER.info("sessionId", "idType", "id",
+							"Requested partnerType does not match any partnerTypeCode for user. partnerType: {}", partnerType);
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
+							String.format(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorMessage(), partnerType));
+				}
+
+				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
 			for (Partner partner : partners) {
