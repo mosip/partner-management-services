@@ -8,7 +8,7 @@
 	<name>apitest-pms</name>
 	<description>Parent project of MOSIP Partner Management Services apitests</description>
 	<url>https://github.com/mosip/partner-management-services</url>
-	<version>1.3.0-beta.4</version>
+	<version>1.3.0-SNAPSHOT</version>
 
 	<licenses>
 		<license>
