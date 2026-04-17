@@ -964,15 +964,18 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
 								additionalConfigDto.getUserinfoResponseType()));
 		}
-		if(additionalConfigDto.getConsentExpireInMins() != null &&
-				additionalConfigDto.getConsentExpireInMins() < 10) {
-				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
-						additionalConfigDto.getConsentExpireInMins());
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
-						clientId);
-				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
-						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
-								additionalConfigDto.getConsentExpireInMins()));
+		String consentValue = additionalConfigDto.getConsentExpireInMins();
+		if (consentValue != null && !consentValue.isEmpty()) {
+			try {
+				Integer value = Integer.parseInt(consentValue);
+
+				if (value > 10) {
+					LOGGER.error("Invalid consent_expire_in_mins {}", value);
+					throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), "Value cannot exceed 10 minutes");
+				}
+			} catch (NumberFormatException e) {
+				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), "Invalid number format for consent_expire_in_mins");
+			}
 		}
 		// PURPOSE VALIDATION
 		Map<String, Object> purpose = additionalConfigDto.getPurpose();
