@@ -56,6 +56,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.pms.common.helper.FilterHelper;
 import io.mosip.pms.common.helper.SearchHelper;
@@ -182,7 +184,10 @@ public class PartnerServiceImplTest {
 		ReflectionTestUtils.setField(target, "environment", environment);
 		ReflectionTestUtils.setField(target, "allowedCredentialTypes", allowedCredentialTypes);
 		// ensure the internal mapper used by isJSONValid is set
-		ReflectionTestUtils.setField(target, "mapper", new ObjectMapper());
+		ObjectMapper serviceMapper = new ObjectMapper()
+				.registerModule(new JavaTimeModule())
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		ReflectionTestUtils.setField(target, "mapper", serviceMapper);
 
 		//Filter_Test
 		searchFilter.setColumnName("name");
@@ -1275,7 +1280,7 @@ public class PartnerServiceImplTest {
 		assertNotNull(actualResponse);
 		assertTrue(actualResponse.getSignedCertificateData().contains("-----BEGIN CERTIFICATE-----"));
 		assertTrue(actualResponse.getSignedCertificateData().contains("-----END CERTIFICATE-----"));
-		verify(restUtil).postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), null, eq(""), eq(""),
+		verify(restUtil).postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), isNull(), eq(""), eq(""),
 				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class));
 	}
 
