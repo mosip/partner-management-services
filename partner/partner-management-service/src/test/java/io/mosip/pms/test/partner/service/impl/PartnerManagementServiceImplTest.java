@@ -59,6 +59,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.pms.common.helper.WebSubPublisher;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.util.AuditUtil;
@@ -132,6 +133,9 @@ public class PartnerManagementServiceImplTest {
 
 	@Mock
 	PartnerHelper partnerHelper;
+
+	@Mock
+	SearchHelper partnerSearchHelper;
 	
 	@Autowired
 	@Qualifier("selfTokenRestTemplate")
@@ -179,6 +183,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", partnerHelper);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerSearchHelper", partnerSearchHelper);
 //		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
@@ -2823,5 +2828,81 @@ public class PartnerManagementServiceImplTest {
 		req.setBioextractorProviderVersion("1.0");
 		req.setBioModality("face");
 		return req;
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_nullRequestId_setsInvalidRequestError() {
+		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestBioExtractors(null);
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_success_mapsRows() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+
+		Partner partner = new Partner();
+		partner.setId("partner-1");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
+		row.setAttributeName("attr");
+		row.setBiometricModality("face");
+		row.setBiometricSubTypes("left");
+		row.setExtractorProvider("prov");
+		row.setExtractorProviderVersion("1.0");
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		when(partnerPolicyBioextractRequestRepository
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc("mapping-1"))
+				.thenReturn(List.of(row));
+
+		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestBioExtractors("req-1");
+
+		assertNotNull(resp);
+		assertEquals("mapping-1", resp.getPartnerPolicyRequestId());
+		assertEquals("InProgress", resp.getStatusCode());
+		assertNotNull(resp.getResponse());
+		assertNotNull(resp.getResponse().getExtractors());
+		assertEquals(1, resp.getResponse().getExtractors().size());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestCredentialTypes_success_trimsValue() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+
+		Partner partner = new Partner();
+		partner.setId("partner-1");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		PartnerPolicyCredentialTypeRequest row = new PartnerPolicyCredentialTypeRequest();
+		row.setCredentialType(" euin ");
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		when(partnerPolicyCredentialTypeRequestRepository
+				.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc("mapping-1"))
+				.thenReturn(Optional.of(row));
+
+		io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestCredentialTypes("req-1");
+
+		assertNotNull(resp);
+		assertEquals("mapping-1", resp.getPartnerPolicyRequestId());
+		assertEquals("InProgress", resp.getStatusCode());
+		assertNotNull(resp.getResponse());
+		assertEquals("euin", resp.getResponse().getCredentialType());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 	}
 }
