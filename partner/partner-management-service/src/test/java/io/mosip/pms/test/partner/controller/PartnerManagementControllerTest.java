@@ -1,8 +1,10 @@
 package io.mosip.pms.test.partner.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,8 +21,11 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -70,6 +75,9 @@ public class PartnerManagementControllerTest {
 
 	@MockBean
 	PartnerManagerService partnerManagementService;
+
+	@Autowired
+	PartnerManagementController partnerManagementController;
 
 	@Mock
 	private MispLicenseKeyRepository misplKeyRepository;	
@@ -462,9 +470,9 @@ public class PartnerManagementControllerTest {
 		Integer pageNo = 0;
 		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
-		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+		Mockito.when(partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
 						.param("sortFieldName", sortFieldName)
@@ -476,7 +484,8 @@ public class PartnerManagementControllerTest {
 						.param("orgName", "ABC")
 						.param("status", "approved")
 						.param("policyName", "policy name")
-						.param("policyGroupName", "policy group"))
+						.param("policyGroupName", "policy group")
+						.param("partnerType", "Auth_Partner"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -488,9 +497,9 @@ public class PartnerManagementControllerTest {
 		Integer pageNo = 0;
 		Integer pageSize = 8;
 		ApiKeyFilterDto apiKeyFilterDto = new ApiKeyFilterDto();
-		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
+		Mockito.when(partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, apiKeyFilterDto))
 				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
 						.param("sortFieldName", sortFieldName)
@@ -810,5 +819,259 @@ public class PartnerManagementControllerTest {
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value("mosip.partnermanagement.partners.retrieve"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.version").value("1.0"));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void createBioextractorConfigurationSuccessTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationResponseDto responseDto = new BioextractorConfigurationResponseDto();
+		responseDto.setId("123456");
+		responseDto.setStatus("SUCCESS");
+		responseWrapper.setResponse(responseDto);
+
+		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
+		Mockito.when(partnerManagementService.createBioextractorConfiguration(any())).thenReturn(responseWrapper);
+
+		mockMvc.perform(post("/bio-extractor-configurations")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void createBioextractorConfigurationValidationFailTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> errorWrapper = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.of(errorWrapper)).when(requestValidator).validate(anyString(), any());
+
+		mockMvc.perform(post("/bio-extractor-configurations")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationsSuccessTest() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setId("cfg-id-1");
+		dto.setConfigName("config-one");
+		dto.setBioextractorProviderName("provider-a");
+		dto.setBioextractorProviderVersion("1.0");
+		dto.setBioModality("face");
+		PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
+		pageResponse.setData(Collections.singletonList(dto));
+		pageResponse.setPageNo(0);
+		pageResponse.setPageSize(8);
+		pageResponse.setTotalResults(1L);
+		responseWrapper.setResponse(pageResponse);
+
+		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class)))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.param("sortFieldName", "createdDateTime")
+						.param("sortType", "desc")
+						.param("pageNo", "0")
+						.param("pageSize", "8")
+						.param("configName", "config")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1))
+				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationByIdSuccessTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setConfigName("config-one");
+		dto.setBioextractorProviderName("provider-a");
+		dto.setBioextractorProviderVersion("1.0");
+		dto.setBioModality("face");
+		responseWrapper.setResponse(dto);
+		Mockito.when(partnerManagementService.getBioextractorConfigurationById("cfg-id-1"))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).getBioextractorConfigurationById("cfg-id-1");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationByIdErrorResponseTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> errorWrapper = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getBioextractorConfigurationById("missing-id"))
+				.thenReturn(errorWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "missing-id")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).getBioextractorConfigurationById("missing-id");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNERMANAGER"})
+	public void getBioextractorConfigurationByIdWithPartnerManagerRoleTest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, never()).getBioextractorConfigurationById(anyString());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getPartnerPolicyRequestBioExtractorsTest() throws Exception {
+		Mockito.when(partnerManagementService.getPartnerPolicyRequestBioExtractors("req-1"))
+				.thenReturn(new io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests/{requestId}/bio-extractors-request", "req-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).getPartnerPolicyRequestBioExtractors("req-1");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getPartnerPolicyRequestCredentialTypesTest() throws Exception {
+		Mockito.when(partnerManagementService.getPartnerPolicyRequestCredentialTypes("req-1"))
+				.thenReturn(new io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2());
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests/{requestId}/credential-types-request", "req-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).getPartnerPolicyRequestCredentialTypes("req-1");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurations_withoutOptionalFilters_coversNullBranches() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.param("sortFieldName", "cr_dtimes")
+						.param("sortType", "desc")
+						.param("pageNo", "0")
+						.param("pageSize", "10")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAdminPartners_withStatusParam_coversStatusBranch() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getAdminPartners(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners")
+						.param("pageNo", "0")
+						.param("pageSize", "8")
+						.param("status", "active")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllPartnerPolicyRequests_withPartnerIdSearchType_coversBranch() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
+						.param("pageNo", "0")
+						.param("pageSize", "10")
+						.param("partnerId", "p1")
+						.param("partnerIdSearchType", "equals")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllPartnerPolicyRequests_withNullPartnerIdSearchType_coversElseBranch() {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getAllPartnerPolicyRequests(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> actual =
+				partnerManagementController.getAllPartnerPolicyRequests(
+						null, null, 0, 10,
+						"p1", null,
+						null, null, null, null, null, null, null
+				);
+		org.junit.Assert.assertNotNull(actual);
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequestsV2_withBlankPartnerType_coversBlankBranch() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getAllApiKeyRequestsV2(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
+						.param("pageNo", "0")
+						.param("pageSize", "10")
+						.param("partnerType", " ")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequestsV2_withPartnerTypeAndExpiryPeriod_coversBranches() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getAllApiKeyRequestsV2(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
+						.param("pageNo", "0")
+						.param("pageSize", "10")
+						.param("partnerType", "Auth_Partner")
+						.param("expiryPeriod", "10")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurations_withProviderFilters_coversProviderBranches() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> response = new ResponseWrapperV2<>();
+		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any()))
+				.thenReturn(response);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.param("sortFieldName", "cr_dtimes")
+						.param("sortType", "desc")
+						.param("pageNo", "0")
+						.param("pageSize", "10")
+						.param("bioextractorProviderName", "ProviderA")
+						.param("bioextractorProviderVersion", "1.0")
+						.param("bioModality", "face")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk());
+	}
+
+	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
+		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = new RequestWrapperV2<>();
+		wrapper.setId("mosip.pms.bioextractor.configurations.post");
+		wrapper.setVersion("1.0");
+		wrapper.setRequestTime(LocalDateTime.now());
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("testConfig");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		wrapper.setRequest(req);
+		return wrapper;
 	}
 }

@@ -55,6 +55,7 @@ import io.mosip.pms.common.constant.EventType;
 import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.dto.NotificationDto;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.service.NotificatonService;
 import io.mosip.pms.common.util.MapperUtils;
 import io.mosip.pms.common.util.PMSLogger;
@@ -69,14 +70,32 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.mosip.pms.partner.util.PartnerUtil;
 
+import static io.mosip.pms.partner.constant.ErrorCode.CREATE_BIOEXTRACTOR_CONFIG_ERROR;
+import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_BIO_EXTRACTOR_APPROVE_FAILED;
+import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_CREDENTIAL_TYPE_APPROVE_FAILED;
+import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_BIOEXTRACTOR_CONFIG_NAME;
+import static io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACTOR_CONFIGURATION_NOT_FOUND;
+import static io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM;
+import static io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER;
+import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID;
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
+import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR;
+import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR;
 
 @Service
 @Transactional
@@ -112,6 +131,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.update.api.key.patch}")
 	private String patchUpdateApiKey;
 
+	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
+	private String postBioextractorConfigurationsId;
+
+	@Value("${mosip.pms.api.id.bioextractor.configurations.get}")
+	private String getBioextractorConfigurationsId;
+
+	@Value("${mosip.pms.api.id.bioextractor.configuration.details.get}")
+	private String getBioextractorConfigurationDetailsId;
+
+
 	@Autowired
 	PartnerSummaryRepository partnerSummaryRepository;
 
@@ -135,6 +164,18 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	BiometricExtractorProviderRepository extractorProviderRepository;
+
+	@Autowired
+	PartnerPolicyCredentialTypeRepository partnerPolicyCredentialTypeRepository;
+
+	@Autowired
+	PartnerPolicyBioextractRequestRepository partnerPolicyBioextractRequestRepository;
+
+	@Autowired
+	PartnerPolicyCredentialTypeRequestRepository partnerPolicyCredentialTypeRequestRepository;
+
+	@Autowired
+	BioextractorConfigurationRepository bioextractorConfigurationRepository;
 
 	@Autowired
 	AuthPolicyRepository authPolicyRepository;
@@ -168,6 +209,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Autowired
 	PartnerServiceRepository partnerServiceRepository;
+
+	@Autowired
+	SearchHelper partnerSearchHelper;
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
@@ -476,18 +520,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_REQUEST_ALREADY_REJECTED.getErrorCode(),
 					ErrorCode.POLICY_REQUEST_ALREADY_REJECTED.getErrorMessage());
 		}
-		if (Arrays.stream(biometricExtractorsRequiredPartnerTypes.split(","))
-				.anyMatch(partnerPolicyRequestFromDb.get().getPartner().getPartnerTypeCode()::equalsIgnoreCase)) {
-			List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository.findByPartnerAndPolicyId(
-					partnerPolicyRequestFromDb.get().getPartner().getId(),
-					partnerPolicyRequestFromDb.get().getPolicyId());
-			if (extractorsFromDb.isEmpty()) {
-				auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE);
-				throw new PartnerManagerServiceException(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode(),
-						ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorMessage());
-			}
-		}		
-
 		return partnerPolicyRequestFromDb.get();
 	}
 
@@ -505,7 +537,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	private String getPartnerCertificate(String certificateAlias) {
 		Map<String, String> pathsegments = new HashMap<>();
 		pathsegments.put("partnerCertId", certificateAlias);
@@ -658,7 +689,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Override
 	public APIKeyGenerateResponseDto generateAPIKey(String partnerId, APIKeyGenerateRequestDto requestDto) {
-		if(!getUser().equals(partnerId)) {
+		if (!getUser().equals(partnerId)) {
 			throw new PartnerManagerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
 		}
@@ -673,44 +704,65 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
 					ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
 		}
-		AuthPolicy validPolicy = authPolicyRepository.findByPolicyGroupIdAndName(partnerFromDb.get().getPolicyGroupId(),requestDto.getPolicyName());
-		if(validPolicy == null) {
+
+		AuthPolicy validPolicy = authPolicyRepository.findByPolicyGroupIdAndName(
+				partnerFromDb.get().getPolicyGroupId(), requestDto.getPolicyName());
+		if (validPolicy == null) {
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());			
-		}		
+					ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+		}
+
+		String label = PartnerUtil.trimAndReplace(requestDto.getLabel());
+		validateApiKeyNameNotExist(partnerId, validPolicy.getId(), label,
+				ErrorCode.PARTNER_POLICY_LABEL_EXISTS);
+
+		APIKeyGenerateResponseDto response = createApiKey(partnerId, validPolicy, label);
+
+		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
+		return response;
+	}
+
+	/**
+	 * Validates that no partner policy already exists for the given partner, policy and apiKeyName/label.
+	 * Throws PartnerManagerServiceException with the given error code if a duplicate exists.
+	 */
+	private void validateApiKeyNameNotExist(String partnerId, String policyId, String apiKeyName,
+			ErrorCode errorCode) {
+		PartnerPolicy apiKey = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
+				partnerId, policyId, apiKeyName);
+		if (apiKey != null) {
+			LOGGER.error("apiKeyName '{}' already exists for partner {} and policy {}", apiKeyName, partnerId,
+					policyId);
+			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
+			throw new PartnerManagerServiceException(errorCode.getErrorCode(),
+					errorCode.getErrorMessage());
+		}
+	}
+
+	private APIKeyGenerateResponseDto createApiKey(
+			String partnerId, AuthPolicy authPolicy, String apiKeyName) {
+
 		List<PartnerPolicyRequest> approvedMappedPolicy = partnerPolicyRequestRepository
-				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, validPolicy.getId(),
-						PartnerConstants.APPROVED);
+				.findByPartnerIdAndPolicyIdAndStatusCode(partnerId, authPolicy.getId(), PartnerConstants.APPROVED);
 		if (approvedMappedPolicy.isEmpty()) {
+			LOGGER.error("No approved policy mapping found for partner {} and policy {}", partnerId, authPolicy.getId());
 			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
 			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_MAPPING_NOT_EXISTS.getErrorMessage());
 		}
-		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(
-				partnerFromDb.get().getId(), validPolicy.getId(), PartnerUtil.trimAndReplace(requestDto.getLabel()));
-		if(policyByLabel != null) {
-			auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-			throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_LABEL_EXISTS.getErrorMessage());
-		}
-		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
+
 		PartnerPolicy partnerPolicy = new PartnerPolicy();
-		// Generate an initial API key ID
 		String apiKeyId = PartnerUtil.createPartnerApiKey();
-
 		int attempts = 0;
-
-		// Keep generating new API key ID until a unique one is found or maxRetries is reached
 		while (partnerPolicyRepository.existsById(apiKeyId)) {
 			if (attempts >= maxRetries) {
-				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts", "API Key ID",
-						"policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries);
+				LOGGER.error("Failed to generate unique API Key ID after {} attempts", maxRetries);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(), "API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries)
-				);
+			throw new PartnerServiceException(
+					UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+					String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+							"API Key ID", "policyApiKey", partnerPolicy.getClass().getSimpleName(), maxRetries));
 			}
 			apiKeyId = PartnerUtil.createPartnerApiKey();
 			attempts++;
@@ -718,44 +770,100 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 		partnerPolicy.setPolicyApiKey(apiKeyId);
 		partnerPolicy.setPartner(approvedMappedPolicy.get(0).getPartner());
-		partnerPolicy.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
+		partnerPolicy.setPolicyId(authPolicy.getId());
 		partnerPolicy.setIsActive(true);
 		partnerPolicy.setIsDeleted(false);
-		partnerPolicy.setLabel(requestDto.getLabel());
+		partnerPolicy.setLabel(apiKeyName);
 		partnerPolicy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now()));
 		partnerPolicy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(partnerPolicyExpiryInDays)));
 		partnerPolicy.setCrBy(getUser());
 		partnerPolicy.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-		partnerPolicyRepository.save(partnerPolicy);		
-		notify(MapperUtils.mapDataToPublishDto(approvedMappedPolicy.get(0).getPartner(),
-				getPartnerCertificate(approvedMappedPolicy.get(0).getPartner().getCertificateAlias())),
-				MapperUtils.mapPolicyToPublishDto(validPolicy, getPolicyObject(validPolicy.getPolicyFileId())),
-				MapperUtils.mapKeyDataToPublishDto(partnerPolicy), EventType.APIKEY_APPROVED);
+		partnerPolicyRepository.save(partnerPolicy);
+
+		notify(
+				MapperUtils.mapDataToPublishDto(
+						approvedMappedPolicy.get(0).getPartner(),
+						getPartnerCertificate(approvedMappedPolicy.get(0).getPartner().getCertificateAlias())),
+				MapperUtils.mapPolicyToPublishDto(authPolicy, getPolicyObject(authPolicy.getPolicyFileId())),
+				MapperUtils.mapKeyDataToPublishDto(partnerPolicy),
+				EventType.APIKEY_APPROVED
+		);
+
+		APIKeyGenerateResponseDto response = new APIKeyGenerateResponseDto();
 		response.setApiKey(partnerPolicy.getPolicyApiKey());
 		response.setLabel(partnerPolicy.getLabel());
 		response.setPartnerId(partnerId);
-		response.setPolicyId(approvedMappedPolicy.get(0).getPolicyId());
-		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY_SUCCESS, partnerId, "partnerId");
-		return response;	
+		response.setPolicyId(authPolicy.getId());
+		return response;
 	}
 
 	@Override
-	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest) {		
+	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest) {
 		PartnerPolicyRequest updateObject = getValidApikeyRequestForStatusUpdate(mappingkey);
-		validatePolicy(updateObject.getPolicyId());		
+
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.APPROVED))) {
-			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			validatePolicy(updateObject.getPolicyId());
+			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+			String currentUser = getUser();
+
+			boolean biometricExtractorsRequiredPartnerTypes = Arrays.stream(this.biometricExtractorsRequiredPartnerTypes.split(","))
+					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
+
+			if (biometricExtractorsRequiredPartnerTypes) {
+				// For partner types that require bio-extractors, ensure at least one InProgress extractor exists before approving
+				List<PartnerPolicyBioextractRequest> inProgressExtractors =
+						partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+								mappingkey, PartnerConstants.IN_PROGRESS);
+				if (inProgressExtractors.isEmpty()) {
+					auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
+					throw new PartnerManagerServiceException(ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorCode(),
+							ErrorCode.EXTRACTORS_NOT_PRESENT.getErrorMessage());
+				}
+
+				// Ensure at least one InProgress credential type exists before approving (only for applicable partner types)
+				List<PartnerPolicyCredentialTypeRequest> inProgressCredentialTypes =
+						partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestIdAndStatusCode(
+								mappingkey, PartnerConstants.IN_PROGRESS);
+				if (inProgressCredentialTypes.isEmpty()) {
+					auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_FAILURE, mappingkey, "mappingKey");
+					throw new PartnerManagerServiceException(
+							io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorCode(),
+							io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPES_NOT_PRESENT.getErrorMessage());
+				}
+
+				processBioExtractorsStatusUpdate(mappingkey, PartnerConstants.APPROVED, currentUser, now);
+				processCredentialTypeStatusUpdate(mappingkey, PartnerConstants.APPROVED, currentUser, now);
+			}
+
+			// Mark partner policy request as Approved
+			updateObject.setUpdBy(currentUser);
+			updateObject.setUpdDtimes(now);
 			updateObject.setStatusCode(PartnerConstants.APPROVED);
-			partnerPolicyRequestRepository.save(updateObject);			
+			partnerPolicyRequestRepository.save(updateObject);
+
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping approved successfully";
 		}
+
 		if ((statusRequest.getStatus().equalsIgnoreCase(PartnerConstants.REJECTED))) {
-			updateObject.setUpdBy(getUser());
-			updateObject.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
+			Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+			String currentUser = getUser();
+
+			boolean biometricExtractorsRequiredPartnerTypes = Arrays.stream(this.biometricExtractorsRequiredPartnerTypes.split(","))
+					.anyMatch(updateObject.getPartner().getPartnerTypeCode()::equalsIgnoreCase);
+
+			// First perform data movement/subrequest updates BEFORE updating main partner policy request table
+			if (biometricExtractorsRequiredPartnerTypes) {
+				processBioExtractorsStatusUpdate(mappingkey, PartnerConstants.REJECTED, currentUser, now);
+				processCredentialTypeStatusUpdate(mappingkey, PartnerConstants.REJECTED, currentUser, now);
+			}
+
+			// Mark partner policy request as Rejected
+			updateObject.setUpdBy(currentUser);
+			updateObject.setUpdDtimes(now);
 			updateObject.setStatusCode(PartnerConstants.REJECTED);
-			partnerPolicyRequestRepository.save(updateObject);			
+			partnerPolicyRequestRepository.save(updateObject);
+
 			auditUtil.setAuditRequestDto(PartnerManageEnum.APPROVE_REJECT_PARTNER_API_SUCCESS, mappingkey, "mappingKey");
 			return "Policy mapping rejected successfully";
 		}
@@ -763,6 +871,196 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		LOGGER.info(statusRequest.getStatus() + " : Invalid Input Parameter (status should be Approved/Rejected)");
 		throw new PartnerManagerServiceException(ErrorCode.INVALID_STATUS_CODE.getErrorCode(),
 				ErrorCode.INVALID_STATUS_CODE.getErrorMessage());
+	}
+
+	@Override
+	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId) {
+		BioExtractorsResponseWrapperV2 responseWrapper = new BioExtractorsResponseWrapperV2();
+		try {
+			if (requestId == null || requestId.isBlank()) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+
+			PartnerPolicyRequest parentRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+			if (parentRequest == null || parentRequest.getPartner() == null || parentRequest.getPartner().getId() == null) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+			}
+			String partnerId = parentRequest.getPartner().getId();
+			validateLoggedInUserAuthorization(partnerId);
+
+			List<PartnerPolicyBioextractRequest> rows =
+					partnerPolicyBioextractRequestRepository
+							.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
+			responseWrapper.setStatusCode(parentRequest.getStatusCode());
+
+			List<BioExtractorsDto> extractors = (rows == null ? List.<BioExtractorsDto>of() :
+					rows.stream().map(r -> {
+						BioExtractorsDto dto = new BioExtractorsDto();
+						dto.setAttributeName(r.getAttributeName());
+						dto.setBiometric(r.getBiometricModality());
+						dto.setBiometricSubTypes(r.getBiometricSubTypes());
+						dto.setExtractorProvider(r.getExtractorProvider());
+						dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+						return dto;
+					}).toList());
+
+			BioExtractorsResponseDto responseDto = new BioExtractorsResponseDto();
+			responseDto.setExtractors(extractors);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestBioExtractors method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestBioExtractors method of PartnerManagementServiceImpl - " + ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId("mosip.pms.partner.policy.request.bioextractors.get");
+		responseWrapper.setVersion("1.0");
+		return responseWrapper;
+	}
+
+	@Override
+	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId) {
+		CredentialTypesResponseWrapperV2 responseWrapper = new CredentialTypesResponseWrapperV2();
+		try {
+			if (requestId == null || requestId.isBlank()) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+
+			PartnerPolicyRequest parentRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+			if (parentRequest == null || parentRequest.getPartner() == null || parentRequest.getPartner().getId() == null) {
+				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+			}
+			String partnerId = parentRequest.getPartner().getId();
+			validateLoggedInUserAuthorization(partnerId);
+
+			Optional<PartnerPolicyCredentialTypeRequest> row =
+					partnerPolicyCredentialTypeRequestRepository
+							.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
+			responseWrapper.setStatusCode(parentRequest.getStatusCode());
+
+			CredentialTypesResponseDto responseDto = new CredentialTypesResponseDto();
+			String credentialType = null;
+			if (row.isPresent()) {
+				credentialType = row.get().getCredentialType();
+				if (credentialType != null) {
+					credentialType = credentialType.trim().isEmpty() ? null : credentialType.trim();
+				}
+			}
+			responseDto.setCredentialType(credentialType);
+			responseWrapper.setResponse(responseDto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestCredentialTypes method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"In getPartnerPolicyRequestCredentialTypes method of PartnerManagementServiceImpl - " + ex.getMessage(), ex);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.FETCH_PARTNER_POLICY_CREDENTIAL_TYPE_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId("mosip.pms.partner.policy.request.credential.types.get");
+		responseWrapper.setVersion("1.0");
+		return responseWrapper;
+	}
+
+	private void validateLoggedInUserAuthorization(String loggedInUserId) {
+		if (partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
+			throw new PartnerServiceException(
+					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
+	}
+
+	private String getLoggedInUserId() {
+		return UserDetailUtil.getLoggedInUserId();
+	}
+
+	/**
+	 * Updates bio-extractor request rows and, on approve, copies pending rows into the production bio-extractor table.
+	 */
+	private void processBioExtractorsStatusUpdate(String mappingkey, String statusCode, String currentUser, Timestamp now)
+			throws PartnerManagerServiceException {
+		List<PartnerPolicyBioextractRequest> bioextractRequests =
+				partnerPolicyBioextractRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+		for (PartnerPolicyBioextractRequest req : bioextractRequests) {
+			req.setStatusCode(statusCode);
+			req.setUpdBy(currentUser);
+			req.setUpdDtimes(now);
+			partnerPolicyBioextractRequestRepository.save(req);
+
+			if (statusCode.equalsIgnoreCase(PartnerConstants.APPROVED)) {
+				try {
+					BiometricExtractorProvider extractorProvider = new BiometricExtractorProvider();
+					extractorProvider.setId(req.getId());
+					extractorProvider.setPartnerId(req.getPartId());
+					extractorProvider.setPolicyId(req.getPolicyId());
+					extractorProvider.setAttributeName(req.getAttributeName());
+					extractorProvider.setExtractorProvider(req.getExtractorProvider());
+					extractorProvider.setExtractorProviderVersion(req.getExtractorProviderVersion());
+					extractorProvider.setBiometricModality(req.getBiometricModality());
+					extractorProvider.setBiometricSubTypes(req.getBiometricSubTypes());
+					extractorProvider.setCrBy(currentUser);
+					extractorProvider.setCrDtimes(now);
+					extractorProvider.setIsDeleted(false);
+					extractorProviderRepository.save(extractorProvider);
+				} catch (Exception e) {
+					LOGGER.error("Failed to insert bio-extractor into final table, reverting to InProgress: " + e.getMessage());
+					req.setStatusCode(PartnerConstants.IN_PROGRESS);
+					partnerPolicyBioextractRequestRepository.save(req);
+					throw new PartnerManagerServiceException(PARTNER_POLICY_BIO_EXTRACTOR_APPROVE_FAILED.getErrorCode(),
+							PARTNER_POLICY_BIO_EXTRACTOR_APPROVE_FAILED.getErrorMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates credential-type request rows and, on approve, copies pending rows into the production credential-type table.
+	 */
+	private void processCredentialTypeStatusUpdate(String mappingkey, String statusCode, String currentUser, Timestamp now)
+			throws PartnerManagerServiceException {
+		List<PartnerPolicyCredentialTypeRequest> credentialTypeRequests =
+				partnerPolicyCredentialTypeRequestRepository.findByPartnerPolicyRequestId(mappingkey);
+		for (PartnerPolicyCredentialTypeRequest req : credentialTypeRequests) {
+			req.setStatusCode(statusCode);
+			req.setUpdBy(currentUser);
+			req.setUpdDtimes(now);
+			partnerPolicyCredentialTypeRequestRepository.save(req);
+
+			if (statusCode.equalsIgnoreCase(PartnerConstants.APPROVED)) {
+				try {
+					PartnerPolicyCredentialTypePK pk = new PartnerPolicyCredentialTypePK();
+					pk.setPartId(req.getPartId());
+					pk.setPolicyId(req.getPolicyId());
+					pk.setCredentialType(req.getCredentialType());
+					PartnerPolicyCredentialType credentialType = new PartnerPolicyCredentialType();
+					credentialType.setId(pk);
+					credentialType.setIsActive(true);
+					credentialType.setIsDeleted(false);
+					credentialType.setCrBy(currentUser);
+					credentialType.setCrDtimes(now);
+					partnerPolicyCredentialTypeRepository.save(credentialType);
+				} catch (Exception e) {
+					LOGGER.error("Failed to insert credential type into final table, reverting to InProgress: " + e.getMessage());
+					req.setStatusCode(PartnerConstants.IN_PROGRESS);
+					partnerPolicyCredentialTypeRequestRepository.save(req);
+					throw new PartnerManagerServiceException(PARTNER_POLICY_CREDENTIAL_TYPE_APPROVE_FAILED.getErrorCode(),
+							PARTNER_POLICY_CREDENTIAL_TYPE_APPROVE_FAILED.getErrorMessage());
+				}
+			}
+		}
 	}
 
 	@Override
@@ -848,6 +1146,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
                         ErrorCode.AT_LEAST_ONE_FIELD_REQUIRED.getErrorMessage());
             }
 
+			// Validate that partner exists in PMS
+			Optional<Partner> partnerOptional = partnerServiceRepository.findById(partnerId);
+			if (partnerOptional.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "Partner ID does not exist: " + partnerId);
+				throw new PartnerManagerServiceException(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+
+			// Validate that policy exists in PMS
+			Optional<AuthPolicy> policyOptional = authPolicyRepository.findById(policyId);
+			if (policyOptional.isEmpty()) {
+				LOGGER.error("sessionId", "idType", "id", "Policy ID does not exist: " + policyId);
+				throw new PartnerManagerServiceException(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
+						ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorMessage());
+			}
+
 			PartnerPolicy partnerPolicy = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName);
 			if (partnerPolicy == null) {
 				throw new PartnerManagerServiceException(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode(),
@@ -857,6 +1171,32 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			//check if logged in user is admin
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 			if (!isAdmin){
+				// Validate that the API key belongs to the logged in user
+				String userId = getUserId();
+				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.error("sessionId", "idType", "id", "User id does not exist.");
+					throw new PartnerManagerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+							ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+				}
+				
+				// Check if the API key's partner belongs to the logged in user
+				boolean isApiKeyBelongsToUser = false;
+				if (partnerPolicy.getPartner() != null) {
+					for (Partner partner : partnerList) {
+						if (partner.getId().equals(partnerPolicy.getPartner().getId())) {
+							isApiKeyBelongsToUser = true;
+							break;
+						}
+					}
+				}
+				
+				if (!isApiKeyBelongsToUser) {
+					LOGGER.error("sessionId", "idType", "id", "The given API key does not belong to the logged in user.");
+					throw new PartnerManagerServiceException(ErrorCode.API_KEY_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+							ErrorCode.API_KEY_NOT_BELONGS_TO_THE_USER.getErrorMessage());
+				}
+				
 				// check if Partner is Active or not.
 				if (partnerPolicy.getPartner() != null && !partnerPolicy.getPartner().getIsActive()) {
 					LOGGER.error("Partner is not Active, hence status of API key cannot be updated, for partner: " + partnerId);
@@ -867,8 +1207,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
             if (!partnerPolicy.getIsActive()) {
                 LOGGER.warn("API key is inactive for partnerId={}", partnerId);
-                throw new PartnerManagerServiceException(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-                        ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+                throw new PartnerManagerServiceException(ErrorCode.APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.APIKEY_NOT_ACTIVE_EXCEPTION.getErrorMessage());
             }
 
 			// If user is not partner admin, they cannot update expiry date time
@@ -1214,7 +1554,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			PageResponseV2Dto<D> pageResponseV2Dto = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.apiKeyAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+			String partnerType = filterDto.getPartnerType();
 			List<String> partnerIdList = null;
+
 			if (!isPartnerAdmin) {
 				String userId = getUserId();
 				List<Partner> partnerList = partnerServiceRepository.findByUserId(userId);
@@ -1227,7 +1569,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				for (Partner partner : partnerList) {
 					partnerHelper.validatePartnerId(partner, userId);
 					partnerHelper.validatePolicyGroupId(partner, userId);
-					partnerHelper.validatePolicyGroup(partner);
 					partnerIdList.add(partner.getId());
 				}
 			}
@@ -1258,7 +1599,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			Page<ApiKeyRequestsSummaryEntity> page = apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(
-					filterDto.getPartnerId(), filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
+					filterDto.getPartnerId(), partnerType, filterDto.getApiKeyLabel(), filterDto.getOrgName(), filterDto.getPolicyName(),
 					filterDto.getPolicyGroupName(), filterDto.getStatus(), partnerIdList, isPartnerAdmin, expiryStartDate,
 					expiryEndDate, filterDto.getExpiryPeriod(), pageable
 			);
@@ -1491,6 +1832,189 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(postLinkPolicyGroup);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(
+			BioextractorConfigurationRequestDto request) {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (request == null) {
+				LOGGER.info("sessionId", "idType", "id", "Request is null in createBioextractorConfiguration.");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			if (request.getConfigName() == null || request.getConfigName().isBlank()
+					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
+					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
+				LOGGER.info("sessionId", "idType", "id", "Required fields are missing in createBioextractorConfiguration.");
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+						MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
+			}
+
+			String normalizedConfigName = PartnerUtil.trimAndReplace(request.getConfigName()).toLowerCase();
+			if (bioextractorConfigurationRepository.existsByConfigName(normalizedConfigName)) {
+				LOGGER.info("sessionId", "idType", "id", "Duplicate config name found: " + normalizedConfigName);
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw new PartnerServiceException(
+						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
+						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorMessage());
+			}
+
+			BioextractorConfiguration entity = new BioextractorConfiguration();
+			String id = PartnerUtil.generateId();
+			int attempts = 0;
+			while (bioextractorConfigurationRepository.existsById(id)) {
+				if (attempts >= maxRetries) {
+					LOGGER.error("sessionId", "idType", "id",
+							"Failed to generate unique ID for BioextractorConfiguration after " + maxRetries + " attempts.");
+					auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+					throw new PartnerServiceException(
+							UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+							String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+									"Bioextractor Configuration ID", "id",
+									entity.getClass().getSimpleName(), maxRetries));
+				}
+				id = PartnerUtil.generateId();
+				attempts++;
+			}
+
+			entity.setId(id);
+			entity.setConfigName(normalizedConfigName);
+			entity.setBioextractorProviderName(
+					PartnerUtil.trimAndReplace(request.getBioextractorProviderName()).toLowerCase());
+			entity.setBioextractorProviderVersion(
+					PartnerUtil.trimAndReplace(request.getBioextractorProviderVersion()));
+			entity.setBioModality(PartnerUtil.trimAndReplace(request.getBioModality()).toLowerCase());
+			entity.setCrBy(getUserId());
+			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+
+			bioextractorConfigurationRepository.save(entity);
+
+			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_SUCCESS);
+			BioextractorConfigurationResponseDto response = new BioextractorConfigurationResponseDto();
+			response.setId(id);
+			response.setStatus("SUCCESS");
+			responseWrapper.setResponse(response);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In createBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
+			auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorCode(),
+					CREATE_BIOEXTRACTOR_CONFIG_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(postBioextractorConfigurationsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
+			BioextractorConfigurationFilterDto filterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
+					sortFieldName, sortType, pageNo, pageSize);
+
+			Pageable pageable = Pageable.unpaged();
+			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
+			if (isPaginationEnabled) {
+				pageable = PageRequest.of(pageNo, pageSize);
+			}
+			if (isPaginationEnabled && Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)) {
+				Sort sort = partnerHelper.getSortingRequest(
+						getSortColumn(partnerHelper.bioextractorConfigurationAliasToColumnMap, sortFieldName), sortType);
+				pageable = PageRequest.of(pageNo, pageSize, sort);
+			}
+
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+					filterDto.getConfigName(),
+					filterDto.getBioextractorProviderName(),
+					filterDto.getBioextractorProviderVersion(),
+					filterDto.getBioModality(),
+					pageable
+			);
+			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
+			for (BioextractorConfiguration configuration : configurations.getContent()) {
+				response.add(mapToBioextractorConfigurationDetailDto(configuration));
+			}
+			pageResponse.setData(response);
+			pageResponse.setTotalResults(configurations.getTotalElements());
+			pageResponse.setPageNo(configurations.getNumber());
+			pageResponse.setPageSize(configurations.getSize());
+			responseWrapper.setResponse(pageResponse);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getBioextractorConfigurations method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorCode(),
+					FETCH_BIOEXTRACTOR_CONFIGS_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(getBioextractorConfigurationsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(
+			String bioExtractorConfigurationId) {
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(bioExtractorConfigurationId) || bioExtractorConfigurationId.isBlank()) {
+				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			BioextractorConfiguration configuration = bioextractorConfigurationRepository.findById(bioExtractorConfigurationId)
+					.orElseThrow(() -> new PartnerServiceException(
+							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
+							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorMessage()));
+			responseWrapper.setResponse(mapToBioextractorConfigurationDetailDto(configuration));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getBioextractorConfigurationById method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getBioextractorConfigurationById method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
+					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(getBioextractorConfigurationDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	private BioextractorConfigurationDetailDto mapToBioextractorConfigurationDetailDto(
+			BioextractorConfiguration configuration) {
+		BioextractorConfigurationDetailDto dto = new BioextractorConfigurationDetailDto();
+		dto.setId(configuration.getId());
+		dto.setConfigName(configuration.getConfigName());
+		dto.setBioextractorProviderName(configuration.getBioextractorProviderName());
+		dto.setBioextractorProviderVersion(configuration.getBioextractorProviderVersion());
+		dto.setBioModality(configuration.getBioModality());
+		if (configuration.getCrDtimes() != null) {
+			dto.setCreatedDateTime(configuration.getCrDtimes().toLocalDateTime());
+		}
+		return dto;
 	}
 
 	public String getSortColumn(Map<String, String> aliasToColumnMap, String alias) {

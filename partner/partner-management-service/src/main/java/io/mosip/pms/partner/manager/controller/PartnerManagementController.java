@@ -11,6 +11,9 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -43,6 +46,8 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -92,6 +97,9 @@ public class PartnerManagementController {
 
     @Value("${mosip.pms.api.id.update.api.key.patch}")
     private String patchUpdateApiKey;
+
+	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
+	private String postBioextractorConfigurationsId;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -466,6 +474,36 @@ public class PartnerManagementController {
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
+	@Operation(summary = "Get bio-extractor requests for a partner-policy request",
+			description = "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(
+			@PathVariable("requestId") String requestId) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		return partnerManagementService.getPartnerPolicyRequestBioExtractors(requestId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
+	@Operation(summary = "Get credential type request for a partner-policy request",
+			description = "Fetches the credential type request row (if any) submitted against the given partner policy mapping request id (`req_id`).")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(
+			@PathVariable("requestId") String requestId) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
+	}
+
 	@Deprecated(since = "release-1.3.0-beta.2")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys")
@@ -501,7 +539,7 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null);
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
@@ -530,6 +568,8 @@ public class PartnerManagementController {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
+			@Parameter(description = "Filter by partner type (e.g. Auth_Partner, Manual_Adjudication)", in = ParameterIn.QUERY)
+			@RequestParam(value = "partnerType", required = false) String partnerType,
 			@RequestParam(value = "expiryPeriod", required = false)
 			@Min(value = 1, message = "Expiry period must be at least 1 day.")
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
@@ -543,12 +583,13 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, expiryPeriod);
+		inputValidator.validateRequestInput("partnerType", partnerType);
+		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
 		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
 	private ApiKeyFilterDto populateApiKeyFilterDto(String partnerId, String apiKeyLabel, String orgName, String status,
-													String policyName, String policyGroupName, Integer expiryPeriod) {
+													String policyName, String policyGroupName, String partnerType, Integer expiryPeriod) {
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) filterDto.setPartnerId(partnerId.toLowerCase());
 		if (apiKeyLabel != null) filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
@@ -556,6 +597,7 @@ public class PartnerManagementController {
 		if (status != null) filterDto.setStatus(status);
 		if (policyName != null) filterDto.setPolicyName(policyName.toLowerCase());
 		if (policyGroupName != null) filterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		if (partnerType != null && !partnerType.isBlank()) filterDto.setPartnerType(partnerType.toLowerCase());
 		if (expiryPeriod != null) filterDto.setExpiryPeriod(expiryPeriod);
 		return filterDto;
 	}
@@ -691,5 +733,88 @@ public class PartnerManagementController {
             return validationResponse.get();
         }
 		return partnerManagementService.updateAPIKey(partnerId, policyId, apiKeyName, requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostbioextractorconfigurations())")
+	@PostMapping(value = "/bio-extractor-configurations")
+	@Operation(summary = "Create a new bio-extractor configuration",
+			description = "Creates a new bio-extractor configuration. Config name must be unique. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(
+			@RequestBody @Valid RequestWrapperV2<BioextractorConfigurationRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<BioextractorConfigurationResponseDto>> validationResponse =
+				requestValidator.validate(postBioextractorConfigurationsId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput("configName", requestWrapper.getRequest().getConfigName());
+		inputValidator.validateRequestInput("bioextractorProviderName", requestWrapper.getRequest().getBioextractorProviderName());
+		inputValidator.validateRequestInput("bioextractorProviderVersion", requestWrapper.getRequest().getBioextractorProviderVersion());
+		inputValidator.validateRequestInput("bioModality", requestWrapper.getRequest().getBioModality());
+		return partnerManagementService.createBioextractorConfiguration(requestWrapper.getRequest());
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurations())")
+	@GetMapping(value = "/bio-extractor-configurations")
+	@Operation(summary = "Get all bio-extractor configurations",
+			description = "Fetches all bio-extractor configurations available in the database. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "configName", required = false) String configName,
+			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
+			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
+			@RequestParam(value = "bioModality", required = false) String bioModality
+	) {
+		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
+				sortFieldName, sortType, pageNo, pageSize, configName, bioextractorProviderName,
+				bioextractorProviderVersion, bioModality);
+		return partnerManagementService.getBioextractorConfigurations(
+				sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurationdetails())")
+	@GetMapping(value = "/bio-extractor-configurations/{bioExtractorConfigurationId}")
+	@Operation(summary = "Get bio-extractor configuration details by ID",
+			description = "Fetches bio-extractor configuration details for the given configuration ID. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(
+			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId) {
+		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
+		return partnerManagementService.getBioextractorConfigurationById(bioExtractorConfigurationId);
+	}
+
+	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
+			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
+			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
+			String bioModality) {
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("configName", configName);
+		inputValidator.validateRequestInput("bioextractorProviderName", bioextractorProviderName);
+		inputValidator.validateRequestInput("bioextractorProviderVersion", bioextractorProviderVersion);
+		inputValidator.validateRequestInput("bioModality", bioModality);
+
+		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
+		if (configName != null) filterDto.setConfigName(configName.toLowerCase());
+		if (bioextractorProviderName != null) filterDto.setBioextractorProviderName(bioextractorProviderName.toLowerCase());
+		if (bioextractorProviderVersion != null) filterDto.setBioextractorProviderVersion(bioextractorProviderVersion.toLowerCase());
+		if (bioModality != null) filterDto.setBioModality(bioModality.toLowerCase());
+		return filterDto;
 	}
 }

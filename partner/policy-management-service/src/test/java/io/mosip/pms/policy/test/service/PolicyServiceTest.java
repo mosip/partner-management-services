@@ -862,42 +862,41 @@ public class PolicyServiceTest {
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_NoPolicyTest() throws JsonParseException, JsonMappingException, IOException {
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("2345","12345")).thenReturn(null);		
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("12345", "12345", "approved"))
+				.thenReturn(new ArrayList<>());
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
 	public void getPartnerMappedPolicy_NoAuthPolicyTest() throws JsonParseException, JsonMappingException, IOException {
-		PartnerPolicy policy = new PartnerPolicy();
-		List<PartnerPolicy> partnerPolicy = new ArrayList<>();
+		PartnerPolicyRequest request = new PartnerPolicyRequest();
 		Partner partner = new Partner();
-		partner.setAddress("Test");
-		partner.setName("Test");
-		policy.setPartner(partner);
-		policy.getPartner().setId("12345");
-		policy.setPolicyId("12345");
-		policy.setPolicyApiKey("12345");
-		partnerPolicy.add(policy);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345","12345")).thenReturn(partnerPolicy);		
+		partner.setId("12345");
+		request.setPartner(partner);
+		request.setPolicyId("12345");
+		request.setStatusCode("approved");
+		List<PartnerPolicyRequest> partnerPolicyRequest = new ArrayList<>();
+		partnerPolicyRequest.add(request);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("12345", "12345", "approved"))
+				.thenReturn(partnerPolicyRequest);
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
 	
 	@Test
 	public void getPartnerMappedPolicyTest_001() throws JsonParseException, JsonMappingException, IOException {
-		PartnerPolicy policy = new PartnerPolicy();
-		List<PartnerPolicy> partnerPolicy = new ArrayList<>();
+		PartnerPolicyRequest request = new PartnerPolicyRequest();
 		Partner partner = new Partner();
-		partner.setAddress("Test");
-		partner.setName("Test");
-		policy.setPartner(partner);
-		policy.getPartner().setId("12345");
-		policy.setPolicyId("12345");
-		policy.setPolicyApiKey("12345");
-		partnerPolicy.add(policy);
+		partner.setId("12345");
+		request.setPartner(partner);
+		request.setPolicyId("12345");
+		request.setStatusCode("approved");
+		List<PartnerPolicyRequest> partnerPolicyRequest = new ArrayList<>();
+		partnerPolicyRequest.add(request);
 		Optional<PolicyGroup> policyGroup = Optional.of(new PolicyGroup());
 		policyGroup.get().setId("12345");		
 		Mockito.when(policyGroupRepository.findById("12345")).thenReturn(policyGroup);
-		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345","12345")).thenReturn(partnerPolicy);
+		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("12345", "12345", "approved"))
+				.thenReturn(partnerPolicyRequest);
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(getAuthPolicies().get(0)));
 		service.getPartnerMappedPolicy("12345", "12345");
 	}
@@ -1059,8 +1058,7 @@ public class PolicyServiceTest {
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(authPolicy))).when(searchHelper).search(Mockito.any(), Mockito.any());
 		service.searchPolicy(policySearchDto);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void searchPolicyTest_02() {
 		Mockito.doReturn(new PageImpl<>(Collections.EMPTY_LIST)).when(searchHelper).search(Mockito.any(), Mockito.any());
@@ -1083,8 +1081,7 @@ public class PolicyServiceTest {
 		Mockito.doReturn(new PageImpl<>(Arrays.asList(policyGroup))).when(searchHelper).search(Mockito.any(), Mockito.any());
 		service.searchPolicyGroup(policySearchDto);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void searchPolicyGroup_02() {
 		Mockito.doReturn(new PageImpl<>(Collections.EMPTY_LIST)).when(searchHelper).search(Mockito.any(), Mockito.any());

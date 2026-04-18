@@ -11,10 +11,15 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
+import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -81,6 +86,22 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest);
+
+	/**
+	 * Fetch bio-extractor request rows submitted for a partner policy request.
+	 *
+	 * @param requestId business request id (req_id)
+	 * @return bio-extractor request rows
+	 */
+	BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId);
+
+	/**
+	 * Fetch credential type request row (if any) submitted for a partner policy request.
+	 *
+	 * @param requestId business request id (req_id)
+	 * @return credential type request row
+	 */
+	CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId);
 	
 	/**
 	 * 
@@ -115,4 +136,11 @@ public interface PartnerManagerService {
     ResponseWrapperV2<LinkPolicyGroupResponseDto> linkPolicyGroup(String partnerId, @NotNull @Valid LinkPolicyGroupRequestDto request);
 
 	ResponseWrapperV2<APIKeyUpdateResponseDto> updateAPIKey(String partnerId, String policyId, String apiKeyName, @NotNull @Valid APIKeyUpdateRequestDto request);
+
+	ResponseWrapperV2<BioextractorConfigurationResponseDto> createBioextractorConfiguration(BioextractorConfigurationRequestDto request);
+
+	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, BioextractorConfigurationFilterDto filterDto);
+
+	ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(String bioExtractorConfigurationId);
+
 }

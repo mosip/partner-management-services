@@ -14,6 +14,8 @@
 \ir ddl/pms-partner_policy_bioextract.sql
 \ir ddl/pms-partner_policy_credential_type.sql
 \ir ddl/pms-partner_policy_request.sql
+\ir ddl/pms-partner_policy_bioextract_request.sql
+\ir ddl/pms-partner_policy_credential_type_request.sql
 \ir ddl/pms-partner_type.sql
 \ir ddl/pms-policy_group.sql
 \ir ddl/pms-reg_device_sub_type.sql
@@ -32,3 +34,4 @@
 \ir ddl/pms-partner_batch_job_execution_context.sql
 \ir ddl/pms-partner_batch_job_sequence.sql
 \ir ddl/pms-notifications.sql
+\ir ddl/pms-bioextractor_configuration.sql

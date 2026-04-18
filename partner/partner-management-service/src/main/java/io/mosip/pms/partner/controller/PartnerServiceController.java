@@ -45,6 +45,8 @@ import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
@@ -81,6 +83,9 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
+
+	@Value("${mosip.pms.api.id.partners.bioextractors.request.post:mosip.pms.partners.bioextractors.request.post}")
+	private String postPartnerBioextractorsRequestId;
 
 	@Autowired
 	PartnerService partnerService;
@@ -156,8 +161,12 @@ public class PartnerServiceController {
 	 * @return
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@Deprecated(since = "release-1.3.0-beta.5")
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
-	@Operation(summary = "Service to add bio extractors", description = "Service to add bio extractors")
+	@Operation(
+			summary = "Service to add bio extractors - deprecated since release-1.3.0-beta.5",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partners/{partnerId}/policies/{policyId}/bio-extractors-request endpoint.",
+			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
@@ -167,7 +176,36 @@ public class PartnerServiceController {
 		response.setVersion(request.getVersion());
 		return new ResponseEntity<>(response, HttpStatus.OK);		
 	}
-	
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/bio-extractors-request", method = RequestMethod.POST)
+	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
+	public ResponseEntity<ResponseWrapper<String>> submitBioExtractorsRequest(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credential-types-request", method = RequestMethod.POST)
+	@Operation(summary = "Service to submit credential types request",
+			description = "Persists credential type request against an in-progress partner policy mapping request")
+	public ResponseEntity<ResponseWrapper<String>> submitCredentialTypesRequest(
+			@PathVariable String partnerId,
+			@PathVariable String policyId,
+			@RequestBody @Valid RequestWrapper<CredentialTypeRequestDto> request) {
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.submitCredentialTypesRequest(partnerId, policyId, request.getRequest()));
+		response.setId(request.getId());
+		response.setVersion(request.getVersion());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
 	/**
 	 * 
 	 * @param partnerId
@@ -185,15 +223,15 @@ public class PartnerServiceController {
 	}
 	
 	/**
-	 * 
-	 * @param partnerId
-	 * @param policyId
-	 * @param credentialType
-	 * @return
+	 * @deprecated Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.
 	 */
+	@Deprecated(since = "release-1.3.0-beta.5")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies/{policyName}",method = RequestMethod.POST)
-	@Operation(summary = "Service to map partner and policy to a credential type", description = "Service to map partner and policy to a credential type")
+	@Operation(
+			summary = "Service to map partner and policy to a credential type — deprecated since release-1.3.0-beta.5",
+			description = "Deprecated since release-1.3.0-beta.5. Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.",
+			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
@@ -410,7 +448,13 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersv3())")
 	@GetMapping(value = "/v3")
 	@Operation(summary = "This endpoint retrieves a list of partners",
-			description = "Available since release-1.2.2.0. This endpoint retrieves a list of partners associated with the logged-in user based on the provided query parameters. If the partner type is MISP_Partner, it fetches all MISP partners instead of only those linked to the user. It is configured for role any of the partner type or PARTNER_ADMIN.")
+			description = "Available since release-1.2.2.0. Retrieves partners associated with the logged-in user based on filters status (mandatory), policyGroupAvailable (optional), and partnerType (optional). "
+					+ "If partnerType is omitted, results are limited to partners associated with the logged-in user (subject to status and policyGroupAvailable filters). "
+					+ "For Partner Admin to fetch all partners, partnerType must be explicitly set to one of MISP_Partner, ABIS_Partner, or Manual_Adjudication. "
+					+ "If partnerType is provided by a non-admin user and does not match any partnerTypeCode mapped to the logged-in user, the request will be rejected. "
+					+ "If you want the list of all partners, use the /admin-partners endpoint and do not use /partners/v3 for this purpose. "
+					+ "Accessible to partner-type roles and PARTNER_ADMIN."
+	)
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -584,7 +628,8 @@ public class PartnerServiceController {
 	}
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnersgenerateapikey())")
-	@Operation(summary = "To generate API Key for approved policies", description = "To generate API Key for approved policies")
+	@Operation(summary = "To generate API Key for approved policies",
+			description = "Generates an API key for an approved policy mapping. Configured for AUTH_PARTNER and PARTNER_ADMIN roles.")
 	@RequestMapping(value = "/{partnerId}/generate/apikey",method = RequestMethod.PATCH)
 	public ResponseEntity<ResponseWrapper<APIKeyGenerateResponseDto>> generateAPIKey(
 			@ApiParam("partner id") @PathVariable("partnerId") @NotNull String partnerId,

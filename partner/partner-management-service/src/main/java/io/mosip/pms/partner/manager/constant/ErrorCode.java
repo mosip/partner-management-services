@@ -34,11 +34,12 @@ public enum ErrorCode {
 	UNABLE_TO_UPDATE_POLICY_AGAINST_APIKEY("PMS_PMP_053","The old and new policy IDs are same, so the policy cannot be updated for the given API key"),
 	POLICY_NOT_EXIST_EXCEPTION("PMS_PMP_014","Policy does not exist"),
 	PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION("PMS_PMS_022","Given Partner api key is not active."),
+	APIKEY_NOT_ACTIVE_EXCEPTION("PMS_PMS_023","Expiry date cannot be updated for a deactivated API key."),
 	POLICY_NOT_ACTIVE_EXCEPTION("PMS_PMP_019","Policy is not active."),
 	POLICY_EXPIRED_EXCEPTION("PMS_PMP_018","Policy expired."),
 	POLICY_PARSING_ERROR("PMS_POL_052","Error occured while parsing policy string to json object"),
 	CERTIFICATE_NOT_UPLOADED_EXCEPTION("PMS_PRT_108","Certficate is not uploaded for the given partner.Cannot activate the same."),
-	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Given policy is not mapped to partner"),
+	PARTNER_POLICY_MAPPING_NOT_EXISTS("PMS_PRT_109","Partner policy mapping is not approved for given partner and policy. Please check mapping status."),
 	PARTNER_POLICY_LABEL_EXISTS("PMS_PRT_110","Given label already exists.Provide unique label."),
 	PARTNER_POLICY_LABEL_NOT_EXISTS("PMS_PRT_111","API key not exists for the given combination"),
 	LOGGEDIN_USER_NOT_AUTHORIZED("PMS_PRT_055","User not authorized."),
@@ -55,8 +56,9 @@ public enum ErrorCode {
 	FIELD_NULL_OR_EMPTY("PMS_PM_068", "Field '%s' is null or empty"),
 	API_KEY_UPDATE_ERROR("PMS_PM_069", "Error while updating API key."),
 	AT_LEAST_ONE_FIELD_REQUIRED("PMS_PM_070", "At least one field (status or expiryDateTime) must be provided"),
-    INVALID_API_KEY_STATUS_FOR_DEACTIVATION("PMS_PM_071", "Only 'De-active' status is supported for API key deactivation"),
+    INVALID_API_KEY_STATUS_FOR_DEACTIVATION("PMS_PM_071", "Invalid API Key status value. Only ‘De-active' status is supported."),
 	PARTNER_CANNOT_UPDATE_EXPIRY_DATE("PMS_PM_072", "Only Partner Admin can update the expiry date of the API key."),
+	API_KEY_NOT_BELONGS_TO_THE_USER("PMS_PM_073", "The given API key does not belong to the logged in user."),
 	API_NOT_ACCESSIBLE("PMS-BJ-001", "API not accessible"),
     API_NULL_RESPONSE("PMS-BJ-002", "API returned a null response"),
     PARTNER_CERTIFICATE_FETCH_ERROR("PMS-BJ-003", "Error while fetching partner certificate"),
@@ -73,7 +75,6 @@ public enum ErrorCode {
     INVALID_NOTIFICATION_TYPE("PMS-BJ-012", "Invalid notification type"),
 	DECRYPT_DATA_ERROR("PMS-BJ-013", "Failed to decrypt data using Key Manager"),
 	ENCRYPT_DATA_ERROR("PMS-BJ-014", "Failed to encrypt data using Key Manager");
-	
 
 	/**
 	 * The error code.
