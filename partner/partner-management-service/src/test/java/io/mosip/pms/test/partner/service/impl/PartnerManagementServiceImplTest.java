@@ -3048,6 +3048,7 @@ public class PartnerManagementServiceImplTest {
 				partnerManagementImpl.updateAPIKey("partner123", "missing-policy", "apiKeyName", requestDto);
 
 		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
 		assertEquals(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
 				response.getErrors().get(0).getErrorCode());
 	}
