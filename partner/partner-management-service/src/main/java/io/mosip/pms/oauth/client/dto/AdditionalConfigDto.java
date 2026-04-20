@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 @Data
@@ -24,6 +25,5 @@ public class AdditionalConfigDto {
     private Boolean forgotPwdLinkRequired;
 
     @JsonProperty("consent_expire_in_mins")
-    @Size(max = 36, message = "partnerPolicyRequestId length must be <= 36")
-    private String consentExpireInMins;
+    private Integer consentExpireInMins;
 }
