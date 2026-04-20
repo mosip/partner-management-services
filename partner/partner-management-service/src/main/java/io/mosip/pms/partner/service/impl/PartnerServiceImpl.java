@@ -2045,20 +2045,18 @@ public class PartnerServiceImpl implements PartnerService {
 		try {
 			String userRoles = authUserDetails().getAuthorities().toString();
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
-			if (isPartnerAdmin) {
-				responseWrapper.setResponse(new ArrayList<>());
-				responseWrapper.setId(getPartnerCertificatesId);
-				responseWrapper.setVersion(VERSION);
-				return responseWrapper;
-			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty()) {
+			if (!partnerList.isEmpty() || isPartnerAdmin) {
 				List<CertificateDto> certificateDtoList = new ArrayList<>();
 				for (Partner partner : partnerList) {
 					CertificateDto certificateDto = new CertificateDto();
 					try {
 						if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
+							if (isPartnerAdmin) {
+								// For admin, skip invalid partner rows instead of erroring.
+								continue;
+							}
 							LOGGER.info("Partner Id is null or empty for user id : " + userId);
 							throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
 									ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
