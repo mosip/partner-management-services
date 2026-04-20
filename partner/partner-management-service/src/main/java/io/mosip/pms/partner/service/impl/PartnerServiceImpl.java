@@ -2043,6 +2043,14 @@ public class PartnerServiceImpl implements PartnerService {
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(Integer expiryPeriod) {
 		ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String userRoles = authUserDetails().getAuthorities().toString();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
+			if (isPartnerAdmin) {
+				responseWrapper.setResponse(new ArrayList<>());
+				responseWrapper.setId(getPartnerCertificatesId);
+				responseWrapper.setVersion(VERSION);
+				return responseWrapper;
+			}
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (!partnerList.isEmpty()) {
