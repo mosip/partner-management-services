@@ -3,9 +3,9 @@ package io.mosip.pms.oauth.client.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import jakarta.validation.constraints.Size;
 
-import java.math.BigInteger;
+
+
 import java.util.Map;
 
 @Data
