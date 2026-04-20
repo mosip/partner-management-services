@@ -132,10 +132,16 @@ public class PartnerUtil {
 	public static void validateAllowedValueFromConfig(Environment environment, String fieldName, String value,
 			String propertyKey) {
 		String configuredValues = environment == null ? null : environment.getProperty(propertyKey, "");
-		if (configuredValues == null || configuredValues.isBlank()) {
+		if (environment == null || propertyKey == null || propertyKey.isBlank()
+				|| configuredValues == null || configuredValues.isBlank()) {
 			return;
 		}
 		String valueForValidation = value == null ? null : value.trim();
+		String displayValues = Arrays.stream(configuredValues.split(","))
+				.map(String::trim)
+				.filter(s -> !s.isBlank())
+				.reduce((a, b) -> a + ", " + b)
+				.orElse(configuredValues.trim());
 		boolean allowed = valueForValidation != null && !valueForValidation.isBlank()
 				&& Arrays.stream(configuredValues.split(","))
 				.map(String::trim)
@@ -147,7 +153,7 @@ public class PartnerUtil {
 					String.format(
 							io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
 							fieldName,
-							"Valid values are: " + configuredValues
+							"Valid values are: " + displayValues
 					)
 			);
 		}

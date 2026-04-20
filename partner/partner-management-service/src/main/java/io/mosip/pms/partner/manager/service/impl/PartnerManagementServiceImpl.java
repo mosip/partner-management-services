@@ -1893,9 +1893,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			entity.setId(id);
-			entity.setConfigName(request.getConfigName());
-			entity.setBioextractorProviderName(request.getBioextractorProviderName());
-			entity.setBioextractorProviderVersion(request.getBioextractorProviderVersion());
+			entity.setConfigName(extractorConfigName);
+			entity.setBioextractorProviderName(request.getBioextractorProviderName() == null ? null : request.getBioextractorProviderName().trim());
+			entity.setBioextractorProviderVersion(request.getBioextractorProviderVersion() == null ? null : request.getBioextractorProviderVersion().trim());
 			entity.setBioModality(request.getBioModality() == null ? null : request.getBioModality().trim());
 			entity.setCrBy(getUserId());
 			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
