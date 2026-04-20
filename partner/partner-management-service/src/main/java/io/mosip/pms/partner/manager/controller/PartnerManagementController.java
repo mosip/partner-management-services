@@ -14,7 +14,6 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.util.FeatureAvailabilityUtil;
@@ -47,6 +46,8 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -473,6 +474,36 @@ public class PartnerManagementController {
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
+	@Operation(summary = "Get bio-extractor requests for a partner-policy request",
+			description = "Fetches all bio-extractor request rows (non-deleted) submitted against the given partner policy mapping request id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(
+			@PathVariable("requestId") String requestId) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		return partnerManagementService.getPartnerPolicyRequestBioExtractors(requestId);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
+	@GetMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
+	@Operation(summary = "Get credential type request for a partner-policy request",
+			description = "Fetches the credential type request row (if any) submitted against the given partner policy mapping request id (`req_id`).")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(
+			@PathVariable("requestId") String requestId) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
+	}
+
 	@Deprecated(since = "release-1.3.0-beta.2")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys")
@@ -766,23 +797,6 @@ public class PartnerManagementController {
 			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId) {
 		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
 		return partnerManagementService.getBioextractorConfigurationById(bioExtractorConfigurationId);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerpolicycredentialtype())")
-	@GetMapping(value = "/partners/{partnerId}/policies/{policyId}/credential-types")
-	@Operation(summary = "Get credential types mapped to partner-policy",
-			description = "Fetches credential types mapped to the given partner and policy. Available for PARTNER_ADMIN role.")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
-	})
-	public ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialType(
-			@PathVariable("partnerId") String partnerId,
-			@PathVariable("policyId") String policyId) {
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		return partnerManagementService.getPartnerPolicyCredentialType(partnerId, policyId);
 	}
 
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(

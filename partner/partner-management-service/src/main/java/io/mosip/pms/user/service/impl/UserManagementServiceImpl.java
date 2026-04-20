@@ -28,7 +28,6 @@ import io.mosip.pms.user.service.UserManagementService;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -72,6 +71,20 @@ public class UserManagementServiceImpl implements UserManagementService{
         return authUserDetails().getUserId();
 	}
 
+	private void validateAccess(String userId, boolean allowPolicyManager) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		boolean isPolicyManager = allowPolicyManager
+				&& partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
+		if (!isAdmin && !isPolicyManager) {
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+		}
+	}
+
 	@Override
 	public MosipUserDto registerUser(UserRegistrationRequestDto userToBeRegistred) {
 		return keycloakService.registerUser(userToBeRegistred);
@@ -82,16 +95,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 		ResponseWrapperV2<UserDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			boolean isPolicyManager = partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
-			if (!isAdmin && !isPolicyManager) {
-				List<Partner> partnerList = partnerRepository.findByUserId(userId);
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-				}
-			}
+			validateAccess(userId, true);
 
             UserDetails userDetails = new UserDetails();
 
@@ -144,16 +148,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 		ResponseWrapperV2<UserDetailsDto> responseWrapper =  new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			boolean isPolicyManager = partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
-			if (!isAdmin && !isPolicyManager) {
-				List<Partner> partnerList = partnerRepository.findByUserId(userId);
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-				}
-			}
+			validateAccess(userId, true);
             UserDetailsDto userDetailsDto = new UserDetailsDto();
             userDetailsDto.setUserId(userId);
             LOGGER.info("sessionId", "idType", "id", "fetching consent status from db for user :", userId);
@@ -185,16 +180,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 	public ResponseWrapperV2<NotificationsSeenResponseDto> updateNotificationsSeenTimestamp(String userId, NotificationsSeenRequestDto requestDto) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			List<Partner> partnerList = new ArrayList<>();
-			if (!isAdmin) {
-				partnerList = partnerRepository.findByUserId(userId);
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-				}
-			}
+			validateAccess(userId, false);
 			LOGGER.info("sessionId", "idType", "id", "updating notification seen timestamp for user :", userId);
 			Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
             if (optionalEntity.isEmpty()) {
@@ -236,16 +222,7 @@ public class UserManagementServiceImpl implements UserManagementService{
 	public ResponseWrapperV2<NotificationsSeenResponseDto> getNotificationsSeenTimestamp(String userId) {
 		ResponseWrapperV2<NotificationsSeenResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
-			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			List<Partner> partnerList = new ArrayList<>();
-			if (!isAdmin) {
-				partnerList = partnerRepository.findByUserId(userId);
-				if (partnerList.isEmpty()) {
-					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-				}
-			}
+			validateAccess(userId, false);
 			LOGGER.info("sessionId", "idType", "id", "fetching notification seen timestamp for user :", userId);
 			Optional<UserDetails> optionalEntity = userDetailsRepository.findByUserId(userId);
 			if (optionalEntity.isPresent()) {

@@ -18,7 +18,8 @@ import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
-import io.mosip.pms.partner.response.dto.PartnerPolicyCredentialTypeResponseDto;
+import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -85,6 +86,22 @@ public interface PartnerManagerService {
 	 * @return
 	 */
 	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest);
+
+	/**
+	 * Fetch bio-extractor request rows submitted for a partner policy request.
+	 *
+	 * @param requestId business request id (req_id)
+	 * @return bio-extractor request rows
+	 */
+	BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId);
+
+	/**
+	 * Fetch credential type request row (if any) submitted for a partner policy request.
+	 *
+	 * @param requestId business request id (req_id)
+	 * @return credential type request row
+	 */
+	CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId);
 	
 	/**
 	 * 
@@ -126,5 +143,4 @@ public interface PartnerManagerService {
 
 	ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(String bioExtractorConfigurationId);
 
-	ResponseWrapperV2<PartnerPolicyCredentialTypeResponseDto> getPartnerPolicyCredentialType(String partnerId, String policyId);
 }

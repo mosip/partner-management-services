@@ -376,7 +376,19 @@ public enum PartnerServiceAuditEnum {
 			"DEACTIVATE DEVICE WITH EXPIRED SBI SUCCESS",
 			"SbiAutoDeactivationTasklet successfully deactivated approved device associated with expired SBI.", AuditConstant.PARTNER_MODULE_ID,
 			AuditConstant.PARTNER_MODULE_NAME, "NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME,
-			AuditConstant.APPLICATION_ID);
+			AuditConstant.APPLICATION_ID),
+	SUBMIT_BIO_EXTRACT_REQUEST_SUCCESS("PMS_PRT_481", AuditConstant.AUDIT_SYSTEM, "POST BIO EXTRACT REQUEST",
+			"Submit bio extract request success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME,
+			"NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	SUBMIT_BIO_EXTRACT_REQUEST_FAILURE("PMS_PRT_482", AuditConstant.AUDIT_SYSTEM, "POST BIO EXTRACT REQUEST",
+			"Submit bio extract request failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME,
+			"NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	SUBMIT_CREDENTIAL_TYPE_REQUEST_SUCCESS("PMS_PRT_483", AuditConstant.AUDIT_SYSTEM, "POST CREDENTIAL TYPE REQUEST",
+			"Submit credential type request success", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME,
+			"NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID),
+	SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE("PMS_PRT_484", AuditConstant.AUDIT_SYSTEM, "POST CREDENTIAL TYPE REQUEST",
+			"Submit credential type request failed", AuditConstant.PARTNER_MODULE_ID, AuditConstant.PARTNER_MODULE_NAME,
+			"NO_ID", "NO_ID_TYPE", AuditConstant.APPLICATION_NAME, AuditConstant.APPLICATION_ID);
 
 	private final String eventId;
 

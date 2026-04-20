@@ -32,6 +32,7 @@
                         "name": "Cookie",
                         "in": "header",
                         "description": "Authorization={jwt_token}",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -385,6 +386,7 @@
                         "name": "Cookie",
                         "in": "header",
                         "description": "Authorization={jwt_token}",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -804,11 +806,10 @@
         "/partners/{partnerId}/generate/apikey": {
             "patch": {
                 "tags": [
-                    "partner-service-controller",
-                    "EXISTING"
+                    "partner-service-controller"
                 ],
-                "summary": "Generate API key for an approved policy mapping",
-                "description": "Generates an API key after the partner policy mapping is approved. The JSON body wraps `policyName` and `label` in the standard request envelope (`id`, `version`, `requesttime`, `request`).\r\n\r\n**Removed endpoint (not available):** `POST /partners/{partnerId}/policies/{policyId}/api-keys` was removed from the product; clients must use this `PATCH` endpoint instead.\r\n\r\nConfigure access roles per deployment (for example AUTH_PARTNER, PARTNER_ADMIN).",
+                "summary": "EXISTING: Generate API key for an approved policy mapping",
+                "description": "Generates an API key after the partner policy mapping is approved. The JSON body wraps `policyName` and `label` in the standard request envelope (`id`, `version`, `requesttime`, `request`).\r\n\r\nConfigure access roles per deployment (for example AUTH_PARTNER, PARTNER_ADMIN).",
                 "operationId": "generateApiKey",
                 "deprecated": false,
                 "parameters": [
@@ -912,10 +913,9 @@
         "/partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}": {
             "patch": {
                 "tags": [
-                    "partner-management-controller",
-                    "NEW"
+                    "partner-management-controller"
                 ],
-                "summary": "Service to deactivate API key and/or update expiry date",
+                "summary": "NEW: Endpoint to deactivate API key and/or update expiry date",
                 "description": "This endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated. Note: Only Partner Admin can update the expiry date of the API key. Authentication Partners can only update the status.",
                 "operationId": "updateAPIKey",
                 "parameters": [
@@ -1298,7 +1298,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "EXISTING: Endpoint to approve/reject partner policy mapping",
-                "description": "Endpoint to approve/reject partner policy mapping",
+                "description": "Approve/reject a partner policy mapping.\r\n\r\n- For **all partner types**: updates the partner-policy mapping status to Approved/Rejected.\r\n- For **Credential partner types**: validates InProgress rows in the *_request tables, updates their status on Approved/Rejected, and on Approved copies them into the final tables (`partner_policy_bioextract`, `partner_policy_credential_type`).",
                 "operationId": "approveRejectPolicyMappings",
                 "parameters": [
                     {
@@ -1702,7 +1702,7 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get list of all the Partner Id's associated with logged in User and filtered by Query Parameters",
-                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.  \r\n\r\nThe query parameter `status` is mandatory. The endpoint will return all \r\nPartner Id's with corresponding status value and which are mapped \r\nto the logged in user. If there are no Partner Id's with corresponding status \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\nA Partner is auto approved by the PMS system, after the partner uploads\r\na valid CA signed certificate for the organisation.\r\n\r\n\r\nThe query parameter `policyGroupAvailable` is optional. If it is true, then this endpoint will return all \r\nPartner Id's which have a Policy Group associated with them and which are mapped \r\nto the logged in user. If there are no Partner Id's which have a Policy Group associated with them \r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nThe query parameter `partnerType` is optional. If it is any of allowed partner types, then this endpoint will return all \r\nPartner Id's which have same partner type and which are mapped \r\nto the logged in user. If there are no Partner Id's which have same partner type\r\nand which are mapped to the logged in user, then it will return an empty array as the response.\r\n\r\nAll these 3 query parameters will work together.\r\nIf the partner type is provided as `MISP_Partner`, `ABIS_Partner`, or `Manual_Adjudication`, e.g., `/partners/v3?status=approved&partnerType=MISP_Partner`:\r\n- Admin users will receive all records for the given partner type.\r\n- Non-admin users will receive only those records mapped to their user account.\r\n\r\nExample 1: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nthis will return list of all Device Provider ids which are in approved status and are associated \r\nwith logged in user and but the policy group attributes in the response will be null in this case.\r\n\r\nExample 2: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=true`\r\nthis will return an empty list since policy group is not available for Device Providers\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,\r\nMANUAL_ADJUDICATION,SDK_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER\r\n",
+                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThe query parameter `status` is mandatory.\r\n\r\nThe query parameter `policyGroupAvailable` is optional.\r\n\r\nThe query parameter `partnerType` is optional for non-admin users. If provided, it must match at least one `partnerTypeCode` mapped to the logged in user, otherwise the request will be rejected.\r\n\r\nFor Partner Admin to fetch all partners, `partnerType` must be explicitly set to one of `MISP_Partner`, `ABIS_Partner`, or `Manual_Adjudication`.\r\nIf Partner Admin omits `partnerType`, the request will be rejected.\r\n\r\nFor non-admin users, if `partnerType` is omitted, results are limited to partners associated with the logged-in user (subject to status and policyGroupAvailable filters).\r\n\r\nIf you want the list of all partners, use the `/admin-partners` endpoint and do not use `/partners/v3` for this purpose.\r\n\r\nExample 1: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nThis returns Device Provider partner ids in approved status mapped to the logged in user; policy group attributes will be null.\r\n\r\nExample 2: `/partners/v3?status=approved&partnerType=MISP_Partner`\r\n- Admin users will receive all records for MISP_Partner.\r\n- Non-admin users will receive only those records mapped to their user account.\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,MANUAL_ADJUDICATION,SDK_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER\r\n",
                 "operationId": "partner-ids-v3",
                 "parameters": [
                     {
@@ -7033,314 +7033,6 @@
             },
             "parameters": []
         },
-        "/partner-api-keys/v2": {
-            "get": {
-                "tags": [
-                    "partner-management-controller"
-                ],
-                "summary": "NEW: V2 version of get the list of all the API keys created by Authentication Partners and Manual Adjudication Partners",
-                "description": "Added in PMS Release 1.3.x, this V2 version of endpoint `/partner-api-keys` which includes below new attributes added in the response:\r\n1. `apiKeyExpiryDateTime`\r\n2. `isApiKeyExpiredStatus`\r\n3. `partnerType` (e.g. Auth_Partner, Manual_Adjudication)\r\nAlso this endpoint will also be used to populate the Count of expiring API keys in the corresponding Dashboard Card \r\nby passing the `expiryPeriod` optional request parameter.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters including `partnerType`. Filter by partnerType=Auth_Partner for Auth Services API keys list; filter by partnerType=Manual_Adjudication for Manual Adjudication Services API keys list. API keys for Manual Adjudication partners (e.g. on DataShare policy) are included when no partnerType filter is applied or when partnerType=Manual_Adjudication.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN,AUTH_PARTNER\r\n",
-                "operationId": "get-auth-partners-apikeys-v2",
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sortFieldName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to sort the response by the sortFieldName. Sorting parameters should be given along with pagination.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sortType",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to sort the response with this sort order. Default is asc order.",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "pageNo",
-                        "in": "query",
-                        "description": "Page Number for the pagination. Starts with 0.",
-                        "schema": {
-                            "type": "integer",
-                            "default": 0
-                        }
-                    },
-                    {
-                        "name": "pageSize",
-                        "in": "query",
-                        "description": "Page Size for the pagination. Page Number and Page Size should be given together in the request.",
-                        "schema": {
-                            "type": "integer",
-                            "default": 8
-                        }
-                    },
-                    {
-                        "name": "partnerId",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given partnerId.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apiKeyLabel",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given apiKeyLabel.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "orgName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `orgName`.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `policyName`.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given status of API key. Allowed values as activated or deactivated.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyGroupName",
-                        "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given `policyGroupName`.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "partnerType",
-                        "in": "query",
-                        "description": "Optional request parameter. Filter by partner type (e.g. Auth_Partner, Manual_Adjudication). Used by Auth Services and Manual Adjudication Services API keys list pages.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 30
-                        },
-                        "in": "query",
-                        "description": "Optional request parameter. Filter by expiry period in days (1–30).",
-                        "name": "expiryPeriod"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "Unique id required to access this endpoint `mosip.pms.all.api.key.requests.get`"
-                                        },
-                                        "version": {
-                                            "type": "string",
-                                            "description": "Version of this endpoint. \r\n`1.0`"
-                                        },
-                                        "responseTime": {
-                                            "type": "string",
-                                            "description": "Date in ISO format indicating date time when response was sent",
-                                            "format": "date-time"
-                                        },
-                                        "metadata": {
-                                            "type": "object",
-                                            "description": "Optional metadata about the response"
-                                        },
-                                        "response": {
-                                            "nullable": true,
-                                            "type": "object",
-                                            "properties": {
-                                                "pageNo": {
-                                                    "type": "integer",
-                                                    "description": "Page Number of the data in the response"
-                                                },
-                                                "pageSize": {
-                                                    "type": "integer",
-                                                    "description": "Page Size of the data in the response"
-                                                },
-                                                "totalResults": {
-                                                    "type": "integer",
-                                                    "description": "Total number of records across all the pages in the response"
-                                                },
-                                                "data": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "partnerId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier for the Partner"
-                                                            },
-                                                            "apiKeyLabel": {
-                                                                "type": "string",
-                                                                "description": "Unique label for the API key"
-                                                            },
-                                                            "orgName": {
-                                                                "type": "string",
-                                                                "description": "Name of the Organisation"
-                                                            },
-                                                            "policyName": {
-                                                                "type": "string",
-                                                                "description": "Name of the Policy"
-                                                            },
-                                                            "policyId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier for the Policy"
-                                                            },
-                                                            "policyDescription": {
-                                                                "type": "string",
-                                                                "description": "Description of the Policy"
-                                                            },
-                                                            "policyGroupName": {
-                                                                "type": "string",
-                                                                "description": "Name of the Policy Group"
-                                                            },
-                                                            "policyGroupDescription": {
-                                                                "type": "string",
-                                                                "description": "Description of the Policy Group"
-                                                            },
-                                                            "partnerType": {
-                                                                "type": "string",
-                                                                "description": "Type of partner (e.g. Auth_Partner, Manual_Adjudication)"
-                                                            },
-                                                            "status": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "activated",
-                                                                    "deactivated"
-                                                                ],
-                                                                "description": "Status of the API key"
-                                                            },
-                                                            "createdDateTime": {
-                                                                "type": "string",
-                                                                "description": "Created date in ISO format"
-                                                            },
-                                                            "policyGroupId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier of the Policy Group"
-                                                            },
-                                                            "apiKeyExpiryDateTime": {
-                                                                "type": "string",
-                                                                "description": "Date in ISO format indicating when API key is going to expire"
-                                                            },
-                                                            "isApiKeyExpiredStatus ": {
-                                                                "type": "boolean",
-                                                                "description": "Flag indicating if API key has expired or not"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
-                                                "properties": {
-                                                    "errorCode": {
-                                                        "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
-                                                    },
-                                                    "message": {
-                                                        "type": "string",
-                                                        "description": "Message indicating the error that has occured"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "examples": {
-                                    "Example 1": {
-                                        "value": {
-                                            "id": "string",
-                                            "version": "string",
-                                            "responseTime": "2019-08-24T14:15:22Z",
-                                            "metadata": {},
-                                            "response": {
-                                                "pageNo": 0,
-                                                "pageSize": 0,
-                                                "totalResults": 0,
-                                                "data": [
-                                                    {
-                                                        "partnerId": "string",
-                                                        "apiKeyLabel": "string",
-                                                        "orgName": "string",
-                                                        "policyName": "string",
-                                                        "policyId": "string",
-                                                        "policyDescription": "string",
-                                                        "policyGroupName": "string",
-                                                        "policyGroupDescription": "string",
-                                                        "status": "activated",
-                                                        "createdDateTime": "string",
-                                                        "policyGroupId": "string",
-                                                        "apiKeyExpiryDateTime": "string",
-                                                        "isApiKeyExpiredStatus ": true
-                                                    }
-                                                ]
-                                            },
-                                            "errors": [
-                                                {
-                                                    "errorCode": "string",
-                                                    "message": "string"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ]
-            }
-        },
         "/partner-api-keys": {
             "get": {
                 "tags": [
@@ -7622,6 +7314,314 @@
                 }
             },
             "parameters": []
+        },
+        "/partner-api-keys/v2": {
+            "get": {
+                "tags": [
+                    "partner-management-controller"
+                ],
+                "summary": "NEW: V2 version to retrieve the list of all API keys created for Authentication Partners and for the provided partner type (if specified).",
+                "description": "Added in PMS Release 1.3.x, this V2 version of endpoint `/partner-api-keys` which includes below new attributes added in the response:\r\n1. `apiKeyExpiryDateTime`\r\n2. `isApiKeyExpiredStatus`\r\n3. `partnerType` (e.g. Auth_Partner, Manual_Adjudication)\r\nAlso this endpoint will also be used to populate the Count of expiring API keys in the corresponding Dashboard Card \r\nby passing the `expiryPeriod` optional request parameter.\r\n\r\nThis endpoint supports pagination, sorting, and filtering using optional query parameters, including partnerType. Use partnerType=Auth_Partner to retrieve Auth Services API keys. If a partnerType is specified, API keys for that partner type are returned. If partnerType is not specified, all API keys available in the database are returned.\r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners across all users.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\". With this feature one PMS user account will be able to support multiple Partner Types. Currently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN,AUTH_PARTNER\r\n",
+                "operationId": "get-auth-partners-apikeys-v2",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortFieldName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to sort the response by the sortFieldName. Sorting parameters should be given along with pagination.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortType",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to sort the response with this sort order. Default is asc order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "pageNo",
+                        "in": "query",
+                        "description": "Page Number for the pagination. Starts with 0.",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Page Size for the pagination. Page Number and Page Size should be given together in the request.",
+                        "schema": {
+                            "type": "integer",
+                            "default": 8
+                        }
+                    },
+                    {
+                        "name": "partnerId",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given partnerId.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "apiKeyLabel",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given apiKeyLabel.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "orgName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given `orgName`.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given `policyName`.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given status of API key. Allowed values as activated or deactivated.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyGroupName",
+                        "in": "query",
+                        "description": "Optional request parameter. Can be used to filter the response by the given `policyGroupName`.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "partnerType",
+                        "in": "query",
+                        "description": "Optional request parameter. Filter by partner type (e.g. Auth_Partner, Manual_Adjudication). Used by Auth Services and Manual Adjudication Services API keys list pages.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 30
+                        },
+                        "in": "query",
+                        "description": "Optional request parameter. Filter by expiry period in days (1–30).",
+                        "name": "expiryPeriod"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Unique id required to access this endpoint `mosip.pms.all.api.key.requests.get`"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "Version of this endpoint. \r\n`1.0`"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "description": "Date in ISO format indicating date time when response was sent",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "description": "Optional metadata about the response"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "pageNo": {
+                                                    "type": "integer",
+                                                    "description": "Page Number of the data in the response"
+                                                },
+                                                "pageSize": {
+                                                    "type": "integer",
+                                                    "description": "Page Size of the data in the response"
+                                                },
+                                                "totalResults": {
+                                                    "type": "integer",
+                                                    "description": "Total number of records across all the pages in the response"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "partnerId": {
+                                                                "type": "string",
+                                                                "description": "Unique identifier for the Partner"
+                                                            },
+                                                            "apiKeyLabel": {
+                                                                "type": "string",
+                                                                "description": "Unique label for the API key"
+                                                            },
+                                                            "orgName": {
+                                                                "type": "string",
+                                                                "description": "Name of the Organisation"
+                                                            },
+                                                            "policyName": {
+                                                                "type": "string",
+                                                                "description": "Name of the Policy"
+                                                            },
+                                                            "policyId": {
+                                                                "type": "string",
+                                                                "description": "Unique identifier for the Policy"
+                                                            },
+                                                            "policyDescription": {
+                                                                "type": "string",
+                                                                "description": "Description of the Policy"
+                                                            },
+                                                            "policyGroupName": {
+                                                                "type": "string",
+                                                                "description": "Name of the Policy Group"
+                                                            },
+                                                            "policyGroupDescription": {
+                                                                "type": "string",
+                                                                "description": "Description of the Policy Group"
+                                                            },
+                                                            "partnerType": {
+                                                                "type": "string",
+                                                                "description": "Type of partner (e.g. Auth_Partner, Manual_Adjudication)"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "activated",
+                                                                    "deactivated"
+                                                                ],
+                                                                "description": "Status of the API key"
+                                                            },
+                                                            "createdDateTime": {
+                                                                "type": "string",
+                                                                "description": "Created date in ISO format"
+                                                            },
+                                                            "policyGroupId": {
+                                                                "type": "string",
+                                                                "description": "Unique identifier of the Policy Group"
+                                                            },
+                                                            "apiKeyExpiryDateTime": {
+                                                                "type": "string",
+                                                                "description": "Date in ISO format indicating when API key is going to expire"
+                                                            },
+                                                            "isApiKeyExpiredStatus": {
+                                                                "type": "boolean",
+                                                                "description": "Flag indicating if API key has expired or not"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string",
+                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "Message indicating the error that has occured"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "string",
+                                            "version": "string",
+                                            "responseTime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "pageNo": 0,
+                                                "pageSize": 0,
+                                                "totalResults": 0,
+                                                "data": [
+                                                    {
+                                                        "partnerId": "string",
+                                                        "apiKeyLabel": "string",
+                                                        "orgName": "string",
+                                                        "policyName": "string",
+                                                        "policyId": "string",
+                                                        "policyDescription": "string",
+                                                        "policyGroupName": "string",
+                                                        "policyGroupDescription": "string",
+                                                        "status": "activated",
+                                                        "createdDateTime": "string",
+                                                        "policyGroupId": "string",
+                                                        "apiKeyExpiryDateTime": "string",
+                                                        "isApiKeyExpiredStatus": true
+                                                    }
+                                                ]
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ]
+            }
         },
         "/ftpchipdetail/v2": {
             "get": {
@@ -9268,6 +9268,1148 @@
                     "required": true
                 }
             ]
+        },
+        "/bio-extractor-configurations": {
+            "get": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "NEW: Get all bio-extractor configurations",
+                "description": "Returns bio-extractor configurations persisted in PMS (catalog entries used when partners submit bio-extractor requests against policies). Supports optional pagination, sorting, and filtering.\r\n\r\n**Query behaviour**\r\n- Optional filters (`configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`) are applied using **case-insensitive** matching on stored values (the service normalizes filter values to lower case).\r\n- When `pageNo` and `pageSize` are omitted, results are returned **unpaged** (all matching rows).\r\n- When **both** `pageNo` and `pageSize` are sent, pagination is enabled; in that case `sortFieldName` and `sortType` may be sent **together** to sort that page (if omitted, the page uses the default sort from persistence). If pagination is not enabled, `sortFieldName` / `sortType` are **not** applied by the service. Allowed `sortFieldName` values: `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `createdDateTime`. `sortType` is `asc` or `desc`.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2` envelope. `response` is a page object with `pageNo`, `pageSize`, `totalResults`, and `data` (array of configuration rows). Business or validation failures may populate `errors` while still returning HTTP 200, consistent with other PMS V2 endpoints.\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurations`. Example roles in default configuration: PARTNER_ADMIN, CREDENTIAL_PARTNER.",
+                "operationId": "getBioextractorConfigurations",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "required": true,
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortFieldName",
+                        "in": "query",
+                        "description": "Optional. Sort field; only used when **both** `pageNo` and `pageSize` are present—use together with `sortType` in that case. Allowed: id, configName, bioextractorProviderName, bioextractorProviderVersion, bioModality, createdDateTime.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sortType",
+                        "in": "query",
+                        "description": "Optional. Sort order: asc or desc. Only used when **both** `pageNo` and `pageSize` are present (with `sortFieldName`).",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "pageNo",
+                        "in": "query",
+                        "description": "Optional. Page index starting at 0. Must be used together with `pageSize` for pagination.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "Optional. Page size. Must be used together with `pageNo` for pagination.",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "configName",
+                        "in": "query",
+                        "description": "Optional filter by configuration name (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioextractorProviderName",
+                        "in": "query",
+                        "description": "Optional filter by bio-extractor provider name (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioextractorProviderVersion",
+                        "in": "query",
+                        "description": "Optional filter by provider version.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioModality",
+                        "in": "query",
+                        "description": "Optional filter by biometric modality (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "API identifier",
+                                            "example": "mosip.pms.bioextractor.configurations.get"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "description": "API version",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Response timestamp (UTC)"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "pageNo": {
+                                                    "type": "integer",
+                                                    "format": "int64",
+                                                    "description": "Page index from the underlying Spring Data page (0-based when pagination is used)."
+                                                },
+                                                "pageSize": {
+                                                    "type": "integer",
+                                                    "format": "int64",
+                                                    "description": "Page size from the underlying Spring Data page object (when no pagination parameters are sent, the query is unpaged and these fields still reflect that page metadata)."
+                                                },
+                                                "totalResults": {
+                                                    "type": "integer",
+                                                    "format": "int64",
+                                                    "description": "Total number of matching configurations."
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "description": "Generated configuration identifier"
+                                                            },
+                                                            "configName": {
+                                                                "type": "string",
+                                                                "description": "Unique configuration name (stored lower case)"
+                                                            },
+                                                            "bioextractorProviderName": {
+                                                                "type": "string"
+                                                            },
+                                                            "bioextractorProviderVersion": {
+                                                                "type": "string"
+                                                            },
+                                                            "bioModality": {
+                                                                "type": "string"
+                                                            },
+                                                            "createdDateTime": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "description": "Creation timestamp"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "mosip.pms.bioextractor.configurations.get",
+                                            "version": "1.0",
+                                            "responseTime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "pageNo": 0,
+                                                "pageSize": 10,
+                                                "totalResults": 1,
+                                                "data": [
+                                                    {
+                                                        "id": "string",
+                                                        "configName": "string",
+                                                        "bioextractorProviderName": "string",
+                                                        "bioextractorProviderVersion": "string",
+                                                        "bioModality": "string",
+                                                        "createdDateTime": "2019-08-24T14:15:22Z"
+                                                    }
+                                                ]
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configurations-get"
+                }
+            },
+            "post": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "NEW: Create a new bio-extractor configuration",
+                "description": "Creates a new bio-extractor configuration row. **configName** must be **unique** after normalization (trimmed and compared in lower case). **configName**, **bioextractorProviderName**, **bioextractorProviderVersion**, and **bioModality** are required in the inner `request` object; the service stores normalized names/modality in lower case and preserves the provider version string as trimmed input.\r\n\r\n**Request envelope:** `RequestWrapperV2` with `id` set to `mosip.pms.bioextractor.configurations.post`.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2`; `response.id` is the new configuration id and `response.status` is `SUCCESS`.\r\n\r\n**Authorization:** `mosip.role.pms.postbioextractorconfigurations`. Example role in default configuration: PARTNER_ADMIN.",
+                "operationId": "createBioextractorConfiguration",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "required": true,
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "Request API id",
+                                        "example": "mosip.pms.bioextractor.configurations.post"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "example": "1.0"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "description": "Timestamp when the request is sent (UTC)"
+                                    },
+                                    "metadata": {
+                                        "type": "object"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "required": [
+                                            "configName",
+                                            "bioextractorProviderName",
+                                            "bioextractorProviderVersion",
+                                            "bioModality"
+                                        ],
+                                        "properties": {
+                                            "configName": {
+                                                "type": "string",
+                                                "description": "Unique logical name for this configuration"
+                                            },
+                                            "bioextractorProviderName": {
+                                                "type": "string"
+                                            },
+                                            "bioextractorProviderVersion": {
+                                                "type": "string"
+                                            },
+                                            "bioModality": {
+                                                "type": "string",
+                                                "description": "Biometric modality for this configuration"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "Create configuration": {
+                                    "value": {
+                                        "id": "mosip.pms.bioextractor.configurations.post",
+                                        "version": "1.0",
+                                        "requestTime": "2026-04-11T10:00:00.000Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "configName": "default-face-extractor",
+                                            "bioextractorProviderName": "MOSIP",
+                                            "bioextractorProviderVersion": "1.0",
+                                            "bioModality": "face"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "mosip.pms.bioextractor.configurations.post"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "description": "Newly created configuration id"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "SUCCESS"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "mosip.pms.bioextractor.configurations.post",
+                                            "version": "1.0",
+                                            "responseTime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "id": "string",
+                                                "status": "SUCCESS"
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configurations-post"
+                }
+            }
+        },
+        "/bio-extractor-configurations/{bioExtractorConfigurationId}": {
+            "get": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "NEW: Get bio-extractor configuration details by ID",
+                "description": "Returns a single bio-extractor configuration by its generated identifier.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2`; `response` contains `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, and `createdDateTime`. If the id does not exist, `errors` is populated (often still HTTP 200, depending on global exception handling).\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurationdetails`. Example role in default configuration: PARTNER_ADMIN.",
+                "operationId": "getBioextractorConfigurationById",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "required": true,
+                        "description": "Authorization={jwt_token}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioExtractorConfigurationId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Bio-extractor configuration id returned from create or list APIs.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "mosip.pms.bioextractor.configuration.details.get"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "configName": {
+                                                    "type": "string"
+                                                },
+                                                "bioextractorProviderName": {
+                                                    "type": "string"
+                                                },
+                                                "bioextractorProviderVersion": {
+                                                    "type": "string"
+                                                },
+                                                "bioModality": {
+                                                    "type": "string"
+                                                },
+                                                "createdDateTime": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "mosip.pms.bioextractor.configuration.details.get",
+                                            "version": "1.0",
+                                            "responseTime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "response": {
+                                                "id": "string",
+                                                "configName": "string",
+                                                "bioextractorProviderName": "string",
+                                                "bioextractorProviderVersion": "string",
+                                                "bioModality": "string",
+                                                "createdDateTime": "2019-08-24T14:15:22Z"
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configuration-by-id-get"
+                }
+            }
+        },
+        "/partners/{partnerId}/policies/{policyId}/bio-extractors-request": {
+            "post": {
+                "tags": [
+                    "partner-service-controller"
+                ],
+                "summary": "NEW: Submit bio extractors request",
+                "description": "Submits bio extractor details for an **in-progress** partner policy mapping request. Rows are persisted for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{partnerId}` with status **IN_PROGRESS** (see partner policy mapping request APIs).\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that in-progress mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** bio-extractors submission is accepted per partner policy request; subsequent calls return a business error.\r\n- Attribute names in the payload must not duplicate existing extractor configuration for the same partner and policy.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/bioextractors/{policyId}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors`. Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "operationId": "submitBioExtractorsRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner id. Must match the partner that owns the partner policy request referenced in the body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Policy id. Must match the policy on the partner policy request referenced in the body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "type": "string"
+                                    },
+                                    "requesttime": {
+                                        "type": "string"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "nullable": true
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partnerPolicyRequestId": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 36
+                                            },
+                                            "extractors": {
+                                                "type": "array",
+                                                "minItems": 1,
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "attributeName": {
+                                                            "type": "string",
+                                                            "minLength": 1,
+                                                            "maxLength": 128
+                                                        },
+                                                        "biometric": {
+                                                            "type": "string",
+                                                            "minLength": 1,
+                                                            "maxLength": 64
+                                                        },
+                                                        "biometricSubTypes": {
+                                                            "type": "string",
+                                                            "maxLength": 64
+                                                        },
+                                                        "extractorProvider": {
+                                                            "type": "string",
+                                                            "minLength": 1,
+                                                            "maxLength": 128
+                                                        },
+                                                        "extractorProviderVersion": {
+                                                            "type": "string",
+                                                            "maxLength": 8
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "attributeName",
+                                                        "biometric",
+                                                        "extractorProvider"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "partnerPolicyRequestId",
+                                            "extractors"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "request"
+                                ]
+                            },
+                            "examples": {
+                                "Example 1": {
+                                    "value": {
+                                        "id": "string",
+                                        "version": "string",
+                                        "requesttime": "string",
+                                        "metadata": {},
+                                        "request": {
+                                            "partnerPolicyRequestId": "string",
+                                            "extractors": [
+                                                {
+                                                    "attributeName": "string",
+                                                    "biometric": "string",
+                                                    "biometricSubTypes": "string",
+                                                    "extractorProvider": "string",
+                                                    "extractorProviderVersion": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK. On success, `response` contains the confirmation message (for example `Bio extract request submitted successfully.`). Validation and business rule failures are typically returned as HTTP error responses from the API gateway or exception handler.",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapperString"
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "string",
+                                            "version": "string",
+                                            "responsetime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "response": "string",
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "p1p7qg4e8d2ss"
+                }
+            }
+        },
+        "/partners/{partnerId}/policies/{policyId}/credential-types-request": {
+            "post": {
+                "tags": [
+                    "partner-service-controller"
+                ],
+                "summary": "NEW: Submit credential type request",
+                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{partnerId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "operationId": "submitCredentialTypesRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner id. Must match the partner that owns the partner policy request referenced in the body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Policy id. Must match the policy on the partner policy request referenced in the body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "type": "string"
+                                    },
+                                    "requesttime": {
+                                        "type": "string"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "nullable": true
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partnerPolicyRequestId": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 36
+                                            },
+                                            "credentialType": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 128
+                                            }
+                                        },
+                                        "required": [
+                                            "partnerPolicyRequestId",
+                                            "credentialType"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "request"
+                                ]
+                            },
+                            "example": {
+                                "id": "mosip.pms.partners.credentialtypes.request.post",
+                                "version": "1.0",
+                                "requesttime": "2026-01-01T00:00:00.000Z",
+                                "metadata": null,
+                                "request": {
+                                    "partnerPolicyRequestId": "179392",
+                                    "credentialType": "auth"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapperString"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "crdt7y2k9m1pqw"
+                }
+            }
+        },
+        "/partner-policy-requests/{requestId}/bio-extractors-request": {
+            "get": {
+                "summary": "NEW: Get bio-extractor requests for a partner-policy request",
+                "description": "Returns all bio-extractor request rows submitted for the partner policy mapping identified by `{requestId}`.\r\n\r\n**Path parameter:** `{requestId}` is the **business** partner policy request identifier (`pms.partner_policy_request.req_id`), the same value you send as `partnerPolicyRequestId` when calling `POST /partners/{partnerId}/policies/{policyId}/bio-extractors-request`.\r\n\r\n**Response shape:** `ResponseWrapperV2`-style envelope. Top-level `partnerPolicyRequestId` is the internal partner policy request key; `statusCode` reflects the partner policy request status. `response.extractors` lists extractor rows in creation order. If no rows exist, `response.extractors` is an **empty array** (still HTTP 200).\r\n\r\n**Errors:** Some failures populate the `errors` array while still returning HTTP 200, depending on server exception handling.\r\n\r\n**Authorization:** `mosip.role.pms.getpartnersbioextractors` (same role key as `GET /partners/{partnerId}/bioextractors/{policyId}`). Example roles in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER.",
+                "operationId": "getPartnerPolicyRequestBioExtractorsRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner policy request business id (`req_id`).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Example: `mosip.pms.partner.policy.request.bioextractors.get`"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Response timestamp (UTC, ISO-8601)"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "nullable": true
+                                        },
+                                        "partnerPolicyRequestId": {
+                                            "type": "string",
+                                            "description": "Internal partner policy request id (`pms.partner_policy_request.id`)"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "description": "Partner policy request status"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "nullable": true,
+                                            "properties": {
+                                                "extractors": {
+                                                    "type": "array",
+                                                    "description": "Bio extractor rows for this partner policy request; empty if none submitted.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "attributeName": {
+                                                                "type": "string"
+                                                            },
+                                                            "biometric": {
+                                                                "type": "string"
+                                                            },
+                                                            "biometricSubTypes": {
+                                                                "type": "string"
+                                                            },
+                                                            "extractorProvider": {
+                                                                "type": "string"
+                                                            },
+                                                            "extractorProviderVersion": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "string",
+                                            "version": "string",
+                                            "responseTime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "partnerPolicyRequestId": "string",
+                                            "statusCode": "string",
+                                            "response": {
+                                                "extractors": [
+                                                    {
+                                                        "attributeName": "string",
+                                                        "biometric": "string",
+                                                        "biometricSubTypes": "string",
+                                                        "extractorProvider": "string",
+                                                        "extractorProviderVersion": "string"
+                                                    }
+                                                ]
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "bioextreqget1a2b3c"
+                },
+                "tags": [
+                    "partner-management-controller"
+                ]
+            },
+            "parameters": [
+                {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "name": "requestId",
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        },
+        "/partner-policy-requests/{requestId}/credential-types-request": {
+            "get": {
+                "tags": [
+                    "partner-management-controller"
+                ],
+                "summary": "NEW: Get credential type request for a partner-policy request",
+                "description": "Returns the credential type submitted for the partner policy mapping identified by `{requestId}`, if any.\r\n\r\n**Path parameter:** `{requestId}` is the **business** partner policy request identifier (`pms.partner_policy_request.req_id`), the same value you send as `partnerPolicyRequestId` when calling `POST /partners/{partnerId}/policies/{policyId}/credential-types-request`.\r\n\r\n**Response shape:** `ResponseWrapperV2`-style envelope. Top-level `partnerPolicyRequestId` is the internal partner policy request key; `statusCode` reflects the partner policy request status. `response.credentialType` is the submitted credential type, or null if no credential-type request row exists yet.\r\n\r\n**Authorization:** `mosip.role.pms.getpartnersbioextractors` (same SpEL role key as the bio-extractors GET by partner-policy request). Example roles in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER.",
+                "operationId": "getPartnerPolicyRequestCredentialTypesRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner policy request business id (`req_id`).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Example: `mosip.pms.partner.policy.request.credential.types.get`"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Response timestamp (UTC, ISO-8601)"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "nullable": true
+                                        },
+                                        "partnerPolicyRequestId": {
+                                            "type": "string",
+                                            "description": "Internal partner policy request id (`pms.partner_policy_request.id`)"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "description": "Partner policy request status"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "nullable": true,
+                                            "properties": {
+                                                "credentialType": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "description": "Credential type from the stored request, or null if none submitted"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "credtypereqget4d5e6f"
+                }
+            }
         }
     },
     "components": {
@@ -10626,6 +11768,108 @@
                         ],
                         "description": "Status of the partner"
                     }
+                }
+            },
+            "RequestWrapperExtractorsDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Request id. Expected value: mosip.pms.partners.bioextractors.request.post",
+                        "example": "mosip.pms.partners.bioextractors.request.post",
+                        "default": "mosip.pms.partners.bioextractors.request.post"
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Request version. Expected value: 1.0",
+                        "example": "1.0",
+                        "default": "1.0"
+                    },
+                    "requesttime": {
+                        "type": "string",
+                        "description": "Current date time in ISO format, when request is being sent.",
+                        "format": "date-time"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "description": "Optional metadata about the request"
+                    },
+                    "request": {
+                        "$ref": "#/components/schemas/ExtractorsDto"
+                    }
+                },
+                "required": [
+                    "id",
+                    "version",
+                    "requesttime",
+                    "request"
+                ],
+                "x-stoplight": {
+                    "id": "q8x1m0c4j2z9a"
+                }
+            },
+            "ExtractorsDto": {
+                "type": "object",
+                "properties": {
+                    "extractors": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "$ref": "#/components/schemas/ExtractorDto"
+                        }
+                    }
+                },
+                "required": [
+                    "extractors"
+                ],
+                "x-stoplight": {
+                    "id": "a7k2n1m0b9v8c"
+                }
+            },
+            "ExtractorDto": {
+                "type": "object",
+                "properties": {
+                    "attributeName": {
+                        "type": "string"
+                    },
+                    "biometric": {
+                        "type": "string",
+                        "description": "Biometric modality, e.g. face, iris, finger"
+                    },
+                    "biometricSubTypes": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional biometric sub types"
+                    },
+                    "extractor": {
+                        "$ref": "#/components/schemas/ExtractorProviderDto"
+                    }
+                },
+                "required": [
+                    "attributeName",
+                    "biometric",
+                    "extractor"
+                ],
+                "x-stoplight": {
+                    "id": "v1c2x3z4b5n6m"
+                }
+            },
+            "ExtractorProviderDto": {
+                "type": "object",
+                "properties": {
+                    "provider": {
+                        "type": "string"
+                    },
+                    "version": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "required": [
+                    "provider"
+                ],
+                "x-stoplight": {
+                    "id": "m6n5b4v3c2x1z"
                 }
             },
             "ResponseWrapperListCertificateDto": {
