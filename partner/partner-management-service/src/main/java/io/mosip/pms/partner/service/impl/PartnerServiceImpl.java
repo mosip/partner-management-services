@@ -1319,8 +1319,7 @@ public class PartnerServiceImpl implements PartnerService {
 			String biometric = extractor.getBiometric().trim().toLowerCase();
 			String expectedModality = null;
 
-			int limit = Math.min(attrs.length, modalities.length);
-			for (int i = 0; i < limit; i++) {
+			for (int i = 0; i < attrs.length; i++) {
 				String attr = attrs[i].toLowerCase();
 				if (attr.equals(attributeName)) {
 					expectedModality = modalities[i].toLowerCase();
