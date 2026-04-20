@@ -2054,7 +2054,6 @@ public class PartnerServiceImpl implements PartnerService {
 					try {
 						if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
 							if (isPartnerAdmin) {
-								// For admin, skip invalid partner rows instead of erroring.
 								continue;
 							}
 							LOGGER.info("Partner Id is null or empty for user id : " + userId);
