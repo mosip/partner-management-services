@@ -16,13 +16,13 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Set;
-import java.util.HashSet;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -1161,12 +1161,12 @@ public class PartnerServiceImpl implements PartnerService {
 			row.setPartId(partnerId);
 			row.setPolicyId(policyId);
 			row.setAttributeName(extractor.getAttributeName());
-			row.setBiometricModality(extractor.getBiometric());
+			row.setBiometricModality(extractor.getBiometric() == null ? null : extractor.getBiometric().trim());
 			if (extractor.getBiometricSubTypes() != null && !extractor.getBiometricSubTypes().isBlank()) {
 				row.setBiometricSubTypes(extractor.getBiometricSubTypes());
 			}
 			row.setExtractorProvider(extractor.getExtractorProvider());
-			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion());
+			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion() == null ? null : extractor.getExtractorProviderVersion().trim());
 			row.setStatusCode(parentStatus);
 			row.setCrBy(getLoggedInUserId());
 			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -1289,11 +1289,51 @@ public class PartnerServiceImpl implements PartnerService {
 	private void validateExtractorForBioExtractRequest(String partnerId, BioExtractorsDto extractor) {
 		if (extractor == null || extractor.getAttributeName() == null || extractor.getAttributeName().isBlank()
 				|| extractor.getBiometric() == null || extractor.getBiometric().isBlank()
-				|| extractor.getExtractorProvider() == null || extractor.getExtractorProvider().isBlank()) {
+				|| extractor.getExtractorProvider() == null || extractor.getExtractorProvider().isBlank()
+				|| extractor.getExtractorProviderVersion() == null || extractor.getExtractorProviderVersion().isBlank()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		}
+
+		try {
+			PartnerUtil.validateAllowedValueFromConfig(environment, "attributeName", extractor.getAttributeName(),
+					"mosip.pms.bioextractor.allowed.attribute.names");
+			PartnerUtil.validateAllowedValueFromConfig(environment, "biometric", extractor.getBiometric(),
+					"mosip.pms.bioextractor.allowed.modalities");
+		} catch (PartnerServiceException ex) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId, "partnerId");
+			throw ex;
+		}
+
+		String allowedAttributeNames = environment.getProperty("mosip.pms.bioextractor.allowed.attribute.names", "");
+		String allowedModalities = environment.getProperty("mosip.pms.bioextractor.allowed.modalities", "");
+
+		if (allowedAttributeNames != null && !allowedAttributeNames.isBlank()
+				&& allowedModalities != null && !allowedModalities.isBlank()) {
+			String[] attrs = Arrays.stream(allowedAttributeNames.split(",")).map(String::trim).filter(s -> !s.isBlank()).toArray(String[]::new);
+			String[] modalities = Arrays.stream(allowedModalities.split(",")).map(String::trim).filter(s -> !s.isBlank()).toArray(String[]::new);
+
+			String attributeName = extractor.getAttributeName().trim().toLowerCase();
+			String biometric = extractor.getBiometric().trim().toLowerCase();
+			String expectedModality = null;
+
+			int limit = Math.min(attrs.length, modalities.length);
+			for (int i = 0; i < limit; i++) {
+				String attr = attrs[i].toLowerCase();
+				if (attr.equals(attributeName)) {
+					expectedModality = modalities[i].toLowerCase();
+					break;
+				}
+			}
+
+			if (expectedModality != null && !expectedModality.equals(biometric)) {
+				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId, "partnerId");
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "biometric", "For attributeName '" + attributeName + "', biometric modality must be '" + expectedModality + "'"));
+			}
 		}
 	}
 

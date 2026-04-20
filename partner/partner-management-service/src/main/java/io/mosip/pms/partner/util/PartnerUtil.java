@@ -6,12 +6,15 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.exception.BatchJobServiceException;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.core.env.Environment;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
+
+import io.mosip.pms.partner.exception.PartnerServiceException;
 
 /**
  * @author sanjeev.shrivastava
@@ -123,6 +126,30 @@ public class PartnerUtil {
 			LOGGER.debug("Missing response data in API call: {}", apiUrl);
 			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
 					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
+		}
+	}
+
+	public static void validateAllowedValueFromConfig(Environment environment, String fieldName, String value,
+			String propertyKey) {
+		String configuredValues = environment == null ? null : environment.getProperty(propertyKey, "");
+		if (configuredValues == null || configuredValues.isBlank()) {
+			return;
+		}
+		String valueForValidation = value == null ? null : value.trim();
+		boolean allowed = valueForValidation != null && !valueForValidation.isBlank()
+				&& Arrays.stream(configuredValues.split(","))
+				.map(String::trim)
+				.filter(s -> !s.isBlank())
+				.anyMatch(v -> v.equalsIgnoreCase(valueForValidation));
+		if (!allowed) {
+			throw new PartnerServiceException(
+					io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(
+							io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							fieldName,
+							"Valid values are: " + configuredValues
+					)
+			);
 		}
 	}
 }

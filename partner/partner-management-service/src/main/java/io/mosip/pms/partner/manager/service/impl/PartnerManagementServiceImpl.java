@@ -1848,6 +1848,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 			if (request.getConfigName() == null || request.getConfigName().isBlank()
 					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
+					|| request.getBioextractorProviderVersion() == null || request.getBioextractorProviderVersion().isBlank()
 					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "Required fields are missing in createBioextractorConfiguration.");
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
@@ -1856,9 +1857,17 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						MISSING_PARTNER_INPUT_PARAMETER.getErrorMessage());
 			}
 
-			String normalizedConfigName = PartnerUtil.trimAndReplace(request.getConfigName()).toLowerCase();
-			if (bioextractorConfigurationRepository.existsByConfigName(normalizedConfigName)) {
-				LOGGER.info("sessionId", "idType", "id", "Duplicate config name found: " + normalizedConfigName);
+			try {
+				PartnerUtil.validateAllowedValueFromConfig(environment, "bioModality", request.getBioModality(),
+						"mosip.pms.bioextractor.allowed.modalities");
+			} catch (PartnerServiceException ex) {
+				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
+				throw ex;
+			}
+
+			String extractorConfigName = request.getConfigName().trim();
+			if (bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(extractorConfigName)) {
+				LOGGER.info("sessionId", "idType", "id", "Duplicate config name found: " + extractorConfigName);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw new PartnerServiceException(
 						DUPLICATE_BIOEXTRACTOR_CONFIG_NAME.getErrorCode(),
@@ -1884,12 +1893,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			entity.setId(id);
-			entity.setConfigName(normalizedConfigName);
-			entity.setBioextractorProviderName(
-					PartnerUtil.trimAndReplace(request.getBioextractorProviderName()).toLowerCase());
-			entity.setBioextractorProviderVersion(
-					PartnerUtil.trimAndReplace(request.getBioextractorProviderVersion()));
-			entity.setBioModality(PartnerUtil.trimAndReplace(request.getBioModality()).toLowerCase());
+			entity.setConfigName(request.getConfigName());
+			entity.setBioextractorProviderName(request.getBioextractorProviderName());
+			entity.setBioextractorProviderVersion(request.getBioextractorProviderVersion());
+			entity.setBioModality(request.getBioModality() == null ? null : request.getBioModality().trim());
 			entity.setCrBy(getUserId());
 			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 
