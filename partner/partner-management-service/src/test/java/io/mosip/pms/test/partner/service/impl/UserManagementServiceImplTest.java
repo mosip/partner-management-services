@@ -8,6 +8,7 @@ import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.repository.UserDetailsRepository;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
 import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
@@ -32,8 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -69,6 +75,11 @@ public class UserManagementServiceImplTest {
 		ReflectionTestUtils.setField(userManagementServiceImpl, "putNotificationsSeenTimestampId", "put.notification.id");
 		ReflectionTestUtils.setField(userManagementServiceImpl, "getNotificationsSeenTimestampId", "get.notification.id");
 	}
+
+	@After
+	public void tearDown() {
+		SecurityContextHolder.clearContext();
+	}
 	
 	@Test
 	public void registerUserTest() {
@@ -78,7 +89,9 @@ public class UserManagementServiceImplTest {
 		userDto.setName("PARTNER");
 		userDto.setMobile("partner@gmail.com");
 		Mockito.doReturn(userDto).when(keycloakImpl).registerUser(registrationRequest);
-		userManagementServiceImpl.registerUser(registrationRequest);
+		MosipUserDto result = userManagementServiceImpl.registerUser(registrationRequest);
+		assertNotNull(result);
+		verify(keycloakImpl).registerUser(registrationRequest);
 	}
 
 	@Test
@@ -704,6 +717,50 @@ public class UserManagementServiceImplTest {
 		savedUserDetails.setConsentGivenDtimes(LocalDateTime.now());
 		when(userDetailsRepository.save(any())).thenReturn(savedUserDetails);
 		userManagementServiceImpl.saveUserConsent();
+	}
+
+	@Test
+	public void updateNotificationsSeenTimestamp_whenSaveThrows_setsGenericError() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		UserDetails userDetails = new UserDetails();
+		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
+		when(userDetailsRepository.save(any())).thenThrow(new RuntimeException("save failed"));
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+
+		ResponseWrapperV2<NotificationsSeenResponseDto> response =
+				userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+
+		assertNotNull(response);
+		assertTrue(response.getErrors() != null && !response.getErrors().isEmpty());
+		assertEquals(ErrorCode.UPDATE_NOTIFICATIONS_SEEN_TIME_ERROR.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getNotificationsSeenTimestamp_whenRepositoryThrowsAfterAccess_setsGenericError() {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(userDetailsRepository.findByUserId(anyString())).thenThrow(new RuntimeException("db failure"));
+
+		ResponseWrapperV2<NotificationsSeenResponseDto> response =
+				userManagementServiceImpl.getNotificationsSeenTimestamp("any-user");
+
+		assertNotNull(response);
+		assertTrue(response.getErrors() != null && !response.getErrors().isEmpty());
+		assertEquals(ErrorCode.GET_NOTIFICATIONS_SEEN_TIME_ERROR.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
 	}
 
 	@Test

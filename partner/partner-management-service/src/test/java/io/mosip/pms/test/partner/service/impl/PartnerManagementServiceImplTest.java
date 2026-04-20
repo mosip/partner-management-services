@@ -27,6 +27,7 @@ import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.json.simple.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -165,6 +166,11 @@ public class PartnerManagementServiceImplTest {
 	@MockBean
 	KeyManagerHelper keyManagerHelper;
 	
+	@After
+	public void tearDownSecurityContext() {
+		SecurityContextHolder.clearContext();
+	}
+
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -2904,5 +2910,280 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getResponse());
 		assertEquals("euin", resp.getResponse().getCredentialType());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test(expected = PartnerManagerServiceException.class)
+	public void getPartners_emptyResult_throwsPartnerManagerServiceException() {
+		when(partnerRepository.findAll()).thenReturn(Collections.emptyList());
+		partnerManagementImpl.getPartners(Optional.empty());
+	}
+
+	@Test
+	public void getPartners_findAll_mapsPartnersAndLogoUrl() {
+		Partner p = buildPartnerForGetPartners(false);
+		when(partnerRepository.findAll()).thenReturn(Collections.singletonList(p));
+
+		PartnerDetailsResponse resp = partnerManagementImpl.getPartners(Optional.empty());
+
+		assertNotNull(resp);
+		assertNotNull(resp.getPartners());
+		assertEquals(1, resp.getPartners().size());
+		assertEquals("p1", resp.getPartners().get(0).getPartnerID());
+		assertEquals("http://logo", resp.getPartners().get(0).getLogoUrl());
+		Mockito.verify(partnerRepository).findAll();
+	}
+
+	@Test
+	public void getPartners_blankPartnerTypeUsesFindAll() {
+		Partner p = buildPartnerForGetPartners(false);
+		when(partnerRepository.findAll()).thenReturn(Collections.singletonList(p));
+
+		PartnerDetailsResponse resp = partnerManagementImpl.getPartners(Optional.of("   "));
+
+		assertNotNull(resp);
+		assertEquals(1, resp.getPartners().size());
+		Mockito.verify(partnerRepository).findAll();
+		Mockito.verify(partnerRepository, Mockito.never()).findByPartnerType(anyString());
+	}
+
+	@Test
+	public void getPartners_findByPartnerType_whenTypeProvided() {
+		Partner p = buildPartnerForGetPartners(false);
+		when(partnerRepository.findByPartnerType("Auth_Partner")).thenReturn(Collections.singletonList(p));
+
+		PartnerDetailsResponse resp = partnerManagementImpl.getPartners(Optional.of("Auth_Partner"));
+
+		assertNotNull(resp);
+		assertEquals(1, resp.getPartners().size());
+		Mockito.verify(partnerRepository).findByPartnerType("Auth_Partner");
+	}
+
+	@Test
+	public void getPartners_decryptsWhenEmailIdHashPresent() {
+		Partner p = buildPartnerForGetPartners(true);
+		when(partnerRepository.findAll()).thenReturn(Collections.singletonList(p));
+		when(keyManagerHelper.decryptData(anyString())).thenReturn("decrypted-value");
+
+		PartnerDetailsResponse resp = partnerManagementImpl.getPartners(Optional.empty());
+
+		assertEquals("decrypted-value", resp.getPartners().get(0).getEmailId());
+		assertEquals("decrypted-value", resp.getPartners().get(0).getContactNumber());
+		assertEquals("decrypted-value", resp.getPartners().get(0).getAddress());
+		Mockito.verify(keyManagerHelper, Mockito.times(3)).decryptData(anyString());
+	}
+
+	@Test
+	public void getPartners_validAdditionalInfo_parsesJson() {
+		Partner p = buildPartnerForGetPartners(false);
+		p.setAdditionalInfo("{\"k\":\"v\"}");
+		when(partnerRepository.findAll()).thenReturn(Collections.singletonList(p));
+
+		PartnerDetailsResponse resp = partnerManagementImpl.getPartners(Optional.empty());
+
+		assertNotNull(resp.getPartners().get(0).getAdditionalInfo());
+	}
+
+	@Test(expected = PartnerManagerServiceException.class)
+	public void getPartners_invalidAdditionalInfo_throws() {
+		Partner p = buildPartnerForGetPartners(false);
+		p.setAdditionalInfo("not-json{{{");
+		when(partnerRepository.findAll()).thenReturn(Collections.singletonList(p));
+		partnerManagementImpl.getPartners(Optional.empty());
+	}
+
+	private Partner buildPartnerForGetPartners(boolean encrypted) {
+		Partner p = new Partner();
+		p.setId("p1");
+		p.setIsActive(true);
+		p.setName("Org");
+		p.setContactNo("999");
+		p.setEmailId("mail@test.com");
+		p.setAddress("addr line");
+		p.setPartnerTypeCode("Auth_Partner");
+		p.setLogoUrl("http://logo");
+		if (encrypted) {
+			p.setEmailIdHash("hash");
+		} else {
+			p.setEmailIdHash(null);
+		}
+		p.setAdditionalInfo(null);
+		return p;
+	}
+
+	@Test
+	public void getSortColumn_returnsMappedValueOrAlias() {
+		Map<String, String> map = new HashMap<>();
+		map.put("status", "status_col");
+		assertEquals("status_col", partnerManagementImpl.getSortColumn(map, "status"));
+		assertEquals("unknownAlias", partnerManagementImpl.getSortColumn(map, "unknownAlias"));
+	}
+
+	@Test
+	public void updateAPIKey_partnerIdNotFound_returnsError() {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto =
+				new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+		when(partnerServiceRepository.findById("missing-partner")).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("missing-partner", "policy456", "apiKeyName", requestDto);
+
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+		assertEquals(ErrorCode.PARTNER_ID_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void updateAPIKey_policyIdNotFound_returnsError() {
+		io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto requestDto =
+				new io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto();
+		requestDto.setStatus("De-active");
+		Partner partner = new Partner();
+		partner.setId("partner123");
+		when(partnerServiceRepository.findById("partner123")).thenReturn(Optional.of(partner));
+		when(authPolicyRepository.findById("missing-policy")).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
+				partnerManagementImpl.updateAPIKey("partner123", "missing-policy", "apiKeyName", requestDto);
+
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+		assertEquals(ErrorCode.POLICY_NOT_EXIST_EXCEPTION.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_matchingUser_success() throws Exception {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Partner partner = new Partner();
+		partner.setId("123");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		when(partnerPolicyBioextractRequestRepository
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc("mapping-1"))
+				.thenReturn(Collections.emptyList());
+
+		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestBioExtractors("req-1");
+
+		assertNotNull(resp);
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_userMismatch_returnsError() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Partner partner = new Partner();
+		partner.setId("other-partner");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+
+		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestBioExtractors("req-1");
+
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestBioExtractors_nullRows_treatedAsEmptyList() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+
+		Partner partner = new Partner();
+		partner.setId("partner-1");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		when(partnerPolicyBioextractRequestRepository
+				.findByPartnerPolicyRequestIdOrderByCrDtimesAsc("mapping-1"))
+				.thenReturn(null);
+
+		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestBioExtractors("req-1");
+
+		assertNotNull(resp.getResponse());
+		assertNotNull(resp.getResponse().getExtractors());
+		assertTrue(resp.getResponse().getExtractors().isEmpty());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestCredentialTypes_optionalRowEmpty() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+
+		Partner partner = new Partner();
+		partner.setId("partner-1");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		when(partnerPolicyCredentialTypeRequestRepository
+				.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc("mapping-1"))
+				.thenReturn(Optional.empty());
+
+		io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestCredentialTypes("req-1");
+
+		assertNotNull(resp.getResponse());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		org.junit.Assert.assertNull(resp.getResponse().getCredentialType());
+	}
+
+	@Test
+	public void getPartnerPolicyRequestCredentialTypes_loggedInFilterRequired_matchingUser() throws Exception {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Partner partner = new Partner();
+		partner.setId("123");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setStatusCode("InProgress");
+		parent.setPartner(partner);
+
+		PartnerPolicyCredentialTypeRequest row = new PartnerPolicyCredentialTypeRequest();
+		row.setCredentialType("   ");
+
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		when(partnerPolicyCredentialTypeRequestRepository
+				.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc("mapping-1"))
+				.thenReturn(Optional.of(row));
+
+		io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2 resp =
+				partnerManagementImpl.getPartnerPolicyRequestCredentialTypes("req-1");
+
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		org.junit.Assert.assertNull(resp.getResponse().getCredentialType());
 	}
 }
