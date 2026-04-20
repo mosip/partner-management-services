@@ -518,6 +518,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
 		</classes>
 	</test>
+	<test name="CreateBioExtractorConfiguration">
+		<parameter name="ymlFile"
+			value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
 
 	<test name="AddBioExtractors">
 		<parameter name="ymlFile"
