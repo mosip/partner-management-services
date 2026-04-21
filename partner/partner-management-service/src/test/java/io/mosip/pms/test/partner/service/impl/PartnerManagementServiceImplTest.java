@@ -3047,7 +3047,8 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_matchingUser_success() throws Exception {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
