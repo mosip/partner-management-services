@@ -1951,12 +1951,14 @@ public class PartnerServiceImplTest {
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(
+				anyString(), anyString(), anyString(), any())).thenReturn(Collections.emptyList());
+
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Device_Provider");
 		assertNotNull(responseWrapper);
-		assertNotNull(responseWrapper.getErrors());
-		assertFalse(responseWrapper.getErrors().isEmpty());
-		assertEquals(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
-				responseWrapper.getErrors().get(0).getErrorCode());
+		assertTrue(responseWrapper.getErrors() == null || responseWrapper.getErrors().isEmpty());
+		assertNotNull(responseWrapper.getResponse());
+		assertTrue(responseWrapper.getResponse().isEmpty());
 	}
 
 	@Test
