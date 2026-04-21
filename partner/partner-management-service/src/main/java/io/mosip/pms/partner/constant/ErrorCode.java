@@ -117,7 +117,7 @@ public enum ErrorCode {
 	PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN("PMS_POLICY_ERROR_030",
 			"For Partner Admin, partnerType is mandatory. Allowed values: MISP_Partner, ABIS_Partner, Manual_Adjudication."),
 	PARTNER_TYPE_MISMATCH_FOR_USER("PMS_POLICY_ERROR_031",
-			"Invalid partnerType '%s' for the logged-in user. Please use your own partnerType or omit partnerType."),
+			"Invalid partnerType for logged in user"),
 	FETCH_PARTNER_POLICY_BIOEXTRACTORS_ERROR("PMS_POLICY_ERROR_029", "Error while fetching bio-extractor requests for partner policy request."),
 	PMS_CONSENT_ERR("PMS_CONSENT_ERROR_001", "Error while fetching partner consent."),
 	PMS_CONSENT_UNABLE_TO_ADD("PMS_CONSENT_ERROR_002", "Error while saving partner consent."),

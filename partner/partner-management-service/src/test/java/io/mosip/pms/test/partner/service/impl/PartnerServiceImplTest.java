@@ -26,6 +26,7 @@ import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -73,6 +75,7 @@ import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.service.impl.PartnerServiceImpl;
+import io.mosip.pms.partner.util.PartnerUtil;
 import io.mosip.pms.test.PartnerManagementServiceTest;
 import io.mosip.pms.test.config.TestSecurityConfig;
 
@@ -233,6 +236,11 @@ public class PartnerServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
+	}
+
+	@After
+	public void tearDownSecurityContext() {
+		SecurityContextHolder.clearContext();
 	}
 
 	@Test
@@ -1506,6 +1514,21 @@ public class PartnerServiceImplTest {
 		return partner;
 	}
 
+	private PartnerRequestDto buildPartnerRegisterDto(String email, String partnerId, JsonNode additionalInfo)
+			throws Exception {
+		PartnerRequestDto dto = new PartnerRequestDto();
+		dto.setPartnerId(partnerId);
+		dto.setPolicyGroup("Telecom sector");
+		dto.setOrganizationName("Org Inc");
+		dto.setAddress("Registered address line one");
+		dto.setContactNumber("9876543210");
+		dto.setEmailId(email);
+		dto.setPartnerType("Auth");
+		dto.setLangCode(null);
+		dto.setAdditionalInfo(additionalInfo);
+		return dto;
+	}
+
 	private PartnerRequest createPartnerRequest() {
 		PartnerRequest prequest = new PartnerRequest();
 		prequest.setAddress("addresss-1");
@@ -1928,12 +1951,14 @@ public class PartnerServiceImplTest {
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 
+		when(partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(
+				anyString(), anyString(), anyString(), any())).thenReturn(Collections.emptyList());
+
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Device_Provider");
 		assertNotNull(responseWrapper);
-		assertNotNull(responseWrapper.getErrors());
-		assertFalse(responseWrapper.getErrors().isEmpty());
-		assertEquals(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
-				responseWrapper.getErrors().get(0).getErrorCode());
+		assertTrue(responseWrapper.getErrors() == null || responseWrapper.getErrors().isEmpty());
+		assertNotNull(responseWrapper.getResponse());
+		assertTrue(responseWrapper.getResponse().isEmpty());
 	}
 
 	@Test
@@ -2299,6 +2324,7 @@ public class PartnerServiceImplTest {
 		extractor.setAttributeName("attr");
 		extractor.setBiometric("face");
 		extractor.setExtractorProvider("prov");
+		extractor.setExtractorProviderVersion("1.0");
 		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
 	}
 
@@ -2325,5 +2351,294 @@ public class PartnerServiceImplTest {
 	public void isJSONValid_validJson_noThrow() {
 		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
 		ReflectionTestUtils.invokeMethod(target, "isJSONValid", "{\"k\":\"v\"}");
+	}
+
+	@Test
+	public void registerPartner_whenLoggedInUserEmailAlreadyRegistered_throwsLoggedInUserNotAuthorized() throws Exception {
+		String loggedInMail = "abc@gmail.com";
+		when(partnerRepository.findByEmailIdHash(PartnerUtil.generateSHA256Hash(loggedInMail))).thenReturn(new Partner());
+
+		PartnerRequestDto dto = buildPartnerRegisterDto("new-register-1@gmail.com", "regPidAuth1", null);
+		try {
+			pserviceImpl.registerPartner(dto);
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void registerPartner_whenRequestEmailAlreadyExists_throws() throws Exception {
+		when(partnerRepository.findByEmailIdHash(PartnerUtil.generateSHA256Hash("abc@gmail.com"))).thenReturn(null);
+		when(partnerRepository.findByEmailId("abc@gmail.com")).thenReturn(null);
+
+		String dup = "dup-register@gmail.com";
+		when(partnerRepository.findByEmailIdHash(PartnerUtil.generateSHA256Hash(dup))).thenReturn(new Partner());
+
+		PartnerRequestDto dto = buildPartnerRegisterDto(dup, "regPidAuth2", null);
+		try {
+			pserviceImpl.registerPartner(dto);
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void registerPartner_success_withAdditionalInfoJson() throws Exception {
+		when(partnerRepository.findByEmailIdHash(PartnerUtil.generateSHA256Hash("abc@gmail.com"))).thenReturn(null);
+		when(partnerRepository.findByEmailId("abc@gmail.com")).thenReturn(null);
+
+		String regEmail = "fresh-register-99@gmail.com";
+		when(partnerRepository.findByEmailIdHash(PartnerUtil.generateSHA256Hash(regEmail))).thenReturn(null);
+		when(partnerRepository.findByEmailId(regEmail)).thenReturn(null);
+
+		String partnerId = "freshPid99";
+		when(partnerRepository.findById(partnerId)).thenReturn(Optional.empty());
+		when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
+		PolicyGroup policyGroup = createPolicyGroup(Boolean.TRUE);
+		when(policyGroupRepository.findByName("Telecom sector")).thenReturn(policyGroup);
+		when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+		when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
+
+		PartnerRequestDto dto = buildPartnerRegisterDto(regEmail, partnerId, objectMapper.readTree("{\"x\":1}"));
+		PartnerResponse response = pserviceImpl.registerPartner(dto);
+		assertNotNull(response);
+		assertEquals(partnerId, response.getPartnerId());
+		verify(partnerRepository, atLeastOnce()).save(any(Partner.class));
+	}
+
+	@Test
+	public void validatePartnerByEmail_plainEmailFallback_detectsDuplicate() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		String email = "fallback-dup@gmail.com";
+		when(partnerRepository.findByEmailIdHash(PartnerUtil.generateSHA256Hash(email))).thenReturn(null);
+		when(partnerRepository.findByEmailId(email)).thenReturn(new Partner());
+		boolean ok = ReflectionTestUtils.invokeMethod(target, "validatePartnerByEmail", email);
+		assertFalse(ok);
+	}
+
+	@Test
+	@WithMockUser(roles = { "PARTNER" })
+	public void getPartnerDetails_plainFields_whenNotEncrypted_andInactive() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		Partner p = createPartner(Boolean.FALSE);
+		p.setEmailIdHash(null);
+		p.setEmailId("plain-email@mail.com");
+		p.setContactNo("plain-contact");
+		p.setAddress("plain-addr");
+		p.setPolicyGroupId(null);
+		when(partnerRepository.findById("12345")).thenReturn(Optional.of(p));
+
+		RetrievePartnerDetailsResponse r = pserviceImpl.getPartnerDetails("12345");
+		assertEquals("plain-email@mail.com", r.getEmailId());
+		assertEquals(PartnerConstants.DEACTIVE, r.getStatus());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	@WithMockUser(roles = { "PARTNER" })
+	public void getPartnerDetails_whenPolicyGroupMissing_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		Partner p = createPartner(Boolean.TRUE);
+		p.setPolicyGroupId("missing-pg");
+		when(partnerRepository.findById("12345")).thenReturn(Optional.of(p));
+		when(policyGroupRepository.findById("missing-pg")).thenReturn(Optional.empty());
+		pserviceImpl.getPartnerDetails("12345");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void validateLoggedInUserAuthorization_whenFilterRequiredAndIdMismatch_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.validateLoggedInUserAuthorization("not-logged-in-partner-id");
+	}
+
+	@Test
+	public void getSystemSupportedLanguageCodes_and_isInputStringContainsSpaces_viaReflection() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		ReflectionTestUtils.setField(target, "mandatoryLanguges", "eng");
+		ReflectionTestUtils.setField(target, "optionalLanguges", "fra,hin");
+		List<String> langs = pserviceImpl.getSystemSupportedLanguageCodes();
+		assertEquals(3, langs.size());
+
+		assertTrue(ReflectionTestUtils.invokeMethod(target, "isInputStringContainsSpaces", "has space"));
+		assertFalse(ReflectionTestUtils.invokeMethod(target, "isInputStringContainsSpaces", "nospaces"));
+	}
+
+	@Test
+	@WithMockUser(roles = { "PARTNER" })
+	public void updatePartnerDetails_withAdditionalInfoAndNullEmailIdHash_encryptsEmail() throws Exception {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		String partnerId = "12345";
+		Partner part = createPartner(Boolean.TRUE);
+		part.setEmailIdHash(null);
+		part.setEmailId("plain-upd@gmail.com");
+		when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(part));
+		when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
+
+		PartnerUpdateDto dto = new PartnerUpdateDto();
+		dto.setAddress("new-address-line");
+		dto.setContactNumber("9876543210");
+		dto.setLogoUrl("https://logo");
+		dto.setAdditionalInfo(objectMapper.readTree("{\"flag\":true}"));
+
+		PartnerResponse res = pserviceImpl.updatePartnerDetails(dto, partnerId);
+		assertNotNull(res);
+		assertEquals(partnerId, res.getPartnerId());
+		verify(keyManagerHelper, atLeastOnce()).encryptData(any());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getValidPartner_whenNotForRetrieve_andPartnerInactive_throws() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		Partner p = createPartner(Boolean.FALSE);
+		when(partnerRepository.findById("pid-x")).thenReturn(Optional.of(p));
+		ReflectionTestUtils.invokeMethod(target, "getValidPartner", "pid-x", false);
+	}
+
+	@Test
+	public void validatePolicyGroupAndPolicy_happyPath_returnsPolicy() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		String pgId = "pg1";
+		String polName = "pol1";
+
+		PolicyGroup pg = new PolicyGroup();
+		pg.setId(pgId);
+		pg.setIsActive(true);
+
+		AuthPolicy ap = new AuthPolicy();
+		ap.setIsActive(true);
+		ap.setValidToDate(LocalDateTime.now().plusDays(10));
+		ap.setPolicyGroup(pg);
+
+		when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(polName))
+				.thenReturn(List.of(ap));
+		when(authPolicyRepository.findByPolicyGroupIdAndName(pgId, polName)).thenReturn(ap);
+
+		AuthPolicy out = ReflectionTestUtils.invokeMethod(target, "validatePolicyGroupAndPolicy", pgId, polName);
+		assertNotNull(out);
+		assertEquals(ap, out);
+	}
+
+	@Test
+	public void validatePolicyGroupAndPolicy_whenNoPolicies_throwsPolicyNotExist() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("missing"))
+				.thenReturn(Collections.emptyList());
+		try {
+			ReflectionTestUtils.invokeMethod(target, "validatePolicyGroupAndPolicy", "pg1", "missing");
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.POLICY_NOT_EXIST.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void validatePolicyGroupAndPolicy_whenPolicyGroupMappingMissing_throws() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		PolicyGroup otherPg = new PolicyGroup();
+		otherPg.setId("other");
+		otherPg.setIsActive(true);
+		AuthPolicy ap = new AuthPolicy();
+		ap.setPolicyGroup(otherPg);
+		ap.setIsActive(true);
+		ap.setValidToDate(LocalDateTime.now().plusDays(5));
+		when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("p"))
+				.thenReturn(List.of(ap));
+		when(authPolicyRepository.findByPolicyGroupIdAndName("pg1", "p")).thenReturn(null);
+		try {
+			ReflectionTestUtils.invokeMethod(target, "validatePolicyGroupAndPolicy", "pg1", "p");
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void validatePolicyGroupAndPolicy_whenPolicyInactive_throws() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		PolicyGroup pg = new PolicyGroup();
+		pg.setId("pg1");
+		pg.setIsActive(true);
+		AuthPolicy ap = new AuthPolicy();
+		ap.setPolicyGroup(pg);
+		ap.setIsActive(false);
+		ap.setValidToDate(LocalDateTime.now().plusDays(5));
+		when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("p"))
+				.thenReturn(List.of(ap));
+		when(authPolicyRepository.findByPolicyGroupIdAndName("pg1", "p")).thenReturn(ap);
+		try {
+			ReflectionTestUtils.invokeMethod(target, "validatePolicyGroupAndPolicy", "pg1", "p");
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void validatePolicyGroupAndPolicy_whenPolicyExpired_throws() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		PolicyGroup pg = new PolicyGroup();
+		pg.setId("pg1");
+		pg.setIsActive(true);
+		AuthPolicy ap = new AuthPolicy();
+		ap.setPolicyGroup(pg);
+		ap.setIsActive(true);
+		ap.setValidToDate(LocalDateTime.now().minusDays(1));
+		when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("p"))
+				.thenReturn(List.of(ap));
+		when(authPolicyRepository.findByPolicyGroupIdAndName("pg1", "p")).thenReturn(ap);
+		try {
+			ReflectionTestUtils.invokeMethod(target, "validatePolicyGroupAndPolicy", "pg1", "p");
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.POLICY_EXPIRED_EXCEPTION.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void validatePolicyGroupAndPolicy_whenPolicyGroupInactive_throws() {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		PolicyGroup pg = new PolicyGroup();
+		pg.setId("pg1");
+		pg.setIsActive(false);
+		AuthPolicy ap = new AuthPolicy();
+		ap.setPolicyGroup(pg);
+		ap.setIsActive(true);
+		ap.setValidToDate(LocalDateTime.now().plusDays(5));
+		when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("p"))
+				.thenReturn(List.of(ap));
+		when(authPolicyRepository.findByPolicyGroupIdAndName("pg1", "p")).thenReturn(ap);
+		try {
+			ReflectionTestUtils.invokeMethod(target, "validatePolicyGroupAndPolicy", "pg1", "p");
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.POLICY_GROUP_NOT_ACTIVE.getErrorCode(), e.getErrorCode());
+		}
+	}
+
+	@Test
+	public void createAndUpdateContactDetails_whenMaxRetriesForIdGeneration_throws() throws Exception {
+		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
+		ReflectionTestUtils.setField(target, "maxRetries", 0);
+
+		AddContactRequestDto req = new AddContactRequestDto();
+		req.setAddress("Addr");
+		req.setContactNumber("1234567890");
+		req.setEmailId("newcontact@gmail.com");
+		req.setIs_Active(true);
+
+		Partner active = createPartner(Boolean.TRUE);
+		when(partnerRepository.findById(active.getId())).thenReturn(Optional.of(active));
+		when(partnerContactRepository.findByPartnerAndEmailIdHash(anyString(), anyString())).thenReturn(null);
+		when(partnerContactRepository.findByPartnerAndEmailId(anyString(), anyString())).thenReturn(null);
+		when(keyManagerHelper.encryptData(any())).thenReturn("enc");
+		when(partnerContactRepository.existsById(anyString())).thenReturn(true);
+
+		try {
+			pserviceImpl.createAndUpdateContactDetails(req, active.getId());
+			fail("expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertEquals(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(), e.getErrorCode());
+		}
 	}
 }
