@@ -945,8 +945,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// convert additional config as String and set to client detail
 			ObjectMapper mapper = new ObjectMapper();
-			// Ensure consent_expire_in_mins is persisted as a NUMBER (eSignet expectation),
-			// even though we accept it as a String in the request.
 			var additionalConfigNode = mapper.valueToTree(createRequest.getAdditionalConfig());
 			Integer consentExpireInMins = parseConsentExpireInMins(createRequest.getAdditionalConfig());
 			if (consentExpireInMins != null && additionalConfigNode.isObject()) {
