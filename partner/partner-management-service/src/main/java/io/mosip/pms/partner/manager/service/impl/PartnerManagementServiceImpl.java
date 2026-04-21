@@ -1858,8 +1858,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			try {
-				PartnerUtil.validateAllowedValueFromConfig(environment, "bioModality", request.getBioModality(),
-						"mosip.pms.bioextractor.allowed.modalities");
+				Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
+						environment,
+						"mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
+				if (modalityToAttribute != null && !modalityToAttribute.isEmpty()) {
+					String bioModality = request.getBioModality().trim().toLowerCase();
+					if (!modalityToAttribute.containsKey(bioModality)) {
+						String validModalities = modalityToAttribute.keySet().stream()
+								.reduce((a, b) -> a + ", " + b)
+								.orElse("");
+						throw new PartnerServiceException(
+								io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+								String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+										"bioModality",
+										"Valid values are: " + validModalities));
+					}
+				}
 			} catch (PartnerServiceException ex) {
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw ex;

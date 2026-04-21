@@ -1298,41 +1298,37 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		try {
-			PartnerUtil.validateAllowedValueFromConfig(environment, "attributeName", extractor.getAttributeName(),
-					"mosip.pms.bioextractor.allowed.attribute.names");
-			PartnerUtil.validateAllowedValueFromConfig(environment, "biometric", extractor.getBiometric(),
-					"mosip.pms.bioextractor.allowed.modalities");
-		} catch (PartnerServiceException ex) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId, "partnerId");
-			throw ex;
-		}
-
-		String allowedAttributeNames = environment.getProperty("mosip.pms.bioextractor.allowed.attribute.names", "");
-		String allowedModalities = environment.getProperty("mosip.pms.bioextractor.allowed.modalities", "");
-
-		if (allowedAttributeNames != null && !allowedAttributeNames.isBlank()
-				&& allowedModalities != null && !allowedModalities.isBlank()) {
-			String[] attrs = Arrays.stream(allowedAttributeNames.split(",")).map(String::trim).filter(s -> !s.isBlank()).toArray(String[]::new);
-			String[] modalities = Arrays.stream(allowedModalities.split(",")).map(String::trim).filter(s -> !s.isBlank()).toArray(String[]::new);
-
-			String attributeName = extractor.getAttributeName().trim().toLowerCase();
-			String biometric = extractor.getBiometric().trim().toLowerCase();
-			String expectedModality = null;
-
-			for (int i = 0; i < attrs.length; i++) {
-				String attr = attrs[i].toLowerCase();
-				if (attr.equals(attributeName)) {
-					expectedModality = modalities[i].toLowerCase();
-					break;
-				}
+			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
+					environment,
+					"mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
+			if (modalityToAttribute == null || modalityToAttribute.isEmpty()) {
+				return;
 			}
 
-			if (expectedModality != null && !expectedModality.equals(biometric)) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId, "partnerId");
+			String biometric = extractor.getBiometric().trim().toLowerCase();
+			String attributeName = extractor.getAttributeName().trim().toLowerCase();
+
+			String expectedAttributeName = modalityToAttribute.get(biometric);
+			if (expectedAttributeName == null || expectedAttributeName.isBlank()) {
+				String validModalities = modalityToAttribute.keySet().stream()
+						.reduce((a, b) -> a + ", " + b)
+						.orElse("");
 				throw new PartnerServiceException(
 						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "biometric", "For attributeName '" + attributeName + "', biometric modality must be '" + expectedModality + "'"));
+						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "biometric",
+								"Valid values are: " + validModalities));
 			}
+
+			if (!expectedAttributeName.equalsIgnoreCase(attributeName)) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "attributeName",
+								"For biometric '" + biometric + "', attributeName must be '" + expectedAttributeName + "'"));
+			}
+		} catch (PartnerServiceException ex) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw ex;
 		}
 	}
 

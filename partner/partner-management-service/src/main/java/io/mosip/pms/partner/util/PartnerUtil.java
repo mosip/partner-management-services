@@ -10,11 +10,10 @@ import org.springframework.core.env.Environment;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import io.mosip.pms.partner.exception.PartnerServiceException;
 
 /**
  * @author sanjeev.shrivastava
@@ -129,33 +128,34 @@ public class PartnerUtil {
 		}
 	}
 
-	public static void validateAllowedValueFromConfig(Environment environment, String fieldName, String value,
-			String propertyKey) {
-		String configuredValues = environment == null ? null : environment.getProperty(propertyKey, "");
-		if (environment == null || propertyKey == null || propertyKey.isBlank()
-				|| configuredValues == null || configuredValues.isBlank()) {
-			return;
+	public static Map<String, String> getAllowedBioextractorModalityAttributeNameMap(
+			Environment environment, String propertyKey) {
+		if (environment == null || propertyKey == null || propertyKey.isBlank()) {
+			return Map.of();
 		}
-		String valueForValidation = value == null ? null : value.trim();
-		String displayValues = Arrays.stream(configuredValues.split(","))
-				.map(String::trim)
-				.filter(s -> !s.isBlank())
-				.reduce((a, b) -> a + ", " + b)
-				.orElse(configuredValues.trim());
-		boolean allowed = valueForValidation != null && !valueForValidation.isBlank()
-				&& Arrays.stream(configuredValues.split(","))
-				.map(String::trim)
-				.filter(s -> !s.isBlank())
-				.anyMatch(v -> v.equalsIgnoreCase(valueForValidation));
-		if (!allowed) {
-			throw new PartnerServiceException(
-					io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
-					String.format(
-							io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
-							fieldName,
-							"Valid values are: " + displayValues
-					)
-			);
+		String raw = environment.getProperty(propertyKey, "");
+		if (raw == null || raw.isBlank()) {
+			return Map.of();
 		}
+
+		Map<String, String> modalityToAttributeNameMap = new LinkedHashMap<>();
+
+		for (String modalityAttributePairs : raw.split(",")) {
+			if (modalityAttributePairs == null || modalityAttributePairs.isBlank()) {
+				continue;
+			}
+
+			String[] parts = Arrays.stream(modalityAttributePairs.split(":"))
+					.map(String::trim)
+					.filter(s -> !s.isBlank())
+					.toArray(String[]::new);
+
+			for (int i = 0; i + 1 < parts.length; i += 2) {
+				String modality = parts[i].toLowerCase();
+				String attributeName = parts[i + 1].toLowerCase();
+				modalityToAttributeNameMap.put(modality, attributeName);
+			}
+		}
+		return modalityToAttributeNameMap;
 	}
 }
