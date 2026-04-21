@@ -944,7 +944,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
 			// convert additional config as String and set to client detail
-			String additionalConfig = normalizeConsentExpiryInAdditionalConfig(createRequest.getAdditionalConfig());
+			String additionalConfig = serializeConsentExpiry(createRequest.getAdditionalConfig());
 			clientDetail.setAdditionalConfig(additionalConfig);
 
 			processedClientDetail.setClientDetail(clientDetail);
@@ -952,7 +952,8 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return processedClientDetail;
 	}
 
-	private String normalizeConsentExpiryInAdditionalConfig(AdditionalConfigDto additionalConfigDto) throws JsonProcessingException {
+	private String serializeConsentExpiry(AdditionalConfigDto additionalConfigDto)
+			throws JsonProcessingException {
 		var additionalConfigNode = objectMapper.valueToTree(additionalConfigDto);
 		Integer consentExpireInMins = parseConsentExpireInMins(additionalConfigDto);
 		if (consentExpireInMins != null && additionalConfigNode.isObject()) {
@@ -1047,9 +1048,6 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			return null;
 		}
 		String value = raw.trim();
-		if (value.isEmpty()) {
-			return null;
-		}
 		try {
 			return Integer.parseInt(value);
 		} catch (NumberFormatException e) {
@@ -1282,7 +1280,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
 
             // convert additional config as String and set to client detail
-            String additionalConfig = normalizeConsentExpiryInAdditionalConfig(updateRequest.getAdditionalConfig());
+            String additionalConfig = serializeConsentExpiry(updateRequest.getAdditionalConfig());
             clientDetail.setAdditionalConfig(additionalConfig);
         }
         return clientDetail;
