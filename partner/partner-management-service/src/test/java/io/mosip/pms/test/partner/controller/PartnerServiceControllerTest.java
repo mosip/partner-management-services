@@ -194,6 +194,21 @@ public class PartnerServiceControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void submitBioExtractorsRequest_withNullExtractorEntry_shouldReturnBadRequest() throws Exception {
+		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		List<BioExtractorsDto> extractors = new ArrayList<>();
+		extractors.add(null);
+		wrapper.getRequest().setExtractors(extractors);
+
+		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors").isNotEmpty());
+	}
+
+	@Test
 	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
 		PreAuthorize preAuthorize = PartnerManagementController.class
 				.getMethod("getPartnerPolicyRequestBioExtractors", String.class)
