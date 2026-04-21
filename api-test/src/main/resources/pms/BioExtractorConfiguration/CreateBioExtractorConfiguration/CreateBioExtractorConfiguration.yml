@@ -226,7 +226,7 @@ CreateBioExtractorConfiguration:
     role: partneradmin
     restMethod: post
     inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
-    outputTemplate: pms/error
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
     input: '{
       "id": "mosip.pms.bioextractor.configurations.post",
       "version": "1.0",
@@ -237,11 +237,7 @@ CreateBioExtractorConfiguration:
       "bioModality": "face"
 }'
     output: '{
-      "errors": [
-        {
-           "errorCode": "PMS_REQUEST_ERROR_007"
-        }
-    ]
+      "status": "SUCCESS"
 }'
   Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderName:
     endPoint: /v1/partnermanager/bio-extractor-configurations
@@ -334,7 +330,7 @@ CreateBioExtractorConfiguration:
     role: partneradmin
     restMethod: post
     inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
-    outputTemplate: pms/error
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
     input: '{
       "id": "mosip.pms.bioextractor.configurations.post",
       "version": "1.0",
@@ -345,11 +341,7 @@ CreateBioExtractorConfiguration:
       "bioModality": "face"
 }'
     output: '{
-      "errors": [
-        {
-           "errorCode": "PMS_REQUEST_ERROR_007"
-        }
-    ]
+      "status": "SUCCESS"
 }'
   Pms_CreateBioExtractorConfiguration_With_BioextractorProviderVersion_As_Test:
     endPoint: /v1/partnermanager/bio-extractor-configurations
@@ -459,7 +451,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_REQUEST_ERROR_007"
+           "errorCode": "PMS_PRT_099"
         }
     ]
 }'
