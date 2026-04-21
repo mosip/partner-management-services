@@ -1058,7 +1058,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					String.format(
 							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
 							"consent_expire_in_mins",
-							"Value must be an integer greater than or equal to 10 and within the allowed system limits."
+							"Invalid number. Provide a value within the allowed system limits."
 					)
 			);
 		}
