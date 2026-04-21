@@ -945,7 +945,15 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// convert additional config as String and set to client detail
 			ObjectMapper mapper = new ObjectMapper();
-			String additionalConfig = mapper.writeValueAsString(createRequest.getAdditionalConfig());
+			// Ensure consent_expire_in_mins is persisted as a NUMBER (eSignet expectation),
+			// even though we accept it as a String in the request.
+			var additionalConfigNode = mapper.valueToTree(createRequest.getAdditionalConfig());
+			Integer consentExpireInMins = parseConsentExpireInMins(createRequest.getAdditionalConfig());
+			if (consentExpireInMins != null && additionalConfigNode.isObject()) {
+				((com.fasterxml.jackson.databind.node.ObjectNode) additionalConfigNode)
+						.put("consent_expire_in_mins", consentExpireInMins);
+			}
+			String additionalConfig = mapper.writeValueAsString(additionalConfigNode);
 			clientDetail.setAdditionalConfig(additionalConfig);
 
 			processedClientDetail.setClientDetail(clientDetail);
@@ -964,15 +972,16 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
 								additionalConfigDto.getUserinfoResponseType()));
 		}
-		if(additionalConfigDto.getConsentExpireInMins() != null &&
-				additionalConfigDto.getConsentExpireInMins() < 10) {
-				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
-						additionalConfigDto.getConsentExpireInMins());
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
-						clientId);
-				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
-						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
-								additionalConfigDto.getConsentExpireInMins()));
+		Integer consentExpireInMins = parseConsentExpireInMins(additionalConfigDto);
+		if (consentExpireInMins != null && consentExpireInMins < 10) {
+			LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
+					consentExpireInMins);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+					clientId);
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(),
+					ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage()
+			);
 		}
 		// PURPOSE VALIDATION
 		Map<String, Object> purpose = additionalConfigDto.getPurpose();
@@ -1025,6 +1034,32 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// 4. Validate subtitle keys (@none mandatory)
 			validateLanguageKeys(subtitle, "purpose.subTitle", true);
+		}
+	}
+
+	private Integer parseConsentExpireInMins(AdditionalConfigDto additionalConfigDto) {
+		if (additionalConfigDto == null) {
+			return null;
+		}
+		String raw = additionalConfigDto.getConsentExpireInMins();
+		if (raw == null) {
+			return null;
+		}
+		String value = raw.trim();
+		if (value.isEmpty()) {
+			return null;
+		}
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(
+							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"consent_expire_in_mins",
+							"integer value (minutes) >= 10 or not valid"
+					)
+			);
 		}
 	}
 
