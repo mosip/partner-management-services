@@ -179,6 +179,21 @@ public class PartnerServiceControllerTest {
     }
 
 	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void submitBioExtractorsRequest_withInvalidExtractorProvider_shouldReturnInvalidInputError() throws Exception {
+		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
+
+		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].errorCode").value("PMS_REQUEST_ERROR_007"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message")
+						.value(org.hamcrest.Matchers.containsString("extractorProvider")));
+	}
+
+	@Test
 	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
 		PreAuthorize preAuthorize = PartnerManagementController.class
 				.getMethod("getPartnerPolicyRequestBioExtractors", String.class)
