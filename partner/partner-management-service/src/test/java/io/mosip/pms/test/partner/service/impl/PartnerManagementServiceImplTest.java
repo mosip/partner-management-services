@@ -93,6 +93,12 @@ public class PartnerManagementServiceImplTest {
 		when(details.getAuthorities()).thenReturn(auths);
 		return details;
 	}
+
+	private io.mosip.kernel.openid.bridge.model.AuthUserDetails mockBridgeAuthUserDetails(String userId) {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		mosipUserDto.setUserId(userId);
+		return new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, userId);
+	}
 	
 	@Autowired
 	private PartnerManagementServiceImpl partnerManagementImpl;
@@ -3054,9 +3060,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_matchingUser_success() throws Exception {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails =
-				new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, "123");
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -3157,9 +3161,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_loggedInFilterRequired_matchingUser() throws Exception {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails =
-				new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, "123");
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);

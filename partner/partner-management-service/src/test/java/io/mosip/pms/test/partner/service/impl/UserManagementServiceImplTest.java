@@ -712,8 +712,7 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void updateNotificationsSeenTimestamp_whenSaveThrows_setsGenericError() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -737,8 +736,7 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void getNotificationsSeenTimestamp_whenRepositoryThrowsAfterAccess_setsGenericError() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -756,8 +754,7 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void testIsUserConsentGivenPartnerServiceException() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "ROLE_PARTNER");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -769,8 +766,7 @@ public class UserManagementServiceImplTest {
 
 	@Test
 	public void testIsUserConsentGivenWithNonAdminNonPolicyManager() {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "ROLE_PARTNER");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
