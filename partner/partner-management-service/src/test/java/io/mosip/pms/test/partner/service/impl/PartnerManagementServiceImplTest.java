@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.openid.bridge.model.MosipUserDto;
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
@@ -80,6 +80,25 @@ import io.mosip.pms.test.config.TestSecurityConfig;
 @AutoConfigureMockMvc
 @Import(TestSecurityConfig.class)
 public class PartnerManagementServiceImplTest {
+
+	private AuthUserDetails mockAuthUserDetails(String userId, String... authorities) {
+		AuthUserDetails details = org.mockito.Mockito.mock(AuthUserDetails.class);
+		when(details.getUserId()).thenReturn(userId);
+		Collection auths = new ArrayList<GrantedAuthority>();
+		if (authorities != null) {
+			for (String a : authorities) {
+				((Collection<GrantedAuthority>) auths).add(new SimpleGrantedAuthority(a));
+			}
+		}
+		when(details.getAuthorities()).thenReturn(auths);
+		return details;
+	}
+
+	private io.mosip.kernel.openid.bridge.model.AuthUserDetails mockBridgeAuthUserDetails(String userId) {
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		mosipUserDto.setUserId(userId);
+		return new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, userId);
+	}
 	
 	@Autowired
 	private PartnerManagementServiceImpl partnerManagementImpl;
@@ -367,6 +386,53 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(policyGroupRepository.findById(partnersPolicyMappingRequest.getNewPolicyID())).thenReturn(opt_PolicyGroup);
 		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndApikey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(part_policy);
 		partnerManagementImpl.updatePolicyAgainstApikey(partnersPolicyMappingRequest, partnerID, PolicyAPIKey);
+	}
+
+	@Test
+	public void partnerApiKeyPolicyMappings_whenPolicyInactive_throwsPolicyNotActive() {
+		LocalDateTime now = LocalDateTime.now();
+		String partnerID = "56784567";
+		String PolicyAPIKey = "56784567";
+
+		PartnersPolicyMappingRequest partnersPolicyMappingRequest = new PartnersPolicyMappingRequest();
+		partnersPolicyMappingRequest.setOldPolicyID("456789");
+		partnersPolicyMappingRequest.setNewPolicyID("567890");
+
+		Partner partner = new Partner();
+		partner.setId(partnerID);
+		partner.setPolicyGroupId("pg-1");
+		partner.setIsActive(true);
+		partner.setUpdBy("Partner Service");
+		partner.setUpdDtimes(Timestamp.valueOf(now));
+
+		PartnerPolicy part_policy = new PartnerPolicy();
+		part_policy.setCrBy("Partner Manager");
+		part_policy.setCrDtimes(Timestamp.valueOf(now));
+		part_policy.setIsActive(true);
+		part_policy.setPartner(partner);
+		part_policy.setPolicyId(partnersPolicyMappingRequest.getOldPolicyID());
+		part_policy.setValidFromDatetime(Timestamp.valueOf(LocalDateTime.now().minusDays(5)));
+		part_policy.setValidToDatetime(Timestamp.valueOf(LocalDateTime.now().plusDays(5)));
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setId("pg-1");
+		policyGroup.setIsActive(true);
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId(partnersPolicyMappingRequest.getNewPolicyID());
+		authPolicy.setIsActive(false);
+		authPolicy.setPolicyGroup(policyGroup);
+
+		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndApikey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+				.thenReturn(part_policy);
+		Mockito.when(authPolicyRepository.findByPolicyGroupAndId(Mockito.anyString(), Mockito.anyString())).thenReturn(authPolicy);
+
+		try {
+			partnerManagementImpl.updatePolicyAgainstApikey(partnersPolicyMappingRequest, partnerID, PolicyAPIKey);
+			fail("expected PartnerManagerServiceException");
+		} catch (PartnerManagerServiceException e) {
+			assertEquals(ErrorCode.POLICY_NOT_ACTIVE_EXCEPTION.getErrorCode(), e.getErrorCode());
+		}
 	}
 
 	@Test(expected = PartnerManagerServiceException.class)
@@ -866,14 +932,7 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("PARTNER_ADMIN")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -895,14 +954,7 @@ public class PartnerManagementServiceImplTest {
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("PARTNER_ADMIN")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -936,14 +988,7 @@ public class PartnerManagementServiceImplTest {
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("PARTNER_ADMIN")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -953,14 +998,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void updateAPIKeyStatusTest05() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -984,14 +1022,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void updateAPIKeyStatusTest06() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1279,8 +1310,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerDetailsTest01() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1401,7 +1431,8 @@ public class PartnerManagementServiceImplTest {
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
 
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails =
+				new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, "123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1410,8 +1441,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getAdminPartnersTest01() throws Exception {
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1439,8 +1469,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getAdminPartnersTest02() throws Exception {
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1457,14 +1486,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getAllApiKeyRequestsTest01() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1503,14 +1525,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getAllApiKeyRequestsV2Test01() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1550,14 +1565,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getAllApiKeyRequestsTest02() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1594,14 +1602,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getAllPartnerPolicyRequestsTest01() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("Auth_Partner")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -1640,7 +1641,8 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getAllPartnerPolicyRequestsTest02() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails =
+				new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, "123");
 		Collection<GrantedAuthority> newAuthorities = List.of(
 				new SimpleGrantedAuthority("Auth_Partner")
 		);
@@ -1683,8 +1685,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getTrustCertificatesTest01() throws Exception {
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -2093,14 +2094,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void updateAPIKeyTest_SuccessWithExpiryDate() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("PARTNER_ADMIN")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -2119,6 +2113,11 @@ public class PartnerManagementServiceImplTest {
 		partner.setIsActive(true);
 		partnerPolicy.setPartner(partner);
 
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId(policyId);
+		authPolicy.setIsActive(true);
+		Mockito.when(partnerServiceRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+		Mockito.when(authPolicyRepository.findById(policyId)).thenReturn(Optional.of(authPolicy));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
 				.thenReturn(partnerPolicy);
 		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
@@ -2129,18 +2128,12 @@ public class PartnerManagementServiceImplTest {
 		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
 				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
 		assertNotNull(response);
+		assertTrue(response.getErrors() == null || response.getErrors().isEmpty());
 	}
 
 	@Test
 	public void updateAPIKeyTest_SuccessWithDeactivateStatus() throws Exception {
-		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
-		Collection<GrantedAuthority> newAuthorities = List.of(
-				new SimpleGrantedAuthority("PARTNER_ADMIN")
-		);
-		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
-		addAuthoritiesMethod.setAccessible(true);
-		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -2159,6 +2152,11 @@ public class PartnerManagementServiceImplTest {
 		partner.setIsActive(true);
 		partnerPolicy.setPartner(partner);
 
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId(policyId);
+		authPolicy.setIsActive(true);
+		Mockito.when(partnerServiceRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+		Mockito.when(authPolicyRepository.findById(policyId)).thenReturn(Optional.of(authPolicy));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
 				.thenReturn(partnerPolicy);
 		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
@@ -2169,6 +2167,7 @@ public class PartnerManagementServiceImplTest {
 		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> response =
 				partnerManagementImpl.updateAPIKey(partnerId, policyId, apiKeyName, requestDto);
 		assertNotNull(response);
+		assertTrue(response.getErrors() == null || response.getErrors().isEmpty());
 	}
 
 	@Test
@@ -2200,6 +2199,11 @@ public class PartnerManagementServiceImplTest {
 		partner.setIsActive(true);
 		partnerPolicy.setPartner(partner);
 
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId(policyId);
+		authPolicy.setIsActive(true);
+		Mockito.when(partnerServiceRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+		Mockito.when(authPolicyRepository.findById(policyId)).thenReturn(Optional.of(authPolicy));
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId, apiKeyName))
 				.thenReturn(partnerPolicy);
 		Mockito.when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
@@ -3056,8 +3060,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_matchingUser_success() throws Exception {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -3084,8 +3087,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_userMismatch_returnsError() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -3159,8 +3161,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_loggedInFilterRequired_matchingUser() throws Exception {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		MosipUserDto mosipUserDto = getMosipUserDto();
-		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
