@@ -2047,15 +2047,12 @@ public class PartnerServiceImpl implements PartnerService {
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (!partnerList.isEmpty() || isPartnerAdmin) {
-				List<CertificateDto> certificateDtoList = new ArrayList<>();
+			List<CertificateDto> certificateDtoList = new ArrayList<>();
+			if (!partnerList.isEmpty()) {
 				for (Partner partner : partnerList) {
 					CertificateDto certificateDto = new CertificateDto();
 					try {
 						if (Objects.isNull(partner.getId()) || partner.getId().equals(BLANK_STRING)) {
-							if (isPartnerAdmin) {
-								continue;
-							}
 							LOGGER.info("Partner Id is null or empty for user id : " + userId);
 							throw new PartnerServiceException(ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorCode(),
 									ErrorCode.PARTNER_ID_NOT_EXISTS.getErrorMessage());
@@ -2095,12 +2092,15 @@ public class PartnerServiceImpl implements PartnerService {
 					}
 					certificateDtoList.add(certificateDto);
 				}
-				responseWrapper.setResponse(certificateDtoList);
+
 			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				if (!isPartnerAdmin) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
+			responseWrapper.setResponse(certificateDtoList);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getPartnerCertificatesDetails method of PartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
