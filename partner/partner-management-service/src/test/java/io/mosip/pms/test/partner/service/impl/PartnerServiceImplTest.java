@@ -2324,6 +2324,7 @@ public class PartnerServiceImplTest {
 		extractor.setAttributeName("attr");
 		extractor.setBiometric("face");
 		extractor.setExtractorProvider("prov");
+		extractor.setExtractorProviderVersion("1.0");
 		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
 	}
 
