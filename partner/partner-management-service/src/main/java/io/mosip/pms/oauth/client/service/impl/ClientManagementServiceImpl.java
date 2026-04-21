@@ -944,19 +944,22 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
 			// convert additional config as String and set to client detail
-			ObjectMapper mapper = new ObjectMapper();
-			var additionalConfigNode = mapper.valueToTree(createRequest.getAdditionalConfig());
-			Integer consentExpireInMins = parseConsentExpireInMins(createRequest.getAdditionalConfig());
-			if (consentExpireInMins != null && additionalConfigNode.isObject()) {
-				((com.fasterxml.jackson.databind.node.ObjectNode) additionalConfigNode)
-						.put("consent_expire_in_mins", consentExpireInMins);
-			}
-			String additionalConfig = mapper.writeValueAsString(additionalConfigNode);
+			String additionalConfig = normalizeAdditionalConfig(createRequest.getAdditionalConfig());
 			clientDetail.setAdditionalConfig(additionalConfig);
 
 			processedClientDetail.setClientDetail(clientDetail);
 		}
 		return processedClientDetail;
+	}
+
+	private String normalizeAdditionalConfig(AdditionalConfigDto additionalConfigDto) throws JsonProcessingException {
+		var additionalConfigNode = objectMapper.valueToTree(additionalConfigDto);
+		Integer consentExpireInMins = parseConsentExpireInMins(additionalConfigDto);
+		if (consentExpireInMins != null && additionalConfigNode.isObject()) {
+			((com.fasterxml.jackson.databind.node.ObjectNode) additionalConfigNode)
+					.put("consent_expire_in_mins", consentExpireInMins);
+		}
+		return objectMapper.writeValueAsString(additionalConfigNode);
 	}
 
 	private void validateAdditionalConfigFields(AdditionalConfigDto additionalConfigDto, String clientId, String clientName) {
@@ -1055,7 +1058,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 					String.format(
 							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
 							"consent_expire_in_mins",
-							"integer value (minutes) >= 10 or not valid"
+							"Value must be an integer greater than or equal to 10 and within the allowed system limits."
 					)
 			);
 		}
@@ -1279,8 +1282,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
 
             // convert additional config as String and set to client detail
-            ObjectMapper mapper = new ObjectMapper();
-            String additionalConfig = mapper.writeValueAsString(updateRequest.getAdditionalConfig());
+            String additionalConfig = normalizeAdditionalConfig(updateRequest.getAdditionalConfig());
             clientDetail.setAdditionalConfig(additionalConfig);
         }
         return clientDetail;
