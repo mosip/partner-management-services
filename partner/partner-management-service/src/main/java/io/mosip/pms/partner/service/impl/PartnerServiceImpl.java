@@ -2043,10 +2043,12 @@ public class PartnerServiceImpl implements PartnerService {
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(Integer expiryPeriod) {
 		ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String userRoles = authUserDetails().getAuthorities().toString();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			List<CertificateDto> certificateDtoList = new ArrayList<>();
 			if (!partnerList.isEmpty()) {
-				List<CertificateDto> certificateDtoList = new ArrayList<>();
 				for (Partner partner : partnerList) {
 					CertificateDto certificateDto = new CertificateDto();
 					try {
@@ -2090,12 +2092,15 @@ public class PartnerServiceImpl implements PartnerService {
 					}
 					certificateDtoList.add(certificateDto);
 				}
-				responseWrapper.setResponse(certificateDtoList);
+
 			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				if (!isPartnerAdmin) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
+			responseWrapper.setResponse(certificateDtoList);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getPartnerCertificatesDetails method of PartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
@@ -2151,14 +2156,6 @@ public class PartnerServiceImpl implements PartnerService {
 					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
 					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
 							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-				}
-
-				if (partnerType != null && !partnerType.isBlank()
-						&& userPartners.stream().noneMatch(p -> partnerType.equalsIgnoreCase(p.getPartnerTypeCode()))) {
-					LOGGER.info("sessionId", "idType", "id",
-							"Requested partnerType does not match any partnerTypeCode for user. partnerType: {}", partnerType);
-					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
-							String.format(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorMessage(), partnerType));
 				}
 
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
