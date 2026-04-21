@@ -6,11 +6,13 @@ import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.exception.BatchJobServiceException;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.core.env.Environment;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -124,5 +126,36 @@ public class PartnerUtil {
 			throw new BatchJobServiceException(ErrorCode.API_NULL_RESPONSE.getErrorCode(),
 					ErrorCode.API_NULL_RESPONSE.getErrorMessage());
 		}
+	}
+
+	public static Map<String, String> getAllowedBioextractorModalityAttributeNameMap(
+			Environment environment, String propertyKey) {
+		if (environment == null || propertyKey == null || propertyKey.isBlank()) {
+			return Map.of();
+		}
+		String raw = environment.getProperty(propertyKey, "");
+		if (raw == null || raw.isBlank()) {
+			return Map.of();
+		}
+
+		Map<String, String> modalityToAttributeNameMap = new LinkedHashMap<>();
+
+		for (String modalityAttributePairs : raw.split(",")) {
+			if (modalityAttributePairs == null || modalityAttributePairs.isBlank()) {
+				continue;
+			}
+
+			String[] parts = Arrays.stream(modalityAttributePairs.split(":"))
+					.map(String::trim)
+					.filter(s -> !s.isBlank())
+					.toArray(String[]::new);
+
+			for (int i = 0; i + 1 < parts.length; i += 2) {
+				String modality = parts[i].toLowerCase();
+				String attributeName = parts[i + 1].toLowerCase();
+				modalityToAttributeNameMap.put(modality, attributeName);
+			}
+		}
+		return modalityToAttributeNameMap;
 	}
 }

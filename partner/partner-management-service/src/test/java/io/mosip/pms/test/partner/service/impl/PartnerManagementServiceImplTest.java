@@ -2513,7 +2513,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfigurationSuccess() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -2588,7 +2588,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void createBioextractorConfiguration_DuplicateConfigName() {
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(true);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(true);
 
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
 				partnerManagementImpl.createBioextractorConfiguration(req);
@@ -2603,7 +2603,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_IdCollisionRetry() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -2619,7 +2619,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_MaxRetriesExceeded() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 0);
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true);
 
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
@@ -2635,7 +2635,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_SaveException() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigName(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenThrow(new RuntimeException("DB error"));
 
