@@ -944,7 +944,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
 			// convert additional config as String and set to client detail
-			String additionalConfig = normalizeAdditionalConfig(createRequest.getAdditionalConfig());
+			String additionalConfig = normalizeConsentExpiryInAdditionalConfig(createRequest.getAdditionalConfig());
 			clientDetail.setAdditionalConfig(additionalConfig);
 
 			processedClientDetail.setClientDetail(clientDetail);
@@ -952,7 +952,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 		return processedClientDetail;
 	}
 
-	private String normalizeAdditionalConfig(AdditionalConfigDto additionalConfigDto) throws JsonProcessingException {
+	private String normalizeConsentExpiryInAdditionalConfig(AdditionalConfigDto additionalConfigDto) throws JsonProcessingException {
 		var additionalConfigNode = objectMapper.valueToTree(additionalConfigDto);
 		Integer consentExpireInMins = parseConsentExpireInMins(additionalConfigDto);
 		if (consentExpireInMins != null && additionalConfigNode.isObject()) {
@@ -1282,7 +1282,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
 
             // convert additional config as String and set to client detail
-            String additionalConfig = normalizeAdditionalConfig(updateRequest.getAdditionalConfig());
+            String additionalConfig = normalizeConsentExpiryInAdditionalConfig(updateRequest.getAdditionalConfig());
             clientDetail.setAdditionalConfig(additionalConfig);
         }
         return clientDetail;
