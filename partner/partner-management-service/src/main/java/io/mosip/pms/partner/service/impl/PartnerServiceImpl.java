@@ -2192,14 +2192,6 @@ public class PartnerServiceImpl implements PartnerService {
 							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
 				}
 
-				if (partnerType != null && !partnerType.isBlank()
-						&& userPartners.stream().noneMatch(p -> partnerType.equalsIgnoreCase(p.getPartnerTypeCode()))) {
-					LOGGER.info("sessionId", "idType", "id",
-							"Requested partnerType does not match any partnerTypeCode for user. partnerType: {}", partnerType);
-					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
-							String.format(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorMessage(), partnerType));
-				}
-
 				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
