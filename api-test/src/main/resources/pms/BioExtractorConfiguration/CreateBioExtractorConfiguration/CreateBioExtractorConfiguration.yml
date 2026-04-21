@@ -107,7 +107,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "status": "SUCCESS"
 }'
-  Pms_CreateBioExtractorConfiguration_InValid_ConfigName:
+  Pms_CreateBioExtractorConfiguration_With_InValid_ConfigName:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_06
     description: Validate that a Bio Extractor Configuration is created successfully even when the configName contains invalid.
@@ -386,7 +386,7 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "Finger"
+      "bioModality": "finger"
 }'
     output: '{
       "status": "SUCCESS"
@@ -411,7 +411,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_COR_001"
+           "errorCode": "PMS_PRT_099"
         }
     ]
 }'
@@ -479,7 +479,7 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config04",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "Finger"
+      "bioModality": "finger"
 }'
     output: '{
       "responseCode": "400"
@@ -499,7 +499,7 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config05",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "Finger"
+      "bioModality": "finger"
 }'
     output: '{
       "errors": [
@@ -523,7 +523,7 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config06",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "Finger"
+      "bioModality": "finger"
 }'
     output: '{
       "errors": [
