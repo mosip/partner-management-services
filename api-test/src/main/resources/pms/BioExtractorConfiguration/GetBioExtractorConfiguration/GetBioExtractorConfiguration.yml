@@ -175,7 +175,7 @@ GetBioExtractorConfiguration:
 }'
     output: '{
 }'
-  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName:
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_09
     description: Validate that the request to retrieve Bio Extractor Configurations fails when bioExtractorProviderName contains invalid special characters.
@@ -242,7 +242,7 @@ GetBioExtractorConfiguration:
 }'
     output: '{
 }'
-  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion:
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_12
     description: Validate that the request to retrieve Bio Extractor Configurations fails when bioExtractorProviderVersion contains invalid special characters.
@@ -267,7 +267,7 @@ GetBioExtractorConfiguration:
         }
     ]
 }'
-  Pms_GetBioExtractorConfiguration_With_Any_SpecialCharacter_BioextractorProviderVersion:
+  Pms_GetBioExtractorConfiguration_With_Any_SpecialCharacter_BioextractorProviderVersion_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_13
     description: Validate that the request to retrieve Bio Extractor Configurations fails when bioExtractorProviderVersion contains any invalid special characters.
@@ -313,7 +313,7 @@ GetBioExtractorConfiguration:
 }'
     output: '{
 }'
-  Pms_GetBioExtractorConfiguration_With_InValid_BioModality:
+  Pms_GetBioExtractorConfiguration_With_InValid_BioModality_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_15
     description: Validate that the request to retrieve Bio Extractor Configurations fails when an invalid bioModality is provided.
@@ -338,7 +338,7 @@ GetBioExtractorConfiguration:
         }
     ]
 }'
-  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioModality:
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioModality_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_16
     description: Validate that the request to retrieve Bio Extractor Configurations fails when bioModality contains invalid special characters.
@@ -626,7 +626,7 @@ GetBioExtractorConfiguration:
 }'
     output: '{
 }'
-  Pms_GetBioExtractorConfiguration_With_PageSize_And_Without_PageNo:
+  Pms_GetBioExtractorConfiguration_With_PageSize_And_Without_PageNo_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_28
     description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when pageSize is provided without pageNo.
@@ -720,7 +720,7 @@ GetBioExtractorConfiguration:
     output: '{
       "responseCode": "400"
 }'
-  Pms_GetBioExtractorConfiguration_With_VeryLarge_PageNo_Neg:
+  Pms_GetBioExtractorConfiguration_With_VeryLarge_PageNo:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_32
     description: Validate that Bio Extractor Configurations are retrieved successfully when a very large pageNo is provided.
@@ -783,7 +783,7 @@ GetBioExtractorConfiguration:
 }'
     output: '{
 }'
-  Pms_GetBioExtractorConfiguration_With_Negativevalue_PageSize:
+  Pms_GetBioExtractorConfiguration_With_Negativevalue_PageSize_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_35
     description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when a negative value is provided for pageSize.
