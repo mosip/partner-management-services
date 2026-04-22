@@ -13,6 +13,8 @@ import io.mosip.pms.common.entity.BioextractorConfiguration;
 public interface BioextractorConfigurationRepository extends JpaRepository<BioextractorConfiguration, String> {
 
 	boolean existsByConfigName(String configName);
+	
+	boolean existsByConfigNameIgnoreCase(String configName);
 
 	@Query("SELECT b FROM BioextractorConfiguration b " +
 			"WHERE (:configName IS NULL OR lower(b.configName) LIKE %:configName%) " +

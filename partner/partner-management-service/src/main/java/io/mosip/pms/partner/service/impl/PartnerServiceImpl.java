@@ -16,13 +16,13 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.Set;
-import java.util.HashSet;
 
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
@@ -1161,12 +1161,12 @@ public class PartnerServiceImpl implements PartnerService {
 			row.setPartId(partnerId);
 			row.setPolicyId(policyId);
 			row.setAttributeName(extractor.getAttributeName());
-			row.setBiometricModality(extractor.getBiometric());
+			row.setBiometricModality(extractor.getBiometric() == null ? null : extractor.getBiometric().trim());
 			if (extractor.getBiometricSubTypes() != null && !extractor.getBiometricSubTypes().isBlank()) {
 				row.setBiometricSubTypes(extractor.getBiometricSubTypes());
 			}
 			row.setExtractorProvider(extractor.getExtractorProvider());
-			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion());
+			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion() == null ? null : extractor.getExtractorProviderVersion().trim());
 			row.setStatusCode(parentStatus);
 			row.setCrBy(getLoggedInUserId());
 			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -1289,11 +1289,46 @@ public class PartnerServiceImpl implements PartnerService {
 	private void validateExtractorForBioExtractRequest(String partnerId, BioExtractorsDto extractor) {
 		if (extractor == null || extractor.getAttributeName() == null || extractor.getAttributeName().isBlank()
 				|| extractor.getBiometric() == null || extractor.getBiometric().isBlank()
-				|| extractor.getExtractorProvider() == null || extractor.getExtractorProvider().isBlank()) {
+				|| extractor.getExtractorProvider() == null || extractor.getExtractorProvider().isBlank()
+				|| extractor.getExtractorProviderVersion() == null || extractor.getExtractorProviderVersion().isBlank()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 					"partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
+		}
+
+		try {
+			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
+					environment,
+					"mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
+			if (modalityToAttribute == null || modalityToAttribute.isEmpty()) {
+				return;
+			}
+
+			String biometric = extractor.getBiometric().trim().toLowerCase();
+			String attributeName = extractor.getAttributeName().trim().toLowerCase();
+
+			String expectedAttributeName = modalityToAttribute.get(biometric);
+			if (expectedAttributeName == null || expectedAttributeName.isBlank()) {
+				String validModalities = modalityToAttribute.keySet().stream()
+						.reduce((a, b) -> a + ", " + b)
+						.orElse("");
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "biometric",
+								"Valid values are: " + validModalities));
+			}
+
+			if (!expectedAttributeName.equalsIgnoreCase(attributeName)) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "attributeName",
+								"For biometric '" + biometric + "', attributeName must be '" + expectedAttributeName + "'"));
+			}
+		} catch (PartnerServiceException ex) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw ex;
 		}
 	}
 
@@ -2043,10 +2078,12 @@ public class PartnerServiceImpl implements PartnerService {
 	public ResponseWrapperV2<List<CertificateDto>> getPartnerCertificatesDetails(Integer expiryPeriod) {
 		ResponseWrapperV2<List<CertificateDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			String userRoles = authUserDetails().getAuthorities().toString();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
 			String userId = getUserId();
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			List<CertificateDto> certificateDtoList = new ArrayList<>();
 			if (!partnerList.isEmpty()) {
-				List<CertificateDto> certificateDtoList = new ArrayList<>();
 				for (Partner partner : partnerList) {
 					CertificateDto certificateDto = new CertificateDto();
 					try {
@@ -2090,12 +2127,15 @@ public class PartnerServiceImpl implements PartnerService {
 					}
 					certificateDtoList.add(certificateDto);
 				}
-				responseWrapper.setResponse(certificateDtoList);
+
 			} else {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				if (!isPartnerAdmin) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
+			responseWrapper.setResponse(certificateDtoList);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In getPartnerCertificatesDetails method of PartnerServiceImpl - " + ex.getMessage());
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
@@ -2120,28 +2160,40 @@ public class PartnerServiceImpl implements PartnerService {
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			String userId = getUserId();
-			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-			List<Partner> partners = new ArrayList<>();
-			// if not MISP_Partner and ABIS_Partner type, fetch partners for logged in user
-			if (!PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) && !PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType)) {
-				if (!isPartnerAdmin) {
-					List<Partner> partnerList = partnerRepository.findByUserId(userId);
-					if (partnerList.isEmpty()) {
-						LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-						throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-								ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-					}
+			String userRoles = authUserDetails().getAuthorities().toString();
+			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
+			List<Partner> partners;
+			boolean isAdminManagedPartnerType = PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) || PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType);
+
+			if (isPartnerAdmin) {
+				if (partnerType == null || partnerType.isBlank()) {
+					LOGGER.info("sessionId", "idType", "id", "Partner Admin must provide partnerType for /partners/v3.");
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
+							ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorMessage());
 				}
-				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
-			}
-			// if MISP_Partner/ABIS_Partner type and Partner_Admin, fetch all partners
-			else {
-				if (!isPartnerAdmin) {
-					LOGGER.info("sessionId", "idType", "id", "Only Partner Admin can fetch all partners for partner type: " + partnerType);
-					throw new PartnerServiceException(ErrorCode.UNABLE_TO_FETCH_PARTNERS_LIST.getErrorCode(),
-							ErrorCode.UNABLE_TO_FETCH_PARTNERS_LIST.getErrorMessage());
+				if (!isAdminManagedPartnerType) {
+					LOGGER.info("sessionId", "idType", "id",
+							"Partner Admin can fetch all partners only for partnerType: MISP_Partner, ABIS_Partner, or Manual_Adjudication.");
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
+							ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorMessage());
 				}
 				partners = partnerRepository.findPartnersByStatusAndPartnerTypeAndPolicyGroupAvailable(status, partnerType, policyGroupAvailable);
+			} else {
+				if (isAdminManagedPartnerType) {
+					LOGGER.info("sessionId", "idType", "id",
+							"Requested partnerType does not match any partnerTypeCode for user. partnerType: {}", partnerType);
+					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorCode(),
+							String.format(ErrorCode.PARTNER_TYPE_MISMATCH_FOR_USER.getErrorMessage(), partnerType));
+				}
+
+				List<Partner> userPartners = partnerRepository.findByUserId(userId);
+				if (userPartners.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
+
+				partners = partnerRepository.findPartnersByUserIdAndStatusAndPartnerTypeAndPolicyGroupAvailable(status, userId, partnerType, policyGroupAvailable);
 			}
 			List<PartnerDtoV3> partnerDtoV3List = new ArrayList<>();
 			for (Partner partner : partners) {

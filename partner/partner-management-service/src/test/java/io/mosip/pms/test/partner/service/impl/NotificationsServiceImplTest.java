@@ -15,6 +15,7 @@ import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.service.impl.NotificationsServiceImpl;
 import io.mosip.pms.partner.util.PartnerHelper;
+import io.mosip.pms.user.service.UserManagementService;
 import io.mosip.pms.test.config.TestSecurityConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,6 +57,9 @@ public class NotificationsServiceImplTest {
 
     @InjectMocks
     private NotificationsServiceImpl notificationsServiceImpl;
+
+    @MockBean
+    private UserManagementService userManagementService;
 
     @Mock
     NotificationServiceRepository notificationServiceRepository;

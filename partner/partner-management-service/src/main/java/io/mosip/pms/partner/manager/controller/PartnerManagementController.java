@@ -751,11 +751,12 @@ public class PartnerManagementController {
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput("configName", requestWrapper.getRequest().getConfigName());
-		inputValidator.validateRequestInput("bioextractorProviderName", requestWrapper.getRequest().getBioextractorProviderName());
-		inputValidator.validateRequestInput("bioextractorProviderVersion", requestWrapper.getRequest().getBioextractorProviderVersion());
-		inputValidator.validateRequestInput("bioModality", requestWrapper.getRequest().getBioModality());
-		return partnerManagementService.createBioextractorConfiguration(requestWrapper.getRequest());
+		BioextractorConfigurationRequestDto request = requestWrapper.getRequest();
+		inputValidator.validateRequestInput("configName", request.getConfigName());
+		inputValidator.validateRequestInput("bioextractorProviderName", request.getBioextractorProviderName());
+		inputValidator.validateRequestInput("bioextractorProviderVersion", request.getBioextractorProviderVersion());
+		inputValidator.validateRequestInput("bioModality", request.getBioModality());
+		return partnerManagementService.createBioextractorConfiguration(request);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurations())")

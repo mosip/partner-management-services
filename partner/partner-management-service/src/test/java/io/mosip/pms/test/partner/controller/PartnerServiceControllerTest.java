@@ -53,6 +53,7 @@ import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.dto.PartnerPolicyMappingResponseDto;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
@@ -104,6 +105,9 @@ public class PartnerServiceControllerTest {
     @MockBean
     private AuditUtil auditUtil;
 
+    @MockBean
+    private RequestValidator requestValidator;
+
     @Autowired
     private PartnerServiceController partnerServiceController;
 
@@ -115,6 +119,7 @@ public class PartnerServiceControllerTest {
         MockitoAnnotations.initMocks(this);
         doNothing().when(auditUtil).setAuditRequestDto(any(PartnerServiceAuditEnum.class), anyString(), anyString());
         doNothing().when(auditUtil).setAuditRequestDto(any(PartnerManageEnum.class), anyString(), anyString());
+        doNothing().when(requestValidator).validateReqTime(any());
     }
     
     
@@ -172,6 +177,36 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest()))).andExpect(status().isOk());
     }
+
+	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void submitBioExtractorsRequest_withInvalidExtractorProvider_shouldReturnInvalidInputError() throws Exception {
+		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
+
+		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].errorCode").value("PMS_REQUEST_ERROR_007"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message")
+						.value(org.hamcrest.Matchers.containsString("extractorProvider")));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER"})
+	public void submitBioExtractorsRequest_withNullExtractorEntry_shouldReturnBadRequest() throws Exception {
+		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		List<BioExtractorsDto> extractors = new ArrayList<>();
+		extractors.add(null);
+		wrapper.getRequest().setExtractors(extractors);
+
+		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors").isNotEmpty());
+	}
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
@@ -381,6 +416,81 @@ public class PartnerServiceControllerTest {
         responseWrapper.setResponse(originalCertDownloadResponseDto);
         when(partnerService.getPartnerCertificateData(requestDto)).thenReturn(responseWrapper);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/1234/certificate-data")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void submitCredentialTypesRequestTest() throws Exception {
+        when(partnerService.submitCredentialTypesRequest(eq("123456"), eq("12345"), any(CredentialTypeRequestDto.class)))
+                .thenReturn("ok");
+        mockMvc.perform(post("/partners/123456/policies/12345/credential-types-request")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(createSubmitCredentialTypesRequest())))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void checkPartnerExists_validationPresent_returnsValidationResponse() throws Exception {
+        ResponseWrapperV2<PartnerExistsResponseDto> validation = new ResponseWrapperV2<>();
+        @SuppressWarnings("rawtypes")
+        java.util.Optional raw = java.util.Optional.of(validation);
+        Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(raw);
+
+        mockMvc.perform(put("/partners/exists")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(createPartnerExistsRequestWrapper())))
+                .andExpect(status().isOk());
+
+        Mockito.verify(partnerService, Mockito.never()).checkPartnerExists(any());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void checkPartnerExists_validationEmpty_callsService() throws Exception {
+        ResponseWrapperV2<PartnerExistsResponseDto> response = new ResponseWrapperV2<>();
+        response.setResponse(new PartnerExistsResponseDto());
+        Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(java.util.Optional.empty());
+        when(partnerService.checkPartnerExists(any())).thenReturn(response);
+
+        mockMvc.perform(put("/partners/exists")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(createPartnerExistsRequestWrapper())))
+                .andExpect(status().isOk());
+
+        Mockito.verify(partnerService, Mockito.times(1)).checkPartnerExists(any());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void createPartner_validationPresent_returnsValidationResponse() throws Exception {
+        ResponseWrapperV2<PartnerResponse> validation = new ResponseWrapperV2<>();
+        @SuppressWarnings("rawtypes")
+        java.util.Optional raw = java.util.Optional.of(validation);
+        Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(raw);
+
+        mockMvc.perform(post("/partners/v3")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(createCreatePartnerRequestWrapper())))
+                .andExpect(status().isOk());
+
+        Mockito.verify(partnerService, Mockito.never()).createPartner(any());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
+    public void createPartner_validationEmpty_callsService() throws Exception {
+        ResponseWrapperV2<PartnerResponse> response = new ResponseWrapperV2<>();
+        response.setResponse(new PartnerResponse());
+        Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(java.util.Optional.empty());
+        when(partnerService.createPartner(any())).thenReturn(response);
+
+        mockMvc.perform(post("/partners/v3")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(createCreatePartnerRequestWrapper())))
+                .andExpect(status().isOk());
+
+        Mockito.verify(partnerService, Mockito.times(1)).createPartner(any());
     }
     
     private RequestWrapper<FilterValueDto> createFilterRequest(){
@@ -795,6 +905,48 @@ public class PartnerServiceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    private RequestWrapper<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
+        RequestWrapper<CredentialTypeRequestDto> request = new RequestWrapper<>();
+        CredentialTypeRequestDto dto = new CredentialTypeRequestDto();
+        dto.setPartnerPolicyRequestId("req-1");
+        dto.setCredentialType("euin");
+        request.setRequest(dto);
+        request.setId("mosip.pms.partner.policy.credential.types.create");
+        request.setVersion("1.0");
+        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+        request.setMetadata("{}");
+        return request;
+    }
+
+    private RequestWrapperV2<PartnerExistsRequestDto> createPartnerExistsRequestWrapper() {
+        RequestWrapperV2<PartnerExistsRequestDto> wrapper = new RequestWrapperV2<>();
+        PartnerExistsRequestDto dto = new PartnerExistsRequestDto();
+        dto.setPartnerId("p1");
+        dto.setEmailId("test@example.com");
+        dto.setPartnerType("Auth");
+        wrapper.setId("mosip.pms.partners.exists.put");
+        wrapper.setVersion("1.0");
+        wrapper.setRequest(dto);
+        return wrapper;
+    }
+
+    private RequestWrapperV2<PartnerRequest> createCreatePartnerRequestWrapper() {
+        RequestWrapperV2<PartnerRequest> wrapper = new RequestWrapperV2<>();
+        PartnerRequest dto = new PartnerRequest();
+        dto.setPartnerId("p1");
+        dto.setEmailId("test@example.com");
+        dto.setPartnerType("Auth");
+        dto.setOrganizationName("Org");
+        dto.setContactNumber("9999999999");
+        dto.setAddress("addr");
+        dto.setPolicyGroup("pg");
+        dto.setLangCode("eng");
+        wrapper.setId("mosip.pms.partners.v3.post");
+        wrapper.setVersion("1.0");
+        wrapper.setRequest(dto);
+        return wrapper;
     }
 
 }
