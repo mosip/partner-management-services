@@ -95,7 +95,7 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_CaseSensitive_Status_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_06
-    description: Validate that the API retrieves the list of Manual Adjudication (MA) partners with InProgress status associated with the logged-in Partner Admin user.
+    description: Validate that the API retrieves the list of Manual Adjudication (MA) partners with Case-sensitive(Approved) status associated with the logged-in Partner Admin user.
     role: partneradmin
     checkErrorsOnlyInResponse: true
     restMethod: get
@@ -163,18 +163,22 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_10
-    description: Validate that the API successfully processes the request when retrieving MA partners with an invalid partnerType parameter
+    description: Validate that the request to retrieve partners fails with an error when an invalid value is provided for partnerType.
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "_Invalid_Partner"
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
    }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_SpecialCharacter_PartnerType_Neg:
@@ -201,7 +205,7 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_LowerCase_Status_Smoke:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_12
-    description: Validate that the API does not return MA partners when the status is provided in lowercase ("approved") instead of the expected lowercase format.
+    description: Validate that the API successfully processes the request when the status is provided in lowercase ("approved").
     role: partneradmin
     restMethod: get
     checkErrorsOnlyInResponse: true
@@ -210,7 +214,7 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     input: '{
       "status": "approved",
       "policyGroupAvailable": "$REMOVE$",
-      "partnerType": "$REMOVE$"
+      "partnerType": "Manual_Adjudication"
     }'
     output: '{
     }'
@@ -218,35 +222,43 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Empty_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_13
-    description: Validate that the API successfully processes the request when retrieving MA partners with an empty partnerType parameter
+    description: Validate that the request to retrieve partners fails with an error when an empty value is provided for partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": ""
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
     }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_CaseSensitive_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_14
-    description: Validate that the API successfully processes the request when retrieving MA partners using a case-sensitive partnerType value (manual_Adjudication)
+    description: Validate that the request to retrieve partners fails with an error when a case-sensitive invalid value is provided for partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "manual_Adjudication"
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
     }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_PartnerType_As_FTMPartner_Neg:
@@ -255,21 +267,25 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     description: Validate that the API does not return MA partners when Partner Type is provided as FTM_Provider.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "FTM_Provider"
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
     }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_AuthPartner_Token_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_16
-    description: Validate that the API returns an authentication error when attempting to retrieve the list of MA partners associated with the logged-in user using an auth partner token
+    description: Validate that the request to retrieve partners fails with an error when an Auth Partner token is used instead of a Partner Admin token for MA Partner.
     role: partnerauth
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
@@ -282,9 +298,9 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_POLICY_ERROR_012"
+           "errorCode": "PMS_POLICY_ERROR_031"
         }
-    ] 
+    ]
    }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Invalid_Status_And_Valid_PartnerType_Neg:
@@ -306,18 +322,22 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Valid_Status_And_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_18
-    description: Validate that the API successfully processes the request when retrieving MA partners using a valid status and an invalid partnerType
+    description: Validate that the request to retrieve partners fails with an error when a valid status is provided along with an invalid partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "invalidPartner"
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
     }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Multiple_Invalid_Parameters_Neg:
@@ -341,33 +361,41 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_PolicyGroupAvailable_As_True_And_PartnerType_As_Auth:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_20
-    description: Validate that the API retrieves partners when policyGroupAvailable is true and partnerType is provided as "Auth_Partner" for the logged-in Partner Admin user.
+    description: Validate that the request to retrieve partners fails with an error when partnerType is provided as "AuthPartner", which is not applicable for the logged-in Partner Admin user, even when policyGroupAvailable is set to true.
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "Auth_Partner"
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+         }
+    ]
     }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_PolicyGroupAvailable_As_False_And_PartnerType_As_Auth:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_21
-    description: Validate that the API retrieves partners when policyGroupAvailable is false and partnerType is provided as "Auth_Partner" for the logged-in Partner Admin user.
+    description: Validate that the request to retrieve partners fails with an error when partnerType is provided as "AuthPartner", which is not applicable for the logged-in Partner Admin user, even when policyGroupAvailable is set to false.
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "false",
       "partnerType": "Auth_Partner"
     }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+         }
+    ]
     }'
