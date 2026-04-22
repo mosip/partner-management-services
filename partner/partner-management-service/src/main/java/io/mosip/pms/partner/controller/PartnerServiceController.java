@@ -185,6 +185,16 @@ public class PartnerServiceController {
 			@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("policyId", policyId);
+		inputValidator.validateRequestInput("partnerPolicyRequestId", request.getRequest().getPartnerPolicyRequestId());
+		request.getRequest().getExtractors().forEach(extractor -> {
+			inputValidator.validateRequestInput("attributeName", extractor.getAttributeName());
+			inputValidator.validateRequestInput("biometric", extractor.getBiometric());
+			inputValidator.validateRequestInput("biometricSubTypes", extractor.getBiometricSubTypes());
+			inputValidator.validateRequestInput("extractorProvider", extractor.getExtractorProvider());
+			inputValidator.validateRequestInput("extractorProviderVersion", extractor.getExtractorProviderVersion());
+		});
 		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());

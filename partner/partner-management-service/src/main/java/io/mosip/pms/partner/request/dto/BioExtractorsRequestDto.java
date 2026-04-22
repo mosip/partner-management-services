@@ -22,6 +22,6 @@ public class BioExtractorsRequestDto {
 	@Valid
 	@NotNull(message = "extractors is missing")
 	@NotEmpty(message = "extractors must not be empty")
-	private List<BioExtractorsDto> extractors;
+	private List<@NotNull @Valid BioExtractorsDto> extractors;
 }
 
