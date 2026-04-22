@@ -841,6 +841,22 @@ public class PartnerManagementControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void createBioextractorConfiguration_invalidProviderName_shouldReturnInvalidInputError() throws Exception {
+		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
+
+		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = buildBioextractorConfigRequestWrapper();
+		wrapper.getRequest().setBioextractorProviderName("Provider<Bad>");
+
+		mockMvc.perform(post("/bio-extractor-configurations")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].errorCode").value("PMS_REQUEST_ERROR_007"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message").value(org.hamcrest.Matchers.containsString("bioextractorProviderName")));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void createBioextractorConfigurationValidationFailTest() throws Exception {
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> errorWrapper = new ResponseWrapperV2<>();
 		Mockito.doReturn(Optional.of(errorWrapper)).when(requestValidator).validate(anyString(), any());

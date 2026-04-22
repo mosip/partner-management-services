@@ -944,13 +944,23 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 			validateAdditionalConfigFields(createRequest.getAdditionalConfig(), clientDetail.getId(), createRequest.getName());
 
 			// convert additional config as String and set to client detail
-			ObjectMapper mapper = new ObjectMapper();
-			String additionalConfig = mapper.writeValueAsString(createRequest.getAdditionalConfig());
+			String additionalConfig = serializeConsentExpiry(createRequest.getAdditionalConfig());
 			clientDetail.setAdditionalConfig(additionalConfig);
 
 			processedClientDetail.setClientDetail(clientDetail);
 		}
 		return processedClientDetail;
+	}
+
+	private String serializeConsentExpiry(AdditionalConfigDto additionalConfigDto)
+			throws JsonProcessingException {
+		var additionalConfigNode = objectMapper.valueToTree(additionalConfigDto);
+		Integer consentExpireInMins = parseConsentExpireInMins(additionalConfigDto);
+		if (consentExpireInMins != null && additionalConfigNode.isObject()) {
+			((com.fasterxml.jackson.databind.node.ObjectNode) additionalConfigNode)
+					.put("consent_expire_in_mins", consentExpireInMins);
+		}
+		return objectMapper.writeValueAsString(additionalConfigNode);
 	}
 
 	private void validateAdditionalConfigFields(AdditionalConfigDto additionalConfigDto, String clientId, String clientName) {
@@ -964,15 +974,16 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 						.format(ErrorCode.INVALID_USERINFO_RESPONSE_TYPE.getErrorMessage(),
 								additionalConfigDto.getUserinfoResponseType()));
 		}
-		if(additionalConfigDto.getConsentExpireInMins() != null &&
-				additionalConfigDto.getConsentExpireInMins() < 10) {
-				LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
-						additionalConfigDto.getConsentExpireInMins());
-				auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
-						clientId);
-				throw new PartnerServiceException(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(), String
-						.format(ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage(),
-								additionalConfigDto.getConsentExpireInMins()));
+		Integer consentExpireInMins = parseConsentExpireInMins(additionalConfigDto);
+		if (consentExpireInMins != null && consentExpireInMins < 10) {
+			LOGGER.error("validateAdditionalConfigFields::Invalid consent_expire_in_mins {}",
+					consentExpireInMins);
+			auditUtil.setAuditRequestDto(ClientServiceAuditEnum.CREATE_CLIENT_FAILURE, clientName,
+					clientId);
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorCode(),
+					ErrorCode.INVALID_CONSENT_EXPIRE_TIME.getErrorMessage()
+			);
 		}
 		// PURPOSE VALIDATION
 		Map<String, Object> purpose = additionalConfigDto.getPurpose();
@@ -1025,6 +1036,29 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 
 			// 4. Validate subtitle keys (@none mandatory)
 			validateLanguageKeys(subtitle, "purpose.subTitle", true);
+		}
+	}
+
+	private Integer parseConsentExpireInMins(AdditionalConfigDto additionalConfigDto) {
+		if (additionalConfigDto == null) {
+			return null;
+		}
+		String raw = additionalConfigDto.getConsentExpireInMins();
+		if (raw == null) {
+			return null;
+		}
+		String value = raw.trim();
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			throw new PartnerServiceException(
+					ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(
+							ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"consent_expire_in_mins",
+							"Integer within the allowed system limits."
+					)
+			);
 		}
 	}
 
@@ -1246,8 +1280,7 @@ public class ClientManagementServiceImpl implements ClientManagementService {
             validateAdditionalConfigFields(updateRequest.getAdditionalConfig(), clientDetail.getId(), updateRequest.getClientName());
 
             // convert additional config as String and set to client detail
-            ObjectMapper mapper = new ObjectMapper();
-            String additionalConfig = mapper.writeValueAsString(updateRequest.getAdditionalConfig());
+            String additionalConfig = serializeConsentExpiry(updateRequest.getAdditionalConfig());
             clientDetail.setAdditionalConfig(additionalConfig);
         }
         return clientDetail;
