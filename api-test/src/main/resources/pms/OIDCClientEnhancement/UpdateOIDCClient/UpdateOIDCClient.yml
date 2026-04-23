@@ -477,9 +477,8 @@ UpdateOIDCClient:
       uniqueIdentifier:  TC_PMS_UpdateOIDCClient_15
       role: partnerauth
       restMethod: put
-      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient
-      outputTemplate: pms/responseCode 
+      outputTemplate: pms/error
       input: '{
       	"id": "mosip.pms.update.oidc.client.put",
       	"version": "1.0",
@@ -501,7 +500,11 @@ UpdateOIDCClient:
       	"consentExpireInMins": "*"
 }'
       output: '{
-       "responseCode": "400"
+        "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+      ]
 }'
    Pms_UpdateOIDCClient_Invalid_GrantType_Neg:
       endPoint: /v1/partnermanager/oidc-clients/{clientId}

@@ -44,16 +44,20 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_03
       description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using an invalid partner type
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "MISP"
 }'
-      output: '{ 
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+           }
+      ] 
 }'
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Special_Characters_partnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
@@ -80,32 +84,40 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_05
       description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using a lowercase partner type value
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "misp_partner"
 }'
-      output: '{  
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+          }
+      ]
 }'
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Invalid_query_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_06
       description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using an invalid query parameter
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "FTM_Provider"
 }'
-      output: '{  
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+           }
+      ]
 }'
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_Partner_Fetching_MISP_Neg:
       endPoint: /v1/partnermanager/partners/v3
@@ -123,9 +135,9 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_POLICY_ERROR_012"
+       "errorCode": "PMS_POLICY_ERROR_031"
        }
-       ]   
+       ] 
 }'
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_InvalidStatus_validPartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
@@ -148,30 +160,38 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_09
       description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using a valid status with an invalid partner type
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "MISP_Partner_Auth_Partner"
 }'
       output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+           }
+      ] 
 }'
    Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_invalidStatus_invalidPartnerType_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_10
       description: Validate that the API returns an error when attempting to retrieve the list of partners associated with the logged in user using both invalid status and invalid partner type
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "activedeactivate",
       "policyGroupAvailable": "true",
       "partnerType": "MISP_Partner_Auth_Partner"
 }'
       output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+           }
+      ] 
 }'

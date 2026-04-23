@@ -1592,9 +1592,8 @@ CreateOIDCClient:
       role: partnerauth
       restMethod: post
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_05,TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_01,TC_PMS_ApproveAPIKey_02
-      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/OIDCClientEnhancement/CreateOIDCClient/oIDCClient
-      outputTemplate: pms/responseCode
+      outputTemplate: pms/error
       input: '{
       	"id": "mosip.pms.create.oidc.client.post",
       	"version": "1.0",
@@ -1617,7 +1616,11 @@ CreateOIDCClient:
       	"consentExpireInMins": "StringValue"
 }'
       output: '{
-        "responseCode": "400"
+       "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+      ]
 }'
    Pms_CreateOIDCClient_Without_ConsentExpireInMins_smoke:
       endPoint: /v1/partnermanager/oidc-clients
@@ -2274,9 +2277,9 @@ CreateOIDCClient:
        }
      ]
 }'
-   Pms_CreateOIDCClient_Maximum_Allowed_ConsentExpire_sid:
+   Pms_CreateOIDCClient_Maximum_Allowed_ConsentExpire_Neg:
       endPoint: /v1/partnermanager/oidc-clients
-      description: Validate that an OIDC client creation fails when the consentExpireInMins exceed the maximum allowed limits "10"
+      description: Validate that an OIDC client creation fails when the consentExpireInMins exceed the maximum allowed limits
       uniqueIdentifier: TC_PMS_CreateOIDCClient_64
       role: partnerauth
       restMethod: post
@@ -2302,12 +2305,12 @@ CreateOIDCClient:
       	"subTitle": "subTitle",
       	"signupBannerRequired": true,
       	"forgotPwdLinkRequired": true,
-      	"consentExpireInMins": "14440"
+      	"consentExpireInMins": "144400000000000000000000"
 }'
       output: '{
       "errors": [
         {
-           "errorCode": "PMS_POLICY_ERROR_015"
+           "errorCode": "PMS_PRT_099"
          }
       ]
 }'
