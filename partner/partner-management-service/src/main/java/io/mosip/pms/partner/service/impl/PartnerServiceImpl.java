@@ -1949,17 +1949,9 @@ public class PartnerServiceImpl implements PartnerService {
 		List<String> pathSegments = new ArrayList<>();
 		pathSegments.add(policyId);
 		pathSegments.add(subscriberId);
-		DataShareResponseDto response;
-		try {
-			response = restUtil.postApi(
-					environment.getProperty("pmp.certificaticate.datashare.rest.uri"), pathSegments, "", "",
-					MediaType.MULTIPART_FORM_DATA, map, DataShareResponseDto.class);
-		} catch (Exception ex) {
-			LOGGER.error("Error while calling Data Share service", ex);
-			throw new PartnerServiceException(
-					ErrorCode.DATASHARE_API_NOT_ACCESSIBLE.getErrorCode(),
-					ErrorCode.DATASHARE_API_NOT_ACCESSIBLE.getErrorMessage());
-		}
+		DataShareResponseDto response = restUtil.postApi(
+				environment.getProperty("pmp.certificaticate.datashare.rest.uri"), pathSegments, "", "",
+				MediaType.MULTIPART_FORM_DATA, map, DataShareResponseDto.class);
 		if (response == null) {
 			throw new PartnerServiceException(ErrorCode.DATASHARE_RESPONSE_NULL.getErrorCode(),
 					ErrorCode.DATASHARE_RESPONSE_NULL.getErrorMessage());

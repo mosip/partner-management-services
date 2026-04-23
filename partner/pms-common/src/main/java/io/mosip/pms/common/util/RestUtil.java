@@ -101,6 +101,7 @@ public class RestUtil {
 
 			try {
 				restTemplate = getRestTemplate();
+				logger.info("Calling POST {}", builder.toUriString());
 				result = (T) restTemplate.postForObject(builder.toUriString(), setRequestHeader(requestType, mediaType),
 						responseClass);
 			} catch (Exception e) {
@@ -142,6 +143,7 @@ public class RestUtil {
 
 			HttpEntity<?> requestEntity = setRequestHeader(requestBody, mediaType);
 
+			logger.info("Calling PUT {}", uri);
 			return restTemplate.exchange(
 					uri,
 					HttpMethod.PUT,
@@ -187,6 +189,7 @@ public class RestUtil {
 
 			try {
 				restTemplate = getRestTemplate();
+				logger.info("Calling PUT {}", builder.toUriString());
 				restTemplate.put(builder.toUriString(), setRequestHeader(requestType, mediaType),
 						responseClass);
 			} catch (Exception e) {
@@ -238,6 +241,7 @@ public class RestUtil {
 
 			try {
 				restTemplate = getRestTemplate();
+				logger.info("Calling GET {}", uriComponents.toUriString());
 				result = (T) restTemplate
 						.exchange(uriComponents.toUri(), HttpMethod.GET, setRequestHeader(null, null), responseType)
 						.getBody();
@@ -269,6 +273,7 @@ public class RestUtil {
 			RestTemplate restTemplate;
 			try {
 				restTemplate = getRestTemplate();
+				logger.info("Calling GET {}", urlWithPath);
 				result = (T) restTemplate
 						.exchange(urlWithPath, HttpMethod.GET, setRequestHeader(null, null), responseType).getBody();
 			} catch (Exception e) {
@@ -300,6 +305,7 @@ public class RestUtil {
 			RestTemplate restTemplate;
 			try {
 				restTemplate = getRestTemplate();
+				logger.info("Calling GET {}", urlWithPath);
 				result = (T) restTemplate
 						.exchange(urlWithPath, HttpMethod.GET, setRequestHeader(null, mediaType), responseType).getBody();
 			} catch (Exception e) {
