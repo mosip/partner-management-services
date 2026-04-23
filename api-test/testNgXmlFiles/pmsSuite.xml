@@ -328,6 +328,39 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
+	<test name="MAPartnerV3">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/CreateMAPartner/CreateMAPartner.yml" />
+			<parameter name="idKeyName" value="id,partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateCASUBCAForMA">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateMAForCASUBCA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadMAPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/UploadPartnerCertificateForMAPartner/UploadMAPartnerCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUserMA">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
@@ -516,6 +549,14 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
+		</classes>
+	</test>
+	<test name="CreateBioExtractorConfiguration">
+		<parameter name="ymlFile"
+			value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 

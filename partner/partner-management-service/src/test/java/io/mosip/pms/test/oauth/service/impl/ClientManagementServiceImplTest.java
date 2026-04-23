@@ -2096,7 +2096,7 @@ public class ClientManagementServiceImplTest {
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		AdditionalConfigDto additionalConfigDto = new AdditionalConfigDto();
-		additionalConfigDto.setConsentExpireInMins(5);
+		additionalConfigDto.setConsentExpireInMins("5");
 
 		Mockito.doNothing().when(auditUtil).setAuditRequestDto(Mockito.any(ClientServiceAuditEnum.class));
 
@@ -2694,7 +2694,7 @@ public class ClientManagementServiceImplTest {
 		ClientDetailUpdateRequestV3 updateRequest = new ClientDetailUpdateRequestV3();
 		updateRequest.setClientName("Updated Client");
 		AdditionalConfigDto additionalConfig = new AdditionalConfigDto();
-		additionalConfig.setConsentExpireInMins(5);
+		additionalConfig.setConsentExpireInMins("5");
 		updateRequest.setAdditionalConfig(additionalConfig);
 
 		ClientDetail clientDetail = new ClientDetail();

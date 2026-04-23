@@ -23,5 +23,5 @@ public class AdditionalConfigDto {
     private Boolean forgotPwdLinkRequired;
 
     @JsonProperty("consent_expire_in_mins")
-    private Integer consentExpireInMins;
+    private String consentExpireInMins;
 }
