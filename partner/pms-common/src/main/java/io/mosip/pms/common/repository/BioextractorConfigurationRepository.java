@@ -11,8 +11,6 @@ import io.mosip.pms.common.entity.BioextractorConfiguration;
 
 @Repository
 public interface BioextractorConfigurationRepository extends JpaRepository<BioextractorConfiguration, String> {
-
-	boolean existsByConfigName(String configName);
 	
 	boolean existsByConfigNameIgnoreCase(String configName);
 

@@ -1934,9 +1934,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
 					sortFieldName, sortType, pageNo, pageSize);
 
-			// Validate bioModality filter against configured allowed modalities (same as POST)
 			if (filterDto != null && filterDto.getBioModality() != null && !filterDto.getBioModality().isBlank()) {
 				validateAllowedBioextractorBioModality(filterDto.getBioModality());
+				filterDto.setBioModality(filterDto.getBioModality().trim().toLowerCase());
 			}
 
 			Pageable pageable = Pageable.unpaged();
