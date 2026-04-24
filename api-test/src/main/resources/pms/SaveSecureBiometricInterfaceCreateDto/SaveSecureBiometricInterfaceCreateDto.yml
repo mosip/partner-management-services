@@ -233,3 +233,23 @@ SaveSecureBiometricInterfaceCreateDto:
   }'
       output: '{      
     }'
+   Pms_SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid:
+      endPoint: /v1/partnermanager/securebiometricinterface
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_12
+      role: partner
+      description: Validate that secure biometric interface details can be saved successfully with all valid inputs
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_12
+      inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
+      outputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDtoResult
+      input: '{
+    "swBinaryHash": "0",
+    "swCreateDateTime": "$TIMESTAMP$",
+    "swExpiryDateTime": "2033-08-22T12:51:07.794Z",
+    "swVersion": "MO.TD.01",
+    "requesttime": "$TIMESTAMP$",
+    "providerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$"
+  }'
+      output: '{
+    }'

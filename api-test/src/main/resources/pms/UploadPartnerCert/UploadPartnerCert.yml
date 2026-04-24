@@ -137,3 +137,22 @@ uploadPartnerCert:
 }'
       output: ' {
 }'
+
+   Pms_UploadPartnerCert_uploadCertificate_For_Device_Provider_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_09
+      description: Validate that uploading a Partner Certificate and Device Provider Certificate with all valid inputs is successful
+      role: partnerdevicenew
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_21,TC_PMS_UploadCACertificate_10, TC_PMS_UploadCACertificate_11
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{  
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+  "partnerDomain": "DEVICE"
+}'
+      output: ' {
+}'

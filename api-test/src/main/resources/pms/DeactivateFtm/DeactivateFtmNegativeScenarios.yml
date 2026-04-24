@@ -401,3 +401,44 @@ DeactivateFtmNegativeScenarios:
        }
        ]
 }'
+   Pms_DeactivateFtm_With_Rejected_Ftm_Id_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_19
+      description: Deactivate FTM while passing rejected ftmId in request and expecting an error in the response
+      role: partnerftm
+      restMethod: patch
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "ftmId": "$ID:CreateFTPChipDetail_All_Valid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_FTM_ERROR_010"
+       }
+       ]
+}'
+   Pms_DeactivateFtm_With_Numeric_RequestTime_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail/{ftmId}
+      uniqueIdentifier: TC_PMS_DeactivateFtmNegativeScenarios_20
+      description: Deactivate FTM while passing numeric requestTime in request and expecting an error in the response
+      role: partnerftm
+      restMethod: patch
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/DeactivateFtm/DeactivateFtmNegativeScenarios
+      outputTemplate: pms/responseCode
+      input: '{
+      "id": "mosip.pms.deactivate.ftm.patch",
+      "version": "1.0",
+      "requestTime": "345678",
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$"
+     
+}'
+      output: '{
+      "responseCode": "400"
+}'

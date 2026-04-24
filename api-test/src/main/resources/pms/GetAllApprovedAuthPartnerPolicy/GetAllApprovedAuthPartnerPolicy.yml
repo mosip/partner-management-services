@@ -11,4 +11,38 @@ GetAllApprovedAuthPartnerPolicy:
       input: '{
 }'
       output: '{
-}'     
+}'
+   Pms_GetAllApprovedAuthPartnerPolicy_With_Device_Partner_Neg:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
+      description: Validate that retrieving all approved policies for a partner fails when an invalid authentication is provided
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_04
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+        {
+          "errorCode": "KER-ATH-403"
+         }
+     ]
+}'
+   Pms_GetAllApprovedAuthPartnerPolicy_With_Ftm_Partner_Neg:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&policyGroupAvailable=true&partnerType=Auth_Partner
+      description: Validate that retrieving all approved policies for a partner fails when an invalid authentication is provided
+      role: partnerftm
+      uniqueIdentifier: TC_PMS_GetAllApprovedAuthPartnerPolicy_05
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedAuthPartnerPolicy/getAllApprovedAuthPartnerPolicy
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+      ]
+}'

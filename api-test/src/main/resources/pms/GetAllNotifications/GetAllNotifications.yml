@@ -990,3 +990,195 @@ GetAllNotifications:
       }
      ]
 }'
+   Pms_GetAllNotifications_NotificationType_As_validapikey_And_Valid_ApiKeyName_Neg:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that notifications retrieval fails when filtering by invalid notification type with valid apiKeyName
+      uniqueIdentifier: TC_PMS_GetAllNotifications_60
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
+      outputTemplate: pms/error
+      input: '{
+      "apiKeyName": "$ID:GenerateApiKey_AllValid_smoke_sid_label$",
+      "certificateId": "$REMOVE$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "valid apikey"
+}'
+      output: '{
+      "errors": [
+      {
+         "errorCode": "PMS_NOTIFICATION_ERROR_020"
+      }
+     ]
+}'
+   Pms_GetAllNotifications_With_Invalid_ExpiryDate_Neg:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that notifications retrieval fails when filtering by root notification type with an invalid expiryDate
+      uniqueIdentifier: TC_PMS_GetAllNotifications_61
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
+      outputTemplate: pms/error
+      input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "45/5/8990",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "root"
+}'
+      output: '{
+      "errors": [
+      {
+         "errorCode": "PMS_NOTIFICATION_ERROR_016"
+      }
+     ]
+}'
+   Pms_GetAllNotifications_With_NotificationType_As_Sbi_And_SbiVersion:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that all notifications are successfully retrieved when filtering by Sbi notification type with SbiVersion
+      uniqueIdentifier: TC_PMS_GetAllNotifications_62
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput2
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "ftmId": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "sbiVersion": "MO.TD.01",
+      "notificationType": "sbi"
+}'
+      output: '{
+}'
+   Pms_GetAllNotifications_With_NotificationType_As_Sbi_And_SbiId:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that all notifications are successfully retrieved when filtering by Sbi notification type with SbiId
+      uniqueIdentifier: TC_PMS_GetAllNotifications_63
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput2
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "ftmId": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
+      "sbiVersion": "$REMOVE$",
+      "notificationType": "sbi"
+}'
+      output: '{
+}'
+   Pms_GetAllNotifications_With_NotificationType_As_Ftm-Chip_And_Model:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that all notifications are successfully retrieved when filtering by Ftm-Chip notification type with Model
+      uniqueIdentifier: TC_PMS_GetAllNotifications_64
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput2
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "ftmId": "$REMOVE$",
+      "make": "$REMOVE$",
+      "model": "FACE01",
+      "sbiId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "notificationType": "ftm-chip"
+}'
+      output: '{
+}'
+   Pms_GetAllNotifications_With_NotificationType_As_Ftm-Chip_And_Make:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that all notifications are successfully retrieved when filtering by Ftm-Chip notification type with Make
+      uniqueIdentifier: TC_PMS_GetAllNotifications_65
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput2
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "ftmId": "$REMOVE$",
+      "make": "MOSIP",
+      "model": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "notificationType": "ftm-chip"
+}'
+      output: '{
+}'
+   Pms_GetAllNotifications_With_NotificationType_As_Ftm-Chip_And_FtmId:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that all notifications are successfully retrieved when filtering by Ftm-Chip notification type with FtmId
+      uniqueIdentifier: TC_PMS_GetAllNotifications_66
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput2
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "ftmId": "$ID:CreateFtmChipDetails_FtmProvider_AllValid_Smoke_sid_id$",
+      "make": "$REMOVE$",
+      "model": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "notificationType": "ftm-chip"
+}'
+      output: '{
+}'
+   Pms_GetAllNotifications_with_Weekly_NotificationType_With_CertificateId:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that notifications retrieval when filtering by Weekly notification type with CertificateId
+      uniqueIdentifier: TC_PMS_GetAllNotifications_67
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
+      outputTemplate: pms/error
+      input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "weekly"
+}'
+      output: '{
+      "errors": [
+       {
+          "errorCode": "PMS_NOTIFICATION_ERROR_021"
+       }
+     ]
+}'
+   Pms_GetAllNotifications_with_Partner_NotificationType_And_certificateId:
+      endPoint: /v1/partnermanager/notifications
+      role: partneradmin
+      description: Validate that notifications retrieval fails when filtering by Partner notification type with certificateId
+      uniqueIdentifier: TC_PMS_GetAllNotifications_68
+      restMethod: get
+      checkErrorsOnlyInResponse: true
+      inputTemplate: pms/GetAllNotifications/GetAllNotificationsInput
+      outputTemplate: pms/GetAllNotifications/GetAllNotificationsResult
+      input: '{
+      "apiKeyName": "$REMOVE$",
+      "certificateId": "$ID:UploadPartnerCert_All_Valid_Smoke_Sid_certificateId$",
+      "createdFromDate": "$REMOVE$",
+      "createdToDate": "$REMOVE$",
+      "expiryDate": "$REMOVE$",
+      "mispPartnerId": "$REMOVE$",
+      "mispLicenseKeyName": "$REMOVE$",
+      "notificationType": "partner"
+}'
+      output: '{
+}'

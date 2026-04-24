@@ -200,3 +200,23 @@ GetMISPPartnerLicenseByPartnerIdNegTC:
         }
     ]
 }'
+  Pms_GetMISPPartnerLicenseByPartnerIdNegTC_With_Null_In_Request_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{partnerId}?mispLicenseKeyName={licenseKeyName}&policyId={policyId}
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseByPartnerIdNegTC_11
+    description: Validate that the API returns an error when attempting to retrieve MISP partner licenses for null request
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId
+    outputTemplate: pms/error
+    input: '{
+      "partnerId": "null",
+      "licenseKeyName": "null",
+      "policyId": "null"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_MSP_429"
+        }
+    ]
+}'

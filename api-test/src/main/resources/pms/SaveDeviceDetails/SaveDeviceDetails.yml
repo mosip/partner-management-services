@@ -47,6 +47,7 @@ SaveDeviceDetails:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
       role: partnerdevice
       uniqueIdentifier: TC_PMS_SaveDeviceDetails_03
+      additionalDependencies: TC_PMS_uploadPartnerCert_03
       description: Validate that device details can be saved successfully by a device provider for pending approval with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
@@ -85,4 +86,160 @@ SaveDeviceDetails:
 }'
       output: '{
           
+}'
+
+   Pms_SaveDeviceDetails_DeviceProviderForPendingApproval_With_SbiId_Which_Is_Not_Approved_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevicenew
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_05
+      description: Validate that saving device details by a device provider FAILS when using an SBI ID that is not approved
+      restMethod: post
+      additionalDependencies: TC_PMS_uploadPartnerCert_09
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+    "make": "AcmeCorpApprovalPending",
+    "model": "X1000ApprovalPending",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_DEVICE_ERROR_009"
+         }
+      ]
+}'
+
+   Pms_SaveDeviceDetails_With_Partner_Auth_Role_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_06
+      description: Validate that saving device details fails when a user with the Partner Auth role attempts to perform the operation
+      restMethod: post
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01,TC_PMS_uploadPartnerCert_07,TC_PMS_uploadPartnerCert_03
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+    "make": "AcmeCorpApprovalPending",
+    "model": "X1000ApprovalPending",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+         }
+      ]
+}'
+
+   Pms_SaveDeviceDetails_With_Rejected_SBI_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_07
+      description: Validate that saving device details fails when the associated SBI is in a rejected state.
+      restMethod: post
+      additionalDependencies: TC_PMS_uploadPartnerCert_03,TC_PMS_RejectSecureBiometricInterface_01
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+    "make": "AcmeCorpApprovalPending",
+    "model": "X5000ApprovalPending",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_ForReject_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_DEVICE_ERROR_028"
+         }
+      ]
+}'
+
+   Pms_SaveDeviceDetails_With_PartnerAdmin_Role_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_08
+      description: Validate that saving device details fails when performed by a user with the Partner Admin role.
+      restMethod: post
+      additionalDependencies: TC_PMS_uploadPartnerCert_09
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+    "make": "AcmeCorpApprovalPending",
+    "model": "X1000ApprovalPending",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_CERTIFICATE_ERROR_002"
+         }
+      ]
+}'
+
+   Pms_SaveDeviceDetails_DeviceProvider_With_Same_Device_And_Sbi_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_09
+      description: Validate that the system correctly rejects duplicate device registration when a device provider attempts to save device details with the same combination of make, model, device type, device subtype, and SBI ID that has already been registered
+      restMethod: post
+      additionalDependencies: TC_PMS_uploadPartnerCert_03,TC_PMS_createUpdateSecureBiometricInterface_01
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+    "make": "AcmeCorp",
+    "model": "X1000",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_AUT_003"
+        }
+     ]
+}'
+
+   Pms_SaveDeviceDetails_DeviceProvider_With_Same_Device_And_Diff_Sbi_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      uniqueIdentifier: TC_PMS_SaveDeviceDetails_10
+      description: Validate that the system rejects saving device details when the same device is attempted to be registered with a different SBI
+      restMethod: post
+      additionalDependencies: TC_PMS_uploadPartnerCert_03,TC_PMS_createUpdateSecureBiometricInterface_05
+      inputTemplate: pms/SaveDeviceDetails/SaveDeviceDetails
+      outputTemplate: pms/error
+      input: '{
+    "deviceTypeCode": "Face",
+    "deviceSubTypeCode": "Full face",
+    "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+    "make": "AcmeCorp",
+    "model": "X9000",
+    "requestTime": "$TIMESTAMP$",
+    "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid_id$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_DEVICE_ERROR_002"
+        }
+      ]
 }'

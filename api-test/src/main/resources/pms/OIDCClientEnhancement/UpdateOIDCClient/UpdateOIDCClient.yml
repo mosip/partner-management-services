@@ -605,3 +605,67 @@ UpdateOIDCClient:
         "clientId": "$ID:CreateOIDCClient_all_ValidName_Smoke_sid_clientId$",
         "status": "ACTIVE"
 }'
+   Pms_UpdateOIDCClient_With_Additional_Languages_In_Purpose_Title_sid:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_19
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient4
+      outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "OIDC TEST CLIENT 89766",
+      	"logoUri": "https://health-services.com/logo.png",
+      	"redirectUris": "$IDPREDIRECTURI$",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\",\"eng\":\"Test\",\"ara\":\"تسجيل الدخول\"}",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+    	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+    	"status": "ACTIVE"
+}'
+   Pms_UpdateOIDCClient_With_Diff_ClientId_And_Diff_ClientDetails:
+      endPoint: /v1/partnermanager/oidc-clients/{clientId}
+      description: Updating OAUTH Client
+      uniqueIdentifier:  TC_PMS_UpdateOIDCClient_20
+      role: partnerauth
+      restMethod: put
+      inputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateoIDCClient4
+      outputTemplate: pms/OIDCClientEnhancement/UpdateOIDCClient/oIDCClientResult
+      input: '{
+      	"id": "mosip.pms.update.oidc.client.put",
+      	"version": "1.0",
+      	"requestTime": "$TIMESTAMP$",
+      	"clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+      	"clientName": "Updated OIDC TEST CLIENT",
+      	"logoUri": "https://example.com/logo.png",
+      	"redirectUris": "https://client-app.com/oauth/callback",
+      	"status": "ACTIVE",
+      	"grantTypes": "authorization_code",
+      	"clientAuthMethods": "private_key_jwt",
+      	"clientNameLangMap": "OIDC TEST CLIENT",
+      	"userinfoResponseType": "JWS",
+      	"title": "{\"@none\":\"Title\",\"eng\":\"Test\",\"ara\":\"تسجيل الدخول\"}",
+      	"subTitle": "subTitle",
+      	"type": "verify",
+      	"signupBannerRequired": true,
+      	"forgotPwdLinkRequired": true,
+      	"consentExpireInMins": "30"
+}'
+      output: '{
+        "clientId": "$ID:CreateOIDCClient_all_Valid_Smoke_sid_clientId$",
+        "status": "ACTIVE"
+}'
