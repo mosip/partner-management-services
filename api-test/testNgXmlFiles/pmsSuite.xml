@@ -554,9 +554,18 @@
 	<test name="CreateBioExtractorConfiguration">
 		<parameter name="ymlFile"
 			value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml" />
+		<parameter name="reqKeyName" value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="GetBioExtractorConfiguration">
+		<parameter name="ymlFile"
+			value="pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 

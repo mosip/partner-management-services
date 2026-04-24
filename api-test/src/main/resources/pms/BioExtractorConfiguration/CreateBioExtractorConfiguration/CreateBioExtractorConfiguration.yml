@@ -1,5 +1,5 @@
 CreateBioExtractorConfiguration:
-  Pms_CreateBioExtractorConfiguration_All_Valid_Smoke:
+  Pms_CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_01
     description: Validate that a Bio Extractor Configuration is created successfully with all valid inputs.
@@ -107,7 +107,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "status": "SUCCESS"
 }'
-  Pms_CreateBioExtractorConfiguration_With_InValid_ConfigName:
+  Pms_CreateBioExtractorConfiguration_With_InValid_ConfigName_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_06
     description: Validate that a Bio Extractor Configuration is created successfully even when the configName contains invalid.
@@ -175,7 +175,7 @@ CreateBioExtractorConfiguration:
         }
     ]
 }'
-  Pms_CreateBioExtractorConfiguration_With_Valid_BioextractorProviderName:
+  Pms_CreateBioExtractorConfiguration_With_Valid_BioextractorProviderName_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_09
     description: Validate that a Bio Extractor Configuration is created successfully when a valid bioextractorProviderName is provided.
@@ -219,14 +219,14 @@ CreateBioExtractorConfiguration:
         }
     ]
 }'
-  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg:
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_11
     description: Validate that Bio Extractor Configuration creation fails when bioextractorProviderName contains invalid special characters.
     role: partneradmin
     restMethod: post
     inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
-    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    outputTemplate: pms/error
     input: '{
       "id": "mosip.pms.bioextractor.configurations.post",
       "version": "1.0",
@@ -237,9 +237,13 @@ CreateBioExtractorConfiguration:
       "bioModality": "face"
 }'
     output: '{
-      "status": "SUCCESS"
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+         }
+    ]
 }'
-  Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderName:
+  Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderName_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_12
     description: Validate that a Bio Extractor Configuration is created successfully even when bioextractorProviderName contains invalid.
@@ -259,7 +263,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "status": "SUCCESS"
 }'
-  Pms_CreateBioExtractorConfiguration_With_Valid_BioextractorProviderVersion:
+  Pms_CreateBioExtractorConfiguration_With_Valid_BioextractorProviderVersion_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_13
     description: Validate that a Bio Extractor Configuration is created successfully when a valid bioextractorProviderVersion is provided.
@@ -279,7 +283,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "status": "SUCCESS"
 }'
-  Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderVersion:
+  Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderVersion_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_14
     description: Validate that a Bio Extractor Configuration is created successfully even when bioextractorProviderVersion contains invalid. 
@@ -323,14 +327,14 @@ CreateBioExtractorConfiguration:
         }
     ]
 }'
-  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_Neg:
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_16
     description: Validate that Bio Extractor Configuration creation fails when bioextractorProviderVersion contains invalid special characters.
     role: partneradmin
     restMethod: post
     inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
-    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    outputTemplate: pms/error
     input: '{
       "id": "mosip.pms.bioextractor.configurations.post",
       "version": "1.0",
@@ -341,7 +345,11 @@ CreateBioExtractorConfiguration:
       "bioModality": "face"
 }'
     output: '{
-      "status": "SUCCESS"
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
 }'
   Pms_CreateBioExtractorConfiguration_With_BioextractorProviderVersion_As_Test:
     endPoint: /v1/partnermanager/bio-extractor-configurations
@@ -451,7 +459,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_PRT_099"
+           "errorCode": "PMS_REQUEST_ERROR_007"
         }
     ]
 }'
