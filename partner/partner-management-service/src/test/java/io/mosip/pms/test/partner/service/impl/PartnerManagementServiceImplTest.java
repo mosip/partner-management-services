@@ -2733,6 +2733,137 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
+	public void getBioextractorConfigurations_InvalidBioModalityFilter() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+
+		Object originalEnv = ReflectionTestUtils.getField(partnerManagementImpl, "environment");
+		try {
+			Environment env = org.mockito.Mockito.mock(Environment.class);
+			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
+					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
+
+			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
+			filterDto.setBioModality("Invalid");
+
+			ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+					partnerManagementImpl.getBioextractorConfigurations(
+							"createdDateTime", "desc", 0, 8, filterDto);
+
+			assertNotNull(resp);
+			assertNotNull(resp.getErrors());
+			assertFalse(resp.getErrors().isEmpty());
+			assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					resp.getErrors().get(0).getErrorCode());
+			assertTrue(resp.getErrors().get(0).getMessage().contains("Valid values are: face, iris, finger"));
+		} finally {
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", originalEnv);
+		}
+	}
+
+	@Test
+	public void getBioextractorConfigurations_ValidBioModalityFilter() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+
+		Object originalEnv = ReflectionTestUtils.getField(partnerManagementImpl, "environment");
+		try {
+			Environment env = org.mockito.Mockito.mock(Environment.class);
+			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
+					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
+
+			Page<BioextractorConfiguration> page = new PageImpl<>(
+					Collections.emptyList(),
+					PageRequest.of(0, 8),
+					0
+			);
+			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+					any(), any(), any(), any(), any(Pageable.class)))
+					.thenReturn(page);
+
+			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
+			filterDto.setBioModality("Face");
+
+			ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+					partnerManagementImpl.getBioextractorConfigurations(
+							"createdDateTime", "desc", 0, 8, filterDto);
+
+			assertNotNull(resp);
+			assertNotNull(resp.getResponse());
+			assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		} finally {
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", originalEnv);
+		}
+	}
+
+	@Test
+	public void getBioextractorConfigurations_ConfigEmpty_SkipsBioModalityValidation() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+
+		Object originalEnv = ReflectionTestUtils.getField(partnerManagementImpl, "environment");
+		try {
+			Environment env = org.mockito.Mockito.mock(Environment.class);
+			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
+					.thenReturn("");
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
+
+			Page<BioextractorConfiguration> page = new PageImpl<>(
+					Collections.emptyList(),
+					PageRequest.of(0, 8),
+					0
+			);
+			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+					any(), any(), any(), any(), any(Pageable.class)))
+					.thenReturn(page);
+
+			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
+			filterDto.setBioModality("not-configured-value");
+
+			ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+					partnerManagementImpl.getBioextractorConfigurations(
+							"createdDateTime", "desc", 0, 8, filterDto);
+
+			assertNotNull(resp);
+			assertNotNull(resp.getResponse());
+			assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		} finally {
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", originalEnv);
+		}
+	}
+
+	@Test
+	public void createBioextractorConfiguration_InvalidBioModality_ReturnsSameValidationError() {
+		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
+		req.setBioModality("invalid");
+
+		Object originalEnv = ReflectionTestUtils.getField(partnerManagementImpl, "environment");
+		try {
+			Environment env = org.mockito.Mockito.mock(Environment.class);
+			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
+					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
+
+			ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+					partnerManagementImpl.createBioextractorConfiguration(req);
+
+			assertNotNull(resp);
+			assertNotNull(resp.getErrors());
+			assertFalse(resp.getErrors().isEmpty());
+			assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					resp.getErrors().get(0).getErrorCode());
+			assertTrue(resp.getErrors().get(0).getMessage().contains("Valid values are: face, iris, finger"));
+		} finally {
+			ReflectionTestUtils.setField(partnerManagementImpl, "environment", originalEnv);
+		}
+	}
+
+	@Test
 	public void getBioextractorConfigurationByIdSuccess() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
 				"mosip.pms.bioextractor.configuration.details.get");
