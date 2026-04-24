@@ -1858,22 +1858,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			try {
-				Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
-						environment,
-						"mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
-				if (modalityToAttribute != null && !modalityToAttribute.isEmpty()) {
-					String bioModality = request.getBioModality().trim().toLowerCase();
-					if (!modalityToAttribute.containsKey(bioModality)) {
-						String validModalities = modalityToAttribute.keySet().stream()
-								.reduce((a, b) -> a + ", " + b)
-								.orElse("");
-						throw new PartnerServiceException(
-								io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
-								String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
-										"bioModality",
-										"Valid values are: " + validModalities));
-					}
-				}
+				validateAllowedBioextractorBioModality(request.getBioModality());
 			} catch (PartnerServiceException ex) {
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw ex;
@@ -1948,6 +1933,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			PageResponseV2Dto<BioextractorConfigurationDetailDto> pageResponse = new PageResponseV2Dto<>();
 			partnerHelper.validateRequestParameters(partnerHelper.bioextractorConfigurationAliasToColumnMap,
 					sortFieldName, sortType, pageNo, pageSize);
+
+			// Validate bioModality filter against configured allowed modalities (same as POST)
+			if (filterDto != null && filterDto.getBioModality() != null && !filterDto.getBioModality().isBlank()) {
+				validateAllowedBioextractorBioModality(filterDto.getBioModality());
+			}
 
 			Pageable pageable = Pageable.unpaged();
 			boolean isPaginationEnabled = (pageNo != null && pageSize != null);
@@ -2049,6 +2039,30 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private String getUserId() {
 		String userId = authUserDetails().getUserId();
 		return userId;
+	}
+
+	private void validateAllowedBioextractorBioModality(String bioModalityRaw) {
+		Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
+				environment,
+				"mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
+		if (modalityToAttribute == null || modalityToAttribute.isEmpty()) {
+			return;
+		}
+		if (bioModalityRaw == null || bioModalityRaw.isBlank()) {
+			return;
+		}
+
+		String bioModality = bioModalityRaw.trim().toLowerCase();
+		if (!modalityToAttribute.containsKey(bioModality)) {
+			String validModalities = modalityToAttribute.keySet().stream()
+					.reduce((a, b) -> a + ", " + b)
+					.orElse("");
+			throw new PartnerServiceException(
+					io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"bioModality",
+							"Valid values are: " + validModalities));
+		}
 	}
 }
 
