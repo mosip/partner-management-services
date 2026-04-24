@@ -450,6 +450,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllApiKeyForMAPartnerV2">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 
 	<test name="UpdatePartner">
 		<parameter name="ymlFile"
