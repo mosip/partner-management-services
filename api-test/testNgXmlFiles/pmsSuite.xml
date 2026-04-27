@@ -450,6 +450,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllApiKeyForMAPartnerV2">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 
 	<test name="UpdatePartner">
 		<parameter name="ymlFile"
@@ -554,9 +562,18 @@
 	<test name="CreateBioExtractorConfiguration">
 		<parameter name="ymlFile"
 			value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml" />
+		<parameter name="reqKeyName" value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="GetBioExtractorConfiguration">
+		<parameter name="ymlFile"
+			value="pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 
@@ -1960,6 +1977,16 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	<test name="SaveDeviceDetailsWithDeactivateSBI">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/SaveDeviceDetailsWithDeactivateSBI.yml" />
+		<parameter name="pathParams" value="sbiId" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
+		</classes>
+	</test>
 	<test name="ApproveMappingDeviceToSbiwhenSBIisDeactivated">
 		<parameter name="ymlFile"
 			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiwhenSBIisDeactivated.yml" />
@@ -2087,7 +2114,7 @@
 			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate.yml" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 	<test

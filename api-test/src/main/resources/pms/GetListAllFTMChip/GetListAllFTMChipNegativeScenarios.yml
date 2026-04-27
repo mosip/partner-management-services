@@ -83,3 +83,45 @@ GetListAllFTMChipNegativeScenarios:
        }
        ]
 }'
+   Pms_GetListAllFTMChip_With_InValid_ExpiryPeriod_With_SpecialCharacters_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=@@@*%%
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_06
+      description: Validate that FTM chip list retrieval fails when special characters expiryPeriod is provided
+      role: partnerftm
+      restMethod: get
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/responseCode
+      input: '{
+}'
+      output: ' {
+      "responseCode": "400"
+}'
+   Pms_GetListAllFTMChip_With_InValid_ExpiryPeriod_More_Than_30_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=1128
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_07
+      description: Validate that FTM chip list retrieval fails when more than 30 value is provided in expiryPeriod
+      role: partnerftm
+      restMethod: get
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/responseCode
+      input: '{
+}'
+      output: ' {
+      "responseCode": "400"
+}'
+   Pms_GetListAllFTMChip_With_InValid_ExpiryPeriod_With_Only_Characters_Neg:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=abc
+      uniqueIdentifier: TC_PMS_GetListAllFTMChipNegativeScenarios_08
+      description: Validate that FTM chip list retrieval fails when only character value is provided in expiryPeriod
+      role: partnerftm
+      restMethod: get
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/responseCode
+      input: '{
+}'
+      output: ' {
+      "responseCode": "400"
+}'
