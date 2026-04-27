@@ -52,6 +52,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_04
     description: Validate that the API successfully retrieves the list of ABIS partners associated with the logged-in Partner Admin user using only the mandatory parameter (status = approved)
     role: partneradmin
+    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
     outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
