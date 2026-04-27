@@ -47,7 +47,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
 }'
     output: '{
 }'
-  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Status_Approved_Neg:
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Status_Approved:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_04
     description: Validate that the API successfully retrieves the list of ABIS partners associated with the logged-in Partner Admin user using only the mandatory parameter (status = approved)
