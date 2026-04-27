@@ -47,7 +47,7 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
 }'
     output: '{
 }'
-  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Mandatory_Parameters:
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Status_Approved:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_04
     description: Validate that the API successfully retrieves the list of ABIS partners associated with the logged-in Partner Admin user using only the mandatory parameter (status = approved)
@@ -59,23 +59,27 @@ GetListofPartnersAssociatedwithLoggedinUserABIS:
     input: '{
       "status": "approved",
       "policyGroupAvailable": "$REMOVE$",
-      "partnerType": "$REMOVE$"
+      "partnerType": "ABIS_Partner"
 }'
     output: '{
 }'
-  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_Without_PartnerType:
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_Without_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_05
     description: Validate that the API successfully retrieves the list of approved partners associated with the logged-in Partner Admin user without providing the partnerType parameter
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "$REMOVE$"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
 }'

@@ -90,18 +90,22 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_06
-    description: Validate that the API successfully processes the request when retrieving ABIS partners with an invalid partnerType parameter
+    description: Validate that the request to retrieve ABIS partners fails with an error when an invalid value is provided for partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "_Invalid_Partner"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+         }
+     ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_SpecialCharacter_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
@@ -121,55 +125,67 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
       {
          "errorCode": "PMS_REQUEST_ERROR_007"
       }
-    ] 
+    ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Empty_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_08
-    description: Validate that the API successfully processes the request when retrieving ABIS partners with an empty partnerType parameter
+    description: Validate that the request to retrieve ABIS partners fails with an error when an empty value is provided for partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": ""
 }'
     output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_POLICY_ERROR_030"
+          }
+     ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_CaseSensitive_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_09
-    description: Validate that the API successfully processes the request when retrieving ABIS partners using a case-sensitive partnerType value (abis_partner)
+    description: Validate that the request to retrieve ABIS partners fails with an error when a case-sensitive or incorrectly formatted value is provided for partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "abis_partner"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+     ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_DeviceProvider_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_10
-    description: Validate that the API successfully processes the request when retrieving ABIS partners using partnerType as Device_Provider
+    description: Validate that the request to retrieve ABIS partners fails with an error when partnerType is provided as "Device_Provider", which is not applicable for the logged-in Partner Admin user.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "Device_Provider"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+     ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_NonAdmin_Role_Neg:
     endPoint: /v1/partnermanager/partners/v3
@@ -187,7 +203,7 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_POLICY_ERROR_012"
+           "errorCode": "PMS_POLICY_ERROR_031"
         }
      ] 
 }'
@@ -210,18 +226,22 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Valid_Status_And_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_13
-    description: Validate that the API successfully processes the request when retrieving ABIS partners using a valid status and an invalid partnerType
+    description: Validate that the request to retrieve ABIS partners fails with an error when a valid status is provided along with an invalid partnerType.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "invalidPartner"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+     ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_Invalid_PartnerType_And_Invalid_PolicyGroupAvailable_Neg:
     endPoint: /v1/partnermanager/partners/v3
@@ -242,48 +262,60 @@ GetListofPartnersAssociatedwithLoggedinUserABISNegTC:
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_AuthPartner_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_15
-    description: Validate that the API successfully processes the request when retrieving ABIS partners using partnerType as Auth_Partner
+    description: Validate that the request to retrieve ABIS partners fails with an error when partnerType is provided as "AuthPartner", which is not applicable for the logged-in Partner Admin user.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
       "partnerType": "Auth_Partner"
 }'
     output: '{
+      "errors": [
+         {
+            "errorCode": "PMS_POLICY_ERROR_030"
+          }
+     ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_DeviceProvider_And_PolicyGroupAvailable_As_False_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_16
-    description: Validate that the API successfully processes the request when retrieving ABIS partners using partnerType as Device_Provider and policyGroupAvailable as false
+    description: Validate that the request to retrieve ABIS partners fails with an error when partnerType is provided as "Device_Provider", which is not applicable for the logged-in Partner Admin user, even when policyGroupAvailable is set to false.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "false",
       "partnerType": "Device_Provider"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+         }
+    ]
 }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_With_FTMProvider_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABISNegTC_17
-    description: Validate that the API successfully processes the request when retrieving ABIS partners using partnerType as FTM_Provider
+    description: Validate that the request to retrieve ABIS partners fails with an error when partnerType is provided as "FTM_Provider", which is not applicable for the logged-in Partner Admin user.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
-    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    outputTemplate: pms/error
     input: '{
       "status": "approved",
       "policyGroupAvailable": "false",
       "partnerType": "FTM_Provider"
 }'
     output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
 }'

@@ -78,37 +78,45 @@ GetListofPartnersAssociatedwithLoggedinUser:
 }'
       output: '{
 }'
-   Pms_GetListofPartnersAssociatedwithLoggedinUser_partnerType_Empty:
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_partnerType_Empty_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_06
-      description: Validate that the API retrieves the list of partners associated with the logged in user when the partner type field is empty
+      description: Validate that the request to retrieve partners fails with an error when partnerType is provided as an empty value for the logged-in user.
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "approved",
       "policyGroupAvailable": "true",
-      "partnerType": "$REMOVE$"
+      "partnerType": ""
 }'
       output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+           }
+     ]
 }'
-   Pms_GetListofPartnersAssociatedwithLoggedinUser_only_Status:
+   Pms_GetListofPartnersAssociatedwithLoggedinUser_only_Status_Neg:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUser_07
-      description: Validate that the API retrieves the list of partners associated with the logged in user when only the status filter is applied
+      description: Validate that the request to retrieve partners fails with an error when only the status filter is provided without required parameters partnerType.
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
-      outputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUserResult
+      outputTemplate: pms/error
       input: '{
       "status": "approved",
       "policyGroupAvailable": "$REMOVE$",
       "partnerType": "$REMOVE$"
 }'
       output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_POLICY_ERROR_030"
+          }
+     ]
 }'
    Pms_GetListofPartnersAssociatedwithLoggedinUser_Filter_with_AuthToken:
       endPoint: /v1/partnermanager/partners/v3
