@@ -2,6 +2,7 @@ package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.mosip.pms.common.constant.ValidationErrorCode;
+import io.mosip.pms.common.exception.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -185,6 +189,20 @@ public class PartnerServiceController {
 			@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
+		if (!StringUtils.hasText(request.getId())) {
+			throw new RequestException(
+					ValidationErrorCode.INVALID_REQUEST_ID.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_ID.getErrorMessage()
+			);
+		}
+
+		if (!StringUtils.hasText(request.getVersion())
+				|| !RequestValidator.VERSION.equals(request.getVersion())) {
+			throw new RequestException(
+					ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_VERSION.getErrorMessage()
+			);
+		}
 		inputValidator.validateRequestInput("partnerId", partnerId);
 		inputValidator.validateRequestInput("policyId", policyId);
 		inputValidator.validateRequestInput("partnerPolicyRequestId", request.getRequest().getPartnerPolicyRequestId());
