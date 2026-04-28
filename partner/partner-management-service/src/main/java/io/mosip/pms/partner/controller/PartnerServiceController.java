@@ -189,7 +189,8 @@ public class PartnerServiceController {
 			@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
-		if (!StringUtils.hasText(request.getId())) {
+		  	if (!StringUtils.hasText(request.getId())
+				|| !postPartnerBioextractorsRequestId.equalsIgnoreCase(request.getId())) {
 			throw new RequestException(
 					ValidationErrorCode.INVALID_REQUEST_ID.getErrorCode(),
 					ValidationErrorCode.INVALID_REQUEST_ID.getErrorMessage()
