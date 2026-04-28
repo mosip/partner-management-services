@@ -673,3 +673,123 @@ GetMISPPartnerLicense:
 }'
         output: '{
 }'
+    Pms_GetMISPPartnerLicense_With_NotProviding_PageSize:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_30
+        description: Validate that the MISP partner licenses are retrieved successfully when pagesize is not provided
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+        "pageNo": "0",
+        "pageSize": "$REMOVE$",
+        "partnerId": "$REMOVE$",
+        "orgName": "$REMOVE$",
+        "policyGroupName": "$REMOVE$",
+        "policyName": "$REMOVE$",
+        "mispLicenseKeyName": "$REMOVE$",
+        "sortFieldName": "$REMOVE$",
+        "sortType": "$REMOVE$",
+        "status": "$REMOVE$",
+        "expiryPeriod": "$REMOVE$"
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_MispLicenseKeyName_And_Pagination:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_31
+        description: Validate that the MISP partner licenses are retrieved successfully where MispLicenseKeyName and pagination are provided
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+        "pageNo": "0",
+        "pageSize": "8",
+        "partnerId": "$REMOVE$",
+        "orgName": "$REMOVE$",
+        "policyGroupName": "$REMOVE$",
+        "policyName": "$REMOVE$",
+        "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_with_Numeric_MisplicenseKeyName_sid_licenseKeyName$",
+        "sortFieldName": "$REMOVE$",
+        "sortType": "$REMOVE$",
+        "status": "$REMOVE$",
+        "expiryPeriod": "$REMOVE$"
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_Status_Activated_And_ExpiryPeriod_30:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_32
+        description: Validate that the MISP partner licenses are retrieved successfully where status is activated and expiryPeriod is 30
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+        "pageNo": "$REMOVE$",
+        "pageSize": "$REMOVE$",
+        "partnerId": "$REMOVE$",
+        "orgName": "$REMOVE$",
+        "policyGroupName": "$REMOVE$",
+        "policyName": "$REMOVE$",
+        "mispLicenseKeyName": "$REMOVE$",
+        "sortFieldName": "$REMOVE$",
+        "sortType": "$REMOVE$",
+        "status": "activated",
+        "expiryPeriod": "30"
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_Numeric_PolicyGroupName:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_33
+        description: Validate that the MISP partner licenses are retrieved successfully with numeric policyGroupName
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+        "pageNo": "$REMOVE$",
+        "pageSize": "$REMOVE$",
+        "partnerId": "$REMOVE$",
+        "orgName": "$REMOVE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_With_Numeric_Value_Smoke_sid_name$",
+        "policyName": "$REMOVE$",
+        "mispLicenseKeyName": "$REMOVE$",
+        "sortFieldName": "$REMOVE$",
+        "sortType": "$REMOVE$",
+        "status": "$REMOVE$",
+        "expiryPeriod": "$REMOVE$"
+}'
+        output: '{
+}'
+    Pms_GetMISPPartnerLicense_With_Null_PartnerId:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_34
+        description: Validate that the MISP partner licenses are retrieved successfully with null partnerId
+        role: partneradmin
+        restMethod: get
+        checkErrorsOnlyInResponse: true
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseResult
+        input: '{
+        "pageNo": "$REMOVE$",
+        "pageSize": "$REMOVE$",
+        "partnerId": "null",
+        "orgName": "$REMOVE$",
+        "policyGroupName": "$REMOVE$",
+        "policyName": "$REMOVE$",
+        "mispLicenseKeyName": "$REMOVE$",
+        "sortFieldName": "$REMOVE$",
+        "sortType": "$REMOVE$",
+        "status": "$REMOVE$",
+        "expiryPeriod": "$REMOVE$"
+}'
+        output: '{
+}'

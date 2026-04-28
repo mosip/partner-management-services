@@ -75,3 +75,21 @@ GetAllApprovedFtmProviderNegativeScenarios:
        }
        ]
 }'
+   Pms_Get_All_Approved_Ftm_Provider_With_Partner_Admin_Role_Neg:
+      endPoint: /v1/partnermanager/partners/v3?status=approved&partnerType=FTM_Provider
+      uniqueIdentifier: TC_PMS_GetAllApprovedFtmProviderNegativeScenarios_05
+      description: Validate that retrieving all approved FTM providers fails when authentication is done by Partner Admin
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetAllApprovedFtmProvider/GetAllApprovedFtmProvider
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "pms-111888"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_POLICY_ERROR_030"
+       }
+       ]
+}'

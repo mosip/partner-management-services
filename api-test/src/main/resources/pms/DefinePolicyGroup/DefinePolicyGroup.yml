@@ -392,3 +392,21 @@ definePolicyGroup:
       output: ' {
         "is_Active": true
 }'
+   Pms_DefinePolicyGroup_With_Numeric_Value_Smoke_sid:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Validate that a policy group is successfully created with all valid inputs
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_23
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/DefinePolicyGroup/definePolicyGroupResult
+      input: '{
+    "desc": "$RUNCONTEXT$12345",
+    "name": "$RUNCONTEXT$12345",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "name": "$RUNCONTEXT$12345",
+        "desc": "$RUNCONTEXT$12345",
+        "is_Active": true
+}'

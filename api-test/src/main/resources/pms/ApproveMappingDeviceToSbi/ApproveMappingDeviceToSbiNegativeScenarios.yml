@@ -296,3 +296,26 @@ ApproveMappingDeviceToSbiNegativeScenarios:
        }
        ]
 }'
+   Pms_ApproveMappingDeviceToSbi_With_Different_Device_And_SBI_Mapping_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_ApproveMappingDeviceToSbiNegativeScenarios_14
+      description: Validate that device mapping to an SBI fails when a mismatched or different SBI is provided for the device.
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+      "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_With_FTMPartner_Smoke_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForPendingApproval_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_002"
+       }
+       ]
+}'

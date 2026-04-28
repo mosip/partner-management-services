@@ -1,0 +1,85 @@
+GetListofPartnersAssociatedwithLoggedinUserABIS:
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_01
+    description: Validate that the API successfully retrieves the list of approved ABIS partners associated with the logged-in Partner Admin user
+    role: partneradmin
+    checkErrorsOnlyInResponse: true
+    restMethod: get
+    inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
+    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    input: '{
+      "status": "approved",
+      "policyGroupAvailable": "true",
+      "partnerType": "ABIS_Partner"
+}'
+    output: '{
+}'
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Status_InProgress:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_02
+    description: Validate that the API successfully retrieves the list of ABIS partners with InProgress status associated with the logged-in Partner Admin user.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
+    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    input: '{
+      "status": "InProgress",
+      "policyGroupAvailable": "true",
+      "partnerType": "ABIS_Partner"
+}'
+    output: '{
+}'
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_PolicyGroupAvailable_As_False:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_03
+    description: Validate that the API successfully retrieves the list of approved ABIS partners with policyGroupAvailable set to false associated with the logged-in Partner Admin user.
+    role: partneradmin
+    checkErrorsOnlyInResponse: true
+    restMethod: get
+    inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
+    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    input: '{
+      "status": "approved",
+      "policyGroupAvailable": "false",
+      "partnerType": "ABIS_Partner"
+}'
+    output: '{
+}'
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_With_Only_Status_Approved:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_04
+    description: Validate that the API successfully retrieves the list of ABIS partners associated with the logged-in Partner Admin user using only the mandatory parameter (status = approved)
+    role: partneradmin
+    checkErrorsOnlyInResponse: true
+    restMethod: get
+    inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
+    outputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISResult
+    input: '{
+      "status": "approved",
+      "policyGroupAvailable": "$REMOVE$",
+      "partnerType": "ABIS_Partner"
+}'
+    output: '{
+}'
+  Pms_GetListofPartnersAssociatedwithLoggedinUserABIS_Without_PartnerType_Neg:
+    endPoint: /v1/partnermanager/partners/v3
+    uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserABIS_05
+    description: Validate that the API successfully retrieves the list of approved partners associated with the logged-in Partner Admin user without providing the partnerType parameter
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS
+    outputTemplate: pms/error
+    input: '{
+      "status": "approved",
+      "policyGroupAvailable": "true",
+      "partnerType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_POLICY_ERROR_030"
+        }
+    ]
+}'

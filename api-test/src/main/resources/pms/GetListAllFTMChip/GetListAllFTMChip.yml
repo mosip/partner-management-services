@@ -15,3 +15,55 @@ GetListAllFTMChip:
       "make": "AcmeCorpFtm",
       "model": "mode2
 }'
+   Pms_GetListAllFTMChip_With_Valid_ExpiryPeriod:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=10
+      uniqueIdentifier: TC_PMS_GetListAllFTMChip_02
+      description: Validate that the list of all FTM chips is successfully retrieved when valid expiryPeriod is provided
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResult2
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListAllFTMChip_With_Valid_ExpiryPeriod_15:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=15
+      uniqueIdentifier: TC_PMS_GetListAllFTMChip_03
+      description: Validate that the list of all FTM chips is successfully retrieved when valid expiryPeriod(15) is provided
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResult2
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListAllFTMChip_With_Valid_ExpiryPeriod_30:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=30
+      uniqueIdentifier: TC_PMS_GetListAllFTMChip_04
+      description: Validate that the list of all FTM chips is successfully retrieved when valid expiryPeriod(30) is provided
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResult2
+      input: '{
+}'
+      output: ' {
+}'
+   Pms_GetListAllFTMChip_With_Valid_ExpiryPeriod_2:
+      endPoint: /v1/partnermanager/ftpchipdetail?expiryPeriod=2
+      uniqueIdentifier: TC_PMS_GetListAllFTMChip_05
+      description: Validate that the list of all FTM chips is successfully retrieved when valid expiryPeriod(2) is provided
+      role: partnerftm
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListAllFTMChip/GetListAllFTMChip
+      outputTemplate: pms/GetListAllFTMChip/GetListAllFTMChipResult2
+      input: '{
+}'
+      output: ' {
+}'
