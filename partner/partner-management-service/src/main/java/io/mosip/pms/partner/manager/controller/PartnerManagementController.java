@@ -25,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.constant.ValidationErrorCode;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.annotations.ApiParam;
@@ -816,10 +817,28 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<BioextractorConfigurationResponseDto> deleteBioextractorConfiguration(
 			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId,
 			@RequestBody @Valid RequestWrapperV2<BioextractorConfigurationDeleteRequestDto> requestWrapper) {
+		if (requestWrapper == null) {
+			ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+			responseWrapper.setId(patchDeleteBioextractorConfigurationId);
+			responseWrapper.setVersion(RequestValidator.VERSION);
+			responseWrapper.setErrors(RequestValidator.setErrorResponse(
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorMessage()));
+			return responseWrapper;
+		}
 		Optional<ResponseWrapperV2<BioextractorConfigurationResponseDto>> validationResponse =
 				requestValidator.validate(patchDeleteBioextractorConfigurationId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
+		}
+		if (requestWrapper.getRequest() == null) {
+			ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+			responseWrapper.setId(patchDeleteBioextractorConfigurationId);
+			responseWrapper.setVersion(RequestValidator.VERSION);
+			responseWrapper.setErrors(RequestValidator.setErrorResponse(
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorMessage()));
+			return responseWrapper;
 		}
 		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
 		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());

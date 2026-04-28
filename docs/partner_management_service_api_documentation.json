@@ -9881,7 +9881,10 @@
                                         "properties": {
                                             "status": {
                                                 "type": "string",
-                                                "example": "DELETED"
+                                                "example": "DELETED",
+                                                "enum": [
+                                                    "DELETED"
+                                                ]
                                             }
                                         },
                                         "required": [

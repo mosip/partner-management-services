@@ -37,3 +37,7 @@ COMMENT ON COLUMN pms.bioextractor_configuration.cr_dtimes IS 'Created DateTimes
 -- ddl-end --
 COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft delete flag. true indicates logically deleted record.';
 -- ddl-end --
+
+CREATE UNIQUE INDEX uq_bioextractor_configuration_config_name_active
+ON pms.bioextractor_configuration (lower(config_name))
+WHERE is_deleted = false;

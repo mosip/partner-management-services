@@ -11,3 +11,8 @@ ALTER TABLE IF EXISTS pms.bioextractor_configuration
 ALTER TABLE IF EXISTS pms.bioextractor_configuration
     DROP CONSTRAINT IF EXISTS uq_bioextractor_configuration_config_name;
 
+-- Enforce uniqueness among active (non-deleted) configurations only (case-insensitive)
+CREATE UNIQUE INDEX IF NOT EXISTS uq_bioextractor_configuration_config_name_active
+ON pms.bioextractor_configuration (lower(config_name))
+WHERE is_deleted = false;
+

@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -2975,6 +2976,10 @@ public class PartnerManagementServiceImplTest {
 		assertEquals("Bio Extractor configuration deleted successfully.", resp.getResponse().getStatus());
 		assertEquals("mosip.pms.bioextractor.configuration.delete.patch", resp.getId());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		
+		ArgumentCaptor<BioextractorConfiguration> captor = ArgumentCaptor.forClass(BioextractorConfiguration.class);
+		Mockito.verify(bioextractorConfigurationRepository).save(captor.capture());
+		assertTrue(captor.getValue().isDeleted());
 	}
 	
 	@Test
