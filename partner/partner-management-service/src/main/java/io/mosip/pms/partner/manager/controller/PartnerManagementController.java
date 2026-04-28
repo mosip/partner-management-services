@@ -11,6 +11,7 @@ import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
@@ -100,6 +101,9 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
 	private String postBioextractorConfigurationsId;
+	
+	@Value("${mosip.pms.api.id.bioextractor.configuration.delete.patch}")
+	private String patchDeleteBioextractorConfigurationId;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -798,6 +802,28 @@ public class PartnerManagementController {
 			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId) {
 		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
 		return partnerManagementService.getBioextractorConfigurationById(bioExtractorConfigurationId);
+	}
+	
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchbioextractorconfigurationdelete())")
+	@PatchMapping(value = "/bio-extractor-configurations/{bioExtractorConfigurationId}")
+	@Operation(summary = "Delete bio-extractor configuration ",
+			description = "Deletes the bio-extractor configuration. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> deleteBioextractorConfiguration(
+			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId,
+			@RequestBody @Valid RequestWrapperV2<BioextractorConfigurationDeleteRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<BioextractorConfigurationResponseDto>> validationResponse =
+				requestValidator.validate(patchDeleteBioextractorConfigurationId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
+		return partnerManagementService.deleteBioextractorConfiguration(bioExtractorConfigurationId, requestWrapper.getRequest());
 	}
 
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(

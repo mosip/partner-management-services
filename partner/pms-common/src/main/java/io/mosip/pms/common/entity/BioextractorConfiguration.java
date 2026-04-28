@@ -34,6 +34,9 @@ public class BioextractorConfiguration implements Serializable {
 
 	@Column(name = "cr_dtimes", nullable = false)
 	private Timestamp crDtimes;
+	
+	@Column(name = "is_deleted", nullable = false)
+	private boolean isDeleted = false;
 
 	public String getId() {
 		return id;
@@ -89,5 +92,13 @@ public class BioextractorConfiguration implements Serializable {
 
 	public void setCrDtimes(Timestamp crDtimes) {
 		this.crDtimes = crDtimes;
+	}
+	
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+	
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

@@ -15,8 +15,8 @@ CREATE TABLE pms.bioextractor_configuration(
 	bio_modality character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
-	CONSTRAINT pk_bioextractor_configuration PRIMARY KEY (id),
-	CONSTRAINT uq_bioextractor_configuration_config_name UNIQUE (config_name)
+	is_deleted boolean NOT NULL DEFAULT false,
+	CONSTRAINT pk_bioextractor_configuration PRIMARY KEY (id)
 );
 -- ddl-end --
 COMMENT ON TABLE pms.bioextractor_configuration IS 'Bioextractor Configuration: Stores configuration details for biometric extractor providers.';
@@ -34,4 +34,6 @@ COMMENT ON COLUMN pms.bioextractor_configuration.bio_modality IS 'Bio Modality: 
 COMMENT ON COLUMN pms.bioextractor_configuration.cr_by IS 'Created By: ID or name of the user who created the record.';
 -- ddl-end --
 COMMENT ON COLUMN pms.bioextractor_configuration.cr_dtimes IS 'Created DateTimestamp: Date and Timestamp when the record was created.';
+-- ddl-end --
+COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft delete flag. true indicates logically deleted record.';
 -- ddl-end --

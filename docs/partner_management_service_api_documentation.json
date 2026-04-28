@@ -9828,6 +9828,147 @@
                 "x-stoplight": {
                     "id": "pms-bio-extractor-configuration-by-id-get"
                 }
+            },
+            "patch": {
+                "tags": [
+                    "partner-management-controller",
+                    "NEW"
+                ],
+                "summary": "NEW: Delete bio-extractor configuration by ID",
+                "description": "Deletes a bio-extractor configuration by setting `is_deleted=true`.\r\n\r\n**Request validation:**\r\n- Wrapper validation via `RequestValidator` using id `mosip.pms.bioextractor.configuration.delete.patch` and version `1.0`.\r\n- `status` is mandatory and must be `DELETED` (case-insensitive).\r\n\r\n**Behavior:**\r\n- If the id does not exist (or is already deleted), returns `BIOEXTRACTOR_CONFIGURATION_NOT_FOUND` in `errors`.\r\n- On success, `response.status` is `Bio Extractor configuration deleted successfully.`\r\n\r\n**Authorization:** `mosip.role.pms.patchbioextractorconfigurationdelete` (default role: PARTNER_ADMIN).",
+                "operationId": "deleteBioextractorConfiguration",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bioExtractorConfigurationId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Bio-extractor configuration id returned from create or list APIs.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "mosip.pms.bioextractor.configuration.delete.patch"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "example": "1.0"
+                                    },
+                                    "requestTime": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status": {
+                                                "type": "string",
+                                                "example": "DELETED"
+                                            }
+                                        },
+                                        "required": [
+                                            "status"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id",
+                                    "version",
+                                    "requestTime",
+                                    "request"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "mosip.pms.bioextractor.configuration.delete.patch"
+                                        },
+                                        "version": {
+                                            "type": "string",
+                                            "example": "1.0"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "response": {
+                                            "nullable": true,
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "pms-bio-extractor-configuration-by-id-delete-patch"
+                }
             }
         },
         "/partners/{partnerId}/policies/{policyId}/bio-extractors-request": {
