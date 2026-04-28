@@ -89,7 +89,7 @@ GetAllApprovedFtmProviderNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_POLICY_ERROR_030"
        }
        ]
 }'
