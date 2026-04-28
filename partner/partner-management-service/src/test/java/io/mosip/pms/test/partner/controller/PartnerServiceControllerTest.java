@@ -595,7 +595,7 @@ public class PartnerServiceControllerTest {
     private RequestWrapper<PartnerRequest> createRequest() {
         RequestWrapper<PartnerRequest> request = new RequestWrapper<PartnerRequest>();
         request.setRequest(createPartnerRequest());
-        request.setId("mosip.pms.partners.bioextractors.request.post");
+        request.setId("mosip.partnermanagement.partners.create");
         request.setVersion("1.0");
         request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         request.setMetadata("{}");
@@ -688,7 +688,7 @@ public class PartnerServiceControllerTest {
     private RequestWrapper<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
         RequestWrapper<BioExtractorsRequestDto> request = new RequestWrapper<BioExtractorsRequestDto>();
         request.setRequest(getBioExtractorsRequestInput());
-        request.setId("mosip.partnermanagement.partners.create");
+        request.setId("mosip.pms.partners.bioextractors.request.post");
         request.setVersion("1.0");
         request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         request.setMetadata("{}");
