@@ -138,7 +138,7 @@ uploadPartnerCert:
       output: ' {
 }'
 
-   Pms_UploadPartnerCert_uploadCertificate_For_Device_Provider_Smoke:
+   Pms_UploadPartnerCert_uploadCertificate_For_Device_Provider:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadPartnerCert_09
       description: Validate that uploading a Partner Certificate and Device Provider Certificate with all valid inputs is successful

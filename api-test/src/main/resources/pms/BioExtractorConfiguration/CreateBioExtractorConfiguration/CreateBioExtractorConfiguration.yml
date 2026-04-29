@@ -1,5 +1,5 @@
 CreateBioExtractorConfiguration:
-  Pms_CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid:
+  Pms_CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_01
     description: Validate that a Bio Extractor Configuration is created successfully with all valid inputs.
@@ -555,4 +555,24 @@ CreateBioExtractorConfiguration:
            "errorCode": "PMS_PRT_272"
         }
     ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_30
+    description: Validate that a Bio Extractor Configuration is created successfully with allowed special characters
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$@#&-?!=_Auto",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
 }'

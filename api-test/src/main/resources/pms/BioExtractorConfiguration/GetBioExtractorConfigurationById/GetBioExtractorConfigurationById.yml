@@ -1,0 +1,165 @@
+GetBioExtractorConfigurationById:
+  Pms_GetBioExtractorConfigurationById_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_01
+    description: Validate that Bio Extractor Configurations are retrieved successfully when Bio Extract Configuration ID is provided as path parameter
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationByIdResult
+    input: '{
+      "bioExtractorConfigurationId": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_id$"
+}'
+    output: '{
+    "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+    "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+    "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$"
+}'
+
+  Pms_GetBioExtractorConfigurationById_With_Invalid_Token_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_02
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an unauthorized error when an invalid authentication token is used
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/error
+    input: '{
+      "bioExtractorConfigurationId": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_id$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-401"
+        }
+    ]
+}'
+
+  Pms_GetBioExtractorConfigurationById_With_Invalid_BioExtractorConfigurationId_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_03
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when an invalid Bio Extractor ConfigurationId is used
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/error
+    input: '{
+      "bioExtractorConfigurationId": "invalid-bioextractorconfiguration-id"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_275"
+        }
+    ]
+}'
+
+  Pms_GetBioExtractorConfigurationById_With_SpecialCharacter_in_BioExtractorConfigurationId_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_04
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when an special characters is provided as Bio Extractor ConfigurationId
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/responseCode
+    input: '{
+      "bioExtractorConfigurationId": "!@#$%^&*()_+"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+
+  Pms_GetBioExtractorConfigurationById_With_Space_in_BioExtractorConfigurationId_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_05
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when an space value is provided as Bio Extractor ConfigurationId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/error
+    input: '{
+      "bioExtractorConfigurationId": " "
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_001"
+        }
+    ]
+}'
+
+  Pms_GetBioExtractorConfigurationById_With_LongValue_in_BioExtractorConfigurationId_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_06
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when an long value is provided as Bio Extractor ConfigurationId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/error
+    input: '{
+      "bioExtractorConfigurationId": "hhghGHGggygsdavsgVTgtaGSQVGVGxygatGSTVSGGXA"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_275"
+        }
+    ]
+}'
+
+  Pms_GetBioExtractorConfigurationById_With_ExistingId_in_BioExtractorConfigurationId:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_07
+    description: Validate that the Bio Extractor Configurations is retrieved when an already fetched Bio Extractor ConfigurationId is provided
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationByIdResult
+    input: '{
+      "bioExtractorConfigurationId": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_id$"
+}'
+    output: '{
+    "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+    "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+    "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$"
+}'
+
+  Pms_GetBioExtractorConfigurationById_Without_PartnerAdmin_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_08
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when partner admin role is not present
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/error
+    input: '{
+      "bioExtractorConfigurationId": "hhghGHGggygsdavsgVTgtaGSQVGVGxygatGSTVSGGXA"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+    ]
+}'
+
+  Pms_GetBioExtractorConfigurationById_BioExtractorConfigurationId_has_AllowedSpecialCharactes_Valid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_09
+    description: Validate that the Bio extractor configuration is retrieved for the configuration created with allowed special characters
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationByIdResult
+    input: '{
+      "bioExtractorConfigurationId": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_id$"
+}'
+    output: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_configName$"
+}'

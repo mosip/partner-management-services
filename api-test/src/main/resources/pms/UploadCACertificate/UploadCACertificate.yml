@@ -171,7 +171,7 @@ UploadCACertificate:
       "status": "Upload Success."
 }'
 
-   Pms_UploadSubCACertificate_For_Device_Provider_Smoke:
+   Pms_UploadCACertificate_For_Device_Provider:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_10
       description: Validate that uploading a Device Provider Certificate with all valid inputs is successful and reflected correctly
@@ -189,7 +189,7 @@ UploadCACertificate:
       "status": "Upload Success."
 }'
 
-   Pms_UploadSubCACertificate_DeviceProvider_Smoke:
+   Pms_UploadSubCACertificate_For_Device_Provider:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_11
       description: Validate that uploading a Sub CA Certificate for a Device Provider with all valid inputs is successful

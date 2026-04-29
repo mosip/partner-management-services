@@ -1,6 +1,6 @@
 AddBioExtractors:
    Pms_AddBioExtractors_MosipDataSharePolicy_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_01
       description: Validate that bio extractors can be successfully added under the Mosip Data Share policy when all inputs are valid
       role: partner
@@ -11,11 +11,12 @@ AddBioExtractors:
       input: '{
 	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+	"partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
 	"requesttime": "$TIMESTAMP$"
   }'
 
    Pms_AddBioExtractors_MosipPolicy_All_Valid_Smoke:
-      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_02
       description: Validate that bio extractors can be successfully added under the Mosip policy when all inputs are valid
       role: partner
@@ -26,11 +27,12 @@ AddBioExtractors:
       input: '{
 	"partnerId":"$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+	"partnerPolicyRequestId": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
 	"requesttime": "$TIMESTAMP$"
   }'
       
    Pms_AddBioExtractors_invalid_policyId:
-      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_03
       description: Validate that adding bio extractors fails when an invalid policy ID is provided
       role: partner
@@ -40,18 +42,19 @@ AddBioExtractors:
       input: '{
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"abcd",
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
   "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_PRT_061"
+      "errorCode": "PMS_PRT_284"
     }
   ]
 }'
 
    Pms_AddBioExtractors_invalid_partnerId:
-      endPoint: /v1/partnermanager/partners/{partnerId}/bioextractors/{policyId}
+      endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_04
       description: Validate that adding bio extractors fails when an invalid partner ID is provided
       role: partner
@@ -61,12 +64,13 @@ AddBioExtractors:
       input: '{
   "partnerId":"abcd",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+  "partnerPolicyRequestId": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
   "requesttime": "$TIMESTAMP$"
   }'
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_PRT_061"
+      "errorCode": "PMS_PRT_005"
     }
   ]
 }'    
