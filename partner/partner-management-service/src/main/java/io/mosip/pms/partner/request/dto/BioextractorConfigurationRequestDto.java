@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 public class BioextractorConfigurationRequestDto {
 
-	@Size(max = 126, message = "configName length must be <= 126")
+	@Size(max = 128, message = "configName length must be <= 128")
 	private String configName;
 
-	@Size(max = 126, message = "Bio extractor provider name length must be <= 126")
+	@Size(max = 128, message = "Bio extractor provider name length must be <= 128")
 	private String bioextractorProviderName;
 
 	@Size(max = 36, message = "Bio extractor provider version length must be <= 36")
