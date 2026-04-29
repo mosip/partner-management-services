@@ -146,10 +146,10 @@ GetBioExtractorConfigurationById:
     ]
 }'
 
-  Pms_GetBioExtractorConfigurationById_BioExtractorConfigurationId_has_AllowedSpecialCharactes_Neg:
+  Pms_GetBioExtractorConfigurationById_BioExtractorConfigurationId_has_AllowedSpecialCharactes_Valid:
     endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
     uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_09
-    description: Validate that the request to retrieve Bio Extractor Configurations fails when an long value is provided as Bio Extractor ConfigurationId
+    description: Validate that the Bio extractor configuration is retrieved for the configuration created with allowed special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
