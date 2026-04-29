@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.Data;
 public class RequestWrapperV2<T> {
     private String id;
     private String version;
+    @JsonAlias("requesttime")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime requestTime;
 
