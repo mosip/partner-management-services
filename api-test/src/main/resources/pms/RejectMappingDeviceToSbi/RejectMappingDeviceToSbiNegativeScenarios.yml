@@ -735,3 +735,89 @@ RejectMappingDeviceToSbiNegativeScenarios:
        }
        ]
 }'
+   Pms_RejectMappingDeviceToSbi_with_Rejected_SBI_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_34
+      description: Validate that rejecting the mapping of a device to SBI fails when rejected sbi is provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+      "sbiId": "$ID:SaveSecureBiometricInterface_Valid_Smoke_ForReject_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForReject_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_028"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_with_SBI_Which_Is_Not_Approved_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_35
+      description: Validate that rejecting the mapping of a device to SBI fails when not approved sbi is provided.
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/error
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "$TIMESTAMP$",
+      "partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+      "sbiId": "$ID:SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForPendingApproval_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_DEVICE_ERROR_009"
+       }
+       ]
+}'
+   Pms_RejectMappingDeviceToSbi_with_Numeric_RequestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_36
+      description: Validate that rejecting the mapping of a device to SBI fails when numeric requesttime is provided.
+      role: partneradmin
+      restMethod: post
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/responseCode
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "20260406",
+      "partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+      "sbiId": "$ID:SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForPendingApproval_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "responseCode": "400"
+}'
+   Pms_RejectMappingDeviceToSbi_with_Invalid_RequestTime_Neg:
+      endPoint: /v1/partnermanager/devicedetail/{deviceDetailId}/approval
+      uniqueIdentifier: TC_PMS_RejectMappingDeviceToSbiNegativeScenarios_37
+      description: Validate that rejecting the mapping of a device to SBI fails when numeric requesttime is provided.
+      role: partneradmin
+      restMethod: post
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/RejectMappingDeviceToSbi/RejectMappingDeviceToSbiNegativeScenarios
+      outputTemplate: pms/responseCode
+      input: '{
+      "id": "mosip.pms.approval.mapping.device.to.sbi.post",
+      "version": "1.0",	
+      "requestTime": "@invalid%time",
+      "partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+      "sbiId": "$ID:SaveSecureBiometricInterface_For_Not_Approved_SbiId_sid_id$",
+      "deviceDetailId": "$ID:SaveDeviceDetails_DeviceProviderForPendingApproval_AllValid_Smoke_sid_id$"
+}'
+      output: '{
+	  "responseCode": "400"
+}'

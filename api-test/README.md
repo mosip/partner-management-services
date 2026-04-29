@@ -96,7 +96,7 @@ To execute the tests using Jar, use the following steps:
 
 2. Run the automation test suite JAR file:
    ```
-   java -jar -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression -jar apitest-partner-1.3.0-jar-with-dependencies.jar
+   java -jar -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression -jar apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar
    ```
 
 # Using Eclipse IDE
@@ -133,15 +133,23 @@ To execute the tests using Eclipse IDE, use the following steps:
      - **VM Arguments**:
        ```
        -Dmodules=partner -Denv.user=api-internal.<env_name> -Denv.endpoint=<base_env> -Denv.testLevel=smokeAndRegression```
+	   (example : -Dmodules=Partner -Denv.user=api-internal.test-env -Denv.endpoint=https://api-internal.test-env.mosip.net -Denv.testLevel=smokeAndRegression)
+	   
+## 5. **Update the property file**
+      
+   1. Navigate to the pms.properties file located at: `partner-management-services/api-test/src/main/resources/config/pms.properties`
+   2. Open the file in your preferred editor.
+   3. Update the client secret values and other required credentials as per your environment.
+	
 
-## 5. **Run the Configuration**
+## 6. **Run the Configuration**
 
    - Once the configuration is set up, click **Run** to execute the test suite.
    - The tests will run, and the results will be shown in the **Console** tab of Eclipse.
 
    **Note**: You can also run in **Debug Mode** to troubleshoot issues by setting breakpoints in your code and choosing `Debug` instead of `Run`.
 
-## 6. **View Test Results**
+## 7. **View Test Results**
 
    - After the tests are executed, you can view the detailed results in the `api-test\testng-report` directory.
 
@@ -152,7 +160,7 @@ To execute the tests using Eclipse IDE, use the following steps:
 - **env.user**: Replace `<env_name>` with the appropriate environment name (e.g., `dev`, `qa`, etc.).
 - **env.endpoint**: The environment where the application under test is deployed. Replace `<base_env>` with the correct base URL for the environment (e.g., `https://api-internal.<env_name>.mosip.net`).
 - **env.testLevel**: Set this to `smoke` to run only smoke test cases, or `smokeAndRegression` to run both smoke and regression tests.
-- **jar**: Specify the name of the JAR file to execute. The version will change according to the development code version. For example, the current version may look like `apitest-partner-1.3.0-jar-with-dependencies.jar`.
+- **jar**: Specify the name of the JAR file to execute. The version will change according to the development code version. For example, the current version may look like `apitest-partner-1.3.0-SNAPSHOT-jar-with-dependencies.jar`.
 
 ### Build and Run Info
 

@@ -377,3 +377,29 @@ GetListOfAllSBI:
        }
        ]
 }'
+   Pms_GetListOfAllSBI_With_Invalid_ExpiryPeriod_Neg:
+      endPoint: /v1/partnermanager/securebiometricinterface?expiryPeriod={expiryPeriod}
+      uniqueIdentifier: TC_PMS_SBI_List_17
+      description: Validate that SBI list retrieval fails when invalid expiry period is provided
+      role: partnerdevice
+      restMethod: get
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/GetListOfAllSBI/getListOfAllSBI
+      outputTemplate: pms/responseCode
+      input: '{
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortType": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "status": "$REMOVE$",
+      "partnerId": "$REMOVE$",
+      "sbiVersion": "$REMOVE$",
+      "orgName": "$REMOVE$",
+      "sbiId": "$REMOVE$",
+      "policyId": "$REMOVE$",
+      "sbiExpiryStatus": "$REMOVE$",
+      "expiryPeriod": "@56Abc*%"
+}'
+      output: '{
+      "responseCode": "400"
+}'

@@ -286,6 +286,81 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
+	<test name="ABISPartnerV3">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/CreateABISPartner/CreateABISPartner.yml" />
+			<parameter name="idKeyName" value="id,partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateABISCASUBCA">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/UploadCertificateABIS/UploadCertificateABISForCASUBCA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadABISPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/UploadPartnerCertificateABIS/UploadABISPartnerCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+
+	<test name="GetListofPartnersAssociatedwithLoggedinUserABIS">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABIS.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUserABISNegTC">
+		<parameter name="ymlFile"
+			value="pms/ABISPartnerV3/GetListofPartnersAssociatedwithLoggedinUserABIS/GetListofPartnersAssociatedwithLoggedinUserABISNegTC.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="MAPartnerV3">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/CreateMAPartner/CreateMAPartner.yml" />
+			<parameter name="idKeyName" value="id,partnerId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCertificateCASUBCAForMA">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/UploadCertificateForMAPartner/UploadCertificateMAForCASUBCA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadMAPartnerCertificate">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/UploadPartnerCertificateForMAPartner/UploadMAPartnerCertificate.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetListofPartnersAssociatedwithLoggedinUserMA">
+		<parameter name="ymlFile"
+			value="pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 	<test name="CreatePartner_Online_Verification_Partner">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/CreatePartner/CreatePartner.yml" />
@@ -375,6 +450,14 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetAllApiKeyForMAPartnerV2">
+		<parameter name="ymlFile"
+			value="pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
 
 	<test name="UpdatePartner">
 		<parameter name="ymlFile"
@@ -416,6 +499,48 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+
+	<test name="CreatePartner_MISP_Provider">
+		<parameter name="ymlFile"
+		           value="pms/mispPartner/CreatePartner/CreatePartner.yml" />
+		<parameter name="idKeyName" value="partnerId" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="UploadCACertificate_MISP_Provider">
+		<parameter name="ymlFile"
+		           value="pms/mispPartner/UploadCertificate/UploadCertificate.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="UploadPartnerCertificate_MISP_Provider">
+		<parameter name="ymlFile"
+		           value="pms/mispPartner/UploadCert/UploadCert.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+		</classes>
+	</test>
+	<test name="GetPartnerDetails_MISP_Provider">
+		<parameter name="ymlFile"
+		           value="pms/mispPartner/GetPartner/GetPartner.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
+	<test name="GetPartnerCertificate_MISP_Provider">
+		<parameter name="ymlFile"
+		           value="pms/mispPartner/GetCertificate/GetCert.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
 
@@ -476,6 +601,32 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
 		</classes>
 	</test>
+	<test name="CreateBioExtractorConfiguration">
+		<parameter name="ymlFile"
+			value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml" />
+		<parameter name="reqKeyName" value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
+		</classes>
+	</test>
+	<test name="GetBioExtractorConfiguration">
+		<parameter name="ymlFile"
+			value="pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration.yml" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
+		</classes>
+	</test>
+	<test name="GetBioExtractorConfigurationById">
+		<parameter name="ymlFile"
+		           value="pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
 
 	<test name="AddBioExtractors">
 		<parameter name="ymlFile"
@@ -484,6 +635,15 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	<test name="MapPartnerAndPolicytoCredentialType">
+		<parameter name="ymlFile"
+		           value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml" />
+		<parameter name="pathParams" value="partnerId,policyId"/>
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
 
@@ -504,6 +664,14 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GetPolicyforMappedPartnerAndCredentialtype">
+		<parameter name="ymlFile"
+		           value="pms/GetPolicyforMappedPartnerAndCredentialtype/GetPolicyforMappedPartnerAndCredentialtype.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
 
@@ -562,7 +730,25 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBodyForAutoGenId" />
 		</classes>
 	</test>
-	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has 
+	<test name="UpdateOrDeactivateApiKey">
+		<parameter name="ymlFile"
+			value="pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKey.yml" />
+		<parameter name="pathParams" value="partnerId,policyId,apiKeyName" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="UpdateOrDeactivateApiKeyNegTC">
+		<parameter name="ymlFile"
+			value="pms/UpdateOrDeactivateApiKey/UpdateOrDeactivateApiKeyNegTC.yml" />
+		<parameter name="pathParams" value="partnerId,policyId,apiKeyName" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/expiry-date has
 		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
 		Ticket ID: MOSIP-43700, Story ID: MOSIP-44155 -->
 	<!-- <test name="UpdateApiKeyExpiryDate">
@@ -583,8 +769,10 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test> -->
-
-	<test name="ActivateDeactivatePartnerApiKey">
+	<!-- PATCH /partners/{partnerId}/policy/{policyId}/apiKey/status has
+		been deprecated and replaced by PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName}. 
+		Ticket ID: MOSIP-44170, Story ID: MOSIP-44155 -->
+	<!--<test name="ActivateDeactivatePartnerApiKey">
 		<parameter name="ymlFile"
 			value="pms/ActivateDeactivatePartnerApiKey/ActivateDeactivatePartnerApiKey.yml" />
 		<parameter name="pathParams" value="partnerId,policyId" />
@@ -592,7 +780,7 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
-	</test>
+	</test>-->
 	<test name="InsertDBData">
 		<parameter name="ymlFile"
 			value="pms/InsertDBData/InsertAPIKeyData.yml" />
@@ -858,47 +1046,6 @@
 	<test name="GetOriginalPartnerCertificates">
 		<parameter name="ymlFile"
 			value="pms/GetOriginalPartnerCertificates/GetOriginalPartnerCertificates.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
-		</classes>
-	</test>
-	<test name="CreatePartner_MISP_Provider">
-		<parameter name="ymlFile"
-			value="pms/mispPartner/CreatePartner/CreatePartner.yml" />
-			<parameter name="idKeyName" value="partnerId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
-		</classes>
-	</test>
-	<test name="UploadCACertificate_MISP_Provider">
-		<parameter name="ymlFile"
-			value="pms/mispPartner/UploadCertificate/UploadCertificate.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
-		</classes>
-	</test>
-	<test name="UploadPartnerCertificate_MISP_Provider">
-		<parameter name="ymlFile"
-			value="pms/mispPartner/UploadCert/UploadCert.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
-		</classes>
-	</test>
-	<test name="GetPartnerDetails_MISP_Provider">
-		<parameter name="ymlFile"
-			value="pms/mispPartner/GetPartner/GetPartner.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
-		</classes>
-	</test>
-	<test name="GetPartnerCertificate_MISP_Provider">
-		<parameter name="ymlFile"
-			value="pms/mispPartner/GetCertificate/GetCert.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1670,22 +1817,6 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
-	<test name="MapPartnerAndPolicytoCredentialType">
-		<parameter name="ymlFile"
-			value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.PostWithOnlyPathParam" />
-		</classes>
-	</test>
-	<test name="GetPolicyforMappedPartnerAndCredentialtype">
-		<parameter name="ymlFile"
-			value="pms/GetPolicyforMappedPartnerAndCredentialtype/GetPolicyforMappedPartnerAndCredentialtype.yml" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
-		</classes>
-	</test>
 	<test name="GetRoles">
 		<parameter name="ymlFile" value="pms/GetRoles/GetRoles.yml" />
 		<classes>
@@ -1857,6 +1988,16 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
+	<test name="SaveDeviceDetailsWithDeactivateSBI">
+		<parameter name="ymlFile"
+			value="pms/DeactivateSBIWithAssociatedDevices/SaveDeviceDetailsWithDeactivateSBI.yml" />
+		<parameter name="pathParams" value="sbiId" />
+		<parameter name="idKeyName" value="id" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParamsAndAutoGenId" />
+		</classes>
+	</test>
 	<test name="ApproveMappingDeviceToSbiwhenSBIisDeactivated">
 		<parameter name="ymlFile"
 			value="pms/ApproveMappingDeviceToSbi/ApproveMappingDeviceToSbiwhenSBIisDeactivated.yml" />
@@ -1984,7 +2125,7 @@
 			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate.yml" />
 		<classes>
 			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 	<test

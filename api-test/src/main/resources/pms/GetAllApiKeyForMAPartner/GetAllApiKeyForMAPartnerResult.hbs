@@ -1,0 +1,12 @@
+{
+  "response": {
+    "pageNo": {{#if pageNo}}{{pageNo}}{{else}}0{{/if}},
+    "data": [
+      {{#each response.data}}
+      {
+        "partnerType": "{{this.partnerType}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  }
+}

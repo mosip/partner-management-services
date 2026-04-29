@@ -1,0 +1,578 @@
+CreateBioExtractorConfiguration:
+  Pms_CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_01
+    description: Validate that a Bio Extractor Configuration is created successfully with all valid inputs.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Invalid_Access_Token_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_02
+    description: Validate that Bio Extractor Configuration creation fails when an invalid access token is provided.
+    role: invalidtoken
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config1",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-401"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Valid_Data:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_03 
+    description: Validate that a Bio Extractor Configuration is created successfully with valid input data.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Iris_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto1",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "iris"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_AuthPartner_Role_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_04
+    description: Validate that Bio Extractor Configuration creation fails when a user with an unauthorized role attempts the request.
+    role: partnerauth
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config2",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_Valid_ConfigName:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_05
+    description: Validate that a Bio Extractor Configuration is created successfully when a valid configName is provided.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$AutoTest_Face_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_InValid_ConfigName_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_06
+    description: Validate that a Bio Extractor Configuration is created successfully even when the configName contains invalid.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "_$RUNCONTEXT$_InvalidAutoTest_Face_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Empty_ConfigName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_07
+    description: Validate that Bio Extractor Configuration creation fails when configName is empty.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_ConfigName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_08
+    description: Validate that Bio Extractor Configuration creation fails when configName contains invalid special characters.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "@%AutoConfig",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Valid_BioextractorProviderName_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_09
+    description: Validate that a Bio Extractor Configuration is created successfully when a valid bioextractorProviderName is provided.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config3",
+      "bioextractorProviderName": "MosipProviderAuto2",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Empty_BioextractorProviderName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_10
+    description: Validate that Bio Extractor Configuration creation fails when bioextractorProviderName is empty.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config4",
+      "bioextractorProviderName": "",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_11
+    description: Validate that Bio Extractor Configuration creation fails when bioextractorProviderName contains invalid special characters.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config5",
+      "bioextractorProviderName": "@%MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+         }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderName_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_12
+    description: Validate that a Bio Extractor Configuration is created successfully even when bioextractorProviderName contains invalid.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config6",
+      "bioextractorProviderName": "invalid",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Valid_BioextractorProviderVersion_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_13
+    description: Validate that a Bio Extractor Configuration is created successfully when a valid bioextractorProviderVersion is provided.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config7",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "version1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderVersion_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_14
+    description: Validate that a Bio Extractor Configuration is created successfully even when bioextractorProviderVersion contains invalid. 
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config8",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "invalid",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Empty_BioextractorProviderVersion_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_15
+    description: Validate that Bio Extractor Configuration creation fails when bioextractorProviderVersion is empty.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config9",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_reqsid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_16
+    description: Validate that Bio Extractor Configuration creation fails when bioextractorProviderVersion contains invalid special characters.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config10",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "@%#1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_BioextractorProviderVersion_As_Test:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_17
+    description: Validate that a Bio Extractor Configuration is created successfully when bioextractorProviderVersion value provided as "test".
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config11",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "test",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Valid_BioModality:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_18
+    description: Validate that a Bio Extractor Configuration is created successfully when a valid bioModality is provided.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "finger"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_InValid_BioModality_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_19
+    description: Validate that Bio Extractor Configuration creation fails when an invalid bioModality is provided.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config01",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "invalid"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Empty_BioModality_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_20
+    description: Validate that Bio Extractor Configuration creation fails when bioModality is empty.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config02",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": ""
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_BioModality_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_21
+    description: Validate that Bio Extractor Configuration creation fails when bioModality contains invalid special characters.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config03",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "@#%"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Invalid_RequestTime_Format_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_22
+    description: Validate that Bio Extractor Configuration creation fails when requestTime is provided in an invalid format.
+    role: partneradmin
+    restMethod: post
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/responseCode
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "2026-04-02",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config04",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "finger"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Invalid_Version_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_23
+    description: Validate that Bio Extractor Configuration creation fails when an invalid version is provided in the request.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "invalid",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config05",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "finger"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_003"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Invalid_Id_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_24
+    description: Validate that Bio Extractor Configuration creation fails when an invalid id is provided in the request.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "invalid",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Finger_BioExtractor_Config06",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "finger"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_002"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Existing_ConfigName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_25
+    description: Validate that Bio Extractor Configuration creation fails when a configName that already exists is provided.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Face_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_272"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_30
+    description: Validate that a Bio Extractor Configuration is created successfully with allowed special characters
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$@#&-?!=_Auto",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'

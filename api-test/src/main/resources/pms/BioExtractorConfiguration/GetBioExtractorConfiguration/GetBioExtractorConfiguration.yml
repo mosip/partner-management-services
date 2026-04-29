@@ -1,0 +1,881 @@
+GetBioExtractorConfiguration:
+  Pms_GetBioExtractorConfiguration_All_Valid_Smoke:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_01
+    description: Validate that Bio Extractor Configurations are retrieved successfully when all valid filter parameters are provided.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_Invalid_Token_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_02
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an unauthorized error when an invalid authentication token is used.
+    role: invalidtoken
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-401"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_ConfigName:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_03
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid configName is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_InValid_ConfigName:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_04
+    description: Validate that Bio Extractor Configurations are retrieved successfully even when an invalid configName is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$ID:CreateBioExtractorConfiguration_With_InValid_ConfigName_reqsid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_ConfigName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_05
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when configName contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "@%AutoConfig",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_ConfigName_And_PageNo_And_PageSize:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_06
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid configName is provided along with valid pagination parameters.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "2",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_BioextractorProviderName:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_07
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid bioExtractorProviderName is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_InValid_BioextractorProviderName:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_08
+    description: Validate that Bio Extractor Configurations are retrieved successfully even when an invalid bioExtractorProviderName is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_InValid_BioextractorProviderName_reqsid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_09
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when bioExtractorProviderName contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg_reqsid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_BioextractorProviderVersion:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_10
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid bioExtractorProviderVersion is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_Valid_BioextractorProviderVersion_reqsid_bioextractorProviderVersion$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_InValid_BioextractorProviderVersion:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_11
+    description: Validate that Bio Extractor Configurations are retrieved successfully even when an invalid bioExtractorProviderVersion is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_InValid_BioextractorProviderVersion_reqsid_bioextractorProviderVersion$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_12
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when bioExtractorProviderVersion contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_reqsid_bioextractorProviderVersion$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Any_SpecialCharacter_BioextractorProviderVersion_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_13
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when bioExtractorProviderVersion contains any invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "@$Misp",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_BioModality:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_14
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid bioModality is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_InValid_BioModality_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_15
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when an invalid bioModality is provided.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "invalid",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_BioModality_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_16
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when bioModality contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "@#%",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_Details_And_SortFieldName_And_sortType:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_17
+    description: Validate that Bio Extractor Configurations are retrieved successfully when all valid filter parameters are provided along with valid sorting (sortFieldName, sortType).
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "id",
+      "sortType": "asc"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_Details_And_SortFieldName_And_sortType_Desc:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_18
+    description: Validate that Bio Extractor Configurations are retrieved successfully when all valid filter parameters are provided along with valid sorting (sortFieldName, sortType).
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "id",
+      "sortType": "desc"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_Invalid_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_19
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when an invalid sortFieldName is provided.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "invalid",
+      "sortType": "asc"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_357"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_SortFieldName_And_Without_SortType_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_20
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when sortFieldName is provided without sortType.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "id",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PS_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_21
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when sortFieldName contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "@%#",
+      "sortType": "asc"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Numeric_SortFieldName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_22
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when a numeric value is provided for sortFieldName.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "1234",
+      "sortType": "asc"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_357"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Both_Invalid_SortFieldName_And_SortType_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_23
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when both sortFieldName and sortType are invalid.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "invalid",
+      "sortType": "invalid"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_357"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Unsupported_SortType_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_24
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when an unsupported sortType is provided.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "id",
+      "sortType": "ascending"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_358"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Only_SortType_Field_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_25
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when sortType is provided without sortFieldName.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "asc"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PS_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_SortType_Field_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_26
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when sortType contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "@%asc"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Default_PageNo:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_27
+    description: Validate that Bio Extractor Configurations are retrieved successfully when default pageNo is used along with valid filter parameters and pageSize.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "5",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_PageSize_And_Without_PageNo_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_28
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when pageSize is provided without pageNo.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "5",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PS_ERROR_006"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Negative_PageNo_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_29
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when a negative value is provided for pageNo.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "-1",
+      "pageSize": "8",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_360"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_NonInteger_PageNo_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_30
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a bad request response when a non-integer value is provided for pageNo.
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/responseCode
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "abc",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_GetBioExtractorConfiguration_With_Decimal_PageNo_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_31
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a bad request response when a decimal value is provided for pageNo.
+    role: partneradmin
+    restMethod: get
+    checkOnlyStatusCodeInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/responseCode
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "1.5",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "responseCode": "400"
+}'
+  Pms_GetBioExtractorConfiguration_With_VeryLarge_PageNo:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_32
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a very large pageNo is provided.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "1155",
+      "pageSize": "8",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_Default_PageSize:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_33
+    description: Validate that Bio Extractor Configurations are retrieved successfully when default pageSize is used along with valid filter parameters and pageNo.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "8",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_VeryLarge_PageSize:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_34
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a very large pageSize is provided along with valid filter parameters and pageNo.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "500",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_Negativevalue_PageSize_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_35
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with an error when a negative value is provided for pageSize.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "0",
+      "pageSize": "-5",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_361"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_NonInteger_PageSize:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_36
+    description: Validate that the request to retrieve Bio Extractor Configurations fails or does not return valid results when a non-integer value is provided for pageSize.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "abc",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_Without_PartnerAdmin_Role_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_37
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a forbidden error when the user does not have the required partneradmin role.
+    role: partnerauth
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "KER-ATH-403"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_SortFieldName_WithOut_Pagination_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_38
+    description: Validate that the request to retrieve Bio Extractor Configurations fails with a validation error when sorting parameters are provided without pagination details.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
+      "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
+      "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
+      "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "id",
+      "sortType": "desc"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PS_ERROR_008"
+         }
+    ]
+}'

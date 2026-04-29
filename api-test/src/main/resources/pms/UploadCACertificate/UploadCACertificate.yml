@@ -170,3 +170,39 @@ UploadCACertificate:
       output: ' {
       "status": "Upload Success."
 }'
+
+   Pms_UploadCACertificate_For_Device_Provider:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_UploadCACertificate_10
+      description: Validate that uploading a Device Provider Certificate with all valid inputs is successful and reflected correctly
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$CACERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+ 	"partnerDomain": "DEVICE"
+  }'
+      output: ' {
+      "status": "Upload Success."
+}'
+
+   Pms_UploadSubCACertificate_For_Device_Provider:
+      endPoint: /v1/partnermanager/partners/certificate/ca/upload
+      uniqueIdentifier: TC_PMS_UploadCACertificate_11
+      description: Validate that uploading a Sub CA Certificate for a Device Provider with all valid inputs is successful
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/UploadCACertificate/uploadCertificate
+      outputTemplate: pms/UploadCACertificate/uploadCertificateResult
+      input: '{
+    "requesttime": "$TIMESTAMP$",
+ 	"certificateData": "$INTERCERT$",
+ 	"partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
+ 	"partnerDomain": "DEVICE"
+  }'
+      output: ' {
+      "status": "Upload Success."
+}'

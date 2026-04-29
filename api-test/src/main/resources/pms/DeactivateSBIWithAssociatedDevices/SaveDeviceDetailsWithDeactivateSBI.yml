@@ -1,0 +1,26 @@
+SaveDeviceDetailsWithDeactivateSBI:
+  Pms_SaveDeviceDetailsWithDeactivateSBI_With_Deactivated_SBI_Neg:
+    endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+    role: partnerdevice
+    uniqueIdentifier: TC_PMS_SaveDeviceDetailsWithDeactivateSBI_01
+    description: Validate that saving device details fails when a device provider attempts to use an SBI ID that is deactivated
+    restMethod: post
+    additionalDependencies: TC_PMS_uploadPartnerCert_03
+    inputTemplate: pms/DeactivateSBIWithAssociatedDevices/SaveDeviceDetails
+    outputTemplate: pms/error
+    input: '{
+      "deviceTypeCode": "Face",
+      "deviceSubTypeCode": "Full face",
+      "deviceProviderId": "$ID:PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid_partnerId$",
+      "make": "AcmeCorpApprovalPending",
+      "model": "X5000ApprovalPending",
+      "requestTime": "$TIMESTAMP$",
+      "sbiId": "$ID:SaveSecureBiometricInterface_All_Valid_Smoke_sid_id$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_DEVICE_ERROR_029"
+        }
+    ]
+}'

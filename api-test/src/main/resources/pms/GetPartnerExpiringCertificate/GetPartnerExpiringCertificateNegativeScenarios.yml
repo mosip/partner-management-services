@@ -35,3 +35,30 @@ GetPartnerExpiringCertificateNegativeScenarios:
        }
        ]
 }'
+   Pms_GetPartnerExpiringCertificateNegativeScenarios_With_ExpiryPeriod_More_Than_30_Neg:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details?expiryPeriod=1445
+      role: partnerdevice
+      description: Validate that retrieving expiring partner certificates fails when expiryPeriod is provided as more than 30 
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_03
+      restMethod: get
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate2
+      outputTemplate: pms/responseCode
+      input: '{
+}'
+      output: '{
+      "responseCode": "400"
+}'
+   Pms_GetPartnerExpiringCertificateNegativeScenarios_With_PartnerAdmin_Access_Neg:
+      endPoint: /v1/partnermanager/partners/partner-certificates-details?expiryPeriod=30
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      description: Validate that retrieving expiring partner certificates fails when an invalid token is used
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_04
+      restMethod: get
+      inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificate2
+      outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateResult2
+      input: '{
+}'
+      output: '{
+}'

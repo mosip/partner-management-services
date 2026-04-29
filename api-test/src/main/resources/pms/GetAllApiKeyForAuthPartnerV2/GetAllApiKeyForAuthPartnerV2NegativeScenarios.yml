@@ -225,3 +225,31 @@ GetAllApiKeyForAuthPartnerV2NegativeScenarios:
        }
        ]
 }'
+   Pms_GetAllApiKeyForAuthPartner_With_Invalid_Expiry_Period_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=@abc%*
+      description: Validate that retrieving API keys fails when invalid expiryPeriod is provided
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_15
+      checkOnlyStatusCodeInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/responseCode
+      input: '{
+}'
+      output: '{
+      "responseCode": "400"
+}'
+   Pms_GetAllApiKeyForAuthPartner_With_Expiry_Period_More_Than_30_Neg:
+      endPoint: /v1/partnermanager/partner-api-keys/v2?expiryPeriod=50
+      description: Validate that retrieving API keys fails when invalid expiryPeriod is provided
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetAllApiKeyForAuthPartnerV2NegativeScenarios_16
+      checkOnlyStatusCodeInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2
+      outputTemplate: pms/responseCode
+      input: '{
+}'
+      output: '{
+      "responseCode": "400"
+}'
