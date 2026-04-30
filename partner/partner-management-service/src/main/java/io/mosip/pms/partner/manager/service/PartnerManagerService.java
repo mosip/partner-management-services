@@ -11,6 +11,7 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
@@ -142,5 +143,8 @@ public interface PartnerManagerService {
 	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, BioextractorConfigurationFilterDto filterDto);
 
 	ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(String bioExtractorConfigurationId);
+	
+	ResponseWrapperV2<BioextractorConfigurationResponseDto> deleteBioextractorConfiguration(
+			String bioExtractorConfigurationId, BioextractorConfigurationDeleteRequestDto request);
 
 }

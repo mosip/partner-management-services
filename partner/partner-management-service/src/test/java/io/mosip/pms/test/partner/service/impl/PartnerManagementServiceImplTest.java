@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -70,6 +71,7 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
@@ -2517,7 +2519,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfigurationSuccess() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -2592,7 +2594,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void createBioextractorConfiguration_DuplicateConfigName() {
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(true);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(true);
 
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
 				partnerManagementImpl.createBioextractorConfiguration(req);
@@ -2607,7 +2609,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_IdCollisionRetry() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -2623,7 +2625,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_MaxRetriesExceeded() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 0);
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true);
 
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
@@ -2639,7 +2641,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_SaveException() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenThrow(new RuntimeException("DB error"));
 
@@ -2874,7 +2876,7 @@ public class PartnerManagementServiceImplTest {
 		config.setBioextractorProviderVersion("1.0");
 		config.setBioModality("face");
 		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 1, 1, 10, 30)));
-		when(bioextractorConfigurationRepository.findById("cfg-id-1")).thenReturn(Optional.of(config));
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-1")).thenReturn(Optional.of(config));
 
 		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
 				partnerManagementImpl.getBioextractorConfigurationById("cfg-id-1");
@@ -2921,7 +2923,7 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationByIdNotFound() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
 				"mosip.pms.bioextractor.configuration.details.get");
-		when(bioextractorConfigurationRepository.findById("missing-id")).thenReturn(Optional.empty());
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("missing-id")).thenReturn(Optional.empty());
 
 		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
 				partnerManagementImpl.getBioextractorConfigurationById("missing-id");
@@ -2937,7 +2939,7 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationByIdRepositoryException() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
 				"mosip.pms.bioextractor.configuration.details.get");
-		when(bioextractorConfigurationRepository.findById("cfg-id-1"))
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-1"))
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
@@ -2947,6 +2949,93 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getErrors());
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("DELETED");
+		
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-1");
+		config.setConfigName("config-one");
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-1"))
+				.thenReturn(Optional.of(config));
+		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("cfg-id-1", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("cfg-id-1", resp.getResponse().getId());
+		assertEquals("Bio Extractor configuration deleted successfully.", resp.getResponse().getStatus());
+		assertEquals("mosip.pms.bioextractor.configuration.delete.patch", resp.getId());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		
+		ArgumentCaptor<BioextractorConfiguration> captor = ArgumentCaptor.forClass(BioextractorConfiguration.class);
+		Mockito.verify(bioextractorConfigurationRepository).save(captor.capture());
+		assertTrue(captor.getValue().isDeleted());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationNotFound() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("DELETED");
+		
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("missing-id"))
+				.thenReturn(Optional.empty());
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("missing-id", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationInvalidStatus_returnsInvalidInputFormat() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("string");
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("cfg-id-1", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationNullStatus_returnsInvalidRequestParam() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus(null);
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("cfg-id-1", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
 	}
 

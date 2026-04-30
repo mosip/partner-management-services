@@ -154,6 +154,8 @@ public class AuthorizedRolesDto {
 	private List<String> getbioextractorconfigurations;
 
 	private List<String> getbioextractorconfigurationdetails;
+	
+	private List<String> patchbioextractorconfigurationdelete;
 
 	//MISP License controller
 	
