@@ -21,6 +21,7 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
@@ -939,6 +940,38 @@ public class PartnerManagementControllerTest {
 				.andExpect(status().isOk());
 		verify(partnerManagementService, never()).getBioextractorConfigurationById(anyString());
 	}
+	
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void deleteBioextractorConfigurationSuccessTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		BioextractorConfigurationResponseDto responseDto = new BioextractorConfigurationResponseDto();
+		responseDto.setId("cfg-id-1");
+		responseDto.setStatus("Bio Extractor configuration deleted successfully.");
+		responseWrapper.setResponse(responseDto);
+		
+		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
+		Mockito.when(partnerManagementService.deleteBioextractorConfiguration(anyString(), any())).thenReturn(responseWrapper);
+		
+		mockMvc.perform(MockMvcRequestBuilders.patch("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(buildBioextractorConfigDeleteRequestWrapper())))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).deleteBioextractorConfiguration(eq("cfg-id-1"), any());
+	}
+	
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void deleteBioextractorConfigurationValidationFailTest() throws Exception {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> errorWrapper = new ResponseWrapperV2<>();
+		Mockito.doReturn(Optional.of(errorWrapper)).when(requestValidator).validate(anyString(), any());
+		
+		mockMvc.perform(MockMvcRequestBuilders.patch("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(buildBioextractorConfigDeleteRequestWrapper())))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, never()).deleteBioextractorConfiguration(anyString(), any());
+	}
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
@@ -1087,6 +1120,17 @@ public class PartnerManagementControllerTest {
 		req.setBioextractorProviderName("ProviderA");
 		req.setBioextractorProviderVersion("1.0");
 		req.setBioModality("face");
+		wrapper.setRequest(req);
+		return wrapper;
+	}
+	
+	private RequestWrapperV2<BioextractorConfigurationDeleteRequestDto> buildBioextractorConfigDeleteRequestWrapper() {
+		RequestWrapperV2<BioextractorConfigurationDeleteRequestDto> wrapper = new RequestWrapperV2<>();
+		wrapper.setId("mosip.pms.bioextractor.configuration.delete.patch");
+		wrapper.setVersion("1.0");
+		wrapper.setRequestTime(LocalDateTime.now());
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("DELETED");
 		wrapper.setRequest(req);
 		return wrapper;
 	}

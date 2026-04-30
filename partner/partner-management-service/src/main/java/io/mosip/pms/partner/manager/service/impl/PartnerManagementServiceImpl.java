@@ -70,6 +70,7 @@ import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
@@ -96,6 +97,7 @@ import static io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_
 import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR;
+import static io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT;
 
 @Service
 @Transactional
@@ -139,6 +141,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.bioextractor.configuration.details.get}")
 	private String getBioextractorConfigurationDetailsId;
+	
+	@Value("${mosip.pms.api.id.bioextractor.configuration.delete.patch}")
+	private String patchDeleteBioextractorConfigurationId;
 
 
 	@Autowired
@@ -1865,7 +1870,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 
 			String extractorConfigName = request.getConfigName().trim();
-			if (bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(extractorConfigName)) {
+			if (bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(extractorConfigName)) {
 				LOGGER.info("sessionId", "idType", "id", "Duplicate config name found: " + extractorConfigName);
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw new PartnerServiceException(
@@ -1992,7 +1997,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
 						INVALID_REQUEST_PARAM.getErrorMessage());
 			}
-			BioextractorConfiguration configuration = bioextractorConfigurationRepository.findById(bioExtractorConfigurationId)
+			BioextractorConfiguration configuration = bioextractorConfigurationRepository
+					.findByIdAndIsDeletedFalse(bioExtractorConfigurationId)
 					.orElseThrow(() -> new PartnerServiceException(
 							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
 							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorMessage()));
@@ -2010,6 +2016,56 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorMessage()));
 		}
 		responseWrapper.setId(getBioextractorConfigurationDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+	
+	@Override
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> deleteBioextractorConfiguration(
+			String bioExtractorConfigurationId, BioextractorConfigurationDeleteRequestDto request) {
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(bioExtractorConfigurationId) || bioExtractorConfigurationId.isBlank()) {
+				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			if (request == null || request.getStatus() == null || request.getStatus().isBlank()) {
+				throw new PartnerServiceException(INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage());
+			}
+			if (!PartnerConstants.STATUS_DELETED.equalsIgnoreCase(request.getStatus().trim())) {
+				throw new PartnerServiceException(
+						INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(INVALID_INPUT_FORMAT.getErrorMessage(),
+								"status", PartnerConstants.STATUS_DELETED));
+			}
+			
+			BioextractorConfiguration configuration = bioextractorConfigurationRepository
+					.findByIdAndIsDeletedFalse(bioExtractorConfigurationId)
+					.orElseThrow(() -> new PartnerServiceException(
+							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
+							BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorMessage()));
+			
+			configuration.setDeleted(true);
+			bioextractorConfigurationRepository.save(configuration);
+			
+			BioextractorConfigurationResponseDto response = new BioextractorConfigurationResponseDto();
+			response.setId(bioExtractorConfigurationId);
+			response.setStatus("Bio Extractor configuration deleted successfully.");
+			responseWrapper.setResponse(response);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In deleteBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In deleteBioextractorConfiguration method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(
+					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
+					FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorMessage()));
+		}
+		responseWrapper.setId(patchDeleteBioextractorConfigurationId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
