@@ -2,6 +2,7 @@ package io.mosip.pms.partner.controller;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.mosip.pms.common.constant.ValidationErrorCode;
+import io.mosip.pms.common.exception.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -80,6 +84,9 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
+
+	@Value("${mosip.pms.api.id.partners.credentialtypes.request.post}")
+	private String postPartnerCredentialTypesRequestId;
 
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
@@ -180,40 +187,50 @@ public class PartnerServiceController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
 	@RequestMapping(value = "/{partnerId}/policies/{policyId}/bio-extractors-request", method = RequestMethod.POST)
 	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
-	public ResponseEntity<ResponseWrapper<String>> submitBioExtractorsRequest(
+	public ResponseWrapperV2<String> submitBioExtractorsRequest(
 			@PathVariable String partnerId,
 			@PathVariable String policyId,
-			@RequestBody @Valid RequestWrapper<BioExtractorsRequestDto> request) {
-		ResponseWrapper<String> response = new ResponseWrapper<>();
+			@RequestBody @Valid RequestWrapperV2<BioExtractorsRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<String>> validationResponse =
+				requestValidator.validate(postPartnerBioextractorsRequestId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
 		inputValidator.validateRequestInput("partnerId", partnerId);
 		inputValidator.validateRequestInput("policyId", policyId);
-		inputValidator.validateRequestInput("partnerPolicyRequestId", request.getRequest().getPartnerPolicyRequestId());
-		request.getRequest().getExtractors().forEach(extractor -> {
+		inputValidator.validateRequestInput("partnerPolicyRequestId", requestWrapper.getRequest().getPartnerPolicyRequestId());
+		requestWrapper.getRequest().getExtractors().forEach(extractor -> {
 			inputValidator.validateRequestInput("attributeName", extractor.getAttributeName());
 			inputValidator.validateRequestInput("biometric", extractor.getBiometric());
 			inputValidator.validateRequestInput("biometricSubTypes", extractor.getBiometricSubTypes());
 			inputValidator.validateRequestInput("extractorProvider", extractor.getExtractorProvider());
 			inputValidator.validateRequestInput("extractorProviderVersion", extractor.getExtractorProviderVersion());
 		});
-		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, request.getRequest()));
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
+		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, requestWrapper.getRequest()));
+		response.setId(requestWrapper.getId());
+		response.setVersion(requestWrapper.getVersion());
+		return response;
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
 	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credential-types-request", method = RequestMethod.POST)
 	@Operation(summary = "Service to submit credential types request",
 			description = "Persists credential type request against an in-progress partner policy mapping request")
-	public ResponseEntity<ResponseWrapper<String>> submitCredentialTypesRequest(
+	public ResponseWrapperV2<String> submitCredentialTypesRequest(
 			@PathVariable String partnerId,
 			@PathVariable String policyId,
-			@RequestBody @Valid RequestWrapper<CredentialTypeRequestDto> request) {
-		ResponseWrapper<String> response = new ResponseWrapper<>();
-		response.setResponse(partnerService.submitCredentialTypesRequest(partnerId, policyId, request.getRequest()));
-		response.setId(request.getId());
-		response.setVersion(request.getVersion());
-		return new ResponseEntity<>(response, HttpStatus.OK);
+			@RequestBody @Valid RequestWrapperV2<CredentialTypeRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<String>> validationResponse =
+				requestValidator.validate(postPartnerCredentialTypesRequestId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
+		response.setResponse(partnerService.submitCredentialTypesRequest(partnerId, policyId, requestWrapper.getRequest()));
+		response.setId(requestWrapper.getId());
+		response.setVersion(requestWrapper.getVersion());
+		return response;
 	}
 
 	/**
