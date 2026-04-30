@@ -16,6 +16,7 @@ public enum ErrorCode {
 	INVALID_SORT_TYPE("PMS_PRT_358", "Sort type %s is not supported"),
 	ERROR_OCCURED_WHILE_SORTING("PMS_PRT_359", "Error occured while sorting"),
 	INVALID_SORT_FIELD("PMS_PRT_357", "Invalid sort field %s"),
+	INVALID_SORT_FIELD_AND_TYPE("PMS_PRT_362", "Sort field and sort type are invalid"),
 	INVALID_PAGE_NO("PMS_PRT_360", "Invalid Page No"),
 	INVALID_PAGE_SIZE("PMS_PRT_361", "Invalid page size"),
 	INVALID_VALUE("KER_PRT_390", "Invalid filter value"),

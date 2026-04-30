@@ -376,18 +376,26 @@ public class PartnerHelper {
                     ErrorCode.MISSING_PAGINATION_FOR_SORT.getErrorMessage()
             );
         }
+        boolean isInvalidSortField = sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName);
+        boolean isInvalidSortType = sortType != null
+                && !sortType.equalsIgnoreCase(PartnerConstants.ASC)
+                && !sortType.equalsIgnoreCase(PartnerConstants.DESC);
+
+        if (isInvalidSortField && isInvalidSortType) {
+            LOGGER.error("Invalid sort field name: {} and sort type: {}", sortFieldName, sortType);
+            throw new PartnerServiceException(ErrorCode.INVALID_SORT_FIELD_AND_TYPE.getErrorCode(),
+                    ErrorCode.INVALID_SORT_FIELD_AND_TYPE.getErrorMessage());
+        }
 
         // Validate sortFieldName
-        if (sortFieldName != null && !aliasToColumnMap.containsKey(sortFieldName)) {
+        if (isInvalidSortField) {
             LOGGER.error("Invalid sort field name: " + sortFieldName);
             throw new PartnerServiceException(ErrorCode.INVALID_SORT_FIELD.getErrorCode(),
                     String.format(ErrorCode.INVALID_SORT_FIELD.getErrorMessage(), sortFieldName));
         }
 
         // Validate sortType
-        if (sortType != null &&
-                !sortType.equalsIgnoreCase(PartnerConstants.ASC) &&
-                !sortType.equalsIgnoreCase(PartnerConstants.DESC)) {
+        if (isInvalidSortType) {
             LOGGER.error("Invalid sort type: " + sortType);
             throw new PartnerServiceException(ErrorCode.INVALID_SORT_TYPE.getErrorCode(),
                     String.format(ErrorCode.INVALID_SORT_TYPE.getErrorMessage(), sortType));
