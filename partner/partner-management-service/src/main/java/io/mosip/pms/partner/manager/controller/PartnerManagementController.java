@@ -755,7 +755,6 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("configName", request.getConfigName());
 		inputValidator.validateRequestInput("bioextractorProviderName", request.getBioextractorProviderName());
 		inputValidator.validateRequestInput("bioextractorProviderVersion", request.getBioextractorProviderVersion());
-		inputValidator.validateRequestInput("bioModality", request.getBioModality());
 		return partnerManagementService.createBioextractorConfiguration(request);
 	}
 
@@ -809,7 +808,7 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("configName", configName);
 		inputValidator.validateRequestInput("bioextractorProviderName", bioextractorProviderName);
 		inputValidator.validateRequestInput("bioextractorProviderVersion", bioextractorProviderVersion);
-		inputValidator.validateRequestInput("bioModality", bioModality);
+
 
 		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
 		if (configName != null) filterDto.setConfigName(configName.toLowerCase());
