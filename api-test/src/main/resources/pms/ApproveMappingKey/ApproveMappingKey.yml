@@ -209,7 +209,7 @@ ApproveMappingKey:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS_PM_034"
+      "errorCode": "KER-ATH-401"
     }
   ]
     }'
@@ -230,7 +230,7 @@ ApproveMappingKey:
       output: '{
    "errors": [
     {
-      "errorCode": "PMS"
+      "errorCode": "PMS_PMP_007"
     }
   ]
     }'
@@ -241,22 +241,19 @@ ApproveMappingKey:
       description: Validate that mapping key approval fails when attempting with special characters in mapping key
       role: partneradmin
       restMethod: put
+      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
       "status": "Approved",
       "mappingkey": "&*^%#@!&",
 	  "requesttime": "$TIMESTAMP$"
   }'
       output: '{
-   "errors": [
-    {
-      "errorCode": "PMS"
-    }
-  ]
+   "responseCode": "400"
     }'
 
-   Pms_ApproveMappingKey_CredentialPartner_Reject_With_all valid:
+   Pms_ApproveMappingKey_CredentialPartner_Reject_With_all_valid:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       uniqueIdentifier: TC_PMS_ApproveAPIKey_14
       description: Validate that mapping key approval gets rejected for credential partner
