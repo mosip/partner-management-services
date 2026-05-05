@@ -832,3 +832,28 @@ definePolicy:
     "desc": "$RUNCONTEXT$desc in progress mapping mosip policy 19234",
     "is_Active": false
 }'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_32
+      description: Validate that a policy is successfully created for rejecting credential partner policy mapping
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner policy mapping reject",
+	"name": "$RUNCONTEXT$credential partner policy mapping reject",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner policy mapping reject",
+    "desc": "$RUNCONTEXT$credential partner policy mapping reject",
+    "is_Active": false
+}'
