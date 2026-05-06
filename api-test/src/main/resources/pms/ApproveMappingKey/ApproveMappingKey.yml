@@ -337,7 +337,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_Reject_AlreadyApproved_MappingKey:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       uniqueIdentifier: TC_PMS_ApproveAPIKey_18
-      description: Validate that rejecting an already Approved mapping key returns a success response
+      description: Validate that rejecting an already Approved mapping key fails with an error
       role: partneradmin
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
