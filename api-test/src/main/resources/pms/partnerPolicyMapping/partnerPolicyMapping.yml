@@ -146,26 +146,7 @@ partnerPolicyMapping:
         }
        ]
     }'
-    
-   Pms_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
-      description: Validate that partner API key requests can be submitted and rejected successfully for all valid entries
-      role: partnerauth
-      checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
-      restMethod: post 
-      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
-      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
-      input: '{
-        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
-        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
-        "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
-    }'
-      output: '{
-    }'
-    
+
    Pms_SubmitPartnerApiKeyRequest_Approval_All_for_Deactivated_policy:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
@@ -293,6 +274,45 @@ partnerPolicyMapping:
         "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
         "policyName": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_name$",
         "useCaseDescription": "Need to submit for Pending",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
+      description: Validate that partner API key requests can be submitted and rejected successfully for all valid entries
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+
+   Pms_Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_01
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
       output: '{

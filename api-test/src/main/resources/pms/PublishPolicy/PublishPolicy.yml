@@ -308,4 +308,33 @@ createPublishPolicy:
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
-      
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_PolicyMappingReject:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_13
+      description: Validate that a policy can be published successfully for rejecting credential partner policy mapping
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+        "mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'

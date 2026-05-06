@@ -1,0 +1,24 @@
+{
+  "id": "string",
+  "metadata": {},
+  "partnerId": "{{partnerId}}",
+  "policyId": "{{policyId}}",
+  "request": {
+    "partnerPolicyRequestId": "{{partnerPolicyRequestId}}",
+    "extractors": [
+      {{#each extractors}}
+      {
+        "attributeName": "{{attributeName}}",
+        "biometric": "{{biometric}}",
+        {{#if biometricSubTypes}}
+        "biometricSubTypes": {{biometricSubTypes}},
+        {{/if}}
+        "extractorProvider": "{{extractorProvider}}",
+        "extractorProviderVersion": "{{extractorProviderVersion}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  },
+  "requesttime": "{{requesttime}}",
+  "version": "string"
+}

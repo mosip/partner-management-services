@@ -82,7 +82,8 @@ ApproveMappingKey:
       outputTemplate: pms/error
       input: '{
       "status": "Approved",
-      "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$"
+      "mappingkey": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
+      "requesttime": "$REMOVE$"
   }'
       output: '{
    "errors": [
@@ -173,7 +174,7 @@ ApproveMappingKey:
     }
   ]
     }'
-    
+
    Pms_ApproveMappingKey_Reject_All_Valid:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       uniqueIdentifier: TC_PMS_ApproveAPIKey_10
@@ -190,4 +191,82 @@ ApproveMappingKey:
   }'
       output: '{
         "response": "Policy mapping rejected successfully"
+    }'
+
+   Pms_ApproveMappingKey_With_Invalid_Token_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_11
+      description: Validate that mapping key approval fails when attempting to approve a mapping key with an invalid token
+      role: invalidtoken
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "status": "Approved",
+      "mappingkey": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-ATH-401"
+    }
+  ]
+    }'
+
+   Pms_ApproveMappingKey_With_Invalid_MappingKey_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_12
+      description: Validate that mapping key approval fails when attempting a invalid mapping key
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/error
+      input: '{
+      "status": "Approved",
+      "mappingkey": "invalidmappingkey",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PMP_007"
+    }
+  ]
+    }'
+
+   Pms_ApproveMappingKey_With_SpecialCharacters_In_MappingKey_Neg:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_13
+      description: Validate that mapping key approval fails when attempting with special characters in mapping key
+      role: partneradmin
+      restMethod: put
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/responseCode
+      input: '{
+      "status": "Approved",
+      "mappingkey": "&*^%#@!&",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "responseCode": "400"
+    }'
+
+   Pms_ApproveMappingKey_CredentialPartner_Reject_With_all_valid:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_14
+      description: Validate that mapping key approval gets rejected for credential partner
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Rejected",
+      "mappingkey": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+       "response": "Policy mapping rejected successfully"
     }'
