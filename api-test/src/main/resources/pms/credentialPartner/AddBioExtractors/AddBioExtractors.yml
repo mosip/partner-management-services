@@ -34,7 +34,7 @@ AddBioExtractors:
       output: '{
       "response": "Bio extract request submitted successfully."
       }'
-      
+
    Pms_AddBioExtractors_invalid_policyId:
       endPoint: /v1/partnermanager/partners/{partnerId}/policies/{policyId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_03
