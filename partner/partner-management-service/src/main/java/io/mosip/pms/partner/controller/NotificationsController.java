@@ -12,6 +12,7 @@ import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.partner.service.NotificationsService;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -43,6 +44,9 @@ public class NotificationsController {
     @Autowired
 	private InputValidator inputValidator;
 
+    @Autowired
+    private PartnerHelper partnerHelper;
+
     @PreAuthorize("hasAnyRole(@authorizedRoles.getGetnotifications())")
     @GetMapping(value = "/notifications")
     @Operation(summary = "This endpoint retrieves a list of all notifications.",
@@ -65,7 +69,7 @@ public class NotificationsController {
                     schema = @Schema(allowableValues = {"root", "intermediate", "partner", "weekly", "sbi", "ftm-chip", "apikey", "misp"})
             )
             @RequestParam(value = "notificationType", required = false) String notificationType,
-            @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
             @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
             @RequestParam(value = "certificateId", required = false) String certificateId,
             @RequestParam(value = "expiryDate", required = false)
@@ -165,7 +169,10 @@ public class NotificationsController {
         if (mispPartnerId != null) {
             filterDto.setMispPartnerId(mispPartnerId);
         }
-        return notificationsService.getNotifications(pageNo, pageSize, filterDto);
+        return notificationsService.getNotifications(
+                partnerHelper.parsePageNo(pageNo),
+                pageSize,
+                filterDto);
     }
 
     @PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdismissnotification())")

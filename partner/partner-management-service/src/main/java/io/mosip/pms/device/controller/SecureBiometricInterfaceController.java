@@ -338,7 +338,7 @@ public class SecureBiometricInterfaceController {
 	ResponseWrapperV2<PageResponseV2Dto<SbiSummaryDto>> getAllSbiDetails(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -391,6 +391,7 @@ public class SecureBiometricInterfaceController {
 		if (expiryPeriod != null) {
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
-		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
+		return secureBiometricInterface.getAllSbiDetails(sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 }

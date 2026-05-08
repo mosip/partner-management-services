@@ -413,6 +413,24 @@ public class PartnerHelper {
                 && Objects.isNull(pageNo) && Objects.isNull(pageSize);
     }
 
+    public Integer parsePageNo(String pageNo) {
+        if (pageNo == null) {
+            return null;
+        }
+        try {
+            int parsedPageNo = Integer.parseInt(pageNo);
+            if (parsedPageNo < 0) {
+                throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                        ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+            }
+            return parsedPageNo;
+        } catch (NumberFormatException ex) {
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+        }
+    }
+
+
     public void checkIfPartnerIsNotActive(Partner partner) {
         if (!partner.getIsActive()) {
             LOGGER.error("Partner is not Active with id {}", partner.getId());

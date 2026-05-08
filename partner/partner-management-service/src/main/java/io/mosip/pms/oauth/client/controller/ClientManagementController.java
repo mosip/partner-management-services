@@ -168,7 +168,7 @@ public class ClientManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClients(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -182,9 +182,10 @@ public class ClientManagementController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
-		ClientFilterDto filterDto = populateClientFilterDto(sortFieldName, sortType, pageNo, pageSize,
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
+		ClientFilterDto filterDto = populateClientFilterDto(sortFieldName, sortType, normalizedPageNo, pageSize,
 				partnerId, orgName, policyGroupName, policyName, clientName, status);
-		return clientManagementService.getPartnersClientsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return clientManagementService.getPartnersClientsV2(sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
@@ -197,7 +198,7 @@ public class ClientManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ClientSummaryDto>> getPartnersClientsV2(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -211,9 +212,10 @@ public class ClientManagementController {
 			)
 			@RequestParam(value = "status", required = false) String status
 	) {
-		ClientFilterDto filterDto = populateClientFilterDto(sortFieldName, sortType, pageNo, pageSize,
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
+		ClientFilterDto filterDto = populateClientFilterDto(sortFieldName, sortType, normalizedPageNo, pageSize,
 				partnerId, orgName, policyGroupName, policyName, clientName, status);
-		return clientManagementService.getPartnersClientsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return clientManagementService.getPartnersClientsV2(sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 
 	private ClientFilterDto populateClientFilterDto(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, String partnerId,

@@ -38,6 +38,7 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseUpdateRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
@@ -64,6 +65,9 @@ public class MISPLicenseController {
 
 	@Autowired
 	RequestValidator requestValidator;
+
+	@Autowired
+	private PartnerHelper partnerHelper;
 
 	@Value("${mosip.pms.api.id.misp.generate.license.post}")
 	private String postGenerateMISPApiId;
@@ -148,7 +152,7 @@ public class MISPLicenseController {
 	public ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> getAllMISPLicenses(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -196,7 +200,9 @@ public class MISPLicenseController {
 		if (expiryPeriod != null) {
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
-		return infraProviderService.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return infraProviderService.getAllMISPLicenses(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PostMapping("/misp-licenses")

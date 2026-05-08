@@ -337,7 +337,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "partnerType", required = false) String partnerType,
@@ -392,7 +392,9 @@ public class PartnerManagementController {
 		if (status != null) {
 			partnerFilterDto.setStatus(status);
 		}
-		return partnerManagementService.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+		return partnerManagementService.getAdminPartners(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, partnerFilterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
@@ -407,7 +409,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@Parameter(
@@ -476,7 +478,9 @@ public class PartnerManagementController {
 		if (partnerType != null) {
 			filterDto.setPartnerType(partnerType.toLowerCase());
 		}
-		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
@@ -522,7 +526,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageNo",  required = false) String pageNo,
 			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
@@ -545,7 +549,9 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
-		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
@@ -560,7 +566,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> getAllApiKeyRequestsV2(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageNo",  required = false) String pageNo,
 			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
@@ -590,7 +596,9 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("partnerType", partnerType);
 		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
-		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	private ApiKeyFilterDto populateApiKeyFilterDto(String partnerId, String apiKeyLabel, String orgName, String status,
@@ -620,7 +628,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@Parameter(
 					description = "Type of CA certificate",
@@ -668,7 +676,9 @@ public class PartnerManagementController {
 		if (expiryPeriod != null){
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
-		return partnerManagementService.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getTrustCertificates(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdownloadtrustcertificates())")
@@ -776,18 +786,19 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "configName", required = false) String configName,
 			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
 			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
 			@RequestParam(value = "bioModality", required = false) String bioModality
 	) {
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
 		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
-				sortFieldName, sortType, pageNo, pageSize, configName, bioextractorProviderName,
+				sortFieldName, sortType, normalizedPageNo, pageSize, configName, bioextractorProviderName,
 				bioextractorProviderVersion, bioModality);
 		return partnerManagementService.getBioextractorConfigurations(
-				sortFieldName, sortType, pageNo, pageSize, filterDto);
+				sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurationdetails())")
