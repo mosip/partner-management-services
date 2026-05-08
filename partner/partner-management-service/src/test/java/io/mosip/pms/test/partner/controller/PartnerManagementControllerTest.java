@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -898,6 +899,21 @@ public class PartnerManagementControllerTest {
 		verify(partnerManagementService, times(1))
 				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
 	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationsWithVeryLargePageNoReturnsBadRequest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+		verify(partnerManagementService, never())
+				.getBioextractorConfigurations(any(), any(), any(), any(), any(BioextractorConfigurationFilterDto.class));
+	}
+
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})

@@ -771,18 +771,36 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "configName", required = false) String configName,
 			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
 			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
 			@RequestParam(value = "bioModality", required = false) String bioModality
 	) {
+		Integer parsedPageNo = parsePageNo(pageNo);
 		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
-				sortFieldName, sortType, pageNo, pageSize, configName, bioextractorProviderName,
+				sortFieldName, sortType, parsedPageNo, pageSize, configName, bioextractorProviderName,
 				bioextractorProviderVersion, bioModality);
 		return partnerManagementService.getBioextractorConfigurations(
-				sortFieldName, sortType, pageNo, pageSize, filterDto);
+				sortFieldName, sortType, parsedPageNo, pageSize, filterDto);
+	}
+
+	private Integer parsePageNo(String pageNo) {
+		if (pageNo == null) {
+			return null;
+		}
+		try {
+			long parsedPageNo = Long.parseLong(pageNo);
+			if (parsedPageNo > Integer.MAX_VALUE || parsedPageNo < Integer.MIN_VALUE) {
+				throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+						ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+			}
+			return (int) parsedPageNo;
+		} catch (NumberFormatException ex) {
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+					ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+		}
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurationdetails())")
