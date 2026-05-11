@@ -655,6 +655,15 @@
 					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
+	<test name="GetCredentialTypesRequest">
+		<parameter name="ymlFile"
+		           value="pms/GetCredentialTypesRequest/GetCredentialTypesRequest.yml" />
+		<parameter name="pathParams" value="requestId" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
 
 	<test name="RejectMappingKey">
 		<parameter name="ymlFile"
