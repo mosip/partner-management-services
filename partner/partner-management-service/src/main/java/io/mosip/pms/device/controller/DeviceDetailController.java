@@ -303,7 +303,7 @@ public class DeviceDetailController {
 	public ResponseWrapperV2<PageResponseV2Dto<DeviceDetailSummaryDto>> getAllDeviceDetails(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -364,6 +364,7 @@ public class DeviceDetailController {
 		if (deviceId != null) {
 			filterDto.setDeviceId(deviceId.toLowerCase());
 		}
-		return deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
+		return deviceDetaillService.getAllDeviceDetails(sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 }

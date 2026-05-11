@@ -327,7 +327,7 @@ public class FTPChipDetailController {
 	ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> getPartnersFtmChipDetails(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
@@ -368,7 +368,8 @@ public class FTPChipDetailController {
 		if (status != null) {
 			filterDto.setStatus(status);
 		}
-		return ftpChipDetaillService.getPartnersFtmChipDetails(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
+		return ftpChipDetaillService.getPartnersFtmChipDetails(sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetftmchipdetails())")
