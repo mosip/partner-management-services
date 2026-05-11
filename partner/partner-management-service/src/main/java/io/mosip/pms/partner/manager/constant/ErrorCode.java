@@ -10,7 +10,7 @@ public enum ErrorCode {
 	INVALID_STATUS_CODE_ACTIVE_DEACTIVE("PMS_PM_058", "Status should be either Active or De-Active"),
 	NEW_POLICY_ID_NOT_EXIST("PMS_PMP_010","Policy does not belong to the Policy Group of the Partner Manger"),
 	NO_PARTNER_API_KEY_REQUEST_EXCEPTION("PMS_PMP_015","No Partner api key requests for the Policy Group"),
-	PARTNER_API_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_007","Partner api key does not exist"),
+	PARTNER_API_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_007","Mapping key does not exist"),
 	PARTNER_API_DOES_NOT_BELONGS_TO_THE_POLICYGROUP_OF_PARTNERMANAGER_EXCEPTION(
 			"PMS_PMP_009","Partner api key does not belong to the Policy Group of the Partner Manger"),
 	PARTNER_API_KEY_DOES_NOT_EXIST_EXCEPTION("PMS_PMP_011","Partner api key does not exist"),
