@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -115,7 +116,7 @@ public class PartnerManagementControllerTest {
 	public void setUp() {
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 	}
-	
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void partnerApiKeyToPolicyMappingsTest() throws Exception {
@@ -375,7 +376,7 @@ public class PartnerManagementControllerTest {
 	public void getAllPartnersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";
-		Integer pageNo = 0;
+		String pageNo = "0";
 		Integer pageSize = 8;
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		partnerFilterDto.setPartnerId("abc");
@@ -387,7 +388,7 @@ public class PartnerManagementControllerTest {
 		partnerFilterDto.setIsActive(false);
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 
-		Mockito.when(partnerManagementService.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto))
+		Mockito.when(partnerManagementService.getAdminPartners(sortFieldName, sortType, 0, pageSize, partnerFilterDto))
 				.thenReturn(responseWrapper);
 		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners?sortFieldName=createdDateTime&sortType=desc&pageSize=8&pageNo=0&" +
 						"partnerId=abc&partnerType=Auth_Partner&orgName=ABC&emailAddress=abc&certificateUploadStatus=not_uploaded&policyGroupName=default&isActive=false"))
@@ -792,6 +793,91 @@ public class PartnerManagementControllerTest {
 	}
 
 	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllPartnersWithVeryLargePageNoReturnsValidationError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+		verify(partnerManagementService, never())
+				.getAdminPartners(any(), any(), any(), any(), any(PartnerFilterDto.class));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllPartnerPolicyRequestsWithVeryLargePageNoReturnsValidationError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-policy-requests")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+		verify(partnerManagementService, never())
+				.getAllPartnerPolicyRequests(any(), any(), any(), any(), any());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequestsWithVeryLargePageNoReturnsValidationError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+		verify(partnerManagementService, never())
+				.getAllApiKeyRequests(any(), any(), any(), any(), any());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAllApiKeyRequestsV2WithVeryLargePageNoReturnsValidationError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/partner-api-keys/v2")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+		verify(partnerManagementService, never())
+				.getAllApiKeyRequestsV2(any(), any(), any(), any(), any());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getBioextractorConfigurationsWithVeryLargePageNoReturnsValidationError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/bio-extractor-configurations")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+		verify(partnerManagementService, never())
+				.getBioextractorConfigurations(any(), any(), any(), any(), any());
+	}
+
+	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void getPartnersDeatilsTest() throws Exception {
 		PartnerDetailsResponse partnerDetailsResponse = new PartnerDetailsResponse();
@@ -1053,7 +1139,7 @@ public class PartnerManagementControllerTest {
 
 		ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> actual =
 				partnerManagementController.getAllPartnerPolicyRequests(
-						null, null, 0, 10,
+						null, null, "0", 10,
 						"p1", null,
 						null, null, null, null, null, null, null
 				);

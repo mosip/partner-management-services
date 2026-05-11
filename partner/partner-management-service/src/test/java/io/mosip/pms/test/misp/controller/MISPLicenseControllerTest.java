@@ -2,6 +2,7 @@ package io.mosip.pms.test.misp.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -69,7 +70,7 @@ public class MISPLicenseControllerTest {
 
 	@MockBean
 	private InfraProviderServiceImpl infraProvidertService;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -291,6 +292,28 @@ public class MISPLicenseControllerTest {
 						.param("pageNo", String.valueOf(pageNo))
 						.param("pageSize", String.valueOf(pageSize)))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getMispLicensesWithVeryLargePageNoReturnsValidationError() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/misp-licenses")
+						.param("pageNo", "4567890908909")
+						.param("pageSize", "8")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
+
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+		verify(infraProvidertService, never())
+				.getAllMISPLicenses(
+						any(),
+						any(),
+						any(),
+						any(),
+						any(MISPFilterDto.class));
 	}
 
 	@Test
