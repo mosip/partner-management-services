@@ -2110,9 +2110,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 		String bioModality = bioModalityRaw.trim().toLowerCase();
 		if (!modalityToAttribute.containsKey(bioModality)) {
-			String validModalities = modalityToAttribute.keySet().stream()
-					.reduce((a, b) -> a + ", " + b)
-					.orElse("");
+            String validModalities = String.join(", ", modalityToAttribute.keySet());
 			throw new PartnerServiceException(
 					io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
 					String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
