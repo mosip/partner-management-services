@@ -127,6 +127,9 @@ public class PartnerManagementControllerTest {
 	@MockBean
 	private InfraServiceProviderService infraProviderService;
 
+    @MockBean
+    private NotificationsService notificationsService;
+
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
 	public void partnerApiKeyToPolicyMappingsTest() throws Exception {
@@ -916,6 +919,9 @@ public class PartnerManagementControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
 				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+        verify(notificationsService, never())
+                .getNotifications(anyInt(), anyInt(), any(NotificationsFilterDto.class));
 	}
 
 	@Test
