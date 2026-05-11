@@ -646,6 +646,15 @@
 					name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
 		</classes>
 	</test>
+	<test name="GetBioExtractorRequests">
+		<parameter name="ymlFile"
+		           value="pms/GetBioExtractorRequests/GetBioExtractorRequests.yml" />
+		<parameter name="pathParams" value="requestId" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+		</classes>
+	</test>
 
 	<test name="RejectMappingKey">
 		<parameter name="ymlFile"
