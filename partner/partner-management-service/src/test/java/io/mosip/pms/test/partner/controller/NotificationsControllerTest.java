@@ -30,6 +30,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -140,6 +145,23 @@ public class NotificationsControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/notifications/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getNotificationsWithVeryLargePageNoReturnsValidationError() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/notifications")
+                        .param("pageNo", "4567890908909")
+                        .param("pageSize", "4")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
+                .andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
+
+        verify(notificationsService, never())
+                .getNotifications(anyInt(), anyInt(), any(NotificationsFilterDto.class));
     }
 
     @Test

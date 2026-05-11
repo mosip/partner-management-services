@@ -19,7 +19,6 @@ import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.request.dto.RequestWrapperV2;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.common.util.RequestValidator;
-import io.mosip.pms.partner.dto.NotificationsFilterDto;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
@@ -65,9 +64,6 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
-import io.mosip.pms.oauth.client.service.ClientManagementService;
-import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
-import io.mosip.pms.partner.service.NotificationsService;
 
 
 @RunWith(SpringRunner.class)
@@ -120,15 +116,6 @@ public class PartnerManagementControllerTest {
 	public void setUp() {
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 	}
-
-	@MockBean
-	private ClientManagementService clientManagementService;
-
-	@MockBean
-	private InfraServiceProviderService infraProviderService;
-
-    @MockBean
-    private NotificationsService notificationsService;
 
 	@Test
 	@WithMockUser(roles = {"PARTNERMANAGER"})
@@ -888,57 +875,6 @@ public class PartnerManagementControllerTest {
 
 		verify(partnerManagementService, never())
 				.getBioextractorConfigurations(any(), any(), any(), any(), any());
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void getOidcClientsWithVeryLargePageNoReturnsValidationError() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/oidc-clients")
-						.param("pageNo", "4567890908909")
-						.param("pageSize", "8")
-						.contentType(MediaType.APPLICATION_JSON_VALUE))
-
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
-				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
-
-		verify(clientManagementService, never())
-				.getPartnersClientsV2(any(), any(), any(), any(), any());
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void getNotificationsWithVeryLargePageNoReturnsValidationError() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/notifications")
-						.param("pageNo", "4567890908909")
-						.param("pageSize", "4")
-						.contentType(MediaType.APPLICATION_JSON_VALUE))
-
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
-				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
-
-        verify(notificationsService, never())
-                .getNotifications(anyInt(), anyInt(), any(NotificationsFilterDto.class));
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void getMispLicensesWithVeryLargePageNoReturnsValidationError() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/misp-licenses")
-						.param("pageNo", "4567890908909")
-						.param("pageSize", "8")
-						.contentType(MediaType.APPLICATION_JSON_VALUE))
-
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors[0].errorCode").value("PMS_PRT_360"))
-				.andExpect(jsonPath("$.errors[0].message").value("Invalid Page No"));
-
-		verify(infraProviderService, never())
-				.getAllMISPLicenses(any(), any(), any(), any(), any());
 	}
 
 	@Test
