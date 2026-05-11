@@ -58,7 +58,7 @@ GetBioExtractorRequests:
       description: Validate that bio-extractor request retrieval fails when a special character requestId is provided
       role: partneradmin
       restMethod: get
-      checkStatusCodeOnlyInResponse: true
+      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
       outputTemplate: pms/responseCode
       input: '{
