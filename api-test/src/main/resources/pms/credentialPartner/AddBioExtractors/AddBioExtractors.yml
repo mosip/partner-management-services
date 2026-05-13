@@ -8,10 +8,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
+    "requestTime": "$TIMESTAMP$",
 	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-	"partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$"
+	"partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
       "response": "Bio extract request submitted successfully."
@@ -26,10 +26,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
+    "requestTime": "$TIMESTAMP$",
 	"partnerId":"$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
-	"partnerPolicyRequestId": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$"
+	"partnerPolicyRequestId": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
       "response": "Bio extract request submitted successfully."
@@ -44,10 +44,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"abcd",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -66,10 +66,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"abcd",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:partnerPolicyMapping_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -88,10 +88,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -110,10 +110,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -132,10 +132,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":" ",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -155,10 +155,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/responseCode
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"!@#$%^&*()",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "responseCode": "400"
@@ -173,10 +173,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":" ",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -196,10 +196,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/responseCode
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"!@#$%^&*()",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "responseCode": "400"
@@ -214,10 +214,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"invalid",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -241,10 +241,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":" ",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -268,10 +268,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"!@#$%^&*()",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -295,10 +295,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"invalid",
   "biometricSubTypes":"mock",
@@ -322,10 +322,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":" ",
   "biometricSubTypes":"mock",
@@ -349,10 +349,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"!@#$%^&*()",
   "biometricSubTypes":"mock",
@@ -376,10 +376,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "invalid",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -403,10 +403,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": " ",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -430,10 +430,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "!@#$%^&*()",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -457,10 +457,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -484,10 +484,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+    "requestTime": "$TIMESTAMP$",
 	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-	"partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$"
+	"partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -506,10 +506,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
-	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
-	"policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-	"partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$"
+    "requestTime": "$TIMESTAMP$",
+    "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+    "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
+    "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "errors": [
@@ -528,10 +528,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsCustomAttribute
       outputTemplate: pms/error
       input: '{
+    "requestTime": "$TIMESTAMP$",
 	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
 	"partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$",
 	"extractors":[]	
   }'
       output: '{
@@ -551,10 +551,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsCustomAttribute
       outputTemplate: pms/error
       input: '{
+    "requestTime": "$TIMESTAMP$",
 	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
 	"partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$",
 	"extractors":[
 	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"},
 	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"}
@@ -578,10 +578,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/responseCode
       input: '{
+  "requestTime": "2026/04/30 12:30:45",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
-  "requesttime": "2026/04/30 12:30:45"
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
   }'
       output: '{
    "responseCode": "400"
@@ -596,10 +596,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_id$",
-  "partnerPolicyRequestId": "$REMOVE$",
-  "requesttime": "$TIMESTAMP$"
+  "partnerPolicyRequestId": "$REMOVE$"
   }'
       output: '{
    "errors": [
@@ -618,10 +618,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
+  "requestTime": "$TIMESTAMP$",
   "partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
   "policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
   "partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-  "requesttime": "$TIMESTAMP$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -645,10 +645,10 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
       outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
+    "requestTime": "$TIMESTAMP$",
 	"partnerId":"$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
 	"policyId":"$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_id$",
-	"partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
-	"requesttime": "$TIMESTAMP$"
+	"partnerPolicyRequestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$"
   }'
       output: '{
       "response": "Bio extract request submitted successfully."

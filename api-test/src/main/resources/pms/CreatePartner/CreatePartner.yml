@@ -280,7 +280,7 @@ createPartnerSelfRegistration:
       input: '{
     "address": "Bangalore",
     "contactNumber": "8553967572",
-    "emailId": "mmo@gmail.com",
+    "emailId": "$RUNCONTEXT$mmo@gmail.com",
     "organizationName": "Techno",
     "partnerId": "Tech-3241",
     "partnerType": "Auth_Partner",
