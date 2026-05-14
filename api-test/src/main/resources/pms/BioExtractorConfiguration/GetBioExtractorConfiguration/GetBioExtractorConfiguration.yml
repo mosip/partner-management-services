@@ -359,7 +359,7 @@ GetBioExtractorConfiguration:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_REQUEST_ERROR_007"
+           "errorCode": "PMS_PRT_099"
         }
     ]
 }'
@@ -679,12 +679,11 @@ GetBioExtractorConfiguration:
   Pms_GetBioExtractorConfiguration_With_NonInteger_PageNo_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_30
-    description: Validate that the request to retrieve Bio Extractor Configurations fails with a bad request response when a non-integer value is provided for pageNo.
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when a non-integer value is provided for pageNo.
     role: partneradmin
     restMethod: get
-    checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
-    outputTemplate: pms/responseCode
+    outputTemplate: pms/error
     input: '{
       "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
@@ -696,17 +695,20 @@ GetBioExtractorConfiguration:
       "sortType": "$REMOVE$"
 }'
     output: '{
-      "responseCode": "400"
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_360"
+        }
+    ]
 }'
   Pms_GetBioExtractorConfiguration_With_Decimal_PageNo_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_31
-    description: Validate that the request to retrieve Bio Extractor Configurations fails with a bad request response when a decimal value is provided for pageNo.
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when a decimal value is provided for pageNo.
     role: partneradmin
     restMethod: get
-    checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
-    outputTemplate: pms/responseCode
+    outputTemplate: pms/error
     input: '{
       "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
@@ -718,7 +720,11 @@ GetBioExtractorConfiguration:
       "sortType": "$REMOVE$"
 }'
     output: '{
-      "responseCode": "400"
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_360"
+        }
+    ]
 }'
   Pms_GetBioExtractorConfiguration_With_VeryLarge_PageNo:
     endPoint: /v1/partnermanager/bio-extractor-configurations

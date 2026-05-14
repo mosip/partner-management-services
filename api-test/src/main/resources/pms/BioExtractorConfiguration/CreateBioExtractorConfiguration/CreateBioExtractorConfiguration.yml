@@ -459,7 +459,7 @@ CreateBioExtractorConfiguration:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_REQUEST_ERROR_007"
+           "errorCode": "PMS_PRT_099"
         }
     ]
 }'
