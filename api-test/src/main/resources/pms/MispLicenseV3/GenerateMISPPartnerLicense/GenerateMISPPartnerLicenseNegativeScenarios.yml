@@ -479,3 +479,69 @@ GenerateMISPPartnerLicenseNegativeScenarios:
        }
        ]
 }'
+   Pms_GenerateMISPPartnerLicenseNegativeScenarios_With_Invalid_RequestTime_Neg:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_21
+      description: Validate that generating a MISP partner license fails when requestTime is provided in an invalid date-time format
+      role: partneradmin
+      restMethod: post
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/responseCode
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "2026-05-14",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
+        "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
+        "expiryDate": "$EXPIRYDATE$"
+}'
+      output: '{
+	  "responseCode": "400"
+}'
+   Pms_GenerateMISPPartnerLicenseNegativeScenarios_With_Invalid_PolicyId_Neg:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_22
+      description: Validate that generating a MISP partner license fails when an invalid policyId is provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
+        "policyId": "invalid",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
+        "expiryDate": "$EXPIRYDATE$"
+}'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_MSP_437"
+        }
+     ]
+}'
+   Pms_GenerateMISPPartnerLicenseNegativeScenarios_With_Invalid_ExpiryDate_Neg:
+      endPoint: /v1/partnermanager/misp-licenses
+      uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_23
+      description: Validate that generating a MISP partner license fails when expiryDate is provided in an invalid date format
+      role: partneradmin
+      restMethod: post
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
+      outputTemplate: pms/responseCode
+      input: '{
+        "id": "mosip.pms.misp.generate.license.post",
+        "version": "1.0",
+        "requestTime": "$TIMESTAMP$",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
+        "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+        "licenseKeyName": "$LICENSE_KEY_NAME$",
+        "expiryDate": "invalid"
+}'
+      output: '{
+	  "responseCode": "400"
+}'
