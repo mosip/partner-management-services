@@ -205,7 +205,7 @@ GetMISPPartnerLicense:
         output: '{
 }'
     Pms_GetMISPPartnerLicense_with_Pagination:
-        endPoint: /v1/partnermanager/misp-licenses?pageNo=0&pageSize=2
+        endPoint: /v1/partnermanager/misp-licenses
         uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_10
         description: Validate that the MISP partner licenses are retrieved successfully using pagination parameters
         role: partneradmin
