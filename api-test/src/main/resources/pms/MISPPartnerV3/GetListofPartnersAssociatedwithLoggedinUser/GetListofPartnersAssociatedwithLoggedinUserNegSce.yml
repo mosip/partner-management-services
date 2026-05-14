@@ -211,7 +211,7 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_REQUEST_ERROR_007"
+       "errorCode": "PMS_PS_ERROR_009"
        }
        ]   
 }'
