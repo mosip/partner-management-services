@@ -13,8 +13,6 @@ public class NotificationsResponseDto {
 
     private String notificationId;
 
-    private String notificationPartnerId;
-
     private String notificationType;
 
     private String notificationStatus;

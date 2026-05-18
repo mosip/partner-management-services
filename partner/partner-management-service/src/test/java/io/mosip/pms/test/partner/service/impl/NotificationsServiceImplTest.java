@@ -7,6 +7,7 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.dto.DismissNotificationRequestDto;
 import io.mosip.pms.common.dto.DismissNotificationResponseDto;
 import io.mosip.pms.common.dto.NotificationDetailsDto;
+import io.mosip.pms.common.dto.NotificationsResponseDto;
 import io.mosip.pms.common.entity.NotificationEntity;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.repository.NotificationServiceRepository;
@@ -45,6 +46,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -495,6 +498,23 @@ public class NotificationsServiceImplTest {
     @Test
     public void dismissNotificationExceptionTest2() {
         notificationsServiceImpl.dismissNotification("12345", null);
+    }
+
+    @Test
+    public void mapToResponseDto_returnsNotificationTypeFromEntity() {
+        NotificationEntity entity = new NotificationEntity();
+        entity.setId("notification-1");
+        entity.setPartnerId("partner-1");
+        entity.setNotificationType("ROOT_CERT_EXPIRY");
+        entity.setNotificationStatus(PartnerConstants.STATUS_ACTIVE);
+        entity.setCreatedDatetime(LocalDateTime.now());
+
+        NotificationsResponseDto responseDto = notificationsServiceImpl.mapToResponseDto(entity);
+
+        assertEquals("notification-1", responseDto.getNotificationId());
+        assertEquals("ROOT_CERT_EXPIRY", responseDto.getNotificationType());
+        assertEquals(PartnerConstants.STATUS_ACTIVE, responseDto.getNotificationStatus());
+        assertNull(responseDto.getNotificationDetails());
     }
 
     private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {

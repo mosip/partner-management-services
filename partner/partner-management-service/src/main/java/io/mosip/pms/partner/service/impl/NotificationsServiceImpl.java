@@ -443,7 +443,6 @@ public class NotificationsServiceImpl implements NotificationsService {
 	public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
 			NotificationsResponseDto responseDto = new NotificationsResponseDto();
 			responseDto.setNotificationId(notificationEntity.getId());
-			responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
 			responseDto.setNotificationType(notificationEntity.getNotificationType());
 			responseDto.setNotificationStatus(notificationEntity.getNotificationStatus());
 			responseDto.setCreatedDateTime(notificationEntity.getCreatedDatetime());

@@ -8508,7 +8508,6 @@
                                                         "type": "object",
                                                         "required": [
                                                             "notificationId",
-                                                            "notificationPartnerId",
                                                             "notificationType",
                                                             "notificationStatus",
                                                             "createdDateTime",
@@ -8518,10 +8517,6 @@
                                                             "notificationId": {
                                                                 "type": "string",
                                                                 "description": "Unique identifier for the Notification"
-                                                            },
-                                                            "notificationPartnerId": {
-                                                                "type": "string",
-                                                                "description": "Unique identifier of the partner"
                                                             },
                                                             "notificationType": {
                                                                 "type": "string",
@@ -8535,7 +8530,7 @@
                                                                     "FTM_CHIP_CERT_EXPIRY",
                                                                     "MISP_LICENSE_KEY_EXPIRY"
                                                                 ],
-                                                                "description": "Type of the notification"
+                                                                "description": "Type of the notification from pms.notifications.notification_type"
                                                             },
                                                             "notificationStatus": {
                                                                 "type": "string",
