@@ -1096,8 +1096,6 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
 
-		validateLoggedInUser();
-
 		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByReqId(requestId);
 		if (parentPolicyRequest == null || Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
 				|| parentPolicyRequest.getPartner() == null) {
@@ -2356,13 +2354,6 @@ public class PartnerServiceImpl implements PartnerService {
 	 * validates the loggedInUser authorization
 	 * @param loggedInUserId
 	 */
-	private void validateLoggedInUser() {
-		if (getLoggedInUserId() == null) {
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
-	}
-
 	public void validateLoggedInUserAuthorization(String loggedInUserId) {
 		if(partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
 			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
