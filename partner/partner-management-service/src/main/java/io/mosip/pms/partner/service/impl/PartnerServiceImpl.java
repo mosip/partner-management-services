@@ -1106,6 +1106,14 @@ public class PartnerServiceImpl implements PartnerService {
 		String partnerId = parentPolicyRequest.getPartner().getId();
 		String policyId = parentPolicyRequest.getPolicyId();
 
+		String loggedInUserId = getLoggedInUserId();
+		if (loggedInUserId != null && !partnerId.equals(loggedInUserId)) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
+					"partnerId");
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
+
 		validateLoggedInUserAuthorization(partnerId);
 		getValidPartner(partnerId, false);
 

@@ -274,7 +274,7 @@ public class PartnerServiceImplTest {
 		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
 		parent.setIsDeleted(false);
 
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId, requestId)).thenReturn(parent);
+		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
 		when(partnerRepository.findById(partnerId)).thenReturn(java.util.Optional.of(partner));
 
 		PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
@@ -283,7 +283,6 @@ public class PartnerServiceImplTest {
 		when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
 
 		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
-		req.setPartnerPolicyRequestId(requestId);
 		BioExtractorsDto extractor = new BioExtractorsDto();
 		extractor.setAttributeName("face");
 		extractor.setBiometric("face");
@@ -292,7 +291,7 @@ public class PartnerServiceImplTest {
 		req.setExtractors(List.of(extractor));
 
 		try {
-			pserviceImpl.submitBioExtractorsRequest(partnerId, policyId, req);
+			pserviceImpl.submitBioExtractorsRequest(requestId, req);
 			fail("Expected PartnerServiceException");
 		} catch (PartnerServiceException ex) {
 			assertEquals(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(), ex.getErrorCode());
