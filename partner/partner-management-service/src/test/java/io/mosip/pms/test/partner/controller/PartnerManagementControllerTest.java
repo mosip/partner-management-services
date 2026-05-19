@@ -64,7 +64,7 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
-
+import io.mosip.pms.partner.service.PartnerService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -77,6 +77,9 @@ public class PartnerManagementControllerTest {
 
 	@MockBean
 	PartnerManagerService partnerManagementService;
+
+	@MockBean
+	PartnerService partnerService;
 
 	@Autowired
 	PartnerManagementController partnerManagementController;

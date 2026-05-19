@@ -47,9 +47,9 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
-import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
@@ -172,7 +172,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
 	@Operation(
 			summary = "Service to add bio extractors - deprecated since release-1.3.0-beta.5",
-			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partners/{partnerId}/policies/{policyId}/bio-extractors-request endpoint.",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partners/partner-policy-requests/{requestId}/bio-extractors-request endpoint.",
 			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
@@ -185,20 +185,22 @@ public class PartnerServiceController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
-	@RequestMapping(value = "/{partnerId}/policies/{policyId}/bio-extractors-request", method = RequestMethod.POST)
+	@PostMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
 	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
 	public ResponseWrapperV2<String> submitBioExtractorsRequest(
-			@PathVariable String partnerId,
-			@PathVariable String policyId,
+			@PathVariable("requestId") String requestId,
 			@RequestBody @Valid RequestWrapperV2<BioExtractorsRequestDto> requestWrapper) {
 		Optional<ResponseWrapperV2<String>> validationResponse =
 				requestValidator.validate(postPartnerBioextractorsRequestId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		inputValidator.validateRequestInput("partnerPolicyRequestId", requestWrapper.getRequest().getPartnerPolicyRequestId());
+		inputValidator.validateRequestInput("requestId", requestId);
 		requestWrapper.getRequest().getExtractors().forEach(extractor -> {
 			inputValidator.validateRequestInput("attributeName", extractor.getAttributeName());
 			inputValidator.validateRequestInput("biometric", extractor.getBiometric());
@@ -207,7 +209,7 @@ public class PartnerServiceController {
 			inputValidator.validateRequestInput("extractorProviderVersion", extractor.getExtractorProviderVersion());
 		});
 		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
-		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, requestWrapper.getRequest()));
+		response.setResponse(partnerService.submitBioExtractorsRequest(requestId, requestWrapper.getRequest()));
 		response.setId(requestWrapper.getId());
 		response.setVersion(requestWrapper.getVersion());
 		return response;

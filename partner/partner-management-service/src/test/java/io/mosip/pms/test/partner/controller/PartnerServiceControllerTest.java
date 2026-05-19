@@ -172,19 +172,19 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void submitBioExtractorsRequestTest() throws Exception {
     	String responseDto = "ok";
-    	when(partnerService.submitBioExtractorsRequest(eq("123456"), eq("12345"), any(BioExtractorsRequestDto.class)))
+    	when(partnerService.submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class)))
     			.thenReturn(responseDto);
-    	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest()))).andExpect(status().isOk());
     }
 
 	@Test
 	@WithMockUser(roles = {"PARTNER"})
 	public void submitBioExtractorsRequest_withInvalidExtractorProvider_shouldReturnInvalidInputError() throws Exception {
-		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
 		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
 
-		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(status().isOk())
@@ -196,12 +196,12 @@ public class PartnerServiceControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER"})
 	public void submitBioExtractorsRequest_withNullExtractorEntry_shouldReturnBadRequest() throws Exception {
-		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
 		List<BioExtractorsDto> extractors = new ArrayList<>();
 		extractors.add(null);
 		wrapper.getRequest().setExtractors(extractors);
 
-		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -675,7 +675,6 @@ public class PartnerServiceControllerTest {
 
     private BioExtractorsRequestDto getBioExtractorsRequestInput() {
         BioExtractorsRequestDto request = new BioExtractorsRequestDto();
-        request.setPartnerPolicyRequestId("req-1");
         BioExtractorsDto dto = new BioExtractorsDto();
         dto.setAttributeName("face");
         dto.setBiometric("face");
@@ -685,13 +684,12 @@ public class PartnerServiceControllerTest {
         return request;
     }
 
-    private RequestWrapper<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
-        RequestWrapper<BioExtractorsRequestDto> request = new RequestWrapper<BioExtractorsRequestDto>();
+    private RequestWrapperV2<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
+        RequestWrapperV2<BioExtractorsRequestDto> request = new RequestWrapperV2<BioExtractorsRequestDto>();
         request.setRequest(getBioExtractorsRequestInput());
         request.setId("mosip.pms.partners.bioextractors.request.post");
         request.setVersion("1.0");
-        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        request.setMetadata("{}");
+        request.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
         return request;
     }
     

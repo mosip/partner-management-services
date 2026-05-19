@@ -1087,31 +1087,29 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public String submitBioExtractorsRequest(String partnerId, String policyId,
+	public String submitBioExtractorsRequest(String requestId,
 			BioExtractorsRequestDto extractors) {
-		validateLoggedInUserAuthorization(partnerId);
-		if (extractors == null || extractors.getExtractors() == null || extractors.getExtractors().isEmpty()
-				|| extractors.getPartnerPolicyRequestId() == null || extractors.getPartnerPolicyRequestId().isBlank()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
+		if (extractors == null || extractors.getExtractors() == null || extractors.getExtractors().isEmpty()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, requestId,
+					"requestId");
 			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
 					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
-		getValidPartner(partnerId, false);
 
-		String requestId = extractors.getPartnerPolicyRequestId().trim();
-		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
-				requestId);
-		boolean invalidParent = parentPolicyRequest == null
-				|| Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
-				|| parentPolicyRequest.getPolicyId() == null
-				|| !policyId.equals(parentPolicyRequest.getPolicyId());
-		if (invalidParent) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
+		validateLoggedInUser();
+
+		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByReqId(requestId);
+		if (parentPolicyRequest == null || Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
+				|| parentPolicyRequest.getPartner() == null) {
 			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
 					ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
 		}
+
+		String partnerId = parentPolicyRequest.getPartner().getId();
+		String policyId = parentPolicyRequest.getPolicyId();
+
+		validateLoggedInUserAuthorization(partnerId);
+		getValidPartner(partnerId, false);
 
 		String parentStatus = parentPolicyRequest.getStatusCode();
 		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
@@ -1122,17 +1120,14 @@ public class PartnerServiceImpl implements PartnerService {
 					ErrorCode.BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
 		}
 
-		List<String> createdIds = new ArrayList<>();
-
 		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
-		Set<String> uniqueAttributeNames = new HashSet<>();
-		Set<String> uniqueModalities = new HashSet<>();
+		Set<String> uniqueCombinations = new HashSet<>();
 		for (BioExtractorsDto extractor : extractors.getExtractors()) {
 			String attrName = extractor.getAttributeName() != null ? extractor.getAttributeName().toLowerCase().trim() : null;
 			String biometric = extractor.getBiometric() != null ? extractor.getBiometric().toLowerCase().trim() : null;
-			
+
 			if (attrName != null && biometric != null) {
-				if (!uniqueAttributeNames.add(attrName) || !uniqueModalities.add(biometric)) {
+				if (!uniqueCombinations.add(attrName + "|" + biometric)) {
 					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
 							"partnerId");
 					throw new PartnerServiceException(ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorCode(),
@@ -1195,7 +1190,6 @@ public class PartnerServiceImpl implements PartnerService {
 				throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
 						ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorMessage());
 			}
-			createdIds.add(id);
 		}
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_SUCCESS, partnerId, "partnerId");
 		return "Bio extract request submitted successfully.";
@@ -2362,6 +2356,13 @@ public class PartnerServiceImpl implements PartnerService {
 	 * validates the loggedInUser authorization
 	 * @param loggedInUserId
 	 */
+	private void validateLoggedInUser() {
+		if (getLoggedInUserId() == null) {
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
+	}
+
 	public void validateLoggedInUserAuthorization(String loggedInUserId) {
 		if(partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
 			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),

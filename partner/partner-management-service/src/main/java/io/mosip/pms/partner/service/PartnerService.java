@@ -142,12 +142,11 @@ public interface PartnerService {
 	/**
 	 * Submit bio extractor configuration requests against an in-progress partner policy mapping request.
 	 *
-	 * @param partnerId partner identifier
-	 * @param policyId  auth policy identifier
-	 * @param request bio-extractor request payload (includes partnerPolicyRequestId)
+	 * @param requestId partner policy mapping request identifier
+	 * @param request bio-extractor request payload
 	 * @return created request row identifiers
 	 */
-	String submitBioExtractorsRequest(String partnerId, String policyId, BioExtractorsRequestDto request);
+	String submitBioExtractorsRequest(String requestId, BioExtractorsRequestDto request);
 
 	/**
 	 * Submit credential type request against an in-progress partner policy mapping request.
