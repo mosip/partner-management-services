@@ -174,7 +174,7 @@ public class PartnerServiceControllerTest {
     	String responseDto = "ok";
     	when(partnerService.submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class)))
     			.thenReturn(responseDto);
-    	mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(post("/partners/partner-policy-requests/req-1/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest()))).andExpect(status().isOk());
     }
 
@@ -184,7 +184,7 @@ public class PartnerServiceControllerTest {
 		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
 		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
 
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+		mockMvc.perform(post("/partners/partner-policy-requests/req-1/bio-extractors-request")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(status().isOk())
@@ -201,7 +201,7 @@ public class PartnerServiceControllerTest {
 		extractors.add(null);
 		wrapper.getRequest().setExtractors(extractors);
 
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+		mockMvc.perform(post("/partners/partner-policy-requests/req-1/bio-extractors-request")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
