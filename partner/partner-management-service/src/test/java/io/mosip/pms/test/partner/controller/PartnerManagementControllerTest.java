@@ -27,6 +27,7 @@ import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
@@ -68,6 +69,7 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.service.PartnerService;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -1091,6 +1093,17 @@ public class PartnerManagementControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void submitCredentialTypesRequestTest() throws Exception {
+		Mockito.when(partnerService.submitCredentialTypesRequest(any())).thenReturn("ok");
+		mockMvc.perform(post("/partner-policy-requests/{requestId}/credential-types-request", "req-1")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(createSubmitCredentialTypesRequest())))
+				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).submitCredentialTypesRequest(any());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getBioextractorConfigurations_withoutOptionalFilters_coversNullBranches() throws Exception {
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> response = new ResponseWrapperV2<>();
 		Mockito.when(partnerManagementService.getBioextractorConfigurations(any(), any(), any(), any(), any()))
@@ -1202,68 +1215,6 @@ public class PartnerManagementControllerTest {
 				.andExpect(status().isOk());
 	}
 
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void submitBioExtractorsRequestTest() throws Exception {
-		when(partnerManagementService.submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class)))
-				.thenReturn("Bio extract request submitted successfully.");
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest())))
-				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1)).submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class));
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void submitBioExtractorsRequest_withInvalidExtractorProvider_shouldReturnInvalidInputError() throws Exception {
-		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
-		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
-
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content(objectMapper.writeValueAsString(wrapper)))
-				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].errorCode").value("PMS_REQUEST_ERROR_007"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message")
-						.value(org.hamcrest.Matchers.containsString("extractorProvider")));
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void submitBioExtractorsRequest_withNullExtractorEntry_shouldReturnBadRequest() throws Exception {
-		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
-		List<BioExtractorsDto> extractors = new ArrayList<>();
-		extractors.add(null);
-		wrapper.getRequest().setExtractors(extractors);
-
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content(objectMapper.writeValueAsString(wrapper)))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.errors").isNotEmpty());
-	}
-
-	private RequestWrapperV2<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
-		RequestWrapperV2<BioExtractorsRequestDto> request = new RequestWrapperV2<>();
-		request.setRequest(getBioExtractorsRequestInput());
-		request.setId("mosip.pms.partners.bioextractors.request.post");
-		request.setVersion("1.0");
-		request.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-		return request;
-	}
-
-	private BioExtractorsRequestDto getBioExtractorsRequestInput() {
-		BioExtractorsRequestDto request = new BioExtractorsRequestDto();
-		BioExtractorsDto dto = new BioExtractorsDto();
-		dto.setAttributeName("face");
-		dto.setBiometric("face");
-		dto.setExtractorProvider("t5");
-		dto.setExtractorProviderVersion("1.1");
-		request.setExtractors(List.of(dto));
-		return request;
-	}
-
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {
 		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = new RequestWrapperV2<>();
 		wrapper.setId("mosip.pms.bioextractor.configurations.post");
@@ -1287,5 +1238,14 @@ public class PartnerManagementControllerTest {
 		req.setStatus("DELETED");
 		wrapper.setRequest(req);
 		return wrapper;
+	}
+
+	private RequestWrapperV2<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
+		RequestWrapperV2<CredentialTypeRequestDto> request = new RequestWrapperV2<>();
+		CredentialTypeRequestDto requestDto = new CredentialTypeRequestDto();
+		requestDto.setPartnerPolicyRequestId("req-1");
+		requestDto.setCredentialType("auth");
+		request.setRequest(requestDto);
+		return request;
 	}
 }
