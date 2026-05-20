@@ -2116,19 +2116,19 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_invalidRequest_throws() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
-		pserviceImpl.submitCredentialTypesRequest("p1", "pol1", null);
+		pserviceImpl.submitCredentialTypesRequest(null);
 	}
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_parentNotFound_throws() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
 		when(partnerRepository.findById("p1")).thenReturn(Optional.of(createPartner(true)));
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId(eq("p1"), anyString())).thenReturn(null);
+		when(partnerPolicyRequestRepository.findByReqId(anyString())).thenReturn(null);
 
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
 		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
+		pserviceImpl.submitCredentialTypesRequest(req);
 	}
 
 	@Test(expected = PartnerServiceException.class)
@@ -2141,12 +2141,15 @@ public class PartnerServiceImplTest {
 		parent.setPolicyId("pol1");
 		parent.setIsDeleted(false);
 		parent.setStatusCode("Approved");
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId("p1", "req-1")).thenReturn(parent);
+		Partner partner = new Partner();
+		partner.setId("p1");
+		parent.setPartner(partner);
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
 		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
+		pserviceImpl.submitCredentialTypesRequest(req);
 	}
 
 	@Test(expected = PartnerServiceException.class)
@@ -2159,13 +2162,16 @@ public class PartnerServiceImplTest {
 		parent.setPolicyId("pol1");
 		parent.setIsDeleted(false);
 		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId("p1", "req-1")).thenReturn(parent);
+		Partner partner = new Partner();
+		partner.setId("p1");
+		parent.setPartner(partner);
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(true);
 
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
 		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
+		pserviceImpl.submitCredentialTypesRequest(req);
 	}
 
 	@Test(expected = PartnerServiceException.class)
@@ -2179,7 +2185,10 @@ public class PartnerServiceImplTest {
 		parent.setPolicyId("pol1");
 		parent.setIsDeleted(false);
 		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId("p1", "req-1")).thenReturn(parent);
+		Partner partner = new Partner();
+		partner.setId("p1");
+		parent.setPartner(partner);
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
 		when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(anyString(), anyString())).thenReturn(null);
 		when(partnerPolicyCredentialTypeRequestRepository.existsById(anyString())).thenReturn(true);
@@ -2187,7 +2196,7 @@ public class PartnerServiceImplTest {
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
 		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
+		pserviceImpl.submitCredentialTypesRequest(req);
 	}
 
 	@Test(expected = PartnerServiceException.class)
@@ -2201,7 +2210,10 @@ public class PartnerServiceImplTest {
 		parent.setPolicyId("pol1");
 		parent.setIsDeleted(false);
 		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId("p1", "req-1")).thenReturn(parent);
+		Partner partner = new Partner();
+		partner.setId("p1");
+		parent.setPartner(partner);
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
 		when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(anyString(), anyString())).thenReturn(null);
 		when(partnerPolicyCredentialTypeRequestRepository.existsById(anyString())).thenReturn(false);
@@ -2210,7 +2222,7 @@ public class PartnerServiceImplTest {
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
 		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
+		pserviceImpl.submitCredentialTypesRequest(req);
 	}
 
 	@Test
@@ -2224,7 +2236,10 @@ public class PartnerServiceImplTest {
 		parent.setPolicyId("pol1");
 		parent.setIsDeleted(false);
 		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		when(partnerPolicyRequestRepository.findByPartnerIdAndReqId("p1", "req-1")).thenReturn(parent);
+		Partner partner = new Partner();
+		partner.setId("p1");
+		parent.setPartner(partner);
+		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
 		when(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(anyString(), anyString())).thenReturn(null);
 		when(partnerPolicyCredentialTypeRequestRepository.existsById(anyString())).thenReturn(true, false);
@@ -2234,7 +2249,7 @@ public class PartnerServiceImplTest {
 		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType((" " + allowedCredentialTypes.split(",")[0] + " "));
 
-		String msg = pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
+		String msg = pserviceImpl.submitCredentialTypesRequest(req);
 		assertEquals("Credential type request submitted successfully.", msg);
 	}
 
