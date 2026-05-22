@@ -48,11 +48,9 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
-import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
-import io.mosip.pms.partner.service.PartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -79,9 +77,6 @@ public class PartnerManagementController {
 	@Autowired
 	PartnerManagerService partnerManagementService;
 
-	@Autowired
-	PartnerService partnerService;
-	
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -114,9 +109,6 @@ public class PartnerManagementController {
 	
 	@Value("${mosip.pms.api.id.bioextractor.configuration.delete.patch}")
 	private String patchDeleteBioextractorConfigurationId;
-
-	@Value("${mosip.pms.api.id.partners.credentialtypes.request.post}")
-	private String postPartnerCredentialTypesRequestId;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -554,26 +546,6 @@ public class PartnerManagementController {
 			@PathVariable("requestId") String requestId) {
 		inputValidator.validateRequestInput("requestId", requestId);
 		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
-	}
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
-	@PostMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
-	@Operation(summary = "Service to submit credential types request",
-			description = "Persists credential type request against an in-progress partner policy mapping request")
-	public ResponseWrapperV2<String> submitCredentialTypesRequest(
-			@PathVariable("requestId") String requestId,
-			@RequestBody @Valid RequestWrapperV2<CredentialTypeRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<String>> validationResponse =
-				requestValidator.validate(postPartnerCredentialTypesRequestId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		inputValidator.validateRequestInput("requestId", requestId);
-		requestWrapper.getRequest().setPartnerPolicyRequestId(requestId);
-		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
-		response.setResponse(partnerService.submitCredentialTypesRequest(requestWrapper.getRequest()));
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
-		return response;
 	}
 
 	@Deprecated(since = "release-1.3.0-beta.2")
