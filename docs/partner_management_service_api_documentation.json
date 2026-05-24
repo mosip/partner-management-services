@@ -9993,19 +9993,10 @@
                         }
                     },
                     {
-                        "name": "partnerId",
+                        "name": "requestId",
                         "in": "path",
                         "required": true,
-                        "description": "Partner id. Must match the partner that owns the partner policy request referenced in the body.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Policy id. Must match the policy on the partner policy request referenced in the body.",
+                        "description": "Business partner-policy request id (`pms.partner_policy_request.req_id`).",
                         "schema": {
                             "type": "string"
                         }
@@ -10158,7 +10149,7 @@
                 }
             }
         },
-        "/partners/{partnerId}/policies/{policyId}/credential-types-request": {
+        "/partner-policy-requests/{requestId}/credential-types-request": {
             "post": {
                 "tags": [
                     "partner-service-controller"

@@ -47,13 +47,13 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
-import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
-import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequestDto;
@@ -172,7 +172,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
 	@Operation(
 			summary = "Service to add bio extractors - deprecated since release-1.3.0-beta.5",
-			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partner-policy-requests/{requestId}/bio-extractors-request endpoint.",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partners/{partnerId}/policies/{policyId}/bio-extractors-request endpoint.",
 			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
