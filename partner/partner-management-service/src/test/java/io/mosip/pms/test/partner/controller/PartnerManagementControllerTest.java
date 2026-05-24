@@ -1240,12 +1240,4 @@ public class PartnerManagementControllerTest {
 		return wrapper;
 	}
 
-	private RequestWrapperV2<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
-		RequestWrapperV2<CredentialTypeRequestDto> request = new RequestWrapperV2<>();
-		CredentialTypeRequestDto requestDto = new CredentialTypeRequestDto();
-		requestDto.setPartnerPolicyRequestId("req-1");
-		requestDto.setCredentialType("auth");
-		request.setRequest(requestDto);
-		return request;
-	}
 }

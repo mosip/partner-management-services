@@ -378,6 +378,21 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
+    public void submitCredentialTypesRequestTest() throws Exception {
+        when(partnerService.submitCredentialTypesRequest(any(CredentialTypeRequestDto.class)))
+                .thenReturn("ok");
+
+        mockMvc.perform(
+                post("/partners/partner-policy-requests/12345/credential-types-request")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(
+                                        createSubmitCredentialTypesRequest())))
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void checkPartnerExists_validationPresent_returnsValidationResponse() throws Exception {
         ResponseWrapperV2<PartnerExistsResponseDto> validation = new ResponseWrapperV2<>();
         @SuppressWarnings("rawtypes")
