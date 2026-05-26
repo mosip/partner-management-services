@@ -9974,13 +9974,290 @@
                 }
             }
         },
-        "/partners/partner-policy-requests/{requestId}/bio-extractors-request": {
+        "/partners/{partnerId}/policies/{policyId}/credential-types-request": {
             "post": {
                 "tags": [
                     "partner-service-controller"
                 ],
-                "summary": "NEW: Submit bio extractors request",
-                "description": "Submits bio extractor details for an **in-progress** partner policy mapping request identified by `{requestId}`. Rows are persisted for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request with the given `{requestId}` (`pms.partner_policy_request.req_id`) must exist with status **IN_PROGRESS**.\r\n- The logged-in user must be the partner that owns the request.\r\n- Only **one** bio-extractors submission is accepted per partner policy request; subsequent calls return a business error.\r\n- Attribute name + biometric modality combinations in the payload must be unique within the request and must not duplicate existing extractor configuration for the same partner and policy.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/bioextractors/{policyId}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors`. Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "summary": "NEW: Submit credential type request",
+                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{partnerId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "operationId": "submitCredentialTypesRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "partnerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner id. Must match the partner that owns the partner policy request referenced in the body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "policyId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Policy id. Must match the policy on the partner policy request referenced in the body.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "type": "string"
+                                    },
+                                    "requesttime": {
+                                        "type": "string"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "nullable": true
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partnerPolicyRequestId": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 36
+                                            },
+                                            "credentialType": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 128
+                                            }
+                                        },
+                                        "required": [
+                                            "partnerPolicyRequestId",
+                                            "credentialType"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "request"
+                                ]
+                            },
+                            "example": {
+                                "id": "mosip.pms.partners.credentialtypes.request.post",
+                                "version": "1.0",
+                                "requesttime": "2026-01-01T00:00:00.000Z",
+                                "metadata": null,
+                                "request": {
+                                    "partnerPolicyRequestId": "179392",
+                                    "credentialType": "auth"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapperString"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "crdt7y2k9m1pqw"
+                }
+            }
+        },
+        "/partner-policy-requests/{requestId}/bio-extractors-request": {
+            "get": {
+                "summary": "NEW: Get bio-extractor requests for a partner-policy request",
+                "description": "Returns all bio-extractor request rows submitted for the partner policy mapping identified by `{requestId}`.\r\n\r\n**Path parameter:** `{requestId}` is the **business** partner policy request identifier (`pms.partner_policy_request.req_id`), the same value used in `POST /partner-policy-requests/{requestId}/bio-extractors-request`.\r\n\r\n**Response shape:** `ResponseWrapperV2`-style envelope. Top-level `partnerPolicyRequestId` is the internal partner policy request key; `statusCode` reflects the partner policy request status. `response.extractors` lists extractor rows in creation order. If no rows exist, `response.extractors` is an **empty array** (still HTTP 200).\r\n\r\n**Errors:** Some failures populate the `errors` array while still returning HTTP 200, depending on server exception handling.\r\n\r\n**Authorization:** `mosip.role.pms.getpartnersbioextractors` (same role key as `GET /partners/{partnerId}/bioextractors/{policyId}`). Example roles in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER.",
+                "operationId": "getPartnerPolicyRequestBioExtractorsRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Partner policy request business id (`req_id`).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "Example: `mosip.pms.partner.policy.request.bioextractors.get`"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "responseTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Response timestamp (UTC, ISO-8601)"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "nullable": true
+                                        },
+                                        "partnerPolicyRequestId": {
+                                            "type": "string",
+                                            "description": "Internal partner policy request id (`pms.partner_policy_request.id`)"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "description": "Partner policy request status"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "nullable": true,
+                                            "properties": {
+                                                "extractors": {
+                                                    "type": "array",
+                                                    "description": "Bio extractor rows for this partner policy request; empty if none submitted.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "attributeName": {
+                                                                "type": "string"
+                                                            },
+                                                            "biometric": {
+                                                                "type": "string"
+                                                            },
+                                                            "biometricSubTypes": {
+                                                                "type": "string"
+                                                            },
+                                                            "extractorProvider": {
+                                                                "type": "string"
+                                                            },
+                                                            "extractorProviderVersion": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "errorCode": {
+                                                        "type": "string"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "value": {
+                                            "id": "string",
+                                            "version": "string",
+                                            "responseTime": "2019-08-24T14:15:22Z",
+                                            "metadata": {},
+                                            "partnerPolicyRequestId": "string",
+                                            "statusCode": "string",
+                                            "response": {
+                                                "extractors": [
+                                                    {
+                                                        "attributeName": "string",
+                                                        "biometric": "string",
+                                                        "biometricSubTypes": "string",
+                                                        "extractorProvider": "string",
+                                                        "extractorProviderVersion": "string"
+                                                    }
+                                                ]
+                                            },
+                                            "errors": [
+                                                {
+                                                    "errorCode": "string",
+                                                    "message": "string"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "bioextreqget1a2b3c"
+                },
+                "tags": [
+                    "partner-management-controller"
+                ]
+            },
+            "post": {
+                "tags": [
+                    "partner-management-controller"
+                ],
+                "summary": "Submit bio extractors request",
+                "description": "Submits bio extractor details for an **in-progress** partner policy mapping request identified by `{requestId}`. Rows are persisted for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request with the given `{requestId}` (`pms.partner_policy_request.req_id`) must exist with status **IN_PROGRESS**.\r\n- Only **one** bio-extractors submission is accepted per partner policy request; subsequent calls return a business error.\r\n- Attribute name + biometric modality combinations in the payload must be unique within the request and must not duplicate existing extractor configuration for the same partner and policy.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/bioextractors/{policyId}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors`. Accessible by both partner users and PARTNER_ADMIN. Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
                 "operationId": "submitBioExtractorsRequest",
                 "parameters": [
                     {
@@ -10140,285 +10417,6 @@
                 "x-stoplight": {
                     "id": "p1p7qg4e8d2ss"
                 }
-            }
-        },
-        "/partners/{partnerId}/policies/{policyId}/credential-types-request": {
-            "post": {
-                "tags": [
-                    "partner-service-controller"
-                ],
-                "summary": "NEW: Submit credential type request",
-                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{partnerId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
-                "operationId": "submitCredentialTypesRequest",
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "partnerId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Partner id. Must match the partner that owns the partner policy request referenced in the body.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Policy id. Must match the policy on the partner policy request referenced in the body.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string"
-                                    },
-                                    "version": {
-                                        "type": "string"
-                                    },
-                                    "requesttime": {
-                                        "type": "string"
-                                    },
-                                    "metadata": {
-                                        "type": "object",
-                                        "nullable": true
-                                    },
-                                    "request": {
-                                        "type": "object",
-                                        "properties": {
-                                            "partnerPolicyRequestId": {
-                                                "type": "string",
-                                                "minLength": 1,
-                                                "maxLength": 36
-                                            },
-                                            "credentialType": {
-                                                "type": "string",
-                                                "minLength": 1,
-                                                "maxLength": 128
-                                            }
-                                        },
-                                        "required": [
-                                            "partnerPolicyRequestId",
-                                            "credentialType"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "request"
-                                ]
-                            },
-                            "example": {
-                                "id": "mosip.pms.partners.credentialtypes.request.post",
-                                "version": "1.0",
-                                "requesttime": "2026-01-01T00:00:00.000Z",
-                                "metadata": null,
-                                "request": {
-                                    "partnerPolicyRequestId": "179392",
-                                    "credentialType": "auth"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ResponseWrapperString"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
-                "x-stoplight": {
-                    "id": "crdt7y2k9m1pqw"
-                }
-            }
-        },
-        "/partner-policy-requests/{requestId}/bio-extractors-request": {
-            "get": {
-                "summary": "NEW: Get bio-extractor requests for a partner-policy request",
-                "description": "Returns all bio-extractor request rows submitted for the partner policy mapping identified by `{requestId}`.\r\n\r\n**Path parameter:** `{requestId}` is the **business** partner policy request identifier (`pms.partner_policy_request.req_id`), the same value used in `POST /partners/partner-policy-requests/{requestId}/bio-extractors-request`.\r\n\r\n**Response shape:** `ResponseWrapperV2`-style envelope. Top-level `partnerPolicyRequestId` is the internal partner policy request key; `statusCode` reflects the partner policy request status. `response.extractors` lists extractor rows in creation order. If no rows exist, `response.extractors` is an **empty array** (still HTTP 200).\r\n\r\n**Errors:** Some failures populate the `errors` array while still returning HTTP 200, depending on server exception handling.\r\n\r\n**Authorization:** `mosip.role.pms.getpartnersbioextractors` (same role key as `GET /partners/{partnerId}/bioextractors/{policyId}`). Example roles in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER.",
-                "operationId": "getPartnerPolicyRequestBioExtractorsRequest",
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "requestId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Partner policy request business id (`req_id`).",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "Example: `mosip.pms.partner.policy.request.bioextractors.get`"
-                                        },
-                                        "version": {
-                                            "type": "string"
-                                        },
-                                        "responseTime": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "description": "Response timestamp (UTC, ISO-8601)"
-                                        },
-                                        "metadata": {
-                                            "type": "object",
-                                            "nullable": true
-                                        },
-                                        "partnerPolicyRequestId": {
-                                            "type": "string",
-                                            "description": "Internal partner policy request id (`pms.partner_policy_request.id`)"
-                                        },
-                                        "statusCode": {
-                                            "type": "string",
-                                            "description": "Partner policy request status"
-                                        },
-                                        "response": {
-                                            "type": "object",
-                                            "nullable": true,
-                                            "properties": {
-                                                "extractors": {
-                                                    "type": "array",
-                                                    "description": "Bio extractor rows for this partner policy request; empty if none submitted.",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "attributeName": {
-                                                                "type": "string"
-                                                            },
-                                                            "biometric": {
-                                                                "type": "string"
-                                                            },
-                                                            "biometricSubTypes": {
-                                                                "type": "string"
-                                                            },
-                                                            "extractorProvider": {
-                                                                "type": "string"
-                                                            },
-                                                            "extractorProviderVersion": {
-                                                                "type": "string"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "errorCode": {
-                                                        "type": "string"
-                                                    },
-                                                    "message": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "examples": {
-                                    "Example 1": {
-                                        "value": {
-                                            "id": "string",
-                                            "version": "string",
-                                            "responseTime": "2019-08-24T14:15:22Z",
-                                            "metadata": {},
-                                            "partnerPolicyRequestId": "string",
-                                            "statusCode": "string",
-                                            "response": {
-                                                "extractors": [
-                                                    {
-                                                        "attributeName": "string",
-                                                        "biometric": "string",
-                                                        "biometricSubTypes": "string",
-                                                        "extractorProvider": "string",
-                                                        "extractorProviderVersion": "string"
-                                                    }
-                                                ]
-                                            },
-                                            "errors": [
-                                                {
-                                                    "errorCode": "string",
-                                                    "message": "string"
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
-                "x-stoplight": {
-                    "id": "bioextreqget1a2b3c"
-                },
-                "tags": [
-                    "partner-management-controller"
-                ]
             },
             "parameters": [
                 {

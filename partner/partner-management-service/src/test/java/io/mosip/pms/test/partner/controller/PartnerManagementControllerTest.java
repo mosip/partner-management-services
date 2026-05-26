@@ -2,6 +2,7 @@ package io.mosip.pms.test.partner.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,6 +23,8 @@ import io.mosip.pms.common.util.RequestValidator;
 import io.mosip.pms.partner.manager.controller.PartnerManagementController;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
@@ -1197,6 +1200,67 @@ public class PartnerManagementControllerTest {
 						.param("bioModality", "face")
 						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void submitBioExtractorsRequestTest() throws Exception {
+		when(partnerManagementService.submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class)))
+				.thenReturn("Bio extract request submitted successfully.");
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest())))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void submitBioExtractorsRequest_withInvalidExtractorProvider_shouldReturnInvalidInputError() throws Exception {
+		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
+
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].errorCode").value("PMS_REQUEST_ERROR_007"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message")
+						.value(org.hamcrest.Matchers.containsString("extractorProvider")));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void submitBioExtractorsRequest_withNullExtractorEntry_shouldReturnBadRequest() throws Exception {
+		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
+		List<BioExtractorsDto> extractors = new ArrayList<>();
+		extractors.add(null);
+		wrapper.getRequest().setExtractors(extractors);
+
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content(objectMapper.writeValueAsString(wrapper)))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.errors").isNotEmpty());
+	}
+
+	private RequestWrapperV2<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
+		RequestWrapperV2<BioExtractorsRequestDto> request = new RequestWrapperV2<>();
+		request.setRequest(getBioExtractorsRequestInput());
+		request.setId("mosip.pms.partners.bioextractors.request.post");
+		request.setVersion("1.0");
+		request.setRequestTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
+		return request;
+	}
+
+	private BioExtractorsRequestDto getBioExtractorsRequestInput() {
+		BioExtractorsRequestDto request = new BioExtractorsRequestDto();
+		BioExtractorsDto dto = new BioExtractorsDto();
+		dto.setAttributeName("face");
+		dto.setBiometric("face");
+		dto.setExtractorProvider("t5");
+		dto.setExtractorProviderVersion("1.1");
+		request.setExtractors(List.of(dto));
+		return request;
 	}
 
 	private RequestWrapperV2<BioextractorConfigurationRequestDto> buildBioextractorConfigRequestWrapper() {

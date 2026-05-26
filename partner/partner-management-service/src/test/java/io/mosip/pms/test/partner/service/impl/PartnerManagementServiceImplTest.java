@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+import org.springframework.test.util.AopTestUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
@@ -71,6 +73,8 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
@@ -3376,6 +3380,65 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getResponse());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 		org.junit.Assert.assertNull(resp.getResponse().getCredentialType());
+	}
+
+	@Test
+	public void submitBioExtractorsRequest_whenChildRowsExist_returnsAlreadyExistsError() {
+		String partnerId = "p1";
+		String policyId = "pol-1";
+		String requestId = "req-1";
+
+		Partner partner = new Partner();
+		partner.setId(partnerId);
+		partner.setIsActive(true);
+		partner.setApprovalStatus(PartnerConstants.APPROVED);
+
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId(requestId);
+		parent.setPartner(partner);
+		parent.setPolicyId(policyId);
+		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
+		parent.setIsDeleted(false);
+
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
+		when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+		when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
+
+		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
+		BioExtractorsDto extractor = new BioExtractorsDto();
+		extractor.setAttributeName("face");
+		extractor.setBiometric("face");
+		extractor.setExtractorProvider("prov");
+		extractor.setExtractorProviderVersion("1.0");
+		req.setExtractors(List.of(extractor));
+
+		try {
+			partnerManagementImpl.submitBioExtractorsRequest(requestId, req);
+			fail("Expected PartnerServiceException");
+		} catch (io.mosip.pms.partner.exception.PartnerServiceException ex) {
+			assertEquals(io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void submitBioExtractorsRequest_validateExtractor_invalid_throws() {
+		PartnerManagementServiceImpl target = AopTestUtils.getTargetObject(partnerManagementImpl);
+		io.mosip.pms.partner.exception.PartnerServiceException ex = assertThrows(
+				io.mosip.pms.partner.exception.PartnerServiceException.class,
+				() -> ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", (BioExtractorsDto) null));
+		assertNotNull(ex);
+	}
+
+	@Test
+	public void submitBioExtractorsRequest_validateExtractor_valid_noThrow() {
+		PartnerManagementServiceImpl target = AopTestUtils.getTargetObject(partnerManagementImpl);
+		BioExtractorsDto extractor = new BioExtractorsDto();
+		extractor.setAttributeName("attr");
+		extractor.setBiometric("face");
+		extractor.setExtractorProvider("prov");
+		extractor.setExtractorProviderVersion("1.0");
+		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
 	}
 
 	@Test

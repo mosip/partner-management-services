@@ -11,6 +11,7 @@ import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
@@ -94,6 +95,8 @@ public interface PartnerManagerService {
 	 * @param requestId business request id (req_id)
 	 * @return bio-extractor request rows
 	 */
+	String submitBioExtractorsRequest(String requestId, BioExtractorsRequestDto request);
+
 	BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId);
 
 	/**

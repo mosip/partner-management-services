@@ -256,48 +256,6 @@ public class PartnerServiceImplTest {
 		SecurityContextHolder.clearContext();
 	}
 
-	@Test
-	public void submitBioExtractorsRequest_whenChildRowsExist_returnsAlreadyExistsError() {
-		String partnerId = "p1";
-		String policyId = "pol-1";
-		String requestId = "req-1";
-
-		Partner partner = new Partner();
-		partner.setId(partnerId);
-		partner.setIsActive(true);
-		partner.setApprovalStatus(PartnerConstants.APPROVED);
-
-		PartnerPolicyRequest parent = new PartnerPolicyRequest();
-		parent.setId(requestId);
-		parent.setPartner(partner);
-		parent.setPolicyId(policyId);
-		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		parent.setIsDeleted(false);
-
-		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
-		when(partnerRepository.findById(partnerId)).thenReturn(java.util.Optional.of(partner));
-
-		PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
-		row.setId("row-1");
-		row.setPartnerPolicyRequestId(requestId);
-		when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
-
-		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
-		BioExtractorsDto extractor = new BioExtractorsDto();
-		extractor.setAttributeName("face");
-		extractor.setBiometric("face");
-		extractor.setExtractorProvider("prov");
-		extractor.setExtractorProviderVersion("1.0");
-		req.setExtractors(List.of(extractor));
-
-		try {
-			pserviceImpl.submitBioExtractorsRequest(requestId, req);
-			fail("Expected PartnerServiceException");
-		} catch (PartnerServiceException ex) {
-			assertEquals(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(), ex.getErrorCode());
-		}
-	}
-
 	private io.mosip.kernel.openid.bridge.model.MosipUserDto getMosipUserDto() {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = new io.mosip.kernel.openid.bridge.model.MosipUserDto();
 		mosipUserDto.setUserId("123");
@@ -2285,23 +2243,6 @@ public class PartnerServiceImplTest {
 
 		String msg = pserviceImpl.submitCredentialTypesRequest("p1", "pol1", req);
 		assertEquals("Credential type request submitted successfully.", msg);
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void validateExtractorForBioExtractRequest_invalid_throws() {
-		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
-		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", (BioExtractorsDto) null);
-	}
-
-	@Test
-	public void validateExtractorForBioExtractRequest_valid_noThrow() {
-		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
-		BioExtractorsDto extractor = new BioExtractorsDto();
-		extractor.setAttributeName("attr");
-		extractor.setBiometric("face");
-		extractor.setExtractorProvider("prov");
-		extractor.setExtractorProviderVersion("1.0");
-		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
 	}
 
 	@Test
