@@ -921,7 +921,11 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
 		}
 
-		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
+		List<String> attributeNames = extractors.getExtractors().stream()
+				.map(BioExtractorsDto::getAttributeName)
+				.filter(Objects::nonNull)
+				.map(String::trim)
+				.toList();
 		Set<String> uniqueCombinations = new HashSet<>();
 		for (BioExtractorsDto extractor : extractors.getExtractors()) {
 			String attrName = extractor.getAttributeName() != null ? extractor.getAttributeName().toLowerCase().trim() : null;
@@ -951,7 +955,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			row.setPartnerPolicyRequestId(parentPolicyRequest.getId());
 			row.setPartId(partnerId);
 			row.setPolicyId(policyId);
-			row.setAttributeName(extractor.getAttributeName());
+			row.setAttributeName(extractor.getAttributeName() != null ? extractor.getAttributeName().trim() : null);
 			row.setBiometricModality(extractor.getBiometric() == null ? null : extractor.getBiometric().trim());
 			if (extractor.getBiometricSubTypes() != null && !extractor.getBiometricSubTypes().isBlank()) {
 				row.setBiometricSubTypes(extractor.getBiometricSubTypes());
