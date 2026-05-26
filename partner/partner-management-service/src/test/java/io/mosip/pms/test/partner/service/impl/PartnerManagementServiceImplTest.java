@@ -3422,6 +3422,41 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
+	public void submitBioExtractorsRequest_whenPartnerInactive_throwsPartnerNotActiveException() {
+		String partnerId = "p1";
+		String policyId = "pol-1";
+		String requestId = "req-1";
+
+		Partner partner = new Partner();
+		partner.setId(partnerId);
+		partner.setIsActive(false);
+
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId(requestId);
+		parent.setPartner(partner);
+		parent.setPolicyId(policyId);
+		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
+		parent.setIsDeleted(false);
+
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
+		when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+
+		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
+		BioExtractorsDto extractor = new BioExtractorsDto();
+		extractor.setAttributeName("photo");
+		extractor.setBiometric("face");
+		extractor.setExtractorProvider("prov");
+		extractor.setExtractorProviderVersion("1.0");
+		req.setExtractors(List.of(extractor));
+
+		io.mosip.pms.partner.exception.PartnerServiceException ex = assertThrows(
+				io.mosip.pms.partner.exception.PartnerServiceException.class,
+				() -> partnerManagementImpl.submitBioExtractorsRequest(requestId, req));
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(), ex.getErrorCode());
+	}
+
+	@Test
 	public void submitBioExtractorsRequest_validateExtractor_invalid_throws() {
 		PartnerManagementServiceImpl target = AopTestUtils.getTargetObject(partnerManagementImpl);
 		io.mosip.pms.partner.exception.PartnerServiceException ex = assertThrows(
