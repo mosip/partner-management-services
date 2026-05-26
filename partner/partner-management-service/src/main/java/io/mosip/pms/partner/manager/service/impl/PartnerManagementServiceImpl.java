@@ -21,6 +21,7 @@ import java.util.Set;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
+import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import jakarta.transaction.Transactional;
 
@@ -159,6 +160,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	
 	@Value("${mosip.pms.api.id.bioextractor.configuration.delete.patch}")
 	private String patchDeleteBioextractorConfigurationId;
+
+	@Value("${pmp.allowed.credential.types}")
+	private String allowedCredentialTypes;
 
 
 	@Autowired

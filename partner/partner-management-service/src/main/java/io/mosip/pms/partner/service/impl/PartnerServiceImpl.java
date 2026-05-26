@@ -1723,7 +1723,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	@Override
 	public String updatePolicyGroup(String partnerId, String policyGroupName) {
-		Partner partner = partnerHelper.getValidPartner(partnerId, true);
+		Partner partner = getValidPartner(partnerId, true);
 		//Approved partners policy group should not be updated
 		if (partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");

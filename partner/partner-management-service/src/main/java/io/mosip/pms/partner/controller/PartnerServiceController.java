@@ -53,7 +53,6 @@ import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
-import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequest;
 import io.mosip.pms.partner.request.dto.PartnerRequestDto;
@@ -91,8 +90,6 @@ public class PartnerServiceController {
 	@Value("${mosip.pms.api.id.partners.bioextractors.request.post:mosip.pms.partners.bioextractors.request.post}")
 	private String postPartnerBioextractorsRequestId;
 
-	@Value("${mosip.pms.api.id.partners.credentialtypes.request.post}")
-	private String postPartnerCredentialTypesRequestId;
 
 	@Autowired
 	PartnerService partnerService;

@@ -1,7 +1,8 @@
 package io.mosip.pms.test.partner.controller;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.junit.Assert.*;
@@ -25,7 +26,6 @@ import io.mosip.pms.partner.response.dto.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -378,24 +378,6 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void submitCredentialTypesRequestTest() throws Exception {
-        ArgumentCaptor<CredentialTypeRequestDto> captor = ArgumentCaptor.forClass(CredentialTypeRequestDto.class);
-        when(partnerService.submitCredentialTypesRequest(any(CredentialTypeRequestDto.class)))
-                .thenReturn("ok");
-
-        mockMvc.perform(
-                post("/partners/partner-policy-requests/12345/credential-types-request")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(
-                                        createSubmitCredentialTypesRequest())))
-                .andExpect(status().isOk());
-        verify(partnerService).submitCredentialTypesRequest(captor.capture());
-        assertEquals("12345", captor.getValue().getPartnerPolicyRequestId());
-    }
-
-
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
     public void checkPartnerExists_validationPresent_returnsValidationResponse() throws Exception {
         ResponseWrapperV2<PartnerExistsResponseDto> validation = new ResponseWrapperV2<>();
         @SuppressWarnings("rawtypes")
@@ -407,7 +389,7 @@ public class PartnerServiceControllerTest {
                         .content(objectMapper.writeValueAsString(createPartnerExistsRequestWrapper())))
                 .andExpect(status().isOk());
 
-        verify(partnerService, Mockito.never()).checkPartnerExists(any());
+        Mockito.verify(partnerService, Mockito.never()).checkPartnerExists(any());
     }
 
     @Test
@@ -423,7 +405,7 @@ public class PartnerServiceControllerTest {
                         .content(objectMapper.writeValueAsString(createPartnerExistsRequestWrapper())))
                 .andExpect(status().isOk());
 
-        verify(partnerService, Mockito.times(1)).checkPartnerExists(any());
+        Mockito.verify(partnerService, Mockito.times(1)).checkPartnerExists(any());
     }
 
     @Test
@@ -439,7 +421,7 @@ public class PartnerServiceControllerTest {
                         .content(objectMapper.writeValueAsString(createCreatePartnerRequestWrapper())))
                 .andExpect(status().isOk());
 
-        verify(partnerService, Mockito.never()).createPartner(any());
+        Mockito.verify(partnerService, Mockito.never()).createPartner(any());
     }
 
     @Test
@@ -455,9 +437,9 @@ public class PartnerServiceControllerTest {
                         .content(objectMapper.writeValueAsString(createCreatePartnerRequestWrapper())))
                 .andExpect(status().isOk());
 
-        verify(partnerService, Mockito.times(1)).createPartner(any());
+        Mockito.verify(partnerService, Mockito.times(1)).createPartner(any());
     }
-    
+
     private RequestWrapper<FilterValueDto> createFilterRequest(){
     	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
     	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
