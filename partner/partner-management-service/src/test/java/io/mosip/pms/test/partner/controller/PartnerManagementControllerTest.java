@@ -1239,5 +1239,4 @@ public class PartnerManagementControllerTest {
 		wrapper.setRequest(req);
 		return wrapper;
 	}
-
 }
