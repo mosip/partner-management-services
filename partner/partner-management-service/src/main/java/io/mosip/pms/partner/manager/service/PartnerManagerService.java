@@ -90,10 +90,10 @@ public interface PartnerManagerService {
 	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest);
 
 	/**
-	 * Fetch bio-extractor request rows submitted for a partner policy request.
-	 *
-	 * @param requestId business request id (req_id)
-	 * @return bio-extractor request rows
+	 * Submit bio-extractor request rows for a partner policy request.
+	 * `@param` requestId business request id (req_id)
+	 * `@param` request bio-extractor payload
+	 * `@return` submission result identifier/message
 	 */
 	String submitBioExtractorsRequest(String requestId, BioExtractorsRequestDto request);
 
