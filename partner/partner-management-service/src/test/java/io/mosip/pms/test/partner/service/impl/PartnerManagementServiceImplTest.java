@@ -3433,12 +3433,21 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void submitBioExtractorsRequest_validateExtractor_valid_noThrow() {
 		PartnerManagementServiceImpl target = AopTestUtils.getTargetObject(partnerManagementImpl);
-		BioExtractorsDto extractor = new BioExtractorsDto();
-		extractor.setAttributeName("attr");
-		extractor.setBiometric("face");
-		extractor.setExtractorProvider("prov");
-		extractor.setExtractorProviderVersion("1.0");
-		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
+		Object originalEnv = ReflectionTestUtils.getField(target, "environment");
+		try {
+			Environment env = org.mockito.Mockito.mock(Environment.class);
+			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
+					.thenReturn("");
+			ReflectionTestUtils.setField(target, "environment", env);
+			BioExtractorsDto extractor = new BioExtractorsDto();
+			extractor.setAttributeName("attr");
+			extractor.setBiometric("face");
+			extractor.setExtractorProvider("prov");
+			extractor.setExtractorProviderVersion("1.0");
+			ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
+		} finally {
+			ReflectionTestUtils.setField(target, "environment", originalEnv);
+		}
 	}
 
 	@Test
