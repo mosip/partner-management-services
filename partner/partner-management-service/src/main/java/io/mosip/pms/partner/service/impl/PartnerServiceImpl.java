@@ -2159,6 +2159,11 @@ public class PartnerServiceImpl implements PartnerService {
 	public ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType) {
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			if (status == null || status.isBlank() || (!PartnerConstants.APPROVED.equals(status) && !PartnerConstants.IN_PROGRESS.equals(status))) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_STATUS_VALUE.getErrorCode(),
+						String.format(ErrorCode.INVALID_STATUS_VALUE.getErrorMessage(), status));
+			}
 			String userId = getUserId();
 			String userRoles = authUserDetails().getAuthorities().toString();
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
