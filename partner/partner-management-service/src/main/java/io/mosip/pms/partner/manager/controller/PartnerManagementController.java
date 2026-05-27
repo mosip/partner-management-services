@@ -556,7 +556,6 @@ public class PartnerManagementController {
 		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
 	@PostMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
 	@Operation(summary = "Service to submit credential types request",
 			description = "Persists credential type request against an in-progress partner policy mapping request")
