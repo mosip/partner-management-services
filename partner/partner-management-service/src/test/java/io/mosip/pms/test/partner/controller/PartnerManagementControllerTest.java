@@ -1211,6 +1211,7 @@ public class PartnerManagementControllerTest {
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest())))
 				.andExpect(status().isOk());
+		verify(partnerManagementService, times(1)).submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class));
 	}
 
 	@Test
