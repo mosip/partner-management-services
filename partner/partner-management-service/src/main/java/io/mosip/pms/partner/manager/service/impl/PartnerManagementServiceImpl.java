@@ -912,7 +912,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		String policyId = parentPolicyRequest.getPolicyId();
 
 		validateLoggedInUserAuthorization(partnerId);
-		getValidPartnerForBioExtract(partnerId);
+		partnerHelper.getValidPartner(partnerId, false);
 
 		String parentStatus = parentPolicyRequest.getStatusCode();
 		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
@@ -992,19 +992,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return "Bio extract request submitted successfully.";
 	}
 
-	private void getValidPartnerForBioExtract(String partnerId) {
-		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
-		if (partnerById.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		if (!partnerById.get().getIsActive()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-					PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-		}
-	}
 
 	private void validateExtractorForBioExtractRequest(String partnerId, BioExtractorsDto extractor) {
 		if (extractor == null || extractor.getAttributeName() == null || extractor.getAttributeName().isBlank()
