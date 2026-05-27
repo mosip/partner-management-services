@@ -42,16 +42,20 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_03
     description: Validate that the API successfully processes the request when retrieving MA partners with an empty status parameter
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "",
       "policyGroupAvailable": "true",
       "partnerType": "Manual_Adjudication"
     }'
     output: '{
+    "errors": [
+       {
+          "errorCode": "PMS_PS_ERROR_009"
+       }
+    ]
 }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_SpecialCharacter_Status_Neg:
@@ -97,16 +101,20 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUserMA_06
     description: Validate that the API retrieves the list of Manual Adjudication (MA) partners with Case-sensitive(Approved) status associated with the logged-in Partner Admin user.
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "Approved",
       "policyGroupAvailable": "true",
       "partnerType": "Manual_Adjudication"
     }'
     output: '{
+    "errors": [
+      {
+         "errorCode": "PMS_PS_ERROR_009"
+      }
+    ]
 }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_UpperCase_Status_Neg:
@@ -115,15 +123,19 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     description: Validate that the API does not return MA partners when the status is provided in uppercase ("APPROVED") instead of the expected lowercase format.
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "APPROVED",
       "policyGroupAvailable": "true",
       "partnerType": "Manual_Adjudication"
     }'
     output: '{
+    "errors": [
+      {
+         "errorCode": "PMS_PS_ERROR_009"
+       }
+    ]
 }'
 
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_PolicyGroupAvailable_As_False_Smoke:
@@ -309,15 +321,19 @@ GetListofPartnersAssociatedwithLoggedinUserMA:
     description: Validate that the API successfully processes the request when retrieving MA partners using an invalid status and a valid partnerType
     role: partneradmin
     restMethod: get
-    checkErrorsOnlyInResponse: true
     inputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserMA
-    outputTemplate: pms/MAPartnerV3/GetListofPartnersAssociatedwithLoggedinUserMA/GetListofPartnersAssociatedwithLoggedinUserResultMA
+    outputTemplate: pms/error
     input: '{
       "status": "invalidstatus",
       "policyGroupAvailable": "true",
       "partnerType": "Manual_Adjudication"
     }'
     output: '{
+    "errors": [
+      {
+         "errorCode": "PMS_PS_ERROR_009"
+       }
+     ]
     }'
   Pms_GetListofPartnersAssociatedwithLoggedinUserMA_With_Valid_Status_And_Invalid_PartnerType_Neg:
     endPoint: /v1/partnermanager/partners/v3
