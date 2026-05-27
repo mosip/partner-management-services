@@ -68,7 +68,6 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
-import io.mosip.pms.partner.service.PartnerService;
 
 
 @RunWith(SpringRunner.class)
@@ -108,8 +107,8 @@ public class PartnerManagementControllerTest {
 	AuthPolicyRepository authPolicyRepository;
 	
 	@Autowired
-	private ObjectMapper objectMapper;	
-	
+	private ObjectMapper objectMapper;
+
 	@Autowired
 	@Qualifier("selfTokenRestTemplate")
 	private RestTemplate restTemplate;
@@ -1094,12 +1093,14 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void submitCredentialTypesRequestTest() throws Exception {
+		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.submitCredentialTypesRequest(any())).thenReturn("ok");
 		mockMvc.perform(post("/partner-policy-requests/{requestId}/credential-types-request", "req-1")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(createSubmitCredentialTypesRequest())))
 				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1)).submitCredentialTypesRequest(any());
+		verify(partnerManagementService, times(1)).submitCredentialTypesRequest(argThat(request ->
+				"req-1".equals(request.getPartnerPolicyRequestId())));
 	}
 
 	@Test
@@ -1243,7 +1244,7 @@ public class PartnerManagementControllerTest {
 	private RequestWrapperV2<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
 		RequestWrapperV2<CredentialTypeRequestDto> request = new RequestWrapperV2<>();
 		CredentialTypeRequestDto requestDto = new CredentialTypeRequestDto();
-		requestDto.setPartnerPolicyRequestId("req-1");
+		requestDto.setPartnerPolicyRequestId("body-value-should-be-overridden");
 		requestDto.setCredentialType("auth");
 		request.setRequest(requestDto);
 		return request;

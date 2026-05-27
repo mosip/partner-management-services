@@ -52,7 +52,6 @@ import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
-import io.mosip.pms.partner.service.PartnerService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -78,9 +77,6 @@ public class PartnerManagementController {
 	
 	@Autowired
 	PartnerManagerService partnerManagementService;
-
-	@Autowired
-	PartnerService partnerService;
 
 	@Autowired
 	AuditUtil auditUtil;
