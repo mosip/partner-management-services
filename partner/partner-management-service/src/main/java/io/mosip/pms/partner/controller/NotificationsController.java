@@ -66,7 +66,7 @@ public class NotificationsController {
             @Parameter(
                     description = "Type of notifications",
                     in = ParameterIn.QUERY,
-                    schema = @Schema(allowableValues = {"root", "intermediate", "partner", "weekly", "sbi", "ftm-chip", "apikey", "misp"})
+                    schema = @Schema(allowableValues = {"ROOT_CERT_EXPIRY", "INTERMEDIATE_CERT_EXPIRY", "PARTNER_CERT_EXPIRY", "WEEKLY_SUMMARY", "SBI_EXPIRY", "FTM_CHIP_CERT_EXPIRY", "API_KEY_EXPIRY", "MISP_LICENSE_KEY_EXPIRY"})
             )
             @RequestParam(value = "notificationType", required = false) String notificationType,
             @RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
@@ -134,7 +134,7 @@ public class NotificationsController {
             filterDto.setNotificationStatus(notificationStatus.toLowerCase());
         }
         if (notificationType != null) {
-            filterDto.setNotificationType(notificationType.toLowerCase());
+            filterDto.setNotificationType(notificationType);
         }
         if (createdFromDate != null) {
             filterDto.setCreatedFromDate(createdFromDate);
