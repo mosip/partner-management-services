@@ -1,5 +1,6 @@
 package io.mosip.pms.test.partner.service.impl;
 
+import static io.mosip.pms.partner.manager.constant.ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -80,6 +81,7 @@ import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.test.config.TestSecurityConfig;
+import io.mosip.pms.partner.constant.ErrorCode.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -1022,7 +1024,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 		}catch (PartnerManagerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 	}
 
@@ -1203,7 +1205,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			partnerManagementImpl.generateAPIKey("partner", request);
 		}catch (PartnerManagerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(newPartner);
 		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(request.getPolicyName(),newPartner.get().getPolicyGroupId())).thenReturn(null);
@@ -3440,7 +3442,10 @@ public class PartnerManagementServiceImplTest {
 
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
 		when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
-		when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+		when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(false))).thenThrow(
+				new io.mosip.pms.partner.exception.PartnerServiceException(
+						PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+						PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage()));
 
 		BioExtractorsRequestDto req = new BioExtractorsRequestDto();
 		BioExtractorsDto extractor = new BioExtractorsDto();
