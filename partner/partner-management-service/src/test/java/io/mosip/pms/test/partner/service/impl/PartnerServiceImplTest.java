@@ -426,7 +426,7 @@ public class PartnerServiceImplTest {
 		response.setStatus("Approved");	
 		
 		Mockito.when(partnerRepository.findByName(par.getName())).thenReturn(par);
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(true))).thenReturn(partner.get());
 		Mockito.when(policyGroupRepository.findById(par.getPolicyGroupId())).thenReturn(findByIdpolicyGroup);
 		pserviceImpl.getPartnerDetails(par.getName());
 	}
@@ -446,7 +446,7 @@ public class PartnerServiceImplTest {
 		response.setPolicyGroup("policyGroup");
 		response.setStatus("Approved");		
 		Mockito.when(partnerRepository.findByName(par.getName())).thenReturn(par);
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(true))).thenReturn(partner.get());
 		pserviceImpl.getPartnerDetails(par.getName());
 	}
 
@@ -467,7 +467,7 @@ public class PartnerServiceImplTest {
 		response.setStatus("Approved");	
 		
 		Mockito.when(partnerRepository.findByName(par.getName())).thenReturn(null);
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(true))).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
 		Mockito.when(policyGroupRepository.findById(par.getPolicyGroupId())).thenReturn(findByIdpolicyGroup);
 		pserviceImpl.getPartnerDetails(par.getName());
 	}
@@ -618,7 +618,7 @@ public class PartnerServiceImplTest {
 	public void getPartnerDetailsTest() {
 		Optional<Partner> partner = Optional.of(createPartner(Boolean.TRUE));
 		Optional<PolicyGroup> policyGroup = Optional.of(createPolicyGroup(Boolean.TRUE));
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(true))).thenReturn(partner.get());
 		Mockito.when(policyGroupRepository.findById(partner.get().getPolicyGroupId())).thenReturn(policyGroup);
 		RetrievePartnerDetailsResponse partnerDetails = pserviceImpl.getPartnerDetails("12345");
 		assertNotNull(partnerDetails);
@@ -630,7 +630,7 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	@WithMockUser(roles = {"PARTNER"})
 	public void throwExceptionWhenPartnerDetailsIsEmptyTest() {
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(true))).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
 		pserviceImpl.getPartnerDetails("12345");
 	}
 
@@ -642,7 +642,7 @@ public class PartnerServiceImplTest {
 
 		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(true))).thenReturn(partner.get());
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
 		assertEquals(updatePartnerDetail.getPartnerId(), "12345");
@@ -659,7 +659,7 @@ public class PartnerServiceImplTest {
 	public void updatePartnerDetailTest_S2() {
 		PartnerUpdateRequest req = createPartnerUpdateRequest();
 		String partnerId = "12345";
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(true))).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
@@ -673,7 +673,7 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(part);
 		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(true))).thenReturn(partner.get());
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
 	
@@ -687,7 +687,7 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(part);
 		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(true))).thenReturn(partner.get());
 		updatePartner(Boolean.TRUE);
 		pserviceImpl.updatePartnerDetail(req, partnerId);
 	}
@@ -830,7 +830,7 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(true));
 		Mockito.when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 		Mockito.when(keyManagerHelper.decryptData(any())).thenReturn("decrypted-data");
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(true))).thenReturn(partner.get());
 		PartnerResponse updatePartnerDetail = pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 		assertNotNull(updatePartnerDetail);
 		assertEquals(updatePartnerDetail.getPartnerId(), "12345");
@@ -839,7 +839,7 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void doNotUpdaePartnerWhenPartnerDetailsIsEmptyTest() {
 		String partnerId = "12345";
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.anyBoolean())).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(true))).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
 		pserviceImpl.updatePartnerDetail(createPartnerUpdateRequest(), partnerId);
 	}
 	
@@ -886,7 +886,7 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_001() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenReturn(partner.get());
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
 		Mockito.when(authPolicyRepository
 				.findByPolicyGroupIdAndName(Mockito.anyString(), Mockito.anyString())).thenReturn(createAuthPolicy());
@@ -904,7 +904,7 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_003() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
-		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.anyString(), Mockito.eq(false))).thenReturn(partner.get());
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "1234578", "12345");
 	}
@@ -912,7 +912,7 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_004() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenReturn(partner.get());
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
 	}
@@ -921,7 +921,7 @@ public class PartnerServiceImplTest {
 	public void mapPartnerPolicyCredentialType_005() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
 		partner.get().setPartnerTypeCode("Auth_Partner");
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenReturn(partner.get());
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
 	}
@@ -978,7 +978,7 @@ public class PartnerServiceImplTest {
 		request.setUseCaseDescription("Use cases Details");
 		Optional<Partner> partner = Optional.of(createPartner(true));
 		partner.get().setPartnerTypeCode("Auth_Partner");
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenReturn(partner.get());
 		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(createAuthPolicy());
 		Mockito.when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("12345","123")).thenReturn(List.of(createPartnerPolicyRequest("approved")));
 		pserviceImpl.requestForPolicyMapping(request, "12345");
@@ -1003,20 +1003,20 @@ public class PartnerServiceImplTest {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_MAPPING_INPROGRESS.getErrorCode()));
 		}
 
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode()));
 		}
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage()));
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenThrow(new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(), ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage()));
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
 		}catch (PartnerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 		partner.get().setIsActive(true);
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenReturn(partner.get());
 		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345","policyName")).thenReturn(null);
 		try {
 			pserviceImpl.requestForPolicyMapping(request, "12345");
@@ -1068,7 +1068,7 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(true));
 		partner.get().setPartnerTypeCode("Auth");
 		partner.get().setIsActive(false);
-		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.anyBoolean())).thenReturn(partner.get());
+		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(true))).thenReturn(partner.get());
 		Mockito.when(partnerTypeRepository.findAll()).thenReturn(List.of(getPartnerType()));
 		Mockito.when(policyGroupRepository.findByName("policygroupname")).thenReturn(createPolicyGroup(true));
 		assertTrue(pserviceImpl.updatePolicyGroup("12345","policygroupname").equals("Success"));
@@ -1223,7 +1223,7 @@ public class PartnerServiceImplTest {
 		p.setName("Org");
 		p.setPartnerTypeCode("Auth_Partner");
 		p.setPolicyGroupId("pg1");
-		when(partnerHelper.getValidPartner(eq("Partner"), anyBoolean())).thenReturn(p);
+		when(partnerHelper.getValidPartner(eq("Partner"), eq(true))).thenReturn(p);
 		PartnerType pt = new PartnerType();
 		pt.setCode("Auth_Partner");
 		pt.setIsPolicyRequired(false);
@@ -2346,7 +2346,7 @@ public class PartnerServiceImplTest {
 		p.setContactNo("plain-contact");
 		p.setAddress("plain-addr");
 		p.setPolicyGroupId(null);
-		when(partnerHelper.getValidPartner(eq("12345"), anyBoolean())).thenReturn(p);
+		when(partnerHelper.getValidPartner(eq("12345"), eq(true))).thenReturn(p);
 
 		RetrievePartnerDetailsResponse r = pserviceImpl.getPartnerDetails("12345");
 		assertEquals("plain-email@mail.com", r.getEmailId());
@@ -2359,7 +2359,7 @@ public class PartnerServiceImplTest {
 		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
 		Partner p = createPartner(Boolean.TRUE);
 		p.setPolicyGroupId("missing-pg");
-		when(partnerHelper.getValidPartner(eq("12345"), anyBoolean())).thenReturn(p);
+		when(partnerHelper.getValidPartner(eq("12345"), eq(true))).thenReturn(p);
 		when(policyGroupRepository.findById("missing-pg")).thenReturn(Optional.empty());
 		pserviceImpl.getPartnerDetails("12345");
 	}
@@ -2390,7 +2390,7 @@ public class PartnerServiceImplTest {
 		Partner part = createPartner(Boolean.TRUE);
 		part.setEmailIdHash(null);
 		part.setEmailId("plain-upd@gmail.com");
-		when(partnerHelper.getValidPartner(eq(partnerId), anyBoolean())).thenReturn(part);
+		when(partnerHelper.getValidPartner(eq(partnerId), eq(true))).thenReturn(part);
 		when(keyManagerHelper.encryptData(any())).thenReturn("encrypted-data");
 
 		PartnerUpdateDto dto = new PartnerUpdateDto();
