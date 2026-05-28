@@ -207,17 +207,22 @@ public class NotificationsServiceImplTest {
                 anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
+        // invalid type: real fetchNotifications runs → default: throw INVALID_NOTIFICATION_TYPE → caught by getNotifications
         filterDto.setNotificationType("abc");
-        doReturn(Page.empty()).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
+        // wrong-case type (equalsIgnoreCase removed): real fetchNotifications runs → default: throw INVALID_NOTIFICATION_TYPE, not UNABLE_TO_GET_NOTIFICATIONS
+        filterDto.setNotificationType("root_cert_expiry");
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+
+        // apiKeyName set with non-API_KEY type: validateNotificationsFilter throws INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER before fetchNotifications
         filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
         filterDto.setApiKeyName("123");
-        doReturn(Page.empty()).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
+        // ROOT_CERT_EXPIRY for non-admin: validateNotificationTypeForPartner throws UNABLE_TO_GET_NOTIFICATIONS before fetchNotifications
+        filterDto.setApiKeyName(null);
         filterDto.setNotificationType("ROOT_CERT_EXPIRY");
-        doReturn(Page.empty()).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
 
@@ -364,7 +369,7 @@ public class NotificationsServiceImplTest {
 
         NotificationEntity notificationEntity = new NotificationEntity();
         notificationEntity.setId("12345");
-        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
+        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY");
         notificationEntity.setPartnerId("123");
         notificationEntity.setEmailId("abc@gmail.com");
         notificationEntity.setEmailLangCode("eng");
@@ -404,7 +409,7 @@ public class NotificationsServiceImplTest {
 
         DismissNotificationResponseDto responseDto = new DismissNotificationResponseDto();
         responseDto.setId("12345");
-        responseDto.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
+        responseDto.setNotificationType("PARTNER_CERT_EXPIRY");
         responseDto.setNotificationStatus("DISMISSED");
         when(mapper.convertValue(entity, DismissNotificationResponseDto.class)).thenReturn(responseDto);
         notificationsServiceImpl.dismissNotification("12345", requestDto);
@@ -473,12 +478,12 @@ public class NotificationsServiceImplTest {
 
         DismissNotificationResponseDto responseDto = new DismissNotificationResponseDto();
         responseDto.setId("12345");
-        responseDto.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
+        responseDto.setNotificationType("PARTNER_CERT_EXPIRY");
         responseDto.setNotificationStatus("DISMISSED");
         when(mapper.convertValue(entity, DismissNotificationResponseDto.class)).thenReturn(responseDto);
         notificationsServiceImpl.dismissNotification("12345", requestDto);
 
-        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE");
+        notificationEntity.setNotificationType("PARTNER_CERT_EXPIRY");
         notificationEntity.setNotificationStatus("DISMISSED");
         when(notificationServiceRepository.findById(anyString())).thenReturn(optionalEntity);
         notificationsServiceImpl.dismissNotification("12345", requestDto);

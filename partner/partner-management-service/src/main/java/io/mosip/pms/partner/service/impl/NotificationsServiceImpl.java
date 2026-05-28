@@ -324,10 +324,10 @@ public class NotificationsServiceImpl implements NotificationsService {
 	}
 
 	private boolean validateNotificationTypeForPartner(String notificationType) {
-		return notificationType.equalsIgnoreCase(ROOT_CERT_EXPIRY)
-				|| notificationType.equalsIgnoreCase(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE)
-				|| notificationType.equalsIgnoreCase(MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE)
-				|| notificationType.equalsIgnoreCase(WEEKLY_SUMMARY_NOTIFICATION_TYPE);
+		return notificationType.equals(ROOT_CERT_EXPIRY)
+				|| notificationType.equals(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE)
+				|| notificationType.equals(MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE)
+				|| notificationType.equals(WEEKLY_SUMMARY_NOTIFICATION_TYPE);
 	}
 
 	private void validateDate(String date, ErrorCode errorCode) {
