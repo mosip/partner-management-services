@@ -547,7 +547,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerId) {
 		validateLoggedInUserAuthorization(partnerId);
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
-		Partner partner = getValidPartner(partnerId, true);
+		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
 		// check if the data is encrypted
 		boolean isEncrypted = partner.getEmailIdHash() != null;
@@ -565,23 +565,6 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setPolicyGroup(validateAndGetPolicyGroupById(partner.getPolicyGroupId()).getName());
 		}
 		return response;
-	}
-
-	private Partner getValidPartner(String partnerId, boolean isToRetrieve) {
-		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
-		if (partnerById.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		if (!isToRetrieve) {
-			if (!partnerById.get().getIsActive()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
-		}
-		return partnerById.get();
 	}
 
 	private PolicyGroup validateAndGetPolicyGroupById(String policyGroupId) {
@@ -602,7 +585,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		};
-		Partner partner = getValidPartner(partnerId, true);
+		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
 		}
@@ -728,7 +711,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
 			resultMessage = "Contacts details updated successfully.";
 		} else {
-			Partner partnerFromDb = getValidPartner(partnerId, false);
+			Partner partnerFromDb =  partnerHelper.getValidPartner(partnerId, false);
 			contactsFromDb = new PartnerContact();
 
 			String id = PartnerUtil.createPartnerId();
@@ -805,7 +788,7 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
-		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		Partner partner = partnerHelper.getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
@@ -1723,7 +1706,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	@Override
 	public String updatePolicyGroup(String partnerId, String policyGroupName) {
-		Partner partner = getValidPartner(partnerId, true);
+		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		//Approved partners policy group should not be updated
 		if (partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");

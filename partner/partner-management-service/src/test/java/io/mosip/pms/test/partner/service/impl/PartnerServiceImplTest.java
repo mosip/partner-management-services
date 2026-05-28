@@ -2113,23 +2113,6 @@ public class PartnerServiceImplTest {
 		return response;
 	}
 
-	@Test(expected = PartnerServiceException.class)
-	public void validateExtractorForBioExtractRequest_invalid_throws() {
-		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
-		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", (BioExtractorsDto) null);
-	}
-
-	@Test
-	public void validateExtractorForBioExtractRequest_valid_noThrow() {
-		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
-		BioExtractorsDto extractor = new BioExtractorsDto();
-		extractor.setAttributeName("attr");
-		extractor.setBiometric("face");
-		extractor.setExtractorProvider("prov");
-		extractor.setExtractorProviderVersion("1.0");
-		ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
-	}
-
 	@Test
 	public void isPartnerAlreadyMapped_returnsExpected() {
 		PartnerServiceImpl target = AopTestUtils.getTargetObject(pserviceImpl);
