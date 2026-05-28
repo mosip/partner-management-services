@@ -207,13 +207,13 @@ public class NotificationsServiceImplTest {
                 anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        // invalid type: real fetchNotifications runs → default: throw INVALID_NOTIFICATION_TYPE → caught by getNotifications
-        filterDto.setNotificationType("abc");
-        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+        NotificationsFilterDto invalidTypeDto = new NotificationsFilterDto();
+        invalidTypeDto.setNotificationType("abc");
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, invalidTypeDto);
 
-        // wrong-case type (equalsIgnoreCase removed): real fetchNotifications runs → default: throw INVALID_NOTIFICATION_TYPE, not UNABLE_TO_GET_NOTIFICATIONS
-        filterDto.setNotificationType("root_cert_expiry");
-        notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
+        NotificationsFilterDto wrongCaseDto = new NotificationsFilterDto();
+        wrongCaseDto.setNotificationType("root_cert_expiry");
+        notificationsServiceImpl.getNotifications(pageNo, pageSize, wrongCaseDto);
 
         // apiKeyName set with non-API_KEY type: validateNotificationsFilter throws INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER before fetchNotifications
         filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
