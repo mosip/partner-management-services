@@ -26,8 +26,10 @@ import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -38,11 +40,7 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public class PartnerHelper {
@@ -210,6 +208,9 @@ public class PartnerHelper {
 
     @Autowired
     private Environment environment;
+
+    @Value("${pmp.allowed.credential.types}")
+    private String allowedCredentialTypes;
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
@@ -439,6 +440,18 @@ public class PartnerHelper {
         }
     }
 
+    public void validateCredentialTypes(String credentialType) {
+        if (!Arrays.stream(allowedCredentialTypes.split(","))
+                .anyMatch(credentialType::equalsIgnoreCase)) {
+
+            throw new PartnerManagerServiceException(
+                    io.mosip.pms.partner.constant.ErrorCode
+                            .CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+                    io.mosip.pms.partner.constant.ErrorCode
+                            .CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage()
+                            + allowedCredentialTypes);
+        }
+    }
 
     public Partner getValidPartner(String partnerId, boolean isToRetrieve) {
         Optional<Partner> partnerById = partnerRepository.findById(partnerId);

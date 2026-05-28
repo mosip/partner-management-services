@@ -181,35 +181,6 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);		
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
-	@RequestMapping(value = "/{partnerId}/policies/{policyId}/bio-extractors-request", method = RequestMethod.POST)
-	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
-	public ResponseWrapperV2<String> submitBioExtractorsRequest(
-			@PathVariable String partnerId,
-			@PathVariable String policyId,
-			@RequestBody @Valid RequestWrapperV2<BioExtractorsRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<String>> validationResponse =
-				requestValidator.validate(postPartnerBioextractorsRequestId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		inputValidator.validateRequestInput("partnerPolicyRequestId", requestWrapper.getRequest().getPartnerPolicyRequestId());
-		requestWrapper.getRequest().getExtractors().forEach(extractor -> {
-			inputValidator.validateRequestInput("attributeName", extractor.getAttributeName());
-			inputValidator.validateRequestInput("biometric", extractor.getBiometric());
-			inputValidator.validateRequestInput("biometricSubTypes", extractor.getBiometricSubTypes());
-			inputValidator.validateRequestInput("extractorProvider", extractor.getExtractorProvider());
-			inputValidator.validateRequestInput("extractorProviderVersion", extractor.getExtractorProviderVersion());
-		});
-		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
-		response.setResponse(partnerService.submitBioExtractorsRequest(partnerId, policyId, requestWrapper.getRequest()));
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
-		return response;
-	}
-
 	/**
 	 * 
 	 * @param partnerId
