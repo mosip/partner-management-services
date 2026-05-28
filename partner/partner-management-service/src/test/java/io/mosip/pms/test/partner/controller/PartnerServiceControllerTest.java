@@ -64,8 +64,6 @@ import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorDto;
 import io.mosip.pms.partner.request.dto.ExtractorProviderDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
-import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
-import io.mosip.pms.partner.request.dto.BioExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
@@ -167,46 +165,6 @@ public class PartnerServiceControllerTest {
     	mockMvc.perform(post("/partners/123456/bioextractors/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
-    public void submitBioExtractorsRequestTest() throws Exception {
-    	String responseDto = "ok";
-    	when(partnerService.submitBioExtractorsRequest(eq("123456"), eq("12345"), any(BioExtractorsRequestDto.class)))
-    			.thenReturn(responseDto);
-    	mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request").contentType(MediaType.APPLICATION_JSON_VALUE)
-    			.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest()))).andExpect(status().isOk());
-    }
-
-	@Test
-	@WithMockUser(roles = {"PARTNER"})
-	public void submitBioExtractorsRequest_withInvalidExtractorProvider_shouldReturnInvalidInputError() throws Exception {
-		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
-		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
-
-		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content(objectMapper.writeValueAsString(wrapper)))
-				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].errorCode").value("PMS_REQUEST_ERROR_007"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message")
-						.value(org.hamcrest.Matchers.containsString("extractorProvider")));
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER"})
-	public void submitBioExtractorsRequest_withNullExtractorEntry_shouldReturnBadRequest() throws Exception {
-		RequestWrapper<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
-		List<BioExtractorsDto> extractors = new ArrayList<>();
-		extractors.add(null);
-		wrapper.getRequest().setExtractors(extractors);
-
-		mockMvc.perform(post("/partners/123456/policies/12345/bio-extractors-request")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content(objectMapper.writeValueAsString(wrapper)))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.errors").isNotEmpty());
-	}
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_hasPreAuthorizeConfigured() throws Exception {
@@ -673,28 +631,6 @@ public class PartnerServiceControllerTest {
     	return request;
     }
 
-    private BioExtractorsRequestDto getBioExtractorsRequestInput() {
-        BioExtractorsRequestDto request = new BioExtractorsRequestDto();
-        request.setPartnerPolicyRequestId("req-1");
-        BioExtractorsDto dto = new BioExtractorsDto();
-        dto.setAttributeName("face");
-        dto.setBiometric("face");
-        dto.setExtractorProvider("t5");
-        dto.setExtractorProviderVersion("1.1");
-        request.setExtractors(List.of(dto));
-        return request;
-    }
-
-    private RequestWrapper<BioExtractorsRequestDto> createSubmitBioExtractorsRequest() {
-        RequestWrapper<BioExtractorsRequestDto> request = new RequestWrapper<BioExtractorsRequestDto>();
-        request.setRequest(getBioExtractorsRequestInput());
-        request.setId("mosip.pms.partners.bioextractors.request.post");
-        request.setVersion("1.0");
-        request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-        request.setMetadata("{}");
-        return request;
-    }
-    
     private RequestWrapper<PartnerCertificateRequestDto> partnerCertificateRequest() {
         RequestWrapper<PartnerCertificateRequestDto> request = new RequestWrapper<PartnerCertificateRequestDto>();
         request.setRequest(createPartnerCertificateRequest());

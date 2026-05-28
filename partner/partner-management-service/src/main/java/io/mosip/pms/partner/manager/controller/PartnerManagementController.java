@@ -10,6 +10,7 @@ import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
@@ -93,6 +94,9 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.certificate.id.regex}")
 	private String certificateIdRegex;
+
+	@Value("${mosip.pms.api.id.partners.bioextractors.request.post}")
+	private String postPartnerBioextractorsRequestId;
 
 	@Value("${mosip.pms.api.id.link.policy.group.post}")
 	private String postLinkPolicyGroup;
@@ -481,6 +485,37 @@ public class PartnerManagementController {
 		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType,
 				partnerHelper.parsePageNo(pageNo),
 				pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@PostMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
+	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<String> submitBioExtractorsRequest(
+			@PathVariable("requestId") String requestId,
+			@RequestBody @Valid RequestWrapperV2<BioExtractorsRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<String>> validationResponse =
+				requestValidator.validate(postPartnerBioextractorsRequestId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput("requestId", requestId);
+		requestWrapper.getRequest().getExtractors().forEach(extractor -> {
+			inputValidator.validateRequestInput("attributeName", extractor.getAttributeName());
+			inputValidator.validateRequestInput("biometric", extractor.getBiometric());
+			inputValidator.validateRequestInput("biometricSubTypes", extractor.getBiometricSubTypes());
+			inputValidator.validateRequestInput("extractorProvider", extractor.getExtractorProvider());
+			inputValidator.validateRequestInput("extractorProviderVersion", extractor.getExtractorProviderVersion());
+		});
+		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
+		response.setResponse(partnerManagementService.submitBioExtractorsRequest(requestId, requestWrapper.getRequest()));
+		response.setId(requestWrapper.getId());
+		response.setVersion(requestWrapper.getVersion());
+		return response;
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
