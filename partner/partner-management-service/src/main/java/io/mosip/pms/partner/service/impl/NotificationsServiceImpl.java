@@ -294,7 +294,8 @@ public class NotificationsServiceImpl implements NotificationsService {
 					MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
 		default:
-			return Page.empty(pageable); // Return empty paginated response
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
 		}
 	}
 

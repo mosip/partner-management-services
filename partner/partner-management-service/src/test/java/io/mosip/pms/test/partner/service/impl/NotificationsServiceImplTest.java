@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -50,6 +51,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -58,6 +60,7 @@ import static org.mockito.Mockito.when;
 @Import(TestSecurityConfig.class)
 public class NotificationsServiceImplTest {
 
+    @Spy
     @InjectMocks
     private NotificationsServiceImpl notificationsServiceImpl;
 
@@ -119,23 +122,23 @@ public class NotificationsServiceImplTest {
         when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
 
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
-        filterDto.setNotificationType("root");
+        filterDto.setNotificationType("ROOT_CERT_EXPIRY");
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         NotificationEntity entity = new NotificationEntity();
         entity.setId("12345");
         entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
         Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, true)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, true);
         when(notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("intermediate");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, true)).thenReturn(page);
+        filterDto.setNotificationType("INTERMEDIATE_CERT_EXPIRY");
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, true);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("weekly");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, true)).thenReturn(page);
+        filterDto.setNotificationType("WEEKLY_SUMMARY");
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, true);
         when(notificationsSummaryRepository.getSummaryOfWeeklyNotifications(anyString(), anyString(),
                 anyString(), anyString(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
@@ -147,7 +150,7 @@ public class NotificationsServiceImplTest {
         filterDto.setCreatedToDate("2025-04-07T13:08:37");
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("partner");
+        filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
         filterDto.setCreatedToDate(null);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
@@ -188,33 +191,33 @@ public class NotificationsServiceImplTest {
         entity.setId("12345");
         entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
         Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         when(mapper.readValue(anyString(), eq(NotificationDetailsDto.class)))
                 .thenThrow(new JsonProcessingException("test") {});
         when(notificationsSummaryRepository.getSummaryOfAllNotifications(anyString(), any(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, true)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, true);
         when(notificationsSummaryRepository.getSummaryOfAllNotifications(anyString(), any(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("partner");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         when(notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
         filterDto.setNotificationType("abc");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(Page.empty());
+        doReturn(Page.empty()).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("partner");
+        filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
         filterDto.setApiKeyName("123");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(Page.empty());
+        doReturn(Page.empty()).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("root");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(Page.empty());
+        filterDto.setNotificationType("ROOT_CERT_EXPIRY");
+        doReturn(Page.empty()).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
 
@@ -282,28 +285,28 @@ public class NotificationsServiceImplTest {
         partnerIdList.add("123");
 
         NotificationsFilterDto filterDto = new NotificationsFilterDto();
-        filterDto.setNotificationType("sbi");
+        filterDto.setNotificationType("SBI_EXPIRY");
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         NotificationEntity entity = new NotificationEntity();
         entity.setId("12345");
         entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
         Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         when(notificationsSummaryRepository.getSummaryOfAllSbiNotifications(anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("partner");
+        filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
         filterDto.setSbiVersion("123");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("apikey");
+        filterDto.setNotificationType("API_KEY_EXPIRY");
         filterDto.setCertificateId("123");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
         filterDto = new NotificationsFilterDto();
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
 
@@ -340,17 +343,17 @@ public class NotificationsServiceImplTest {
         entity.setId("12345");
         entity.setNotificationDetailsJson("{\"abc\":\"test\"}");
         Page<NotificationEntity> page =new PageImpl<>(List.of(entity), pageable, 1);
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         when(notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any())).thenReturn(page);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("ftm-chip");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        filterDto.setNotificationType("FTM_CHIP_CERT_EXPIRY");
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
 
-        filterDto.setNotificationType("partner");
+        filterDto.setNotificationType("PARTNER_CERT_EXPIRY");
         filterDto.setFtmId("123");
-        when(notificationsServiceImpl.fetchNotifications(filterDto, pageable, partnerIdList, false)).thenReturn(page);
+        doReturn(page).when(notificationsServiceImpl).fetchNotifications(filterDto, pageable, partnerIdList, false);
         notificationsServiceImpl.getNotifications(pageNo, pageSize, filterDto);
     }
 

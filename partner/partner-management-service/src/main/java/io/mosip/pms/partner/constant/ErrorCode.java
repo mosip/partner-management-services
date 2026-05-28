@@ -216,6 +216,7 @@ public enum ErrorCode {
 	INVALID_CREATED_TO_DATE("PMS_NOTIFICATION_ERROR_026", "Please enter a valid created to date."),
 	INVALID_NOTIFICATION_TYPE_SELECTED_FOR_MISP_FILTER("PMS_NOTIFICATION_ERROR_027", "The selected notification type is invalid. Only 'misp' type is allowed for this filter."),
 	INVALID_NOTIFICATION_TYPE_SELECTED_FOR_POLICYNAME_FILTER("PMS_NOTIFICATION_ERROR_028", "The selected notification type is invalid. Either 'apikey' or 'misp' type is allowed for this filter."),
+	INVALID_NOTIFICATION_TYPE("PMS_NOTIFICATION_ERROR_029", "Invalid notification type. Allowed values: ROOT_CERT_EXPIRY, INTERMEDIATE_CERT_EXPIRY, PARTNER_CERT_EXPIRY, WEEKLY_SUMMARY, SBI_EXPIRY, FTM_CHIP_CERT_EXPIRY, API_KEY_EXPIRY, MISP_LICENSE_KEY_EXPIRY."),
 	ROOT_AND_INTERMEDIATE_CERTS_DISABLED("PMS_FEATURE_001", "Root and Intermediate Certificates list is not available in the current deployment."),
 	OIDC_CLIENT_FEATURE_DISABLED("PMS_FEATURE_002", "OIDC client related features are not available in the current deployment."),
 	CA_SIGNED_CERT_DISABLED("PMS_FEATURE_003", "Downloading CA signed certificate is not available in the current deployment."),
