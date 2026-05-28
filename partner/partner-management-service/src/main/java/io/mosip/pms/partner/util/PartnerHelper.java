@@ -19,7 +19,10 @@ import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -180,6 +183,12 @@ public class PartnerHelper {
         mispAliasToColumnMap.put("status", "isActive");
         mispAliasToColumnMap.put("createdDateTime", "createdDateTime");
     }
+
+    @Autowired
+    PartnerRepository partnerRepository;
+
+    @Autowired
+    AuditUtil auditUtil;
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -430,6 +439,23 @@ public class PartnerHelper {
         }
     }
 
+
+    public Partner getValidPartner(String partnerId, boolean isToRetrieve) {
+        Optional<Partner> partnerById = partnerRepository.findById(partnerId);
+        if (partnerById.isEmpty()) {
+            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
+            throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+                    ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+        }
+        if (!isToRetrieve) {
+            if (!partnerById.get().getIsActive()) {
+                auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
+                throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+            }
+        }
+        return partnerById.get();
+    }
 
     public void checkIfPartnerIsNotActive(Partner partner) {
         if (!partner.getIsActive()) {
