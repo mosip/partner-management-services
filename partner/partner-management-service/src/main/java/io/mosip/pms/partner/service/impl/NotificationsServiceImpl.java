@@ -177,43 +177,43 @@ public class NotificationsServiceImpl implements NotificationsService {
 		}
 		// validate createdFromdate and createdTodate fields
 		if ((Objects.nonNull(filterDto.getCreatedFromDate()) || Objects.nonNull(filterDto.getCreatedToDate()))
-				&& !notificationType.equals(WEEKLY)) {
+				&& !notificationType.equals(WEEKLY_SUMMARY_NOTIFICATION_TYPE)) {
 			throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorCode(),
 					ErrorCode.WEEKLY_TYPE_NOT_SELECTED.getErrorMessage());
 		}
 		// validate expiryDate field
-		if (notificationType.equals(WEEKLY) && Objects.nonNull(filterDto.getExpiryDate())) {
+		if (notificationType.equals(WEEKLY_SUMMARY_NOTIFICATION_TYPE) && Objects.nonNull(filterDto.getExpiryDate())) {
 			throw new PartnerServiceException(ErrorCode.WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER.getErrorCode(),
 					ErrorCode.WEEKLY_TYPE_NOT_SUPPORTED_FOR_EXPIRY_DATE_FILTER.getErrorMessage());
 		}
 		// validate certificateId, issuedBy, issuedTo and partnerDomain
 		if ((Objects.nonNull(filterDto.getCertificateId()) || Objects.nonNull(filterDto.getIssuedBy()) || Objects.nonNull(filterDto.getIssuedTo()) || Objects.nonNull(filterDto.getPartnerDomain()))
-				&& (!notificationType.equals(ROOT) && !notificationType.equals(INTERMEDIATE) && !notificationType.equals(PARTNER))) {
+				&& (!notificationType.equals(ROOT_CERT_EXPIRY) && !notificationType.equals(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE) && !notificationType.equals(PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE))) {
 			throw new PartnerServiceException(ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorCode(),
 					ErrorCode.ONLY_ROOT_INTERMEDIATE_PARTNER_TYPES_ARE_ALLOWED.getErrorMessage());
 		}
 		// validate apiKeyName
-		if (Objects.nonNull(filterDto.getApiKeyName()) && (!notificationType.equals(API_KEY))) {
+		if (Objects.nonNull(filterDto.getApiKeyName()) && (!notificationType.equals(API_KEY_EXPIRY_NOTIFICATION_TYPE))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_APIKEY_FILTER.getErrorMessage());
 		}
 		// validate make, model and ftmId
-		if ((Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel()) || Objects.nonNull(filterDto.getFtmId())) && (!notificationType.equals(FTM_CHIP))) {
+		if ((Objects.nonNull(filterDto.getMake()) || Objects.nonNull(filterDto.getModel()) || Objects.nonNull(filterDto.getFtmId())) && (!notificationType.equals(FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_FTM_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_FTM_FILTER.getErrorMessage());
 		}
 		// validate sbiId and sbiVersion
-		if ((Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) && (!notificationType.equals(SBI))) {
+		if ((Objects.nonNull(filterDto.getSbiId()) || Objects.nonNull(filterDto.getSbiVersion())) && (!notificationType.equals(SBI_EXPIRY_NOTIFICATION_TYPE))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_SBI_FILTER.getErrorMessage());
 		}
 		// validate mispLicenseKeyName and mispPartnerId
-		if ((Objects.nonNull(filterDto.getMispLicenseKeyName()) || Objects.nonNull(filterDto.getMispPartnerId())) && (!notificationType.equals(MISP))) {
+		if ((Objects.nonNull(filterDto.getMispLicenseKeyName()) || Objects.nonNull(filterDto.getMispPartnerId())) && (!notificationType.equals(MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_MISP_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_MISP_FILTER.getErrorMessage());
 		}
 		// validate policyName
-		if (Objects.nonNull(filterDto.getPolicyName()) && (!notificationType.equals(MISP) && !notificationType.equals(API_KEY))) {
+		if (Objects.nonNull(filterDto.getPolicyName()) && (!notificationType.equals(MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE) && !notificationType.equals(API_KEY_EXPIRY_NOTIFICATION_TYPE))) {
 			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_POLICYNAME_FILTER.getErrorCode(),
 					ErrorCode.INVALID_NOTIFICATION_TYPE_SELECTED_FOR_POLICYNAME_FILTER.getErrorMessage());
 		}
@@ -250,50 +250,52 @@ public class NotificationsServiceImpl implements NotificationsService {
 		}
 
 		switch (notificationType) {
-		case ROOT:
+		case ROOT_CERT_EXPIRY:
 			return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
 					filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
 					filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					ROOT_CERT_EXPIRY, partnerIdList, pageable);
 
-		case INTERMEDIATE:
+		case INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
 					filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
 					filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-		case WEEKLY:
+		case WEEKLY_SUMMARY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfWeeklyNotifications(filterDto.getCreatedFromDate(),
 					filterDto.getCreatedToDate(), filterDto.getNotificationStatus(), WEEKLY_SUMMARY_NOTIFICATION_TYPE,
 					partnerIdList, pageable);
 
-		case PARTNER:
+		case PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfAllRootIntermediatePartnerCertNotifications(
 					filterDto.getCertificateId(), filterDto.getIssuedBy(), filterDto.getIssuedTo(),
 					filterDto.getPartnerDomain(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					PARTNER_CERT_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
-		case SBI:
+
+		case SBI_EXPIRY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfAllSbiNotifications(filterDto.getSbiId(),
 					filterDto.getSbiVersion(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					SBI_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-		case FTM_CHIP:
+		case FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfAllFtmChipCertNotifications(filterDto.getFtmId(),
 					filterDto.getMake(), filterDto.getModel(), filterDto.getExpiryDate(),
 					filterDto.getNotificationStatus(), FTM_CHIP_CERT_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-		case API_KEY:
+		case API_KEY_EXPIRY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfAllApiKeyNotifications(filterDto.getApiKeyName(),
 					filterDto.getPolicyName(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					API_KEY_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
-		case MISP:
+		case MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE:
 			return notificationsSummaryRepository.getSummaryOfAllMispLicenseKeyNotifications(filterDto.getMispLicenseKeyName(),
 					filterDto.getMispPartnerId(), filterDto.getPolicyName(), filterDto.getExpiryDate(), filterDto.getNotificationStatus(),
 					MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE, partnerIdList, pageable);
 
 		default:
-			return Page.empty(pageable); // Return empty paginated response
+			throw new PartnerServiceException(ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorCode(),
+					ErrorCode.INVALID_NOTIFICATION_TYPE.getErrorMessage());
 		}
 	}
 
@@ -322,10 +324,10 @@ public class NotificationsServiceImpl implements NotificationsService {
 	}
 
 	private boolean validateNotificationTypeForPartner(String notificationType) {
-		return notificationType.equalsIgnoreCase(PartnerConstants.ROOT)
-				|| notificationType.equalsIgnoreCase(PartnerConstants.INTERMEDIATE)
-				|| notificationType.equalsIgnoreCase(PartnerConstants.MISP)
-				|| notificationType.equalsIgnoreCase(PartnerConstants.WEEKLY);
+		return notificationType.equals(ROOT_CERT_EXPIRY)
+				|| notificationType.equals(INTERMEDIATE_CERT_EXPIRY_NOTIFICATION_TYPE)
+				|| notificationType.equals(MISP_LICENSE_KEY_EXPIRY_NOTIFICATION_TYPE)
+				|| notificationType.equals(WEEKLY_SUMMARY_NOTIFICATION_TYPE);
 	}
 
 	private void validateDate(String date, ErrorCode errorCode) {
@@ -443,7 +445,6 @@ public class NotificationsServiceImpl implements NotificationsService {
 	public NotificationsResponseDto mapToResponseDto(NotificationEntity notificationEntity) {
 			NotificationsResponseDto responseDto = new NotificationsResponseDto();
 			responseDto.setNotificationId(notificationEntity.getId());
-			responseDto.setNotificationPartnerId(notificationEntity.getPartnerId());
 			responseDto.setNotificationType(notificationEntity.getNotificationType());
 			responseDto.setNotificationStatus(notificationEntity.getNotificationStatus());
 			responseDto.setCreatedDateTime(notificationEntity.getCreatedDatetime());
