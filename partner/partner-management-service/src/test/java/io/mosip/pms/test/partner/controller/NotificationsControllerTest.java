@@ -69,7 +69,7 @@ public class NotificationsControllerTest {
                         .param("pageNo", String.valueOf(pageNo))
                         .param("pageSize", String.valueOf(pageSize))
                         .param("notificationStatus", "active")
-                        .param("notificationType", "root")
+                        .param("notificationType", "ROOT_CERT_EXPIRY")
                         .param("certificateId", "ABC")
                         .param("issuedBy", "abc")
                         .param("issuedTo", "abc")
