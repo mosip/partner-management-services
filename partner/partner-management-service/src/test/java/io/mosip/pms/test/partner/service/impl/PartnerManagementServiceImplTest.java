@@ -3503,7 +3503,7 @@ public class PartnerManagementServiceImplTest {
         }
     }
 
-	@Test(expected = PartnerManagerServiceException.class)
+	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_invalidRequest_throws() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
 		CredentialTypeRequestDto req =new CredentialTypeRequestDto();
@@ -3513,7 +3513,7 @@ public class PartnerManagementServiceImplTest {
 		partnerManagementImpl.submitCredentialTypesRequest(req);
 	}
 
-    @Test(expected = PartnerManagerServiceException.class)
+    @Test(expected = PartnerServiceException.class)
     public void submitCredentialTypesRequest_parentNotFound_throws() {
         Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
         when(partnerPolicyRequestRepository.findById("req-1")).thenReturn(Optional.empty());
@@ -3524,7 +3524,7 @@ public class PartnerManagementServiceImplTest {
                 .submitCredentialTypesRequest(req);
     }
 
-    @Test(expected = PartnerManagerServiceException.class)
+    @Test(expected = PartnerServiceException.class)
     public void submitCredentialTypesRequest_parentStatusNotInProgress_throws() {
         PartnerPolicyRequest parent =new PartnerPolicyRequest();
         parent.setId("req-1");
@@ -3538,7 +3538,7 @@ public class PartnerManagementServiceImplTest {
         partnerManagementImpl.submitCredentialTypesRequest(req);
     }
 
-    @Test(expected = PartnerManagerServiceException.class)
+    @Test(expected = PartnerServiceException.class)
     public void submitCredentialTypesRequest_duplicateRequest_throws() {
         PartnerPolicyRequest parent =new PartnerPolicyRequest();
         parent.setId("req-1");
@@ -3553,7 +3553,7 @@ public class PartnerManagementServiceImplTest {
         partnerManagementImpl.submitCredentialTypesRequest(req);
     }
 
-    @Test(expected = PartnerManagerServiceException.class)
+    @Test(expected = PartnerServiceException.class)
     public void submitCredentialTypesRequest_saveIntegrityViolation_throws() {
         ReflectionTestUtils.setField(partnerManagementImpl,"maxRetries",1);
         PartnerPolicyRequest parent =new PartnerPolicyRequest();
