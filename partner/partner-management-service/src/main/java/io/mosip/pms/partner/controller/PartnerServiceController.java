@@ -87,10 +87,6 @@ public class PartnerServiceController {
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
 
-	@Value("${mosip.pms.api.id.partners.bioextractors.request.post:mosip.pms.partners.bioextractors.request.post}")
-	private String postPartnerBioextractorsRequestId;
-
-
 	@Autowired
 	PartnerService partnerService;
 	
@@ -169,7 +165,7 @@ public class PartnerServiceController {
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
 	@Operation(
 			summary = "Service to add bio extractors - deprecated since release-1.3.0-beta.5",
-			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partners/{partnerId}/policies/{policyId}/bio-extractors-request endpoint.",
+			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partner-policy-requests/{requestId}/bio-extractors-request endpoint.",
 			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
