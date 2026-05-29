@@ -1186,7 +1186,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyName) {
-		validateCredentialTypes(credentialType);
+		partnerHelper.validateCredentialTypes(credentialType);
 		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
@@ -1218,14 +1218,6 @@ public class PartnerServiceImpl implements PartnerService {
 	private boolean isPartnerAlreadyMapped(String partnerId, String credentialType) {
 		Optional<PartnerPolicyCredentialType> existingMapping = Optional.ofNullable(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType));
 		return existingMapping.isPresent();
-	}
-
-	private void validateCredentialTypes(String credentialType) {
-		if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, credentialType, "credentialType");
-			throw new PartnerServiceException(ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
-					ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
-		}
 	}
 
 	@Override

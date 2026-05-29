@@ -441,15 +441,10 @@ public class PartnerHelper {
     }
 
     public void validateCredentialTypes(String credentialType) {
-        if (!Arrays.stream(allowedCredentialTypes.split(","))
-                .anyMatch(credentialType::equalsIgnoreCase)) {
-
-            throw new PartnerManagerServiceException(
-                    io.mosip.pms.partner.constant.ErrorCode
-                            .CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
-                    io.mosip.pms.partner.constant.ErrorCode
-                            .CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage()
-                            + allowedCredentialTypes);
+        if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
+            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, credentialType, "credentialType");
+            throw new PartnerServiceException(ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+                    ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
         }
     }
 
