@@ -898,6 +898,11 @@ public class PartnerServiceImplTest {
 		Optional<Partner> partner = Optional.of(createPartner(true));		
 		Mockito.when(partnerRepository.findById("12345")).thenReturn(partner);
 		Mockito.when(authPolicyRepository.findById("12345")).thenReturn(Optional.of(createAuthPolicy()));
+		Mockito.doThrow(new PartnerServiceException(
+						ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+						ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage()))
+				.when(partnerHelper)
+				.validateCredentialTypes("uin");
 		pserviceImpl.mapPartnerPolicyCredentialType("uin", "12345", "12345");
 	}
 	
