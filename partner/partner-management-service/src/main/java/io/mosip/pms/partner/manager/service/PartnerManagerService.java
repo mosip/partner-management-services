@@ -8,6 +8,7 @@ import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
@@ -106,7 +107,8 @@ public interface PartnerManagerService {
 	 * @return credential type request row
 	 */
 	CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId);
-	
+	String submitCredentialTypesRequest(String requestId, CredentialTypeRequestDto request);
+
 	/**
 	 * 
 	 * @param partnerId

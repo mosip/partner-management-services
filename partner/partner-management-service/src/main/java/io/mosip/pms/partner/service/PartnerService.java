@@ -20,6 +20,7 @@ import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.dto.*;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerPolicyMappingRequest;
@@ -146,7 +147,6 @@ public interface PartnerService {
 	 * @param request credential type request payload (includes partnerPolicyRequestId)
 	 * @return success message
 	 */
-	String submitCredentialTypesRequest(String partnerId, String policyId, CredentialTypeRequestDto request);
 
     /**
      * Function to get biometric extractors of partner and policy
