@@ -195,3 +195,23 @@ GetListofPartnersAssociatedwithLoggedinUserNegSce:
            }
       ] 
 }'
+   Pms_GetListofPartnersAssociatedwithLoggedinUserNegSce_With_Empty_Status_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_GetListofPartnersAssociatedwithLoggedinUsernegSce_11
+      description: Validate that retrieving the list of partners associated with the logged-in user fails when status is provided as empty
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/MISPPartnerV3/GetListofPartnersAssociatedwithLoggedinUser/GetListofPartnersAssociatedwithLoggedinUser
+      outputTemplate: pms/error
+      input: '{
+      "status": "",
+      "policyGroupAvailable": "true",
+      "partnerType": "MISP_Partner"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PS_ERROR_009"
+       }
+       ]   
+}'
