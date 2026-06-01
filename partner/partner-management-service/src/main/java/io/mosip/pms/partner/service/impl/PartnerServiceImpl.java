@@ -1897,7 +1897,7 @@ public class PartnerServiceImpl implements PartnerService {
 			String userRoles = authUserDetails().getAuthorities().toString();
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
 			List<Partner> partners;
-			boolean isAdminManagedPartnerType = PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) || PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType);
+			boolean isAdminManagedPartnerType = PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) || PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ONLINE_VERIFICATION_PARTNER_TYPE.equals(partnerType);
 
 			if (isPartnerAdmin) {
 				if (partnerType == null || partnerType.isBlank()) {
@@ -1907,7 +1907,7 @@ public class PartnerServiceImpl implements PartnerService {
 				}
 				if (!isAdminManagedPartnerType) {
 					LOGGER.info("sessionId", "idType", "id",
-							"Partner Admin can fetch all partners only for partnerType: MISP_Partner, ABIS_Partner, or Manual_Adjudication.");
+							"Partner Admin can fetch all partners only for partnerType: MISP_Partner, ABIS_Partner, Manual_Adjudication, or Online_Verification_Partner.");
 					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
 							ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorMessage());
 				}
