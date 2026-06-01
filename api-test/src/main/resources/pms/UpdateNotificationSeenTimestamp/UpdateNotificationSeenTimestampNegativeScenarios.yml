@@ -414,3 +414,22 @@ UpdateNotificationSeenTimestampNegativeScenarios:
        }
        ]
 }'
+   Pms_UpdateNotificationSeenTimestamp_With_InvalidFormat_NotificationsSeenDtimes_Neg:
+      endPoint: /v1/partnermanager/users/{userId}/notifications-seen-timestamp
+      uniqueIdentifier: TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_20
+      description: Validate that updating the Notification Seen Timestamp fails when notificationsSeenDtimes is provided in an invalid date-time format
+      role: partneradmin
+      restMethod: put
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/UpdateNotificationSeenTimestamp/UpdateNotificationSeenTimestamp
+      outputTemplate: pms/responseCode
+      input: '{
+      "id": "mosip.pms.users.notifications.seen.timestamp.put",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$",
+      "notificationsSeenDtimes": "2025-06-04",
+      "userId": "$RUNCONTEXT$pms-111777"
+}'
+      output: '{
+      "responseCode": "400"
+}'

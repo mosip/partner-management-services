@@ -47,10 +47,9 @@ import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.AddContactRequestDto;
-import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.CACertificateRequestDto;
 import io.mosip.pms.partner.request.dto.EmailVerificationRequestDto;
-import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.request.dto.ExtractorsDto;
 import io.mosip.pms.partner.request.dto.PartnerCertDownloadRequestDto;
 import io.mosip.pms.partner.request.dto.PartnerCertificateUploadRequestDto;
@@ -84,9 +83,6 @@ public class PartnerServiceController {
 
 	@Value("${mosip.pms.api.id.create.partner.post}")
 	private String postCreatePartnerId;
-
-	@Value("${mosip.pms.api.id.partners.credentialtypes.request.post}")
-	private String postPartnerCredentialTypesRequestId;
 
 	@Value("${mosip.pms.api.id.partner.exists.post}")
 	private String postPartnerExistsId;
@@ -181,26 +177,6 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);		
 	}
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
-	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credential-types-request", method = RequestMethod.POST)
-	@Operation(summary = "Service to submit credential types request",
-			description = "Persists credential type request against an in-progress partner policy mapping request")
-	public ResponseWrapperV2<String> submitCredentialTypesRequest(
-			@PathVariable String partnerId,
-			@PathVariable String policyId,
-			@RequestBody @Valid RequestWrapperV2<CredentialTypeRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<String>> validationResponse =
-				requestValidator.validate(postPartnerCredentialTypesRequestId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
-		response.setResponse(partnerService.submitCredentialTypesRequest(partnerId, policyId, requestWrapper.getRequest()));
-		response.setId(requestWrapper.getId());
-		response.setVersion(requestWrapper.getVersion());
-		return response;
-	}
-
 	/**
 	 * 
 	 * @param partnerId
@@ -218,14 +194,14 @@ public class PartnerServiceController {
 	}
 	
 	/**
-	 * @deprecated Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.
+	 * @deprecated Replaced by POST /partner-policy-requests/{requestId}/credential-types-request.
 	 */
 	@Deprecated(since = "release-1.3.0-beta.5")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies/{policyName}",method = RequestMethod.POST)
 	@Operation(
 			summary = "Service to map partner and policy to a credential type — deprecated since release-1.3.0-beta.5",
-			description = "Deprecated since release-1.3.0-beta.5. Replaced by POST /partners/{partnerId}/policies/{policyId}/credential-types-request.",
+			description = "Deprecated since release-1.3.0-beta.5. Replaced by POST /partner-policy-requests/{requestId}/credential-types-request.",
 			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){

@@ -378,17 +378,6 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
-    public void submitCredentialTypesRequestTest() throws Exception {
-        when(partnerService.submitCredentialTypesRequest(eq("123456"), eq("12345"), any(CredentialTypeRequestDto.class)))
-                .thenReturn("ok");
-        mockMvc.perform(post("/partners/123456/policies/12345/credential-types-request")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(createSubmitCredentialTypesRequest())))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = {"PARTNER"})
     public void checkPartnerExists_validationPresent_returnsValidationResponse() throws Exception {
         ResponseWrapperV2<PartnerExistsResponseDto> validation = new ResponseWrapperV2<>();
         @SuppressWarnings("rawtypes")
@@ -450,7 +439,7 @@ public class PartnerServiceControllerTest {
 
         Mockito.verify(partnerService, Mockito.times(1)).createPartner(any());
     }
-    
+
     private RequestWrapper<FilterValueDto> createFilterRequest(){
     	RequestWrapper<FilterValueDto> request = new RequestWrapper<FilterValueDto>();
     	request.setId("mosip.partnermanagement.partnerAPIKeyRequest.create");
@@ -846,7 +835,6 @@ public class PartnerServiceControllerTest {
     private RequestWrapper<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
         RequestWrapper<CredentialTypeRequestDto> request = new RequestWrapper<>();
         CredentialTypeRequestDto dto = new CredentialTypeRequestDto();
-        dto.setPartnerPolicyRequestId("req-1");
         dto.setCredentialType("euin");
         request.setRequest(dto);
         request.setId("mosip.pms.partner.policy.credential.types.create");
