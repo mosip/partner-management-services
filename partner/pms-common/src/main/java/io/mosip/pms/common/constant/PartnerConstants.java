@@ -97,6 +97,8 @@ public final class PartnerConstants {
 	public static final String ABIS_PARTNER_TYPE = "ABIS_Partner";
 
 	public static final String MANUAL_ADJUDICATION_PARTNER_TYPE = "Manual_Adjudication";
+
+	public static final String ONLINE_VERIFICATION_PARTNER_TYPE = "Online_Verification_Partner";
 	
 	public static final String PARTNER_DOMAIN_AUTH = "AUTH";
 
