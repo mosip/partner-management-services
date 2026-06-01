@@ -1099,15 +1099,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
 
-		String trimmedRequestId = requestId.trim();
-		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByReqId(trimmedRequestId);
+		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByReqId(requestId);
 		boolean invalidParent = parentPolicyRequest == null
 				|| Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
 				|| parentPolicyRequest.getPolicyId() == null
 				|| parentPolicyRequest.getPartner() == null
 				|| parentPolicyRequest.getPartner().getId() == null;
 		if (invalidParent) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, trimmedRequestId, "requestId");
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, requestId, "requestId");
 			throw new PartnerServiceException(PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
 					PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
 		}
