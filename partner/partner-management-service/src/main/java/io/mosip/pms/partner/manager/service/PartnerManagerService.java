@@ -107,8 +107,7 @@ public interface PartnerManagerService {
 	 * @return credential type request row
 	 */
 	CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId);
-	String submitCredentialTypesRequest(
-			CredentialTypeRequestDto request);
+	String submitCredentialTypesRequest(String requestId, CredentialTypeRequestDto request);
 
 	/**
 	 * 

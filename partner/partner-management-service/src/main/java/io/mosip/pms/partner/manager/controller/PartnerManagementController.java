@@ -552,21 +552,21 @@ public class PartnerManagementController {
 		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
 	@PostMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
 	@Operation(summary = "Service to submit credential types request",
-			description = "Persists credential type request against an in-progress partner policy mapping request")
+			description = "Persists credential type request against an in-progress partner policy mapping request. Partner and policy are resolved from the partner-policy request id in the path.")
 	public ResponseWrapperV2<String> submitCredentialTypesRequest(
 			@PathVariable("requestId") String requestId,
 			@RequestBody @Valid RequestWrapperV2<CredentialTypeRequestDto> requestWrapper) {
+		inputValidator.validateRequestInput("requestId", requestId);
 		Optional<ResponseWrapperV2<String>> validationResponse =
 				requestValidator.validate(postPartnerCredentialTypesRequestId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput("requestId", requestId);
-		requestWrapper.getRequest().setPartnerPolicyRequestId(requestId);
 		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
-		response.setResponse(partnerManagementService.submitCredentialTypesRequest(requestWrapper.getRequest()));
+		response.setResponse(partnerManagementService.submitCredentialTypesRequest(requestId,requestWrapper.getRequest()));
 		response.setId(requestWrapper.getId());
 		response.setVersion(requestWrapper.getVersion());
 		return response;

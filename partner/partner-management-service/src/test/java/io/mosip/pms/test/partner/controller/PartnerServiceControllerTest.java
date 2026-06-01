@@ -835,7 +835,6 @@ public class PartnerServiceControllerTest {
     private RequestWrapper<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
         RequestWrapper<CredentialTypeRequestDto> request = new RequestWrapper<>();
         CredentialTypeRequestDto dto = new CredentialTypeRequestDto();
-        dto.setPartnerPolicyRequestId("req-1");
         dto.setCredentialType("euin");
         request.setRequest(dto);
         request.setId("mosip.pms.partner.policy.credential.types.create");

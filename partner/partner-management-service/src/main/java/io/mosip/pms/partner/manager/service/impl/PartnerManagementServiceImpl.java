@@ -102,6 +102,9 @@ import static io.mosip.pms.partner.constant.ErrorCode.INVALID_PARTNER_INPUT_PARA
 import static io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED;
 import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION;
 import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION;
+import static io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST;
+import static io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST;
+import static io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED;
 import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND;
 import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_BIO_EXTRACTOR_APPROVE_FAILED;
 import static io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_CREDENTIAL_TYPE_APPROVE_FAILED;
@@ -1087,56 +1090,53 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public String submitCredentialTypesRequest(CredentialTypeRequestDto request) {
-		if (request == null
-				|| request.getPartnerPolicyRequestId() == null || request.getPartnerPolicyRequestId().isBlank()
+	public String submitCredentialTypesRequest(String requestId, CredentialTypeRequestDto request) {
+		if (requestId == null || requestId.isBlank()
+				|| request == null
 				|| request.getCredentialType() == null || request.getCredentialType().isBlank()) {
-			String requestId = request != null ? request.getPartnerPolicyRequestId() : null;
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE,
-					requestId, "requestId");
-			throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, requestId, "requestId");
+			throw new PartnerServiceException(INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
+					INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
 
-
-		String credentialType = request.getCredentialType().trim();
-		partnerHelper.validateCredentialTypes(credentialType);
-
-		String requestId = request.getPartnerPolicyRequestId().trim();
-		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByReqId(requestId);
-		String partnerId = parentPolicyRequest == null || parentPolicyRequest.getPartner() == null
-				? null : parentPolicyRequest.getPartner().getId();
-		validateLoggedInUserAuthorization(partnerId);
-		partnerHelper.getValidPartner(partnerId, false);
-		String policyId = parentPolicyRequest == null ? null : parentPolicyRequest.getPolicyId();
+		String trimmedRequestId = requestId.trim();
+		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByReqId(trimmedRequestId);
 		boolean invalidParent = parentPolicyRequest == null
 				|| Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
 				|| parentPolicyRequest.getPolicyId() == null
-				|| !policyId.equals(parentPolicyRequest.getPolicyId());
+				|| parentPolicyRequest.getPartner() == null
+				|| parentPolicyRequest.getPartner().getId() == null;
 		if (invalidParent) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, trimmedRequestId, "requestId");
+			throw new PartnerServiceException(PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
+					PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
 		}
+
+		String partnerId = parentPolicyRequest.getPartner().getId();
+		String policyId = parentPolicyRequest.getPolicyId();
+		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.getValidPartner(partnerId, false);
+
+		String credentialType = request.getCredentialType().trim();
+		validateCredentialTypes(credentialType);
 
 		String parentStatus = parentPolicyRequest.getStatusCode();
 		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(
-					io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
+			throw new PartnerServiceException(CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
+					CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
 		}
 
 		if (partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
+			throw new PartnerServiceException(DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
+					DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
 		}
 
 		if (partnerPolicyCredentialTypeRepository.findByPartnerIdAndCrdentialType(partnerId, credentialType) != null) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
+			throw new PartnerServiceException(DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
+					DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
 		}
 
 		PartnerPolicyCredentialTypeRequest row = new PartnerPolicyCredentialTypeRequest();
@@ -1155,8 +1155,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts",
 						"Partner Policy Credential Type Request ID", "id", row.getClass().getSimpleName(), maxRetries);
 				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(io.mosip.pms.partner.constant.ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
+				throw new PartnerServiceException(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
+						String.format(UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
 								"Partner Policy Credential Type Request ID", "id", row.getClass().getSimpleName(), maxRetries));
 			}
 			id = PartnerUtil.generateId();
@@ -1168,12 +1168,19 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			partnerPolicyCredentialTypeRequestRepository.saveAndFlush(row);
 		} catch (DataIntegrityViolationException ex) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
+			throw new PartnerServiceException(DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
+					DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
 		}
 
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_SUCCESS, partnerId, "partnerId");
 		return "Credential type request submitted successfully.";
+	}
+
+	private void validateCredentialTypes(String credentialType) {
+		if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
+			throw new PartnerServiceException(CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+					CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
+		}
 	}
 
 	@Override

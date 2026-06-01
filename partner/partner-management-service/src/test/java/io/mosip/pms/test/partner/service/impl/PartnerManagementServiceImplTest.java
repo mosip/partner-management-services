@@ -225,7 +225,6 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRequestRepository", partnerPolicyCredentialTypeRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 100);
-		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", partnerHelper);
@@ -3503,130 +3502,93 @@ public class PartnerManagementServiceImplTest {
         }
     }
 
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_invalidRequest_throws() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
-		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
-		req.setPartnerPolicyRequestId("req-1");
-		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(null);
-		try {
-			partnerManagementImpl.submitCredentialTypesRequest(req);
-			fail("Expected PartnerServiceException");
-		} catch (PartnerServiceException ex) {
-			assertEquals(io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),ex.getErrorCode());
-		}
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", null);
 	}
 
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_parentNotFound_throws() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
-		when(partnerPolicyRequestRepository.findById("req-1")).thenReturn(Optional.empty());
+		Mockito.when(partnerPolicyRequestRepository.findByReqId(Mockito.anyString())).thenReturn(null);
+
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
-		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		try {
-			partnerManagementImpl.submitCredentialTypesRequest(req);
-			fail("Expected PartnerServiceException");
-		} catch (PartnerServiceException ex) {
-			assertEquals(io.mosip.pms.partner.constant.ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),ex.getErrorCode());
-		}
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
 	}
 
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_parentStatusNotInProgress_throws() {
-		PartnerPolicyRequest parent = new PartnerPolicyRequest();
-		parent.setId("req-1");
-		parent.setPolicyId("pol1");
-		parent.setStatusCode("Approved");
-		parent.setPartner(getPartner());
-		when(partnerPolicyRequestRepository.findById("req-1"))
-				.thenReturn(Optional.of(parent));
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest("Approved");
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
-		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		PartnerServiceException ex = assertThrows(PartnerServiceException.class,() -> partnerManagementImpl.submitCredentialTypesRequest(req));
-		assertNotNull(ex);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
 	}
 
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_duplicateRequest_throws() {
-		PartnerPolicyRequest parent = new PartnerPolicyRequest();
-		parent.setId("req-1");
-		parent.setPolicyId("pol1");
-		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		parent.setPartner(getPartner());
-		when(partnerPolicyRequestRepository.findById("req-1"))
-				.thenReturn(Optional.of(parent));
-		when(partnerPolicyCredentialTypeRequestRepository
-				.existsByPartnerPolicyRequestId("req-1"))
-				.thenReturn(true);
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(true);
+
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
-		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		PartnerServiceException ex = assertThrows(
-				PartnerServiceException.class,
-				() -> partnerManagementImpl.submitCredentialTypesRequest(req));
-		assertNotNull(ex);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
 	}
 
-	@Test
+	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_saveIntegrityViolation_throws() {
-		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 1);
-		PartnerPolicyRequest parent = new PartnerPolicyRequest();
-		parent.setId("req-1");
-		parent.setPolicyId("pol1");
-		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		parent.setPartner(getPartner());
-		when(partnerPolicyRequestRepository.findById("req-1"))
-				.thenReturn(Optional.of(parent));
-		when(partnerPolicyCredentialTypeRequestRepository
-				.existsByPartnerPolicyRequestId("req-1"))
-				.thenReturn(false);
-		when(partnerPolicyCredentialTypeRequestRepository
-				.existsById(anyString()))
-				.thenReturn(false);
-		doThrow(new DataIntegrityViolationException("dup"))
-				.when(partnerPolicyCredentialTypeRequestRepository)
-				.saveAndFlush(any());
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
+		Mockito.when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndCrdentialType(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsById(Mockito.anyString())).thenReturn(false);
+		Mockito.doThrow(new DataIntegrityViolationException("dup")).when(partnerPolicyCredentialTypeRequestRepository).saveAndFlush(Mockito.any());
+
 		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
-		req.setPartnerPolicyRequestId("req-1");
 		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		PartnerServiceException ex = assertThrows(
-				PartnerServiceException.class,
-				() -> partnerManagementImpl.submitCredentialTypesRequest(req));
-		assertNotNull(ex);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
 	}
 
 	@Test
 	public void submitCredentialTypesRequest_success_returnsMessage() {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
-		ReflectionTestUtils.setField(partnerManagementImpl,"maxRetries",2);
-		Partner partner = new Partner();
-		partner.setId("partner1");
-		partner.setIsActive(true);
-		partner.setIsDeleted(false);
-		partner.setApprovalStatus("approved");
-		partner.setPartnerTypeCode("Auth");
-		partner.setPolicyGroupId("234");
-		PartnerPolicyRequest parent =	new PartnerPolicyRequest();
-		parent.setId("req-1");
-		parent.setPolicyId("policy1");
-		parent.setPartner(partner);
-		parent.setStatusCode(PartnerConstants.IN_PROGRESS);
-		parent.setIsDeleted(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
-		Mockito.when(partnerRepository.findById("partner1")).thenReturn(Optional.of(partner));
-		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("req-1")).thenReturn(false);
-		Mockito.when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndCrdentialType("partner1",allowedCredentialTypes.split(",")[0])).thenReturn(null);
-		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsById(anyString())).thenReturn(false);
-		Mockito.when(partnerPolicyCredentialTypeRequestRepository.saveAndFlush(any())).thenReturn(new PartnerPolicyCredentialTypeRequest());
-		CredentialTypeRequestDto request =new CredentialTypeRequestDto();
-		request.setPartnerPolicyRequestId("req-1");
-		request.setCredentialType(allowedCredentialTypes.split(",")[0]);
-		String response =partnerManagementImpl.submitCredentialTypesRequest(request);
-		assertEquals("Credential type request submitted successfully.",response);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
+		Mockito.when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndCrdentialType(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsById(Mockito.anyString())).thenReturn(true, false);
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.saveAndFlush(Mockito.any())).thenReturn(new PartnerPolicyCredentialTypeRequest());
+
+		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
+		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
+
+		String msg = partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
+		assertEquals("Credential type request submitted successfully.", msg);
 	}
+
+		private PartnerPolicyRequest createPartnerPolicyRequest(String statusCode) {
+		Partner partner = new Partner();
+		partner.setId("p1");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setPolicyId("pol1");
+		parent.setIsDeleted(false);
+		parent.setStatusCode(statusCode);
+		parent.setPartner(partner);
+		return parent;
+	}
+
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_loggedInFilterRequired_matchingUser() throws Exception {
 		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);

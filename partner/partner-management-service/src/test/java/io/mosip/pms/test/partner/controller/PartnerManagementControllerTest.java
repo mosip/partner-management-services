@@ -1091,14 +1091,13 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void submitCredentialTypesRequestTest() throws Exception {
-		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
-		Mockito.when(partnerManagementService.submitCredentialTypesRequest(any())).thenReturn("ok");
+		Mockito.when(partnerManagementService.submitCredentialTypesRequest(eq("req-1"), any(CredentialTypeRequestDto.class)))
+				.thenReturn("ok");
 		mockMvc.perform(post("/partner-policy-requests/{requestId}/credential-types-request", "req-1")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(createSubmitCredentialTypesRequest())))
 				.andExpect(status().isOk());
-		verify(partnerManagementService, times(1)).submitCredentialTypesRequest(argThat(request ->
-				"req-1".equals(request.getPartnerPolicyRequestId())));
+		verify(partnerManagementService, times(1)).submitCredentialTypesRequest(eq("req-1"), any(CredentialTypeRequestDto.class));
 	}
 
 	@Test
@@ -1304,7 +1303,6 @@ public class PartnerManagementControllerTest {
 	private RequestWrapperV2<CredentialTypeRequestDto> createSubmitCredentialTypesRequest() {
 		RequestWrapperV2<CredentialTypeRequestDto> request = new RequestWrapperV2<>();
 		CredentialTypeRequestDto requestDto = new CredentialTypeRequestDto();
-		requestDto.setPartnerPolicyRequestId("body-value-should-be-overridden");
 		requestDto.setCredentialType("auth");
 		request.setRequest(requestDto);
 		return request;
