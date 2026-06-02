@@ -9979,120 +9979,6 @@
                 }
             }
         },
-        "/partner-policy-requests/{requestId}/credential-types-request": {
-            "post": {
-                "tags": [
-                    "partner-service-controller"
-                ],
-                "summary": "NEW: Submit credential type request",
-                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{requestId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
-                "operationId": "submitCredentialTypesRequest",
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "requestId",
-                        "in": "path",
-                        "required": true,
-                        "description": "Business partner-policy request id (`pms.partner_policy_request.req_id`).",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string"
-                                    },
-                                    "version": {
-                                        "type": "string"
-                                    },
-                                    "requesttime": {
-                                        "type": "string"
-                                    },
-                                    "metadata": {
-                                        "type": "object",
-                                        "nullable": true
-                                    },
-                                    "request": {
-                                        "type": "object",
-                                        "properties": {
-                                            "partnerPolicyRequestId": {
-                                                "type": "string",
-                                                "minLength": 1,
-                                                "maxLength": 36
-                                            },
-                                            "credentialType": {
-                                                "type": "string",
-                                                "minLength": 1,
-                                                "maxLength": 128
-                                            }
-                                        },
-                                        "required": [
-                                            "partnerPolicyRequestId",
-                                            "credentialType"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "request"
-                                ]
-                            },
-                            "example": {
-                                "id": "mosip.pms.partners.credentialtypes.request.post",
-                                "version": "1.0",
-                                "requesttime": "2026-01-01T00:00:00.000Z",
-                                "metadata": null,
-                                "request": {
-                                    "partnerPolicyRequestId": "179392",
-                                    "credentialType": "auth"
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ResponseWrapperString"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
-                "x-stoplight": {
-                    "id": "crdt7y2k9m1pqw"
-                }
-            }
-        },
         "/partner-policy-requests/{requestId}/bio-extractors-request": {
             "get": {
                 "summary": "NEW: Get bio-extractor requests for a partner-policy request",
@@ -10252,7 +10138,7 @@
                 "tags": [
                     "partner-management-controller"
                 ],
-                "summary": "Submit bio extractors request",
+                "summary": "NEW: Add bio extractors for partner policy request",
                 "description": "Submits bio extractor details for an **in-progress** partner policy mapping request identified by `{requestId}`. Rows are persisted for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request with the given `{requestId}` (`pms.partner_policy_request.req_id`) must exist with status **IN_PROGRESS**.\r\n- Only **one** bio-extractors submission is accepted per partner policy request; subsequent calls return a business error.\r\n- Attribute name + biometric modality combinations in the payload must be unique within the request and must not duplicate existing extractor configuration for the same partner and policy.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/bioextractors/{policyId}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors`. Accessible by both partner users and PARTNER_ADMIN. Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
                 "operationId": "submitBioExtractorsRequest",
                 "parameters": [
@@ -10426,6 +10312,118 @@
             ]
         },
         "/partner-policy-requests/{requestId}/credential-types-request": {
+            "post": {
+                "tags": [
+                    "partner-management-controller"
+                ],
+                "summary": "NEW: Add a credential type for partner policy request",
+                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{requestId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "operationId": "submitCredentialTypesRequest",
+                "parameters": [
+                    {
+                        "name": "Cookie",
+                        "in": "header",
+                        "description": "Authorization={jwt_token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Business partner-policy request id (`pms.partner_policy_request.req_id`).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "type": "string"
+                                    },
+                                    "requesttime": {
+                                        "type": "string"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "nullable": true
+                                    },
+                                    "request": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partnerPolicyRequestId": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 36
+                                            },
+                                            "credentialType": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 128
+                                            }
+                                        },
+                                        "required": [
+                                            "partnerPolicyRequestId",
+                                            "credentialType"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "request"
+                                ]
+                            },
+                            "example": {
+                                "id": "mosip.pms.partners.credentialtypes.request.post",
+                                "version": "1.0",
+                                "requesttime": "2026-01-01T00:00:00.000Z",
+                                "metadata": null,
+                                "request": {
+                                    "partnerPolicyRequestId": "179392",
+                                    "credentialType": "auth"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWrapperString"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "crdt7y2k9m1pqw"
+                }
+            },
             "get": {
                 "tags": [
                     "partner-management-controller"
