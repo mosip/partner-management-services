@@ -1053,22 +1053,38 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			String partnerId = parentRequest.getPartner().getId();
 			validateLoggedInUserAuthorization(partnerId);
 
-			List<PartnerPolicyBioextractRequest> rows =
-					partnerPolicyBioextractRequestRepository
-							.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
 			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
 			responseWrapper.setStatusCode(parentRequest.getStatusCode());
 
-			List<BioExtractorsDto> extractors = (rows == null ? List.<BioExtractorsDto>of() :
-					rows.stream().map(r -> {
-						BioExtractorsDto dto = new BioExtractorsDto();
-						dto.setAttributeName(r.getAttributeName());
-						dto.setBiometric(r.getBiometricModality());
-						dto.setBiometricSubTypes(r.getBiometricSubTypes());
-						dto.setExtractorProvider(r.getExtractorProvider());
-						dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
-						return dto;
-					}).toList());
+			List<BioExtractorsDto> extractors;
+			if (APPROVED.equalsIgnoreCase(parentRequest.getStatusCode())) {
+				List<BiometricExtractorProvider> finalRows = extractorProviderRepository
+						.findActiveByPartnerAndPolicyId(partnerId, parentRequest.getPolicyId());
+				extractors = (finalRows == null ? List.<BioExtractorsDto>of() :
+						finalRows.stream().map(r -> {
+							BioExtractorsDto dto = new BioExtractorsDto();
+							dto.setAttributeName(r.getAttributeName());
+							dto.setBiometric(r.getBiometricModality());
+							dto.setBiometricSubTypes(r.getBiometricSubTypes());
+							dto.setExtractorProvider(r.getExtractorProvider());
+							dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+							return dto;
+						}).toList());
+			} else {
+				List<PartnerPolicyBioextractRequest> rows =
+						partnerPolicyBioextractRequestRepository
+								.findByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+				extractors = (rows == null ? List.<BioExtractorsDto>of() :
+						rows.stream().map(r -> {
+							BioExtractorsDto dto = new BioExtractorsDto();
+							dto.setAttributeName(r.getAttributeName());
+							dto.setBiometric(r.getBiometricModality());
+							dto.setBiometricSubTypes(r.getBiometricSubTypes());
+							dto.setExtractorProvider(r.getExtractorProvider());
+							dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+							return dto;
+						}).toList());
+			}
 
 			BioExtractorsResponseDto responseDto = new BioExtractorsResponseDto();
 			responseDto.setExtractors(extractors);
@@ -1199,18 +1215,29 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			String partnerId = parentRequest.getPartner().getId();
 			validateLoggedInUserAuthorization(partnerId);
 
-			Optional<PartnerPolicyCredentialTypeRequest> row =
-					partnerPolicyCredentialTypeRequestRepository
-							.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
 			responseWrapper.setPartnerPolicyRequestId(parentRequest.getId());
 			responseWrapper.setStatusCode(parentRequest.getStatusCode());
 
 			CredentialTypesResponseDto responseDto = new CredentialTypesResponseDto();
 			String credentialType = null;
-			if (row.isPresent()) {
-				credentialType = row.get().getCredentialType();
-				if (credentialType != null) {
-					credentialType = credentialType.trim().isEmpty() ? null : credentialType.trim();
+			if (APPROVED.equalsIgnoreCase(parentRequest.getStatusCode())) {
+				List<PartnerPolicyCredentialType> finalRows = partnerPolicyCredentialTypeRepository
+						.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, parentRequest.getPolicyId());
+				if (finalRows != null && !finalRows.isEmpty()) {
+					credentialType = finalRows.get(0).getId().getCredentialType();
+					if (credentialType != null) {
+						credentialType = credentialType.trim().isEmpty() ? null : credentialType.trim();
+					}
+				}
+			} else {
+				Optional<PartnerPolicyCredentialTypeRequest> row =
+						partnerPolicyCredentialTypeRequestRepository
+								.findFirstByPartnerPolicyRequestIdOrderByCrDtimesAsc(parentRequest.getId());
+				if (row.isPresent()) {
+					credentialType = row.get().getCredentialType();
+					if (credentialType != null) {
+						credentialType = credentialType.trim().isEmpty() ? null : credentialType.trim();
+					}
 				}
 			}
 			responseDto.setCredentialType(credentialType);
