@@ -8309,9 +8309,19 @@
                     {
                         "name": "notificationType",
                         "in": "query",
-                        "description": "Optional request parameter. Filter notifications by type. Allowed values: `root`, `intermediate`, `partner`, `weekly`, `sbi`, `ftm-chip`, `apikey`, `misp`.",
+                        "description": "Optional request parameter. Filter notifications by type. Allowed values: `ROOT_CERT_EXPIRY`, `INTERMEDIATE_CERT_EXPIRY`, `PARTNER_CERT_EXPIRY`, `WEEKLY_SUMMARY`, `SBI_EXPIRY`, `FTM_CHIP_CERT_EXPIRY`, `API_KEY_EXPIRY`, `MISP_LICENSE_KEY_EXPIRY`.",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "ROOT_CERT_EXPIRY",
+                                "INTERMEDIATE_CERT_EXPIRY",
+                                "PARTNER_CERT_EXPIRY",
+                                "WEEKLY_SUMMARY",
+                                "SBI_EXPIRY",
+                                "FTM_CHIP_CERT_EXPIRY",
+                                "API_KEY_EXPIRY",
+                                "MISP_LICENSE_KEY_EXPIRY"
+                            ]
                         }
                     },
                     {
@@ -8325,7 +8335,7 @@
                     {
                         "name": "certificateId",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `certificateId`. To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `certificateId`. To use this filter set `notificationType` as `ROOT_CERT_EXPIRY` / `INTERMEDIATE_CERT_EXPIRY` / `PARTNER_CERT_EXPIRY`",
                         "schema": {
                             "type": "string"
                         }
@@ -8333,7 +8343,7 @@
                     {
                         "name": "issuedBy",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given issuedBy.To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given issuedBy. To use this filter set `notificationType` as `ROOT_CERT_EXPIRY` / `INTERMEDIATE_CERT_EXPIRY` / `PARTNER_CERT_EXPIRY`",
                         "schema": {
                             "type": "string"
                         }
@@ -8341,7 +8351,7 @@
                     {
                         "name": "issuedTo",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given issuedTo.To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given issuedTo. To use this filter set `notificationType` as `ROOT_CERT_EXPIRY` / `INTERMEDIATE_CERT_EXPIRY` / `PARTNER_CERT_EXPIRY`",
                         "schema": {
                             "type": "string"
                         }
@@ -8349,7 +8359,7 @@
                     {
                         "name": "partnerDomain",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `partnerDomain`.To use this filter set `notificationType` as `root` / `intermediate` / `partner`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `partnerDomain`. To use this filter set `notificationType` as `ROOT_CERT_EXPIRY` / `INTERMEDIATE_CERT_EXPIRY` / `PARTNER_CERT_EXPIRY`",
                         "schema": {
                             "type": "string"
                         }
@@ -8357,7 +8367,7 @@
                     {
                         "name": "expiryDate",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `root` / `intermediate` / `partner` / `sbi` / `ftm-chip` / `apikey` / `misp`",
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `expiryDate`. Expiry date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `ROOT_CERT_EXPIRY` / `INTERMEDIATE_CERT_EXPIRY` / `PARTNER_CERT_EXPIRY` / `SBI_EXPIRY` / `FTM_CHIP_CERT_EXPIRY` / `API_KEY_EXPIRY` / `MISP_LICENSE_KEY_EXPIRY`",
                         "schema": {
                             "type": "string"
                         }
@@ -8368,7 +8378,7 @@
                         },
                         "in": "query",
                         "name": "createdFromDate",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `createdFromDate`. Created from date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `weekly`"
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `createdFromDate`. Created from date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `WEEKLY_SUMMARY`"
                     },
                     {
                         "schema": {
@@ -8376,7 +8386,7 @@
                         },
                         "in": "query",
                         "name": "createdToDate",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `createdToDate`. Created to date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `weekly`"
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `createdToDate`. Created to date should be in `yyyy-MM-dd` format. To use this filter set `notificationType` as `WEEKLY_SUMMARY`"
                     },
                     {
                         "schema": {
@@ -8384,7 +8394,7 @@
                         },
                         "in": "query",
                         "name": "apiKeyName",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `apiKeyName`. To use this filter set `notificationType` as `apikey`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `apiKeyName`. To use this filter set `notificationType` as `API_KEY_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8392,7 +8402,7 @@
                         },
                         "in": "query",
                         "name": "policyName",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `policyName`. To use this filter set `notificationType` as `apikey` or `misp`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `policyName`. To use this filter set `notificationType` as `API_KEY_EXPIRY` or `MISP_LICENSE_KEY_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8400,7 +8410,7 @@
                         },
                         "in": "query",
                         "name": "ftmId",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `ftmId`. To use this filter set `notificationType` as `ftm-chip`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `ftmId`. To use this filter set `notificationType` as `FTM_CHIP_CERT_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8408,7 +8418,7 @@
                         },
                         "in": "query",
                         "name": "make",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `make`. To use this filter set `notificationType` as `ftm-chip`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `make`. To use this filter set `notificationType` as `FTM_CHIP_CERT_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8416,7 +8426,7 @@
                         },
                         "in": "query",
                         "name": "model",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `model`. To use this filter set `notificationType` as `ftm-chip` ."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `model`. To use this filter set `notificationType` as `FTM_CHIP_CERT_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8424,7 +8434,7 @@
                         },
                         "in": "query",
                         "name": "sbiId",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `sbiId`. To use this filter set `notificationType` as `sbi`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `sbiId`. To use this filter set `notificationType` as `SBI_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8432,7 +8442,7 @@
                         },
                         "in": "query",
                         "name": "sbiVersion",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `sbiId`. To use this filter set `notificationType` as `sbi`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `sbiVersion`. To use this filter set `notificationType` as `SBI_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8440,7 +8450,7 @@
                         },
                         "in": "query",
                         "name": "mispLicenseKeyName",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `mispLicenseKeyName`. To use this filter set `notificationType` as `misp`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `mispLicenseKeyName`. To use this filter set `notificationType` as `MISP_LICENSE_KEY_EXPIRY`."
                     },
                     {
                         "schema": {
@@ -8448,7 +8458,7 @@
                         },
                         "in": "query",
                         "name": "mispPartnerId",
-                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will matched to the given `mispPartnerId`. To use this filter set `notificationType` as `misp`."
+                        "description": "Optional request parameter. Can be used to filter the response by the given value. Notification details will be matched to the given `mispPartnerId`. To use this filter set `notificationType` as `MISP_LICENSE_KEY_EXPIRY`."
                     }
                 ],
                 "responses": {
@@ -8790,7 +8800,7 @@
                 "x-stoplight": {
                     "id": "86rs9kczv4mw3"
                 },
-                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional parameter, `notificationType`. \r\nAllowed values for the same will be `root`, `intermediate`, `partner`, `weekly`,`sbi`, `ftm-chip`, `apikey` and `misp`. \r\nIf the `notificationType` is `root`, `intermediate`, `weekly` or `misp` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n",
+                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional parameter, `notificationType`. \r\nAllowed values for the same will be `ROOT_CERT_EXPIRY`, `INTERMEDIATE_CERT_EXPIRY`, `PARTNER_CERT_EXPIRY`, `WEEKLY_SUMMARY`, `SBI_EXPIRY`, `FTM_CHIP_CERT_EXPIRY`, `API_KEY_EXPIRY` and `MISP_LICENSE_KEY_EXPIRY`. \r\nIf the `notificationType` is `ROOT_CERT_EXPIRY`, `INTERMEDIATE_CERT_EXPIRY`, `WEEKLY_SUMMARY` or `MISP_LICENSE_KEY_EXPIRY` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n\r\nIf an unrecognised `notificationType` value is provided, an error response will be returned instead of an empty result.\r\n",
                 "tags": [
                     "notifications-controller"
                 ]
