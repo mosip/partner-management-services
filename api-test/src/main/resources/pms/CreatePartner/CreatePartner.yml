@@ -1,5 +1,5 @@
 createPartnerSelfRegistration:
-   Pms_PartnerSelfRegistration_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerauth
@@ -11,7 +11,7 @@ createPartnerSelfRegistration:
     "address": "Bangalore",
     "contactNumber": "8553967572",
     "emailId": "mosip98763@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
+    "organizationName": "pms-111999",
     "partnerId": "pms-111999",
     "partnerType": "AUTH_PARTNER",
     "policyGroup": "mosip policy group 19234",
@@ -125,12 +125,11 @@ createPartnerSelfRegistration:
   ]
 }'
 
-   Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_Device_provider_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerdevice
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_06
-
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/CreatePartner/createPartnerResult
@@ -138,7 +137,7 @@ createPartnerSelfRegistration:
     "address": "Bangalore",
     "contactNumber": "8553967572",
     "emailId": "mosip98768@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
+    "organizationName": "pms-111998",
     "partnerId": "pms-111998",
     "partnerType": "Device_Provider",
     "policyGroup": "$REMOVE$",
@@ -149,7 +148,7 @@ createPartnerSelfRegistration:
         "status": "InProgress"
     }'
     
-   Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke:
+   Pms_PartnerSelfRegistration_Ftm_provider_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
       description: Creating a Partner
       role: partnerftm
@@ -161,7 +160,7 @@ createPartnerSelfRegistration:
     "address": "Bangalore",
     "contactNumber": "8553967572",
     "emailId": "mosip98788@gmail.com",
-    "organizationName": "PMS_API_ABC_ORG",
+    "organizationName": "pms-111888",
     "partnerId": "pms-111888",
     "partnerType": "FTM_Provider",
     "policyGroup": "$REMOVE$",

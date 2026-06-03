@@ -6,3 +6,7 @@ delete from keymgr.partner_cert_store where cert_subject ='CN=PMS_API_ABC_ORG,OU
 DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111999';
 DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111998';
 DELETE FROM keymgr.key_alias where app_id = 'PARTNER' AND ref_id = 'pms-111888';
+
+delete from mosip_keymgr.keymgr.ca_cert_store where cert_subject LIKE '%O=pms-111%';
+delete from mosip_keymgr.keymgr.partner_cert_store where cert_subject LIKE '%O=pms-111%';
+delete from mosip_keymgr.keymgr.key_alias where app_id = 'PARTNER' AND ref_id LIKE '%pms-111%';

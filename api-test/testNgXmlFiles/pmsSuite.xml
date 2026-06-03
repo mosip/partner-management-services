@@ -79,9 +79,9 @@
 	<test name="CreatePartner">
 		<parameter name="ymlFile"
 			value="pms/CreatePartner/CreatePartner.yml" />
-		<parameter name="idKeyName" value="id" />
+		<parameter name="idKeyName" value="partnerId" />
 		<classes>
-			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+			<class name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 
