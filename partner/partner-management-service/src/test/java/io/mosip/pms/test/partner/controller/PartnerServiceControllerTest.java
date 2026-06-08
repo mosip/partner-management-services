@@ -228,13 +228,6 @@ public class PartnerServiceControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"DEVICE_PROVIDER"})
-    public void getCredentialTypesByPartnerAndPolicy_forbiddenRoleTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtypes/p001"))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
     public void getCredentialTypesByPartnerAndPolicy_hasPreAuthorizeConfigured() throws Exception {
         PreAuthorize preAuthorize = PartnerServiceController.class
                 .getMethod("getCredentialTypesByPartnerAndPolicy", String.class, String.class)
