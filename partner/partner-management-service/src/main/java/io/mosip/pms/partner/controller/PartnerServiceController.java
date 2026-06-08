@@ -67,6 +67,7 @@ import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -217,6 +218,21 @@ public class PartnerServiceController {
 	public ResponseEntity<ResponseWrapper<PartnerCredentialTypePolicyDto>> getCredentialTypePolicy(@PathVariable @Valid String partnerId,@PathVariable @Valid String credentialType) throws JsonParseException, JsonMappingException, IOException{
 		ResponseWrapper<PartnerCredentialTypePolicyDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.getPartnerCredentialTypePolicy(credentialType, partnerId));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscredentialtypes())")
+	@RequestMapping(value = "/{partnerId}/credentialtypes/{policyId}", method = RequestMethod.GET)
+	@Operation(summary = "Get credential type for a partner and policy", description = "Returns the active credential type mapped to the given partner and policy from the partner_policy_credential_type table.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseEntity<ResponseWrapper<CredentialTypesResponseDto>> getCredentialTypesByPartnerAndPolicy(
+			@PathVariable String partnerId, @PathVariable String policyId) {
+		ResponseWrapper<CredentialTypesResponseDto> response = new ResponseWrapper<>();
+		response.setResponse(partnerService.getCredentialTypesByPartnerAndPolicy(partnerId, policyId));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

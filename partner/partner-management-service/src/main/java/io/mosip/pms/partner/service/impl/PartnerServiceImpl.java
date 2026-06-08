@@ -137,6 +137,7 @@ import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -1218,6 +1219,20 @@ public class PartnerServiceImpl implements PartnerService {
 	private boolean isPartnerAlreadyMapped(String partnerId, String credentialType) {
 		Optional<PartnerPolicyCredentialType> existingMapping = Optional.ofNullable(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType));
 		return existingMapping.isPresent();
+	}
+
+	@Override
+	public CredentialTypesResponseDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
+		List<PartnerPolicyCredentialType> records = partnerCredentialTypePolicyRepo
+				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
+		if (records.isEmpty()) {
+			LOGGER.error("No active credential type found for partner {} and policy {}", partnerId, policyId);
+			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+		}
+		CredentialTypesResponseDto response = new CredentialTypesResponseDto();
+		response.setCredentialType(records.get(0).getId().getCredentialType());
+		return response;
 	}
 
 	@Override
