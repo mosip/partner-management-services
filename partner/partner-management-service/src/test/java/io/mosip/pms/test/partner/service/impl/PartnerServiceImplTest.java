@@ -822,6 +822,58 @@ public class PartnerServiceImplTest {
 		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId("12345", "12345")).thenReturn(data);
 		pserviceImpl.getBiometricExtractors("12345", "12345");
 	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getCredentialTypesByPartnerAndPolicyTest_001() {
+		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
+				.thenReturn(new ArrayList<>());
+		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+	}
+
+	@Test
+	public void getCredentialTypesByPartnerAndPolicyTest_002() {
+		PartnerPolicyCredentialType record = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setPartId("12345");
+		key.setPolicyId("p001");
+		key.setCredentialType("euin");
+		record.setId(key);
+		record.setIsActive(true);
+		record.setCrBy("system");
+		record.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
+				.thenReturn(List.of(record));
+		List<CredentialTypesResponseDto> result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals("euin", result.get(0).getCredentialType());
+	}
+
+	@Test
+	public void getCredentialTypesByPartnerAndPolicyTest_003() {
+		PartnerPolicyCredentialType r1 = buildCredentialTypeRecord("12345", "p001", "euin");
+		PartnerPolicyCredentialType r2 = buildCredentialTypeRecord("12345", "p001", "qrcode");
+		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
+				.thenReturn(List.of(r1, r2));
+		List<CredentialTypesResponseDto> result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertTrue(result.stream().anyMatch(d -> "euin".equals(d.getCredentialType())));
+		assertTrue(result.stream().anyMatch(d -> "qrcode".equals(d.getCredentialType())));
+	}
+
+	private PartnerPolicyCredentialType buildCredentialTypeRecord(String partnerId, String policyId, String credentialType) {
+		PartnerPolicyCredentialType record = new PartnerPolicyCredentialType();
+		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
+		key.setPartId(partnerId);
+		key.setPolicyId(policyId);
+		key.setCredentialType(credentialType);
+		record.setId(key);
+		record.setIsActive(true);
+		record.setCrBy("system");
+		record.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		return record;
+	}
 	
 	@Test
 	@WithMockUser(roles = {"PARTNER"})

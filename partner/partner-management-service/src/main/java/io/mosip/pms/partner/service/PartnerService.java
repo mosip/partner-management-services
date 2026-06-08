@@ -188,7 +188,7 @@ public interface PartnerService {
 	 */
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType,String partnerId) throws JsonParseException, JsonMappingException, IOException;
 
-	public CredentialTypesResponseDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId);
+	public List<CredentialTypesResponseDto> getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId);
 	
 	/**
 	 * 

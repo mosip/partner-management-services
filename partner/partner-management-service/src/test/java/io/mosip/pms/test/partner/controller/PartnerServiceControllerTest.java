@@ -199,6 +199,52 @@ public class PartnerServiceControllerTest {
 
     @Test
     @WithMockUser(roles = {"PARTNER"})
+    public void getCredentialTypesByPartnerAndPolicyTest() throws Exception {
+        CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
+        dto.setCredentialType("euin");
+        when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(List.of(dto));
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtypes/p001"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"CREDENTIAL_PARTNER"})
+    public void getCredentialTypesByPartnerAndPolicy_credentialPartnerRoleTest() throws Exception {
+        CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
+        dto.setCredentialType("qrcode");
+        when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(List.of(dto));
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtypes/p001"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER_ADMIN"})
+    public void getCredentialTypesByPartnerAndPolicy_adminRoleTest() throws Exception {
+        CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
+        dto.setCredentialType("auth");
+        when(partnerService.getCredentialTypesByPartnerAndPolicy("adminPartner", "pol99")).thenReturn(List.of(dto));
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/adminPartner/credentialtypes/pol99"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = {"DEVICE_PROVIDER"})
+    public void getCredentialTypesByPartnerAndPolicy_forbiddenRoleTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtypes/p001"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getCredentialTypesByPartnerAndPolicy_hasPreAuthorizeConfigured() throws Exception {
+        PreAuthorize preAuthorize = PartnerServiceController.class
+                .getMethod("getCredentialTypesByPartnerAndPolicy", String.class, String.class)
+                .getAnnotation(PreAuthorize.class);
+        assertNotNull(preAuthorize);
+        assertEquals("hasAnyRole(@authorizedRoles.getGetpartnerscredentialtypes())", preAuthorize.value());
+    }
+
+    @Test
+    @WithMockUser(roles = {"PARTNER"})
     public void retrievePartnerCertificateTest() throws Exception {
         PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = new PartnerCertDownloadResponeDto();
         when(partnerService.getPartnerCertificate(any())).thenReturn(partnerCertDownloadResponeDto);

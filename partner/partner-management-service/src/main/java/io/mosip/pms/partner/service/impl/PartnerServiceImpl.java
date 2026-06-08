@@ -1222,7 +1222,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public CredentialTypesResponseDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
+	public List<CredentialTypesResponseDto> getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
 		List<PartnerPolicyCredentialType> records = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
 		if (records.isEmpty()) {
@@ -1230,9 +1230,13 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 		}
-		CredentialTypesResponseDto response = new CredentialTypesResponseDto();
-		response.setCredentialType(records.get(0).getId().getCredentialType());
-		return response;
+		List<CredentialTypesResponseDto> result = new ArrayList<>();
+		for (PartnerPolicyCredentialType record : records) {
+			CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
+			dto.setCredentialType(record.getId().getCredentialType());
+			result.add(dto);
+		}
+		return result;
 	}
 
 	@Override
