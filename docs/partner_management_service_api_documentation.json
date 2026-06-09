@@ -271,15 +271,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -643,15 +643,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -1918,17 +1918,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Aray of error code and message indicating the error that has occured"
+                                                        "description": "Array of error code and message indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -2113,15 +2113,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -2540,17 +2540,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -2715,17 +2715,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -3060,17 +3060,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Aray of error code and message indicating the error that has occured"
+                                                        "description": "Array of error code and message indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -3338,15 +3338,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Array of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -3537,17 +3537,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -3730,17 +3730,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Array of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Aray of error code and message indicating the error that has occured"
+                                                        "description": "Array of error code and message indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -3944,17 +3944,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Array of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -4139,17 +4139,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Array of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -4304,11 +4304,11 @@
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique identifier of the error that occured while processing the request"
+                                                        "description": "Unique identifier of the error that occurred while processing the request"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message with details about the error that occured while processing the request"
+                                                        "description": "Message with details about the error that occurred while processing the request"
                                                     }
                                                 }
                                             }
@@ -4739,13 +4739,13 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured. eSignet error codes: PMS_ESI_009 (Invalid grant type), PMS_ESI_010 (Invalid client authentication method), PMS_ESI_011 (Generic eSignet error), PMS_ESI_012 (Invalid client id), PMS_ESI_013 (Invalid client name), PMS_ESI_014 (Invalid claim), PMS_ESI_015 (Invalid authentication context reference), PMS_ESI_016 (Invalid URI), PMS_ESI_017 (Invalid redirect URI), PMS_ESI_018 (Invalid client name value), PMS_ESI_019 (Invalid language code), PMS_ESI_020 (Invalid additional config)",
+                                                        "description": "Unique code of the error indicating the error that has occurred. eSignet error codes: PMS_ESI_009 (Invalid grant type), PMS_ESI_010 (Invalid client authentication method), PMS_ESI_011 (Generic eSignet error), PMS_ESI_012 (Invalid client id), PMS_ESI_013 (Invalid client name), PMS_ESI_014 (Invalid claim), PMS_ESI_015 (Invalid authentication context reference), PMS_ESI_016 (Invalid URI), PMS_ESI_017 (Invalid redirect URI), PMS_ESI_018 (Invalid client name value), PMS_ESI_019 (Invalid language code), PMS_ESI_020 (Invalid additional config)",
                                                         "enum": [
                                                             "PMS_ESI_009",
                                                             "PMS_ESI_010",
@@ -4763,7 +4763,7 @@
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -5040,15 +5040,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -5295,17 +5295,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -5655,13 +5655,13 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured. eSignet error codes: PMS_ESI_009 (Invalid grant type), PMS_ESI_010 (Invalid client authentication method), PMS_ESI_011 (Generic eSignet error), PMS_ESI_012 (Invalid client id), PMS_ESI_013 (Invalid client name), PMS_ESI_014 (Invalid claim), PMS_ESI_015 (Invalid authentication context reference), PMS_ESI_016 (Invalid URI), PMS_ESI_017 (Invalid redirect URI), PMS_ESI_018 (Invalid client name value), PMS_ESI_019 (Invalid language code), PMS_ESI_020 (Invalid additional config)",
+                                                        "description": "Unique code of the error indicating the error that has occurred. eSignet error codes: PMS_ESI_009 (Invalid grant type), PMS_ESI_010 (Invalid client authentication method), PMS_ESI_011 (Generic eSignet error), PMS_ESI_012 (Invalid client id), PMS_ESI_013 (Invalid client name), PMS_ESI_014 (Invalid claim), PMS_ESI_015 (Invalid authentication context reference), PMS_ESI_016 (Invalid URI), PMS_ESI_017 (Invalid redirect URI), PMS_ESI_018 (Invalid client name value), PMS_ESI_019 (Invalid language code), PMS_ESI_020 (Invalid additional config)",
                                                         "enum": [
                                                             "PMS_ESI_009",
                                                             "PMS_ESI_010",
@@ -5679,7 +5679,7 @@
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -5873,17 +5873,17 @@
                                         },
                                         "errors": {
                                             "type": "array",
-                                            "description": "Aray of error code and message indicating the error that has occured",
+                                            "description": "Array of error code and message indicating the error that has occurred",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -6534,15 +6534,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -6849,15 +6849,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -7141,15 +7141,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -7388,15 +7388,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -7697,15 +7697,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -8006,15 +8006,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -8277,15 +8277,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -8391,15 +8391,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -8916,15 +8916,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -9057,15 +9057,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -9218,15 +9218,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -9326,15 +9326,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Aray of error code and message indicating the error that has occured",
+                                                "description": "Array of error code and message indicating the error that has occurred",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occured"
+                                                        "description": "Unique code of the error indicating the error that has occurred"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occured"
+                                                        "description": "Message indicating the error that has occurred"
                                                     }
                                                 }
                                             }
@@ -10789,15 +10789,15 @@
             },
             "ErrorResponse": {
                 "type": "object",
-                "description": "Aray of error code and message indicating the error that has occured",
+                "description": "Array of error code and message indicating the error that has occurred",
                 "properties": {
                     "errorCode": {
                         "type": "string",
-                        "description": "Unique code of the error indicating the error that has occured"
+                        "description": "Unique code of the error indicating the error that has occurred"
                     },
                     "message": {
                         "type": "string",
-                        "description": "Message indicating the error that has occured"
+                        "description": "Message indicating the error that has occurred"
                     }
                 },
                 "x-stoplight": {
@@ -13091,11 +13091,11 @@
                             "properties": {
                                 "errorCode": {
                                     "type": "string",
-                                    "description": "Unique identifier of the error that occured while processing the request"
+                                    "description": "Unique identifier of the error that occurred while processing the request"
                                 },
                                 "message": {
                                     "type": "string",
-                                    "description": "Message with details about the error that occured while processing the request"
+                                    "description": "Message with details about the error that occurred while processing the request"
                                 }
                             }
                         }
