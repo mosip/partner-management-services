@@ -1223,6 +1223,42 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin) {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.error("User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			boolean isPartnerBelongsToUser = false;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(partnerId)) {
+					isPartnerBelongsToUser = true;
+					break;
+				}
+			}
+			if (!isPartnerBelongsToUser) {
+				LOGGER.error("The given partner ID does not belong to the user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorMessage());
+			}
+		}
+		Partner partner = partnerHelper.getValidPartner(partnerId, false);
+		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
+				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
+			LOGGER.error("Partner type {} is not valid for credential type operations.", partner.getPartnerTypeCode());
+			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
+					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
+		}
+		partnerHelper.validatePolicyGroupId(partner, partnerId);
+		AuthPolicy authPolicy = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), policyId);
+		if (authPolicy == null) {
+			LOGGER.error("Policy id {} does not exist or is not active under partner's policy group.", policyId);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
+					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorMessage());
+		}
 		List<PartnerPolicyCredentialType> records = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
 		if (records.isEmpty()) {

@@ -825,6 +825,11 @@ public class PartnerServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void getCredentialTypesByPartnerAndPolicyTest_001() {
+		Partner p = buildValidCredentialPartner("12345");
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(true);
+		Mockito.when(partnerHelper.getValidPartner("12345", false)).thenReturn(p);
+		Mockito.when(authPolicyRepository.findActivePoliciesByPolicyGroupId(Mockito.any(), Mockito.eq("p001")))
+				.thenReturn(createAuthPolicy());
 		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
 				.thenReturn(new ArrayList<>());
 		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
@@ -832,15 +837,12 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void getCredentialTypesByPartnerAndPolicyTest_002() {
-		PartnerPolicyCredentialType record = new PartnerPolicyCredentialType();
-		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
-		key.setPartId("12345");
-		key.setPolicyId("p001");
-		key.setCredentialType("euin");
-		record.setId(key);
-		record.setIsActive(true);
-		record.setCrBy("system");
-		record.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		Partner p = buildValidCredentialPartner("12345");
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(true);
+		Mockito.when(partnerHelper.getValidPartner("12345", false)).thenReturn(p);
+		Mockito.when(authPolicyRepository.findActivePoliciesByPolicyGroupId(Mockito.any(), Mockito.eq("p001")))
+				.thenReturn(createAuthPolicy());
+		PartnerPolicyCredentialType record = buildCredentialTypeRecord("12345", "p001", "euin");
 		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
 				.thenReturn(List.of(record));
 		CredentialTypesListDto result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
@@ -851,6 +853,11 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void getCredentialTypesByPartnerAndPolicyTest_003() {
+		Partner p = buildValidCredentialPartner("12345");
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(true);
+		Mockito.when(partnerHelper.getValidPartner("12345", false)).thenReturn(p);
+		Mockito.when(authPolicyRepository.findActivePoliciesByPolicyGroupId(Mockito.any(), Mockito.eq("p001")))
+				.thenReturn(createAuthPolicy());
 		PartnerPolicyCredentialType r1 = buildCredentialTypeRecord("12345", "p001", "euin");
 		PartnerPolicyCredentialType r2 = buildCredentialTypeRecord("12345", "p001", "qrcode");
 		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
@@ -860,6 +867,51 @@ public class PartnerServiceImplTest {
 		assertEquals(2, result.getCredentialTypes().size());
 		assertTrue(result.getCredentialTypes().contains("euin"));
 		assertTrue(result.getCredentialTypes().contains("qrcode"));
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getCredentialTypesByPartnerAndPolicyTest_004_nonAdminUserNotFound() {
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(false);
+		Mockito.when(partnerRepository.findByUserId(Mockito.anyString())).thenReturn(new ArrayList<>());
+		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getCredentialTypesByPartnerAndPolicyTest_005_nonAdminPartnerNotBelongToUser() {
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(false);
+		Partner other = new Partner();
+		other.setId("other-partner");
+		Mockito.when(partnerRepository.findByUserId(Mockito.anyString())).thenReturn(List.of(other));
+		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getCredentialTypesByPartnerAndPolicyTest_006_invalidPartnerType() {
+		Partner authPartner = new Partner();
+		authPartner.setId("12345");
+		authPartner.setPartnerTypeCode("Auth_Partner");
+		authPartner.setIsActive(true);
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(true);
+		Mockito.when(partnerHelper.getValidPartner("12345", false)).thenReturn(authPartner);
+		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void getCredentialTypesByPartnerAndPolicyTest_007_invalidPolicyId() {
+		Partner p = buildValidCredentialPartner("12345");
+		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(true);
+		Mockito.when(partnerHelper.getValidPartner("12345", false)).thenReturn(p);
+		Mockito.when(authPolicyRepository.findActivePoliciesByPolicyGroupId(Mockito.any(), Mockito.eq("bad-policy")))
+				.thenReturn(null);
+		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "bad-policy");
+	}
+
+	private Partner buildValidCredentialPartner(String partnerId) {
+		Partner p = new Partner();
+		p.setId(partnerId);
+		p.setPartnerTypeCode("Credential_Partner");
+		p.setIsActive(true);
+		return p;
 	}
 
 	private PartnerPolicyCredentialType buildCredentialTypeRecord(String partnerId, String policyId, String credentialType) {
