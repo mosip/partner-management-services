@@ -2097,14 +2097,14 @@
                                         },
                                         "response": {
                                             "nullable": true,
-                                            "type": "array",
-                                            "description": "List of active credential types mapped to the given partner and policy. Returns error PMS_PRT_064 when no active mapping exists.",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "credentialType": {
-                                                        "type": "string",
-                                                        "description": "The credential type mapped to the partner and policy (e.g., euin, qrcode)"
+                                            "type": "object",
+                                            "description": "Active credential types mapped to the given partner and policy. Returns error PMS_PRT_064 when no active mapping exists.",
+                                            "properties": {
+                                                "credentialTypes": {
+                                                    "type": "array",
+                                                    "description": "List of credential type names mapped to the partner and policy (e.g., euin, qrcode)",
+                                                    "items": {
+                                                        "type": "string"
                                                     }
                                                 }
                                             }
@@ -2135,11 +2135,9 @@
                                             "version": "1.0",
                                             "responseTime": "2024-01-01T10:00:00Z",
                                             "metadata": {},
-                                            "response": [
-                                                {
-                                                    "credentialType": "euin"
-                                                }
-                                            ],
+                                            "response": {
+                                                "credentialTypes": ["euin"]
+                                            },
                                             "errors": []
                                         }
                                     },
@@ -2169,12 +2167,6 @@
                         "description": "Forbidden"
                     }
                 },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
                 "x-stoplight": {
                     "id": "a3f8r2kcmx9p1"
                 }
