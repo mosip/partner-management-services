@@ -67,7 +67,7 @@ import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
-import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesListDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -229,9 +229,9 @@ public class PartnerServiceController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseEntity<ResponseWrapper<List<CredentialTypesResponseDto>>> getCredentialTypesByPartnerAndPolicy(
+	public ResponseEntity<ResponseWrapper<CredentialTypesListDto>> getCredentialTypesByPartnerAndPolicy(
 			@PathVariable String partnerId, @PathVariable String policyId) {
-		ResponseWrapper<List<CredentialTypesResponseDto>> response = new ResponseWrapper<>();
+		ResponseWrapper<CredentialTypesListDto> response = new ResponseWrapper<>();
 		response.setResponse(partnerService.getCredentialTypesByPartnerAndPolicy(partnerId, policyId));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

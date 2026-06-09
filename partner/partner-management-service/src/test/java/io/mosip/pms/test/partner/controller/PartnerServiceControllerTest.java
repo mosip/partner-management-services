@@ -200,9 +200,9 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER"})
     public void getCredentialTypesByPartnerAndPolicyTest() throws Exception {
-        CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
-        dto.setCredentialType("euin");
-        when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(List.of(dto));
+        CredentialTypesListDto dto = new CredentialTypesListDto();
+        dto.setCredentialTypes(List.of("euin"));
+        when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(dto);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtypes/p001"))
                 .andExpect(status().isOk());
     }
@@ -210,9 +210,9 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"CREDENTIAL_PARTNER"})
     public void getCredentialTypesByPartnerAndPolicy_credentialPartnerRoleTest() throws Exception {
-        CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
-        dto.setCredentialType("qrcode");
-        when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(List.of(dto));
+        CredentialTypesListDto dto = new CredentialTypesListDto();
+        dto.setCredentialTypes(List.of("qrcode"));
+        when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(dto);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/credentialtypes/p001"))
                 .andExpect(status().isOk());
     }
@@ -220,9 +220,9 @@ public class PartnerServiceControllerTest {
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void getCredentialTypesByPartnerAndPolicy_adminRoleTest() throws Exception {
-        CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
-        dto.setCredentialType("auth");
-        when(partnerService.getCredentialTypesByPartnerAndPolicy("adminPartner", "pol99")).thenReturn(List.of(dto));
+        CredentialTypesListDto dto = new CredentialTypesListDto();
+        dto.setCredentialTypes(List.of("auth"));
+        when(partnerService.getCredentialTypesByPartnerAndPolicy("adminPartner", "pol99")).thenReturn(dto);
         mockMvc.perform(MockMvcRequestBuilders.get("/partners/adminPartner/credentialtypes/pol99"))
                 .andExpect(status().isOk());
     }

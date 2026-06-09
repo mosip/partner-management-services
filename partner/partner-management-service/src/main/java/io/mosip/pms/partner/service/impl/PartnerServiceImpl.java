@@ -137,7 +137,7 @@ import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
-import io.mosip.pms.partner.response.dto.CredentialTypesResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesListDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -1222,7 +1222,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public List<CredentialTypesResponseDto> getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
+	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
 		List<PartnerPolicyCredentialType> records = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
 		if (records.isEmpty()) {
@@ -1230,13 +1230,13 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
 					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 		}
-		List<CredentialTypesResponseDto> result = new ArrayList<>();
+		List<String> types = new ArrayList<>();
 		for (PartnerPolicyCredentialType record : records) {
-			CredentialTypesResponseDto dto = new CredentialTypesResponseDto();
-			dto.setCredentialType(record.getId().getCredentialType());
-			result.add(dto);
+			types.add(record.getId().getCredentialType());
 		}
-		return result;
+		CredentialTypesListDto dto = new CredentialTypesListDto();
+		dto.setCredentialTypes(types);
+		return dto;
 	}
 
 	@Override

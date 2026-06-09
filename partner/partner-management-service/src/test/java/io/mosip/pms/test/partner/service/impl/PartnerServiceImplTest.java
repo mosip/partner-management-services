@@ -843,10 +843,10 @@ public class PartnerServiceImplTest {
 		record.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
 				.thenReturn(List.of(record));
-		List<CredentialTypesResponseDto> result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+		CredentialTypesListDto result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
 		assertNotNull(result);
-		assertEquals(1, result.size());
-		assertEquals("euin", result.get(0).getCredentialType());
+		assertEquals(1, result.getCredentialTypes().size());
+		assertEquals("euin", result.getCredentialTypes().get(0));
 	}
 
 	@Test
@@ -855,11 +855,11 @@ public class PartnerServiceImplTest {
 		PartnerPolicyCredentialType r2 = buildCredentialTypeRecord("12345", "p001", "qrcode");
 		Mockito.when(partnerCredentialTypePolicyRepo.findByPartnerIdAndPolicyIdAndIsActiveTrue("12345", "p001"))
 				.thenReturn(List.of(r1, r2));
-		List<CredentialTypesResponseDto> result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
+		CredentialTypesListDto result = pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
 		assertNotNull(result);
-		assertEquals(2, result.size());
-		assertTrue(result.stream().anyMatch(d -> "euin".equals(d.getCredentialType())));
-		assertTrue(result.stream().anyMatch(d -> "qrcode".equals(d.getCredentialType())));
+		assertEquals(2, result.getCredentialTypes().size());
+		assertTrue(result.getCredentialTypes().contains("euin"));
+		assertTrue(result.getCredentialTypes().contains("qrcode"));
 	}
 
 	private PartnerPolicyCredentialType buildCredentialTypeRecord(String partnerId, String policyId, String credentialType) {
