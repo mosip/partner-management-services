@@ -2039,7 +2039,7 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get credential types mapped to a partner and policy",
-                "description": "Returns all active credential types mapped to the given partner ID and policy ID\r\nfrom the `partner_policy_credential_type` table.\r\n\r\nThe endpoint queries for records where `is_active = true` and `is_deleted` is null or false,\r\nmatching both the given `partnerId` and `policyId`.\r\n\r\nIn the typical application flow, there is exactly one active credential type per partner-policy pair.\r\nHowever, since the database primary key is on `(part_id, policy_id, credential_type)`,\r\nmultiple records with the same `partnerId` and `policyId` but different credential types are\r\ntechnically possible (e.g., via direct DB inserts). This endpoint handles that case and returns\r\nall matching active records as an array.\r\n\r\nIf no active mapping exists for the given partner and policy, the endpoint returns error\r\ncode `PMS_PRT_064` (No details found).\r\n\r\nThis endpoint should be configured for the Roles: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN,\r\nCREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER\r\n",
+                "description": "Returns all active credential types mapped to the given partner ID and policy ID\r\nfrom the `partner_policy_credential_type` table.\r\n\r\nThe endpoint queries for records where `is_active = true` and `is_deleted` is null or false,\r\nmatching both the given `partnerId` and `policyId`.\r\n\r\nIn the typical application flow, there is exactly one active credential type per partner-policy pair.\r\nHowever, since the database primary key is on `(part_id, policy_id, credential_type)`,\r\nmultiple records with the same `partnerId` and `policyId` but different credential types are\r\ntechnically possible (e.g., via direct DB inserts). This endpoint handles that case and returns\r\nall matching active credential type names as a `credentialTypes` array inside the response object.\r\n\r\nIf no active mapping exists for the given partner and policy, the endpoint returns error\r\ncode `PMS_PRT_064` (No details found).\r\n\r\nThis endpoint should be configured for the Roles: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN,\r\nCREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER\r\n",
                 "operationId": "get-credential-types-by-partner-and-policy",
                 "parameters": [
                     {
@@ -2113,15 +2113,15 @@
                                             "type": "array",
                                             "items": {
                                                 "type": "object",
-                                                "description": "Array of error code and message indicating the error that has occurred",
+                                                "description": "Aray of error code and message indicating the error that has occured",
                                                 "properties": {
                                                     "errorCode": {
                                                         "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occurred. `PMS_PRT_064` when no active credential type mapping is found for the given partner and policy."
+                                                        "description": "Unique code of the error indicating the error that has occured"
                                                     },
                                                     "message": {
                                                         "type": "string",
-                                                        "description": "Message indicating the error that has occurred"
+                                                        "description": "Message indicating the error that has occured"
                                                     }
                                                 }
                                             }
@@ -2167,6 +2167,12 @@
                         "description": "Forbidden"
                     }
                 },
+                "servers": [
+                    {
+                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
+                        "description": "Partner Management Service"
+                    }
+                ],
                 "x-stoplight": {
                     "id": "a3f8r2kcmx9p1"
                 }
