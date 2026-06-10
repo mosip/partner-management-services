@@ -38,6 +38,7 @@ import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesListDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -186,6 +187,8 @@ public interface PartnerService {
 	 * @throws IOException
 	 */
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType,String partnerId) throws JsonParseException, JsonMappingException, IOException;
+
+	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId);
 	
 	/**
 	 * 
