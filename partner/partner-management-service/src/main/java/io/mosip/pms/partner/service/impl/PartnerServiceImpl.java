@@ -137,6 +137,7 @@ import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesListDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -1218,6 +1219,60 @@ public class PartnerServiceImpl implements PartnerService {
 	private boolean isPartnerAlreadyMapped(String partnerId, String credentialType) {
 		Optional<PartnerPolicyCredentialType> existingMapping = Optional.ofNullable(partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType));
 		return existingMapping.isPresent();
+	}
+
+	@Override
+	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin) {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.error("User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			boolean isPartnerBelongsToUser = false;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(partnerId)) {
+					isPartnerBelongsToUser = true;
+					break;
+				}
+			}
+			if (!isPartnerBelongsToUser) {
+				LOGGER.error("The given partner ID does not belong to the user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorMessage());
+			}
+		}
+		Partner partner = partnerHelper.getValidPartner(partnerId, false);
+		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
+				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
+			LOGGER.error("Partner type {} is not valid for credential type operations.", partner.getPartnerTypeCode());
+			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
+					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
+		}
+		partnerHelper.validatePolicyGroupId(partner, partnerId);
+		AuthPolicy authPolicy = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), policyId);
+		if (authPolicy == null) {
+			LOGGER.error("Policy id {} does not exist or is not active under partner's policy group.", policyId);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
+					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorMessage());
+		}
+		List<PartnerPolicyCredentialType> records = partnerCredentialTypePolicyRepo
+				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
+		if (records.isEmpty()) {
+			LOGGER.error("No active credential type found for partner {} and policy {}", partnerId, policyId);
+			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+		}
+		List<String> types = new ArrayList<>();
+		for (PartnerPolicyCredentialType record : records) {
+			types.add(record.getId().getCredentialType());
+		}
+		CredentialTypesListDto dto = new CredentialTypesListDto();
+		dto.setCredentialTypes(types);
+		return dto;
 	}
 
 	@Override
