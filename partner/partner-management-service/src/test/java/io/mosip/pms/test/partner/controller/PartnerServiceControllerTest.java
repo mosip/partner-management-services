@@ -203,7 +203,7 @@ public class PartnerServiceControllerTest {
         CredentialTypesListDto dto = new CredentialTypesListDto();
         dto.setCredentialTypes(List.of("euin"));
         when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(dto);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/policies/p001/credentialTypes"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/policies/p001/credential-types"))
                 .andExpect(status().isOk());
     }
 
@@ -213,7 +213,7 @@ public class PartnerServiceControllerTest {
         CredentialTypesListDto dto = new CredentialTypesListDto();
         dto.setCredentialTypes(List.of("qrcode"));
         when(partnerService.getCredentialTypesByPartnerAndPolicy("12345", "p001")).thenReturn(dto);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/policies/p001/credentialTypes"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/12345/policies/p001/credential-types"))
                 .andExpect(status().isOk());
     }
 
@@ -223,7 +223,7 @@ public class PartnerServiceControllerTest {
         CredentialTypesListDto dto = new CredentialTypesListDto();
         dto.setCredentialTypes(List.of("auth"));
         when(partnerService.getCredentialTypesByPartnerAndPolicy("adminPartner", "pol99")).thenReturn(dto);
-        mockMvc.perform(MockMvcRequestBuilders.get("/partners/adminPartner/policies/pol99/credentialTypes"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/partners/adminPartner/policies/pol99/credential-types"))
                 .andExpect(status().isOk());
     }
 

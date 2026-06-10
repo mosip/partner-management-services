@@ -2033,7 +2033,7 @@
                 }
             }
         },
-        "/partners/{partnerId}/policies/{policyId}/credentialTypes": {
+        "/partners/{partnerId}/policies/{policyId}/credential-types": {
             "get": {
                 "tags": [
                     "partner-service-controller"

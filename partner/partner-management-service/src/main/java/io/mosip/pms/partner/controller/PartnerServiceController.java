@@ -222,7 +222,7 @@ public class PartnerServiceController {
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerscredentialtypes())")
-	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credentialTypes", method = RequestMethod.GET)
+	@RequestMapping(value = "/{partnerId}/policies/{policyId}/credential-types", method = RequestMethod.GET)
 	@Operation(summary = "Get credential types for a partner and policy", description = "Returns all active credential types mapped to the given partner and policy from the partner_policy_credential_type table.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
