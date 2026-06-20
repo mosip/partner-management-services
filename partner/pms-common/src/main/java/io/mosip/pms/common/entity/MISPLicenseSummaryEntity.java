@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
         classes = { @ConstructorResult(
                 targetClass = MISPLicenseSummaryEntity.class,
                 columns = {
+                        @ColumnResult(name = "mispLicenseId", type = String.class),
                         @ColumnResult(name = "partnerId", type = String.class),
                         @ColumnResult(name = "orgName", type = String.class),
                         @ColumnResult(name = "policyGroupId", type = String.class),
@@ -33,10 +34,12 @@ import java.time.LocalDateTime;
         }
 )
 public class MISPLicenseSummaryEntity {
-    public MISPLicenseSummaryEntity(String partnerId, String orgName, String policyGroupId, String policyGroupName,
-                                   String policyGroupDescription, String policyId, String policyName,
-                                   String policyDescription, String mispLicenseKeyName, String mispLicenseKey, String status,
-                                    LocalDateTime createdDateTime, LocalDateTime expiryDateTime) {
+    public MISPLicenseSummaryEntity(String mispLicenseId, String partnerId, String orgName, String policyGroupId,
+                                   String policyGroupName, String policyGroupDescription, String policyId,
+                                   String policyName, String policyDescription, String mispLicenseKeyName,
+                                   String mispLicenseKey, String status, LocalDateTime createdDateTime,
+                                   LocalDateTime expiryDateTime) {
+        this.mispLicenseId = mispLicenseId;
         this.partnerId = partnerId;
         this.orgName = orgName;
         this.policyGroupId = policyGroupId;
@@ -52,12 +55,13 @@ public class MISPLicenseSummaryEntity {
         this.expiryDateTime = expiryDateTime;
     }
 
-    // No-argument constructor
     public MISPLicenseSummaryEntity() {
         super();
     }
 
     @Id
+    private String mispLicenseId;
+
     private String partnerId;
 
     private String orgName;

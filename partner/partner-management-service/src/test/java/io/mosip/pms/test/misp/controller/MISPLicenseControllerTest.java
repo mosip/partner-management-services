@@ -376,87 +376,32 @@ public class MISPLicenseControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getMISPLicenseDetailsTest() throws Exception {
-		String partnerId = "PARTNER1";
-		String licenseKeyName = "KEY1";
-		String policyId = "POLICY1";
+		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
 		ResponseWrapperV2<MISPLicenseDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		MISPLicenseDetailsDto detailsDto = new MISPLicenseDetailsDto();
 		responseWrapper.setResponse(detailsDto);
-		when(infraProvidertService.getMISPLicenseDetails(partnerId, licenseKeyName, policyId))
-				.thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.get("/misp-licenses/PARTNER1")
-						.param("licenseKeyName", licenseKeyName)
-						.param("policyId", policyId))
+		when(infraProvidertService.getMISPLicenseDetails(mispLicenseId)).thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/misp-licenses/" + mispLicenseId))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
-	private MISPDeactivateRequestDto deactivateMISPRequest() {
-		MISPDeactivateRequestDto request = new MISPDeactivateRequestDto();
-		request.setPolicyId("policy1");
-		request.setLicenseKeyName("newKey");
-		request.setStatus("De-Activate");
+	private MISPLicensePatchRequestDto updateMISPRequest() {
+		MISPLicensePatchRequestDto request = new MISPLicensePatchRequestDto();
+		request.setStatus("INACTIVE");
 		return request;
 	}
 
-	private RequestWrapperV2<MISPDeactivateRequestDto> deactivateMISPRequestWrapper() {
-		RequestWrapperV2<MISPDeactivateRequestDto> requestWrapper = new RequestWrapperV2<>();
-		requestWrapper.setId("mosip.pms.deactivate.misp.license.patch");
+	private RequestWrapperV2<MISPLicensePatchRequestDto> updateMISPRequestWrapper() {
+		RequestWrapperV2<MISPLicensePatchRequestDto> requestWrapper = new RequestWrapperV2<>();
+		requestWrapper.setId("mosip.pms.update.misp.license.patch");
 		requestWrapper.setVersion("1.0");
-		requestWrapper.setRequest(deactivateMISPRequest());
+		requestWrapper.setRequest(updateMISPRequest());
 		return requestWrapper;
 	}
 
-	private ResponseWrapperV2<MISPDeactivateResponseDto> deactivateMISPResponseWrapper() {
-		ResponseWrapperV2<MISPDeactivateResponseDto> responseWrapper = new ResponseWrapperV2<>();
-		responseWrapper.setId("mosip.pms.deactivate.misp.license.patch");
-		responseWrapper.setVersion("1.0");
-		MISPDeactivateResponseDto response = new MISPDeactivateResponseDto();
-		responseWrapper.setResponse(response);
-		return responseWrapper;
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void deactivateMISPLicenseTest() throws Exception {
-		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
-		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
-		Mockito.when(infraProvidertService.deactivateMISPLicense("partner1", deactivateMISPRequest())).thenReturn(deactivateMISPResponseWrapper());
-
-		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/partner1").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(deactivateMISPRequestWrapper()))).andExpect(status().isOk());
-
-	}
-
-	@Test
-	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void deactivateMISPLicenseTest_InvalidRequest() throws Exception {
-		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
-		Mockito.when(infraProvidertService.deactivateMISPLicense("partner1", deactivateMISPRequest())).thenReturn(deactivateMISPResponseWrapper());
-
-		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/partner1").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(deactivateMISPRequestWrapper()))).andExpect(status().isOk());
-
-	}
-
-	private MISPRegenerateRequestDto regenerateMISPRequest() {
-		MISPRegenerateRequestDto request = new MISPRegenerateRequestDto();
-		request.setPolicyId("policy1");
-		request.setLicenseKeyName("newKey");
-		request.setExpiryDate(LocalDate.now());
-		return request;
-	}
-
-	private RequestWrapperV2<MISPRegenerateRequestDto> regenerateMISPRequestWrapper() {
-		RequestWrapperV2<MISPRegenerateRequestDto> requestWrapper = new RequestWrapperV2<>();
-		requestWrapper.setId("mosip.pms.regenerate.misp.license.put");
-		requestWrapper.setVersion("1.0");
-		requestWrapper.setRequest(regenerateMISPRequest());
-		return requestWrapper;
-	}
-
-	private ResponseWrapperV2<MISPLicenseResponseDtoV2> regenerateMISPResponseWrapper() {
+	private ResponseWrapperV2<MISPLicenseResponseDtoV2> updateMISPResponseWrapper() {
 		ResponseWrapperV2<MISPLicenseResponseDtoV2> responseWrapper = new ResponseWrapperV2<>();
-		responseWrapper.setId("mosip.pms.regenerate.misp.license.put");
+		responseWrapper.setId("mosip.pms.update.misp.license.patch");
 		responseWrapper.setVersion("1.0");
 		MISPLicenseResponseDtoV2 response = new MISPLicenseResponseDtoV2();
 		responseWrapper.setResponse(response);
@@ -465,22 +410,49 @@ public class MISPLicenseControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void regenerateMISPLicenseTest() throws Exception {
+	public void updateMISPLicenseTest() throws Exception {
+		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
 		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
-		Mockito.when(infraProvidertService.regenerateMISPLicense("partner1", regenerateMISPRequest())).thenReturn(regenerateMISPResponseWrapper());
+		Mockito.when(infraProvidertService.updateMISPLicense(mispLicenseId, updateMISPRequest()))
+				.thenReturn(updateMISPResponseWrapper());
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/misp-licenses/partner1").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(regenerateMISPRequestWrapper()))).andExpect(status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(updateMISPRequestWrapper())))
+				.andExpect(status().isOk());
 	}
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void regenerateMISPLicenseTest_InvalidRequest() throws Exception {
+	public void updateMISPLicenseTest_InvalidRequest() throws Exception {
+		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
-		Mockito.when(infraProvidertService.regenerateMISPLicense("partner1", regenerateMISPRequest())).thenReturn(regenerateMISPResponseWrapper());
+		Mockito.when(infraProvidertService.updateMISPLicense(mispLicenseId, updateMISPRequest()))
+				.thenReturn(updateMISPResponseWrapper());
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/misp-licenses/partner1").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(objectMapper.writeValueAsString(regenerateMISPRequestWrapper()))).andExpect(status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(updateMISPRequestWrapper())))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void updateMISPLicenseTest_WithExpiryDate() throws Exception {
+		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
+		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
+		MISPLicensePatchRequestDto patchRequest = new MISPLicensePatchRequestDto();
+		patchRequest.setExpiryDate(LocalDate.now().plusDays(30));
+		RequestWrapperV2<MISPLicensePatchRequestDto> requestWrapper = new RequestWrapperV2<>();
+		requestWrapper.setId("mosip.pms.update.misp.license.patch");
+		requestWrapper.setVersion("1.0");
+		requestWrapper.setRequest(patchRequest);
+		Mockito.when(infraProvidertService.updateMISPLicense(anyString(), any())).thenReturn(updateMISPResponseWrapper());
+
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(objectMapper.writeValueAsString(requestWrapper)))
+				.andExpect(status().isOk());
 	}
 }

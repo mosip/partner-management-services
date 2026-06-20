@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicenseSummaryEntity, String> {
 
     @Query(value = "SELECT new MISPLicenseSummaryEntity(" +
-            "m.id.mispId, p.name, pg.id, pg.name, pg.desc, ap.id, ap.name, " +
+            "m.mispLicenseId, m.mispId, p.name, pg.id, pg.name, pg.desc, ap.id, ap.name, " +
             "ap.descr, m.licenseKeyName, " +
             "CONCAT(FUNCTION('repeat', '*', LENGTH(m.id.licenseKey) - 4), SUBSTRING(m.id.licenseKey, LENGTH(m.id.licenseKey) - 3, 4)) as mispLicenseKey, " +
             "CASE " +
