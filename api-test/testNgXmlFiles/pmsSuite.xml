@@ -628,7 +628,15 @@
                     name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
         </classes>
     </test>
-
+    <test name="DeleteBioExtractorConfiguration">
+        <parameter name="ymlFile"
+                   value="pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfiguration.yml"/>
+        <parameter name="pathParams" value="bioExtractorConfigurationId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>
+        </classes>
+    </test>
     <test name="AddBioExtractors">
         <parameter name="ymlFile"
                    value="pms/credentialPartner/AddBioExtractors/AddBioExtractors.yml"/>
