@@ -576,3 +576,43 @@ CreateBioExtractorConfiguration:
     output: '{
       "status": "SUCCESS"
 }'
+  Pms_CreateBioExtractorConfiguration_For_Delete_Smoke_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_31
+    description: Validate that a Bio Extractor Configuration is created successfully to be used for delete tests.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Delete_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_For_AlreadyDeleted_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_32
+    description: Validate that a Bio Extractor Configuration is created successfully to be deleted twice for the already-deleted negative test.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$AlreadyDeleted_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'

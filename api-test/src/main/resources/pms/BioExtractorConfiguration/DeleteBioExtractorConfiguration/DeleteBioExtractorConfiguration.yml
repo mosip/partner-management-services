@@ -1,0 +1,38 @@
+DeleteBioExtractorConfiguration:
+  Pms_DeleteBioExtractorConfiguration_All_Valid_Smoke_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_DeleteBioExtractorConfiguration_01
+    description: Validate that a Bio Extractor Configuration is deleted successfully when valid bioExtractorConfigurationId and valid request details are provided.
+    role: partneradmin
+    restMethod: patch
+    inputTemplate: pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configuration.delete.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "bioExtractorConfigurationId": "$ID:CreateBioExtractorConfiguration_For_Delete_Smoke_sid_id$",
+      "status": "DELETED"
+}'
+    output: '{
+      "status": "Bio Extractor configuration deleted successfully."
+}'
+
+  Pms_DeleteBioExtractorConfiguration_AlreadyDeleted_FirstAttempt:
+    endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
+    uniqueIdentifier: TC_PMS_DeleteBioExtractorConfiguration_02
+    description: Validate that a Bio Extractor Configuration is deleted successfully on the first delete attempt, so it can be re-deleted in the next test to validate the already-deleted scenario.
+    role: partneradmin
+    restMethod: patch
+    inputTemplate: pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configuration.delete.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "bioExtractorConfigurationId": "$ID:CreateBioExtractorConfiguration_For_AlreadyDeleted_sid_id$",
+      "status": "DELETED"
+}'
+    output: '{
+      "status": "Bio Extractor configuration deleted successfully."
+}'
