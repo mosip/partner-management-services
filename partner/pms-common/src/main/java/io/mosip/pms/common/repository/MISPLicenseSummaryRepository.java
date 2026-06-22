@@ -18,8 +18,8 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             "ap.descr, m.licenseKeyName, " +
             "CONCAT(FUNCTION('repeat', '*', LENGTH(m.id.licenseKey) - 4), SUBSTRING(m.id.licenseKey, LENGTH(m.id.licenseKey) - 3, 4)) as mispLicenseKey, " +
             "CASE " +
-            "WHEN (m.isActive = true) THEN 'activated' " +
-            "WHEN (m.isActive = false) THEN 'deactivated' " +
+            "WHEN (m.isActive = true) THEN 'ACTIVE' " +
+            "WHEN (m.isActive = false) THEN 'INACTIVE' " +
             "END as status, " +
             "m.createdDateTime, m.validToDate) " +
             "FROM MISPLicenseEntityV2 m " +
@@ -33,8 +33,8 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             "AND (:mispLicenseKeyName IS NULL OR lower(m.licenseKeyName) LIKE %:mispLicenseKeyName%) " +
             "AND (:status IS NULL OR " +
             "(" +
-            "  (:status = 'activated' AND m.isActive = true) " +
-            "  OR (:status = 'deactivated' AND m.isActive = false) " +
+            "  (:status = 'ACTIVE' AND m.isActive = true) " +
+            "  OR (:status = 'INACTIVE' AND m.isActive = false) " +
             ")) " +
             "AND ((:expiryPeriod IS NULL) OR (m.validToDate BETWEEN :expiryStartDate AND :expiryEndDate)) "
     )

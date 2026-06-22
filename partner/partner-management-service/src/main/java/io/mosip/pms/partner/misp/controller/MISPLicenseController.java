@@ -157,7 +157,7 @@ public class MISPLicenseController {
 			@Parameter(
 					description = "Status of MISP License Key.",
 					in = ParameterIn.QUERY,
-					schema = @Schema(allowableValues = {"activated", "deactivated"})
+					schema = @Schema(allowableValues = {"ACTIVE", "INACTIVE"})
 			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "expiryPeriod", required = false)
@@ -235,7 +235,7 @@ public class MISPLicenseController {
 	@PatchMapping("/misp-licenses/{mispLicenseId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatemisplicensekey())")
 	@Operation(summary = "This endpoint updates the expiry date or status of a MISP Licence Key.",
-			description = "Available since release-1.3.0-GA. This endpoint is configured only for users with the PARTNER_ADMIN role. It supports updating expiryDate and/or status (activated/deactivated).")
+			description = "Available since release-1.3.0-GA. This endpoint is configured only for users with the PARTNER_ADMIN role. It supports updating expiryDate and/or status (ACTIVE/INACTIVE).")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

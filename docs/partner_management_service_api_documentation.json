@@ -3223,8 +3223,8 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "activated",
-                                "deactivated"
+                                "ACTIVE",
+                                "INACTIVE"
                             ]
                         }
                     },

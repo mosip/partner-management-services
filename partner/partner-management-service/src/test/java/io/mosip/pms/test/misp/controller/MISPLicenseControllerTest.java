@@ -254,7 +254,7 @@ public class MISPLicenseControllerTest {
 		String policyGroupName = "PG";
 		String policyName = "PN";
 		String mispLicenseKeyName = "KEY";
-		String status = "activated";
+		String status = "ACTIVE";
 		MISPFilterDto filterDto = new MISPFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		when(infraProvidertService.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto))
