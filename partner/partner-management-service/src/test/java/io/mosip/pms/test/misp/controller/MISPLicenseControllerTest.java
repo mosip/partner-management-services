@@ -412,29 +412,32 @@ public class MISPLicenseControllerTest {
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void updateMISPLicenseTest() throws Exception {
 		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
-		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
-		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
-		Mockito.when(infraProvidertService.updateMISPLicense(mispLicenseId, updateMISPRequest()))
+		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
+		Mockito.when(infraProvidertService.updateMISPLicense(eq(mispLicenseId), any(MISPLicensePatchRequestDto.class)))
 				.thenReturn(updateMISPResponseWrapper());
 
 		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(updateMISPRequestWrapper())))
 				.andExpect(status().isOk());
+
+		verify(infraProvidertService).updateMISPLicense(eq(mispLicenseId), any(MISPLicensePatchRequestDto.class));
 	}
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void updateMISPLicenseTest_InvalidRequest() throws Exception {
 		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
-		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
-		Mockito.when(infraProvidertService.updateMISPLicense(mispLicenseId, updateMISPRequest()))
-				.thenReturn(updateMISPResponseWrapper());
+		// Validation fails -> controller returns the validator error and must NOT call the service.
+		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
+		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
 
 		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(updateMISPRequestWrapper())))
 				.andExpect(status().isOk());
+
+		verify(infraProvidertService, never()).updateMISPLicense(anyString(), any(MISPLicensePatchRequestDto.class));
 	}
 
 	@Test

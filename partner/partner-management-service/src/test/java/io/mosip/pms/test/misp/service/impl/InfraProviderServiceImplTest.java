@@ -38,7 +38,12 @@ import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -919,7 +924,11 @@ public class InfraProviderServiceImplTest {
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(getPolicyGroup());
 		when(authPolicyRepository.findById(anyString())).thenReturn(getAuthPolicy());
 
-		infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+		var result = infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		assertNotNull(result.getResponse());
+		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
+		assertEquals("misp-license-1", result.getResponse().getMispLicenseId());
 	}
 
 	@Test
@@ -931,7 +940,9 @@ public class InfraProviderServiceImplTest {
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(getPolicyGroup());
 		when(authPolicyRepository.findById(anyString())).thenReturn(getAuthPolicy());
 
-		infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+		var result = infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_426");
 	}
 
 	@Test
@@ -941,7 +952,9 @@ public class InfraProviderServiceImplTest {
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(getPolicyGroup());
 		when(authPolicyRepository.findById(anyString())).thenReturn(Optional.empty());
 
-		infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+		var result = infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_419");
 	}
 
 	@Test
@@ -950,32 +963,47 @@ public class InfraProviderServiceImplTest {
 		when(partnerRepository.findById(anyString())).thenReturn(getPartner());
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(null);
 
-		infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+		var result = infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		assertErrorCode(result.getErrors(), "PMS_POLICY_ERROR_008");
 	}
 
 	@Test
 	public void getMISPLicenseDetailsTest_WithLicenseNotFound() {
 		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.empty());
 
-		infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+		var result = infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_441");
 	}
 
 	@Test
 	public void getMISPLicenseDetailsTest_WithPartnerNotExist() {
 		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.of(getMISPLicenseEntityV2()));
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.empty());
-		infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		var result = infraProviderServiceImpl.getMISPLicenseDetails("misp-license-1");
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_429");
 	}
 
 	@Test
 	public void getMISPLicenseDetailsTest_WithNullId() {
-		infraProviderServiceImpl.getMISPLicenseDetails(null);
+		var result = infraProviderServiceImpl.getMISPLicenseDetails(null);
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_441");
 	}
 
 	private MISPLicensePatchRequestDto mispPatchRequestDto() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("INACTIVE");
 		return dto;
+	}
+
+	private void assertErrorCode(java.util.List<io.mosip.pms.common.request.dto.ErrorResponse> errors, String expectedCode) {
+		assertNotNull(errors);
+		assertFalse(errors.isEmpty());
+		assertEquals(expectedCode, errors.get(0).getErrorCode());
 	}
 
 	@Test
@@ -986,7 +1014,12 @@ public class InfraProviderServiceImplTest {
 		updatedEntity.setIsActive(false);
 		when(mispLicenseV2Repository.save(any())).thenReturn(updatedEntity);
 
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", mispPatchRequestDto());
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", mispPatchRequestDto());
+
+		assertNotNull(result.getResponse());
+		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
+		assertEquals("INACTIVE", result.getResponse().getStatus());
+		verify(mispLicenseV2Repository).save(any());
 	}
 
 	@Test
@@ -1002,14 +1035,24 @@ public class InfraProviderServiceImplTest {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("ACTIVE");
 		dto.setExpiryDate(LocalDate.now().plusDays(30));
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertNotNull(result.getResponse());
+		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
+		assertEquals("ACTIVE", result.getResponse().getStatus());
+		verify(mispLicenseV2Repository).save(any());
 	}
 
 	@Test
 	public void updateMISPLicenseTest_ActiveWithoutExpiryDate() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("ACTIVE");
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_444");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
@@ -1017,7 +1060,11 @@ public class InfraProviderServiceImplTest {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("INACTIVE");
 		dto.setExpiryDate(LocalDate.now().plusDays(1));
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_445");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
@@ -1030,7 +1077,12 @@ public class InfraProviderServiceImplTest {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("INACTIVE");
 		dto.setExpiryDate(LocalDate.now());
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertNotNull(result.getResponse());
+		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
+		verify(mispLicenseV2Repository).save(any());
 	}
 
 	@Test
@@ -1040,7 +1092,12 @@ public class InfraProviderServiceImplTest {
 
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setExpiryDate(LocalDate.now().plusDays(60));
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertNotNull(result.getResponse());
+		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
+		verify(mispLicenseV2Repository).save(any());
 	}
 
 	@Test
@@ -1051,37 +1108,61 @@ public class InfraProviderServiceImplTest {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("ACTIVE");
 		dto.setExpiryDate(LocalDate.now().plusDays(60));
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertNotNull(result.getResponse());
+		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
+		verify(mispLicenseV2Repository).save(any());
 	}
 
 	@Test
 	public void updateMISPLicenseTest_WithLicenseNotFound() {
 		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.empty());
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", mispPatchRequestDto());
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", mispPatchRequestDto());
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_441");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
 	public void updateMISPLicenseTest_WithNothingToUpdate() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_443");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
 	public void updateMISPLicenseTest_WithInvalidStatus() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("invalid-status");
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_442");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
 	public void updateMISPLicenseTest_WithPastExpiryDate() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setExpiryDate(LocalDate.now().minusDays(10));
-		infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_425");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
 	public void updateMISPLicenseTest_WithNullId() {
-		infraProviderServiceImpl.updateMISPLicense(null, mispPatchRequestDto());
+		var result = infraProviderServiceImpl.updateMISPLicense(null, mispPatchRequestDto());
+
+		assertErrorCode(result.getErrors(), "PMS_MSP_441");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 }
