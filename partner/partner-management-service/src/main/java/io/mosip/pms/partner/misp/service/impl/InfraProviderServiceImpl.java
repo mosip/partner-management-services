@@ -786,7 +786,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			responseDtoV2.setMispLicenseId(updated.getMispLicenseId());
 			responseDtoV2.setPartnerId(updated.getMispId());
 			responseDtoV2.setPolicyId(updated.getPolicyId());
-			responseDtoV2.setLicenseKey(updated.getLicenseKey());
 			responseDtoV2.setLicenseKeyName(updated.getLicenseKeyName());
 			responseDtoV2.setStatus(updated.getIsActive() ? ACTIVE : INACTIVE);
 			responseDtoV2.setExpiryDateTime(updated.getValidToDate());

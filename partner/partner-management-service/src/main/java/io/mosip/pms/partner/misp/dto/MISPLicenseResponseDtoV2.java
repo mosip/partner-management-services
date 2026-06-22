@@ -1,5 +1,6 @@
 package io.mosip.pms.partner.misp.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class MISPLicenseResponseDtoV2 {
 
     private String policyId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String licenseKey;
 
     private String licenseKeyName;
