@@ -319,10 +319,11 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
-	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoint /partners/{partnerId} by adding new features like Policy Group Details in Response and Certificate Details in Response. It is configured for the role PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id - deprecated since release-1.3.0.",
+	description = "This endpoint has been deprecated since the release-1.3.0 and replaced by the GET /admin-partners/v2/{partnerId} endpoint, which additionally returns logoUrl and additionalInfo.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -333,10 +334,25 @@ public class PartnerManagementController {
 		return partnerManagementService.getPartnerDetails(partnerId);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
+	@GetMapping(value = "/admin-partners/v2/{partnerId}")
+	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
+	description = "Available since release-1.3.0. This endpoint upgrades the earlier GET endpoint /admin-partners/{partnerId} by additionally returning logoUrl and additionalInfo in the response. It is configured for the role PARTNER_ADMIN.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PartnerDetailsV4Dto> getPartnerDetailsV2(@PathVariable String partnerId) {
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		return partnerManagementService.getPartnerDetailsV2(partnerId);
+	}
+
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
-	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoints /partners and /partners/v2 by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves a list of all Partners - deprecated since release-1.3.0.",
+			description = "This endpoint has been deprecated since the release-1.3.0 and replaced by the GET /admin-partners/v2 endpoint, which additionally returns logoUrl and additionalInfo.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -401,6 +417,78 @@ public class PartnerManagementController {
 			partnerFilterDto.setStatus(status);
 		}
 		return partnerManagementService.getAdminPartners(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, partnerFilterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
+	@GetMapping(value = "/admin-partners/v2")
+	@Operation(summary = "This endpoint retrieves a list of all Partners.",
+			description = "Available since release-1.3.0. This endpoint upgrades the earlier GET endpoint /admin-partners by additionally returning logoUrl and additionalInfo for each partner. It is configured for the role PARTNER_ADMIN.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> getAdminPartnersV2(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "partnerType", required = false) String partnerType,
+			@RequestParam(value = "isActive", required = false) Boolean isActive,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@Parameter(
+					description = "Status of certificate upload",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"uploaded", "not_uploaded"})
+			)
+			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
+			@Parameter(
+					description = "Approval status of partner",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"active", "deactivated", "inactive"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
+		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
+		inputValidator.validateRequestInput("sortType", sortType);
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		inputValidator.validateRequestInput("partnerType", partnerType);
+		inputValidator.validateRequestInput("orgName", orgName);
+		inputValidator.validateRequestInput("emailAddress", emailAddress);
+		inputValidator.validateRequestInput("certificateUploadStatus", certificateUploadStatus);
+		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
+		inputValidator.validateRequestInput("status", status);
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		if (partnerId != null) {
+			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
+		}
+		if (partnerType != null) {
+			partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		}
+		if (orgName != null) {
+			partnerFilterDto.setOrganizationName(orgName.toLowerCase());
+		}
+		if (policyGroupName != null) {
+			partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		}
+		if (certificateUploadStatus != null) {
+			partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
+		}
+		if (emailAddress != null) {
+			partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
+		}
+		if (isActive != null) {
+			partnerFilterDto.setIsActive(isActive);
+		}
+		if (status != null) {
+			partnerFilterDto.setStatus(status);
+		}
+		return partnerManagementService.getAdminPartnersV2(sortFieldName, sortType,
 				partnerHelper.parsePageNo(pageNo),
 				pageSize, partnerFilterDto);
 	}

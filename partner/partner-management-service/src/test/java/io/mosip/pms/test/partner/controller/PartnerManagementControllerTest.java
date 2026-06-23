@@ -378,6 +378,35 @@ public class PartnerManagementControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getPartnerDetailsV2Test() throws Exception {
+		ResponseWrapperV2<PartnerDetailsV4Dto> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getPartnerDetailsV2(anyString()))
+				.thenReturn(responseWrapper);
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners/v2/{partnerId}", "samplePartnerId")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+		Mockito.verify(partnerManagementService).getPartnerDetailsV2("samplePartnerId");
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
+	public void getAdminPartnersV2Test() throws Exception {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
+
+		Mockito.when(partnerManagementService.getAdminPartnersV2(any(), any(), any(), any(), any(PartnerFilterDto.class)))
+				.thenReturn(responseWrapper);
+		mockMvc.perform(MockMvcRequestBuilders.get("/admin-partners/v2?sortFieldName=createdDateTime&sortType=desc&pageSize=8&pageNo=0&" +
+						"partnerId=abc&partnerType=Auth_Partner&orgName=ABC&emailAddress=abc&certificateUploadStatus=not_uploaded&policyGroupName=default&isActive=false"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+
+		Mockito.verify(partnerManagementService).getAdminPartnersV2(any(), any(), any(), any(), any(PartnerFilterDto.class));
+	}
+
+	@Test
+	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getAllPartnersTest() throws Exception {
 		String sortFieldName = "createdDateTime";
 		String sortType = "desc";

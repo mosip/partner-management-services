@@ -25,7 +25,9 @@ import jakarta.persistence.*;
                         @ColumnResult(name = "certificateUploadStatus", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "isActive", type = Boolean.class),
-                        @ColumnResult(name = "createdDateTime", type = Date.class)
+                        @ColumnResult(name = "createdDateTime", type = Date.class),
+                        @ColumnResult(name = "logoUrl", type = String.class),
+                        @ColumnResult(name = "additionalInfo", type = String.class)
                 })
         }
 )
@@ -35,7 +37,7 @@ public class PartnerSummaryEntity {
             String partnerId, String partnerType, String orgName, String policyGroupId,
             String policyGroupName, String emailAddress,
             String certificateUploadStatus, String status, Boolean isActive,
-            Date createdDateTime) {
+            Date createdDateTime, String logoUrl, String additionalInfo) {
         this.partnerId = partnerId;
         this.partnerType = partnerType;
         this.orgName = orgName;
@@ -46,6 +48,8 @@ public class PartnerSummaryEntity {
         this.status = status;
         this.isActive = isActive;
         this.createdDateTime = createdDateTime;
+        this.logoUrl = logoUrl;
+        this.additionalInfo = additionalInfo;
     }
 
     // No-argument constructor
@@ -73,4 +77,8 @@ public class PartnerSummaryEntity {
     private Boolean isActive;
 
     private Date createdDateTime;
+
+    private String logoUrl;
+
+    private String additionalInfo;
 }

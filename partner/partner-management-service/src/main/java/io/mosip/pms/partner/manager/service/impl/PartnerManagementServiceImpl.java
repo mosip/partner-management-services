@@ -117,6 +117,8 @@ import static io.mosip.pms.partner.constant.ErrorCode.UNSUPPORTED_COLUMN;
 import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIGS_ERROR;
 import static io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT;
+import static io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS;
+import static io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS;
 
 @Service
 @Transactional
@@ -1622,6 +1624,101 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
+	public ResponseWrapperV2<PartnerDetailsV4Dto> getPartnerDetailsV2(String partnerId) {
+		ResponseWrapperV2<PartnerDetailsV4Dto> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
+				throw new PartnerServiceException(
+						INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage()
+				);
+			}
+			Optional<Partner> optionalPartner = partnerServiceRepository.findById(partnerId);
+			if (optionalPartner.isEmpty()) {
+				throw new PartnerServiceException(
+						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
+				);
+			}
+			PartnerDetailsV4Dto partnerDetailsV4Dto = new PartnerDetailsV4Dto();
+			Partner partner = optionalPartner.get();
+			partnerDetailsV4Dto.setPartnerId(partner.getId());
+			partnerDetailsV4Dto.setApprovalStatus(partner.getApprovalStatus());
+			partnerDetailsV4Dto.setIsActive(partner.getIsActive());
+			partnerDetailsV4Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
+			partnerDetailsV4Dto.setPartnerType(partner.getPartnerTypeCode());
+			partnerDetailsV4Dto.setOrganizationName(partner.getName());
+			// check if the data is encrypted
+			boolean isEncrypted = partner.getEmailIdHash() != null;
+			partnerDetailsV4Dto.setContactNumber(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+			partnerDetailsV4Dto.setEmailId(
+					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
+			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
+					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
+					!partner.getPartnerTypeCode().equals(MISP_PARTNER) &&
+					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
+				LOGGER.info("sessionId", "idType", "id",
+						"Policy Group Id is empty for partner Id -" + partner.getId());
+				throw new PartnerServiceException(
+						POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+						POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
+				);
+			}
+			if (Objects.nonNull(partner.getPolicyGroupId())) {
+				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+				if (Objects.isNull(policyGroup)) {
+					throw new PartnerServiceException(
+							MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+							MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
+					);
+				}
+				partnerDetailsV4Dto.setPolicyGroupName(policyGroup.getName());
+				partnerDetailsV4Dto.setPolicyGroupDescription(policyGroup.getDesc());
+			}
+			if (Objects.isNull(partner.getCertificateAlias())){
+				partnerDetailsV4Dto.setIsCertificateAvailable(false);
+			} else {
+				PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+				requestDto.setPartnerId(partner.getId());
+
+				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
+						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
+				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+				partnerDetailsV4Dto.setCertificateUploadDateTime(cert.getNotBefore());
+				partnerDetailsV4Dto.setCertificateExpiryDateTime(cert.getNotAfter());
+				partnerDetailsV4Dto.setIsCertificateAvailable(true);
+			}
+			Optional<KeycloakUserDto> keycloakUserDto = partnerHelper.getUserDetailsByPartnerId(partnerId);
+			if (keycloakUserDto.isPresent()){
+				partnerDetailsV4Dto.setFirstName(keycloakUserDto.get().getFirstName());
+				partnerDetailsV4Dto.setLastName(keycloakUserDto.get().getLastName());
+			}
+			partnerDetailsV4Dto.setLogoUrl(partner.getLogoUrl());
+			partnerDetailsV4Dto.setAdditionalInfo(
+					partner.getAdditionalInfo() == null ? null : getValidJson(partner.getAdditionalInfo()));
+			responseWrapper.setResponse(partnerDetailsV4Dto);
+		} catch (ApiAccessibleException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerDetailsV2 method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id",
+					"In getPartnerDetailsV2 method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.error("sessionId", "idType", "id",
+					"Error in getPartnerDetailsV2 method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPartnerDetailsId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto) {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
@@ -1659,6 +1756,58 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
 			LOGGER.error("sessionId", "idType", "id",
 					"In getAdminPartners method of PartnerManagementServiceImpl - " + ex.getMessage());
+			String errorCode = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorCode();
+			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorMessage();
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getAdminPartnersId);
+		responseWrapper.setVersion(VERSION);
+		return responseWrapper;
+	}
+
+	@Override
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> getAdminPartnersV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto) {
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
+		try {
+			PageResponseV2Dto<PartnerSummaryV2Dto> pageResponseV2Dto = new PageResponseV2Dto<>();
+			partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+			if ("emailAddress".equalsIgnoreCase(sortFieldName)) {
+				LOGGER.debug("Sorting on '{}' column is not supported due to system limitations", sortFieldName);
+				throw new PartnerServiceException(
+						UNSUPPORTED_COLUMN.getErrorCode(),
+						String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
+				);
+			}
+
+			// Pagination
+			Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+			// Fetch the partner details
+			Page<PartnerSummaryEntity> page = getPartnerDetails(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto, pageable);
+			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
+				List<PartnerSummaryEntity> content = page.getContent();
+				List<PartnerSummaryV2Dto> partnerSummaryDtoList = MapperUtils.mapAll(content, PartnerSummaryV2Dto.class);
+				for (int i = 0; i < content.size(); i++) {
+					PartnerSummaryEntity entity = content.get(i);
+					PartnerSummaryV2Dto dto = partnerSummaryDtoList.get(i);
+					// Decrypt email address for each partner summary
+					dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
+					dto.setAdditionalInfo(
+							entity.getAdditionalInfo() == null ? null : getValidJson(entity.getAdditionalInfo()));
+				}
+				pageResponseV2Dto.setPageNo(pageNo);
+				pageResponseV2Dto.setPageSize(pageSize);
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				pageResponseV2Dto.setData(partnerSummaryDtoList);
+			}
+			responseWrapper.setResponse(pageResponseV2Dto);
+		} catch (PartnerServiceException ex) {
+			LOGGER.info("sessionId", "idType", "id", "In getAdminPartnersV2 method of PartnerManagementServiceImpl - " + ex.getMessage());
+			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(ex.getErrorCode(), ex.getErrorText()));
+		} catch (Exception ex) {
+			LOGGER.debug("sessionId", "idType", "id", ex.getStackTrace());
+			LOGGER.error("sessionId", "idType", "id",
+					"In getAdminPartnersV2 method of PartnerManagementServiceImpl - " + ex.getMessage());
 			String errorCode = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorCode();
 			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));

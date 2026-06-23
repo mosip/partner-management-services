@@ -1505,6 +1505,87 @@ public class PartnerManagementServiceImplTest {
 	}
 
 	@Test
+	public void getPartnerDetailsV2Test01() throws Exception {
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
+		partner.setPolicyGroupId("121");
+		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		partner.setName("abc");
+		partner.setEmailId("abc@gmail.com");
+		partner.setContactNo("1234567890");
+		partner.setLogoUrl("https://logo.com");
+		partner.setAdditionalInfo("{\"orderRedirectUrl\":\"https://example.io/order\"}");
+		when(partnerServiceRepository.findById(any())).thenReturn(Optional.of(partner));
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setName("policygroup123");
+		policyGroup.setDesc("descr");
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
+		when(partnerHelper.getUserDetailsByPartnerId(anyString())).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<PartnerDetailsV4Dto> response = partnerManagementImpl.getPartnerDetailsV2("123");
+
+		assertNotNull(response.getResponse());
+		assertEquals("https://logo.com", response.getResponse().getLogoUrl());
+		assertNotNull(response.getResponse().getAdditionalInfo());
+		assertEquals("https://example.io/order",
+				response.getResponse().getAdditionalInfo().get("orderRedirectUrl").asText());
+	}
+
+	@Test
+	public void getPartnerDetailsV2Test_PartnerNotExist() {
+		when(partnerServiceRepository.findById(any())).thenReturn(Optional.empty());
+		ResponseWrapperV2<PartnerDetailsV4Dto> response = partnerManagementImpl.getPartnerDetailsV2("123");
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getAdminPartnersV2Test01() throws Exception {
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		partnerFilterDto.setPartnerId("abc");
+		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
+		partnerFilterDto.setOrganizationName("ABC");
+		partnerFilterDto.setEmailAddress("abc");
+		partnerFilterDto.setCertificateUploadStatus("not_uploaded");
+		partnerFilterDto.setPolicyGroupName("default");
+		partnerFilterDto.setIsActive(false);
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		PartnerSummaryEntity partnerSummaryEntity = new PartnerSummaryEntity();
+		partnerSummaryEntity.setPartnerId("123");
+		partnerSummaryEntity.setLogoUrl("https://logo.com");
+		partnerSummaryEntity.setAdditionalInfo("{\"orderRedirectUrl\":\"https://example.io/order\"}");
+		Page<PartnerSummaryEntity> page = new PageImpl<>(List.of(partnerSummaryEntity), pageable, 1);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerSummaryRepository", partnerSummaryRepository);
+		when(partnerSummaryRepository.getSummaryOfAllPartners(any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> response =
+				partnerManagementImpl.getAdminPartnersV2(null, null, pageNo, pageSize, partnerFilterDto);
+
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().getData().size());
+		PartnerSummaryV2Dto dto = response.getResponse().getData().get(0);
+		assertEquals("https://logo.com", dto.getLogoUrl());
+		assertNotNull(dto.getAdditionalInfo());
+		assertEquals("https://example.io/order", dto.getAdditionalInfo().get("orderRedirectUrl").asText());
+	}
+
+	@Test
 	public void getAllApiKeyRequestsTest01() throws Exception {
 		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
