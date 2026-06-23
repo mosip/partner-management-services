@@ -136,6 +136,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	@Value("${mosip.pms.api.id.admin.partners.get}")
 	private String getAdminPartnersId;
 
+	@Value("${mosip.pms.api.id.admin.partners.v2.get}")
+	private String getAdminPartnersV2Id;
+
 	@Value("${mosip.pms.api.id.all.partner.policy.mapping.requests.get}")
 	private String getAllPartnerPolicyMappingRequestsId;
 
@@ -253,6 +256,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Value("${mosip.pms.api.id.partner.details.get}")
 	private String getPartnerDetailsId;
+
+	@Value("${mosip.pms.api.id.partner.details.v2.get}")
+	private String getPartnerDetailsV2Id;
 
 	@Value("${mosip.pms.id.generation.max.retries}")
 	private int maxRetries;
@@ -1713,7 +1719,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			String errorMessage = ErrorCode.FETCH_PARTNER_DETAILS_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getPartnerDetailsId);
+		responseWrapper.setId(getPartnerDetailsV2Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
@@ -1812,7 +1818,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			String errorMessage = ErrorCode.FETCH_ALL_PARTNER_DETAILS_ERROR.getErrorMessage();
 			responseWrapper.setErrors(MultiPartnerUtil.setErrorResponse(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAdminPartnersId);
+		responseWrapper.setId(getAdminPartnersV2Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
 	}
