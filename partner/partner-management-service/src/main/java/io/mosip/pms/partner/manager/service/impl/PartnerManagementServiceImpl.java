@@ -1701,8 +1701,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				partnerDetailsV4Dto.setLastName(keycloakUserDto.get().getLastName());
 			}
 			partnerDetailsV4Dto.setLogoUrl(partner.getLogoUrl());
-			partnerDetailsV4Dto.setAdditionalInfo(
-					partner.getAdditionalInfo() == null ? null : getValidJson(partner.getAdditionalInfo()));
+			if (partner.getAdditionalInfo() != null) {
+				try {
+					partnerDetailsV4Dto.setAdditionalInfo(getValidJson(partner.getAdditionalInfo()));
+				} catch (Exception e) {
+					LOGGER.error("sessionId", "idType", "id",
+							"Invalid additionalInfo JSON for partner " + partnerId + " - " + e.getMessage());
+				}
+			}
 			responseWrapper.setResponse(partnerDetailsV4Dto);
 		} catch (ApiAccessibleException ex) {
 			LOGGER.info("sessionId", "idType", "id",
@@ -1798,8 +1804,14 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					PartnerSummaryV2Dto dto = partnerSummaryDtoList.get(i);
 					// Decrypt email address for each partner summary
 					dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
-					dto.setAdditionalInfo(
-							entity.getAdditionalInfo() == null ? null : getValidJson(entity.getAdditionalInfo()));
+					if (entity.getAdditionalInfo() != null) {
+						try {
+							dto.setAdditionalInfo(getValidJson(entity.getAdditionalInfo()));
+						} catch (Exception e) {
+							LOGGER.error("sessionId", "idType", "id",
+									"Invalid additionalInfo JSON for partner " + entity.getPartnerId() + " - " + e.getMessage());
+						}
+					}
 				}
 				pageResponseV2Dto.setPageNo(pageNo);
 				pageResponseV2Dto.setPageSize(pageSize);

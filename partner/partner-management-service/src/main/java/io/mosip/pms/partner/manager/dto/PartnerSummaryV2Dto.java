@@ -27,7 +27,7 @@ public class PartnerSummaryV2Dto {
     @Schema(description = "Partner email address", example = "abc@gmail.com")
     private String emailAddress;
 
-    @Schema(description = "Status of partner certificate (e.g. uploaded, notUploaded)", example = "uploaded")
+    @Schema(description = "Status of partner certificate (e.g. uploaded, not_uploaded)", example = "uploaded")
     private String certificateUploadStatus;
 
     @Schema(description = "Status of the partner (e.g., approved, InProgress)", example = "approved")

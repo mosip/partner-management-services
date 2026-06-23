@@ -6386,11 +6386,7 @@
                         "in": "query",
                         "description": "Optional request parameter. Can be used to filter the response by the given isActive status..",
                         "schema": {
-                            "type": "string",
-                            "enum": [
-                                "true",
-                                "false"
-                            ]
+                            "type": "boolean"
                         }
                     },
                     {
@@ -6986,11 +6982,7 @@
                         "in": "query",
                         "description": "Optional request parameter. Can be used to filter the response by the given isActive status..",
                         "schema": {
-                            "type": "string",
-                            "enum": [
-                                "true",
-                                "false"
-                            ]
+                            "type": "boolean"
                         }
                     },
                     {
@@ -7171,7 +7163,7 @@
                                     },
                                     "x-examples": {
                                         "Example 1": {
-                                            "id": "mosip.pms.all.partners.get",
+                                            "id": "mosip.pms.admin.partners.v2.get",
                                             "version": "1.0",
                                             "responseTime": "2024-11-05T10:36:13.780Z",
                                             "metadata": {},
@@ -7190,7 +7182,9 @@
                                                         "certificateUploadStatus": "uploaded",
                                                         "status": "approved",
                                                         "isActive": true,
-                                                        "createdDateTime": "2024-08-01T14:30:00Z"
+                                                        "createdDateTime": "2024-08-01T14:30:00Z",
+                                                        "logoUrl": "https://logo.com",
+                                                        "additionalInfo": {"orderRedirectUrl": "https://example.io/order"}
                                                     }
                                                 ]
                                             },
@@ -7256,28 +7250,28 @@
                                     "type": "object",
                                     "x-examples": {
                                         "Example 1": {
-                                            "id": "mosip.pms.all.partners.get",
+                                            "id": "mosip.pms.partner.details.v2.get",
                                             "version": "1.0",
                                             "responseTime": "2024-11-05T10:36:13.780Z",
                                             "metadata": {},
                                             "response": {
-                                                "pageNo": 0,
-                                                "pageSize": 10,
-                                                "totalResults": 1,
-                                                "data": [
-                                                    {
-                                                        "partnerId": "partner123",
-                                                        "partnerType": "Auth_partner",
-                                                        "orgName": "abc",
-                                                        "policyGroupId": "12345",
-                                                        "policyGroupName": "Compliance Policies",
-                                                        "emailAddress": "abc@gmail.com",
-                                                        "certificateUploadStatus": "uploaded",
-                                                        "status": "approved",
-                                                        "isActive": true,
-                                                        "createdDateTime": "2024-08-01T14:30:00Z"
-                                                    }
-                                                ]
+                                                "partnerId": "partner123",
+                                                "firstName": "John",
+                                                "lastName": "Doe",
+                                                "approvalStatus": "approved",
+                                                "createdDateTime": "2024-08-01T14:30:00Z",
+                                                "partnerType": "Auth_Partner",
+                                                "organizationName": "abc",
+                                                "contactNumber": "8983983332",
+                                                "policyGroupName": "Compliance Policies",
+                                                "policyGroupDescription": "Policy group for compliance",
+                                                "emailId": "abc@gmail.com",
+                                                "certificateUploadDateTime": "2024-07-15T10:00:00Z",
+                                                "certificateExpiryDateTime": "2025-07-15T10:00:00Z",
+                                                "isCertificateAvailable": true,
+                                                "isActive": true,
+                                                "logoUrl": "https://logo.com",
+                                                "additionalInfo": {"orderRedirectUrl": "https://example.io/order"}
                                             },
                                             "errors": []
                                         }
@@ -7285,7 +7279,7 @@
                                     "properties": {
                                         "id": {
                                             "type": "string",
-                                            "description": "Unique id that is required to access this endpoint.\r\n`mosip.pms.api.id.partner.details.get`"
+                                            "description": "Unique id that is required to access this endpoint.\r\n`mosip.pms.api.id.partner.details.v2.get`"
                                         },
                                         "version": {
                                             "type": "string",
@@ -7462,17 +7456,7 @@
                     "id": "8y7nht79z8dkg"
                 }
             },
-            "parameters": [
-                {
-                    "schema": {
-                        "type": "string"
-                    },
-                    "name": "partnerId",
-                    "in": "path",
-                    "required": true,
-                    "description": "Unique identifier of the partner"
-                }
-            ]
+            "parameters": []
         },
         "/partner-policy-requests": {
             "get": {
