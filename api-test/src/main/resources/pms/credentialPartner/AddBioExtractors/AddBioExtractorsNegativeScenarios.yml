@@ -378,7 +378,7 @@ AddBioExtractorsNegativeScenarios:
    Pms_AddBioExtractors_Without_ExtractorProviderVersion_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_AddBioExtractorsNegativeScenarios_19
-      description: Validate that adding bio extractors fails when an request sent without extractor provider version
+      description: Validate that adding bio extractors fails when a request sent without extractor provider version
       role: partneradmin
       restMethod: post
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
