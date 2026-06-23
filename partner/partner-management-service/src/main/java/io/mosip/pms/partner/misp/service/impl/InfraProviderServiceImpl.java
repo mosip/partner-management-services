@@ -790,7 +790,18 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			responseDtoV2.setStatus(updated.getIsActive() ? ACTIVE : INACTIVE);
 			responseDtoV2.setExpiryDateTime(updated.getValidToDate());
 
-			notify(MapperUtils.mapDataToPublishDtoV2(updated), EventType.MISP_LICENSE_UPDATED);
+			String updatedPolicyId = updated.getPolicyId();
+			if (updatedPolicyId != null && !updatedPolicyId.isBlank()) {
+				Optional<AuthPolicy> mispPolicyFromDb = authPolicyRepository.findById(updatedPolicyId);
+				if (mispPolicyFromDb.isPresent()) {
+					notify(MapperUtils.mapDataToPublishDtoV2(updated), MapperUtils.mapPolicyToPublishDto(mispPolicyFromDb.get(),
+							getPolicyObject(mispPolicyFromDb.get().getPolicyFileId())), EventType.MISP_LICENSE_UPDATED);
+				} else {
+					notify(MapperUtils.mapDataToPublishDtoV2(updated), null, EventType.MISP_LICENSE_UPDATED);
+				}
+			} else {
+				notify(MapperUtils.mapDataToPublishDtoV2(updated), null, EventType.MISP_LICENSE_UPDATED);
+			}
 
 			responseWrapper.setResponse(responseDtoV2);
 		} catch (MISPServiceException ex) {
