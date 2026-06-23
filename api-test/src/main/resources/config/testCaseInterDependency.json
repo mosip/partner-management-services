@@ -1984,5 +1984,13 @@
         "TC_PMS_UploadCertificateMISPCASUBCA_14"
     ],
     "TC_PMS_DeactivateDevice_10": ["TC_PMS_SaveDeviceDetails_03"],
-    "TC_PMS_DeactivateDevice_11": ["TC_PMS_SaveDeviceDetails_02"]
+    "TC_PMS_DeactivateDevice_11": ["TC_PMS_SaveDeviceDetails_02"],
+    "TC_PMS_DeleteBioExtractorConfiguration_01": ["TC_PMS_CreateBioExtractorConfiguration_31"],
+    "TC_PMS_DeleteBioExtractorConfiguration_02": ["TC_PMS_CreateBioExtractorConfiguration_32"],
+    "TC_PMS_DeleteBioExtractorConfigurationNegativeScenarios_01": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_DeleteBioExtractorConfigurationNegativeScenarios_02": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_DeleteBioExtractorConfigurationNegativeScenarios_03": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_DeleteBioExtractorConfigurationNegativeScenarios_04": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_DeleteBioExtractorConfigurationNegativeScenarios_05": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_DeleteBioExtractorConfigurationNegativeScenarios_08": ["TC_PMS_CreateBioExtractorConfiguration_32"]
 }
