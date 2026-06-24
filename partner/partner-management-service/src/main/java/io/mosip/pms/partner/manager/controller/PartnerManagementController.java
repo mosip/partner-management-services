@@ -343,7 +343,7 @@ public class PartnerManagementController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
 	})
-	public ResponseWrapperV2<PartnerDetailsV4Dto> getPartnerDetailsV2(@PathVariable String partnerId) {
+	public ResponseWrapperV2<AdminPartnerDetailsDto> getPartnerDetailsV2(@PathVariable String partnerId) {
 		inputValidator.validateRequestInput("partnerId", partnerId);
 		return partnerManagementService.getPartnerDetailsV2(partnerId);
 	}
@@ -378,47 +378,14 @@ public class PartnerManagementController {
 					description = "Approval status of partner",
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"active", "deactivated", "inactive"})
-			)   
+			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
-		inputValidator.validateRequestInput("sortType", sortType);
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("partnerType", partnerType);
-		inputValidator.validateRequestInput("orgName", orgName);
-		inputValidator.validateRequestInput("emailAddress", emailAddress);
-		inputValidator.validateRequestInput("certificateUploadStatus", certificateUploadStatus);
-		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		inputValidator.validateRequestInput("status", status);
-		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
-		if (partnerId != null) {
-			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
-		}
-		if (partnerType != null) {
-			partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
-		}
-		if (orgName != null) {
-			partnerFilterDto.setOrganizationName(orgName.toLowerCase());
-		}
-		if (policyGroupName != null) {
-			partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
-		}
-		if (certificateUploadStatus != null) {
-			partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
-		}
-		if (emailAddress != null) {
-			partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
-		}
-		if (isActive != null) {
-			partnerFilterDto.setIsActive(isActive);
-		}
-		if (status != null) {
-			partnerFilterDto.setStatus(status);
-		}
+		PartnerFilterDto partnerFilterDto = buildPartnerFilterDto(sortFieldName, sortType, partnerId,
+				partnerType, isActive, orgName, emailAddress, certificateUploadStatus, status, policyGroupName);
 		return partnerManagementService.getAdminPartners(sortFieldName, sortType,
-				partnerHelper.parsePageNo(pageNo),
-				pageSize, partnerFilterDto);
+				partnerHelper.parsePageNo(pageNo), pageSize, partnerFilterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
@@ -454,6 +421,19 @@ public class PartnerManagementController {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		if (pageSize <= 0) {
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+					ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
+		}
+		PartnerFilterDto partnerFilterDto = buildPartnerFilterDto(sortFieldName, sortType, partnerId,
+				partnerType, isActive, orgName, emailAddress, certificateUploadStatus, status, policyGroupName);
+		return partnerManagementService.getAdminPartnersV2(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo), pageSize, partnerFilterDto);
+	}
+
+	private PartnerFilterDto buildPartnerFilterDto(String sortFieldName, String sortType, String partnerId,
+			String partnerType, Boolean isActive, String orgName, String emailAddress,
+			String certificateUploadStatus, String status, String policyGroupName) {
 		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
 		inputValidator.validateRequestInput("sortType", sortType);
 		inputValidator.validateRequestInput("partnerId", partnerId);
@@ -463,38 +443,16 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("certificateUploadStatus", certificateUploadStatus);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("status", status);
-		if (pageSize <= 0) {
-			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
-					ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
-		}
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
-		if (partnerId != null) {
-			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
-		}
-		if (partnerType != null) {
-			partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
-		}
-		if (orgName != null) {
-			partnerFilterDto.setOrganizationName(orgName.toLowerCase());
-		}
-		if (policyGroupName != null) {
-			partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
-		}
-		if (certificateUploadStatus != null) {
-			partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
-		}
-		if (emailAddress != null) {
-			partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
-		}
-		if (isActive != null) {
-			partnerFilterDto.setIsActive(isActive);
-		}
-		if (status != null) {
-			partnerFilterDto.setStatus(status);
-		}
-		return partnerManagementService.getAdminPartnersV2(sortFieldName, sortType,
-				partnerHelper.parsePageNo(pageNo),
-				pageSize, partnerFilterDto);
+		if (partnerId != null) partnerFilterDto.setPartnerId(partnerId.toLowerCase());
+		if (partnerType != null) partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		if (orgName != null) partnerFilterDto.setOrganizationName(orgName.toLowerCase());
+		if (policyGroupName != null) partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		if (certificateUploadStatus != null) partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
+		if (emailAddress != null) partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
+		if (isActive != null) partnerFilterDto.setIsActive(isActive);
+		if (status != null) partnerFilterDto.setStatus(status);
+		return partnerFilterDto;
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")

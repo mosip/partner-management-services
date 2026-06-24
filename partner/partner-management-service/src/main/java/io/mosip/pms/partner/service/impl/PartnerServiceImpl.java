@@ -450,7 +450,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
 		partner.setLogoUrl(request.getLogoUrl());
-		partner.setAdditionalInfo(request.getAdditionalInfo()== null ? "[]" : request.getAdditionalInfo().toString());
+		partner.setAdditionalInfo(request.getAdditionalInfo() == null ? null : request.getAdditionalInfo().toString());
 		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		return partner;
 	}

@@ -379,7 +379,7 @@ public class PartnerManagementControllerTest {
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void getPartnerDetailsV2Test() throws Exception {
-		ResponseWrapperV2<PartnerDetailsV4Dto> responseWrapper = new ResponseWrapperV2<>();
+		ResponseWrapperV2<AdminPartnerDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 
 		Mockito.when(partnerManagementService.getPartnerDetailsV2(anyString()))
 				.thenReturn(responseWrapper);

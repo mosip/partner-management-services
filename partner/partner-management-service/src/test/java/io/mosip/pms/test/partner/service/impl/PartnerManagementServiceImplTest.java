@@ -1531,7 +1531,7 @@ public class PartnerManagementServiceImplTest {
 		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
 		when(partnerHelper.getUserDetailsByPartnerId(anyString())).thenReturn(Optional.empty());
 
-		ResponseWrapperV2<PartnerDetailsV4Dto> response = partnerManagementImpl.getPartnerDetailsV2("123");
+		ResponseWrapperV2<AdminPartnerDetailsDto> response = partnerManagementImpl.getPartnerDetailsV2("123");
 
 		assertNotNull(response.getResponse());
 		assertEquals("https://logo.com", response.getResponse().getLogoUrl());
@@ -1543,7 +1543,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void getPartnerDetailsV2Test_PartnerNotExist() {
 		when(partnerServiceRepository.findById(any())).thenReturn(Optional.empty());
-		ResponseWrapperV2<PartnerDetailsV4Dto> response = partnerManagementImpl.getPartnerDetailsV2("123");
+		ResponseWrapperV2<AdminPartnerDetailsDto> response = partnerManagementImpl.getPartnerDetailsV2("123");
 		assertNotNull(response.getErrors());
 		assertFalse(response.getErrors().isEmpty());
 	}

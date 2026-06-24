@@ -1543,72 +1543,20 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		try {
 			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
 				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorMessage()
+						INVALID_REQUEST_PARAM.getErrorCode(),
+						INVALID_REQUEST_PARAM.getErrorMessage()
 				);
 			}
 			Optional<Partner> optionalPartner = partnerServiceRepository.findById(partnerId);
 			if (optionalPartner.isEmpty()) {
 				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
+						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
 				);
 			}
-			PartnerDetailsV3Dto partnerDetailsV3Dto = new PartnerDetailsV3Dto();
-			Partner partner = optionalPartner.get();
-			partnerDetailsV3Dto.setPartnerId(partner.getId());
-			partnerDetailsV3Dto.setApprovalStatus(partner.getApprovalStatus());
-			partnerDetailsV3Dto.setIsActive(partner.getIsActive());
-			partnerDetailsV3Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
-			partnerDetailsV3Dto.setPartnerType(partner.getPartnerTypeCode());
-			partnerDetailsV3Dto.setOrganizationName(partner.getName());
-			// check if the data is encrypted
-			boolean isEncrypted = partner.getEmailIdHash() != null;
-			partnerDetailsV3Dto.setContactNumber(
-					isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
-			partnerDetailsV3Dto.setEmailId(
-					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
-			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
-					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
-					!partner.getPartnerTypeCode().equals(MISP_PARTNER) &&
-					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
-				LOGGER.info("sessionId", "idType", "id",
-						"Policy Group Id is empty for partner Id -" + partner.getId());
-				throw new PartnerServiceException(
-						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
-						io.mosip.pms.partner.constant.ErrorCode.POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
-				);
-			}
-			if (Objects.nonNull(partner.getPolicyGroupId())) {
-				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
-				if (Objects.isNull(policyGroup)) {
-					throw new PartnerServiceException(
-							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-							io.mosip.pms.partner.constant.ErrorCode.MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
-					);
-				}
-				partnerDetailsV3Dto.setPolicyGroupName(policyGroup.getName());
-				partnerDetailsV3Dto.setPolicyGroupDescription(policyGroup.getDesc());
-			}
-			if (Objects.isNull(partner.getCertificateAlias())){
-				partnerDetailsV3Dto.setIsCertificateAvailable(false);
-			} else {
-				PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
-				requestDto.setPartnerId(partner.getId());
-
-				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
-						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
-				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
-				partnerDetailsV3Dto.setCertificateUploadDateTime(cert.getNotBefore());
-				partnerDetailsV3Dto.setCertificateExpiryDateTime(cert.getNotAfter());
-				partnerDetailsV3Dto.setIsCertificateAvailable(true);
-			}
-			Optional<KeycloakUserDto> keycloakUserDto = partnerHelper.getUserDetailsByPartnerId(partnerId);
-			if (keycloakUserDto.isPresent()){
-				partnerDetailsV3Dto.setFirstName(keycloakUserDto.get().getFirstName());
-				partnerDetailsV3Dto.setLastName(keycloakUserDto.get().getLastName());
-			}
-			responseWrapper.setResponse(partnerDetailsV3Dto);
+			PartnerDetailsV3Dto dto = new PartnerDetailsV3Dto();
+			populatePartnerDetailsDto(dto, optionalPartner.get(), partnerId);
+			responseWrapper.setResponse(dto);
 		} catch (ApiAccessibleException ex) {
 			LOGGER.info("sessionId", "idType", "id",
 					"In getPartnerDetails method of PartnerManagementServiceImpl - " + ex.getMessage());
@@ -1630,8 +1578,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PartnerDetailsV4Dto> getPartnerDetailsV2(String partnerId) {
-		ResponseWrapperV2<PartnerDetailsV4Dto> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<AdminPartnerDetailsDto> getPartnerDetailsV2(String partnerId) {
+		ResponseWrapperV2<AdminPartnerDetailsDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(partnerId) || partnerId.isEmpty()) {
 				throw new PartnerServiceException(
@@ -1646,70 +1594,19 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
 				);
 			}
-			PartnerDetailsV4Dto partnerDetailsV4Dto = new PartnerDetailsV4Dto();
 			Partner partner = optionalPartner.get();
-			partnerDetailsV4Dto.setPartnerId(partner.getId());
-			partnerDetailsV4Dto.setApprovalStatus(partner.getApprovalStatus());
-			partnerDetailsV4Dto.setIsActive(partner.getIsActive());
-			partnerDetailsV4Dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
-			partnerDetailsV4Dto.setPartnerType(partner.getPartnerTypeCode());
-			partnerDetailsV4Dto.setOrganizationName(partner.getName());
-			// check if the data is encrypted
-			boolean isEncrypted = partner.getEmailIdHash() != null;
-			partnerDetailsV4Dto.setContactNumber(
-					isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
-			partnerDetailsV4Dto.setEmailId(
-					isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
-			if ((!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
-					!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
-					!partner.getPartnerTypeCode().equals(MISP_PARTNER) &&
-					(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty()))) {
-				LOGGER.info("sessionId", "idType", "id",
-						"Policy Group Id is empty for partner Id -" + partner.getId());
-				throw new PartnerServiceException(
-						POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
-						POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
-				);
-			}
-			if (Objects.nonNull(partner.getPolicyGroupId())) {
-				PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
-				if (Objects.isNull(policyGroup)) {
-					throw new PartnerServiceException(
-							MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
-							MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
-					);
-				}
-				partnerDetailsV4Dto.setPolicyGroupName(policyGroup.getName());
-				partnerDetailsV4Dto.setPolicyGroupDescription(policyGroup.getDesc());
-			}
-			if (Objects.isNull(partner.getCertificateAlias())){
-				partnerDetailsV4Dto.setIsCertificateAvailable(false);
-			} else {
-				PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
-				requestDto.setPartnerId(partner.getId());
-
-				PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(partner.getCertificateAlias(),
-						"pmp.partner.certificaticate.get.rest.uri", PartnerCertDownloadResponeDto.class);
-				X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
-				partnerDetailsV4Dto.setCertificateUploadDateTime(cert.getNotBefore());
-				partnerDetailsV4Dto.setCertificateExpiryDateTime(cert.getNotAfter());
-				partnerDetailsV4Dto.setIsCertificateAvailable(true);
-			}
-			Optional<KeycloakUserDto> keycloakUserDto = partnerHelper.getUserDetailsByPartnerId(partnerId);
-			if (keycloakUserDto.isPresent()){
-				partnerDetailsV4Dto.setFirstName(keycloakUserDto.get().getFirstName());
-				partnerDetailsV4Dto.setLastName(keycloakUserDto.get().getLastName());
-			}
-			partnerDetailsV4Dto.setLogoUrl(partner.getLogoUrl());
+			AdminPartnerDetailsDto dto = new AdminPartnerDetailsDto();
+			populatePartnerDetailsDto(dto, partner, partnerId);
+			dto.setLogoUrl(partner.getLogoUrl());
 			if (partner.getAdditionalInfo() != null) {
 				try {
-					partnerDetailsV4Dto.setAdditionalInfo(getValidJson(partner.getAdditionalInfo()));
+					dto.setAdditionalInfo(getValidJson(partner.getAdditionalInfo()));
 				} catch (Exception e) {
 					LOGGER.error("sessionId", "idType", "id",
 							"Invalid additionalInfo JSON for partner " + partnerId + " - " + e.getMessage());
 				}
 			}
-			responseWrapper.setResponse(partnerDetailsV4Dto);
+			responseWrapper.setResponse(dto);
 		} catch (ApiAccessibleException ex) {
 			LOGGER.info("sessionId", "idType", "id",
 					"In getPartnerDetailsV2 method of PartnerManagementServiceImpl - " + ex.getMessage());
@@ -1728,6 +1625,55 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(getPartnerDetailsV2Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private void populatePartnerDetailsDto(PartnerDetailsV3Dto dto, Partner partner, String partnerId) throws Exception {
+		dto.setPartnerId(partner.getId());
+		dto.setApprovalStatus(partner.getApprovalStatus());
+		dto.setIsActive(partner.getIsActive());
+		dto.setCreatedDateTime(partner.getCrDtimes().toLocalDateTime());
+		dto.setPartnerType(partner.getPartnerTypeCode());
+		dto.setOrganizationName(partner.getName());
+		boolean isEncrypted = partner.getEmailIdHash() != null;
+		dto.setContactNumber(isEncrypted ? keyManagerHelper.decryptData(partner.getContactNo()) : partner.getContactNo());
+		dto.setEmailId(isEncrypted ? keyManagerHelper.decryptData(partner.getEmailId()) : partner.getEmailId());
+		if (!partner.getPartnerTypeCode().equals(FTM_PROVIDER) &&
+				!partner.getPartnerTypeCode().equals(DEVICE_PROVIDER) &&
+				!partner.getPartnerTypeCode().equals(MISP_PARTNER) &&
+				(Objects.isNull(partner.getPolicyGroupId()) || partner.getPolicyGroupId().isEmpty())) {
+			LOGGER.info("sessionId", "idType", "id", "Policy Group Id is empty for partner Id -" + partner.getId());
+			throw new PartnerServiceException(
+					POLICY_GROUP_ID_NOT_EXISTS.getErrorCode(),
+					POLICY_GROUP_ID_NOT_EXISTS.getErrorMessage()
+			);
+		}
+		if (Objects.nonNull(partner.getPolicyGroupId())) {
+			PolicyGroup policyGroup = policyGroupRepository.findPolicyGroupById(partner.getPolicyGroupId());
+			if (Objects.isNull(policyGroup)) {
+				throw new PartnerServiceException(
+						MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorCode(),
+						MATCHING_POLICY_GROUP_NOT_EXISTS.getErrorMessage()
+				);
+			}
+			dto.setPolicyGroupName(policyGroup.getName());
+			dto.setPolicyGroupDescription(policyGroup.getDesc());
+		}
+		if (Objects.isNull(partner.getCertificateAlias())) {
+			dto.setIsCertificateAvailable(false);
+		} else {
+			PartnerCertDownloadResponeDto partnerCertDownloadResponeDto = partnerHelper.getCertificate(
+					partner.getCertificateAlias(), "pmp.partner.certificaticate.get.rest.uri",
+					PartnerCertDownloadResponeDto.class);
+			X509Certificate cert = MultiPartnerUtil.decodeCertificateData(partnerCertDownloadResponeDto.getCertificateData());
+			dto.setCertificateUploadDateTime(cert.getNotBefore());
+			dto.setCertificateExpiryDateTime(cert.getNotAfter());
+			dto.setIsCertificateAvailable(true);
+		}
+		Optional<KeycloakUserDto> keycloakUserDto = partnerHelper.getUserDetailsByPartnerId(partnerId);
+		if (keycloakUserDto.isPresent()) {
+			dto.setFirstName(keycloakUserDto.get().getFirstName());
+			dto.setLastName(keycloakUserDto.get().getLastName());
+		}
 	}
 
 	@Override
