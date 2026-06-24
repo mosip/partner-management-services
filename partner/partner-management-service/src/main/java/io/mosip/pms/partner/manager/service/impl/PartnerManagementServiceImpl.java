@@ -1681,30 +1681,16 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryDto> pageResponseV2Dto = new PageResponseV2Dto<>();
-			partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
-			if ("emailAddress".equalsIgnoreCase(sortFieldName)) {
-				LOGGER.debug("Sorting on '{}' column is not supported due to system limitations", sortFieldName);
-				throw new PartnerServiceException(
-						UNSUPPORTED_COLUMN.getErrorCode(),
-						String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
-				);
-			}
-
-			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
-
-			// Fetch the partner details
-			Page<PartnerSummaryEntity> page = getPartnerDetails(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto, pageable);
-			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
-				// Decrypt email address for each partner summary
-				partnerSummaryDtoList.forEach(dto -> {
-					dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
-				});
-				pageResponseV2Dto.setPageNo(pageNo);
-				pageResponseV2Dto.setPageSize(pageSize);
+			Page<PartnerSummaryEntity> page = validateAndFetchPartnerPage(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+			pageResponseV2Dto.setPageNo(pageNo);
+			pageResponseV2Dto.setPageSize(pageSize);
+			if (Objects.nonNull(page)) {
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
-				pageResponseV2Dto.setData(partnerSummaryDtoList);
+				if (!page.getContent().isEmpty()) {
+					List<PartnerSummaryDto> partnerSummaryDtoList = MapperUtils.mapAll(page.getContent(), PartnerSummaryDto.class);
+					partnerSummaryDtoList.forEach(dto -> dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress())));
+					pageResponseV2Dto.setData(partnerSummaryDtoList);
+				}
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {
@@ -1728,20 +1714,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			PageResponseV2Dto<PartnerSummaryV2Dto> pageResponseV2Dto = new PageResponseV2Dto<>();
-			partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
-			if ("emailAddress".equalsIgnoreCase(sortFieldName)) {
-				LOGGER.debug("Sorting on '{}' column is not supported due to system limitations", sortFieldName);
-				throw new PartnerServiceException(
-						UNSUPPORTED_COLUMN.getErrorCode(),
-						String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
-				);
-			}
-
-			// Pagination
-			Pageable pageable = PageRequest.of(pageNo, pageSize);
-
-			// Fetch the partner details
-			Page<PartnerSummaryEntity> page = getPartnerDetails(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto, pageable);
+			Page<PartnerSummaryEntity> page = validateAndFetchPartnerPage(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
 			pageResponseV2Dto.setPageNo(pageNo);
 			pageResponseV2Dto.setPageSize(pageSize);
 			if (Objects.nonNull(page)) {
@@ -1752,7 +1725,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					for (int i = 0; i < content.size(); i++) {
 						PartnerSummaryEntity entity = content.get(i);
 						PartnerSummaryV2Dto dto = partnerSummaryDtoList.get(i);
-						// Decrypt email address for each partner summary
 						dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
 						if (entity.getAdditionalInfo() != null) {
 							try {
@@ -1781,6 +1753,20 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId(getAdminPartnersV2Id);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
+	}
+
+	private Page<PartnerSummaryEntity> validateAndFetchPartnerPage(String sortFieldName, String sortType,
+			Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto) {
+		partnerHelper.validateRequestParameters(partnerHelper.partnerAliasToColumnMap, sortFieldName, sortType, pageNo, pageSize);
+		if ("emailAddress".equalsIgnoreCase(sortFieldName)) {
+			LOGGER.debug("Sorting on '{}' column is not supported due to system limitations", sortFieldName);
+			throw new PartnerServiceException(
+					UNSUPPORTED_COLUMN.getErrorCode(),
+					String.format(UNSUPPORTED_COLUMN.getErrorMessage(), sortFieldName)
+			);
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		return getPartnerDetails(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto, pageable);
 	}
 
 	private Page<PartnerSummaryEntity> getPartnerDetails(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto, Pageable pageable) {

@@ -649,15 +649,7 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
-		inputValidator.validateRequestInput("sortType", sortType);
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("apiKeyLabel", apiKeyLabel);
-		inputValidator.validateRequestInput("orgName", orgName);
-		inputValidator.validateRequestInput("status", status);
-		inputValidator.validateRequestInput("policyName", policyName);
-		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
+		ApiKeyFilterDto filterDto = buildApiKeyFilterDto(sortFieldName, sortType, partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
 		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType,
 				partnerHelper.parsePageNo(pageNo),
 				pageSize, filterDto);
@@ -695,6 +687,16 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput("partnerType", partnerType);
+		ApiKeyFilterDto filterDto = buildApiKeyFilterDto(sortFieldName, sortType, partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
+		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
+	}
+
+	private ApiKeyFilterDto buildApiKeyFilterDto(String sortFieldName, String sortType, String partnerId,
+			String apiKeyLabel, String orgName, String status, String policyName, String policyGroupName,
+			String partnerType, Integer expiryPeriod) {
 		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
 		inputValidator.validateRequestInput("sortType", sortType);
 		inputValidator.validateRequestInput("partnerId", partnerId);
@@ -703,15 +705,6 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		inputValidator.validateRequestInput("partnerType", partnerType);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
-		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType,
-				partnerHelper.parsePageNo(pageNo),
-				pageSize, filterDto);
-	}
-
-	private ApiKeyFilterDto populateApiKeyFilterDto(String partnerId, String apiKeyLabel, String orgName, String status,
-													String policyName, String policyGroupName, String partnerType, Integer expiryPeriod) {
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) filterDto.setPartnerId(partnerId.toLowerCase());
 		if (apiKeyLabel != null) filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
