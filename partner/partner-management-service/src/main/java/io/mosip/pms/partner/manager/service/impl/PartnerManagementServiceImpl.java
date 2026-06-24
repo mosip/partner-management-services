@@ -1796,27 +1796,29 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			// Fetch the partner details
 			Page<PartnerSummaryEntity> page = getPartnerDetails(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto, pageable);
-			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
-				List<PartnerSummaryEntity> content = page.getContent();
-				List<PartnerSummaryV2Dto> partnerSummaryDtoList = MapperUtils.mapAll(content, PartnerSummaryV2Dto.class);
-				for (int i = 0; i < content.size(); i++) {
-					PartnerSummaryEntity entity = content.get(i);
-					PartnerSummaryV2Dto dto = partnerSummaryDtoList.get(i);
-					// Decrypt email address for each partner summary
-					dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
-					if (entity.getAdditionalInfo() != null) {
-						try {
-							dto.setAdditionalInfo(getValidJson(entity.getAdditionalInfo()));
-						} catch (Exception e) {
-							LOGGER.error("sessionId", "idType", "id",
-									"Invalid additionalInfo JSON for partner " + entity.getPartnerId() + " - " + e.getMessage());
+			pageResponseV2Dto.setPageNo(pageNo);
+			pageResponseV2Dto.setPageSize(pageSize);
+			if (Objects.nonNull(page)) {
+				pageResponseV2Dto.setTotalResults(page.getTotalElements());
+				if (!page.getContent().isEmpty()) {
+					List<PartnerSummaryEntity> content = page.getContent();
+					List<PartnerSummaryV2Dto> partnerSummaryDtoList = MapperUtils.mapAll(content, PartnerSummaryV2Dto.class);
+					for (int i = 0; i < content.size(); i++) {
+						PartnerSummaryEntity entity = content.get(i);
+						PartnerSummaryV2Dto dto = partnerSummaryDtoList.get(i);
+						// Decrypt email address for each partner summary
+						dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
+						if (entity.getAdditionalInfo() != null) {
+							try {
+								dto.setAdditionalInfo(getValidJson(entity.getAdditionalInfo()));
+							} catch (Exception e) {
+								LOGGER.error("sessionId", "idType", "id",
+										"Invalid additionalInfo JSON for partner " + entity.getPartnerId() + " - " + e.getMessage());
+							}
 						}
 					}
+					pageResponseV2Dto.setData(partnerSummaryDtoList);
 				}
-				pageResponseV2Dto.setPageNo(pageNo);
-				pageResponseV2Dto.setPageSize(pageSize);
-				pageResponseV2Dto.setTotalResults(page.getTotalElements());
-				pageResponseV2Dto.setData(partnerSummaryDtoList);
 			}
 			responseWrapper.setResponse(pageResponseV2Dto);
 		} catch (PartnerServiceException ex) {

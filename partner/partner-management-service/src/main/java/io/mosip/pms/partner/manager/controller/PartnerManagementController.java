@@ -463,6 +463,10 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("certificateUploadStatus", certificateUploadStatus);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("status", status);
+		if (pageSize <= 0) {
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+					ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
+		}
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
 		if (partnerId != null) {
 			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
