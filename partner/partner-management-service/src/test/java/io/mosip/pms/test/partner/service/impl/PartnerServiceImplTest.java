@@ -2,6 +2,7 @@ package io.mosip.pms.test.partner.service.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -2027,7 +2028,7 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void createPartnerTest_WithValidRequest() throws Exception {
-		PartnerRequest prequest = new PartnerRequest();
+		PartnerRequestDto prequest = new PartnerRequestDto();
 		prequest.setAddress("blr");
 		prequest.setContactNumber("8273283283");
 		prequest.setEmailId("xyz@gmail.com");
@@ -2075,12 +2076,21 @@ public class PartnerServiceImplTest {
 		partnerh.setPolicyGroupId("pg1");
 		when(partnerHRepository.save(any())).thenReturn(partnerh);
 
+		prequest.setLogoUrl("https://logo.com");
+		prequest.setAdditionalInfo(new ObjectMapper().readTree("{\"orderRedirectUrl\":\"https://example.io/order\"}"));
+
+		ArgumentCaptor<Partner> partnerCaptor = ArgumentCaptor.forClass(Partner.class);
 		pserviceImpl.createPartner(prequest);
+
+		verify(partnerRepository).save(partnerCaptor.capture());
+		Partner savedPartner = partnerCaptor.getValue();
+		assertEquals("https://logo.com", savedPartner.getLogoUrl());
+		assertTrue(savedPartner.getAdditionalInfo().contains("orderRedirectUrl"));
 	}
 
 	@Test
 	public void createPartnerTest_WithAlreadyExistEmail() throws Exception {
-		PartnerRequest prequest = new PartnerRequest();
+		PartnerRequestDto prequest = new PartnerRequestDto();
 		prequest.setAddress("blr");
 		prequest.setContactNumber("8273283283");
 		prequest.setEmailId("xyz@gmail.com");
@@ -2109,7 +2119,7 @@ public class PartnerServiceImplTest {
 
 	@Test
 	public void createPartnerTest_WithInvalidEmail() throws Exception {
-		PartnerRequest prequest = new PartnerRequest();
+		PartnerRequestDto prequest = new PartnerRequestDto();
 		prequest.setAddress("blr");
 		prequest.setContactNumber("8273283283");
 		prequest.setEmailId("xyz");
@@ -2136,7 +2146,7 @@ public class PartnerServiceImplTest {
 		when(securityContext.getAuthentication()).thenReturn(authentication);
 
 		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
-		pserviceImpl.createPartner(new PartnerRequest());
+		pserviceImpl.createPartner(new PartnerRequestDto());
 	}
 
 	@Test

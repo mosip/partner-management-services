@@ -127,7 +127,11 @@ public interface PartnerManagerService {
 
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId);
 
+	public ResponseWrapperV2<AdminPartnerDetailsDto> getPartnerDetailsV2(String partnerId);
+
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto);
+
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> getAdminPartnersV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto);
 
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerPolicyRequestFilterDto filterDto);
 

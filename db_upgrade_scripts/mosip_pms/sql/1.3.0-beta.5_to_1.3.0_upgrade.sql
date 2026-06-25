@@ -1,7 +1,7 @@
 \c mosip_pms
 
 -- -------------------------------------------------------------------------------------------------
--- Bioextractor configuration soft delete support (1.3.0-GA)
+-- Bioextractor configuration soft delete support (1.3.0)
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE IF EXISTS pms.bioextractor_configuration
