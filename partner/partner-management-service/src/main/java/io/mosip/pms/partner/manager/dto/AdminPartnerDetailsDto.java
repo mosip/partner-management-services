@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class AdminPartnerDetailsDto extends PartnerDetailsV3Dto {
 
     @Schema(description = "URL of the partner logo", example = "https://logo.com")
