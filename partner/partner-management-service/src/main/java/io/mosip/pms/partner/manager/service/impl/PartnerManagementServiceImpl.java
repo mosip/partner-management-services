@@ -1587,14 +1587,10 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						INVALID_REQUEST_PARAM.getErrorMessage()
 				);
 			}
-			Optional<Partner> optionalPartner = partnerServiceRepository.findById(partnerId);
-			if (optionalPartner.isEmpty()) {
-				throw new PartnerServiceException(
-						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-						PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()
-				);
-			}
-			Partner partner = optionalPartner.get();
+			Partner partner = partnerServiceRepository.findById(partnerId)
+					.orElseThrow(() -> new PartnerServiceException(
+							PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+							PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage()));
 			AdminPartnerDetailsDto dto = new AdminPartnerDetailsDto();
 			populatePartnerDetailsDto(dto, partner, partnerId);
 			dto.setLogoUrl(partner.getLogoUrl());
@@ -1721,11 +1717,22 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageResponseV2Dto.setTotalResults(page.getTotalElements());
 				if (!page.getContent().isEmpty()) {
 					List<PartnerSummaryEntity> content = page.getContent();
-					List<PartnerSummaryV2Dto> partnerSummaryDtoList = MapperUtils.mapAll(content, PartnerSummaryV2Dto.class);
-					for (int i = 0; i < content.size(); i++) {
-						PartnerSummaryEntity entity = content.get(i);
-						PartnerSummaryV2Dto dto = partnerSummaryDtoList.get(i);
-						dto.setEmailAddress(keyManagerHelper.decryptData(dto.getEmailAddress()));
+					List<PartnerSummaryV2Dto> partnerSummaryDtoList = new ArrayList<>();
+					for (PartnerSummaryEntity entity : content) {
+						PartnerSummaryV2Dto dto = new PartnerSummaryV2Dto();
+						dto.setPartnerId(entity.getPartnerId());
+						dto.setPartnerType(entity.getPartnerType());
+						dto.setOrgName(entity.getOrgName());
+						dto.setPolicyGroupId(entity.getPolicyGroupId());
+						dto.setPolicyGroupName(entity.getPolicyGroupName());
+						dto.setCertificateUploadStatus(entity.getCertificateUploadStatus());
+						dto.setStatus(entity.getStatus());
+						dto.setIsActive(entity.getIsActive());
+						dto.setCreatedDateTime(entity.getCreatedDateTime());
+						dto.setLogoUrl(entity.getLogoUrl());
+						if (entity.getEmailAddress() != null) {
+							dto.setEmailAddress(keyManagerHelper.decryptData(entity.getEmailAddress()));
+						}
 						if (entity.getAdditionalInfo() != null) {
 							try {
 								dto.setAdditionalInfo(getValidJson(entity.getAdditionalInfo()));
@@ -1734,6 +1741,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 										"Invalid additionalInfo JSON for partner " + entity.getPartnerId() + " - " + e.getMessage());
 							}
 						}
+						partnerSummaryDtoList.add(dto);
 					}
 					pageResponseV2Dto.setData(partnerSummaryDtoList);
 				}
