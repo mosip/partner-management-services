@@ -24,10 +24,10 @@ public interface PartnerServiceRepository extends JpaRepository<Partner, String>
     @Query(value = "select * from partner ppr where ppr.id=? and (ppr.is_deleted is null or ppr.is_deleted = false) and ppr.is_active = true", nativeQuery = true)
     public Partner findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue(String deviceProviderId);
 
-    @Query(value = "select * from partner ppr where ppr.email_id=?", nativeQuery = true)
+    @Query(value = "select * from partner ppr where ppr.email_id=? and (ppr.is_deleted is null or ppr.is_deleted = false)", nativeQuery = true)
     public Partner findByEmailId(String emailId);
 
-    @Query("SELECT p FROM Partner p WHERE p.emailIdHash = :emailIdHash")
+    @Query("SELECT p FROM Partner p WHERE p.emailIdHash = :emailIdHash AND (p.isDeleted IS NULL OR p.isDeleted = false)")
     Partner findByEmailIdHash(@Param("emailIdHash") String emailIdHash);
 
     Partner findByIdAndIsActiveIsTrue(String id);
