@@ -150,7 +150,7 @@ AddBioExtractors:
       outputTemplate: pms/responseCode
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"!@#$%^&*()"
+  "requestId":"!@$%^&*()"
   }'
       output: '{
    "responseCode": "400"
