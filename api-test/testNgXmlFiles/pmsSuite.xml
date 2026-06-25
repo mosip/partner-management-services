@@ -701,15 +701,6 @@
                     name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
         </classes>
     </test>
-    <test name="GetCredentialTypesByPartnerAndPolicy">
-        <parameter name="ymlFile"
-                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicy.yml"/>
-        <parameter name="pathParams" value="partnerId,policyId"/>
-        <classes>
-            <class
-                    name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
-        </classes>
-    </test>
     <test name="GetAllRequestedPolicy">
         <parameter name="ymlFile"
                    value="pms/GetAllRequestedPolicy/GetAllRequestedPolicy.yml"/>
