@@ -637,15 +637,6 @@
                     name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>
         </classes>
     </test>
-    <test name="DeleteBioExtractorConfigurationNegativeScenarios">
-        <parameter name="ymlFile"
-                   value="pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfigurationNegativeScenarios.yml"/>
-        <parameter name="pathParams" value="bioExtractorConfigurationId"/>
-        <classes>
-            <class
-                    name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>
-        </classes>
-    </test>
     <test name="AddBioExtractors">
         <parameter name="ymlFile"
                    value="pms/credentialPartner/AddBioExtractors/AddBioExtractors.yml"/>
@@ -655,27 +646,9 @@
                     name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams"/>
         </classes>
     </test>
-    <test name="AddBioExtractorsNegativeScenarios">
-        <parameter name="ymlFile"
-                   value="pms/credentialPartner/AddBioExtractors/AddBioExtractorsNegativeScenarios.yml"/>
-        <parameter name="pathParams" value="requestId"/>
-        <classes>
-            <class
-                    name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams"/>
-        </classes>
-    </test>
     <test name="MapPartnerAndPolicytoCredentialType">
         <parameter name="ymlFile"
                    value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml"/>
-        <parameter name="pathParams" value="requestId"/>
-        <classes>
-            <class
-                    name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams"/>
-        </classes>
-    </test>
-    <test name="MapPartnerAndPolicytoCredentialTypeNegativeScenarios">
-        <parameter name="ymlFile"
-                   value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialTypeNegativeScenarios.yml"/>
         <parameter name="pathParams" value="requestId"/>
         <classes>
             <class
@@ -723,6 +696,15 @@
     <test name="GetPolicyforMappedPartnerAndCredentialtype">
         <parameter name="ymlFile"
                    value="pms/GetPolicyforMappedPartnerAndCredentialtype/GetPolicyforMappedPartnerAndCredentialtype.yml"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+        </classes>
+    </test>
+    <test name="GetCredentialTypesByPartnerAndPolicy">
+        <parameter name="ymlFile"
+                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicy.yml"/>
+        <parameter name="pathParams" value="partnerId,policyId"/>
         <classes>
             <class
                     name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>

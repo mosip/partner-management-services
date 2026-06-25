@@ -44,3 +44,547 @@ AddBioExtractors:
       output: '{
       "response": "Bio extract request submitted successfully."
       }'
+   Pms_AddBioExtractors_invalid_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_04
+      description: Validate that adding bio extractors fails when an invalid requestId is provided
+      role: partner
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"abcd"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_284"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_NonExisting_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_05
+      description: Validate that adding bio extractors fails when a non-existing requestId is provided
+      role: partner
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"999999999"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_284"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_invalid_accessToken_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_06
+      description: Validate that adding bio extractors fails when an invalid access token is provided
+      role: invalidtoken
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-ATH-401"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_Without_PartnerAdmin_AndCredentialPartner_Role_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_07
+      description: Validate that adding bio extractors fails when non partner admin and credential partner role is provided
+      role: partnerauth
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-ATH-403"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpaceValueIn_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_08
+      description: Validate that adding bio extractors fails when a space value is provided for requestId
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":" "
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_284"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_SpecialCharactersIn_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_09
+      description: Validate that adding bio extractors fails when special characters are provided for requestId
+      role: partneradmin
+      restMethod: post
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/responseCode
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"!@#$%^&*()"
+  }'
+      output: '{
+   "responseCode": "400"
+}'
+   Pms_AddBioExtractors_With_Invalid_AttributeName_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_10
+      description: Validate that adding bio extractors fails when invalid value is provided as attribute name
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"invalid",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpaceValueIn_AttributeName_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_11
+      description: Validate that adding bio extractors fails when space value is provided as attribute name
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":" ",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpecialCharactersIn_AttributeName_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_12
+      description: Validate that adding bio extractors fails when special characters are provided as attribute name
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"!@#$%^&*()",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_007"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_Invalid_Biometrics_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_13
+      description: Validate that adding bio extractors fails when invalid value is provided as biometric
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"invalid",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpaceValueIn_Biometrics_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_14
+      description: Validate that adding bio extractors fails when space value is provided as biometric
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":" ",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpecialCharactersIn_Biometrics_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_15
+      description: Validate that adding bio extractors fails when special characters are provided as biometric
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"!@#$%^&*()",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_007"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_InvalidValueIn_ExtractorProvider_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_16
+      description: Validate that adding bio extractors fails when invalid value is provided as extractor provider
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"!@#$%^&*()",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_007"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_MosipDataSharePolicy_AllreadyMapped_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_17
+      description: Validate that adding bio extractors fails when already mapped requestId is provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+    "requestTime": "$TIMESTAMP$",
+	"requestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_283"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_MosipDataSharePolicy_Again_AllreadyMapped_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_18
+      description: Validate that adding bio extractors fails when again already mapped requestId is provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/error
+      input: '{
+    "requestTime": "$TIMESTAMP$",
+    "requestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_283"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_Without_Extractors_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_19
+      description: Validate that adding bio extractors fails when empty extractor is provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsCustomAttribute
+      outputTemplate: pms/error
+      input: '{
+    "requestTime": "$TIMESTAMP$",
+	"requestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+	"extractors":[]
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_DuplicateExtractors_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_20
+      description: Validate that adding bio extractors fails when duplicate extractors are provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsCustomAttribute
+      outputTemplate: pms/error
+      input: '{
+    "requestTime": "$TIMESTAMP$",
+	"requestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+	"extractors":[
+	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"},
+	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"}
+	]
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_290"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_InvalidTimestamp_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_21
+      description: Validate that adding bio extractors fails when an invalid timestamp format is provided
+      role: partneradmin
+      restMethod: post
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractors
+      outputTemplate: pms/responseCode
+      input: '{
+  "requestTime": "2026/04/30 12:30:45",
+  "requestId":"$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+  }'
+      output: '{
+   "responseCode": "400"
+}'
+   Pms_AddBioExtractors_Without_ExtractorProviderVersion_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_22
+      description: Validate that adding bio extractors fails when a request sent without extractor provider version
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"$REMOVE$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_002"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_Invalid_ExtractorProvider_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_23
+      description: Validate that adding bio extractors fails when extractorProvider exceeds the maximum allowed length
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+    "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+    "requestTime": "$TIMESTAMP$",
+    "attributeName":"photo",
+    "biometric":"face",
+    "biometricSubTypes":"mock",
+    "extractorProvider":"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+    "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+  }'
+   Pms_AddBioExtractors_With_SpecialCharacter_ExtractorProvider_Neg:
+        endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+        uniqueIdentifier: TC_PMS_addBioExtractors_24
+        description: Validate that adding bio extractors fails when extractorProvider contains special characters
+        role: partneradmin
+        restMethod: post
+        inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+        outputTemplate: pms/error
+        input: '{
+      "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+      "requestTime": "$TIMESTAMP$",
+      "attributeName":"photo",
+      "biometric":"face",
+      "biometricSubTypes":"mock",
+      "extractorProvider":"@Invalid#Provider!%",
+      "extractorProviderVersion":"1.1"
+    }'
+        output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_007"
+          }
+      ]
+    }'
+   Pms_AddBioExtractors_With_Empty_ExtractorProvider_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_25
+      description: Validate that adding bio extractors fails when extractorProvider is empty
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestTime": "$TIMESTAMP$",
+        "attributeName":"photo",
+        "biometric":"face",
+        "biometricSubTypes":"mock",
+        "extractorProvider":"",
+        "extractorProviderVersion":"1.1"
+    }'
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_COR_001"
+          }
+      ]
+    }'
+   Pms_AddBioExtractors_With_Invalid_ExtractorProviderVersion_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_26
+      description: Validate that adding bio extractors fails when extractorProviderVersion contains an invalid value
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestTime": "$TIMESTAMP$",
+        "attributeName":"photo",
+        "biometric":"face",
+        "biometricSubTypes":"mock",
+        "extractorProvider":"mock",
+        "extractorProviderVersion":"iiiiiiiiinvalid"
+    }'
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_COR_001"
+          }
+     ]
+    }'
+   Pms_AddBioExtractors_With_Empty_ExtractorProviderVersion_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_27
+      description: Validate that adding bio extractors fails when extractorProviderVersion is empty
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestTime": "$TIMESTAMP$",
+        "attributeName":"photo",
+        "biometric":"face",
+        "biometricSubTypes":"mock",
+        "extractorProvider":"mock",
+        "extractorProviderVersion":""
+     }'
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_COR_002"
+          }
+     ]
+    }'
+   Pms_AddBioExtractors_With_SpecialCharacter_ExtractorProviderVersion_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_28
+      description: Validate that adding bio extractors fails when extractorProviderVersion contains special characters
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestTime": "$TIMESTAMP$",
+        "attributeName":"photo",
+        "biometric":"face",
+        "biometricSubTypes":"mock",
+        "extractorProvider":"mock",
+        "extractorProviderVersion":"@%#!"
+	     }'
+      output: '{
+        "errors": [
+          {
+             "errorCode": "PMS_REQUEST_ERROR_007"
+           }
+     ]
+    }'
