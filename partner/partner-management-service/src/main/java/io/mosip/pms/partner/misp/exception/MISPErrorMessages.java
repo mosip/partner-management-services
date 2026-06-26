@@ -39,10 +39,7 @@ public enum MISPErrorMessages {
 	MISP_LICENSE_NOT_FOUND("PMS_MSP_439","No Active MISP License key found for the given Partner ID and Policy ID."),
 	ERROR_UPDATING_MISP_LICENSE("PMS_MSP_440","Error while updating MISP License key."),
 	MISP_LICENSE_NOT_FOUND_BY_ID("PMS_MSP_441","No MISP License key found for the given MISP License ID."),
-	INVALID_STATUS_FOR_UPDATE("PMS_MSP_442","Invalid status. Status should be 'ACTIVE' or 'INACTIVE'."),
-	NOTHING_TO_UPDATE("PMS_MSP_443","At least one field (expiryDate or status) must be provided for update."),
-	EXPIRY_DATE_REQUIRED_FOR_ACTIVE("PMS_MSP_444","Expiry date is mandatory when status is 'ACTIVE'."),
-	EXPIRY_DATE_MUST_NOT_BE_FUTURE_FOR_INACTIVE("PMS_MSP_445","Expiry date cannot be a future date when status is 'INACTIVE'.");
+	INVALID_STATUS_FOR_UPDATE("PMS_MSP_442","Invalid status. Only 'INACTIVE' is accepted.");
 
 	private final String errorCode;
 	private final String errorMessage;

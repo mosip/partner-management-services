@@ -16,7 +16,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
     @Query(value = "SELECT new MISPLicenseSummaryEntity(" +
             "m.mispLicenseId, m.mispId, p.name, pg.id, pg.name, pg.desc, ap.id, ap.name, " +
             "ap.descr, m.licenseKeyName, " +
-            "CONCAT(FUNCTION('repeat', '*', LENGTH(m.id.licenseKey) - 4), SUBSTRING(m.id.licenseKey, LENGTH(m.id.licenseKey) - 3, 4)) as mispLicenseKey, " +
+            "CONCAT(FUNCTION('repeat', '*', LENGTH(m.licenseKey) - 4), SUBSTRING(m.licenseKey, LENGTH(m.licenseKey) - 3, 4)) as mispLicenseKey, " +
             "CASE " +
             "WHEN (m.isActive = true) THEN 'ACTIVE' " +
             "WHEN (m.isActive = false) THEN 'INACTIVE' " +
@@ -26,7 +26,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             "LEFT JOIN m.policy ap " +
             "LEFT JOIN m.partner p " +
             "LEFT JOIN p.policyGroup pg " +
-            "WHERE (:partnerId IS NULL OR lower(m.id.mispId) LIKE %:partnerId%) " +
+            "WHERE (:partnerId IS NULL OR lower(m.mispId) LIKE %:partnerId%) " +
             "AND (:orgName IS NULL OR lower(p.name) LIKE %:orgName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +

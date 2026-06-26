@@ -107,7 +107,7 @@ public class MISPLicenseController {
 	@Deprecated(since = "release-1.3.0-beta.3")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensekey())")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
-	@Operation(summary = "Service to get/regenarate license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the PUT /misp-licenses/{partnerId} endpoint.")
+	@Operation(summary = "Service to get/regenarate license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /misp-licenses endpoint.")
 	public ResponseWrapper<MISPLicenseResponseDto> regenarteLicenseKey(@PathVariable @Valid String mispId){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));
@@ -222,7 +222,7 @@ public class MISPLicenseController {
 	@GetMapping("/misp-licenses/{mispLicenseId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensedetails())")
 	@Operation(summary = "This endpoint retrieves the details of a MISP Licence Key by its unique ID.",
-			description = "Available since release-1.3.0-GA. This endpoint retrieves the details of a MISP Licence Key based on the unique mispLicenseId. It is configured for PARTNER_ADMIN role.")
+			description = "Available since release-1.3.0. This endpoint retrieves the details of a MISP Licence Key based on the unique mispLicenseId. It is configured for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -234,8 +234,8 @@ public class MISPLicenseController {
 
 	@PatchMapping("/misp-licenses/{mispLicenseId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatemisplicensekey())")
-	@Operation(summary = "This endpoint updates the expiry date or status of a MISP Licence Key.",
-			description = "Available since release-1.3.0-GA. This endpoint is configured only for users with the PARTNER_ADMIN role. It supports updating expiryDate and/or status (ACTIVE/INACTIVE).")
+	@Operation(summary = "This endpoint deactivates a MISP Licence Key.",
+			description = "Available since release-1.3.0. This endpoint is configured only for users with the PARTNER_ADMIN role. It accepts status=INACTIVE to deactivate the specified MISP license key.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),

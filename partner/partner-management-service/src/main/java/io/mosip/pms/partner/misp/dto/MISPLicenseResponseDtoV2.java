@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Data
 public class MISPLicenseResponseDtoV2 {
 
+    private String mispLicenseId;
+
     private String partnerId;
 
     private String policyId;
