@@ -1,7 +1,7 @@
 \c mosip_pms
 
 -- -------------------------------------------------------------------------------------------------
--- Rollback for Bioextractor configuration soft delete support (1.3.0-GA)
+-- Rollback for Bioextractor configuration soft delete support (1.3.0)
 -- -------------------------------------------------------------------------------------------------
 
 -- Remove soft-deleted rows to safely restore uniqueness

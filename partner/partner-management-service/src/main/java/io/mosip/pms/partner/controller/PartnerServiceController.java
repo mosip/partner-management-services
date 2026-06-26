@@ -635,7 +635,7 @@ public class PartnerServiceController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<PartnerResponse> createPartner(@RequestBody @Valid RequestWrapperV2<PartnerRequest> requestWrapper) {
+	public ResponseWrapperV2<PartnerResponse> createPartner(@RequestBody @Valid RequestWrapperV2<PartnerRequestDto> requestWrapper) {
 		Optional<ResponseWrapperV2<PartnerResponse>> validationResponse = requestValidator.validate(postCreatePartnerId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
