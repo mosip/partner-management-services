@@ -193,7 +193,7 @@ GetAllNotifications:
        ]
 }'
    PMS_GetAllNotifications_UsingPartnerToken_FilteredByNotificationTypeRoot_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
+      endPoint: /v1/partnermanager/notifications?notificationType=ROOT_CERT_EXPIRY&pageNo=0&pageSize=4
       role: partnerftm
       description: Validate that retrieving notifications using a partner token fails when filtered by a notificationTypeRoot that the partner is not authorized to access
       uniqueIdentifier: TC_PMS_GetAllNotifications_13
@@ -261,9 +261,9 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_Weekly_Notifications:
-      endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
+      endPoint: /v1/partnermanager/notifications?notificationType=WEEKLY_SUMMARY&pageNo=0&pageSize=4
       role: partneradmin
-      description: Validate that the Get All Notifications API correctly retrieves notifications filtered for the current week returning only notifications issued within the last 7 days
+      description: Validate that the Get All Notifications API correctly retrieves notifications filtered for the current week, returning only notifications issued within the last 7 days
       uniqueIdentifier: TC_PMS_GetAllNotifications_17
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -274,7 +274,7 @@ GetAllNotifications:
       output: ' {
 }'
    Pms_GetAllNotifications_Filter_Root_Certificates_Notifications:
-      endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
+      endPoint: /v1/partnermanager/notifications?notificationType=ROOT_CERT_EXPIRY&pageNo=0&pageSize=4
       role: partneradmin
       description: Validate that the Get All Notifications API correctly retrieves notifications related to root certificates when filtered by the appropriate notificationType
       checkErrorsOnlyInResponse: true
@@ -312,7 +312,7 @@ GetAllNotifications:
       output: ' {
 }'
    Pms_GetAllNotifications_For_RootType_Notifications:
-      endPoint: /v1/partnermanager/notifications?notificationType=root&pageNo=0&pageSize=4
+      endPoint: /v1/partnermanager/notifications?notificationType=ROOT_CERT_EXPIRY&pageNo=0&pageSize=4
       role: partneradmin
       description: Validate that retrieving notifications fails when requesting notifications for RootType without proper filters
       uniqueIdentifier: TC_PMS_GetAllNotifications_21
@@ -325,7 +325,7 @@ GetAllNotifications:
       output: ' {
 }'
    Pms_GetAllNotifications_For_IntermediateType_Notifications:
-      endPoint: /v1/partnermanager/notifications?notificationType=intermediate&pageNo=0&pageSize=4
+      endPoint: /v1/partnermanager/notifications?notificationType=INTERMEDIATE_CERT_EXPIRY&pageNo=0&pageSize=4
       role: partneradmin
       description: Validate that retrieving notifications fails when requesting notifications for IntermediateType without proper filters or permissions
       uniqueIdentifier: TC_PMS_GetAllNotifications_22
@@ -338,7 +338,7 @@ GetAllNotifications:
       output: ' {
 }'
    Pms_GetAllNotifications_For_WeeklyType_Notifications:
-      endPoint: /v1/partnermanager/notifications?notificationType=weekly&pageNo=0&pageSize=4
+      endPoint: /v1/partnermanager/notifications?notificationType=WEEKLY_SUMMARY&pageNo=0&pageSize=4
       role: partneradmin
       description: Validate that retrieving notifications fails when requesting notifications for WeeklyType without proper filters
       uniqueIdentifier: TC_PMS_GetAllNotifications_23
@@ -351,7 +351,7 @@ GetAllNotifications:
       output: ' {
 }'
    Pms_GetAllNotifications_invalid_apiKeyName_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=apikey&apiKeyName=%2APMS121
+      endPoint: /v1/partnermanager/notifications?notificationType=API_KEY_EXPIRY&apiKeyName=%2APMS121
       role: partneradmin
       description: Validate that retrieving notifications fails when an invalid apiKeyName is provided in the request
       uniqueIdentifier: TC_PMS_GetAllNotifications_24
@@ -385,7 +385,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_policyName_invalid_notificationType_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&policyName=PMS-test
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&policyName=PMS-test
       role: partneradmin
       description: Validate that notifications retrieval fails when policyName is filtered with an invalid notificationType
       uniqueIdentifier: TC_PMS_GetAllNotifications_26
@@ -419,7 +419,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_invalid_ftmId_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&ftmId=342342
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&ftmId=342342
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid ftmId is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_28
@@ -432,7 +432,7 @@ GetAllNotifications:
       "totalResults": "0"
 }'
    Pms_GetAllNotifications_Filter_invalid_make_model_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&pageNo=0&pageSize=4&ftmId=ftm-1212&make=ftm-1212&model=ftm-1212
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid make or model is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_29
@@ -462,7 +462,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_invalid_SbiID_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&sbiId=PMS-SBI
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid sbiId is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_31
@@ -492,7 +492,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_invalid_SbiVersion_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI&sbiVersion=ab-102-13881
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&sbiId=PMS-SBI&sbiVersion=ab-102-13881
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid sbiVersion is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_33
@@ -505,7 +505,7 @@ GetAllNotifications:
       "totalResults": "0"
 }'
    Pms_GetAllNotifications_Filter_invalid_SbiVersionValues_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&sbiId=PMS-SBI&sbiVersion=_%2ASBI
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&sbiId=PMS-SBI&sbiVersion=_%2ASBI
       role: partneradmin
       description: Validate that notifications retrieval fails when invalid sbiVersion values are provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_34
@@ -569,7 +569,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_ApiKey_Invalid_ftmChipType_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&apiKeyName=12
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&apiKeyName=12
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid ftmChipType is provided while filtering by apiKey
       uniqueIdentifier: TC_PMS_GetAllNotifications_38
@@ -586,7 +586,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_ftmChip_Invalid_apikeyType_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&ftmId=12
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&ftmId=12
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid apiKeyType is provided while filtering by ftmChip
       uniqueIdentifier: TC_PMS_GetAllNotifications_39
@@ -603,7 +603,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_sbiId_Invalid_ftmChip_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&sbiId=12
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&sbiId=12
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid ftmChip is provided while filtering by sbiId
       uniqueIdentifier: TC_PMS_GetAllNotifications_40
@@ -620,7 +620,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_Filter_Invalid_NotificationType_invalid_partnerDomain_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip&partnerDomain=AUTH
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&partnerDomain=AUTH
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid notificationType or partnerDomain is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_41
@@ -671,7 +671,7 @@ GetAllNotifications:
        ]
 }'
    Pms_GetAllNotifications_with_MISP_NotificationType:
-      endPoint: /v1/partnermanager/notifications?notificationType=misp
+      endPoint: /v1/partnermanager/notifications?notificationType=MISP_LICENSE_KEY_EXPIRY
       role: partneradmin
       description: Validate that notifications retrieval fails when an unsupported MISP notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_44
@@ -684,7 +684,7 @@ GetAllNotifications:
       output: '{
 }'
    Pms_GetAllNotifications_with_Partner_NotificationType:
-      endPoint: /v1/partnermanager/notifications?notificationType=partner
+      endPoint: /v1/partnermanager/notifications?notificationType=PARTNER_CERT_EXPIRY
       role: partneradmin
       description: Validate that notifications retrieval fails when an unsupported Partner notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_45
@@ -697,7 +697,7 @@ GetAllNotifications:
       output: '{
 }'
    Pms_GetAllNotifications_with_Sbi_NotificationType:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY
       role: partneradmin
       description: Validate that notifications retrieval fails when an unsupported SBI notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_46
@@ -710,7 +710,7 @@ GetAllNotifications:
       output: '{
 }'
    Pms_GetAllNotifications_with_Ftm-chip_NotificationType:
-      endPoint: /v1/partnermanager/notifications?notificationType=ftm-chip
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY
       role: partneradmin
       description: Validate that notifications retrieval fails when an unsupported FTM-Chip notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_47
@@ -723,7 +723,7 @@ GetAllNotifications:
       output: '{
 }'
    Pms_GetAllNotifications_with_Apikey_NotificationType:
-      endPoint: /v1/partnermanager/notifications?notificationType=apikey
+      endPoint: /v1/partnermanager/notifications?notificationType=API_KEY_EXPIRY
       role: partneradmin
       description: Validate that notifications retrieval fails when an unsupported API Key notification type is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_48
@@ -736,7 +736,7 @@ GetAllNotifications:
       output: '{
 }'
    Pms_GetAllNotifications_Invalid_Certificate_ID_Neg:
-      endPoint: /v1/partnermanager/notifications?notificationType=sbi&certificateId=777apple@%123
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&certificateId=777apple@%123
       role: partneradmin
       description: Validate that notifications retrieval fails when an invalid certificateID is provided
       uniqueIdentifier: TC_PMS_GetAllNotifications_49
@@ -768,7 +768,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "apikey"
+      "notificationType": "API_KEY_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -818,7 +818,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "partner"
+      "notificationType": "PARTNER_CERT_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -843,7 +843,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-      "notificationType": "apikey"
+      "notificationType": "API_KEY_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -869,7 +869,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "apikey"
+      "notificationType": "API_KEY_EXPIRY"
 }'
       output: '{
 }'
@@ -889,7 +889,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "root"
+      "notificationType": "ROOT_CERT_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -914,7 +914,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "partner"
+      "notificationType": "PARTNER_CERT_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -940,7 +940,7 @@ GetAllNotifications:
       "expiryDate": "$ID:GetListOfAllSBI_Filter_Expiry_Period_30_days_Sid_sbiExpiryDateTime$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "sbi"
+      "notificationType": "SBI_EXPIRY"
 }'
       output: '{
 }'
@@ -961,7 +961,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "weekly"
+      "notificationType": "WEEKLY_SUMMARY"
 }'
       output: '{
 }'
@@ -981,7 +981,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "partner"
+      "notificationType": "PARTNER_CERT_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -1031,7 +1031,7 @@ GetAllNotifications:
       "expiryDate": "45/5/8990",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "root"
+      "notificationType": "ROOT_CERT_EXPIRY"
 }'
       output: '{
       "errors": [
@@ -1055,7 +1055,7 @@ GetAllNotifications:
       "model": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "sbiVersion": "MO.TD.01",
-      "notificationType": "sbi"
+      "notificationType": "SBI_EXPIRY"
 }'
       output: '{
 }'
@@ -1074,7 +1074,7 @@ GetAllNotifications:
       "model": "$REMOVE$",
       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$",
       "sbiVersion": "$REMOVE$",
-      "notificationType": "sbi"
+      "notificationType": "SBI_EXPIRY"
 }'
       output: '{
 }'
@@ -1093,7 +1093,7 @@ GetAllNotifications:
       "model": "FACE01",
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "notificationType": "ftm-chip"
+      "notificationType": "FTM_CHIP_CERT_EXPIRY"
 }'
       output: '{
 }'
@@ -1112,7 +1112,7 @@ GetAllNotifications:
       "model": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "notificationType": "ftm-chip"
+      "notificationType": "FTM_CHIP_CERT_EXPIRY"
 }'
       output: '{
 }'
@@ -1131,7 +1131,7 @@ GetAllNotifications:
       "model": "$REMOVE$",
       "sbiId": "$REMOVE$",
       "sbiVersion": "$REMOVE$",
-      "notificationType": "ftm-chip"
+      "notificationType": "FTM_CHIP_CERT_EXPIRY"
 }'
       output: '{
 }'
@@ -1152,7 +1152,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "weekly"
+      "notificationType": "WEEKLY_SUMMARY"
 }'
       output: '{
       "errors": [
@@ -1178,7 +1178,7 @@ GetAllNotifications:
       "expiryDate": "$REMOVE$",
       "mispPartnerId": "$REMOVE$",
       "mispLicenseKeyName": "$REMOVE$",
-      "notificationType": "partner"
+      "notificationType": "PARTNER_CERT_EXPIRY"
 }'
       output: '{
 }'
