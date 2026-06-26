@@ -1,6 +1,18 @@
 \c mosip_pms
 
 -- -------------------------------------------------------------------------------------------------
+-- Rollback for MISP License surrogate PK migration (1.3.0)
+-- -------------------------------------------------------------------------------------------------
+
+ALTER TABLE IF EXISTS pms.misp_license DROP CONSTRAINT IF EXISTS uk_mlic;
+
+ALTER TABLE IF EXISTS pms.misp_license DROP CONSTRAINT IF EXISTS pk_mlic;
+
+ALTER TABLE IF EXISTS pms.misp_license ADD CONSTRAINT pk_mlic PRIMARY KEY (misp_id, license_key);
+
+ALTER TABLE IF EXISTS pms.misp_license DROP COLUMN IF EXISTS misp_license_id;
+
+-- -------------------------------------------------------------------------------------------------
 -- Rollback for Bioextractor configuration soft delete support (1.3.0)
 -- -------------------------------------------------------------------------------------------------
 
