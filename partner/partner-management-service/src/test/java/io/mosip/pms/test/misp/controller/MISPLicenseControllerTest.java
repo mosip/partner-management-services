@@ -428,7 +428,6 @@ public class MISPLicenseControllerTest {
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
 	public void updateMISPLicenseTest_InvalidRequest() throws Exception {
 		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
-		// Validation fails -> controller returns the validator error and must NOT call the service.
 		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
 

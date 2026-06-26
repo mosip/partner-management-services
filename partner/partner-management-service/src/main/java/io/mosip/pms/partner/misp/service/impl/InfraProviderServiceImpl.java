@@ -585,7 +585,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			Optional<AuthPolicy> mispPolicyFromDb = validatePolicy(partnerId, request.getPolicyId());
 			String policyId = mispPolicyFromDb.map(AuthPolicy::getId).orElse(null);
 
-			// licenseKeyName uniqueness check: scoped to partnerId only, across all records
 			List<MISPLicenseEntityV2> mispLicenseFromDb = mispLicenseV2Repository.findByPartnerIdAndLicenseKeyName(partnerId, PartnerUtil.trimAndReplace(licenseKeyName));
 			if (!mispLicenseFromDb.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_NAME_EXISTS.getErrorCode(),
@@ -598,7 +597,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 						MISPErrorMessages.EXPIRYDATE_SHOULD_BE_GREATER_THAN_TODAYS_DATE.getErrorMessage());
 			}
 
-			// deactivate all existing active licenses for the partner (no WebSub events)
 			List<MISPLicenseEntityV2> activeLicenses = mispLicenseV2Repository.findActiveLicenseKeyByPartnerId(partnerId);
 			boolean hadActiveLicenses = !activeLicenses.isEmpty();
 			if (hadActiveLicenses) {
