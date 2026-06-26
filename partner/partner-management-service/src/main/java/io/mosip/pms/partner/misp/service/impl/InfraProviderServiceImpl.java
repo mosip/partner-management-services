@@ -632,7 +632,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			responseDtoV2.setLicenseKey(entity.getLicenseKey());
 			responseDtoV2.setExpiryDateTime(entity.getValidToDate());
 			responseDtoV2.setLicenseKeyName(entity.getLicenseKeyName());
-			responseDtoV2.setLicenseKeyStatus(ACTIVE);
+			responseDtoV2.setStatus(ACTIVE);
 			responseDtoV2.setPartnerId(entity.getMispId());
 			responseDtoV2.setPolicyId(entity.getPolicyId());
 			EventType eventType = hadActiveLicenses ? EventType.MISP_LICENSE_UPDATED : EventType.MISP_LICENSE_GENERATED;
@@ -752,6 +752,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 						MISPErrorMessages.INVALID_STATUS_FOR_UPDATE.getErrorMessage());
 			}
 
+
 			Optional<MISPLicenseEntityV2> licenseOpt = mispLicenseV2Repository.findById(mispLicenseId);
 			if (licenseOpt.isEmpty()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_FOUND_BY_ID.getErrorCode(),
@@ -774,7 +775,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			responseDtoV2.setPartnerId(updated.getMispId());
 			responseDtoV2.setPolicyId(updated.getPolicyId());
 			responseDtoV2.setLicenseKeyName(updated.getLicenseKeyName());
-			responseDtoV2.setLicenseKeyStatus(updated.getIsActive() ? ACTIVE : INACTIVE);
+			responseDtoV2.setStatus(updated.getIsActive() ? ACTIVE : INACTIVE);
 			responseDtoV2.setExpiryDateTime(updated.getValidToDate());
 
 			String updatedPolicyId = updated.getPolicyId();

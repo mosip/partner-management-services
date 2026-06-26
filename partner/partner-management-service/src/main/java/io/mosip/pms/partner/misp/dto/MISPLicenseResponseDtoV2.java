@@ -19,7 +19,7 @@ public class MISPLicenseResponseDtoV2 {
 
     private String licenseKeyName;
 
-    private String licenseKeyStatus;
+    private String status;
 
     private LocalDateTime expiryDateTime;
 }

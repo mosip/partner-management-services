@@ -715,11 +715,9 @@ public class PartnerManagementServiceImplTest {
 		partner.get().setPartnerTypeCode("MISP_Partner");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		MISPLicenseEntityV2 license = new MISPLicenseEntityV2();
-		MISPLicenseEntityPK id = new MISPLicenseEntityPK();
-		id.setLicenseKey("qwertyhgfdsdfghb");
+		license.setLicenseKey("qwertyhgfdsdfghb");
 		license.setIsActive(true);
-		id.setMispId("12345");
-		license.setId(id);
+		license.setMispId("12345");
 		license.setValidFromDate(LocalDateTime.now().minusDays(1));
 		license.setValidToDate(LocalDateTime.now().plusDays(5));
 		Mockito.when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerId("123456")).thenReturn(List.of(license));

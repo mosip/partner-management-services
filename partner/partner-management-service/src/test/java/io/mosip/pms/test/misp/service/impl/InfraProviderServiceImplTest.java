@@ -335,10 +335,8 @@ public class InfraProviderServiceImplTest {
 		String licenseKey = "12345";
 		String status = "active";
 		MISPLicenseEntityV2 mispLicenseEntity = new MISPLicenseEntityV2();
-		MISPLicenseEntityPK mispLicenseEntityPK = new MISPLicenseEntityPK();
-		mispLicenseEntityPK.setLicenseKey(licenseKey);
-		mispLicenseEntityPK.setMispId(misp_id);
-		mispLicenseEntity.setId(mispLicenseEntityPK);
+		mispLicenseEntity.setLicenseKey(licenseKey);
+		mispLicenseEntity.setMispId(misp_id);
 		mispLicenseEntity.setIsActive(true);
 		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
 		Mockito.when(mispLicenseV2Repository.findByPartnerIdAndLicenseKey(id, licenseKey)).thenReturn(mispLicenseEntity);
@@ -352,10 +350,8 @@ public class InfraProviderServiceImplTest {
 		String licenseKey = "12345";
 		String status = "abcdef";
 		MISPLicenseEntityV2 mispLicenseEntity = new MISPLicenseEntityV2();
-		MISPLicenseEntityPK mispLicenseEntityPK = new MISPLicenseEntityPK();
-		mispLicenseEntityPK.setLicenseKey(licenseKey);
-		mispLicenseEntityPK.setMispId(misp_id);
-		mispLicenseEntity.setId(mispLicenseEntityPK);
+		mispLicenseEntity.setLicenseKey(licenseKey);
+		mispLicenseEntity.setMispId(misp_id);
 		mispLicenseEntity.setIsActive(true);
 		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
 		Mockito.when(mispLicenseV2Repository.findByPartnerIdAndLicenseKey(id, licenseKey)).thenReturn(mispLicenseEntity);
@@ -369,10 +365,8 @@ public class InfraProviderServiceImplTest {
 		String licenseKey = "12345";
 		String status = "active";
 		MISPLicenseEntityV2 mispLicenseEntity = new MISPLicenseEntityV2();
-		MISPLicenseEntityPK mispLicenseEntityPK = new MISPLicenseEntityPK();
-		mispLicenseEntityPK.setLicenseKey(licenseKey);
-		mispLicenseEntityPK.setMispId(misp_id);
-		mispLicenseEntity.setId(mispLicenseEntityPK);
+		mispLicenseEntity.setLicenseKey(licenseKey);
+		mispLicenseEntity.setMispId(misp_id);
 		mispLicenseEntity.setIsActive(true);
 		mispLicenseEntity.setValidToDate(LocalDateTime.now().plusYears(1));
 		infraProviderServiceImpl.updateInfraProvider(id, licenseKey, status);
@@ -771,10 +765,9 @@ public class InfraProviderServiceImplTest {
 
 	private MISPLicenseEntityV2 getMISPLicenseEntityV2() {
 		MISPLicenseEntityV2 entity = new MISPLicenseEntityV2();
-		MISPLicenseEntityPK pk = new MISPLicenseEntityPK();
-		pk.setMispId("partner1");
-		pk.setLicenseKey("xxxxxx");
-		entity.setId(pk);
+		entity.setMispLicenseId("misp-license-1");
+		entity.setMispId("partner1");
+		entity.setLicenseKey("xxxxxx");
 		entity.setLicenseKeyName("license1");
 		entity.setPolicyId("policy1");
 		entity.setIsActive(true);
