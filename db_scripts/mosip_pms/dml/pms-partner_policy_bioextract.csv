@@ -1,5 +1,5 @@
 id,part_id,policy_id,attribute_name,extractor_provider,extractor_provider_version,biometric_modality,biometric_sub_types,cr_by,cr_dtimes,upd_by,upd_dtimes
-146098,mpartner-default-auth,mpolicy-default-auth,individualBiometrics,mock,1.1,face,,admin,now(),admin,now()
+146098,mpartner-default-auth,mpolicy-default-auth,photo,mock,1.1,face,,admin,now(),admin,now()
 146099,mpartner-default-auth,mpolicy-default-auth,individualBiometrics,mock,1.1,iris,,admin,now(),admin,now()
 146100,mpartner-default-auth,mpolicy-default-auth,individualBiometrics,mock,1.1,finger,,admin,now(),admin,now()
 146101,mpartner-default-print,mpolicy-default-qrcode,individualBiometrics,mock,1.1,face,,admin,now(),admin,now()
