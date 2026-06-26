@@ -1017,24 +1017,13 @@ public class InfraProviderServiceImplTest {
 
 	@Test
 	public void updateMISPLicenseTest_WithStatusActivate() {
-		MISPLicenseEntityV2 deactivatedEntity = getMISPLicenseEntityV2();
-		deactivatedEntity.setIsActive(false);
-		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.of(deactivatedEntity));
-
-		MISPLicenseEntityV2 updatedEntity = getMISPLicenseEntityV2();
-		updatedEntity.setIsActive(true);
-		when(mispLicenseV2Repository.save(any())).thenReturn(updatedEntity);
-
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("ACTIVE");
-		dto.setExpiryDate(LocalDate.now().plusDays(30));
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
-		assertNotNull(result.getResponse());
-		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
-		assertEquals("ACTIVE", result.getResponse().getStatus());
-		verify(mispLicenseV2Repository).save(any());
+		assertErrorCode(result.getErrors(), "PMS_MSP_442");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
@@ -1044,19 +1033,22 @@ public class InfraProviderServiceImplTest {
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
-		assertErrorCode(result.getErrors(), "PMS_MSP_444");
+		assertErrorCode(result.getErrors(), "PMS_MSP_442");
 		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
-	public void updateMISPLicenseTest_InactiveWithFutureExpiryDate() {
+	public void updateMISPLicenseTest_AlreadyDeactivated() {
+		MISPLicenseEntityV2 deactivatedEntity = getMISPLicenseEntityV2();
+		deactivatedEntity.setIsActive(false);
+		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.of(deactivatedEntity));
+
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("INACTIVE");
-		dto.setExpiryDate(LocalDate.now().plusDays(1));
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
-		assertErrorCode(result.getErrors(), "PMS_MSP_445");
+		assertErrorCode(result.getErrors(), "PMS_MSP_434");
 		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
@@ -1069,7 +1061,6 @@ public class InfraProviderServiceImplTest {
 
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
 		dto.setStatus("INACTIVE");
-		dto.setExpiryDate(LocalDate.now());
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
@@ -1079,28 +1070,24 @@ public class InfraProviderServiceImplTest {
 	}
 
 	@Test
-	public void updateMISPLicenseTest_WithExpiryDate() {
-		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.of(getMISPLicenseEntityV2()));
-		when(mispLicenseV2Repository.save(any())).thenReturn(getMISPLicenseEntityV2());
-
+	public void updateMISPLicenseTest_WithNoStatus() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
-		dto.setExpiryDate(LocalDate.now().plusDays(60));
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
-		assertNotNull(result.getResponse());
-		assertTrue(result.getErrors() == null || result.getErrors().isEmpty());
-		verify(mispLicenseV2Repository).save(any());
+		assertErrorCode(result.getErrors(), "PMS_MSP_442");
+		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
 	@Test
-	public void updateMISPLicenseTest_WithBothFields() {
+	public void updateMISPLicenseTest_WithInactiveStatus() {
 		when(mispLicenseV2Repository.findById(anyString())).thenReturn(Optional.of(getMISPLicenseEntityV2()));
-		when(mispLicenseV2Repository.save(any())).thenReturn(getMISPLicenseEntityV2());
+		MISPLicenseEntityV2 updatedEntity = getMISPLicenseEntityV2();
+		updatedEntity.setIsActive(false);
+		when(mispLicenseV2Repository.save(any())).thenReturn(updatedEntity);
 
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
-		dto.setStatus("ACTIVE");
-		dto.setExpiryDate(LocalDate.now().plusDays(60));
+		dto.setStatus("INACTIVE");
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
@@ -1125,7 +1112,7 @@ public class InfraProviderServiceImplTest {
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
-		assertErrorCode(result.getErrors(), "PMS_MSP_443");
+		assertErrorCode(result.getErrors(), "PMS_MSP_442");
 		verify(mispLicenseV2Repository, never()).save(any());
 	}
 
@@ -1143,11 +1130,10 @@ public class InfraProviderServiceImplTest {
 	@Test
 	public void updateMISPLicenseTest_WithPastExpiryDate() {
 		MISPLicensePatchRequestDto dto = new MISPLicensePatchRequestDto();
-		dto.setExpiryDate(LocalDate.now().minusDays(10));
 
 		var result = infraProviderServiceImpl.updateMISPLicense("misp-license-1", dto);
 
-		assertErrorCode(result.getErrors(), "PMS_MSP_425");
+		assertErrorCode(result.getErrors(), "PMS_MSP_442");
 		verify(mispLicenseV2Repository, never()).save(any());
 	}
 

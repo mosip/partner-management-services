@@ -442,11 +442,11 @@ public class MISPLicenseControllerTest {
 
 	@Test
 	@WithMockUser(roles = {"PARTNER_ADMIN"})
-	public void updateMISPLicenseTest_WithExpiryDate() throws Exception {
+	public void updateMISPLicenseTest_WithInactiveStatus() throws Exception {
 		String mispLicenseId = "550e8400-e29b-41d4-a716-446655440000";
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
 		MISPLicensePatchRequestDto patchRequest = new MISPLicensePatchRequestDto();
-		patchRequest.setExpiryDate(LocalDate.now().plusDays(30));
+		patchRequest.setStatus("INACTIVE");
 		RequestWrapperV2<MISPLicensePatchRequestDto> requestWrapper = new RequestWrapperV2<>();
 		requestWrapper.setId("mosip.pms.update.misp.license.patch");
 		requestWrapper.setVersion("1.0");
