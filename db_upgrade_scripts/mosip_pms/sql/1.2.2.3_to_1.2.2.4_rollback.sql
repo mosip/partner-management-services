@@ -1,5 +1,12 @@
 \c mosip_pms
 
+-- Rollback attribute name from photo to individualBiometrics in pms.partner_policy_bioextract for id 146098
+UPDATE pms.partner_policy_bioextract
+SET attribute_name='individualBiometrics',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='146098';
+
 -- Table : pms.auth_policy
 -- Reason: Rollback CRVS attributes (declaredAsDeceased) from mpolicy-default-auth
 UPDATE pms.auth_policy

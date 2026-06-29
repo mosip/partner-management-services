@@ -1,5 +1,12 @@
 \c mosip_pms
 
+-- Attribute name changed from individualBiometrics to photo in pms.partner_policy_bioextract for id 146098
+UPDATE pms.partner_policy_bioextract
+SET attribute_name='photo',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='146098';
+
 -- Table : pms.auth_policy
 -- Reason: CRVS attributes needs to be added
 -- Note: Before executing check the existing policy_file_id for id='mpolicy-default-auth'
