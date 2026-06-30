@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -91,8 +92,9 @@ public class DBValidator extends AdminTestUtil implements ITest {
 	    set.addAll(jsonObject.keySet());
 	    String filterId = "";
 	    
-	    if (set.stream().findFirst().isPresent())
-	    	filterId = set.stream().findFirst().get();
+	    Optional<String> first = set.stream().findFirst();
+	    if (first.isPresent())
+	    	filterId = first.get();
 	    
 	    logger.info(filterId);
 		String query = testCaseDTO.getEndPoint() +" " + filterId + " = " +"'"+jsonObject.getString(filterId)+"'";
