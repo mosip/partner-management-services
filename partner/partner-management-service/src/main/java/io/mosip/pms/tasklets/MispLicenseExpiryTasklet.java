@@ -82,7 +82,7 @@ public class MispLicenseExpiryTasklet implements Tasklet {
 				// Step 3: Process each MISP License Key
 				for (MISPLicenseEntityV2 mispLicenseDetails : allActiveMispLicenses) {
 					// Get partner information from MISP license
-					String mispPartnerId = mispLicenseDetails.getId().getMispId();
+					String mispPartnerId = mispLicenseDetails.getMispId();
 					Optional<Partner> partnerOptional = batchJobHelper.getPartnerById(mispPartnerId);
 	 
 					if (partnerOptional.isEmpty()) {

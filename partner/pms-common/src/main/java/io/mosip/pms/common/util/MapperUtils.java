@@ -569,8 +569,8 @@ public class MapperUtils {
 
 	public static MISPDataPublishDto mapDataToPublishDtoV2(MISPLicenseEntityV2 entity) {
 		MISPDataPublishDto dto = new MISPDataPublishDto();
-		populateDto(dto, entity.getId().getLicenseKey(), entity.getValidFromDate(),
-				entity.getValidToDate(), entity.getId().getMispId(), entity.getIsActive());
+		populateDto(dto, entity.getLicenseKey(), entity.getValidFromDate(),
+				entity.getValidToDate(), entity.getMispId(), entity.getIsActive());
 		return dto;
 	}
 

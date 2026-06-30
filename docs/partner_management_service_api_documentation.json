@@ -3223,8 +3223,8 @@
                         "schema": {
                             "type": "string",
                             "enum": [
-                                "activated",
-                                "deactivated"
+                                "ACTIVE",
+                                "INACTIVE"
                             ]
                         }
                     },
@@ -3332,8 +3332,8 @@
                                                             "status": {
                                                                 "type": "string",
                                                                 "enum": [
-                                                                    "activated",
-                                                                    "deactivated"
+                                                                    "ACTIVE",
+                                                                    "INACTIVE"
                                                                 ],
                                                                 "description": "Status of the MISP License key"
                                                             },
@@ -3387,7 +3387,7 @@
                                                         "mispLicenseKeyName": "MISP License Key 1",
                                                         "mispLicenseKey": "********xyz",
                                                         "expiryDateTime": "2025-07-15T10:00:00Z",
-                                                        "status": "activated",
+                                                        "status": "ACTIVE",
                                                         "createdDateTime": "2024-08-08T10:00:00Z"
                                                     }
                                                 ]
@@ -3476,7 +3476,7 @@
                             "examples": {
                                 "Example 1": {
                                     "value": {
-                                        "id": "string",
+                                        "id": "mosip.pms.misp.generate.license.post",
                                         "version": "1.0",
                                         "requestTime": "2024-11-05T10:36:13.780Z",
                                         "metadata": {},
@@ -3520,9 +3520,14 @@
                                             "nullable": true,
                                             "type": "object",
                                             "properties": {
+                                                "mispLicenseId": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "description": "Unique UUID identifier of the generated MISP License Key"
+                                                },
                                                 "partnerId": {
                                                     "type": "string",
-                                                    "description": "Unique identifier for the partner"
+                                                    "description": "Unique identifier of the MISP partner"
                                                 },
                                                 "policyId": {
                                                     "type": "string",
@@ -3530,20 +3535,24 @@
                                                 },
                                                 "licenseKey": {
                                                     "type": "string",
-                                                    "description": "Unique key for the MISP Partner"
+                                                    "description": "Unique license key generated for the MISP Partner"
                                                 },
                                                 "licenseKeyName": {
                                                     "type": "string",
                                                     "description": "Name of the MISP License Key"
                                                 },
-                                                "licenseKeyStatus": {
+                                                "status": {
                                                     "type": "string",
+                                                    "enum": [
+                                                        "ACTIVE",
+                                                        "INACTIVE"
+                                                    ],
                                                     "description": "Status of the MISP License Key"
                                                 },
                                                 "expiryDateTime": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "description": "Expiry date in ISO format"
+                                                    "description": "Expiry date and time of the MISP License Key in ISO format"
                                                 }
                                             }
                                         },
@@ -3567,16 +3576,17 @@
                                     },
                                     "x-examples": {
                                         "Example 1": {
-                                            "id": "string",
+                                            "id": "mosip.pms.misp.generate.license.post",
                                             "version": "1.0",
                                             "responseTime": "2024-11-05T10:36:13.780Z",
                                             "metadata": {},
                                             "response": {
+                                                "mispLicenseId": "4375037d-d069-4670-8b8b-97cb53d4d36e",
                                                 "partnerId": "partner123",
                                                 "policyId": "policy789",
                                                 "licenseKey": "abcdef-123456",
                                                 "licenseKeyName": "MISP License Key 1",
-                                                "licenseKeyStatus": "ACTIVE",
+                                                "status": "ACTIVE",
                                                 "expiryDateTime": "2025-07-15T10:00:00Z"
                                             },
                                             "errors": []
@@ -3611,13 +3621,13 @@
                 ]
             }
         },
-        "/misp-licenses/{partnerId}": {
+        "/misp-licenses/{mispLicenseId}": {
             "get": {
                 "tags": [
                     "misp-license-controller"
                 ],
-                "summary": "NEW: Endpoint to get the details of MISP Licence Key.",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to get the details of MISP License Key based on Partner Id and optional query parameters.\n\nIt is configured for PARTNER_ADMIN role.",
+                "summary": "NEW: Get MISP License Key details by ID",
+                "description": "Available since release-1.3.0-GA.\n\nThis endpoint retrieves the full details of a MISP License Key by its unique UUID (`mispLicenseId`).\n\nIt is configured for PARTNER_ADMIN role.",
                 "operationId": "get-misp-license-details",
                 "parameters": [
                     {
@@ -3629,30 +3639,13 @@
                         }
                     },
                     {
-                        "name": "partnerId",
+                        "name": "mispLicenseId",
                         "in": "path",
-                        "description": "Unique identifier for the partner",
+                        "description": "Unique UUID identifier of the MISP License Key",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "policyId",
-                        "in": "query",
-                        "description": "Unique identifier for the policyId",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "mispLicenseKeyName",
-                        "in": "query",
-                        "description": "Name of MISP License Key",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -3684,9 +3677,14 @@
                                             "nullable": true,
                                             "type": "object",
                                             "properties": {
+                                                "mispLicenseId": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "description": "Unique UUID identifier of the MISP License Key"
+                                                },
                                                 "partnerId": {
                                                     "type": "string",
-                                                    "description": "Unique identifier for the partner"
+                                                    "description": "Unique identifier of the MISP partner"
                                                 },
                                                 "orgName": {
                                                     "type": "string",
@@ -3694,49 +3692,53 @@
                                                 },
                                                 "policyGroupId": {
                                                     "type": "string",
-                                                    "description": "Unique identifier for the policy group"
+                                                    "description": "Unique identifier of the Policy Group"
                                                 },
                                                 "policyGroupName": {
                                                     "type": "string",
-                                                    "description": "Name of the policy group"
+                                                    "description": "Name of the Policy Group"
                                                 },
                                                 "policyGroupDescription": {
                                                     "type": "string",
-                                                    "description": "Description of the policy group"
+                                                    "description": "Description of the Policy Group"
                                                 },
                                                 "policyId": {
                                                     "type": "string",
-                                                    "description": "Unique identifier for the policy"
+                                                    "description": "Unique identifier of the Policy"
                                                 },
                                                 "policyName": {
                                                     "type": "string",
-                                                    "description": "Name of the policy"
+                                                    "description": "Name of the Policy"
                                                 },
                                                 "policyDescription": {
                                                     "type": "string",
-                                                    "description": "Description of the policy"
+                                                    "description": "Description of the Policy"
                                                 },
                                                 "mispLicenseKeyName": {
                                                     "type": "string",
-                                                    "description": "Name of the MISP license key"
+                                                    "description": "Name of the MISP License Key"
                                                 },
                                                 "mispLicenseKey": {
                                                     "type": "string",
-                                                    "description": "Unique identifier for the MISP partner"
+                                                    "description": "Unique license key for the MISP Partner"
                                                 },
                                                 "expiryDateTime": {
                                                     "type": "string",
-                                                    "description": "Date and time when the MISP License expires",
-                                                    "format": "date-time"
+                                                    "format": "date-time",
+                                                    "description": "Date and time when the MISP License expires in ISO format"
                                                 },
                                                 "status": {
                                                     "type": "string",
-                                                    "description": "Current status of the MISP License key"
+                                                    "enum": [
+                                                        "ACTIVE",
+                                                        "INACTIVE"
+                                                    ],
+                                                    "description": "Current status of the MISP License Key"
                                                 },
                                                 "createdDateTime": {
                                                     "type": "string",
-                                                    "description": "Date and time when the record was created",
-                                                    "format": "date-time"
+                                                    "format": "date-time",
+                                                    "description": "Date and time when the record was created in ISO format"
                                                 }
                                             }
                                         },
@@ -3760,11 +3762,12 @@
                                     },
                                     "x-examples": {
                                         "Example 1": {
-                                            "id": "string",
-                                            "version": "string",
+                                            "id": "mosip.pms.misp.licenses.details.get",
+                                            "version": "1.0",
                                             "responseTime": "2024-11-22T12:59:04.105Z",
                                             "metadata": {},
                                             "response": {
+                                                "mispLicenseId": "4375037d-d069-4670-8b8b-97cb53d4d36e",
                                                 "partnerId": "partner123",
                                                 "orgName": "ABC",
                                                 "policyGroupId": "123456",
@@ -3779,12 +3782,7 @@
                                                 "status": "ACTIVE",
                                                 "createdDateTime": "2024-08-08T10:00:00Z"
                                             },
-                                            "errors": [
-                                                {
-                                                    "errorCode": "string",
-                                                    "message": "string"
-                                                }
-                                            ]
+                                            "errors": []
                                         }
                                     }
                                 }
@@ -4011,9 +4009,9 @@
                 "tags": [
                     "misp-license-controller"
                 ],
-                "summary": "NEW: Deactivate MISP License Key",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to deactivate the MISP License Key for a given MISP partner.\n\nThis endpoint is configured only for users with the PARTNER_ADMIN role.\nIt is an upgrade of the earlier PUT /misps endpoint.",
-                "operationId": "deactivate-misp-license",
+                "summary": "NEW: Update / Deactivate MISP License Key",
+                "description": "Available since release-1.3.0-GA.\n\nThis endpoint is used to update the expiry date or status of a MISP License Key. It is configured only for users with the PARTNER_ADMIN role.\n\n## Use cases\n\n### Activate (status = ACTIVE)\nSets the license key to active. When activating, a future `expiryDate` is mandatory — the license cannot be activated without a valid expiry date. The `expiryDate` must be strictly after today.\n\n### Deactivate (status = INACTIVE)\nSets the license key to inactive. The `expiryDate` is optional when deactivating. If an `expiryDate` is provided, it must be today or a past date — a future expiry date is not allowed on deactivation.\n\n### Update expiry date only (no status)\nUpdates only the expiry date without changing the current status. The `expiryDate` must be strictly after today.\n\n## Business rules\n- At least one of `status` or `expiryDate` must be provided.\n- `status` is case-sensitive: only `ACTIVE` and `INACTIVE` are accepted.\n- If `status` is `ACTIVE`, `expiryDate` is mandatory and must be a future date (strictly after today).\n- If `status` is `INACTIVE`, `expiryDate` is optional; if provided it must be today or a past date (not a future date).\n- If only `expiryDate` is provided (no `status`), it must be a future date.",
+                "operationId": "update-misp-license",
                 "parameters": [
                     {
                         "name": "Cookie",
@@ -4024,12 +4022,13 @@
                         }
                     },
                     {
-                        "name": "partnerId",
+                        "name": "mispLicenseId",
                         "in": "path",
-                        "description": "Unique identifier for the partner",
+                        "description": "Unique UUID identifier of the MISP License Key",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -4042,7 +4041,7 @@
                                 "properties": {
                                     "id": {
                                         "type": "string",
-                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.misp.license.patch`"
+                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.misp.license.patch`"
                                     },
                                     "version": {
                                         "type": "string",
@@ -4059,20 +4058,18 @@
                                     "request": {
                                         "type": "object",
                                         "properties": {
-                                            "policyId": {
-                                                "type": "string",
-                                                "description": "Unique identifier of the Policy"
-                                            },
-                                            "licenseKeyName": {
-                                                "type": "string",
-                                                "description": "Name of the MISP License Key Name"
-                                            },
                                             "status": {
                                                 "type": "string",
-                                                "description": "Status of MISP License Key",
+                                                "description": "New status for the MISP License Key. Case-sensitive. If ACTIVE, expiryDate is mandatory and must be a future date. If INACTIVE, expiryDate is optional and must not be a future date.",
                                                 "enum": [
-                                                    "De-Activate"
+                                                    "ACTIVE",
+                                                    "INACTIVE"
                                                 ]
+                                            },
+                                            "expiryDate": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "description": "New expiry date for the MISP License Key (YYYY-MM-DD). Mandatory when status is ACTIVE (must be a future date). Optional when status is INACTIVE (must be today or a past date). Must be a future date when provided without a status."
                                             }
                                         }
                                     }
@@ -4085,17 +4082,53 @@
                                 ]
                             },
                             "examples": {
-                                "Example 1": {
+                                "Activate with expiry date": {
+                                    "summary": "Activate a license key with a future expiry date",
                                     "value": {
-                                        "id": "string",
+                                        "id": "mosip.pms.update.misp.license.patch",
                                         "version": "1.0",
                                         "requestTime": "2024-11-05T10:36:13.780Z",
                                         "metadata": {},
                                         "request": {
-                                            "partnerId": "partner123",
-                                            "policyId": "policy789",
-                                            "licenseKeyName": "MISP License Key 1",
-                                            "status": "De-Activate"
+                                            "status": "ACTIVE",
+                                            "expiryDate": "2026-12-31"
+                                        }
+                                    }
+                                },
+                                "Deactivate": {
+                                    "summary": "Deactivate a license key (expiryDate optional)",
+                                    "value": {
+                                        "id": "mosip.pms.update.misp.license.patch",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "status": "INACTIVE"
+                                        }
+                                    }
+                                },
+                                "Deactivate with expiry date": {
+                                    "summary": "Deactivate a license key and set expiry to today",
+                                    "value": {
+                                        "id": "mosip.pms.update.misp.license.patch",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "status": "INACTIVE",
+                                            "expiryDate": "2024-11-05"
+                                        }
+                                    }
+                                },
+                                "Update expiry date only": {
+                                    "summary": "Update only the expiry date without changing the current status",
+                                    "value": {
+                                        "id": "mosip.pms.update.misp.license.patch",
+                                        "version": "1.0",
+                                        "requestTime": "2024-11-05T10:36:13.780Z",
+                                        "metadata": {},
+                                        "request": {
+                                            "expiryDate": "2026-12-31"
                                         }
                                     }
                                 }
@@ -4113,7 +4146,7 @@
                                     "properties": {
                                         "id": {
                                             "type": "string",
-                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.deactivate.misp.license.patch`"
+                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.update.misp.license.patch`"
                                         },
                                         "version": {
                                             "type": "string",
@@ -4131,21 +4164,39 @@
                                             "nullable": true,
                                             "type": "object",
                                             "properties": {
+                                                "mispLicenseId": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "description": "Unique UUID identifier of the MISP License Key"
+                                                },
                                                 "partnerId": {
                                                     "type": "string",
-                                                    "description": "Unique identifier for the partner"
+                                                    "description": "Unique identifier of the MISP partner"
                                                 },
                                                 "policyId": {
                                                     "type": "string",
                                                     "description": "Unique identifier of the Policy"
                                                 },
+                                                "licenseKey": {
+                                                    "type": "string",
+                                                    "description": "Unique license key for the MISP Partner"
+                                                },
                                                 "licenseKeyName": {
                                                     "type": "string",
                                                     "description": "Name of the MISP License Key"
                                                 },
-                                                "licenseKeyStatus": {
+                                                "status": {
                                                     "type": "string",
-                                                    "description": "Status of the MISP License Key"
+                                                    "enum": [
+                                                        "ACTIVE",
+                                                        "INACTIVE"
+                                                    ],
+                                                    "description": "Current status of the MISP License Key"
+                                                },
+                                                "expiryDateTime": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "description": "Expiry date and time of the MISP License Key in ISO format"
                                                 }
                                             }
                                         },
@@ -4169,15 +4220,18 @@
                                     },
                                     "x-examples": {
                                         "Example 1": {
-                                            "id": "string",
+                                            "id": "mosip.pms.update.misp.license.patch",
                                             "version": "1.0",
                                             "responseTime": "2024-11-05T10:36:13.780Z",
                                             "metadata": {},
                                             "response": {
+                                                "mispLicenseId": "4375037d-d069-4670-8b8b-97cb53d4d36e",
                                                 "partnerId": "partner123",
                                                 "policyId": "policy789",
+                                                "licenseKey": "********xyz",
                                                 "licenseKeyName": "MISP License Key 1",
-                                                "licenseKeyStatus": "INACTIVE"
+                                                "status": "ACTIVE",
+                                                "expiryDateTime": "2026-12-31T10:00:00Z"
                                             },
                                             "errors": []
                                         }
