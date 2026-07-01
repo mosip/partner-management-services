@@ -47,6 +47,7 @@ import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
 import io.mosip.pms.partner.misp.dto.MISPLicensePatchRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -203,7 +204,7 @@ public class MISPLicenseController {
 	@PostMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratemisplicense())")
 	@Operation(summary = "This endpoint is used to generate a MISP License Key for a given MISP partner.",
-			description = "Available since release-1.3.0. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint.")
+			description = "Available since release-1.3.0. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint. Note: The licenseKey is returned only once at the time of creation and will not be available for retrieval thereafter.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -240,9 +241,9 @@ public class MISPLicenseController {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<MISPLicenseResponseDtoV2> updateMISPLicense(@PathVariable @Valid String mispLicenseId,
+	public ResponseWrapperV2<MISPDeactivateResponseDto> updateMISPLicense(@PathVariable @Valid String mispLicenseId,
 			@RequestBody @Valid RequestWrapperV2<MISPLicensePatchRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<MISPLicenseResponseDtoV2>> validationResponse = requestValidator.validate(patchUpdateMISPApiId, requestWrapper);
+		Optional<ResponseWrapperV2<MISPDeactivateResponseDto>> validationResponse = requestValidator.validate(patchUpdateMISPApiId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}

@@ -79,6 +79,7 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicensePatchRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPErrorMessages;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
@@ -735,8 +736,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	}
 
 	@Override
-	public ResponseWrapperV2<MISPLicenseResponseDtoV2> updateMISPLicense(String mispLicenseId, MISPLicensePatchRequestDto request) {
-		ResponseWrapperV2<MISPLicenseResponseDtoV2> responseWrapper = new ResponseWrapperV2<>();
+	public ResponseWrapperV2<MISPDeactivateResponseDto> updateMISPLicense(String mispLicenseId, MISPLicensePatchRequestDto request) {
+		ResponseWrapperV2<MISPDeactivateResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			if (Objects.isNull(mispLicenseId) || mispLicenseId.trim().isBlank()) {
 				throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_NOT_FOUND_BY_ID.getErrorCode(),
@@ -768,13 +769,12 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			entity.setUpdatedDateTime(LocalDateTime.now(ZoneId.of("UTC")));
 			MISPLicenseEntityV2 updated = mispLicenseV2Repository.save(entity);
 
-			MISPLicenseResponseDtoV2 responseDtoV2 = new MISPLicenseResponseDtoV2();
+			MISPDeactivateResponseDto responseDtoV2 = new MISPDeactivateResponseDto();
 			responseDtoV2.setMispLicenseId(updated.getMispLicenseId());
 			responseDtoV2.setPartnerId(updated.getMispId());
 			responseDtoV2.setPolicyId(updated.getPolicyId());
 			responseDtoV2.setLicenseKeyName(updated.getLicenseKeyName());
 			responseDtoV2.setStatus(updated.getIsActive() ? ACTIVE : INACTIVE);
-			responseDtoV2.setExpiryDateTime(updated.getValidToDate());
 
 			String updatedPolicyId = updated.getPolicyId();
 			if (updatedPolicyId != null && !updatedPolicyId.isBlank()) {
