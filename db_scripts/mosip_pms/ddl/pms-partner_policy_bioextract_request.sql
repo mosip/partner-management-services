@@ -41,3 +41,5 @@ COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_dtimes IS 'Created Da
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_bioextract_request TO pmsuser;
+

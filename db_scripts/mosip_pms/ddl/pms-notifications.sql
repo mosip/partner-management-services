@@ -30,3 +30,5 @@ COMMENT ON COLUMN pms.notifications.cr_dtimes IS 'Created Timestamp: The date an
 COMMENT ON COLUMN pms.notifications.cr_by IS 'Created By: The ID or name of the user who created the record.';
 COMMENT ON COLUMN pms.notifications.upd_by IS 'Updated By: The ID or name of the user who last updated the record.';
 COMMENT ON COLUMN pms.notifications.upd_dtimes IS 'Updated Timestamp: The date and time when any field in the record was last updated.';
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.notifications TO pmsuser;
