@@ -916,7 +916,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Endpoint to deactivate API key and/or update expiry date",
-                "description": "This endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated. Note: Only Partner Admin can update the expiry date of the API key. Authentication Partners can only update the status.",
+                "description": "Available since release-1.3.0-beta.4.\r\n\r\nThis endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated. Note: Only Partner Admin can update the expiry date of the API key. Authentication Partners can only update the status.",
                 "operationId": "updateAPIKey",
                 "parameters": [
                     {
@@ -1702,7 +1702,7 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get list of all the Partner Id's associated with logged in User and filtered by Query Parameters",
-                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThe query parameter `status` is mandatory.\r\n\r\nThe query parameter `policyGroupAvailable` is optional.\r\n\r\nThe query parameter `partnerType` is optional for non-admin users.\r\n\r\nFor Partner Admin to fetch all partners, `partnerType` must be explicitly set to one of `MISP_Partner`, `ABIS_Partner`, or `Manual_Adjudication`.\r\nIf Partner Admin omits `partnerType`, the request will be rejected.\r\n\r\nFor non-admin users, if `partnerType` is omitted, results are limited to partners associated with the logged-in user (subject to status and policyGroupAvailable filters).\r\n\r\nIf you want the list of all partners, use the `/admin-partners` endpoint and do not use `/partners/v3` for this purpose.\r\n\r\nExample 1: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nThis returns Device Provider partner ids in approved status mapped to the logged in user; policy group attributes will be null.\r\n\r\nExample 2: `/partners/v3?status=approved&partnerType=MISP_Partner`\r\n- Admin users will receive all records for MISP_Partner.\r\n- Non-admin users will receive only those records mapped to their user account.\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,MANUAL_ADJUDICATION,SDK_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER\r\n",
+                "description": "This endpoint will fetch list of all the partners based on the query parameters.\r\n\r\nThis endpoint is designed to support the upcoming feature \"Multi Partner Type Support for a User\".\r\nWith this feature one PMS user account will be able to support multiple Partner Types.\r\nCurrently one PMS user account maps to one Partner Type and one Partner Id.\r\n\r\nThe query parameter `status` is mandatory.\r\n\r\nThe query parameter `policyGroupAvailable` is optional.\r\n\r\nThe query parameter `partnerType` is optional for non-admin users.\r\n\r\nFor Partner Admin to fetch all partners, `partnerType` must be explicitly set to one of `MISP_Partner`, `ABIS_Partner`, or `Manual_Adjudication`.\r\n\r\nFor non-admin users, if `partnerType` is omitted, results are limited to partners associated with the logged-in user (subject to status and policyGroupAvailable filters).\r\n\r\nIf you want the list of all partners, use the `/admin-partners` endpoint and do not use `/partners/v3` for this purpose.\r\n\r\nExample 1: `/partners/v3?status=approved&partnerType=Device_Provider&policyGroupAvailable=false`\r\nThis returns Device Provider partner ids in approved status mapped to the logged in user; policy group attributes will be null.\r\n\r\nExample 2: `/partners/v3?status=approved&partnerType=MISP_Partner`\r\n- Admin users will receive all records for MISP_Partner.\r\n- Non-admin users will receive only those records mapped to their user account.\r\n\r\nThis endpoint should be configured for the Roles: DEVICE_PROVIDER,FTM_PROVIDER,PARTNER_ADMIN,AUTH_PARTNER,ABIS_PARTNER,MANUAL_ADJUDICATION,SDK_PARTNER,CREDENTIAL_PARTNER,ONLINE_VERIFICATION_PARTNER\r\n",
                 "operationId": "partner-ids-v3",
                 "parameters": [
                     {
@@ -2051,7 +2051,7 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Get credential types mapped to a partner and policy",
-                "description": "Returns all active credential types mapped to the given partner ID and policy ID\r\nfrom the `partner_policy_credential_type` table.\r\n\r\nThe endpoint queries for records where `is_active = true` and `is_deleted` is null or false,\r\nmatching both the given `partnerId` and `policyId`.\r\n\r\nIn the typical application flow, there is exactly one active credential type per partner-policy pair.\r\nHowever, since the database primary key is on `(part_id, policy_id, credential_type)`,\r\nmultiple records with the same `partnerId` and `policyId` but different credential types are\r\ntechnically possible (e.g., via direct DB inserts). This endpoint handles that case and returns\r\nall matching active credential type names as a `credentialTypes` array inside the response object.\r\n\r\nIf no active mapping exists for the given partner and policy, the endpoint returns error\r\ncode `PMS_PRT_064` (No details found).\r\n\r\nThis endpoint should be configured for the Roles: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN,\r\nCREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER\r\n",
+                "description": "Available since release-1.3.0.\r\n\r\nThis endpoint returns the active credential types mapped to the given partner and policy.\r\n\r\nThis endpoint should be configured for the Roles: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER",
                 "operationId": "get-credential-types-by-partner-and-policy",
                 "parameters": [
                     {
@@ -2148,7 +2148,9 @@
                                             "responseTime": "2024-01-01T10:00:00Z",
                                             "metadata": {},
                                             "response": {
-                                                "credentialTypes": ["euin"]
+                                                "credentialTypes": [
+                                                    "euin"
+                                                ]
                                             },
                                             "errors": []
                                         }
@@ -3007,7 +3009,7 @@
                                 "required": [
                                     "id",
                                     "version",
-                                    "requesttime",
+                                    "requestTime",
                                     "request"
                                 ]
                             },
@@ -3627,7 +3629,7 @@
                     "misp-license-controller"
                 ],
                 "summary": "NEW: Get MISP License Key details by ID",
-                "description": "Available since release-1.3.0-GA.\n\nThis endpoint retrieves the full details of a MISP License Key by its unique UUID (`mispLicenseId`).\n\nIt is configured for PARTNER_ADMIN role.",
+                "description": "Available since release-1.3.0.\n\nThis endpoint retrieves the full details of a MISP License Key by its unique UUID (`mispLicenseId`).\n\nIt is configured for PARTNER_ADMIN role.",
                 "operationId": "get-misp-license-details",
                 "parameters": [
                     {
@@ -3803,214 +3805,12 @@
                     }
                 ]
             },
-            "put": {
-                "tags": [
-                    "misp-license-controller"
-                ],
-                "summary": "NEW: Re-generate MISP License Key",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to re-generate a MISP License Key for a given MISP partner.\n\nThis endpoint is configured only for users with the PARTNER_ADMIN role.\nIt is an upgrade of the earlier GET /misps/{mispId}/licenseKey endpoint.\n- Allows the user to set an expiry date for MISP license key.\n- Also it will re-generate new license key for requested partner",
-                "operationId": "regenerate-misp-license",
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "partnerId",
-                        "in": "path",
-                        "description": "Unique identifier for the partner",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.regenerate.misp.license.put`"
-                                    },
-                                    "version": {
-                                        "type": "string",
-                                        "description": "Version of this endpoint. \r\n`1.0`"
-                                    },
-                                    "requestTime": {
-                                        "type": "string",
-                                        "description": "Date time in ISO format, when request is being sent."
-                                    },
-                                    "metadata": {
-                                        "type": "object",
-                                        "description": "Optional metadata about the request"
-                                    },
-                                    "request": {
-                                        "type": "object",
-                                        "properties": {
-                                            "policyId": {
-                                                "type": "string",
-                                                "description": "Unique identifier of the Policy"
-                                            },
-                                            "licenseKeyName": {
-                                                "type": "string",
-                                                "description": "Name of the MISP License Key Name"
-                                            },
-                                            "expiryDate": {
-                                                "type": "string",
-                                                "format": "date",
-                                                "description": "Expiry date for MISP License Key"
-                                            }
-                                        }
-                                    }
-                                },
-                                "required": [
-                                    "id",
-                                    "version",
-                                    "requestTime",
-                                    "request"
-                                ]
-                            },
-                            "examples": {
-                                "Example 1": {
-                                    "value": {
-                                        "id": "string",
-                                        "version": "1.0",
-                                        "requestTime": "2024-11-05T10:36:13.780Z",
-                                        "metadata": {},
-                                        "request": {
-                                            "partnerId": "partner123",
-                                            "policyId": "policy789",
-                                            "licenseKeyName": "MISP License Key 1",
-                                            "expiryDate": "2025-07-15"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "*/*": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "Unique identifier required to call this endpoint. \r\n`mosip.pms.regenerate.misp.license.put`"
-                                        },
-                                        "version": {
-                                            "type": "string",
-                                            "description": "Version of this endpoint. \r\n`1.0`"
-                                        },
-                                        "responseTime": {
-                                            "type": "string",
-                                            "description": "Date time in ISO format, when response is being sent."
-                                        },
-                                        "metadata": {
-                                            "type": "object",
-                                            "description": "Optional metadata about the response"
-                                        },
-                                        "response": {
-                                            "nullable": true,
-                                            "type": "object",
-                                            "properties": {
-                                                "partnerId": {
-                                                    "type": "string",
-                                                    "description": "Unique identifier for the partner"
-                                                },
-                                                "policyId": {
-                                                    "type": "string",
-                                                    "description": "Unique identifier of the Policy"
-                                                },
-                                                "licenseKey": {
-                                                    "type": "string",
-                                                    "description": "Unique key for the MISP Partner"
-                                                },
-                                                "licenseKeyName": {
-                                                    "type": "string",
-                                                    "description": "Name of the MISP License Key"
-                                                },
-                                                "licenseKeyStatus": {
-                                                    "type": "string",
-                                                    "description": "Status of the MISP License Key"
-                                                },
-                                                "expiryDateTime": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "description": "Expiry date in ISO format"
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "array",
-                                            "description": "Array of error code and message indicating the error that has occurred",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "errorCode": {
-                                                        "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occurred"
-                                                    },
-                                                    "message": {
-                                                        "type": "string",
-                                                        "description": "Message indicating the error that has occurred"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "x-examples": {
-                                        "Example 1": {
-                                            "id": "string",
-                                            "version": "1.0",
-                                            "responseTime": "2024-11-05T10:36:13.780Z",
-                                            "metadata": {},
-                                            "response": {
-                                                "partnerId": "partner123",
-                                                "policyId": "policy789",
-                                                "licenseKey": "abcdef-123456",
-                                                "licenseKeyName": "MISP License Key 1",
-                                                "licenseKeyStatus": "ACTIVE",
-                                                "expiryDateTime": "2025-07-15T10:00:00Z"
-                                            },
-                                            "errors": []
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ]
-            },
             "patch": {
                 "tags": [
                     "misp-license-controller"
                 ],
-                "summary": "NEW: Update / Deactivate MISP License Key",
-                "description": "Available since release-1.3.0-GA.\n\nThis endpoint is used to update the expiry date or status of a MISP License Key. It is configured only for users with the PARTNER_ADMIN role.\n\n## Use cases\n\n### Activate (status = ACTIVE)\nSets the license key to active. When activating, a future `expiryDate` is mandatory — the license cannot be activated without a valid expiry date. The `expiryDate` must be strictly after today.\n\n### Deactivate (status = INACTIVE)\nSets the license key to inactive. The `expiryDate` is optional when deactivating. If an `expiryDate` is provided, it must be today or a past date — a future expiry date is not allowed on deactivation.\n\n### Update expiry date only (no status)\nUpdates only the expiry date without changing the current status. The `expiryDate` must be strictly after today.\n\n## Business rules\n- At least one of `status` or `expiryDate` must be provided.\n- `status` is case-sensitive: only `ACTIVE` and `INACTIVE` are accepted.\n- If `status` is `ACTIVE`, `expiryDate` is mandatory and must be a future date (strictly after today).\n- If `status` is `INACTIVE`, `expiryDate` is optional; if provided it must be today or a past date (not a future date).\n- If only `expiryDate` is provided (no `status`), it must be a future date.",
+                "summary": "NEW: Deactivate MISP License Key",
+                "description": "Available since release-1.3.0. Deactivates a MISP License Key. Requires `status=INACTIVE` in the request body. Configured for PARTNER_ADMIN role.",
                 "operationId": "update-misp-license",
                 "parameters": [
                     {
@@ -4060,16 +3860,10 @@
                                         "properties": {
                                             "status": {
                                                 "type": "string",
-                                                "description": "New status for the MISP License Key. Case-sensitive. If ACTIVE, expiryDate is mandatory and must be a future date. If INACTIVE, expiryDate is optional and must not be a future date.",
+                                                "description": "Must be `INACTIVE` to deactivate the MISP License Key.",
                                                 "enum": [
-                                                    "ACTIVE",
                                                     "INACTIVE"
                                                 ]
-                                            },
-                                            "expiryDate": {
-                                                "type": "string",
-                                                "format": "date",
-                                                "description": "New expiry date for the MISP License Key (YYYY-MM-DD). Mandatory when status is ACTIVE (must be a future date). Optional when status is INACTIVE (must be today or a past date). Must be a future date when provided without a status."
                                             }
                                         }
                                     }
@@ -4082,19 +3876,6 @@
                                 ]
                             },
                             "examples": {
-                                "Activate with expiry date": {
-                                    "summary": "Activate a license key with a future expiry date",
-                                    "value": {
-                                        "id": "mosip.pms.update.misp.license.patch",
-                                        "version": "1.0",
-                                        "requestTime": "2024-11-05T10:36:13.780Z",
-                                        "metadata": {},
-                                        "request": {
-                                            "status": "ACTIVE",
-                                            "expiryDate": "2026-12-31"
-                                        }
-                                    }
-                                },
                                 "Deactivate": {
                                     "summary": "Deactivate a license key (expiryDate optional)",
                                     "value": {
@@ -4104,31 +3885,6 @@
                                         "metadata": {},
                                         "request": {
                                             "status": "INACTIVE"
-                                        }
-                                    }
-                                },
-                                "Deactivate with expiry date": {
-                                    "summary": "Deactivate a license key and set expiry to today",
-                                    "value": {
-                                        "id": "mosip.pms.update.misp.license.patch",
-                                        "version": "1.0",
-                                        "requestTime": "2024-11-05T10:36:13.780Z",
-                                        "metadata": {},
-                                        "request": {
-                                            "status": "INACTIVE",
-                                            "expiryDate": "2024-11-05"
-                                        }
-                                    }
-                                },
-                                "Update expiry date only": {
-                                    "summary": "Update only the expiry date without changing the current status",
-                                    "value": {
-                                        "id": "mosip.pms.update.misp.license.patch",
-                                        "version": "1.0",
-                                        "requestTime": "2024-11-05T10:36:13.780Z",
-                                        "metadata": {},
-                                        "request": {
-                                            "expiryDate": "2026-12-31"
                                         }
                                     }
                                 }
@@ -4230,7 +3986,7 @@
                                                 "policyId": "policy789",
                                                 "licenseKey": "********xyz",
                                                 "licenseKeyName": "MISP License Key 1",
-                                                "status": "ACTIVE",
+                                                "status": "INACTIVE",
                                                 "expiryDateTime": "2026-12-31T10:00:00Z"
                                             },
                                             "errors": []
@@ -6713,253 +6469,6 @@
                 }
             }
         },
-        "/admin-partners/{partnerId}": {
-            "get": {
-                "tags": [
-                    "partner-management-controller"
-                ],
-                "summary": "DEPRECATED since release-1.3.0: Endpoint to get the details of the partner",
-                "description": "This endpoint has been deprecated since the release-1.3.0 and replaced by the GET `/admin-partners/v2/{partnerId}` endpoint, which additionally returns `logoUrl` and `additionalInfo`.\r\n\r\nThis endpoint is for the Partner Admin users only.\r\n\r\nThis endpoint can be used to get all the details of the Partner.\r\n\r\nThis endpoint should be configured for the Role: PARTNER_ADMIN",
-                "operationId": "get-partner-v2",
-                "deprecated": true,
-                "parameters": [
-                    {
-                        "name": "Cookie",
-                        "in": "header",
-                        "description": "Authorization={jwt_token}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "partnerId",
-                        "in": "path",
-                        "description": "The unique identifier if the partner.",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "x-examples": {
-                                        "Example 1": {
-                                            "id": "mosip.pms.all.partners.get",
-                                            "version": "1.0",
-                                            "responseTime": "2024-11-05T10:36:13.780Z",
-                                            "metadata": {},
-                                            "response": {
-                                                "pageNo": 0,
-                                                "pageSize": 10,
-                                                "totalResults": 1,
-                                                "data": [
-                                                    {
-                                                        "partnerId": "partner123",
-                                                        "partnerType": "Auth_partner",
-                                                        "orgName": "abc",
-                                                        "policyGroupId": "12345",
-                                                        "policyGroupName": "Compliance Policies",
-                                                        "emailAddress": "abc@gmail.com",
-                                                        "certificateUploadStatus": "uploaded",
-                                                        "status": "approved",
-                                                        "isActive": true,
-                                                        "createdDateTime": "2024-08-01T14:30:00Z"
-                                                    }
-                                                ]
-                                            },
-                                            "errors": []
-                                        }
-                                    },
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "Unique id that is required to access this endpoint.\r\n`mosip.pms.api.id.partner.details.get`"
-                                        },
-                                        "version": {
-                                            "type": "string",
-                                            "description": "Version of this endpoint. \r\n`1.0`"
-                                        },
-                                        "responseTime": {
-                                            "type": "string",
-                                            "description": "The date time of the response in ISO format",
-                                            "format": "date-time"
-                                        },
-                                        "metadata": {
-                                            "type": "object",
-                                            "description": "Optional metadata about the response"
-                                        },
-                                        "response": {
-                                            "nullable": true,
-                                            "type": "object",
-                                            "properties": {
-                                                "partnerId": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "s3c06sfwojeo9"
-                                                    },
-                                                    "description": "Unique identifier of the Partner"
-                                                },
-                                                "approvalStatus": {
-                                                    "x-stoplight": {
-                                                        "id": "1zn25daa4fof8"
-                                                    },
-                                                    "description": "Unique identifier of the Partner",
-                                                    "enum": [
-                                                        "approved",
-                                                        "rejected",
-                                                        "InProgress"
-                                                    ]
-                                                },
-                                                "createdDateTime": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "xgmzaz7f2z64d"
-                                                    },
-                                                    "description": "Date in ISO format of creation date of the Partner"
-                                                },
-                                                "partnerType": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "6zc7b9t42uq7d"
-                                                    },
-                                                    "description": "Type of the Partner"
-                                                },
-                                                "organizationName": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "1qv9oxjacuh05"
-                                                    },
-                                                    "description": "Name of the Organisation of the Partner"
-                                                },
-                                                "contactNumber": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "xdcqf4gq7ll4p"
-                                                    },
-                                                    "description": "Contact Number of the Partner"
-                                                },
-                                                "policyGroupName": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "lmb7ol6ncqeb6"
-                                                    },
-                                                    "description": "Name of Policy Group associated with the Partner. It is null in case of Device Provider and FTM Provider."
-                                                },
-                                                "policyGroupDescription": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "93zqs5yw9rjoh"
-                                                    },
-                                                    "description": "Description of Policy Group associated with the Partner. It is null in case of Device Provider and FTM Provider."
-                                                },
-                                                "emailId": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "2drfl1ypq2jt2"
-                                                    },
-                                                    "description": "Email id of the Partner"
-                                                },
-                                                "certificateUploadDateTime": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "hfw7mlpy7838h"
-                                                    },
-                                                    "description": "Date in ISO format of certificate upload date time by the Partner"
-                                                },
-                                                "certificateExpiryDateTime": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "gtfw5um0lx3h5"
-                                                    },
-                                                    "description": "Date in ISO format of certificate expiry date time"
-                                                },
-                                                "isCertificateAvailable": {
-                                                    "type": "boolean",
-                                                    "x-stoplight": {
-                                                        "id": "g4vgdyhiy2s74"
-                                                    },
-                                                    "description": "Flag indicating if certificate is uploaded or not"
-                                                },
-                                                "isActive": {
-                                                    "type": "boolean",
-                                                    "x-stoplight": {
-                                                        "id": "9o1a6g3xq8zz4"
-                                                    },
-                                                    "description": "Flag indicating status of the Partner"
-                                                },
-                                                "firstName": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "gmlteodixb7tk"
-                                                    },
-                                                    "description": "First Name of the partner as available in Key Cloak"
-                                                },
-                                                "lastName": {
-                                                    "type": "string",
-                                                    "x-stoplight": {
-                                                        "id": "71h3db260okt8"
-                                                    },
-                                                    "description": "Last Name of the partner as available in Key Cloak"
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "description": "Array of error code and message indicating the error that has occurred",
-                                                "properties": {
-                                                    "errorCode": {
-                                                        "type": "string",
-                                                        "description": "Unique code of the error indicating the error that has occurred"
-                                                    },
-                                                    "message": {
-                                                        "type": "string",
-                                                        "description": "Message indicating the error that has occurred"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "servers": [
-                    {
-                        "url": "https://api-internal.dev1.mosip.net/v1/partnermanager",
-                        "description": "Partner Management Service"
-                    }
-                ],
-                "x-stoplight": {
-                    "id": "8y7nht79z8dkg"
-                }
-            },
-            "parameters": [
-                {
-                    "schema": {
-                        "type": "string"
-                    },
-                    "name": "partnerId",
-                    "in": "path",
-                    "required": true,
-                    "description": "Unique identifier of the partner"
-                }
-            ]
-        },
         "/admin-partners/v2": {
             "get": {
                 "tags": [
@@ -7238,7 +6747,9 @@
                                                         "isActive": true,
                                                         "createdDateTime": "2024-08-01T14:30:00Z",
                                                         "logoUrl": "https://logo.com",
-                                                        "additionalInfo": {"orderRedirectUrl": "https://example.io/order"}
+                                                        "additionalInfo": {
+                                                            "orderRedirectUrl": "https://example.io/order"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -7325,7 +6836,9 @@
                                                 "isCertificateAvailable": true,
                                                 "isActive": true,
                                                 "logoUrl": "https://logo.com",
-                                                "additionalInfo": {"orderRedirectUrl": "https://example.io/order"}
+                                                "additionalInfo": {
+                                                    "orderRedirectUrl": "https://example.io/order"
+                                                }
                                             },
                                             "errors": []
                                         }
@@ -7518,7 +7031,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Get the list of all the policy requests made by the partners",
-                "description": "This endpoint is for both regular users and the Partner Admin users.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters. \r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, \r\nthen it will fetch all the Policy Requests made by all the Partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, \r\nthen it will fetch all the Policy Requests made by all the Partners across all users.\r\n\r\nThis endpoint upgrades the earlier POST endpoint `/partners/apikey/request/search` by adding new features like:\r\n1. Additional field - partnerType, policyGroupName, updatedDateTime\r\n2. Performance improvement\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN, AUTH_PARTNER, ABIS_PARTNER, SDK_PARTNER, CREDENTIAL_PARTNER, ONLINE_VERIFICATION_PARTNER",
+                "description": "Available since release-1.2.2.0.\r\n\r\nThis endpoint is for both regular users and the Partner Admin users.\r\n\r\nThis endpoint supports pagination, sorting, and filtering based on optional query parameters. \r\n\r\nIf the token used to access this endpoint, does not have the PARTNER_ADMIN role, \r\nthen it will fetch all the Policy Requests made by all the Partners associated with the logged in user only.\r\n\r\nIf the token used to access this endpoint, has PARTNER_ADMIN role, \r\nthen it will fetch all the Policy Requests made by all the Partners across all users.\r\n\r\nThis endpoint upgrades the earlier POST endpoint `/partners/apikey/request/search` by adding new features like:\r\n1. Additional field - partnerType, policyGroupName, updatedDateTime\r\n2. Performance improvement\r\n\r\nThis endpoint should be configured for the Roles: PARTNER_ADMIN, AUTH_PARTNER, ABIS_PARTNER, SDK_PARTNER, CREDENTIAL_PARTNER, ONLINE_VERIFICATION_PARTNER",
                 "operationId": "get-partner-policy-requests",
                 "parameters": [
                     {
@@ -9561,7 +9074,7 @@
                 "x-stoplight": {
                     "id": "86rs9kczv4mw3"
                 },
-                "description": "This endpoint will get all the notifications from the `pms.notifications` table.\r\n\r\nThe notifications fetched will be for all the partner ids which are linked to the logged in user id, \r\nwhich is sent as a Header in the Authorization token.\r\n\r\nThis endpoint will be used to get the notifications to be displayed in the Notification Panel \r\nas well as in the View All Notifications page.\r\n\r\nThis will include optional request parameters to support pagination and filtering. \r\n\r\nThe request parameters will include optional parameter, `notificationType`. \r\nAllowed values for the same will be `ROOT_CERT_EXPIRY`, `INTERMEDIATE_CERT_EXPIRY`, `PARTNER_CERT_EXPIRY`, `WEEKLY_SUMMARY`, `SBI_EXPIRY`, `FTM_CHIP_CERT_EXPIRY`, `API_KEY_EXPIRY` and `MISP_LICENSE_KEY_EXPIRY`. \r\nIf the `notificationType` is `ROOT_CERT_EXPIRY`, `INTERMEDIATE_CERT_EXPIRY`, `WEEKLY_SUMMARY` or `MISP_LICENSE_KEY_EXPIRY` then the `PARTNER_ADMIN` \r\nrole is expected in the token. If it is not available then error will be thrown.\r\n\r\nIf an unrecognised `notificationType` value is provided, an error response will be returned instead of an empty result.\r\n",
+                "description": "Available since release-1.3.0-beta.1.\r\n\r\nThis endpoint retrieves notifications for all partner IDs linked to the logged-in user. Supports pagination, sorting, and filtering.\r\n\r\nIf notificationType is ROOT_CERT_EXPIRY, INTERMEDIATE_CERT_EXPIRY, WEEKLY_SUMMARY, or MISP_LICENSE_KEY_EXPIRY, the PARTNER_ADMIN role is required in the token.",
                 "tags": [
                     "notifications-controller"
                 ]
@@ -9660,7 +9173,8 @@
                                                         "WEEKLY_SUMMARY",
                                                         "SBI_EXPIRY",
                                                         "API_KEY_EXPIRY",
-                                                        "FTM_CHIP_CERT_EXPIRY"
+                                                        "FTM_CHIP_CERT_EXPIRY",
+                                                        "MISP_LICENSE_KEY_EXPIRY"
                                                     ]
                                                 },
                                                 "notificationStatus": {
@@ -9702,7 +9216,7 @@
                 "x-stoplight": {
                     "id": "q4srlqtqnp7yk"
                 },
-                "description": "This endpoint will be used to handle the Dismiss action by the user.",
+                "description": "Available since release-1.3.0-beta.1.\r\n\r\nThis endpoint is used to dismiss a notification.",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -10601,7 +10115,7 @@
                     "NEW"
                 ],
                 "summary": "NEW: Delete bio-extractor configuration by ID",
-                "description": "Deletes a bio-extractor configuration by setting `is_deleted=true`.\r\n\r\n**Request validation:**\r\n- Wrapper validation via `RequestValidator` using id `mosip.pms.bioextractor.configuration.delete.patch` and version `1.0`.\r\n- `status` is mandatory and must be `DELETED` (case-insensitive).\r\n\r\n**Behavior:**\r\n- If the id does not exist (or is already deleted), returns `BIOEXTRACTOR_CONFIGURATION_NOT_FOUND` in `errors`.\r\n- On success, `response.status` is `Bio Extractor configuration deleted successfully.`\r\n\r\n**Authorization:** `mosip.role.pms.patchbioextractorconfigurationdelete` (default role: PARTNER_ADMIN).",
+                "description": "Available since release-1.3.0.\r\n\r\nThis endpoint deletes a bio-extractor configuration.\r\n\r\nThe request status must be DELETED. This endpoint is configured for the Role: PARTNER_ADMIN",
                 "operationId": "deleteBioextractorConfiguration",
                 "parameters": [
                     {
@@ -11078,7 +10592,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Add a credential type for partner policy request",
-                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{requestId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- `{policyId}` in the path must match the policy id on that partner policy request.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{requestId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
                 "operationId": "submitCredentialTypesRequest",
                 "parameters": [
                     {
@@ -11113,9 +10627,6 @@
                                     "version": {
                                         "type": "string"
                                     },
-                                    "requesttime": {
-                                        "type": "string"
-                                    },
                                     "metadata": {
                                         "type": "object",
                                         "nullable": true
@@ -11138,6 +10649,9 @@
                                             "partnerPolicyRequestId",
                                             "credentialType"
                                         ]
+                                    },
+                                    "requestTime": {
+                                        "type": "string"
                                     }
                                 },
                                 "required": [
