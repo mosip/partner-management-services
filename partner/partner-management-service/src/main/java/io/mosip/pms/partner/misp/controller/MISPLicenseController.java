@@ -153,7 +153,7 @@ public class MISPLicenseController {
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "policyName", required = false) String policyName,
-			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName,
+			@RequestParam(value = "licenseKeyName", required = false) String licenseKeyName,
 			@Parameter(
 					description = "Status of MISP License Key.",
 					in = ParameterIn.QUERY,
@@ -171,7 +171,7 @@ public class MISPLicenseController {
 		inputValidator.validateRequestInput("orgName", orgName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("policyName", policyName);
-		inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
+		inputValidator.validateRequestInput("licenseKeyName", licenseKeyName);
 		inputValidator.validateRequestInput("status", status);
 		MISPFilterDto filterDto = new MISPFilterDto();
 		if (partnerId != null) {
@@ -186,8 +186,8 @@ public class MISPLicenseController {
 		if (policyName != null) {
 			filterDto.setPolicyName(policyName.toLowerCase());
 		}
-		if (mispLicenseKeyName != null) {
-			filterDto.setMispLicenseKeyName(mispLicenseKeyName.toLowerCase());
+		if (licenseKeyName != null) {
+			filterDto.setLicenseKeyName(licenseKeyName.toLowerCase());
 		}
 		if (status != null) {
 			filterDto.setStatus(status);

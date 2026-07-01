@@ -175,8 +175,8 @@ public class PartnerHelper {
         mispAliasToColumnMap.put("orgName", "p.name");
         mispAliasToColumnMap.put("policyGroupName", "pg.name");
         mispAliasToColumnMap.put("policyName", "ap.name");
-        mispAliasToColumnMap.put("mispLicenseKey", "id.licenseKey");
-        mispAliasToColumnMap.put("mispLicenseKeyName", "licenseKeyName");
+        mispAliasToColumnMap.put("maskedLicenseKey", "id.licenseKey");
+        mispAliasToColumnMap.put("licenseKeyName", "licenseKeyName");
         mispAliasToColumnMap.put("expiryDateTime", "validToDate");
         mispAliasToColumnMap.put("status", "isActive");
         mispAliasToColumnMap.put("createdDateTime", "createdDateTime");
