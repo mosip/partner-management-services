@@ -48,7 +48,8 @@ UPDATE pms.partner_policy_bioextract
 SET attribute_name = 'photo',
     upd_by = 'admin',
     upd_dtimes = now()
-WHERE id = '146098';
+WHERE part_id = 'mpartner-default-auth'
+  AND biometric_modality = 'face';
 
 -- -------------------------------------------------------------------------------------------------
 -- Grant privileges on tables introduced between 1.3.0-beta.1 and 1.3.0 (missed at creation time)

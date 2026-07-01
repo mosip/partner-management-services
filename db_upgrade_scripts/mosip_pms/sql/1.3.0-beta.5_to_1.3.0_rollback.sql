@@ -43,5 +43,6 @@ UPDATE pms.partner_policy_bioextract
 SET attribute_name = 'individualBiometrics',
     upd_by = 'admin',
     upd_dtimes = now()
-WHERE id = '146098';
+WHERE part_id = 'mpartner-default-auth'
+  AND biometric_modality = 'face';
 
