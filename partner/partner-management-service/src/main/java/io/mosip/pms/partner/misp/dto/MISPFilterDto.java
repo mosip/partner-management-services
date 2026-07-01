@@ -8,7 +8,7 @@ public class MISPFilterDto {
     private String orgName;
     private String policyGroupName;
     private String policyName;
-    private String mispLicenseKeyName;
+    private String licenseKeyName;
     private String status;
     private Integer expiryPeriod;
 }

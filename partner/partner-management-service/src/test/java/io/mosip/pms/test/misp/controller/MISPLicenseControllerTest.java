@@ -253,7 +253,7 @@ public class MISPLicenseControllerTest {
 		String orgName = "ORG";
 		String policyGroupName = "PG";
 		String policyName = "PN";
-		String mispLicenseKeyName = "KEY";
+		String licenseKeyName = "KEY";
 		String status = "ACTIVE";
 		MISPFilterDto filterDto = new MISPFilterDto();
 		ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> responseWrapper = new ResponseWrapperV2<>();
@@ -270,7 +270,7 @@ public class MISPLicenseControllerTest {
 						.param("policyGroupName", policyGroupName)
 						.param("policyName", policyName)
 						.param("status", status)
-						.param("mispLicenseKeyName", mispLicenseKeyName))
+						.param("licenseKeyName", licenseKeyName))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 

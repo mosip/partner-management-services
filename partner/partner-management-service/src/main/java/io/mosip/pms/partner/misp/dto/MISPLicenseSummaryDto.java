@@ -36,10 +36,10 @@ public class MISPLicenseSummaryDto {
     private String policyDescription;
 
     @Schema(description = "Name of the MISP license key", example = "MISP License Key 1")
-    private String mispLicenseKeyName;
+    private String licenseKeyName;
 
-    @Schema(description = "Unique identifier for the MISP partner", example = "xyz")
-    private String mispLicenseKey;
+    @Schema(description = "Masked MISP License Key", example = "*********xyz")
+    private String maskedLicenseKey;
 
     @Schema(description = "Date and time when the MISP License expires", example = "2025-07-15T10:00:00Z")
     private LocalDateTime expiryDateTime;

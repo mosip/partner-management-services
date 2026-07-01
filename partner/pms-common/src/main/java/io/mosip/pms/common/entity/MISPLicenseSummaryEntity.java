@@ -25,8 +25,8 @@ import java.time.LocalDateTime;
                         @ColumnResult(name = "policyId", type = String.class),
                         @ColumnResult(name = "policyName", type = String.class),
                         @ColumnResult(name = "policyDescription", type = String.class),
-                        @ColumnResult(name = "mispLicenseKeyName", type = String.class),
-                        @ColumnResult(name = "mispLicenseKey", type = String.class),
+                        @ColumnResult(name = "licenseKeyName", type = String.class),
+                        @ColumnResult(name = "maskedLicenseKey", type = String.class),
                         @ColumnResult(name = "status", type = String.class),
                         @ColumnResult(name = "createdDateTime", type = LocalDateTime.class),
                         @ColumnResult(name = "expiryDateTime", type = LocalDateTime.class),
@@ -36,8 +36,8 @@ import java.time.LocalDateTime;
 public class MISPLicenseSummaryEntity {
     public MISPLicenseSummaryEntity(String mispLicenseId, String partnerId, String orgName, String policyGroupId,
                                    String policyGroupName, String policyGroupDescription, String policyId,
-                                   String policyName, String policyDescription, String mispLicenseKeyName,
-                                   String mispLicenseKey, String status, LocalDateTime createdDateTime,
+                                   String policyName, String policyDescription, String licenseKeyName,
+                                   String maskedLicenseKey, String status, LocalDateTime createdDateTime,
                                    LocalDateTime expiryDateTime) {
         this.mispLicenseId = mispLicenseId;
         this.partnerId = partnerId;
@@ -48,8 +48,8 @@ public class MISPLicenseSummaryEntity {
         this.policyId = policyId;
         this.policyName = policyName;
         this.policyDescription = policyDescription;
-        this.mispLicenseKeyName = mispLicenseKeyName;
-        this.mispLicenseKey = mispLicenseKey;
+        this.licenseKeyName = licenseKeyName;
+        this.maskedLicenseKey = maskedLicenseKey;
         this.status = status;
         this.createdDateTime = createdDateTime;
         this.expiryDateTime = expiryDateTime;
@@ -78,9 +78,9 @@ public class MISPLicenseSummaryEntity {
 
     private String policyDescription;
 
-    private String mispLicenseKeyName;
+    private String licenseKeyName;
 
-    private String mispLicenseKey;
+    private String maskedLicenseKey;
 
     private String status;
 

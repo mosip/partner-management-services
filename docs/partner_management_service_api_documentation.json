@@ -3129,7 +3129,7 @@
                     "misp-license-controller"
                 ],
                 "summary": "NEW: Get all the MISP License Keys",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to get all the MISP license keys.\n\nThis endpoint upgrades the earlier GET endpoint /misps by adding new features like:\n\n1. Pagination\n2. Sorting\n3. Filtering",
+                "description": "Available since release-1.3.0.\n\nThis endpoint is used to get all the MISP license keys.\n\nThis endpoint upgrades the earlier GET endpoint /misps by adding new features like:\n\n1. Pagination\n2. Sorting\n3. Filtering",
                 "operationId": "get-misp-licenses",
                 "parameters": [
                     {
@@ -3211,9 +3211,9 @@
                         }
                     },
                     {
-                        "name": "mispLicenseKeyName",
+                        "name": "licenseKeyName",
                         "in": "query",
-                        "description": "Optional request parameter. Can be used to filter the response by the given mispLicenseKeyName.",
+                        "description": "Optional request parameter. Can be used to filter the response by the given licenseKeyName.",
                         "schema": {
                             "type": "string"
                         }
@@ -3287,6 +3287,11 @@
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
+                                                            "mispLicenseId": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "description": "Unique UUID identifier of the MISP License Key"
+                                                            },
                                                             "partnerId": {
                                                                 "type": "string",
                                                                 "description": "Unique identifier for the partner"
@@ -3319,13 +3324,13 @@
                                                                 "type": "string",
                                                                 "description": "Description of the Policy"
                                                             },
-                                                            "mispLicenseKeyName": {
+                                                            "licenseKeyName": {
                                                                 "type": "string",
                                                                 "description": "Name of the MISP license key"
                                                             },
-                                                            "mispLicenseKey": {
+                                                            "maskedLicenseKey": {
                                                                 "type": "string",
-                                                                "description": "Unique key for the MISP Partner"
+                                                                "description": "Masked MISP License Key"
                                                             },
                                                             "expiryDateTime": {
                                                                 "type": "string",
@@ -3378,6 +3383,7 @@
                                                 "totalResults": 1,
                                                 "data": [
                                                     {
+                                                        "mispLicenseId": "4375037d-d069-4670-8b8b-97cb53d4d36e",
                                                         "partnerId": "partner123",
                                                         "orgName": "Example Organization",
                                                         "policyGroupId": "policyGroup789",
@@ -3386,8 +3392,8 @@
                                                         "policyId": "policy789",
                                                         "policyName": "Data Protection Policy",
                                                         "policyDescription": "Data Protection Policy",
-                                                        "mispLicenseKeyName": "MISP License Key 1",
-                                                        "mispLicenseKey": "********xyz",
+                                                        "licenseKeyName": "MISP License Key 1",
+                                                        "maskedLicenseKey": "********xyz",
                                                         "expiryDateTime": "2025-07-15T10:00:00Z",
                                                         "status": "ACTIVE",
                                                         "createdDateTime": "2024-08-08T10:00:00Z"
@@ -3420,7 +3426,7 @@
                     "misp-license-controller"
                 ],
                 "summary": "NEW: Generate MISP License Key",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to generate a MISP License Key for a given MISP partner.\n\nThis endpoint is configured only for users with the PARTNER_ADMIN role.\nIt is an upgrade of the earlier POST /misps endpoint.\n- Supports generation of multiple MISP license keys for the same partner.\n- Allows the user to enter and set an expiry date for MISP license key.\n- `licenseKeyName` field was added to support the generation of multiple MISP license keys with distinct names.",
+                "description": "Available since release-1.3.0.\n\nThis endpoint is used to generate a MISP License Key for a given MISP partner.\n\nThis endpoint is configured only for users with the PARTNER_ADMIN role.\nIt is an upgrade of the earlier POST /misps endpoint.\n- Supports generation of multiple MISP license keys for the same partner.\n- Allows the user to enter and set an expiry date for MISP license key.\n- `licenseKeyName` field was added to support the generation of multiple MISP license keys with distinct names.",
                 "operationId": "generate-misp-license",
                 "requestBody": {
                     "required": true,
@@ -3716,13 +3722,13 @@
                                                     "type": "string",
                                                     "description": "Description of the Policy"
                                                 },
-                                                "mispLicenseKeyName": {
+                                                "licenseKeyName": {
                                                     "type": "string",
                                                     "description": "Name of the MISP License Key"
                                                 },
-                                                "mispLicenseKey": {
+                                                "maskedLicenseKey": {
                                                     "type": "string",
-                                                    "description": "Unique license key for the MISP Partner"
+                                                    "description": "Masked MISP License Key"
                                                 },
                                                 "expiryDateTime": {
                                                     "type": "string",
@@ -3778,8 +3784,8 @@
                                                 "policyId": "34789",
                                                 "policyName": "policy123",
                                                 "policyDescription": "descr policy123",
-                                                "mispLicenseKeyName": "MISP License Key 1",
-                                                "mispLicenseKey": "*********xyz",
+                                                "licenseKeyName": "MISP License Key 1",
+                                                "maskedLicenseKey": "*********xyz",
                                                 "expiryDateTime": "2025-07-15T10:00:00Z",
                                                 "status": "ACTIVE",
                                                 "createdDateTime": "2024-08-08T10:00:00Z"
