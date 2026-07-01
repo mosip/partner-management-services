@@ -485,7 +485,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			}
 
 			Page<MISPLicenseSummaryEntity> page = mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(filterDto.getPartnerId(), filterDto.getOrgName(), filterDto.getPolicyGroupName(),
-					filterDto.getPolicyName(), filterDto.getMispLicenseKeyName(), filterDto.getStatus(), expiryStartDate, expiryEndDate, filterDto.getExpiryPeriod(), pageable);
+					filterDto.getPolicyName(), filterDto.getLicenseKeyName(), filterDto.getStatus(), expiryStartDate, expiryEndDate, filterDto.getExpiryPeriod(), pageable);
 			if (Objects.nonNull(page) && !page.getContent().isEmpty()) {
 				List<MISPLicenseSummaryDto> mispLicenseSummaryDtoList = MapperUtils.mapAll(page.getContent(), MISPLicenseSummaryDto.class);
 				pageResponseV2Dto.setPageNo(pageNo);
@@ -711,8 +711,8 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 
 			String key = entity.getLicenseKey();
 			String maskedKey = "*".repeat(key.length() - 4) + key.substring(key.length() - 4);
-			responseDto.setMispLicenseKey(maskedKey);
-			responseDto.setMispLicenseKeyName(entity.getLicenseKeyName());
+			responseDto.setMaskedLicenseKey(maskedKey);
+			responseDto.setLicenseKeyName(entity.getLicenseKeyName());
 			responseDto.setStatus(entity.getIsActive() ? ACTIVE : INACTIVE);
 			responseDto.setExpiryDateTime(entity.getValidToDate());
 			responseDto.setCreatedDateTime(entity.getCreatedDateTime());

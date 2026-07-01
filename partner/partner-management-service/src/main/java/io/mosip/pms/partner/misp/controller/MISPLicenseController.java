@@ -139,7 +139,7 @@ public class MISPLicenseController {
 	@GetMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallmisplicenses())")
 	@Operation(summary = "This endpoint retrieves a list of all MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint upgrades the earlier GET endpoint /misps by adding new features like pagination, sorting, and and filtering based on optional query parameters. It is configured for PARTNER_ADMIN role.")
+			description = "Available since release-1.3.0. This endpoint upgrades the earlier GET endpoint /misps by adding new features like pagination, sorting, and and filtering based on optional query parameters. It is configured for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -153,7 +153,7 @@ public class MISPLicenseController {
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "policyName", required = false) String policyName,
-			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName,
+			@RequestParam(value = "licenseKeyName", required = false) String licenseKeyName,
 			@Parameter(
 					description = "Status of MISP License Key.",
 					in = ParameterIn.QUERY,
@@ -171,7 +171,7 @@ public class MISPLicenseController {
 		inputValidator.validateRequestInput("orgName", orgName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("policyName", policyName);
-		inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
+		inputValidator.validateRequestInput("licenseKeyName", licenseKeyName);
 		inputValidator.validateRequestInput("status", status);
 		MISPFilterDto filterDto = new MISPFilterDto();
 		if (partnerId != null) {
@@ -186,8 +186,8 @@ public class MISPLicenseController {
 		if (policyName != null) {
 			filterDto.setPolicyName(policyName.toLowerCase());
 		}
-		if (mispLicenseKeyName != null) {
-			filterDto.setMispLicenseKeyName(mispLicenseKeyName.toLowerCase());
+		if (licenseKeyName != null) {
+			filterDto.setLicenseKeyName(licenseKeyName.toLowerCase());
 		}
 		if (status != null) {
 			filterDto.setStatus(status);
@@ -203,7 +203,7 @@ public class MISPLicenseController {
 	@PostMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratemisplicense())")
 	@Operation(summary = "This endpoint is used to generate a MISP License Key for a given MISP partner.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint.")
+			description = "Available since release-1.3.0. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
