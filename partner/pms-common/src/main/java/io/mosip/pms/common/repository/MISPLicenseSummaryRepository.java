@@ -16,7 +16,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
     @Query(value = "SELECT new MISPLicenseSummaryEntity(" +
             "m.mispLicenseId, m.mispId, p.name, pg.id, pg.name, pg.desc, ap.id, ap.name, " +
             "ap.descr, m.licenseKeyName, " +
-            "CONCAT(FUNCTION('repeat', '*', LENGTH(m.licenseKey) - 4), SUBSTRING(m.licenseKey, LENGTH(m.licenseKey) - 3, 4)) as mispLicenseKey, " +
+            "CONCAT(FUNCTION('repeat', '*', LENGTH(m.licenseKey) - 4), SUBSTRING(m.licenseKey, LENGTH(m.licenseKey) - 3, 4)) as maskedLicenseKey, " +
             "CASE " +
             "WHEN (m.isActive = true) THEN 'ACTIVE' " +
             "WHEN (m.isActive = false) THEN 'INACTIVE' " +
@@ -30,7 +30,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             "AND (:orgName IS NULL OR lower(p.name) LIKE %:orgName%) " +
             "AND (:policyGroupName IS NULL OR lower(pg.name) LIKE %:policyGroupName%) " +
             "AND (:policyName IS NULL OR lower(ap.name) LIKE %:policyName%) " +
-            "AND (:mispLicenseKeyName IS NULL OR lower(m.licenseKeyName) LIKE %:mispLicenseKeyName%) " +
+            "AND (:licenseKeyName IS NULL OR lower(m.licenseKeyName) LIKE %:licenseKeyName%) " +
             "AND (:status IS NULL OR " +
             "(" +
             "  (:status = 'ACTIVE' AND m.isActive = true) " +
@@ -43,7 +43,7 @@ public interface MISPLicenseSummaryRepository extends BaseRepository<MISPLicense
             @Param("orgName") String orgName,
             @Param("policyGroupName") String policyGroupName,
             @Param("policyName") String policyName,
-            @Param("mispLicenseKeyName") String mispLicenseKeyName,
+            @Param("licenseKeyName") String licenseKeyName,
             @Param("status") String status,
             @Param("expiryStartDate") LocalDateTime expiryStartDate,
             @Param("expiryEndDate") LocalDateTime expiryEndDate,
