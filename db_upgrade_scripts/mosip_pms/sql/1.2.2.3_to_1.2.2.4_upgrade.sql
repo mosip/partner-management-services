@@ -1,11 +1,11 @@
 \c mosip_pms
 
--- Attribute name changed from individualBiometrics to photo in pms.partner_policy_bioextract for id 146098
+-- Attribute name changed from individualBiometrics to photo in pms.partner_policy_bioextract for mpartner-default-auth face record
 UPDATE pms.partner_policy_bioextract
 SET attribute_name='photo',
     upd_by='admin',
     upd_dtimes=now()
-WHERE id='146098';
+WHERE part_id='mpartner-default-auth' AND biometric_modality='face';
 
 -- declaredAsDeceased attribute added to mpolicy-default-auth in pms.auth_policy for CRVS support
 UPDATE pms.auth_policy

@@ -1,11 +1,11 @@
 \c mosip_pms
 
--- Rollback attribute name from photo to individualBiometrics in pms.partner_policy_bioextract for id 146098
+-- Rollback attribute name from photo to individualBiometrics in pms.partner_policy_bioextract for mpartner-default-auth face record
 UPDATE pms.partner_policy_bioextract
 SET attribute_name='individualBiometrics',
     upd_by='admin',
     upd_dtimes=now()
-WHERE id='146098';
+WHERE part_id='mpartner-default-auth' AND biometric_modality='face';
 
 -- Rollback declaredAsDeceased attribute from mpolicy-default-auth in pms.auth_policy
 UPDATE pms.auth_policy
