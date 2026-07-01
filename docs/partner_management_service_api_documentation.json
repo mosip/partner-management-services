@@ -3129,7 +3129,7 @@
                     "misp-license-controller"
                 ],
                 "summary": "NEW: Get all the MISP License Keys",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to get all the MISP license keys.\n\nThis endpoint upgrades the earlier GET endpoint /misps by adding new features like:\n\n1. Pagination\n2. Sorting\n3. Filtering",
+                "description": "Available since release-1.3.0.\n\nThis endpoint is used to get all the MISP license keys.\n\nThis endpoint upgrades the earlier GET endpoint /misps by adding new features like:\n\n1. Pagination\n2. Sorting\n3. Filtering",
                 "operationId": "get-misp-licenses",
                 "parameters": [
                     {
@@ -3426,7 +3426,7 @@
                     "misp-license-controller"
                 ],
                 "summary": "NEW: Generate MISP License Key",
-                "description": "Available since release-1.3.0-beta.3.\n\nThis endpoint is used to generate a MISP License Key for a given MISP partner.\n\nThis endpoint is configured only for users with the PARTNER_ADMIN role.\nIt is an upgrade of the earlier POST /misps endpoint.\n- Supports generation of multiple MISP license keys for the same partner.\n- Allows the user to enter and set an expiry date for MISP license key.\n- `licenseKeyName` field was added to support the generation of multiple MISP license keys with distinct names.",
+                "description": "Available since release-1.3.0.\n\nThis endpoint is used to generate a MISP License Key for a given MISP partner.\n\nThis endpoint is configured only for users with the PARTNER_ADMIN role.\nIt is an upgrade of the earlier POST /misps endpoint.\n- Supports generation of multiple MISP license keys for the same partner.\n- Allows the user to enter and set an expiry date for MISP license key.\n- `licenseKeyName` field was added to support the generation of multiple MISP license keys with distinct names.",
                 "operationId": "generate-misp-license",
                 "requestBody": {
                     "required": true,
