@@ -10,6 +10,8 @@ create table pms.batch_job_instance (
     constraint job_inst_un unique (job_name, job_key)
 );
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_instance TO pmsuser;
+
 create table pms.batch_job_execution (
     job_execution_id bigint not null primary key,
     version bigint,
@@ -25,6 +27,8 @@ create table pms.batch_job_execution (
     references pms.batch_job_instance(job_instance_id)
 );
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution TO pmsuser;
+
 create table pms.batch_job_execution_params (
     job_execution_id bigint not null,
     parameter_name varchar(100) not null,
@@ -34,6 +38,8 @@ create table pms.batch_job_execution_params (
     constraint job_exec_params_fk foreign key (job_execution_id)
     references pms.batch_job_execution(job_execution_id)
 );
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution_params TO pmsuser;
 
 create table pms.batch_step_execution (
     step_execution_id bigint not null primary key,
@@ -59,6 +65,8 @@ create table pms.batch_step_execution (
     references pms.batch_job_execution(job_execution_id)
 );
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_step_execution TO pmsuser;
+
 create table pms.batch_step_execution_context (
     step_execution_id bigint not null primary key,
     short_context varchar(2500) not null,
@@ -67,6 +75,8 @@ create table pms.batch_step_execution_context (
     references pms.batch_step_execution(step_execution_id)
 );
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_step_execution_context TO pmsuser;
+
 create table pms.batch_job_execution_context (
     job_execution_id bigint not null primary key,
     short_context varchar(2500) not null,
@@ -74,6 +84,8 @@ create table pms.batch_job_execution_context (
     constraint job_exec_ctx_fk foreign key (job_execution_id)
     references batch_job_execution(job_execution_id)
 );
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution_context TO pmsuser;
 
 create sequence pms.batch_step_execution_seq maxvalue 9223372036854775807 no cycle;
 create sequence pms.batch_job_execution_seq maxvalue 9223372036854775807 no cycle;
@@ -113,6 +125,8 @@ COMMENT ON COLUMN pms.notifications.cr_dtimes IS 'Created Timestamp: The date an
 COMMENT ON COLUMN pms.notifications.cr_by IS 'Created By: The ID or name of the user who created the record.';
 COMMENT ON COLUMN pms.notifications.upd_by IS 'Updated By: The ID or name of the user who last updated the record.';
 COMMENT ON COLUMN pms.notifications.upd_dtimes IS 'Updated Timestamp: The date and time when any field in the record was last updated.';
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.notifications TO pmsuser;
 
 -- add new columns in user_details table
 ALTER TABLE pms.user_details Add COLUMN notifications_seen_dtimes timestamp;

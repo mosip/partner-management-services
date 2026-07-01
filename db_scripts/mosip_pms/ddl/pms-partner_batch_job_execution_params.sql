@@ -9,5 +9,3 @@ create table pms.batch_job_execution_params (
     constraint job_exec_params_fk foreign key (job_execution_id)
     references pms.batch_job_execution(job_execution_id)
 );
-
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution_params TO pmsuser;

@@ -7,5 +7,3 @@ create table pms.batch_step_execution_context (
     constraint step_exec_ctx_fk foreign key (step_execution_id)
     references pms.batch_step_execution(step_execution_id)
 );
-
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_step_execution_context TO pmsuser;

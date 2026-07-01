@@ -7,5 +7,3 @@ create table pms.batch_job_instance (
     job_key varchar(32) not null,
     constraint job_inst_un unique (job_name, job_key)
 );
-
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_instance TO pmsuser;

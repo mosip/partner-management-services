@@ -41,5 +41,3 @@ COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft
 CREATE UNIQUE INDEX uq_bioextractor_configuration_config_name_active
 ON pms.bioextractor_configuration (lower(config_name))
 WHERE is_deleted = false;
-
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.bioextractor_configuration TO pmsuser;
