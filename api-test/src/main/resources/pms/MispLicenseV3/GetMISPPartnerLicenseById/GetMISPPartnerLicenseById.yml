@@ -52,7 +52,6 @@ GetMISPPartnerLicenseById:
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseById_04
     description: Validate that the API returns an error when attempting to retrieve a MISP partner license using an invalid mispLicenseId
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: get
     inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseById/getMISPPartnerLicenseById
     outputTemplate: pms/error
@@ -62,7 +61,7 @@ GetMISPPartnerLicenseById:
     output: '{
       "errors": [
         {
-           "errorCode": "$IGNORE$"
+           "errorCode": "PMS_REQUEST_ERROR_002"
         }
     ]
 }'
