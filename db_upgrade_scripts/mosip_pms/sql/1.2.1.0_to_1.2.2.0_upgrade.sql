@@ -23,6 +23,8 @@ CREATE TABLE pms.user_details(
     CONSTRAINT consent_given CHECK (consent_given IN ('YES', 'NO'))
 );
 COMMENT ON TABLE pms.user_details IS 'This table has consents of users.';
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.user_details TO pmsuser;
+GRANT ALL ON TABLE pms.user_details TO postgres;
 COMMENT ON COLUMN pms.user_details.user_id IS 'User Id: user id of the user.';
 COMMENT ON COLUMN pms.user_details.id IS 'ID: Unique Id generated.';
 COMMENT ON COLUMN pms.user_details.consent_given_dtimes IS 'Consent given DateTimestamp : Date and Timestamp when the consent is given.';
