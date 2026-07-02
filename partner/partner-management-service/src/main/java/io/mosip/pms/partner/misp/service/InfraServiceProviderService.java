@@ -11,6 +11,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.misp.dto.MISPFilterDto;
 import io.mosip.pms.partner.misp.dto.MISPLicensePatchRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
@@ -37,5 +38,5 @@ public interface InfraServiceProviderService {
 
 	public ResponseWrapperV2<MISPLicenseDetailsDto> getMISPLicenseDetails(String mispLicenseId);
 
-	public ResponseWrapperV2<MISPLicenseResponseDtoV2> updateMISPLicense(String mispLicenseId, MISPLicensePatchRequestDto request);
+	public ResponseWrapperV2<MISPDeactivateResponseDto> updateMISPLicense(String mispLicenseId, MISPLicensePatchRequestDto request);
 }
