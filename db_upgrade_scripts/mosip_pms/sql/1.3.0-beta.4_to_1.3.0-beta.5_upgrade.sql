@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS pms.bioextractor_configuration(
     CONSTRAINT uq_bioextractor_configuration_config_name UNIQUE (config_name)
     );
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.bioextractor_configuration TO pmsuser;
+
 -- -------------------------------------------------------------------------------------------------
 -- Partner policy bio extract request table for 1.3.0-beta.5
 -- -------------------------------------------------------------------------------------------------
@@ -97,6 +99,8 @@ ON pms.partner_policy_bioextract_request (
    biometric_modality
 );
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_bioextract_request TO pmsuser;
+
 -- -------------------------------------------------------------------------------------------------
 -- Partner policy credential type request table for 1.3.0-beta.5
 -- -------------------------------------------------------------------------------------------------
@@ -152,3 +156,5 @@ WHERE status_code = 'InProgress';
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_partner_cred_approved
 ON pms.partner_policy_credential_type_request (part_id, credential_type)
 WHERE status_code = 'approved';
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_credential_type_request TO pmsuser;
