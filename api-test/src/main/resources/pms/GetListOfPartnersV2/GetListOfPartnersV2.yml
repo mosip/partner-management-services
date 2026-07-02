@@ -1,0 +1,38 @@
+GetListOfPartnersV2:
+   Pms_GetListOfPartnersV2_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/admin-partners/v2
+      description: Validate that all partners are successfully retrieved with valid inputs and include logoUrl and additionalInfo
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_GetListOfPartnersV2_01
+      restMethod: get
+      inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
+      outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
+      input: '{
+}'
+      output: '{
+      "pageNo": "0",
+      "partners": [
+        {
+          "logoUrl": "$IGNORE$",
+          "additionalInfo": "$IGNORE$"
+        }
+      ]
+}'
+   Pms_GetListOfPartnersV2_Invalid_token_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v2
+      description: Validate that partner list retrieval fails when an invalid token is used
+      role: invalidtoken
+      uniqueIdentifier: TC_PMS_GetListOfPartnersV2_02
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+    {
+      "errorCode": "KER-ATH-401"
+    }
+  ]
+}'

@@ -13,6 +13,6 @@
     "policyGroup": "{{policyGroup}}",
     "langCode": "{{langCode}}",
     "logoUrl": "{{logoUrl}}",
-    "additionalInfo": {}
+    "additionalInfo": {{#if orderRedirectUrl}}{ "orderRedirectUrl": "{{orderRedirectUrl}}" }{{else}}{}{{/if}}
   }
 }

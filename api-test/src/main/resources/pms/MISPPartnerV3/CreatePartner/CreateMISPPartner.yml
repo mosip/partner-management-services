@@ -19,7 +19,8 @@ CreateMISPPartner:
         "partnerType": "MISP_Partner",
         "policyGroup": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
         "logoUrl": "https://example.com/logo.png",
-        "langCode": "eng"
+        "langCode": "eng",
+        "orderRedirectUrl": "https://example.com/order-redirect"
 }'
       output: ' {
         "partnerId": "$RUNCONTEXT$pms-111555",

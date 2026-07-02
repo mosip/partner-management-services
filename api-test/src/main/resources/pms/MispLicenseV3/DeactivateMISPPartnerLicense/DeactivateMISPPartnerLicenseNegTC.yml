@@ -1,6 +1,6 @@
 DeactivateMISPPartnerLicenseNegTC:
   Pms_DeactivateMISPPartnerLicenseNegTC_without_Access_Token_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_01
     description: Validate that deactivating a MISP partner license fails when no access token is provided
     role: invalidtoken
@@ -11,9 +11,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_mispLicenseId$",
       "status": "De-Activate"
 }'
     output: '{
@@ -24,7 +22,7 @@ DeactivateMISPPartnerLicenseNegTC:
       ]
 }'
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Version_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_02
     description: Validate that deactivating a MISP partner license fails when an invalid or incorrect version is provided
     role: partneradmin
@@ -35,9 +33,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "invalid_version",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_mispLicenseId$",
       "status": "De-Activate"
 }'
     output: '{
@@ -45,10 +41,10 @@ DeactivateMISPPartnerLicenseNegTC:
         {
           "errorCode": "PMS_REQUEST_ERROR_003"
         }
-      ] 
+      ]
 }'
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Status_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_03
     description: Validate that deactivating a MISP partner license fails when an invalid license status is provided
     role: partneradmin
@@ -59,9 +55,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_mispLicenseId$",
       "status": "invalid_status"
 }'
     output: '{
@@ -69,12 +63,12 @@ DeactivateMISPPartnerLicenseNegTC:
         {
           "errorCode": "PMS_MSP_433"
         }
-      ] 
+      ]
 }'
-  Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_PolicyId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+  Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_Status_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_04
-    description: Validate that deactivating a MISP partner license fails when an invalid policy ID is provided
+    description: Validate that deactivating a MISP partner license fails when the status field is left empty
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -83,81 +77,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "invalid_policyId",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-      "status": "De-Activate"
-}'
-    output: '{
-      "errors": [
-        {
-          "errorCode": "PMS_MSP_427"
-        }
-      ] 
-}'
-  Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_PolicyId_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_05
-    description: Validate that deactivating a MISP partner license fails when the policy ID is left empty
-    role: partneradmin
-    restMethod: patch
-    inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
-    outputTemplate: pms/error
-    input: '{
-      "id": "mosip.pms.deactivate.misp.license.patch",
-      "version": "1.0",
-      "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-      "status": "De-Activate"
-}'
-    output: '{
-      "errors": [
-        {
-          "errorCode": "PMS_MSP_427"
-        }
-      ] 
-}'
-  Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_PolicyId_And_LicenseKeyName_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_06
-    description: Validate that deactivating a MISP partner license fails when both the policy ID and license key name are left empty
-    role: partneradmin
-    restMethod: patch
-    inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
-    outputTemplate: pms/error
-    input: '{
-      "id": "mosip.pms.deactivate.misp.license.patch",
-      "version": "1.0",
-      "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "",
-      "licenseKeyName": "",
-      "status": "De-Activate"
-}'
-    output: '{
-      "errors": [
-        {
-          "errorCode": "PMS_MSP_427"
-        }
-      ] 
-}'
-  Pms_DeactivateMISPPartnerLicenseNegTC_with_Empty_PolicyId_And_Status_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_07
-    description: Validate that deactivating a MISP partner license fails when both the policy ID and status are left empty
-    role: partneradmin
-    restMethod: patch
-    inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
-    outputTemplate: pms/error
-    input: '{
-      "id": "mosip.pms.deactivate.misp.license.patch",
-      "version": "1.0",
-      "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_mispLicenseId$",
       "status": ""
 }'
     output: '{
@@ -165,12 +85,12 @@ DeactivateMISPPartnerLicenseNegTC:
         {
           "errorCode": "PMS_MSP_433"
         }
-      ] 
+      ]
 }'
-  Pms_DeactivateMISPPartnerLicenseNegTC_without_PartnerId_Field_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_08
-    description: Validate that deactivating a MISP partner license fails when the partner ID field is missing from the request
+  Pms_DeactivateMISPPartnerLicenseNegTC_without_Status_Field_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
+    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_05
+    description: Validate that deactivating a MISP partner license fails when the status field is missing from the request
     role: partneradmin
     restMethod: patch
     checkOnlyStatusCodeInResponse: true
@@ -180,17 +100,16 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-      "status": "De-Activate"
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_mispLicenseId$",
+      "status": "$REMOVE$"
 }'
     output: '{
       "responseCode": "404"
 }'
-  Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Token_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_09
-    description: Validate that deactivating a MISP partner license fails when an invalid authentication token is provided
+  Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_MispLicenseId_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
+    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_06
+    description: Validate that deactivating a MISP partner license fails when an invalid mispLicenseId is provided
     role: partneradmin
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
@@ -199,21 +118,19 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "mosip.pms.deactivate.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "invalid_license_key_name",
+      "mispLicenseId": "@@invalid-mispLicenseId",
       "status": "De-Activate"
 }'
     output: '{
       "errors": [
         {
-          "errorCode": "PMS_MSP_427"
+          "errorCode": "PMS_REQUEST_ERROR_002"
         }
-      ] 
+      ]
 }'
   Pms_DeactivateMISPPartnerLicenseNegTC_with_Invalid_Id_Neg:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
-    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_10
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
+    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_07
     description: Validate that deactivating a MISP partner license fails when an invalid license ID is provided
     role: partneradmin
     restMethod: patch
@@ -223,9 +140,7 @@ DeactivateMISPPartnerLicenseNegTC:
       "id": "invalid_id",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_partnerId$",
-      "policyId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_policyId$",
-      "licenseKeyName": "$ID:RegenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_without_PolicyID_sid_mispLicenseId$",
       "status": "De-Activate"
 }'
     output: '{
@@ -233,5 +148,5 @@ DeactivateMISPPartnerLicenseNegTC:
         {
           "errorCode": "PMS_REQUEST_ERROR_002"
         }
-      ] 
+      ]
 }'
