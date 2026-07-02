@@ -32,6 +32,9 @@ COMMENT ON COLUMN pms.user_details.consent_given IS 'Consent Given : Indicates w
 COMMENT ON COLUMN pms.user_details.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.user_details.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
 
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.user_details TO pmsuser;
+GRANT ALL ON TABLE pms.user_details TO postgres;
+
 -- Dropping unique constraint from pms.device_detail table if it exists
 ALTER TABLE pms.device_detail
     DROP CONSTRAINT IF EXISTS uk_devdtl_id;
