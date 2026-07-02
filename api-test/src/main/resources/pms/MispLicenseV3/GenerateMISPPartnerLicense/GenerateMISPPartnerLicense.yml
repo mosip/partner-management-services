@@ -151,7 +151,6 @@ GenerateMISPPartnerLicense:
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_08
       description: Validate that generating a MISP partner license fails when the licenseKeyName is already used by the same partner, even across deactivated licenses
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense
       outputTemplate: pms/error
@@ -167,7 +166,7 @@ GenerateMISPPartnerLicense:
       output: '{
       "errors": [
       {
-       "errorCode": "$IGNORE$"
+       "errorCode": "PMS_MSP_424"
       }
       ]
 }'

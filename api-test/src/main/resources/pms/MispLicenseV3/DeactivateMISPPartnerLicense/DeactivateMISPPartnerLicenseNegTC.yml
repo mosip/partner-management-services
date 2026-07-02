@@ -111,7 +111,6 @@ DeactivateMISPPartnerLicenseNegTC:
     uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_06
     description: Validate that deactivating a MISP partner license fails when an invalid mispLicenseId is provided
     role: partneradmin
-    checkErrorsOnlyInResponse: true
     restMethod: patch
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
     outputTemplate: pms/error
@@ -125,7 +124,7 @@ DeactivateMISPPartnerLicenseNegTC:
     output: '{
       "errors": [
         {
-          "errorCode": "$IGNORE$"
+          "errorCode": "PMS_REQUEST_ERROR_002"
         }
       ]
 }'
