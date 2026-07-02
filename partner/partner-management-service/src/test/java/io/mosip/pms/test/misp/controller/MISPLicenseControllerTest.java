@@ -399,11 +399,11 @@ public class MISPLicenseControllerTest {
 		return requestWrapper;
 	}
 
-	private ResponseWrapperV2<MISPLicenseResponseDtoV2> updateMISPResponseWrapper() {
-		ResponseWrapperV2<MISPLicenseResponseDtoV2> responseWrapper = new ResponseWrapperV2<>();
+	private ResponseWrapperV2<MISPDeactivateResponseDto> updateMISPResponseWrapper() {
+		ResponseWrapperV2<MISPDeactivateResponseDto> responseWrapper = new ResponseWrapperV2<>();
 		responseWrapper.setId("mosip.pms.update.misp.license.patch");
 		responseWrapper.setVersion("1.0");
-		MISPLicenseResponseDtoV2 response = new MISPLicenseResponseDtoV2();
+		MISPDeactivateResponseDto response = new MISPDeactivateResponseDto();
 		responseWrapper.setResponse(response);
 		return responseWrapper;
 	}
