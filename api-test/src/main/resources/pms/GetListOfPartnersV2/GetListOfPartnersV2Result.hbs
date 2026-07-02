@@ -1,5 +1,14 @@
 {
     "response": {
-        "pageNo": "{{pageNo}}"
+        "pageNo": "{{pageNo}}",
+        "partners": [
+            {{#each partners}}
+            {
+                "logoUrl": "{{logoUrl}}",
+                "additionalInfo": "{{additionalInfo}}"
+            }
+            {{#unless @last}},{{/unless}}
+            {{/each}}
+        ]
     }
 }

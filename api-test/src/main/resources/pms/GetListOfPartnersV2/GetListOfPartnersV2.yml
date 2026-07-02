@@ -10,7 +10,13 @@ GetListOfPartnersV2:
       input: '{
 }'
       output: '{
-      "pageNo": "0"
+      "pageNo": "0",
+      "partners": [
+        {
+          "logoUrl": "$IGNORE$",
+          "additionalInfo": "$IGNORE$"
+        }
+      ]
 }'
    Pms_GetListOfPartnersV2_Invalid_token_Neg:
       endPoint: /v1/partnermanager/admin-partners/v2
