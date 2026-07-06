@@ -22,20 +22,17 @@ import io.mosip.testrig.apirig.dto.OutputValidationDto;
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
 import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
-import io.mosip.testrig.apirig.testrunner.BaseTestCase;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.SecurityXSSException;
-import io.restassured.response.Response;
 
 public class AuditValidator extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(AuditValidator.class);
 	protected String testCaseName = "";
 	public static List<String> templateFields = new ArrayList<>();
-	public Response response = null;
 
 	/**
 	 * get current testcaseName
@@ -79,8 +76,7 @@ public class AuditValidator extends PMSUtil implements ITest {
 
 		String query = testCaseDTO.getEndPoint();
 		if (query == null || query.isBlank()) {
-			query = "select * from audit.app_audit_log where cr_by = '" + BaseTestCase.currentModule + "-"
-					+ PMSConfigManager.getproperty("partner_userName") + "'";
+			throw new AdminTestException("AuditValidator requires an endPoint query in the test case yml");
 		}
 
 		logger.info(query);
