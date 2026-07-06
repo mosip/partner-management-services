@@ -258,7 +258,7 @@ GetMISPPartnerLicense:
         "policyGroupName": "$REMOVE$",
         "policyName": "$REMOVE$",
         "mispLicenseKeyName": "$REMOVE$",
-        "sortFieldName": "mispLicenseKeyName",
+        "sortFieldName": "licenseKeyName",
         "sortType": "asc",
         "status": "$REMOVE$",
         "expiryPeriod": "$REMOVE$"
@@ -282,7 +282,7 @@ GetMISPPartnerLicense:
         "policyGroupName": "$REMOVE$",
         "policyName": "$REMOVE$",
         "mispLicenseKeyName": "$REMOVE$",
-        "sortFieldName": "mispLicenseKeyName",
+        "sortFieldName": "licenseKeyName",
         "sortType": "desc",
         "status": "$REMOVE$",
         "expiryPeriod": "$REMOVE$"

@@ -538,7 +538,7 @@ GetMISPPartnerLicenseNegTC:
     "policyGroupName": "$REMOVE$",
     "policyName": "$REMOVE$",
     "mispLicenseKeyName": "$REMOVE$",
-    "sortFieldName": "mispLicenseKeyName",
+    "sortFieldName": "licenseKeyName",
     "sortType": "random",
     "status": "$REMOVE$",
     "expiryPeriod": "$REMOVE$"
@@ -626,7 +626,7 @@ GetMISPPartnerLicenseNegTC:
     "policyGroupName": "$REMOVE$",
     "policyName": "$REMOVE$",
     "mispLicenseKeyName": "$REMOVE$",
-    "sortFieldName": "mispLicenseKeyName",
+    "sortFieldName": "licenseKeyName",
     "sortType": "$REMOVE$",
     "status": "$REMOVE$",
     "expiryPeriod": "$REMOVE$"
@@ -812,7 +812,7 @@ GetMISPPartnerLicenseNegTC:
     "policyGroupName": "$REMOVE$",
     "policyName": "$REMOVE$",
     "mispLicenseKeyName": "$REMOVE$",
-    "sortFieldName": "mispLicenseKeyName",
+    "sortFieldName": "licenseKeyName",
     "sortType": "ascending",
     "status": "$REMOVE$",
     "expiryPeriod": "$REMOVE$"
@@ -840,7 +840,7 @@ GetMISPPartnerLicenseNegTC:
     "policyGroupName": "$REMOVE$",
     "policyName": "$REMOVE$",
     "mispLicenseKeyName": "$REMOVE$",
-    "sortFieldName": "mispLicenseKeyName",
+    "sortFieldName": "licenseKeyName",
     "sortType": "as@",
     "status": "$REMOVE$",
     "expiryPeriod": "$REMOVE$"

@@ -1,6 +1,6 @@
 DeactivateMISPLicense:
   Pms_DeactivateMISPLicense:
-    endPoint: /v1/partnermanager/misp-licenses/{partnerId}
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
     uniqueIdentifier: TC_PMS_DeactivateMISPLicense_01
     description: Validate that the MISP license is successfully deactivated with valid inputs
     role: partneradmin
@@ -8,13 +8,12 @@ DeactivateMISPLicense:
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicenseResult
     input: '{
-      "id": "mosip.pms.deactivate.misp.license.patch",
+      "id": "mosip.pms.update.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
-      "partnerId": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_sid_partnerId$",
-      "policyId": "$REMOVE$",
-      "licenseKeyName": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_sid_licenseKeyName$",
-      "status": "De-Activate"
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_without_PolicyGroup_sid_mispLicenseId$",
+      "status": "INACTIVE"
 }'
-    output: '{   
+    output: '{
+      "status": "INACTIVE"
 }'

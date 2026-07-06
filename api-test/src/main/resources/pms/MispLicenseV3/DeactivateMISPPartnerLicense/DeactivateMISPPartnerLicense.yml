@@ -8,11 +8,12 @@ DeactivateMISPPartnerLicense:
     inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
     outputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicenseResult
     input: '{
-      "id": "mosip.pms.deactivate.misp.license.patch",
+      "id": "mosip.pms.update.misp.license.patch",
       "version": "1.0",
       "requestTime": "$TIMESTAMP$",
       "mispLicenseId": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_mispLicenseId$",
-      "status": "De-Activate"
+      "status": "INACTIVE"
 }'
     output: '{
+      "status": "INACTIVE"
 }'

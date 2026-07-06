@@ -358,7 +358,7 @@ GetAllPartnerPolicyRequest:
       outputTemplate: pms/GetAllPartnerPolicyRequest/getAllPartnerPolicyRequestResult
       input: '{
       "status": "$REMOVE$",
-      "partnerId": "&&&abcdf",
+      "partnerId": "randomabcdf123",
       "sortType": "$REMOVE$",
       "orgName": "$REMOVE$",
       "sortFieldName": "$REMOVE$",

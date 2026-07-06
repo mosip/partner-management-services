@@ -338,3 +338,153 @@ createPublishPolicy:
         "attributeName": "$IGNORE$",
         "authTokenType": "$IGNORE$"
     }'
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_18
+      description: Validate that a policy can be published successfully for bio extractors negative validation tests
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+        "mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'
+
+   Pms_PublishPolicy_For_AuthPartner_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_14
+      description: Validate that a second policy for the same auth partner can be published successfully with all valid inputs
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_For_AuthPartner_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+        "mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'
+
+   Pms_PublishPolicy_For_Policy_WithOut_FullName_Email_Gender_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_15
+      description: Validate that a policy without fullName, email and gender claims can be published successfully
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_WithOut_FullName_Email_Gender_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+        "mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'
+
+   Pms_PublishPolicy_For_Policy_WithOut_AllowedAuthTypes_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_16
+      description: Validate that a policy without allowedAuthTypes can be published successfully
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_WithOut_AllowedAuthTypes_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+        "mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'
+
+   Pms_PublishPolicy_For_Policy_WithOut_AllowedKycAttributes_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_17
+      description: Validate that a policy without allowedKycAttributes can be published successfully
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_WithOut_AllowedKycAttributes_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$IGNORE$",
+        "policyGroupDesc": "$IGNORE$",
+        "policyGroupStatus": true,
+        "policyName": "$IGNORE$",
+        "policyDesc": "$IGNORE$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true,
+        "authType": "$IGNORE$",
+        "authSubType": "$IGNORE$",
+        "mandatory": "$IGNORE$",
+        "attributeName": "$IGNORE$",
+        "authTokenType": "$IGNORE$"
+    }'

@@ -61,7 +61,7 @@ GetMISPPartnerLicenseById:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_REQUEST_ERROR_002"
+           "errorCode": "PMS_MSP_441"
         }
     ]
 }'

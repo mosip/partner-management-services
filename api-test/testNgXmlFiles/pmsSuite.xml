@@ -956,6 +956,14 @@
         </classes>
     </test>
 
+    <test name="AuditLogCreateOIDCClient">
+        <parameter name="ymlFile" value="pms/AuditLog/AuditLogOidcClient.yml"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator"/>
+        </classes>
+    </test>
+
     <test name="UpdateOIDCAuthClient">
         <parameter name="ymlFile"
                    value="pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateOIDCClient.yml"/>
@@ -1744,7 +1752,7 @@
     <test name="DeactivateMISPLicense">
         <parameter name="ymlFile"
                    value="pms/DeactivateMISPLicense/DeactivateMISPLicense.yml"/>
-        <parameter name="pathParams" value="partnerId"/>
+        <parameter name="pathParams" value="mispLicenseId"/>
         <classes>
             <class
                     name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>

@@ -165,7 +165,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"invalid",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -189,7 +189,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":" ",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -213,7 +213,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"!@#$%^&*()",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -237,7 +237,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"photo",
   "biometric":"invalid",
   "biometricSubTypes":"mock",
@@ -261,7 +261,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"photo",
   "biometric":" ",
   "biometricSubTypes":"mock",
@@ -285,7 +285,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"photo",
   "biometric":"!@#$%^&*()",
   "biometricSubTypes":"mock",
@@ -309,7 +309,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -371,7 +371,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
     "requestTime": "$TIMESTAMP$",
-	"requestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+	"requestId": "$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
 	"extractors":[]
   }'
       output: '{
@@ -391,7 +391,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
     "requestTime": "$TIMESTAMP$",
-	"requestId": "$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+	"requestId": "$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
 	"extractors":[
 	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"},
 	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"}
@@ -430,7 +430,7 @@ AddBioExtractors:
       outputTemplate: pms/error
       input: '{
   "requestTime": "$TIMESTAMP$",
-  "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
   "attributeName":"photo",
   "biometric":"face",
   "biometricSubTypes":"mock",
@@ -453,7 +453,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
-    "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+    "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
     "requestTime": "$TIMESTAMP$",
     "attributeName":"photo",
     "biometric":"face",
@@ -477,7 +477,7 @@ AddBioExtractors:
         inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
         outputTemplate: pms/error
         input: '{
-      "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+      "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
       "requestTime": "$TIMESTAMP$",
       "attributeName":"photo",
       "biometric":"face",
@@ -501,7 +501,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
-        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
         "requestTime": "$TIMESTAMP$",
         "attributeName":"photo",
         "biometric":"face",
@@ -525,7 +525,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
-        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
         "requestTime": "$TIMESTAMP$",
         "attributeName":"photo",
         "biometric":"face",
@@ -549,7 +549,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
-        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
         "requestTime": "$TIMESTAMP$",
         "attributeName":"photo",
         "biometric":"face",
@@ -573,7 +573,7 @@ AddBioExtractors:
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
       outputTemplate: pms/error
       input: '{
-        "requestId":"$ID:Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid_mappingkey$",
+        "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
         "requestTime": "$TIMESTAMP$",
         "attributeName":"photo",
         "biometric":"face",

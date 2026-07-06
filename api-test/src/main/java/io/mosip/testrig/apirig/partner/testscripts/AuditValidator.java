@@ -76,8 +76,12 @@ public class AuditValidator extends PMSUtil implements ITest {
 		String[] templateFields = testCaseDTO.getTemplateFields();
 		List<String> queryProp = Arrays.asList(templateFields);
 		logger.info(queryProp);
-		String query = "select * from audit.app_audit_log where cr_by = '" + BaseTestCase.currentModule + "-"
-				+ PMSConfigManager.getproperty("partner_userName") + "'";
+
+		String query = testCaseDTO.getEndPoint();
+		if (query == null || query.isBlank()) {
+			query = "select * from audit.app_audit_log where cr_by = '" + BaseTestCase.currentModule + "-"
+					+ PMSConfigManager.getproperty("partner_userName") + "'";
+		}
 
 		logger.info(query);
 		Map<String, Object> response = DBManager.executeQueryAndGetRecord(testCaseDTO.getRole(), query);
