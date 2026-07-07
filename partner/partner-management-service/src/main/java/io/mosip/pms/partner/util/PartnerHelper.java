@@ -171,15 +171,15 @@ public class PartnerHelper {
 
     public final Map<String, String> mispAliasToColumnMap = new HashMap<>();
     {
-        mispAliasToColumnMap.put("partnerId", "id.mispId");
+        mispAliasToColumnMap.put("partnerId", "m.mispId");
         mispAliasToColumnMap.put("orgName", "p.name");
         mispAliasToColumnMap.put("policyGroupName", "pg.name");
         mispAliasToColumnMap.put("policyName", "ap.name");
-        mispAliasToColumnMap.put("maskedLicenseKey", "id.licenseKey");
-        mispAliasToColumnMap.put("licenseKeyName", "licenseKeyName");
-        mispAliasToColumnMap.put("expiryDateTime", "validToDate");
-        mispAliasToColumnMap.put("status", "isActive");
-        mispAliasToColumnMap.put("createdDateTime", "createdDateTime");
+        mispAliasToColumnMap.put("maskedLicenseKey", "m.licenseKey");
+        mispAliasToColumnMap.put("licenseKeyName", "m.licenseKeyName");
+        mispAliasToColumnMap.put("expiryDateTime", "m.validToDate");
+        mispAliasToColumnMap.put("status", "m.isActive");
+        mispAliasToColumnMap.put("createdDateTime", "m.createdDateTime");
     }
 
     @Autowired
