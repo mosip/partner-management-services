@@ -15,6 +15,8 @@ import io.mosip.pms.partner.misp.dto.MISPFilterDto;
 import io.mosip.pms.partner.misp.dto.MISPLicensePatchRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPRegenerateRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
+import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -710,6 +713,32 @@ public class InfraProviderServiceImplTest {
 		Page<MISPLicenseSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
 		when(mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), anyInt(), any())).thenReturn(page);
 		infraProviderServiceImpl.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
+	}
+
+	@Test
+	public void getAllMISPLicenses_sortByPartnerId_thenSortsSuccessfully() {
+		String sortFieldName = "partnerId";
+		String sortType = "asc";
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		MISPFilterDto filterDto = new MISPFilterDto();
+		filterDto.setPartnerId("partner1");
+
+		MISPLicenseSummaryEntity entity = new MISPLicenseSummaryEntity();
+		entity.setPartnerId("partner1");
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<MISPLicenseSummaryEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
+		ReflectionTestUtils.setField(infraProviderServiceImpl, "mispLicenseSummaryRepository", mispLicenseSummaryRepository);
+		org.mockito.ArgumentCaptor<Pageable> pageableCaptor = org.mockito.ArgumentCaptor.forClass(Pageable.class);
+		when(mispLicenseSummaryRepository.getSummaryOfAllMispLicenseDetails(any(), any(), any(), any(), any(), any(), any(), any(), any(), pageableCaptor.capture())).thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> response =
+				infraProviderServiceImpl.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
+
+		assertTrue(response.getErrors().isEmpty());
+		Sort.Order order = pageableCaptor.getValue().getSort().getOrderFor("m.mispId");
+		assertNotNull(order);
+		assertEquals(Sort.Direction.ASC, order.getDirection());
 	}
 
 	@Test
