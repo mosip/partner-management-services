@@ -58,7 +58,7 @@ WHERE part_id = 'mpartner-default-auth'
 DO $$
 BEGIN
     IF EXISTS (SELECT 1 FROM pms.partner WHERE partner_type_code = 'Partner_Admin') THEN
-        RAISE NOTICE 'Skipping removal of partner_type Partner_Admin: existing pms.partner rows still reference it';
+        RAISE WARNING 'Skipping removal of partner_type Partner_Admin: existing pms.partner rows still reference it. Manual cleanup required: reassign or remove the referencing pms.partner rows, then delete pms.partner_type row with code = ''Partner_Admin''.';
     ELSE
         DELETE FROM pms.partner_type WHERE code = 'Partner_Admin';
     END IF;
