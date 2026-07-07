@@ -4,7 +4,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_01	  
       description: Validate that a policy can be published successfully with all valid inputs
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -134,7 +133,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_07
       description: Validate that a policy can be published successfully even when associated with a deactivated policy group
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -164,7 +162,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_08
       description: Validate that publishing a policy succeeds with all valid inputs intended for negative test scenarios
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -194,7 +191,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_09
       description: Validate that publishing a policy succeeds for a deactivated policy group intended for negative test scenarios
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -225,7 +221,6 @@ createPublishPolicy:
       description: Validate that a partner can publish a data share policy successfully with all valid inputs
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
@@ -254,7 +249,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_11
       description: Validate that a policy can be published successfully even when associated policy mappings are rejected
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -284,7 +278,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_12
       description: Validate that a policy can be published successfully when associated policy mappings are in progress
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -314,7 +307,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_13
       description: Validate that a policy can be published successfully for rejecting credential partner policy mapping
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -344,7 +336,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_18
       description: Validate that a policy can be published successfully for bio extractors negative validation tests
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -374,7 +365,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_14
       description: Validate that a second policy for the same auth partner can be published successfully with all valid inputs
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -404,7 +394,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_15
       description: Validate that a policy without fullName, email and gender claims can be published successfully
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -434,7 +423,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_16
       description: Validate that a policy without allowedAuthTypes can be published successfully
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -464,7 +452,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_17
       description: Validate that a policy without allowedKycAttributes can be published successfully
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult

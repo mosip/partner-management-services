@@ -4,7 +4,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_02	  
       description: Validate that a mapping key is successfully approved when all input parameters are valid
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -22,7 +21,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_01
       description: Validate that a mapping key can be approved successfully even when the associated OIDC client is deactivated, using valid inputs
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -39,7 +37,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_03
       description: Validate that a mapping key is successfully approved for a MISP policy when all inputs are valid
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -140,7 +137,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_08
       description: Validate that a mapping key with rejected status is successfully approved when all inputs are valid
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -180,7 +176,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_10
       description: Validate that a mapping key is successfully rejected when all input parameters are valid
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -300,7 +295,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_14
       description: Validate that mapping key approval gets rejected for credential partner
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -399,7 +393,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_21
       description: Validate that the mapping key for the same auth partner's second policy is successfully approved
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -417,7 +410,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_22
       description: Validate that the mapping key for the policy without FullName, Email and Gender claims is successfully approved
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -435,7 +427,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_23
       description: Validate that the mapping key for the policy without allowedAuthTypes is successfully approved
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
@@ -453,7 +444,6 @@ ApproveMappingKey:
       uniqueIdentifier: TC_PMS_ApproveAPIKey_24
       description: Validate that the mapping key for the policy without allowedKycAttributes is successfully approved
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: put
       inputTemplate: pms/ApproveMappingKey/approveMappingKey
       outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
