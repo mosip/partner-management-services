@@ -50,3 +50,16 @@ SET attribute_name = 'photo',
     upd_dtimes = now()
 WHERE part_id = 'mpartner-default-auth'
   AND biometric_modality = 'face';
+
+-- -------------------------------------------------------------------------------------------------
+-- Remove unused Partner_Admin partner type
+-- -------------------------------------------------------------------------------------------------
+
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pms.partner WHERE partner_type_code = 'Partner_Admin') THEN
+        RAISE NOTICE 'Skipping removal of partner_type Partner_Admin: existing pms.partner rows still reference it';
+    ELSE
+        DELETE FROM pms.partner_type WHERE code = 'Partner_Admin';
+    END IF;
+END $$;

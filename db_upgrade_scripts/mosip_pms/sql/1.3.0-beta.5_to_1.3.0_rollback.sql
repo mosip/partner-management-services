@@ -1,6 +1,14 @@
 \c mosip_pms
 
 -- -------------------------------------------------------------------------------------------------
+-- Rollback for Partner_Admin partner type removal
+-- -------------------------------------------------------------------------------------------------
+
+INSERT INTO pms.partner_type (code, partner_description, is_policy_required, is_active, cr_by, cr_dtimes)
+VALUES ('Partner_Admin', 'Partner Admin', FALSE, TRUE, 'superadmin', now())
+ON CONFLICT (code) DO NOTHING;
+
+-- -------------------------------------------------------------------------------------------------
 -- Rollback for MISP License surrogate PK migration (1.3.0)
 -- -------------------------------------------------------------------------------------------------
 
