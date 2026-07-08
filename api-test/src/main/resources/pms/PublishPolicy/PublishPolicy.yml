@@ -4,7 +4,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_01	  
       description: Validate that a policy can be published successfully with all valid inputs
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -14,19 +13,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
    Pms_PublishPolicy_MISPPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
@@ -134,7 +126,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_07
       description: Validate that a policy can be published successfully even when associated with a deactivated policy group
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -144,19 +135,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_name$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_All_Valid_Smoke_ForNeg:
@@ -164,7 +148,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_08
       description: Validate that publishing a policy succeeds with all valid inputs intended for negative test scenarios
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -174,19 +157,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'  
     
    Pms_PublishPolicy_All_Valid_forDeactivatePolicyGroup_ForNeg:
@@ -194,7 +170,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_09
       description: Validate that publishing a policy succeeds for a deactivated policy group intended for negative test scenarios
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -204,19 +179,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_name$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Published_Policy_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'  
     
    Partner_PublishDataSharePolicy_All_Valid_Smoke:
@@ -225,7 +193,6 @@ createPublishPolicy:
       description: Validate that a partner can publish a data share policy successfully with all valid inputs
       role: partneradmin
       restMethod: post
-      checkErrorsOnlyInResponse: true
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
       input: '{
@@ -234,19 +201,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
         "policyType": "DataShare",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
     
    Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping:
@@ -254,7 +214,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_11
       description: Validate that a policy can be published successfully even when associated policy mappings are rejected
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -264,19 +223,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
     
    Pms_PublishPolicy_All_Valid_ForInProgressPolicyMapping:
@@ -284,7 +236,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_12
       description: Validate that a policy can be published successfully when associated policy mappings are in progress
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -294,19 +245,12 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_PolicyMappingReject:
@@ -314,7 +258,6 @@ createPublishPolicy:
       uniqueIdentifier: TC_PMS_publishPolicy_13
       description: Validate that a policy can be published successfully for rejecting credential partner policy mapping
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
       outputTemplate: pms/PublishPolicy/publishPolicyResult
@@ -324,17 +267,120 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_18
+      description: Validate that a policy can be published successfully for bio extractors negative validation tests
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_For_AuthPartner_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_14
+      description: Validate that a second policy for the same auth partner can be published successfully with all valid inputs
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_For_AuthPartner_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_For_AuthPartner_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_For_Policy_WithOut_FullName_Email_Gender_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_15
+      description: Validate that a policy without fullName, email and gender claims can be published successfully
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_WithOut_FullName_Email_Gender_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_WithOut_FullName_Email_Gender_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_For_Policy_WithOut_AllowedAuthTypes_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_16
+      description: Validate that a policy without allowedAuthTypes can be published successfully
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_WithOut_AllowedAuthTypes_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_WithOut_AllowedAuthTypes_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_For_Policy_WithOut_AllowedKycAttributes_sid:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_17
+      description: Validate that a policy without allowedKycAttributes can be published successfully
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_WithOut_AllowedKycAttributes_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_WithOut_AllowedKycAttributes_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
     }'
