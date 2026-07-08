@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS pms.bioextractor_configuration(
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.bioextractor_configuration TO pmsuser;
 
 -- -------------------------------------------------------------------------------------------------
--- Partner policy bio extract request table for 1.3.0-beta.5
+-- Partner policy bio extract request table
 -- -------------------------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS pms.partner_policy_bioextract_request (
@@ -287,7 +287,7 @@ ON pms.partner_policy_bioextract_request (
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_bioextract_request TO pmsuser;
 
 -- -------------------------------------------------------------------------------------------------
--- Partner policy credential type request table for 1.3.0-beta.5
+-- Partner policy credential type request table
 -- -------------------------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS pms.partner_policy_credential_type_request (
@@ -345,7 +345,7 @@ WHERE status_code = 'approved';
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_credential_type_request TO pmsuser;
 
 -- -------------------------------------------------------------------------------------------------
--- Bioextractor configuration soft delete support (1.3.0)
+-- Bioextractor configuration soft delete support
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE IF EXISTS pms.bioextractor_configuration
@@ -361,7 +361,7 @@ ON pms.bioextractor_configuration (lower(config_name))
 WHERE is_deleted = false;
 
 -- -------------------------------------------------------------------------------------------------
--- MISP License: replace composite PK (misp_id, license_key) with surrogate PK misp_license_id (1.3.0-GA)
+-- MISP License: replace composite PK (misp_id, license_key) with surrogate PK misp_license_id
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE pms.misp_license ADD COLUMN IF NOT EXISTS misp_license_id character varying(36);
@@ -379,7 +379,7 @@ ALTER TABLE pms.misp_license ADD CONSTRAINT uk_mlic UNIQUE (misp_id, license_key
 COMMENT ON COLUMN pms.misp_license.misp_license_id IS 'MISP License ID: Unique surrogate identifier (primary key) for the license record.';
 
 -- -------------------------------------------------------------------------------------------------
--- CRVS attributes: add declaredAsDeceased to mpolicy-default-auth (1.3.0)
+-- CRVS attributes: add declaredAsDeceased to mpolicy-default-auth
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy

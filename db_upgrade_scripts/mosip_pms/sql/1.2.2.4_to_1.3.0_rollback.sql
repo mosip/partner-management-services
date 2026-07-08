@@ -9,7 +9,7 @@ VALUES ('Partner_Admin', 'Partner Admin', FALSE, TRUE, 'superadmin', now())
 ON CONFLICT (code) DO NOTHING;
 
 -- -------------------------------------------------------------------------------------------------
--- Rollback for MISP License surrogate PK migration (1.3.0)
+-- Rollback for MISP License surrogate PK migration
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE IF EXISTS pms.misp_license DROP CONSTRAINT IF EXISTS uk_mlic;
@@ -21,7 +21,7 @@ ALTER TABLE IF EXISTS pms.misp_license ADD CONSTRAINT pk_mlic PRIMARY KEY (misp_
 ALTER TABLE IF EXISTS pms.misp_license DROP COLUMN IF EXISTS misp_license_id;
 
 -- -------------------------------------------------------------------------------------------------
--- Rollback for Bioextractor configuration soft delete support (1.3.0)
+-- Rollback for Bioextractor configuration soft delete support
 -- -------------------------------------------------------------------------------------------------
 
 -- Remove soft-deleted rows to safely restore uniqueness
@@ -38,7 +38,7 @@ ALTER TABLE IF EXISTS pms.bioextractor_configuration
     DROP COLUMN IF EXISTS is_deleted;
 
 -- -------------------------------------------------------------------------------------------------
--- Rollback for CRVS attributes: remove declaredAsDeceased from mpolicy-default-auth (1.3.0)
+-- Rollback for CRVS attributes: remove declaredAsDeceased from mpolicy-default-auth
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy
