@@ -13,7 +13,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -133,7 +135,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_ForDeactivatePolicy_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Deactive_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -153,7 +157,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_Smoke_For_Get_ApiKey_with_deactivated_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -173,7 +179,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_ForPublishedPolicy_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Published_Policy_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -193,7 +201,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
         "policyType": "DataShare",
         "status": "PUBLISHED",
         "is_Active": true
@@ -213,7 +223,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -233,7 +245,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -253,7 +267,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -273,7 +289,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -293,7 +311,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_For_AuthPartner_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -313,7 +333,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_WithOut_FullName_Email_Gender_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -333,7 +355,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_WithOut_AllowedAuthTypes_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
@@ -353,7 +377,9 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
         "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_WithOut_AllowedKycAttributes_sid_name$",
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
