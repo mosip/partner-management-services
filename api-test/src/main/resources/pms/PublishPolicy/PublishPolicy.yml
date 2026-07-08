@@ -13,19 +13,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
    Pms_PublishPolicy_MISPPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
@@ -142,19 +133,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_All_Valid_Smoke_ForNeg:
@@ -171,19 +153,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'  
     
    Pms_PublishPolicy_All_Valid_forDeactivatePolicyGroup_ForNeg:
@@ -200,19 +173,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'  
     
    Partner_PublishDataSharePolicy_All_Valid_Smoke:
@@ -229,19 +193,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "DataShare",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
     
    Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping:
@@ -258,19 +213,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
     
    Pms_PublishPolicy_All_Valid_ForInProgressPolicyMapping:
@@ -287,19 +233,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_PolicyMappingReject:
@@ -316,19 +253,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg:
@@ -345,19 +273,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_For_AuthPartner_sid:
@@ -374,19 +293,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_For_Policy_WithOut_FullName_Email_Gender_sid:
@@ -403,19 +313,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_For_Policy_WithOut_AllowedAuthTypes_sid:
@@ -432,19 +333,10 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
 
    Pms_PublishPolicy_For_Policy_WithOut_AllowedKycAttributes_sid:
@@ -461,17 +353,8 @@ createPublishPolicy:
       "requesttime": "$TIMESTAMP$"
 }'
       output: '{
-        "policyGroupName": "$IGNORE$",
-        "policyGroupDesc": "$IGNORE$",
         "policyGroupStatus": true,
-        "policyName": "$IGNORE$",
-        "policyDesc": "$IGNORE$",
         "policyType": "Auth",
         "status": "PUBLISHED",
-        "is_Active": true,
-        "authType": "$IGNORE$",
-        "authSubType": "$IGNORE$",
-        "mandatory": "$IGNORE$",
-        "attributeName": "$IGNORE$",
-        "authTokenType": "$IGNORE$"
+        "is_Active": true
     }'
