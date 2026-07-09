@@ -247,7 +247,16 @@ CREATE TABLE IF NOT EXISTS pms.partner_policy_bioextract_request (
     upd_by character varying(256),
     upd_dtimes timestamp,
     CONSTRAINT pk_ppber_id PRIMARY KEY (id),
-    CONSTRAINT chk_ppber_status CHECK (status_code IN ('InProgress', 'approved', 'rejected'))
+    CONSTRAINT chk_ppber_status CHECK (status_code IN ('InProgress', 'approved', 'rejected')),
+    CONSTRAINT fk_ppber_request FOREIGN KEY (partner_policy_request_id)
+        REFERENCES pms.partner_policy_request (id) MATCH FULL
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_ppber_part FOREIGN KEY (part_id)
+        REFERENCES pms.partner (id) MATCH FULL
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_ppber_policy FOREIGN KEY (policy_id)
+        REFERENCES pms.auth_policy (id) MATCH FULL
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 COMMENT ON TABLE pms.partner_policy_bioextract_request IS 'Partner Policy Bio Extract Request: Stores partner requests for biometric extraction configuration.';
@@ -265,18 +274,6 @@ COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_by IS 'Created By : I
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
-
-ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_request FOREIGN KEY (partner_policy_request_id)
-REFERENCES pms.partner_policy_request (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_part FOREIGN KEY (part_id)
-REFERENCES pms.partner (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE pms.partner_policy_bioextract_request ADD CONSTRAINT fk_ppber_policy FOREIGN KEY (policy_id)
-REFERENCES pms.auth_policy (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_ppber_modality
 ON pms.partner_policy_bioextract_request (
@@ -302,7 +299,16 @@ CREATE TABLE IF NOT EXISTS pms.partner_policy_credential_type_request (
     upd_by character varying(256),
     upd_dtimes timestamp,
     CONSTRAINT pk_ppctr_id PRIMARY KEY (id),
-    CONSTRAINT chk_ppctr_status CHECK (status_code IN ('InProgress', 'approved', 'rejected'))
+    CONSTRAINT chk_ppctr_status CHECK (status_code IN ('InProgress', 'approved', 'rejected')),
+    CONSTRAINT fk_ppctr_request FOREIGN KEY (partner_policy_request_id)
+        REFERENCES pms.partner_policy_request (id) MATCH FULL
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_ppctr_part FOREIGN KEY (part_id)
+        REFERENCES pms.partner (id) MATCH FULL
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_ppctr_policy FOREIGN KEY (policy_id)
+        REFERENCES pms.auth_policy (id) MATCH FULL
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 COMMENT ON TABLE pms.partner_policy_credential_type_request IS 'Partner Policy Credential Type Request: Stores partner requests for credential type mapping.';
@@ -316,18 +322,6 @@ COMMENT ON COLUMN pms.partner_policy_credential_type_request.cr_by IS 'Created B
 COMMENT ON COLUMN pms.partner_policy_credential_type_request.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN pms.partner_policy_credential_type_request.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.partner_policy_credential_type_request.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
-
-ALTER TABLE pms.partner_policy_credential_type_request ADD CONSTRAINT fk_ppctr_request FOREIGN KEY (partner_policy_request_id)
-REFERENCES pms.partner_policy_request (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE pms.partner_policy_credential_type_request ADD CONSTRAINT fk_ppctr_part FOREIGN KEY (part_id)
-REFERENCES pms.partner (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-ALTER TABLE pms.partner_policy_credential_type_request ADD CONSTRAINT fk_ppctr_policy FOREIGN KEY (policy_id)
-REFERENCES pms.auth_policy (id) MATCH FULL
-ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_ppctr_request
 ON pms.partner_policy_credential_type_request (partner_policy_request_id);

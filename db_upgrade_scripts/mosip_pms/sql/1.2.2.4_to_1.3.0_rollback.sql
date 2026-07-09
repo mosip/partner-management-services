@@ -99,6 +99,11 @@ ALTER TABLE pms.misp_license DROP COLUMN IF EXISTS license_key_name;
 ALTER TABLE pms.partner
     ALTER COLUMN email_id DROP NOT NULL;
 
+-- Rollback script for the email_id_hash column added to partner, partner_h and partner_contact tables
+ALTER TABLE pms.partner DROP COLUMN IF EXISTS email_id_hash;
+ALTER TABLE pms.partner_h DROP COLUMN IF EXISTS email_id_hash;
+ALTER TABLE pms.partner_contact DROP COLUMN IF EXISTS email_id_hash;
+
 -- Create the otp_transaction table
 CREATE TABLE pms.otp_transaction (
     id character varying(36) NOT NULL,
@@ -134,11 +139,7 @@ COMMENT ON COLUMN pms.otp_transaction.upd_dtimes IS 'Updated DateTimestamp : Whe
 COMMENT ON COLUMN pms.otp_transaction.is_deleted IS 'IS_Deleted : Soft delete flag';
 COMMENT ON COLUMN pms.otp_transaction.del_dtimes IS 'Deleted DateTimestamp : When the record was soft deleted';
 
-alter table pms.batch_job_execution drop constraint job_inst_exec_fk;
-alter table pms.batch_job_execution_params drop constraint job_exec_params_fk;
-alter table pms.batch_step_execution drop constraint job_exec_step_fk;
-alter table pms.batch_step_execution_context drop constraint step_exec_ctx_fk;
-alter table pms.batch_job_execution_context drop constraint job_exec_ctx_fk;
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.otp_transaction TO pmsuser;
 
 drop table if exists pms.batch_job_execution_context;
 drop table if exists pms.batch_step_execution_context;
