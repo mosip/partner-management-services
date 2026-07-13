@@ -3215,7 +3215,7 @@ public class PartnerManagementServiceImplTest {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
 		req.setAttributeName(" photo ");
-		req.setCredentialDataFormat(" raw_data ");
+		req.setCredentialDataFormat(" rawData ");
 		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		ArgumentCaptor<BioextractorConfiguration> captor = ArgumentCaptor.forClass(BioextractorConfiguration.class);
@@ -3228,7 +3228,7 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getResponse());
 		assertEquals("SUCCESS", resp.getResponse().getStatus());
 		assertEquals("photo", captor.getValue().getAttributeName());
-		assertEquals("raw_data", captor.getValue().getCredentialDataFormat());
+		assertEquals("rawData", captor.getValue().getCredentialDataFormat());
 	}
 
 	@Test
@@ -3308,7 +3308,7 @@ public class PartnerManagementServiceImplTest {
 		req.setBioextractorProviderVersion("1.0");
 		req.setBioModality("face");
 		req.setAttributeName("photo");
-		req.setCredentialDataFormat("raw_data");
+		req.setCredentialDataFormat("rawData");
 		return req;
 	}
 

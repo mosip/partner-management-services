@@ -1021,26 +1021,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
 		try {
-			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
-					environment, "mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
-			if (modalityToAttribute == null || modalityToAttribute.isEmpty()) {
-				return;
-			}
-			String biometric = extractor.getBiometric().trim().toLowerCase();
-			String attributeName = extractor.getAttributeName().trim().toLowerCase();
-			String expectedAttributeName = modalityToAttribute.get(biometric);
-			if (expectedAttributeName == null || expectedAttributeName.isBlank()) {
-				String validModalities = modalityToAttribute.keySet().stream()
-						.reduce((a, b) -> a + ", " + b).orElse("");
-				throw new PartnerServiceException(INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(INVALID_INPUT_FORMAT.getErrorMessage(), "biometric",
-								"Valid values are: " + validModalities));
-			}
-			if (!expectedAttributeName.equalsIgnoreCase(attributeName)) {
-				throw new PartnerServiceException(INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(INVALID_INPUT_FORMAT.getErrorMessage(), "attributeName",
-								"For biometric '" + biometric + "', attributeName must be '" + expectedAttributeName + "'"));
-			}
+			validateAllowedBioextractorBioModality(extractor.getBiometric());
+			validateAttributeNameForCredentialDataFormat(extractor.getBiometric(),
+					extractor.getCredentialDataFormat(), extractor.getAttributeName());
 		} catch (PartnerServiceException ex) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId, "partnerId");
 			throw ex;
