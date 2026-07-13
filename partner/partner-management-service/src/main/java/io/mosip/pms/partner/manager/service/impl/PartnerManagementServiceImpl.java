@@ -132,6 +132,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private static final String MISP_PARTNER = "MISP_Partner";
 	private static final String EQUALS = "equals";
 	private static final String CONTAINS = "contains";
+	private static final String RAW_DATA_VALUE = "rawData";
+	private static final String TEMPLATE_DATA_VALUE = "templateData";
 
 	@Value("${mosip.pms.api.id.admin.partners.get}")
 	private String getAdminPartnersId;
@@ -2229,6 +2231,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			try {
 				validateAllowedBioextractorBioModality(request.getBioModality());
+				validateAttributeNameForCredentialDataFormat(request.getBioModality(),
+						request.getCredentialDataFormat(), request.getAttributeName());
 			} catch (PartnerServiceException ex) {
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw ex;
@@ -2486,6 +2490,56 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
 							"bioModality",
 							"Valid values are: " + validModalities));
+		}
+	}
+
+	private void validateAttributeNameForCredentialDataFormat(String bioModalityRaw, String credentialDataFormatRaw,
+			String attributeNameRaw) {
+		if (credentialDataFormatRaw == null || credentialDataFormatRaw.isBlank()
+				|| attributeNameRaw == null || attributeNameRaw.isBlank()) {
+			return;
+		}
+		String attributeName = attributeNameRaw.trim().toLowerCase();
+
+		if (RAW_DATA_VALUE.equalsIgnoreCase(credentialDataFormatRaw.trim())) {
+			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
+					environment, "mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
+			if (modalityToAttribute.isEmpty()) {
+				return;
+			}
+			String bioModality = bioModalityRaw == null ? "" : bioModalityRaw.trim().toLowerCase();
+			String expectedAttributeName = modalityToAttribute.get(bioModality);
+			if (expectedAttributeName == null || !expectedAttributeName.equalsIgnoreCase(attributeName)) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+								"attributeName",
+								"For biometric modality '" + bioModality + "', attributeName must be '"
+										+ expectedAttributeName + "'"));
+			}
+		} else if (TEMPLATE_DATA_VALUE.equalsIgnoreCase(credentialDataFormatRaw.trim())) {
+			String raw = environment.getProperty("mosip.pms.bioextractor.allowed.template.attribute.names", "");
+			if (raw == null || raw.isBlank()) {
+				return;
+			}
+			List<String> allowedTemplateAttributeNames = Arrays.stream(raw.split(","))
+					.map(String::trim)
+					.filter(s -> !s.isBlank())
+					.map(String::toLowerCase)
+					.toList();
+			if (!allowedTemplateAttributeNames.contains(attributeName)) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+								"attributeName",
+								"Valid values are: " + String.join(", ", allowedTemplateAttributeNames)));
+			}
+		} else {
+			throw new PartnerServiceException(
+					io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"credentialDataFormat",
+							"Valid values are: " + RAW_DATA_VALUE + ", " + TEMPLATE_DATA_VALUE));
 		}
 	}
 }
