@@ -22,7 +22,6 @@ CREATE TABLE pms.partner_policy_bioextract(
 	extractor_provider_version character varying(8),
 	biometric_modality character varying(64) NOT NULL,
 	biometric_sub_types character varying(64),
-	credential_data_format character varying(64),
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
