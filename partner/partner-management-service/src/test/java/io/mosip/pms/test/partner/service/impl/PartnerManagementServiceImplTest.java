@@ -2769,7 +2769,7 @@ public class PartnerManagementServiceImplTest {
 				1
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2797,7 +2797,7 @@ public class PartnerManagementServiceImplTest {
 				0
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2816,7 +2816,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2881,7 +2881,7 @@ public class PartnerManagementServiceImplTest {
 					0
 			);
 			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					any(), any(), any(), any(), any(), any(Pageable.class)))
+					any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 					.thenReturn(page);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2918,7 +2918,7 @@ public class PartnerManagementServiceImplTest {
 					0
 			);
 			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					any(), any(), any(), any(), any(), any(Pageable.class)))
+					any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 					.thenReturn(page);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -3275,7 +3275,7 @@ public class PartnerManagementServiceImplTest {
 				1
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
