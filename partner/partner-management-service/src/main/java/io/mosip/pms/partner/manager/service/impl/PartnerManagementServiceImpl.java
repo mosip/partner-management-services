@@ -977,6 +977,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 			row.setExtractorProvider(extractor.getExtractorProvider());
 			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion() == null ? null : extractor.getExtractorProviderVersion().trim());
+			row.setCredentialDataFormat(extractor.getCredentialDataFormat() == null ? null : extractor.getCredentialDataFormat().trim());
 			row.setStatusCode(parentStatus);
 			row.setCrBy(getLoggedInUserId());
 			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -1075,6 +1076,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						dto.setBiometricSubTypes(r.getBiometricSubTypes());
 						dto.setExtractorProvider(r.getExtractorProvider());
 						dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+						dto.setCredentialDataFormat(r.getCredentialDataFormat());
 						return dto;
 					}).toList());
 
@@ -1275,6 +1277,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					extractorProvider.setExtractorProviderVersion(req.getExtractorProviderVersion());
 					extractorProvider.setBiometricModality(req.getBiometricModality());
 					extractorProvider.setBiometricSubTypes(req.getBiometricSubTypes());
+					extractorProvider.setCredentialDataFormat(req.getCredentialDataFormat());
 					extractorProvider.setCrBy(currentUser);
 					extractorProvider.setCrDtimes(now);
 					extractorProvider.setIsDeleted(false);
@@ -2214,7 +2217,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			if (request.getConfigName() == null || request.getConfigName().isBlank()
 					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
 					|| request.getBioextractorProviderVersion() == null || request.getBioextractorProviderVersion().isBlank()
-					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
+					|| request.getBioModality() == null || request.getBioModality().isBlank()
+					|| request.getAttributeName() == null || request.getAttributeName().isBlank()
+					|| request.getCredentialDataFormat() == null || request.getCredentialDataFormat().isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "Required fields are missing in createBioextractorConfiguration.");
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw new PartnerServiceException(
@@ -2261,6 +2266,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			entity.setBioextractorProviderName(request.getBioextractorProviderName() == null ? null : request.getBioextractorProviderName().trim());
 			entity.setBioextractorProviderVersion(request.getBioextractorProviderVersion() == null ? null : request.getBioextractorProviderVersion().trim());
 			entity.setBioModality(request.getBioModality() == null ? null : request.getBioModality().trim());
+			entity.setAttributeName(request.getAttributeName() == null ? null : request.getAttributeName().trim());
+			entity.setCredentialDataFormat(request.getCredentialDataFormat() == null ? null : request.getCredentialDataFormat().trim());
 			entity.setCrBy(getUserId());
 			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 
@@ -2320,6 +2327,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					filterDto.getBioextractorProviderName(),
 					filterDto.getBioextractorProviderVersion(),
 					filterDto.getBioModality(),
+					filterDto.getAttributeName(),
 					pageable
 			);
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
@@ -2438,6 +2446,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setBioextractorProviderName(configuration.getBioextractorProviderName());
 		dto.setBioextractorProviderVersion(configuration.getBioextractorProviderVersion());
 		dto.setBioModality(configuration.getBioModality());
+		dto.setAttributeName(configuration.getAttributeName());
+		dto.setCredentialDataFormat(configuration.getCredentialDataFormat());
 		if (configuration.getCrDtimes() != null) {
 			dto.setCreatedDateTime(configuration.getCrDtimes().toLocalDateTime());
 		}

@@ -26,5 +26,8 @@ public class BioExtractorsDto {
 
 	@Size(max = 8, message = "extractorProviderVersion length must be <= 8")
 	private String extractorProviderVersion;
+
+	@Size(max = 64, message = "credentialDataFormat length must be <= 64")
+	private String credentialDataFormat;
 }
 

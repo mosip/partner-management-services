@@ -93,6 +93,9 @@ public class UserController {
 	@Value("${mosip.pms.bioextractor.allowed.modalities.attribute.name.map:}")
 	private String allowedBioextractorModalityAttributeNameMap;
 
+	@Value("${mosip.pms.bioextractor.allowed.template.attribute.names:}")
+	private String allowedBioextractorTemplateAttributeNames;
+
 	public static final String VERSION = "1.0";
 
 	@Autowired
@@ -162,6 +165,7 @@ public class UserController {
 		configMap.put("isOidcClientAdditionalInfoRequired", isOidcClientAdditionalInfoRequired);
 		configMap.put("allowedCredentialTypes", allowedCredentialTypes);
 		configMap.put("allowedBioextractorModalityAttributeNameMap", allowedBioextractorModalityAttributeNameMap);
+		configMap.put("allowedBioextractorTemplateAttributeNames", allowedBioextractorTemplateAttributeNames);
 		responseWrapper.setResponse(configMap);
 		System.out.println(responseWrapper);
 		return responseWrapper;

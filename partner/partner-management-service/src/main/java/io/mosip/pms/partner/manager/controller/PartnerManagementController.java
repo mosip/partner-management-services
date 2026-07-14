@@ -872,6 +872,8 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("configName", request.getConfigName());
 		inputValidator.validateRequestInput("bioextractorProviderName", request.getBioextractorProviderName());
 		inputValidator.validateRequestInput("bioextractorProviderVersion", request.getBioextractorProviderVersion());
+		inputValidator.validateRequestInput("attributeName", request.getAttributeName());
+		inputValidator.validateRequestInput("credentialDataFormat", request.getCredentialDataFormat());
 		return partnerManagementService.createBioextractorConfiguration(request);
 	}
 
@@ -892,12 +894,13 @@ public class PartnerManagementController {
 			@RequestParam(value = "configName", required = false) String configName,
 			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
 			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
-			@RequestParam(value = "bioModality", required = false) String bioModality
+			@RequestParam(value = "bioModality", required = false) String bioModality,
+			@RequestParam(value = "attributeName", required = false) String attributeName
 	) {
 		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
 		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
 				sortFieldName, sortType, normalizedPageNo, pageSize, configName, bioextractorProviderName,
-				bioextractorProviderVersion, bioModality);
+				bioextractorProviderVersion, bioModality, attributeName);
 		return partnerManagementService.getBioextractorConfigurations(
 				sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
@@ -960,19 +963,20 @@ public class PartnerManagementController {
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
 			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
 			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
-			String bioModality) {
+			String bioModality, String attributeName) {
 		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
 		inputValidator.validateRequestInput("sortType", sortType);
 		inputValidator.validateRequestInput("configName", configName);
 		inputValidator.validateRequestInput("bioextractorProviderName", bioextractorProviderName);
 		inputValidator.validateRequestInput("bioextractorProviderVersion", bioextractorProviderVersion);
-
+		inputValidator.validateRequestInput("attributeName", attributeName);
 
 		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
 		if (configName != null) filterDto.setConfigName(configName.toLowerCase());
 		if (bioextractorProviderName != null) filterDto.setBioextractorProviderName(bioextractorProviderName.toLowerCase());
 		if (bioextractorProviderVersion != null) filterDto.setBioextractorProviderVersion(bioextractorProviderVersion.toLowerCase());
 		if (bioModality != null) filterDto.setBioModality(bioModality.toLowerCase());
+		if (attributeName != null) filterDto.setAttributeName(attributeName.toLowerCase());
 		return filterDto;
 	}
 }

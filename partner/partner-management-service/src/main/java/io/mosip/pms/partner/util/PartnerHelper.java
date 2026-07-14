@@ -100,6 +100,7 @@ public class PartnerHelper {
         bioextractorConfigurationAliasToColumnMap.put("bioextractorProviderName", "bioextractorProviderName");
         bioextractorConfigurationAliasToColumnMap.put("bioextractorProviderVersion", "bioextractorProviderVersion");
         bioextractorConfigurationAliasToColumnMap.put("bioModality", "bioModality");
+        bioextractorConfigurationAliasToColumnMap.put("attributeName", "attributeName");
         bioextractorConfigurationAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 

@@ -22,12 +22,14 @@ public interface BioextractorConfigurationRepository extends JpaRepository<Bioex
 			"AND (:bioextractorProviderName IS NULL OR lower(b.bioextractorProviderName) LIKE %:bioextractorProviderName%) " +
 			"AND (:bioextractorProviderVersion IS NULL OR lower(b.bioextractorProviderVersion) LIKE %:bioextractorProviderVersion%) " +
 			"AND (:bioModality IS NULL OR lower(b.bioModality) LIKE %:bioModality%) " +
+			"AND (:attributeName IS NULL OR lower(b.attributeName) LIKE %:attributeName%) " +
 			"AND b.isDeleted = false")
 	Page<BioextractorConfiguration> getAllBioextractorConfigurations(
 			@Param("configName") String configName,
 			@Param("bioextractorProviderName") String bioextractorProviderName,
 			@Param("bioextractorProviderVersion") String bioextractorProviderVersion,
 			@Param("bioModality") String bioModality,
+			@Param("attributeName") String attributeName,
 			Pageable pageable
 	);
 }

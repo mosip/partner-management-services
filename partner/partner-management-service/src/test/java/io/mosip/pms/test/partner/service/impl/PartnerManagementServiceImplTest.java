@@ -2769,7 +2769,7 @@ public class PartnerManagementServiceImplTest {
 				1
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2797,7 +2797,7 @@ public class PartnerManagementServiceImplTest {
 				0
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2816,7 +2816,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2841,7 +2841,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			Environment env = org.mockito.Mockito.mock(Environment.class);
 			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
-					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+					.thenReturn("face:photo,iris:iris,finger:fingerprint");
 			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2872,7 +2872,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			Environment env = org.mockito.Mockito.mock(Environment.class);
 			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
-					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+					.thenReturn("face:photo,iris:iris,finger:fingerprint");
 			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
 
 			Page<BioextractorConfiguration> page = new PageImpl<>(
@@ -2881,7 +2881,7 @@ public class PartnerManagementServiceImplTest {
 					0
 			);
 			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					any(), any(), any(), any(), any(Pageable.class)))
+					any(), any(), any(), any(), any(), any(Pageable.class)))
 					.thenReturn(page);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2918,7 +2918,7 @@ public class PartnerManagementServiceImplTest {
 					0
 			);
 			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					any(), any(), any(), any(), any(Pageable.class)))
+					any(), any(), any(), any(), any(), any(Pageable.class)))
 					.thenReturn(page);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2945,7 +2945,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			Environment env = org.mockito.Mockito.mock(Environment.class);
 			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
-					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+					.thenReturn("face:photo,iris:iris,finger:fingerprint");
 			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
 
 			ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
@@ -3136,6 +3136,159 @@ public class PartnerManagementServiceImplTest {
 				resp.getErrors().get(0).getErrorCode());
 	}
 
+	@Test
+	public void createBioextractorConfigurationNullAttributeName() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName(null);
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationBlankAttributeName() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName("   ");
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationNullCredentialDataFormat() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName("photo");
+		req.setCredentialDataFormat(null);
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationBlankCredentialDataFormat() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName("photo");
+		req.setCredentialDataFormat("   ");
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationSuccess_attributeNameAndCredentialDataFormatPersisted() throws Exception {
+		setupSecurityContextForBioextractor();
+		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
+		req.setAttributeName(" photo ");
+		req.setCredentialDataFormat(" raw_data ");
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
+		ArgumentCaptor<BioextractorConfiguration> captor = ArgumentCaptor.forClass(BioextractorConfiguration.class);
+		when(bioextractorConfigurationRepository.save(captor.capture())).thenAnswer(inv -> inv.getArgument(0));
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("SUCCESS", resp.getResponse().getStatus());
+		assertEquals("photo", captor.getValue().getAttributeName());
+		assertEquals("raw_data", captor.getValue().getCredentialDataFormat());
+	}
+
+	@Test
+	public void getBioextractorConfigurationById_attributeNameAndCredentialDataFormatMappedToResponse() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-2");
+		config.setConfigName("config-two");
+		config.setBioextractorProviderName("provider-b");
+		config.setBioextractorProviderVersion("2.0");
+		config.setBioModality("iris");
+		config.setAttributeName("iris");
+		config.setCredentialDataFormat("template_data");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 3, 1, 9, 0)));
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-2")).thenReturn(Optional.of(config));
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById("cfg-id-2");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("iris", resp.getResponse().getAttributeName());
+		assertEquals("template_data", resp.getResponse().getCredentialDataFormat());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getBioextractorConfigurations_attributeNameMappedToListResponse() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-3");
+		config.setConfigName("config-three");
+		config.setBioextractorProviderName("provider-c");
+		config.setBioextractorProviderVersion("1.5");
+		config.setBioModality("finger");
+		config.setAttributeName("fingerprint");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 4, 1, 8, 0)));
+		Page<BioextractorConfiguration> page = new PageImpl<>(
+				Collections.singletonList(config),
+				PageRequest.of(0, 8),
+				1
+		);
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(), any(Pageable.class)))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"createdDateTime", "desc", 0, 8,
+						new BioextractorConfigurationFilterDto());
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals(1, resp.getResponse().getData().size());
+		assertEquals("fingerprint", resp.getResponse().getData().get(0).getAttributeName());
+	}
+
 	private void setupSecurityContextForBioextractor() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
@@ -3154,6 +3307,8 @@ public class PartnerManagementServiceImplTest {
 		req.setBioextractorProviderName("ProviderA");
 		req.setBioextractorProviderVersion("1.0");
 		req.setBioModality("face");
+		req.setAttributeName("photo");
+		req.setCredentialDataFormat("raw_data");
 		return req;
 	}
 

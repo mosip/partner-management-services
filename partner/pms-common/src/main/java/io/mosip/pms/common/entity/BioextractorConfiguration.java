@@ -29,6 +29,12 @@ public class BioextractorConfiguration implements Serializable {
 	@Column(name = "bio_modality", nullable = false)
 	private String bioModality;
 
+	@Column(name = "attribute_name", nullable = false)
+	private String attributeName;
+
+	@Column(name = "credential_data_format", nullable = false)
+	private String credentialDataFormat;
+
 	@Column(name = "cr_by", nullable = false)
 	private String crBy;
 
@@ -76,6 +82,22 @@ public class BioextractorConfiguration implements Serializable {
 
 	public void setBioModality(String bioModality) {
 		this.bioModality = bioModality;
+	}
+
+	public String getAttributeName() {
+		return attributeName;
+	}
+
+	public void setAttributeName(String attributeName) {
+		this.attributeName = attributeName;
+	}
+
+	public String getCredentialDataFormat() {
+		return credentialDataFormat;
+	}
+
+	public void setCredentialDataFormat(String credentialDataFormat) {
+		this.credentialDataFormat = credentialDataFormat;
 	}
 
 	public String getCrBy() {
