@@ -2309,12 +2309,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
-			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository	.getAllBioextractorConfigurations(
 					filterDto.getConfigName(),
 					filterDto.getBioextractorProviderName(),
 					filterDto.getBioextractorProviderVersion(),
 					filterDto.getBioModality(),
 					filterDto.getAttributeName(),
+					filterDto.getCredentialDataFormat(),
 					pageable
 			);
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
