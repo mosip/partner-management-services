@@ -17,4 +17,10 @@ public class BioextractorConfigurationRequestDto {
 
 	@Size(max = 64, message = "Bio Modality length must be <= 64")
 	private String bioModality;
+
+	@Size(max = 128, message = "Attribute name length must be <= 128")
+	private String attributeName;
+
+	@Size(max = 64, message = "Credential data format length must be <= 64")
+	private String credentialDataFormat;
 }

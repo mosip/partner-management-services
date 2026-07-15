@@ -47,6 +47,9 @@ public class PartnerPolicyBioextractRequest implements Serializable {
 	@Column(name = "biometric_sub_types")
 	private String biometricSubTypes;
 
+	@Column(name = "credential_data_format")
+	private String credentialDataFormat;
+
 	@Column(name = "status_code", nullable = false)
 	private String statusCode;
 

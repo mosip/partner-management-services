@@ -219,6 +219,8 @@ CREATE TABLE IF NOT EXISTS pms.bioextractor_configuration(
     bioextractor_provider_name character varying(128) NOT NULL,
     bioextractor_provider_version character varying(36),
     bio_modality character varying(64) NOT NULL,
+    attribute_name character varying(128) NOT NULL,
+    credential_data_format character varying(64) NOT NULL,
     cr_by character varying(256) NOT NULL,
     cr_dtimes timestamp NOT NULL,
     CONSTRAINT pk_bioextractor_configuration PRIMARY KEY (id),
@@ -241,6 +243,7 @@ CREATE TABLE IF NOT EXISTS pms.partner_policy_bioextract_request (
     extractor_provider_version character varying(8),
     biometric_modality character varying(64) NOT NULL,
     biometric_sub_types character varying(64),
+    credential_data_format character varying(64),
     status_code character varying(20) NOT NULL DEFAULT 'InProgress',
     cr_by character varying(256) NOT NULL,
     cr_dtimes timestamp NOT NULL,
@@ -269,6 +272,7 @@ COMMENT ON COLUMN pms.partner_policy_bioextract_request.extractor_provider IS 'E
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.extractor_provider_version IS 'Extractor Provider Version: Version of biometric extractor provider';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.biometric_modality IS 'Biometric Modality: Biometric modality';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.biometric_sub_types IS 'Biometric Sub Type: Biometric sub type';
+COMMENT ON COLUMN pms.partner_policy_bioextract_request.credential_data_format IS 'Credential Data Format: Format of biometric data to be shared (e.g. rawData, templateData).';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.status_code IS 'Status Code: Request status.';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_by IS 'Created By : ID or name of the user who create / insert record';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
