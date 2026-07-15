@@ -132,6 +132,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	private static final String MISP_PARTNER = "MISP_Partner";
 	private static final String EQUALS = "equals";
 	private static final String CONTAINS = "contains";
+	private static final String RAW_DATA_VALUE = "rawData";
+	private static final String TEMPLATE_DATA_VALUE = "templateData";
 
 	@Value("${mosip.pms.api.id.admin.partners.get}")
 	private String getAdminPartnersId;
@@ -977,6 +979,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			}
 			row.setExtractorProvider(extractor.getExtractorProvider());
 			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion() == null ? null : extractor.getExtractorProviderVersion().trim());
+			row.setCredentialDataFormat(extractor.getCredentialDataFormat() == null ? null : extractor.getCredentialDataFormat().trim());
 			row.setStatusCode(parentStatus);
 			row.setCrBy(getLoggedInUserId());
 			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -1018,26 +1021,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
 		}
 		try {
-			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
-					environment, "mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
-			if (modalityToAttribute == null || modalityToAttribute.isEmpty()) {
-				return;
-			}
-			String biometric = extractor.getBiometric().trim().toLowerCase();
-			String attributeName = extractor.getAttributeName().trim().toLowerCase();
-			String expectedAttributeName = modalityToAttribute.get(biometric);
-			if (expectedAttributeName == null || expectedAttributeName.isBlank()) {
-				String validModalities = modalityToAttribute.keySet().stream()
-						.reduce((a, b) -> a + ", " + b).orElse("");
-				throw new PartnerServiceException(INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(INVALID_INPUT_FORMAT.getErrorMessage(), "biometric",
-								"Valid values are: " + validModalities));
-			}
-			if (!expectedAttributeName.equalsIgnoreCase(attributeName)) {
-				throw new PartnerServiceException(INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(INVALID_INPUT_FORMAT.getErrorMessage(), "attributeName",
-								"For biometric '" + biometric + "', attributeName must be '" + expectedAttributeName + "'"));
-			}
+			validateAllowedBioextractorBioModality(extractor.getBiometric());
+			validateAttributeNameForCredentialDataFormat(extractor.getBiometric(),
+					extractor.getCredentialDataFormat(), extractor.getAttributeName());
 		} catch (PartnerServiceException ex) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId, "partnerId");
 			throw ex;
@@ -1075,6 +1061,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						dto.setBiometricSubTypes(r.getBiometricSubTypes());
 						dto.setExtractorProvider(r.getExtractorProvider());
 						dto.setExtractorProviderVersion(r.getExtractorProviderVersion());
+						dto.setCredentialDataFormat(r.getCredentialDataFormat());
 						return dto;
 					}).toList());
 
@@ -2214,7 +2201,9 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			if (request.getConfigName() == null || request.getConfigName().isBlank()
 					|| request.getBioextractorProviderName() == null || request.getBioextractorProviderName().isBlank()
 					|| request.getBioextractorProviderVersion() == null || request.getBioextractorProviderVersion().isBlank()
-					|| request.getBioModality() == null || request.getBioModality().isBlank()) {
+					|| request.getBioModality() == null || request.getBioModality().isBlank()
+					|| request.getAttributeName() == null || request.getAttributeName().isBlank()
+					|| request.getCredentialDataFormat() == null || request.getCredentialDataFormat().isBlank()) {
 				LOGGER.info("sessionId", "idType", "id", "Required fields are missing in createBioextractorConfiguration.");
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw new PartnerServiceException(
@@ -2224,6 +2213,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 			try {
 				validateAllowedBioextractorBioModality(request.getBioModality());
+				validateAttributeNameForCredentialDataFormat(request.getBioModality(),
+						request.getCredentialDataFormat(), request.getAttributeName());
 			} catch (PartnerServiceException ex) {
 				auditUtil.setAuditRequestDto(PartnerManageEnum.CREATE_BIOEXTRACTOR_CONFIG_FAILURE);
 				throw ex;
@@ -2261,6 +2252,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 			entity.setBioextractorProviderName(request.getBioextractorProviderName() == null ? null : request.getBioextractorProviderName().trim());
 			entity.setBioextractorProviderVersion(request.getBioextractorProviderVersion() == null ? null : request.getBioextractorProviderVersion().trim());
 			entity.setBioModality(request.getBioModality() == null ? null : request.getBioModality().trim());
+			entity.setAttributeName(request.getAttributeName() == null ? null : request.getAttributeName().trim());
+			entity.setCredentialDataFormat(request.getCredentialDataFormat() == null ? null : request.getCredentialDataFormat().trim());
 			entity.setCrBy(getUserId());
 			entity.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 
@@ -2315,11 +2308,13 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 				pageable = PageRequest.of(pageNo, pageSize, sort);
 			}
 
-			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+			Page<BioextractorConfiguration> configurations = bioextractorConfigurationRepository	.getAllBioextractorConfigurations(
 					filterDto.getConfigName(),
 					filterDto.getBioextractorProviderName(),
 					filterDto.getBioextractorProviderVersion(),
 					filterDto.getBioModality(),
+					filterDto.getAttributeName(),
+					filterDto.getCredentialDataFormat(),
 					pageable
 			);
 			List<BioextractorConfigurationDetailDto> response = new ArrayList<>();
@@ -2438,6 +2433,8 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		dto.setBioextractorProviderName(configuration.getBioextractorProviderName());
 		dto.setBioextractorProviderVersion(configuration.getBioextractorProviderVersion());
 		dto.setBioModality(configuration.getBioModality());
+		dto.setAttributeName(configuration.getAttributeName());
+		dto.setCredentialDataFormat(configuration.getCredentialDataFormat());
 		if (configuration.getCrDtimes() != null) {
 			dto.setCreatedDateTime(configuration.getCrDtimes().toLocalDateTime());
 		}
@@ -2476,6 +2473,56 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
 							"bioModality",
 							"Valid values are: " + validModalities));
+		}
+	}
+
+	private void validateAttributeNameForCredentialDataFormat(String bioModalityRaw, String credentialDataFormatRaw,
+			String attributeNameRaw) {
+		if (credentialDataFormatRaw == null || credentialDataFormatRaw.isBlank()
+				|| attributeNameRaw == null || attributeNameRaw.isBlank()) {
+			return;
+		}
+		String attributeName = attributeNameRaw.trim().toLowerCase();
+
+		if (RAW_DATA_VALUE.equalsIgnoreCase(credentialDataFormatRaw.trim())) {
+			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
+					environment, "mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
+			if (modalityToAttribute.isEmpty()) {
+				return;
+			}
+			String bioModality = bioModalityRaw == null ? "" : bioModalityRaw.trim().toLowerCase();
+			String expectedAttributeName = modalityToAttribute.get(bioModality);
+			if (expectedAttributeName == null || !expectedAttributeName.equalsIgnoreCase(attributeName)) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+								"attributeName",
+								"For biometric modality '" + bioModality + "', attributeName must be '"
+										+ expectedAttributeName + "'"));
+			}
+		} else if (TEMPLATE_DATA_VALUE.equalsIgnoreCase(credentialDataFormatRaw.trim())) {
+			String raw = environment.getProperty("mosip.pms.bioextractor.allowed.template.attribute.names", "");
+			if (raw == null || raw.isBlank()) {
+				return;
+			}
+			List<String> allowedTemplateAttributeNames = Arrays.stream(raw.split(","))
+					.map(String::trim)
+					.filter(s -> !s.isBlank())
+					.map(String::toLowerCase)
+					.toList();
+			if (!allowedTemplateAttributeNames.contains(attributeName)) {
+				throw new PartnerServiceException(
+						io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+						String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+								"attributeName",
+								"Valid values are: " + String.join(", ", allowedTemplateAttributeNames)));
+			}
+		} else {
+			throw new PartnerServiceException(
+					io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+					String.format(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(),
+							"credentialDataFormat",
+							"Valid values are: " + RAW_DATA_VALUE + ", " + TEMPLATE_DATA_VALUE));
 		}
 	}
 }

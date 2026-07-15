@@ -13,6 +13,8 @@ CREATE TABLE pms.bioextractor_configuration(
 	bioextractor_provider_name character varying(128) NOT NULL,
 	bioextractor_provider_version character varying(36),
 	bio_modality character varying(64) NOT NULL,
+	attribute_name character varying(128) NOT NULL,
+	credential_data_format character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	is_deleted boolean NOT NULL DEFAULT false,
@@ -34,6 +36,10 @@ COMMENT ON COLUMN pms.bioextractor_configuration.bio_modality IS 'Bio Modality: 
 COMMENT ON COLUMN pms.bioextractor_configuration.cr_by IS 'Created By: ID or name of the user who created the record.';
 -- ddl-end --
 COMMENT ON COLUMN pms.bioextractor_configuration.cr_dtimes IS 'Created DateTimestamp: Date and Timestamp when the record was created.';
+-- ddl-end --
+COMMENT ON COLUMN pms.bioextractor_configuration.attribute_name IS 'Attribute Name: Biometric attribute name (e.g. photo, iris, finger) associated with this configuration.';
+-- ddl-end --
+COMMENT ON COLUMN pms.bioextractor_configuration.credential_data_format IS 'Credential Data Format: Format of biometric data to be shared (e.g. rawData, templateData).';
 -- ddl-end --
 COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft delete flag. true indicates logically deleted record.';
 -- ddl-end --
