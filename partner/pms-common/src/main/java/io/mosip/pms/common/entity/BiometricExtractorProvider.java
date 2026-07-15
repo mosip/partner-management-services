@@ -41,9 +41,6 @@ public class BiometricExtractorProvider implements Serializable {
 	@Column(name = "biometric_sub_types")
 	private String biometricSubTypes;
 
-	@Column(name = "credential_data_format")
-	private String credentialDataFormat;
-
 	@Column(name="cr_by")
 	private String crBy;
 

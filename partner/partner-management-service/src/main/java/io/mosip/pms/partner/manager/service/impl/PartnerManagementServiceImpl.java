@@ -1262,7 +1262,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 					extractorProvider.setExtractorProviderVersion(req.getExtractorProviderVersion());
 					extractorProvider.setBiometricModality(req.getBiometricModality());
 					extractorProvider.setBiometricSubTypes(req.getBiometricSubTypes());
-					extractorProvider.setCredentialDataFormat(req.getCredentialDataFormat());
 					extractorProvider.setCrBy(currentUser);
 					extractorProvider.setCrDtimes(now);
 					extractorProvider.setIsDeleted(false);
