@@ -9551,7 +9551,7 @@
                     "NEW"
                 ],
                 "summary": "NEW: Get all bio-extractor configurations",
-                "description": "Returns bio-extractor configurations persisted in PMS (catalog entries used when partners submit bio-extractor requests against policies). Supports optional pagination, sorting, and filtering.\r\n\r\n**Query behaviour**\r\n- Optional filters (`configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`) are applied using **case-insensitive** matching on stored values (the service normalizes filter values to lower case).\r\n- When `pageNo` and `pageSize` are omitted, results are returned **unpaged** (all matching rows).\r\n- When **both** `pageNo` and `pageSize` are sent, pagination is enabled; in that case `sortFieldName` and `sortType` may be sent **together** to sort that page (if omitted, the page uses the default sort from persistence). If pagination is not enabled, `sortFieldName` / `sortType` are **not** applied by the service. Allowed `sortFieldName` values: `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `createdDateTime`. `sortType` is `asc` or `desc`.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2` envelope. `response` is a page object with `pageNo`, `pageSize`, `totalResults`, and `data` (array of configuration rows). Business or validation failures may populate `errors` while still returning HTTP 200, consistent with other PMS V2 endpoints.\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurations`. Example roles in default configuration: PARTNER_ADMIN, CREDENTIAL_PARTNER.",
+                "description": "Returns bio-extractor configurations persisted in PMS (catalog entries used when partners submit bio-extractor requests against policies). Supports optional pagination, sorting, and filtering.\r\n\r\n**Query behaviour**\r\n- Optional filters (`configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `attributeName`, `credentialDataFormat`) are applied using **case-insensitive** matching on stored values (the service normalizes filter values to lower case).\r\n- When `pageNo` and `pageSize` are omitted, results are returned **unpaged** (all matching rows).\r\n- When **both** `pageNo` and `pageSize` are sent, pagination is enabled; in that case `sortFieldName` and `sortType` may be sent **together** to sort that page (if omitted, the page uses the default sort from persistence). If pagination is not enabled, `sortFieldName` / `sortType` are **not** applied by the service. Allowed `sortFieldName` values: `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `createdDateTime`. `sortType` is `asc` or `desc`.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2` envelope. `response` is a page object with `pageNo`, `pageSize`, `totalResults`, and `data` (array of configuration rows). Business or validation failures may populate `errors` while still returning HTTP 200, consistent with other PMS V2 endpoints.\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurations`. Example roles in default configuration: PARTNER_ADMIN, CREDENTIAL_PARTNER.",
                 "operationId": "getBioextractorConfigurations",
                 "parameters": [
                     {
@@ -9632,6 +9632,26 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "attributeName",
+                        "in": "query",
+                        "description": "Optional filter by attribute name (case-insensitive).",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "credentialDataFormat",
+                        "in": "query",
+                        "description": "Optional filter by credential data format (case-insensitive).",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "rawData",
+                                "templateData"
+                            ]
+                        }
                     }
                 ],
                 "responses": {
@@ -9701,6 +9721,14 @@
                                                             "bioModality": {
                                                                 "type": "string"
                                                             },
+                                                            "attributeName": {
+                                                                "type": "string",
+                                                                "description": "Biometric attribute name associated with this configuration"
+                                                            },
+                                                            "credentialDataFormat": {
+                                                                "type": "string",
+                                                                "description": "Format of biometric credential data (rawData or templateData)"
+                                                            },
                                                             "createdDateTime": {
                                                                 "type": "string",
                                                                 "format": "date-time",
@@ -9745,6 +9773,8 @@
                                                         "bioextractorProviderName": "string",
                                                         "bioextractorProviderVersion": "string",
                                                         "bioModality": "string",
+                                                        "attributeName": "string",
+                                                        "credentialDataFormat": "string",
                                                         "createdDateTime": "2019-08-24T14:15:22Z"
                                                     }
                                                 ]
@@ -9784,7 +9814,7 @@
                     "NEW"
                 ],
                 "summary": "NEW: Create a new bio-extractor configuration",
-                "description": "Creates a new bio-extractor configuration row. **configName** must be **unique** after normalization (trimmed and compared in lower case). **configName**, **bioextractorProviderName**, **bioextractorProviderVersion**, and **bioModality** are required in the inner `request` object; the service stores normalized names/modality in lower case and preserves the provider version string as trimmed input.\r\n\r\n**Request envelope:** `RequestWrapperV2` with `id` set to `mosip.pms.bioextractor.configurations.post`.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2`; `response.id` is the new configuration id and `response.status` is `SUCCESS`.\r\n\r\n**Authorization:** `mosip.role.pms.postbioextractorconfigurations`. Example role in default configuration: PARTNER_ADMIN.",
+                "description": "Creates a new bio-extractor configuration row. **configName** must be **unique** after normalization (trimmed and compared in lower case). **configName**, **bioextractorProviderName**, **bioextractorProviderVersion**, **bioModality**, **attributeName**, and **credentialDataFormat** are required in the inner `request` object; the service stores normalized names/modality in lower case and preserves the provider version string as trimmed input.\r\n\r\n**attributeName / credentialDataFormat validation:** `credentialDataFormat` must be either `rawData` or `templateData`. When `rawData`, `attributeName` must match the attribute name configured for the given `bioModality` (via property `mosip.pms.bioextractor.allowed.modalities.attribute.name.map`). When `templateData`, `attributeName` must be one of the allowed template attribute names (via property `mosip.pms.bioextractor.allowed.template.attribute.names`). Any other `credentialDataFormat` value, or a mismatched `attributeName`, results in an `INVALID_INPUT_FORMAT` error.\r\n\r\n**Request envelope:** `RequestWrapperV2` with `id` set to `mosip.pms.bioextractor.configurations.post`.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2`; `response.id` is the new configuration id and `response.status` is `SUCCESS`.\r\n\r\n**Authorization:** `mosip.role.pms.postbioextractorconfigurations`. Example role in default configuration: PARTNER_ADMIN.",
                 "operationId": "createBioextractorConfiguration",
                 "parameters": [
                     {
@@ -9833,7 +9863,9 @@
                                             "configName",
                                             "bioextractorProviderName",
                                             "bioextractorProviderVersion",
-                                            "bioModality"
+                                            "bioModality",
+                                            "attributeName",
+                                            "credentialDataFormat"
                                         ],
                                         "properties": {
                                             "configName": {
@@ -9849,6 +9881,20 @@
                                             "bioModality": {
                                                 "type": "string",
                                                 "description": "Biometric modality for this configuration"
+                                            },
+                                            "attributeName": {
+                                                "type": "string",
+                                                "maxLength": 128,
+                                                "description": "Biometric attribute name required for this configuration. Must match the allowed attribute name for the bioModality when credentialDataFormat is rawData, or be one of the allowed template attribute names when credentialDataFormat is templateData."
+                                            },
+                                            "credentialDataFormat": {
+                                                "type": "string",
+                                                "maxLength": 64,
+                                                "enum": [
+                                                    "rawData",
+                                                    "templateData"
+                                                ],
+                                                "description": "Format of biometric credential data."
                                             }
                                         }
                                     }
@@ -9865,7 +9911,9 @@
                                             "configName": "default-face-extractor",
                                             "bioextractorProviderName": "MOSIP",
                                             "bioextractorProviderVersion": "1.0",
-                                            "bioModality": "face"
+                                            "bioModality": "face",
+                                            "attributeName": "photo",
+                                            "credentialDataFormat": "rawData"
                                         }
                                     }
                                 }
@@ -9974,7 +10022,7 @@
                     "NEW"
                 ],
                 "summary": "NEW: Get bio-extractor configuration details by ID",
-                "description": "Returns a single bio-extractor configuration by its generated identifier.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2`; `response` contains `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, and `createdDateTime`. If the id does not exist, `errors` is populated (often still HTTP 200, depending on global exception handling).\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurationdetails`. Example role in default configuration: PARTNER_ADMIN.",
+                "description": "Returns a single bio-extractor configuration by its generated identifier.\r\n\r\n**Response shape:** HTTP 200 with `ResponseWrapperV2`; `response` contains `id`, `configName`, `bioextractorProviderName`, `bioextractorProviderVersion`, `bioModality`, `attributeName`, `credentialDataFormat`, and `createdDateTime`. If the id does not exist, `errors` is populated (often still HTTP 200, depending on global exception handling).\r\n\r\n**Authorization:** `mosip.role.pms.getbioextractorconfigurationdetails`. Example role in default configuration: PARTNER_ADMIN.",
                 "operationId": "getBioextractorConfigurationById",
                 "parameters": [
                     {
@@ -10038,6 +10086,12 @@
                                                 "bioModality": {
                                                     "type": "string"
                                                 },
+                                                "attributeName": {
+                                                    "type": "string"
+                                                },
+                                                "credentialDataFormat": {
+                                                    "type": "string"
+                                                },
                                                 "createdDateTime": {
                                                     "type": "string",
                                                     "format": "date-time"
@@ -10073,6 +10127,8 @@
                                                 "bioextractorProviderName": "string",
                                                 "bioextractorProviderVersion": "string",
                                                 "bioModality": "string",
+                                                "attributeName": "string",
+                                                "credentialDataFormat": "string",
                                                 "createdDateTime": "2019-08-24T14:15:22Z"
                                             },
                                             "errors": [
@@ -10330,6 +10386,9 @@
                                                             },
                                                             "extractorProviderVersion": {
                                                                 "type": "string"
+                                                            },
+                                                            "credentialDataFormat": {
+                                                                "type": "string"
                                                             }
                                                         }
                                                     }
@@ -10368,7 +10427,8 @@
                                                         "biometric": "string",
                                                         "biometricSubTypes": "string",
                                                         "extractorProvider": "string",
-                                                        "extractorProviderVersion": "string"
+                                                        "extractorProviderVersion": "string",
+                                                        "credentialDataFormat": "string"
                                                     }
                                                 ]
                                             },
@@ -10482,6 +10542,10 @@
                                                         "extractorProviderVersion": {
                                                             "type": "string",
                                                             "maxLength": 8
+                                                        },
+                                                        "credentialDataFormat": {
+                                                            "type": "string",
+                                                            "maxLength": 64
                                                         }
                                                     },
                                                     "required": [
@@ -10515,7 +10579,8 @@
                                                     "biometric": "string",
                                                     "biometricSubTypes": "string",
                                                     "extractorProvider": "string",
-                                                    "extractorProviderVersion": "string"
+                                                    "extractorProviderVersion": "string",
+                                                    "credentialDataFormat": "string"
                                                 }
                                             ]
                                         }
