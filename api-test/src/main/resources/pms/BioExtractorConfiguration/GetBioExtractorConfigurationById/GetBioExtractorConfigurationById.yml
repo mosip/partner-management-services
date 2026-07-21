@@ -14,7 +14,9 @@ GetBioExtractorConfigurationById:
     "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
     "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
     "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
-    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$"
+    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+    "attributeName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_attributeName$",
+    "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_credentialDataFormat$"
 }'
 
   Pms_GetBioExtractorConfigurationById_With_Invalid_Token_Neg:
@@ -124,7 +126,9 @@ GetBioExtractorConfigurationById:
     "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
     "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
     "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
-    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$"
+    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+    "attributeName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_attributeName$",
+    "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_credentialDataFormat$"
 }'
 
   Pms_GetBioExtractorConfigurationById_Without_PartnerAdmin_Neg:
@@ -161,5 +165,7 @@ GetBioExtractorConfigurationById:
       "bioModality": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioModality$",
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioextractorProviderVersion$",
-      "configName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_configName$"
+      "configName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_configName$",
+      "attributeName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_attributeName$",
+      "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_credentialDataFormat$"
 }'

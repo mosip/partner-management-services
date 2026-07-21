@@ -13,6 +13,9 @@
         {{/if}}
         "extractorProvider": "{{extractorProvider}}",
         "extractorProviderVersion": "{{extractorProviderVersion}}"
+        {{#if credentialDataFormat}}
+        ,"credentialDataFormat": "{{credentialDataFormat}}"
+        {{/if}}
       }{{#unless @last}},{{/unless}}
       {{/each}}
     ]
