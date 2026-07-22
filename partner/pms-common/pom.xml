@@ -45,12 +45,6 @@
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-templatemanager-velocity</artifactId>
 			<version>${kernel.templatemanager.velocity.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.velocity</groupId>
-					<artifactId>velocity-tools</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
