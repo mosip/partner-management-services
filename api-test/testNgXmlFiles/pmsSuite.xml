@@ -605,7 +605,7 @@
         <parameter name="ymlFile"
                    value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml"/>
         <parameter name="reqKeyName"
-                   value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality"/>
+                   value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality,attributeName,credentialDataFormat"/>
         <parameter name="idKeyName" value="id"/>
         <classes>
             <class

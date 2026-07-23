@@ -170,7 +170,8 @@ AddBioExtractors:
   "biometric":"face",
   "biometricSubTypes":"mock",
   "extractorProvider":"mock",
-  "extractorProviderVersion":"1.1"
+  "extractorProviderVersion":"1.1",
+  "credentialDataFormat":"rawData"
   }'
       output: '{
    "errors": [
@@ -588,3 +589,128 @@ AddBioExtractors:
            }
      ]
     }'
+   Pms_AddBioExtractors_With_Invalid_CredentialDataFormat_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_29
+      description: Validate that adding bio extractors fails when credentialDataFormat is not one of the allowed values (rawData, templateData)
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1",
+  "credentialDataFormat":"invalid"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_Mismatched_AttributeName_For_RawData_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_30
+      description: Validate that adding bio extractors fails when attributeName does not match the expected value for the given biometric under rawData credentialDataFormat
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"iris",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1",
+  "credentialDataFormat":"rawData"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_Invalid_AttributeName_For_TemplateData_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_31
+      description: Validate that adding bio extractors fails when attributeName is not an allowed value for templateData credentialDataFormat
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"invalid",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1",
+  "credentialDataFormat":"templateData"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpecialCharacter_CredentialDataFormat_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_32
+      description: Validate that adding bio extractors fails when credentialDataFormat contains invalid special characters
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1",
+  "credentialDataFormat":"@%#rawData"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_LongValue_CredentialDataFormat_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_33
+      description: Validate that adding bio extractors fails when credentialDataFormat exceeds the maximum allowed length
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1",
+  "credentialDataFormat":"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'

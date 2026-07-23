@@ -1,4 +1,5 @@
 {
+    "TC_PMS_addBioExtractors_29": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addBioExtractors_28": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addBioExtractors_27": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addBioExtractors_26": ["TC_PMS_partnerPolicyMapping_06"],
@@ -42,6 +43,7 @@
     "TC_PMS_CreateMISPPartnerSelfRegistrationNegativeScenarios_30": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_addBioExtractors_10": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_GetOriginalFtmCertifacte_BeforecertUpload_01": ["TC_PMS_createFtmChipDetails_01"],
+    "TC_PMS_addBioExtractors_33": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addContact_02": ["TC_PMS_CreateOIDCClient_01"],
     "TC_PMS_DeleteBioExtractorConfiguration_10": ["TC_PMS_CreateBioExtractorConfiguration_32"],
     "TC_PMS_UploadCertificateABISCASUBCA_02": ["TC_PMS_CreateABISPartnerRegistration_01"],
@@ -51,7 +53,10 @@
         "TC_PMS_createSaveSecureBiometricInterface_01",
         "TC_PMS_createPartnerSelfRegistration_06"
     ],
+    "TC_PMS_addBioExtractors_32": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_15": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_addBioExtractors_31": ["TC_PMS_partnerPolicyMapping_06"],
+    "TC_PMS_addBioExtractors_30": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_UpdateNotificationSeenTimestampNegativeScenarios_16": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_RequestAPIKeyForAuthPartner_04": [
         "TC_PMS_createPartnerSelfRegistration_01",
@@ -262,6 +267,7 @@
     ],
     "TC_PMS_deactivate_policy_09": ["TC_PMS_definePolicy_27"],
     "TC_PMS_MapDeviceWithSBI_04": ["TC_PMS_createSaveSecureBiometricInterface_02"],
+    "TC_PMS_GetBioExtractorConfiguration_39": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_DeactivateFtm_19": ["TC_PMS_createFtmChipDetails_01"],
     "TC_PMS_GetBioExtractorConfiguration_34": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_GetBioExtractorConfiguration_33": ["TC_PMS_CreateBioExtractorConfiguration_01"],
@@ -271,6 +277,7 @@
     "TC_PMS_GetBioExtractorConfiguration_37": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_GetBioExtractorConfiguration_36": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_GetBioExtractorConfiguration_35": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_GetBioExtractorConfiguration_41": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_createUpdatePolicy_08": ["TC_PMS_definePolicy_01"],
     "TC_PMS_createUpdatePolicy_07": [
         "TC_PMS_definePolicy_01",
