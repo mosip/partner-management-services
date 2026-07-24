@@ -291,6 +291,8 @@ public class BatchJobHelper {
 			return PartnerConstants.PARTNER_DOMAIN_DEVICE;
 		case PartnerConstants.FTM_PROVIDER_PARTNER_TYPE:
 			return PartnerConstants.PARTNER_DOMAIN_FTM;
+		case PartnerConstants.MISP_PARTNER_TYPE:
+			return PartnerConstants.PARTNER_DOMAIN_MISP;
 		default:
 			return PartnerConstants.PARTNER_DOMAIN_AUTH;
 		}
