@@ -596,7 +596,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
 		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
-		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
+		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo() == null ? null : partnerUpdateRequest.getAdditionalInfo().toString());
 		partner.setLogoUrl(partnerUpdateRequest.getLogoUrl());
 		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));

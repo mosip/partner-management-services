@@ -615,7 +615,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 			entity.setMispLicenseId(UUID.randomUUID().toString());
 			entity.setMispId(partnerId);
 			entity.setLicenseKey(generateLicenseKey());
-			entity.setLicenseKeyName(licenseKeyName);
+			entity.setLicenseKeyName(PartnerUtil.trimAndReplace(licenseKeyName));
 			entity.setValidFromDate(LocalDateTime.now(ZoneId.of("UTC")));
 			LocalTime currentUtcTime = LocalTime.now(ZoneOffset.UTC);
 			entity.setValidToDate(LocalDateTime.of(expiryDate, currentUtcTime));
