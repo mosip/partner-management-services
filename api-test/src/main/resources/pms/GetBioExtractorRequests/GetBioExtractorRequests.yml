@@ -77,7 +77,7 @@ GetBioExtractorRequests:
       inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
       outputTemplate: pms/error
       input: '{
-    "requestId": " "
+    "requestId": ""
 }'
       output: '{
    "errors": [
