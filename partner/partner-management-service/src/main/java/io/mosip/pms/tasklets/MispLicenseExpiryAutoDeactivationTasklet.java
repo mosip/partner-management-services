@@ -87,10 +87,10 @@ public class MispLicenseExpiryAutoDeactivationTasklet implements Tasklet {
                         webSubPublisher.notify(EventType.MISP_LICENSE_UPDATED, data, type);
 
                         deactivatedCount++;
-                        log.info("Deactivated expired MISP License key with id {} for misp id : {}", mispLicenseDetails.getLicenseKey(), mispLicenseDetails.getMispId());
+                        log.info("Deactivated expired MISP License key with id {} for misp id : {}", mispLicenseDetails.getMispLicenseId(), mispLicenseDetails.getMispId());
                     }
                 } catch(Exception e){
-                    log.error("Error deactivating MISP License key with id {} for misp id {}: {}", mispLicenseDetails.getLicenseKey(), mispLicenseDetails.getMispId(), e.getMessage());
+                    log.error("Error deactivating MISP License key with id {} for misp id {}: {}", mispLicenseDetails.getMispLicenseId(), mispLicenseDetails.getMispId(), e.getMessage());
                 }
             }
         } catch (Exception e) {
