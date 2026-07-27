@@ -145,7 +145,7 @@ GetListOfAllSBI:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_PS_ERROR_006"
+       "errorCode": "PMS_PRT_360"
        }
        ]
 }'

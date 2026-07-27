@@ -1,0 +1,107 @@
+GetBioExtractorRequests:
+   Pms_GetBioExtractorRequests_allValid_smoke:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_GetBioExtractorRequests_01
+      description: Validate that bio-extractor requests for a partner-policy request are successfully retrieved with a valid requestId
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
+      outputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequestsResult
+      input: '{
+    "requestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+}'
+      output: '{
+  "partnerPolicyRequestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$",
+  "statusCode": "InProgress"
+}'
+   Pms_GetBioExtractorRequests_InValid_requestId:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_GetBioExtractorRequests_02
+      description: Validate that bio-extractor request retrieval fails when an invalid requestId is provided
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
+      outputTemplate: pms/error
+      input: '{
+    "requestId": "invalid-request-id"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_064"
+    }
+  ]
+}'
+
+   Pms_GetBioExtractorRequests_Without_AccessToken_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_GetBioExtractorRequests_03
+      description: Validate that bio-extractor request retrieval fails when no access token is provided
+      role: invalidtoken
+      restMethod: get
+      inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
+      outputTemplate: pms/error
+      input: '{
+    "requestId": "$ID:SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid_mappingkey$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "KER-ATH-401"
+    }
+  ]
+}'
+
+   Pms_GetBioExtractorRequests_SpecialChar_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_GetBioExtractorRequests_04
+      description: Validate that bio-extractor request retrieval fails when a special character requestId is provided
+      role: partneradmin
+      restMethod: get
+      checkOnlyStatusCodeInResponse: true
+      inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
+      outputTemplate: pms/responseCode
+      input: '{
+    "requestId": "!@#$%^*()"
+}'
+      output: '{
+   "responseCode": "400"
+}'
+
+   Pms_GetBioExtractorRequests_Empty_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_GetBioExtractorRequests_05
+      description: Validate that bio-extractor request retrieval fails when an empty requestId is provided
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
+      outputTemplate: pms/error
+      input: '{
+    "requestId": " "
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_001"
+    }
+  ]
+}'
+
+   Pms_GetBioExtractorRequests_NonExisting_requestId_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_GetBioExtractorRequests_06
+      description: Validate that bio-extractor request retrieval fails when a non-existing requestId is provided
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetBioExtractorRequests/getBioExtractorRequests
+      outputTemplate: pms/error
+      input: '{
+    "requestId": "999999999"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_064"
+    }
+  ]
+}'

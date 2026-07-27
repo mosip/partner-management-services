@@ -33,6 +33,12 @@ public class PMSConfigManager extends ConfigManager{
 		init(moduleSpecificPropertiesMap);
 	}
 
+	public static String getPMSDbUrl() {
+		String dbName = getproperty("pms-db-name");
+		return "jdbc:postgresql://" + getproperty("db-server") + ":" + getproperty("db-port") + "/"
+				+ (dbName.isBlank() ? "mosip_pms" : dbName);
+	}
+
 	public static String getKeymangrDbUrl() {
 		return "jdbc:postgresql://"
 				+ (getproperty("km-db-server").isBlank() ? getproperty("db-server") : getproperty("km-db-server")) + ":"

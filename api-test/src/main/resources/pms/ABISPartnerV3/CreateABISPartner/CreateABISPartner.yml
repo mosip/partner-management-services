@@ -19,7 +19,8 @@ CreateABISPartner:
       "partnerType": "ABIS_Partner",
       "policyGroup": "$ID:DefinePolicyGroup_for_Get_ApiKey_With_Deactive_Partner_All_Valid_Smoke_pms_sid_name$",
       "logoUrl": "https://example.com/logo.png",
-      "langCode": "eng"
+      "langCode": "eng",
+      "orderRedirectUrl": "https://example.com/order-redirect"
 }'
     output: ' {
       "partnerId": "$RUNCONTEXT$pms-111222",

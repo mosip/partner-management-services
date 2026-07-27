@@ -226,12 +226,11 @@ GetAllApiKeyForMAPartnerV2:
   Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PageNo_Neg:
     endPoint: /v1/partnermanager/partner-api-keys/v2
     uniqueIdentifier: TC_PMS_GetAllApiKeyForMAPartnerV2_09
-    description: Verify that API returns a bad request response when an invalid page number is provided.
+    description: Verify that API returns error when an invalid page number is provided.
     role: partneradmin
-    checkOnlyStatusCodeInResponse: true
     restMethod: get
     inputTemplate: pms/GetAllApiKeyForMAPartner/GetAllApiKeyForMAPartner
-    outputTemplate: pms/responseCode
+    outputTemplate: pms/error
     input: '{
       "apiKeyLabel": "$REMOVE$",
       "expiryPeriod": "$REMOVE$",
@@ -247,7 +246,11 @@ GetAllApiKeyForMAPartnerV2:
       "status": "$REMOVE$"
     }'
     output: '{
-      "responseCode": "400"
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_360"
+        }
+    ]
 }'
   Pms_GetAllApiKeyForMAPartnerV2_With_Invalid_PageSize_Neg:
     endPoint: /v1/partnermanager/partner-api-keys/v2
