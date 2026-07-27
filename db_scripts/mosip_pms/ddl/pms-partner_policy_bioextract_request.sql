@@ -15,6 +15,7 @@ CREATE TABLE pms.partner_policy_bioextract_request (
     extractor_provider_version character varying(8),
     biometric_modality character varying(64) NOT NULL,
     biometric_sub_types character varying(64),
+    credential_data_format character varying(64),
     status_code character varying(20) NOT NULL DEFAULT 'InProgress',
     cr_by character varying(256) NOT NULL,
     cr_dtimes timestamp NOT NULL,
@@ -40,4 +41,3 @@ COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_by IS 'Created By : I
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.partner_policy_bioextract_request.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
-

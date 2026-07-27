@@ -17,5 +17,9 @@ public class BioextractorConfigurationDetailDto {
 
 	private String bioModality;
 
+	private String attributeName;
+
+	private String credentialDataFormat;
+
 	private LocalDateTime createdDateTime;
 }

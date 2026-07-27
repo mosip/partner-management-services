@@ -38,6 +38,7 @@ import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.response.dto.FilterResponseCodeDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDto;
+import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseUpdateRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseSummaryDto;
@@ -45,9 +46,8 @@ import io.mosip.pms.partner.misp.dto.MISPFilterDto;
 import io.mosip.pms.partner.misp.dto.MISPLicenseRequestDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDtoV2;
 import io.mosip.pms.partner.misp.dto.MISPLicenseDetailsDto;
-import io.mosip.pms.partner.misp.dto.MISPDeactivateRequestDto;
+import io.mosip.pms.partner.misp.dto.MISPLicensePatchRequestDto;
 import io.mosip.pms.partner.misp.dto.MISPDeactivateResponseDto;
-import io.mosip.pms.partner.misp.dto.MISPRegenerateRequestDto;
 import io.mosip.pms.partner.misp.service.InfraServiceProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,14 +65,14 @@ public class MISPLicenseController {
 	@Autowired
 	RequestValidator requestValidator;
 
+	@Autowired
+	private PartnerHelper partnerHelper;
+
 	@Value("${mosip.pms.api.id.misp.generate.license.post}")
 	private String postGenerateMISPApiId;
 
-	@Value("${mosip.pms.api.id.deactivate.misp.license.patch}")
-	private String patchDeactivateMISPApiId;
-
-	@Value("${mosip.pms.api.id.regenerate.misp.license.put}")
-	private String putRegenerateMISPApiId;
+	@Value("${mosip.pms.api.id.update.misp.license.patch}")
+	private String patchUpdateMISPApiId;
 
 	@Deprecated(since = "release-1.3.0-beta.3")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmisplicense())")
@@ -108,7 +108,7 @@ public class MISPLicenseController {
 	@Deprecated(since = "release-1.3.0-beta.3")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensekey())")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
-	@Operation(summary = "Service to get/regenarate license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the PUT /misp-licenses/{partnerId} endpoint.")
+	@Operation(summary = "Service to get/regenarate license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /misp-licenses endpoint.")
 	public ResponseWrapper<MISPLicenseResponseDto> regenarteLicenseKey(@PathVariable @Valid String mispId){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));
@@ -140,7 +140,7 @@ public class MISPLicenseController {
 	@GetMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallmisplicenses())")
 	@Operation(summary = "This endpoint retrieves a list of all MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint upgrades the earlier GET endpoint /misps by adding new features like pagination, sorting, and and filtering based on optional query parameters. It is configured for PARTNER_ADMIN role.")
+			description = "Available since release-1.3.0. This endpoint upgrades the earlier GET endpoint /misps by adding new features like pagination, sorting, and and filtering based on optional query parameters. It is configured for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -148,17 +148,17 @@ public class MISPLicenseController {
 	public ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> getAllMISPLicenses(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "orgName", required = false) String orgName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName,
 			@RequestParam(value = "policyName", required = false) String policyName,
-			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName,
+			@RequestParam(value = "licenseKeyName", required = false) String licenseKeyName,
 			@Parameter(
 					description = "Status of MISP License Key.",
 					in = ParameterIn.QUERY,
-					schema = @Schema(allowableValues = {"activated", "deactivated"})
+					schema = @Schema(allowableValues = {"ACTIVE", "INACTIVE"})
 			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "expiryPeriod", required = false)
@@ -172,7 +172,7 @@ public class MISPLicenseController {
 		inputValidator.validateRequestInput("orgName", orgName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("policyName", policyName);
-		inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
+		inputValidator.validateRequestInput("licenseKeyName", licenseKeyName);
 		inputValidator.validateRequestInput("status", status);
 		MISPFilterDto filterDto = new MISPFilterDto();
 		if (partnerId != null) {
@@ -187,8 +187,8 @@ public class MISPLicenseController {
 		if (policyName != null) {
 			filterDto.setPolicyName(policyName.toLowerCase());
 		}
-		if (mispLicenseKeyName != null) {
-			filterDto.setMispLicenseKeyName(mispLicenseKeyName.toLowerCase());
+		if (licenseKeyName != null) {
+			filterDto.setLicenseKeyName(licenseKeyName.toLowerCase());
 		}
 		if (status != null) {
 			filterDto.setStatus(status);
@@ -196,13 +196,15 @@ public class MISPLicenseController {
 		if (expiryPeriod != null) {
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
-		return infraProviderService.getAllMISPLicenses(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return infraProviderService.getAllMISPLicenses(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PostMapping("/misp-licenses")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostgeneratemisplicense())")
 	@Operation(summary = "This endpoint is used to generate a MISP License Key for a given MISP partner.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint.")
+			description = "Available since release-1.3.0. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier POST /misps endpoint. Note: The licenseKey is returned only once at the time of creation and will not be available for retrieval thereafter.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -218,62 +220,34 @@ public class MISPLicenseController {
 		return infraProviderService.generateMISPLicense(requestWrapper.getRequest());
 	}
 
-	@GetMapping("/misp-licenses/{partnerId}")
+	@GetMapping("/misp-licenses/{mispLicenseId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensedetails())")
-	@Operation(summary = "This endpoint retrieves the details of MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint retrieves the details of MISP Licence Key based on Partner Id and optional query parameters. It is configured for PARTNER_ADMIN role.")
+	@Operation(summary = "This endpoint retrieves the details of a MISP Licence Key by its unique ID.",
+			description = "Available since release-1.3.0. This endpoint retrieves the details of a MISP Licence Key based on the unique mispLicenseId. It is configured for PARTNER_ADMIN role.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<MISPLicenseDetailsDto> getMISPLicenseDetails( @PathVariable @Valid String partnerId,
-			@RequestParam(value = "policyId", required = false) String policyId,
-			@RequestParam(value = "mispLicenseKeyName", required = false) String mispLicenseKeyName
-	) {
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", policyId);
-		inputValidator.validateRequestInput("mispLicenseKeyName", mispLicenseKeyName);
-		return infraProviderService.getMISPLicenseDetails(partnerId, policyId, mispLicenseKeyName);
+	public ResponseWrapperV2<MISPLicenseDetailsDto> getMISPLicenseDetails(@PathVariable @Valid String mispLicenseId) {
+		inputValidator.validateRequestInput("mispLicenseId", mispLicenseId);
+		return infraProviderService.getMISPLicenseDetails(mispLicenseId);
 	}
 
-	@PatchMapping("/misp-licenses/{partnerId}")
+	@PatchMapping("/misp-licenses/{mispLicenseId}")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivatemisplicensekey())")
-	@Operation(summary = "This endpoint deactivates the MISP Licence Key.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier PUT /misps endpoint.")
+	@Operation(summary = "This endpoint deactivates a MISP Licence Key.",
+			description = "Available since release-1.3.0. This endpoint is configured only for users with the PARTNER_ADMIN role. It accepts status=INACTIVE to deactivate the specified MISP license key.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<MISPDeactivateResponseDto> deactivateMISPLicense( @PathVariable @Valid String partnerId,
-			@RequestBody @Valid RequestWrapperV2<MISPDeactivateRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<MISPDeactivateResponseDto>> validationResponse = requestValidator.validate(patchDeactivateMISPApiId, requestWrapper);
+	public ResponseWrapperV2<MISPDeactivateResponseDto> updateMISPLicense(@PathVariable @Valid String mispLicenseId,
+			@RequestBody @Valid RequestWrapperV2<MISPLicensePatchRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<MISPDeactivateResponseDto>> validationResponse = requestValidator.validate(patchUpdateMISPApiId, requestWrapper);
 		if (validationResponse.isPresent()) {
 			return validationResponse.get();
 		}
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", requestWrapper.getRequest().getPolicyId());
-		inputValidator.validateRequestInput("licenseKeyName", requestWrapper.getRequest().getLicenseKeyName());
-		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
-		return infraProviderService.deactivateMISPLicense(partnerId, requestWrapper.getRequest());
-	}
-
-	@PutMapping("/misp-licenses/{partnerId}")
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutregeneratemisplicensekey())")
-	@Operation(summary = "This endpoint is used to re-generate a MISP License Key for a given MISP partner.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is configured only for users with the PARTNER_ADMIN role. It is an upgrade of the earlier GET /misps/{mispId}/licenseKey endpoint.")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapperV2<MISPLicenseResponseDtoV2> regenerateMISPLicense( @PathVariable @Valid String partnerId,
-			@RequestBody @Valid RequestWrapperV2<MISPRegenerateRequestDto> requestWrapper) {
-		Optional<ResponseWrapperV2<MISPLicenseResponseDtoV2>> validationResponse = requestValidator.validate(putRegenerateMISPApiId, requestWrapper);
-		if (validationResponse.isPresent()) {
-			return validationResponse.get();
-		}
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("policyId", requestWrapper.getRequest().getPolicyId());
-		inputValidator.validateRequestInput("licenseKeyName", requestWrapper.getRequest().getLicenseKeyName());
-		return infraProviderService.regenerateMISPLicense(partnerId, requestWrapper.getRequest());
+		inputValidator.validateRequestInput("mispLicenseId", mispLicenseId);
+		return infraProviderService.updateMISPLicense(mispLicenseId, requestWrapper.getRequest());
 	}
 }

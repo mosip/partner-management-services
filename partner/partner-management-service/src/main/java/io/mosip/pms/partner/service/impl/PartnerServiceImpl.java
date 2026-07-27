@@ -137,6 +137,7 @@ import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.common.dto.SearchSort;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesListDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -449,7 +450,7 @@ public class PartnerServiceImpl implements PartnerService {
 		partner.setCrBy(getLoggedInUserId());
 		partner.setApprovalStatus(PartnerConstants.IN_PROGRESS);
 		partner.setLogoUrl(request.getLogoUrl());
-		partner.setAdditionalInfo(request.getAdditionalInfo()== null ? "[]" : request.getAdditionalInfo().toString());
+		partner.setAdditionalInfo(request.getAdditionalInfo() == null ? null : request.getAdditionalInfo().toString());
 		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
 		return partner;
 	}
@@ -547,7 +548,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerId) {
 		validateLoggedInUserAuthorization(partnerId);
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
-		Partner partner = getValidPartner(partnerId, true);
+		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
 		// check if the data is encrypted
 		boolean isEncrypted = partner.getEmailIdHash() != null;
@@ -565,23 +566,6 @@ public class PartnerServiceImpl implements PartnerService {
 			response.setPolicyGroup(validateAndGetPolicyGroupById(partner.getPolicyGroupId()).getName());
 		}
 		return response;
-	}
-
-	private Partner getValidPartner(String partnerId, boolean isToRetrieve) {
-		Optional<Partner> partnerById = partnerRepository.findById(partnerId);
-		if (partnerById.isEmpty()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
-					ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
-		}
-		if (!isToRetrieve) {
-			if (!partnerById.get().getIsActive()) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
-						ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
-			}
-		}
-		return partnerById.get();
 	}
 
 	private PolicyGroup validateAndGetPolicyGroupById(String policyGroupId) {
@@ -602,7 +586,7 @@ public class PartnerServiceImpl implements PartnerService {
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
 					ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorMessage() + maxMobileNumberLength);
 		};
-		Partner partner = getValidPartner(partnerId, true);
+		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		if(partnerUpdateRequest.getAdditionalInfo() != null) {
 			isJSONValid(partnerUpdateRequest.getAdditionalInfo().toString());
 		}
@@ -612,7 +596,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
 		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
-		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
+		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo() == null ? null : partnerUpdateRequest.getAdditionalInfo().toString());
 		partner.setLogoUrl(partnerUpdateRequest.getLogoUrl());
 		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));
@@ -728,7 +712,7 @@ public class PartnerServiceImpl implements PartnerService {
 			contactsFromDb.setUpdDtimes(LocalDateTime.now());
 			resultMessage = "Contacts details updated successfully.";
 		} else {
-			Partner partnerFromDb = getValidPartner(partnerId, false);
+			Partner partnerFromDb =  partnerHelper.getValidPartner(partnerId, false);
 			contactsFromDb = new PartnerContact();
 
 			String id = PartnerUtil.createPartnerId();
@@ -805,7 +789,7 @@ public class PartnerServiceImpl implements PartnerService {
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
 		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
-		Partner partner = getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
+		Partner partner = partnerHelper.getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
@@ -1086,252 +1070,6 @@ public class PartnerServiceImpl implements PartnerService {
 
 	}
 
-	@Override
-	public String submitBioExtractorsRequest(String partnerId, String policyId,
-			BioExtractorsRequestDto extractors) {
-		validateLoggedInUserAuthorization(partnerId);
-		if (extractors == null || extractors.getExtractors() == null || extractors.getExtractors().isEmpty()
-				|| extractors.getPartnerPolicyRequestId() == null || extractors.getPartnerPolicyRequestId().isBlank()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
-					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
-		}
-		getValidPartner(partnerId, false);
-
-		String requestId = extractors.getPartnerPolicyRequestId().trim();
-		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId,
-				requestId);
-		boolean invalidParent = parentPolicyRequest == null
-				|| Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
-				|| parentPolicyRequest.getPolicyId() == null
-				|| !policyId.equals(parentPolicyRequest.getPolicyId());
-		if (invalidParent) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
-		}
-
-		String parentStatus = parentPolicyRequest.getStatusCode();
-		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(
-					ErrorCode.BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
-					ErrorCode.BIOEXTRACT_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
-		}
-
-		List<String> createdIds = new ArrayList<>();
-
-		List<String> attributeNames = extractors.getExtractors().stream().map(BioExtractorsDto::getAttributeName).toList();
-		Set<String> uniqueAttributeNames = new HashSet<>();
-		Set<String> uniqueModalities = new HashSet<>();
-		for (BioExtractorsDto extractor : extractors.getExtractors()) {
-			String attrName = extractor.getAttributeName() != null ? extractor.getAttributeName().toLowerCase().trim() : null;
-			String biometric = extractor.getBiometric() != null ? extractor.getBiometric().toLowerCase().trim() : null;
-			
-			if (attrName != null && biometric != null) {
-				if (!uniqueAttributeNames.add(attrName) || !uniqueModalities.add(biometric)) {
-					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-							"partnerId");
-					throw new PartnerServiceException(ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorCode(),
-							ErrorCode.DUPLICATE_EXTRACTOR_CONFIG_IN_REQUEST.getErrorMessage());
-				}
-			}
-		}
-
-		if (partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(),
-					ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorMessage());
-		}
-		if (extractorProviderRepository.existsByPartnerIdAndPolicyIdAndAttributeNameIn(partnerId, policyId,
-				attributeNames)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_DETAIL.getErrorCode(),
-					ErrorCode.DUPLICATE_BIOEXTRACT_DETAIL.getErrorMessage());
-		}
-		for (BioExtractorsDto extractor : extractors.getExtractors()) {
-			validateExtractorForBioExtractRequest(partnerId, extractor);
-			PartnerPolicyBioextractRequest row = new PartnerPolicyBioextractRequest();
-			row.setPartnerPolicyRequestId(parentPolicyRequest.getId());
-			row.setPartId(partnerId);
-			row.setPolicyId(policyId);
-			row.setAttributeName(extractor.getAttributeName());
-			row.setBiometricModality(extractor.getBiometric() == null ? null : extractor.getBiometric().trim());
-			if (extractor.getBiometricSubTypes() != null && !extractor.getBiometricSubTypes().isBlank()) {
-				row.setBiometricSubTypes(extractor.getBiometricSubTypes());
-			}
-			row.setExtractorProvider(extractor.getExtractorProvider());
-			row.setExtractorProviderVersion(extractor.getExtractorProviderVersion() == null ? null : extractor.getExtractorProviderVersion().trim());
-			row.setStatusCode(parentStatus);
-			row.setCrBy(getLoggedInUserId());
-			row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-			String id = PartnerUtil.generateId();
-			int attempts = 0;
-			while (partnerPolicyBioextractRequestRepository.existsById(id)) {
-				if (attempts >= maxRetries) {
-					LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts",
-							"Partner Policy Bioextract Request ID", "id", row.getClass().getSimpleName(), maxRetries);
-					auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-							"partnerId");
-					throw new PartnerServiceException(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-							String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-									"Partner Policy Bioextract Request ID", "id", row.getClass().getSimpleName(),
-									maxRetries));
-				}
-				id = PartnerUtil.generateId();
-				attempts++;
-			}
-			row.setId(id);
-			try {
-				partnerPolicyBioextractRequestRepository.saveAndFlush(row);
-			} catch (DataIntegrityViolationException ex) {
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-						"partnerId");
-				throw new PartnerServiceException(ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorCode(),
-						ErrorCode.DUPLICATE_BIOEXTRACT_REQUEST.getErrorMessage());
-			}
-			createdIds.add(id);
-		}
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_SUCCESS, partnerId, "partnerId");
-		return "Bio extract request submitted successfully.";
-	}
-
-	@Override
-	public String submitCredentialTypesRequest(String partnerId, String policyId, CredentialTypeRequestDto request) {
-		validateLoggedInUserAuthorization(partnerId);
-		if (request == null
-				|| request.getPartnerPolicyRequestId() == null || request.getPartnerPolicyRequestId().isBlank()
-				|| request.getCredentialType() == null || request.getCredentialType().isBlank()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
-					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
-		}
-
-		getValidPartner(partnerId, false);
-
-		String credentialType = request.getCredentialType().trim();
-		validateCredentialTypes(credentialType);
-
-		String requestId = request.getPartnerPolicyRequestId().trim();
-		PartnerPolicyRequest parentPolicyRequest = partnerPolicyRequestRepository.findByPartnerIdAndReqId(partnerId, requestId);
-		boolean invalidParent = parentPolicyRequest == null
-				|| Boolean.TRUE.equals(parentPolicyRequest.getIsDeleted())
-				|| parentPolicyRequest.getPolicyId() == null
-				|| !policyId.equals(parentPolicyRequest.getPolicyId());
-		if (invalidParent) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorCode(),
-					ErrorCode.PARTNER_POLICY_REQUEST_NOT_FOUND.getErrorMessage());
-		}
-
-		String parentStatus = parentPolicyRequest.getStatusCode();
-		if (!PartnerConstants.IN_PROGRESS.equalsIgnoreCase(parentStatus)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(
-					ErrorCode.CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorCode(),
-					ErrorCode.CREDENTIAL_TYPE_REQUEST_SEND_PARTNER_POLICY_REQUEST.getErrorMessage());
-		}
-
-		if (partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId(parentPolicyRequest.getId())) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
-		}
-
-		if (partnerCredentialTypePolicyRepo.findByPartnerIdAndCrdentialType(partnerId, credentialType) != null) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
-		}
-
-		PartnerPolicyCredentialTypeRequest row = new PartnerPolicyCredentialTypeRequest();
-		row.setPartnerPolicyRequestId(parentPolicyRequest.getId());
-		row.setPartId(partnerId);
-		row.setPolicyId(policyId);
-		row.setCredentialType(credentialType);
-		row.setStatusCode(parentStatus);
-		row.setCrBy(getLoggedInUserId());
-		row.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
-
-		String id = PartnerUtil.generateId();
-		int attempts = 0;
-		while (partnerPolicyCredentialTypeRequestRepository.existsById(id)) {
-			if (attempts >= maxRetries) {
-				LOGGER.error("Failed to generate unique {} (field: '{}') for entity '{}' after {} attempts",
-						"Partner Policy Credential Type Request ID", "id", row.getClass().getSimpleName(), maxRetries);
-				auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-				throw new PartnerServiceException(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(),
-						String.format(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorMessage(),
-								"Partner Policy Credential Type Request ID", "id", row.getClass().getSimpleName(), maxRetries));
-			}
-			id = PartnerUtil.generateId();
-			attempts++;
-		}
-		row.setId(id);
-
-		try {
-			partnerPolicyCredentialTypeRequestRepository.saveAndFlush(row);
-		} catch (DataIntegrityViolationException ex) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_FAILURE, partnerId, "partnerId");
-			throw new PartnerServiceException(ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorCode(),
-					ErrorCode.DUPLICATE_CREDENTIAL_TYPE_REQUEST.getErrorMessage());
-		}
-
-		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_CREDENTIAL_TYPE_REQUEST_SUCCESS, partnerId, "partnerId");
-		return "Credential type request submitted successfully.";
-	}
-
-	private void validateExtractorForBioExtractRequest(String partnerId, BioExtractorsDto extractor) {
-		if (extractor == null || extractor.getAttributeName() == null || extractor.getAttributeName().isBlank()
-				|| extractor.getBiometric() == null || extractor.getBiometric().isBlank()
-				|| extractor.getExtractorProvider() == null || extractor.getExtractorProvider().isBlank()
-				|| extractor.getExtractorProviderVersion() == null || extractor.getExtractorProviderVersion().isBlank()) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw new PartnerServiceException(ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorCode(),
-					ErrorCode.INVALID_PARTNER_INPUT_PARAMETER.getErrorMessage());
-		}
-
-		try {
-			Map<String, String> modalityToAttribute = PartnerUtil.getAllowedBioextractorModalityAttributeNameMap(
-					environment,
-					"mosip.pms.bioextractor.allowed.modalities.attribute.name.map");
-			if (modalityToAttribute == null || modalityToAttribute.isEmpty()) {
-				return;
-			}
-
-			String biometric = extractor.getBiometric().trim().toLowerCase();
-			String attributeName = extractor.getAttributeName().trim().toLowerCase();
-
-			String expectedAttributeName = modalityToAttribute.get(biometric);
-			if (expectedAttributeName == null || expectedAttributeName.isBlank()) {
-				String validModalities = modalityToAttribute.keySet().stream()
-						.reduce((a, b) -> a + ", " + b)
-						.orElse("");
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "biometric",
-								"Valid values are: " + validModalities));
-			}
-
-			if (!expectedAttributeName.equalsIgnoreCase(attributeName)) {
-				throw new PartnerServiceException(
-						ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
-						String.format(ErrorCode.INVALID_INPUT_FORMAT.getErrorMessage(), "attributeName",
-								"For biometric '" + biometric + "', attributeName must be '" + expectedAttributeName + "'"));
-			}
-		} catch (PartnerServiceException ex) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.SUBMIT_BIO_EXTRACT_REQUEST_FAILURE, partnerId,
-					"partnerId");
-			throw ex;
-		}
-	}
-
 	/**
 	 * Method to check weather approved policy exists for a given partner
 	 * 
@@ -1449,8 +1187,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyName) {
-		validateCredentialTypes(credentialType);
-		Partner partner = getValidPartner(partnerId, false);
+		partnerHelper.validateCredentialTypes(credentialType);
+		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, partnerId, "partnerId");
@@ -1483,12 +1221,58 @@ public class PartnerServiceImpl implements PartnerService {
 		return existingMapping.isPresent();
 	}
 
-	private void validateCredentialTypes(String credentialType) {
-		if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
-			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, credentialType, "credentialType");
-			throw new PartnerServiceException(ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
-					ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
+	@Override
+	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
+		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
+		if (!isAdmin) {
+			String userId = getUserId();
+			List<Partner> partnerList = partnerRepository.findByUserId(userId);
+			if (partnerList.isEmpty()) {
+				LOGGER.error("User id does not exist.");
+				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+			}
+			boolean isPartnerBelongsToUser = false;
+			for (Partner partner : partnerList) {
+				if (partner.getId().equals(partnerId)) {
+					isPartnerBelongsToUser = true;
+					break;
+				}
+			}
+			if (!isPartnerBelongsToUser) {
+				LOGGER.error("The given partner ID does not belong to the user.");
+				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorCode(),
+						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorMessage());
+			}
 		}
+		Partner partner = partnerHelper.getValidPartner(partnerId, false);
+		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
+				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
+			LOGGER.error("Partner type {} is not valid for credential type operations.", partner.getPartnerTypeCode());
+			throw new PartnerServiceException(ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorCode(),
+					ErrorCode.CREDENTIAL_NOT_ALLOWED_PARTNERS.getErrorMessage() + credentialTypesRequiredPartnerTypes);
+		}
+		partnerHelper.validatePolicyGroupId(partner, partnerId);
+		AuthPolicy authPolicy = authPolicyRepository.findActivePoliciesByPolicyGroupId(partner.getPolicyGroupId(), policyId);
+		if (authPolicy == null) {
+			LOGGER.error("Policy id {} does not exist or is not active under partner's policy group.", policyId);
+			throw new PartnerServiceException(ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorCode(),
+					ErrorCode.POLICY_GROUP_POLICY_NOT_EXISTS.getErrorMessage());
+		}
+		List<PartnerPolicyCredentialType> records = partnerCredentialTypePolicyRepo
+				.findByPartnerIdAndPolicyIdAndIsActiveTrue(partnerId, policyId);
+		if (records.isEmpty()) {
+			LOGGER.error("No active credential type found for partner {} and policy {}", partnerId, policyId);
+			throw new PartnerServiceException(ErrorCode.NO_DETAILS_FOUND.getErrorCode(),
+					ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
+		}
+		List<String> types = new ArrayList<>();
+		for (PartnerPolicyCredentialType record : records) {
+			types.add(record.getId().getCredentialType());
+		}
+		CredentialTypesListDto dto = new CredentialTypesListDto();
+		dto.setCredentialTypes(types);
+		return dto;
 	}
 
 	@Override
@@ -1969,7 +1753,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	@Override
 	public String updatePolicyGroup(String partnerId, String policyGroupName) {
-		Partner partner = getValidPartner(partnerId, true);
+		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		//Approved partners policy group should not be updated
 		if (partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_GROUP_FAILURE, partnerId, "partnerId");
@@ -2015,7 +1799,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerPolicyMappingResponseDto requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
 		validateLoggedInUserAuthorization(partnerId);
-		Partner partner = getValidPartner(partnerId, false);
+		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
 				partnerAPIKeyRequest.getPolicyName());
 		if(partner.getPolicyGroupId() == null) {
@@ -2159,11 +1943,16 @@ public class PartnerServiceImpl implements PartnerService {
 	public ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType) {
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = new ResponseWrapperV2<>();
 		try {
+			if (status == null || status.isBlank() || (!PartnerConstants.APPROVED.equals(status) && !PartnerConstants.IN_PROGRESS.equals(status))) {
+				throw new PartnerServiceException(
+						ErrorCode.INVALID_STATUS_VALUE.getErrorCode(),
+						String.format(ErrorCode.INVALID_STATUS_VALUE.getErrorMessage(), status));
+			}
 			String userId = getUserId();
 			String userRoles = authUserDetails().getAuthorities().toString();
 			boolean isPartnerAdmin = partnerHelper.isPartnerAdmin(userRoles);
 			List<Partner> partners;
-			boolean isAdminManagedPartnerType = PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) || PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType);
+			boolean isAdminManagedPartnerType = PartnerConstants.MISP_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ABIS_PARTNER_TYPE.equals(partnerType) || PartnerConstants.MANUAL_ADJUDICATION_PARTNER_TYPE.equals(partnerType) || PartnerConstants.ONLINE_VERIFICATION_PARTNER_TYPE.equals(partnerType);
 
 			if (isPartnerAdmin) {
 				if (partnerType == null || partnerType.isBlank()) {
@@ -2173,7 +1962,7 @@ public class PartnerServiceImpl implements PartnerService {
 				}
 				if (!isAdminManagedPartnerType) {
 					LOGGER.info("sessionId", "idType", "id",
-							"Partner Admin can fetch all partners only for partnerType: MISP_Partner, ABIS_Partner, or Manual_Adjudication.");
+							"Partner Admin can fetch all partners only for partnerType: MISP_Partner, ABIS_Partner, Manual_Adjudication, or Online_Verification_Partner.");
 					throw new PartnerServiceException(ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorCode(),
 							ErrorCode.PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN.getErrorMessage());
 				}
@@ -2231,7 +2020,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequest partnerRequest) {
+	public ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest) {
 		ResponseWrapperV2<PartnerResponse> responseWrapper = new ResponseWrapperV2<>();
 		try {
 			boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
@@ -2251,7 +2040,7 @@ public class PartnerServiceImpl implements PartnerService {
 						ErrorCode.EMAIL_ALREADY_EXISTS_EXCEPTION.getErrorMessage());
 			}
 
-			PartnerResponse partnerResponse = validateAndSavePartner(mapToPartnerRequestDto(partnerRequest));
+			PartnerResponse partnerResponse = validateAndSavePartner(partnerRequest);
 			responseWrapper.setResponse(partnerResponse);
 		} catch (PartnerServiceException ex) {
 			LOGGER.info("sessionId", "idType", "id", "In createPartner method of PartnerServiceImpl - " + ex.getMessage());
@@ -2266,19 +2055,6 @@ public class PartnerServiceImpl implements PartnerService {
 		responseWrapper.setId(postCreatePartnerId);
 		responseWrapper.setVersion(VERSION);
 		return responseWrapper;
-	}
-
-	private PartnerRequestDto mapToPartnerRequestDto(PartnerRequest request) {
-		PartnerRequestDto dto = new PartnerRequestDto();
-		dto.setAddress(request.getAddress());
-		dto.setContactNumber(request.getContactNumber());
-		dto.setEmailId(request.getEmailId());
-		dto.setLangCode(request.getLangCode());
-		dto.setOrganizationName(request.getOrganizationName());
-		dto.setPartnerId(request.getPartnerId());
-		dto.setPartnerType(request.getPartnerType());
-		dto.setPolicyGroup(request.getPolicyGroup());
-		return dto;
 	}
 
 	@Override

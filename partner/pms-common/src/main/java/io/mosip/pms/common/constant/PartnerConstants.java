@@ -67,6 +67,8 @@ public final class PartnerConstants {
 	public static final String STATUS_ACTIVE = "ACTIVE";
 
 	public static final String STATUS_DISMISSED = "DISMISSED";
+	
+	public static final String STATUS_DELETED = "DELETED";
 
 	public static final String SYSTEM_USER = "SYSTEM";
 
@@ -76,17 +78,7 @@ public final class PartnerConstants {
 
 	public static final String RESPONSE = "response";
 
-	public static final String WEEKLY = "weekly";
-
-	public static final String API_KEY = "apikey";
-
-	public static final String FTM_CHIP = "ftm-chip";
-
 	public static final String PARTNER = "partner";
-
-	public static final String SBI = "sbi";
-
-	public static final String MISP = "misp";
 
 	public static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----";
 
@@ -105,12 +97,16 @@ public final class PartnerConstants {
 	public static final String ABIS_PARTNER_TYPE = "ABIS_Partner";
 
 	public static final String MANUAL_ADJUDICATION_PARTNER_TYPE = "Manual_Adjudication";
+
+	public static final String ONLINE_VERIFICATION_PARTNER_TYPE = "Online_Verification_Partner";
 	
 	public static final String PARTNER_DOMAIN_AUTH = "AUTH";
 
 	public static final String PARTNER_DOMAIN_FTM = "FTM";
 	
 	public static final String PARTNER_DOMAIN_DEVICE = "DEVICE";
+
+	public static final String PARTNER_DOMAIN_MISP = "MISP";
 
     public static final String FTM = "ftm";
     

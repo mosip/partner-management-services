@@ -17,8 +17,15 @@ public class MISPLicenseEntityV2 implements Serializable {
 
     private static final long serialVersionUID = -8541947597557590399L;
 
-    @EmbeddedId
-    private MISPLicenseEntityPK id;
+    @Id
+    @Column(name = "misp_license_id", nullable = false, length = 36)
+    private String mispLicenseId;
+
+    @Column(name = "misp_id", nullable = false, length = 36)
+    private String mispId;
+
+    @Column(name = "license_key", nullable = false, length = 128)
+    private String licenseKey;
 
     @Column(name = "policy_id")
     private String policyId;

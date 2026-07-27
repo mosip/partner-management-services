@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 @Data
 public class MISPLicenseSummaryDto {
 
+    @Schema(description = "Unique identifier for the MISP License", example = "550e8400-e29b-41d4-a716-446655440000")
+    private String mispLicenseId;
+
     @Schema(description = "Unique identifier for the partner", example = "partner123")
     private String partnerId;
 
@@ -33,10 +36,10 @@ public class MISPLicenseSummaryDto {
     private String policyDescription;
 
     @Schema(description = "Name of the MISP license key", example = "MISP License Key 1")
-    private String mispLicenseKeyName;
+    private String licenseKeyName;
 
-    @Schema(description = "Unique identifier for the MISP partner", example = "xyz")
-    private String mispLicenseKey;
+    @Schema(description = "Masked MISP License Key", example = "*********xyz")
+    private String maskedLicenseKey;
 
     @Schema(description = "Date and time when the MISP License expires", example = "2025-07-15T10:00:00Z")
     private LocalDateTime expiryDateTime;

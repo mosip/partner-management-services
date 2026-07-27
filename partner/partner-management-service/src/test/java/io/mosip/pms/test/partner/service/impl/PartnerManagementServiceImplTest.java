@@ -1,8 +1,12 @@
 package io.mosip.pms.test.partner.service.impl;
 
+import static io.mosip.pms.partner.manager.constant.ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
+
+import org.springframework.test.util.AopTestUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,11 +23,12 @@ import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.common.entity.*;
 import io.mosip.pms.common.repository.*;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.response.dto.APIKeyGenerateResponseDto;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
-import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.tasklets.util.KeyManagerHelper;
 import org.json.simple.JSONObject;
@@ -33,9 +38,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -70,10 +77,21 @@ import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
 import io.mosip.pms.test.config.TestSecurityConfig;
+import io.mosip.pms.partner.constant.ErrorCode.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+
+import org.springframework.dao.DataIntegrityViolationException;
+
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -102,7 +120,7 @@ public class PartnerManagementServiceImplTest {
 	
 	@Autowired
 	private PartnerManagementServiceImpl partnerManagementImpl;
-	
+
 	@Mock
 	PartnerPolicyRepository partnerPolicyRepository;
 
@@ -184,6 +202,9 @@ public class PartnerManagementServiceImplTest {
 
 	@MockBean
 	KeyManagerHelper keyManagerHelper;
+
+    @Value("${pmp.allowed.credential.types}")
+    private String allowedCredentialTypes;
 	
 	@After
 	public void tearDownSecurityContext() {
@@ -204,7 +225,6 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerPolicyCredentialTypeRequestRepository", partnerPolicyCredentialTypeRequestRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "bioextractorConfigurationRepository", bioextractorConfigurationRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 100);
-		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseV2Repository", mispLicenseV2Repository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);
 		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", partnerHelper);
@@ -546,7 +566,7 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerPolicyRepository.findByPartnerIdAndPolicyIdAndApikey(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(part_policy);
 		partnerManagementImpl.updatePolicyAgainstApikey(partnersPolicyMappingRequest, partnerID, PolicyAPIKey);
 	}
-	
+
 	@Test(expected = PartnerManagerServiceException.class)
 	public void partnerApiKeyPolicyMappingsTest04(){
 		LocalDateTime now = LocalDateTime.now();
@@ -695,11 +715,9 @@ public class PartnerManagementServiceImplTest {
 		partner.get().setPartnerTypeCode("MISP_Partner");
 		Mockito.when(partnerRepository.findById(partnerId)).thenReturn(partner);
 		MISPLicenseEntityV2 license = new MISPLicenseEntityV2();
-		MISPLicenseEntityPK id = new MISPLicenseEntityPK();
-		id.setLicenseKey("qwertyhgfdsdfghb");
+		license.setLicenseKey("qwertyhgfdsdfghb");
 		license.setIsActive(true);
-		id.setMispId("12345");
-		license.setId(id);
+		license.setMispId("12345");
 		license.setValidFromDate(LocalDateTime.now().minusDays(1));
 		license.setValidToDate(LocalDateTime.now().plusDays(5));
 		Mockito.when(mispLicenseV2Repository.findActiveLicenseKeyByPartnerId("123456")).thenReturn(List.of(license));
@@ -1016,7 +1034,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 		}catch (PartnerManagerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 	}
 
@@ -1197,7 +1215,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			partnerManagementImpl.generateAPIKey("partner", request);
 		}catch (PartnerManagerServiceException e) {
-			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
+			assertTrue(e.getErrorCode().equals(PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 		Mockito.when(partnerRepository.findById("partner")).thenReturn(newPartner);
 		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName(request.getPolicyName(),newPartner.get().getPolicyGroupId())).thenReturn(null);
@@ -1482,6 +1500,87 @@ public class PartnerManagementServiceImplTest {
 		Page<PartnerSummaryEntity> page = null;
 		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any(), any(), any())).thenReturn(page);
 		partnerManagementImpl.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, null);
+	}
+
+	@Test
+	public void getPartnerDetailsV2Test01() throws Exception {
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Partner partner = new Partner();
+		partner.setId("123");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setApprovalStatus("approved");
+		partner.setIsActive(true);
+		partner.setPolicyGroupId("121");
+		partner.setCrDtimes(Timestamp.valueOf(LocalDateTime.now()));
+		partner.setName("abc");
+		partner.setEmailId("abc@gmail.com");
+		partner.setContactNo("1234567890");
+		partner.setLogoUrl("https://logo.com");
+		partner.setAdditionalInfo("{\"orderRedirectUrl\":\"https://example.io/order\"}");
+		when(partnerServiceRepository.findById(any())).thenReturn(Optional.of(partner));
+
+		PolicyGroup policyGroup = new PolicyGroup();
+		policyGroup.setName("policygroup123");
+		policyGroup.setDesc("descr");
+		when(policyGroupRepository.findPolicyGroupById(anyString())).thenReturn(policyGroup);
+		when(partnerHelper.getUserDetailsByPartnerId(anyString())).thenReturn(Optional.empty());
+
+		ResponseWrapperV2<AdminPartnerDetailsDto> response = partnerManagementImpl.getPartnerDetailsV2("123");
+
+		assertNotNull(response.getResponse());
+		assertEquals("https://logo.com", response.getResponse().getLogoUrl());
+		assertNotNull(response.getResponse().getAdditionalInfo());
+		assertEquals("https://example.io/order",
+				response.getResponse().getAdditionalInfo().get("orderRedirectUrl").asText());
+	}
+
+	@Test
+	public void getPartnerDetailsV2Test_PartnerNotExist() {
+		when(partnerServiceRepository.findById(any())).thenReturn(Optional.empty());
+		ResponseWrapperV2<AdminPartnerDetailsDto> response = partnerManagementImpl.getPartnerDetailsV2("123");
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getAdminPartnersV2Test01() throws Exception {
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		Integer pageNo = 0;
+		Integer pageSize = 8;
+		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
+		partnerFilterDto.setPartnerId("abc");
+		partnerFilterDto.setPartnerTypeCode("Auth_Partner");
+		partnerFilterDto.setOrganizationName("ABC");
+		partnerFilterDto.setEmailAddress("abc");
+		partnerFilterDto.setCertificateUploadStatus("not_uploaded");
+		partnerFilterDto.setPolicyGroupName("default");
+		partnerFilterDto.setIsActive(false);
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		PartnerSummaryEntity partnerSummaryEntity = new PartnerSummaryEntity();
+		partnerSummaryEntity.setPartnerId("123");
+		partnerSummaryEntity.setLogoUrl("https://logo.com");
+		partnerSummaryEntity.setAdditionalInfo("{\"orderRedirectUrl\":\"https://example.io/order\"}");
+		Page<PartnerSummaryEntity> page = new PageImpl<>(List.of(partnerSummaryEntity), pageable, 1);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerSummaryRepository", partnerSummaryRepository);
+		when(partnerSummaryRepository.getSummaryOfAllPartners(any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> response =
+				partnerManagementImpl.getAdminPartnersV2(null, null, pageNo, pageSize, partnerFilterDto);
+
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().getData().size());
+		PartnerSummaryV2Dto dto = response.getResponse().getData().get(0);
+		assertEquals("https://logo.com", dto.getLogoUrl());
+		assertNotNull(dto.getAdditionalInfo());
+		assertEquals("https://example.io/order", dto.getAdditionalInfo().get("orderRedirectUrl").asText());
 	}
 
 	@Test
@@ -2517,7 +2616,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfigurationSuccess() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -2592,7 +2691,7 @@ public class PartnerManagementServiceImplTest {
 	@Test
 	public void createBioextractorConfiguration_DuplicateConfigName() {
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(true);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(true);
 
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
 				partnerManagementImpl.createBioextractorConfiguration(req);
@@ -2607,7 +2706,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_IdCollisionRetry() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -2623,7 +2722,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_MaxRetriesExceeded() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "maxRetries", 0);
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(true);
 
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
@@ -2639,7 +2738,7 @@ public class PartnerManagementServiceImplTest {
 	public void createBioextractorConfiguration_SaveException() throws Exception {
 		setupSecurityContextForBioextractor();
 		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
-		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCase(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
 		when(bioextractorConfigurationRepository.save(any())).thenThrow(new RuntimeException("DB error"));
 
@@ -2670,7 +2769,7 @@ public class PartnerManagementServiceImplTest {
 				1
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2698,7 +2797,7 @@ public class PartnerManagementServiceImplTest {
 				0
 		);
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenReturn(page);
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2717,7 +2816,7 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
 				"mosip.pms.bioextractor.configurations.get");
 		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-				any(), any(), any(), any(), any(Pageable.class)))
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
@@ -2742,7 +2841,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			Environment env = org.mockito.Mockito.mock(Environment.class);
 			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
-					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+					.thenReturn("face:photo,iris:iris,finger:fingerprint");
 			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2773,7 +2872,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			Environment env = org.mockito.Mockito.mock(Environment.class);
 			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
-					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+					.thenReturn("face:photo,iris:iris,finger:fingerprint");
 			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
 
 			Page<BioextractorConfiguration> page = new PageImpl<>(
@@ -2782,7 +2881,7 @@ public class PartnerManagementServiceImplTest {
 					0
 			);
 			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					any(), any(), any(), any(), any(Pageable.class)))
+					any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 					.thenReturn(page);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2819,7 +2918,7 @@ public class PartnerManagementServiceImplTest {
 					0
 			);
 			when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
-					any(), any(), any(), any(), any(Pageable.class)))
+					any(), any(), any(), any(), any(), any(), any(Pageable.class)))
 					.thenReturn(page);
 
 			BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
@@ -2846,7 +2945,7 @@ public class PartnerManagementServiceImplTest {
 		try {
 			Environment env = org.mockito.Mockito.mock(Environment.class);
 			when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
-					.thenReturn("face:photo,iris:iris:finger:fingerprint");
+					.thenReturn("face:photo,iris:iris,finger:fingerprint");
 			ReflectionTestUtils.setField(partnerManagementImpl, "environment", env);
 
 			ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
@@ -2874,7 +2973,7 @@ public class PartnerManagementServiceImplTest {
 		config.setBioextractorProviderVersion("1.0");
 		config.setBioModality("face");
 		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 1, 1, 10, 30)));
-		when(bioextractorConfigurationRepository.findById("cfg-id-1")).thenReturn(Optional.of(config));
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-1")).thenReturn(Optional.of(config));
 
 		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
 				partnerManagementImpl.getBioextractorConfigurationById("cfg-id-1");
@@ -2921,7 +3020,7 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationByIdNotFound() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
 				"mosip.pms.bioextractor.configuration.details.get");
-		when(bioextractorConfigurationRepository.findById("missing-id")).thenReturn(Optional.empty());
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("missing-id")).thenReturn(Optional.empty());
 
 		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
 				partnerManagementImpl.getBioextractorConfigurationById("missing-id");
@@ -2937,7 +3036,7 @@ public class PartnerManagementServiceImplTest {
 	public void getBioextractorConfigurationByIdRepositoryException() {
 		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
 				"mosip.pms.bioextractor.configuration.details.get");
-		when(bioextractorConfigurationRepository.findById("cfg-id-1"))
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-1"))
 				.thenThrow(new RuntimeException("DB error"));
 
 		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
@@ -2948,6 +3047,246 @@ public class PartnerManagementServiceImplTest {
 		assertFalse(resp.getErrors().isEmpty());
 		assertEquals(io.mosip.pms.partner.constant.ErrorCode.FETCH_BIOEXTRACTOR_CONFIG_BY_ID_ERROR.getErrorCode(),
 				resp.getErrors().get(0).getErrorCode());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationSuccess() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("DELETED");
+		
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-1");
+		config.setConfigName("config-one");
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-1"))
+				.thenReturn(Optional.of(config));
+		when(bioextractorConfigurationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("cfg-id-1", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("cfg-id-1", resp.getResponse().getId());
+		assertEquals("Bio Extractor configuration deleted successfully.", resp.getResponse().getStatus());
+		assertEquals("mosip.pms.bioextractor.configuration.delete.patch", resp.getId());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+		
+		ArgumentCaptor<BioextractorConfiguration> captor = ArgumentCaptor.forClass(BioextractorConfiguration.class);
+		Mockito.verify(bioextractorConfigurationRepository).save(captor.capture());
+		assertTrue(captor.getValue().isDeleted());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationNotFound() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("DELETED");
+		
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("missing-id"))
+				.thenReturn(Optional.empty());
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("missing-id", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACTOR_CONFIGURATION_NOT_FOUND.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationInvalidStatus_returnsInvalidInputFormat() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus("string");
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("cfg-id-1", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_INPUT_FORMAT.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+	
+	@Test
+	public void deleteBioextractorConfigurationNullStatus_returnsInvalidRequestParam() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "patchDeleteBioextractorConfigurationId",
+				"mosip.pms.bioextractor.configuration.delete.patch");
+		
+		BioextractorConfigurationDeleteRequestDto req = new BioextractorConfigurationDeleteRequestDto();
+		req.setStatus(null);
+		
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.deleteBioextractorConfiguration("cfg-id-1", req);
+		
+		assertNotNull(resp);
+		assertNotNull(resp.getErrors());
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.INVALID_REQUEST_PARAM.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationNullAttributeName() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName(null);
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationBlankAttributeName() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName("   ");
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationNullCredentialDataFormat() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName("photo");
+		req.setCredentialDataFormat(null);
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationBlankCredentialDataFormat() {
+		BioextractorConfigurationRequestDto req = new BioextractorConfigurationRequestDto();
+		req.setConfigName("cfg1");
+		req.setBioextractorProviderName("ProviderA");
+		req.setBioextractorProviderVersion("1.0");
+		req.setBioModality("face");
+		req.setAttributeName("photo");
+		req.setCredentialDataFormat("   ");
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertFalse(resp.getErrors().isEmpty());
+		assertEquals(io.mosip.pms.partner.constant.ErrorCode.MISSING_PARTNER_INPUT_PARAMETER.getErrorCode(),
+				resp.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void createBioextractorConfigurationSuccess_attributeNameAndCredentialDataFormatPersisted() throws Exception {
+		setupSecurityContextForBioextractor();
+		BioextractorConfigurationRequestDto req = buildBioextractorRequest();
+		req.setAttributeName(" photo ");
+		req.setCredentialDataFormat(" rawData ");
+		when(bioextractorConfigurationRepository.existsByConfigNameIgnoreCaseAndIsDeletedFalse(anyString())).thenReturn(false);
+		when(bioextractorConfigurationRepository.existsById(anyString())).thenReturn(false);
+		ArgumentCaptor<BioextractorConfiguration> captor = ArgumentCaptor.forClass(BioextractorConfiguration.class);
+		when(bioextractorConfigurationRepository.save(captor.capture())).thenAnswer(inv -> inv.getArgument(0));
+
+		ResponseWrapperV2<BioextractorConfigurationResponseDto> resp =
+				partnerManagementImpl.createBioextractorConfiguration(req);
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("SUCCESS", resp.getResponse().getStatus());
+		assertEquals("photo", captor.getValue().getAttributeName());
+		assertEquals("rawData", captor.getValue().getCredentialDataFormat());
+	}
+
+	@Test
+	public void getBioextractorConfigurationById_attributeNameAndCredentialDataFormatMappedToResponse() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationDetailsId",
+				"mosip.pms.bioextractor.configuration.details.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-2");
+		config.setConfigName("config-two");
+		config.setBioextractorProviderName("provider-b");
+		config.setBioextractorProviderVersion("2.0");
+		config.setBioModality("iris");
+		config.setAttributeName("iris");
+		config.setCredentialDataFormat("template_data");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 3, 1, 9, 0)));
+		when(bioextractorConfigurationRepository.findByIdAndIsDeletedFalse("cfg-id-2")).thenReturn(Optional.of(config));
+
+		ResponseWrapperV2<BioextractorConfigurationDetailDto> resp =
+				partnerManagementImpl.getBioextractorConfigurationById("cfg-id-2");
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals("iris", resp.getResponse().getAttributeName());
+		assertEquals("template_data", resp.getResponse().getCredentialDataFormat());
+		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
+	}
+
+	@Test
+	public void getBioextractorConfigurations_attributeNameMappedToListResponse() {
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", new PartnerHelper());
+		ReflectionTestUtils.setField(partnerManagementImpl, "getBioextractorConfigurationsId",
+				"mosip.pms.bioextractor.configurations.get");
+		BioextractorConfiguration config = new BioextractorConfiguration();
+		config.setId("cfg-id-3");
+		config.setConfigName("config-three");
+		config.setBioextractorProviderName("provider-c");
+		config.setBioextractorProviderVersion("1.5");
+		config.setBioModality("finger");
+		config.setAttributeName("fingerprint");
+		config.setCrDtimes(Timestamp.valueOf(LocalDateTime.of(2026, 4, 1, 8, 0)));
+		Page<BioextractorConfiguration> page = new PageImpl<>(
+				Collections.singletonList(config),
+				PageRequest.of(0, 8),
+				1
+		);
+		when(bioextractorConfigurationRepository.getAllBioextractorConfigurations(
+				any(), any(), any(), any(), any(), any(), any(Pageable.class)))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> resp =
+				partnerManagementImpl.getBioextractorConfigurations(
+						"createdDateTime", "desc", 0, 8,
+						new BioextractorConfigurationFilterDto());
+
+		assertNotNull(resp);
+		assertNotNull(resp.getResponse());
+		assertEquals(1, resp.getResponse().getData().size());
+		assertEquals("fingerprint", resp.getResponse().getData().get(0).getAttributeName());
 	}
 
 	private void setupSecurityContextForBioextractor() throws Exception {
@@ -2968,6 +3307,8 @@ public class PartnerManagementServiceImplTest {
 		req.setBioextractorProviderName("ProviderA");
 		req.setBioextractorProviderVersion("1.0");
 		req.setBioModality("face");
+		req.setAttributeName("photo");
+		req.setCredentialDataFormat("rawData");
 		return req;
 	}
 
@@ -3287,6 +3628,199 @@ public class PartnerManagementServiceImplTest {
 		assertNotNull(resp.getResponse());
 		assertTrue(resp.getErrors() == null || resp.getErrors().isEmpty());
 		org.junit.Assert.assertNull(resp.getResponse().getCredentialType());
+	}
+
+    @Test
+    public void submitBioExtractorsRequest_whenChildRowsExist_returnsAlreadyExistsError() {
+        String partnerId = "p1";
+        String policyId = "pol-1";
+        String requestId = "req-1";
+
+        Partner partner = new Partner();
+        partner.setId(partnerId);
+        partner.setIsActive(true);
+        partner.setApprovalStatus(PartnerConstants.APPROVED);
+
+        PartnerPolicyRequest parent = new PartnerPolicyRequest();
+        parent.setId(requestId);
+        parent.setPartner(partner);
+        parent.setPolicyId(policyId);
+        parent.setStatusCode(PartnerConstants.IN_PROGRESS);
+        parent.setIsDeleted(false);
+
+        Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+        when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
+        when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(partner));
+        when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
+
+        BioExtractorsRequestDto req = new BioExtractorsRequestDto();
+        BioExtractorsDto extractor = new BioExtractorsDto();
+        extractor.setAttributeName("face");
+        extractor.setBiometric("face");
+        extractor.setExtractorProvider("prov");
+        extractor.setExtractorProviderVersion("1.0");
+        req.setExtractors(List.of(extractor));
+
+        try {
+            partnerManagementImpl.submitBioExtractorsRequest(requestId, req);
+            fail("Expected PartnerServiceException");
+        } catch (io.mosip.pms.partner.exception.PartnerServiceException ex) {
+            assertEquals(io.mosip.pms.partner.constant.ErrorCode.BIOEXTRACT_REQUEST_ALREADY_EXISTS.getErrorCode(), ex.getErrorCode());
+        }
+    }
+
+    @Test
+    public void submitBioExtractorsRequest_whenPartnerInactive_throwsPartnerNotActiveException() {
+        String partnerId = "p1";
+        String policyId = "pol-1";
+        String requestId = "req-1";
+
+        Partner partner = new Partner();
+        partner.setId(partnerId);
+        partner.setIsActive(false);
+
+        PartnerPolicyRequest parent = new PartnerPolicyRequest();
+        parent.setId(requestId);
+        parent.setPartner(partner);
+        parent.setPolicyId(policyId);
+        parent.setStatusCode(PartnerConstants.IN_PROGRESS);
+        parent.setIsDeleted(false);
+
+        Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+        when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
+        when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(false))).thenThrow(
+                new io.mosip.pms.partner.exception.PartnerServiceException(
+                        PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage()));
+
+        BioExtractorsRequestDto req = new BioExtractorsRequestDto();
+        BioExtractorsDto extractor = new BioExtractorsDto();
+        extractor.setAttributeName("photo");
+        extractor.setBiometric("face");
+        extractor.setExtractorProvider("prov");
+        extractor.setExtractorProviderVersion("1.0");
+        req.setExtractors(List.of(extractor));
+
+        io.mosip.pms.partner.exception.PartnerServiceException ex = assertThrows(
+                io.mosip.pms.partner.exception.PartnerServiceException.class,
+                () -> partnerManagementImpl.submitBioExtractorsRequest(requestId, req));
+        assertEquals(io.mosip.pms.partner.constant.ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(), ex.getErrorCode());
+    }
+
+    @Test
+    public void submitBioExtractorsRequest_validateExtractor_invalid_throws() {
+        PartnerManagementServiceImpl target = AopTestUtils.getTargetObject(partnerManagementImpl);
+        io.mosip.pms.partner.exception.PartnerServiceException ex = assertThrows(
+                io.mosip.pms.partner.exception.PartnerServiceException.class,
+                () -> ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", (BioExtractorsDto) null));
+        assertNotNull(ex);
+    }
+
+    @Test
+    public void submitBioExtractorsRequest_validateExtractor_valid_noThrow() {
+        PartnerManagementServiceImpl target = AopTestUtils.getTargetObject(partnerManagementImpl);
+        Object originalEnv = ReflectionTestUtils.getField(target, "environment");
+        try {
+            Environment env = org.mockito.Mockito.mock(Environment.class);
+            when(env.getProperty(eq("mosip.pms.bioextractor.allowed.modalities.attribute.name.map"), anyString()))
+                    .thenReturn("");
+            ReflectionTestUtils.setField(target, "environment", env);
+            BioExtractorsDto extractor = new BioExtractorsDto();
+            extractor.setAttributeName("attr");
+            extractor.setBiometric("face");
+            extractor.setExtractorProvider("prov");
+            extractor.setExtractorProviderVersion("1.0");
+            ReflectionTestUtils.invokeMethod(target, "validateExtractorForBioExtractRequest", "p1", extractor);
+        } finally {
+            ReflectionTestUtils.setField(target, "environment", originalEnv);
+        }
+    }
+
+	@Test(expected = PartnerServiceException.class)
+	public void submitCredentialTypesRequest_invalidRequest_throws() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", null);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void submitCredentialTypesRequest_parentNotFound_throws() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		Mockito.when(partnerPolicyRequestRepository.findByReqId(Mockito.anyString())).thenReturn(null);
+
+		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
+		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void submitCredentialTypesRequest_parentStatusNotInProgress_throws() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest("Approved");
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+
+		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
+		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void submitCredentialTypesRequest_duplicateRequest_throws() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(true);
+
+		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
+		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void submitCredentialTypesRequest_saveIntegrityViolation_throws() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
+		Mockito.when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndCrdentialType(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsById(Mockito.anyString())).thenReturn(false);
+		Mockito.doThrow(new DataIntegrityViolationException("dup")).when(partnerPolicyCredentialTypeRequestRepository).saveAndFlush(Mockito.any());
+
+		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
+		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
+		partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
+	}
+
+	@Test
+	public void submitCredentialTypesRequest_success_returnsMessage() {
+		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
+		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsByPartnerPolicyRequestId("mapping-1")).thenReturn(false);
+		Mockito.when(partnerPolicyCredentialTypeRepository.findByPartnerIdAndCrdentialType(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.existsById(Mockito.anyString())).thenReturn(true, false);
+		Mockito.when(partnerPolicyCredentialTypeRequestRepository.saveAndFlush(Mockito.any())).thenReturn(new PartnerPolicyCredentialTypeRequest());
+
+		CredentialTypeRequestDto req = new CredentialTypeRequestDto();
+		req.setCredentialType(allowedCredentialTypes.split(",")[0]);
+
+		String msg = partnerManagementImpl.submitCredentialTypesRequest("req-1", req);
+		assertEquals("Credential type request submitted successfully.", msg);
+	}
+
+		private PartnerPolicyRequest createPartnerPolicyRequest(String statusCode) {
+		Partner partner = new Partner();
+		partner.setId("p1");
+		PartnerPolicyRequest parent = new PartnerPolicyRequest();
+		parent.setId("mapping-1");
+		parent.setPolicyId("pol1");
+		parent.setIsDeleted(false);
+		parent.setStatusCode(statusCode);
+		parent.setPartner(partner);
+		return parent;
 	}
 
 	@Test

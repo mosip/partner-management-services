@@ -10,7 +10,9 @@ import io.mosip.pms.common.validator.InputValidator;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
 import io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationDetailDto;
 import io.mosip.pms.partner.response.dto.BioextractorConfigurationResponseDto;
@@ -24,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 
 import io.mosip.pms.common.dto.PageResponseV2Dto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
+import io.mosip.pms.common.constant.ValidationErrorCode;
 import io.mosip.pms.partner.manager.dto.*;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.swagger.annotations.ApiParam;
@@ -45,6 +48,7 @@ import io.mosip.pms.common.response.dto.ResponseWrapper;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.service.PartnerManagerService;
+import io.mosip.pms.partner.request.dto.CredentialTypeRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
 import io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2;
 import io.mosip.pms.partner.response.dto.CredentialTypesResponseWrapperV2;
@@ -73,7 +77,7 @@ public class PartnerManagementController {
 	
 	@Autowired
 	PartnerManagerService partnerManagementService;
-	
+
 	@Autowired
 	AuditUtil auditUtil;
 
@@ -92,6 +96,9 @@ public class PartnerManagementController {
 	@Value("${mosip.pms.certificate.id.regex}")
 	private String certificateIdRegex;
 
+	@Value("${mosip.pms.api.id.partners.bioextractors.request.post}")
+	private String postPartnerBioextractorsRequestId;
+
 	@Value("${mosip.pms.api.id.link.policy.group.post}")
 	private String postLinkPolicyGroup;
 
@@ -100,6 +107,12 @@ public class PartnerManagementController {
 
 	@Value("${mosip.pms.api.id.bioextractor.configurations.post}")
 	private String postBioextractorConfigurationsId;
+	
+	@Value("${mosip.pms.api.id.bioextractor.configuration.delete.patch}")
+	private String patchDeleteBioextractorConfigurationId;
+
+	@Value("${mosip.pms.api.id.partners.credentialtypes.request.post}")
+	private String postPartnerCredentialTypesRequestId;
 
 	String msg = "mosip.partnermanagement.partners.retrieve";
 	String version = "1.0";
@@ -306,10 +319,11 @@ public class PartnerManagementController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
 	@GetMapping(value = "/admin-partners/{partnerId}")
-	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
-	description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoint /partners/{partnerId} by adding new features like Policy Group Details in Response and Certificate Details in Response. It is configured for the role PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id - deprecated since release-1.3.0.",
+	description = "This endpoint has been deprecated since the release-1.3.0 and replaced by the GET /admin-partners/v2/{partnerId} endpoint, which additionally returns logoUrl and additionalInfo.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -320,10 +334,25 @@ public class PartnerManagementController {
 		return partnerManagementService.getPartnerDetails(partnerId);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnerdetails())")
+	@GetMapping(value = "/admin-partners/v2/{partnerId}")
+	@Operation(summary = "This endpoint retrieves all the details of the Partner based on Partner Id.",
+	description = "Available since release-1.3.0. This endpoint upgrades the earlier GET endpoint /admin-partners/{partnerId} by additionally returning logoUrl and additionalInfo in the response. It is configured for the role PARTNER_ADMIN.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<AdminPartnerDetailsDto> getPartnerDetailsV2(@PathVariable String partnerId) {
+		inputValidator.validateRequestInput("partnerId", partnerId);
+		return partnerManagementService.getPartnerDetailsV2(partnerId);
+	}
+
+	@Deprecated(since = "release-1.3.0")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
 	@GetMapping(value = "/admin-partners")
-	@Operation(summary = "This endpoint retrieves a list of all Partners.",
-			description = "Available since release-1.2.2.0. This endpoint upgrades the earlier GET endpoints /partners and /partners/v2 by adding new features like pagination, sorting, and filtering. It is configured for the role PARTNER_ADMIN.")
+	@Operation(summary = "This endpoint retrieves a list of all Partners - deprecated since release-1.3.0.",
+			description = "This endpoint has been deprecated since the release-1.3.0 and replaced by the GET /admin-partners/v2 endpoint, which additionally returns logoUrl and additionalInfo.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -332,7 +361,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "partnerType", required = false) String partnerType,
@@ -349,10 +378,62 @@ public class PartnerManagementController {
 					description = "Approval status of partner",
 					in = ParameterIn.QUERY,
 					schema = @Schema(allowableValues = {"active", "deactivated", "inactive"})
-			)   
+			)
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
+		PartnerFilterDto partnerFilterDto = buildPartnerFilterDto(sortFieldName, sortType, partnerId,
+				partnerType, isActive, orgName, emailAddress, certificateUploadStatus, status, policyGroupName);
+		return partnerManagementService.getAdminPartners(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo), pageSize, partnerFilterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetadminpartners())")
+	@GetMapping(value = "/admin-partners/v2")
+	@Operation(summary = "This endpoint retrieves a list of all Partners.",
+			description = "Available since release-1.3.0. This endpoint upgrades the earlier GET endpoint /admin-partners by additionally returning logoUrl and additionalInfo for each partner. It is configured for the role PARTNER_ADMIN.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> getAdminPartnersV2(
+			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
+			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
+			@RequestParam(value = "partnerId", required = false) String partnerId,
+			@RequestParam(value = "partnerType", required = false) String partnerType,
+			@RequestParam(value = "isActive", required = false) Boolean isActive,
+			@RequestParam(value = "orgName", required = false) String orgName,
+			@RequestParam(value = "emailAddress", required = false) String emailAddress,
+			@Parameter(
+					description = "Status of certificate upload",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"uploaded", "not_uploaded"})
+			)
+			@RequestParam(value = "certificateUploadStatus", required = false) String certificateUploadStatus,
+			@Parameter(
+					description = "Approval status of partner",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"active", "deactivated", "inactive"})
+			)
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
+	) {
+		if (pageSize <= 0) {
+			throw new PartnerServiceException(ErrorCode.INVALID_PAGE_SIZE.getErrorCode(),
+					ErrorCode.INVALID_PAGE_SIZE.getErrorMessage());
+		}
+		PartnerFilterDto partnerFilterDto = buildPartnerFilterDto(sortFieldName, sortType, partnerId,
+				partnerType, isActive, orgName, emailAddress, certificateUploadStatus, status, policyGroupName);
+		return partnerManagementService.getAdminPartnersV2(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo), pageSize, partnerFilterDto);
+	}
+
+	private PartnerFilterDto buildPartnerFilterDto(String sortFieldName, String sortType, String partnerId,
+			String partnerType, Boolean isActive, String orgName, String emailAddress,
+			String certificateUploadStatus, String status, String policyGroupName) {
 		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
 		inputValidator.validateRequestInput("sortType", sortType);
 		inputValidator.validateRequestInput("partnerId", partnerId);
@@ -363,31 +444,15 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
 		inputValidator.validateRequestInput("status", status);
 		PartnerFilterDto partnerFilterDto = new PartnerFilterDto();
-		if (partnerId != null) {
-			partnerFilterDto.setPartnerId(partnerId.toLowerCase());
-		}
-		if (partnerType != null) {
-			partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
-		}
-		if (orgName != null) {
-			partnerFilterDto.setOrganizationName(orgName.toLowerCase());
-		}
-		if (policyGroupName != null) {
-			partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
-		}
-		if (certificateUploadStatus != null) {
-			partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
-		}
-		if (emailAddress != null) {
-			partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
-		}
-		if (isActive != null) {
-			partnerFilterDto.setIsActive(isActive);
-		}
-		if (status != null) {
-			partnerFilterDto.setStatus(status);
-		}
-		return partnerManagementService.getAdminPartners(sortFieldName, sortType, pageNo, pageSize, partnerFilterDto);
+		if (partnerId != null) partnerFilterDto.setPartnerId(partnerId.toLowerCase());
+		if (partnerType != null) partnerFilterDto.setPartnerTypeCode(partnerType.toLowerCase());
+		if (orgName != null) partnerFilterDto.setOrganizationName(orgName.toLowerCase());
+		if (policyGroupName != null) partnerFilterDto.setPolicyGroupName(policyGroupName.toLowerCase());
+		if (certificateUploadStatus != null) partnerFilterDto.setCertificateUploadStatus(certificateUploadStatus);
+		if (emailAddress != null) partnerFilterDto.setEmailAddress(emailAddress.toLowerCase());
+		if (isActive != null) partnerFilterDto.setIsActive(isActive);
+		if (status != null) partnerFilterDto.setStatus(status);
+		return partnerFilterDto;
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetallpartnerpolicymappingrequests())")
@@ -402,7 +467,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@Parameter(
@@ -471,7 +536,40 @@ public class PartnerManagementController {
 		if (partnerType != null) {
 			filterDto.setPartnerType(partnerType.toLowerCase());
 		}
-		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getAllPartnerPolicyRequests(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@PostMapping(value = "/partner-policy-requests/{requestId}/bio-extractors-request")
+	@Operation(summary = "Service to submit bio extractors request", description = "Persists bio extractor requests against an in-progress partner policy mapping request")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<String> submitBioExtractorsRequest(
+			@PathVariable("requestId") String requestId,
+			@RequestBody @Valid RequestWrapperV2<BioExtractorsRequestDto> requestWrapper) {
+		Optional<ResponseWrapperV2<String>> validationResponse =
+				requestValidator.validate(postPartnerBioextractorsRequestId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		inputValidator.validateRequestInput("requestId", requestId);
+		requestWrapper.getRequest().getExtractors().forEach(extractor -> {
+			inputValidator.validateRequestInput("attributeName", extractor.getAttributeName());
+			inputValidator.validateRequestInput("biometric", extractor.getBiometric());
+			inputValidator.validateRequestInput("biometricSubTypes", extractor.getBiometricSubTypes());
+			inputValidator.validateRequestInput("extractorProvider", extractor.getExtractorProvider());
+			inputValidator.validateRequestInput("extractorProviderVersion", extractor.getExtractorProviderVersion());
+		});
+		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
+		response.setResponse(partnerManagementService.submitBioExtractorsRequest(requestId, requestWrapper.getRequest()));
+		response.setId(requestWrapper.getId());
+		response.setVersion(requestWrapper.getVersion());
+		return response;
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersbioextractors())")
@@ -504,6 +602,26 @@ public class PartnerManagementController {
 		return partnerManagementService.getPartnerPolicyRequestCredentialTypes(requestId);
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
+	@PostMapping(value = "/partner-policy-requests/{requestId}/credential-types-request")
+	@Operation(summary = "Service to submit credential types request",
+			description = "Persists credential type request against an in-progress partner policy mapping request. Partner and policy are resolved from the partner-policy request id in the path.")
+	public ResponseWrapperV2<String> submitCredentialTypesRequest(
+			@PathVariable("requestId") String requestId,
+			@RequestBody @Valid RequestWrapperV2<CredentialTypeRequestDto> requestWrapper) {
+		inputValidator.validateRequestInput("requestId", requestId);
+		Optional<ResponseWrapperV2<String>> validationResponse =
+				requestValidator.validate(postPartnerCredentialTypesRequestId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		ResponseWrapperV2<String> response = new ResponseWrapperV2<>();
+		response.setResponse(partnerManagementService.submitCredentialTypesRequest(requestId,requestWrapper.getRequest()));
+		response.setId(requestWrapper.getId());
+		response.setVersion(requestWrapper.getVersion());
+		return response;
+	}
+
 	@Deprecated(since = "release-1.3.0-beta.2")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys")
@@ -517,7 +635,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> getAllApiKeyRequests(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageNo",  required = false) String pageNo,
 			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
@@ -531,16 +649,10 @@ public class PartnerManagementController {
 			@RequestParam(value = "policyName", required = false) String policyName,
 			@RequestParam(value = "policyGroupName", required = false) String policyGroupName
 	) {
-		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
-		inputValidator.validateRequestInput("sortType", sortType);
-		inputValidator.validateRequestInput("partnerId", partnerId);
-		inputValidator.validateRequestInput("apiKeyLabel", apiKeyLabel);
-		inputValidator.validateRequestInput("orgName", orgName);
-		inputValidator.validateRequestInput("status", status);
-		inputValidator.validateRequestInput("policyName", policyName);
-		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
-		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		ApiKeyFilterDto filterDto = buildApiKeyFilterDto(sortFieldName, sortType, partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, null, null);
+		return partnerManagementService.getAllApiKeyRequests(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
@@ -555,7 +667,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryV2Dto>> getAllApiKeyRequestsV2(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo",  required = false) Integer pageNo,
+			@RequestParam(value = "pageNo",  required = false) String pageNo,
 			@RequestParam(value = "pageSize",  required = false) Integer pageSize,
 			@RequestParam(value = "partnerId", required = false) String partnerId,
 			@RequestParam(value = "apiKeyLabel", required = false) String apiKeyLabel,
@@ -575,6 +687,16 @@ public class PartnerManagementController {
 			@Max(value = 30, message = "Expiry period cannot be more than 30 days.")
 			Integer expiryPeriod
 	) {
+		inputValidator.validateRequestInput("partnerType", partnerType);
+		ApiKeyFilterDto filterDto = buildApiKeyFilterDto(sortFieldName, sortType, partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
+		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
+	}
+
+	private ApiKeyFilterDto buildApiKeyFilterDto(String sortFieldName, String sortType, String partnerId,
+			String apiKeyLabel, String orgName, String status, String policyName, String policyGroupName,
+			String partnerType, Integer expiryPeriod) {
 		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
 		inputValidator.validateRequestInput("sortType", sortType);
 		inputValidator.validateRequestInput("partnerId", partnerId);
@@ -583,13 +705,6 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("status", status);
 		inputValidator.validateRequestInput("policyName", policyName);
 		inputValidator.validateRequestInput("policyGroupName", policyGroupName);
-		inputValidator.validateRequestInput("partnerType", partnerType);
-		ApiKeyFilterDto filterDto = populateApiKeyFilterDto(partnerId, apiKeyLabel, orgName, status, policyName, policyGroupName, partnerType, expiryPeriod);
-		return partnerManagementService.getAllApiKeyRequestsV2(sortFieldName, sortType, pageNo, pageSize, filterDto);
-	}
-
-	private ApiKeyFilterDto populateApiKeyFilterDto(String partnerId, String apiKeyLabel, String orgName, String status,
-													String policyName, String policyGroupName, String partnerType, Integer expiryPeriod) {
 		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
 		if (partnerId != null) filterDto.setPartnerId(partnerId.toLowerCase());
 		if (apiKeyLabel != null) filterDto.setApiKeyLabel(apiKeyLabel.toLowerCase());
@@ -615,7 +730,7 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<TrustCertificateSummaryDto>> getTrustCertificates(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType, // e.g., ASC or DESC
-			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageNo", defaultValue = "0") String pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "8") Integer pageSize,
 			@Parameter(
 					description = "Type of CA certificate",
@@ -663,7 +778,9 @@ public class PartnerManagementController {
 		if (expiryPeriod != null){
 			filterDto.setExpiryPeriod(expiryPeriod);
 		}
-		return partnerManagementService.getTrustCertificates(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		return partnerManagementService.getTrustCertificates(sortFieldName, sortType,
+				partnerHelper.parsePageNo(pageNo),
+				pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetdownloadtrustcertificates())")
@@ -755,7 +872,8 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("configName", request.getConfigName());
 		inputValidator.validateRequestInput("bioextractorProviderName", request.getBioextractorProviderName());
 		inputValidator.validateRequestInput("bioextractorProviderVersion", request.getBioextractorProviderVersion());
-		inputValidator.validateRequestInput("bioModality", request.getBioModality());
+		inputValidator.validateRequestInput("attributeName", request.getAttributeName());
+		inputValidator.validateRequestInput("credentialDataFormat", request.getCredentialDataFormat());
 		return partnerManagementService.createBioextractorConfiguration(request);
 	}
 
@@ -771,18 +889,26 @@ public class PartnerManagementController {
 	public ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(
 			@RequestParam(value = "sortFieldName", required = false) String sortFieldName,
 			@RequestParam(value = "sortType", required = false) String sortType,
-			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageNo", required = false) String pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@RequestParam(value = "configName", required = false) String configName,
 			@RequestParam(value = "bioextractorProviderName", required = false) String bioextractorProviderName,
 			@RequestParam(value = "bioextractorProviderVersion", required = false) String bioextractorProviderVersion,
-			@RequestParam(value = "bioModality", required = false) String bioModality
+			@RequestParam(value = "bioModality", required = false) String bioModality,
+			@RequestParam(value = "attributeName", required = false) String attributeName,
+			@Parameter(
+					description = "Credential data format",
+					in = ParameterIn.QUERY,
+					schema = @Schema(allowableValues = {"rawData", "templateData"})
+			)
+			@RequestParam(value = "credentialDataFormat", required = false) String credentialDataFormat
 	) {
+		Integer normalizedPageNo = partnerHelper.parsePageNo(pageNo);
 		BioextractorConfigurationFilterDto filterDto = populateBioextractorConfigurationFilterDto(
-				sortFieldName, sortType, pageNo, pageSize, configName, bioextractorProviderName,
-				bioextractorProviderVersion, bioModality);
+				sortFieldName, sortType, normalizedPageNo, pageSize, configName, bioextractorProviderName,
+				bioextractorProviderVersion, bioModality, attributeName, credentialDataFormat);
 		return partnerManagementService.getBioextractorConfigurations(
-				sortFieldName, sortType, pageNo, pageSize, filterDto);
+				sortFieldName, sortType, normalizedPageNo, pageSize, filterDto);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetbioextractorconfigurationdetails())")
@@ -799,23 +925,66 @@ public class PartnerManagementController {
 		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
 		return partnerManagementService.getBioextractorConfigurationById(bioExtractorConfigurationId);
 	}
+	
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchbioextractorconfigurationdelete())")
+	@PatchMapping(value = "/bio-extractor-configurations/{bioExtractorConfigurationId}")
+	@Operation(summary = "Delete bio-extractor configuration ",
+			description = "Deletes the bio-extractor configuration. Available for PARTNER_ADMIN role.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapperV2<BioextractorConfigurationResponseDto> deleteBioextractorConfiguration(
+			@PathVariable("bioExtractorConfigurationId") String bioExtractorConfigurationId,
+			@RequestBody @Valid RequestWrapperV2<BioextractorConfigurationDeleteRequestDto> requestWrapper) {
+		if (requestWrapper == null) {
+			ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+			responseWrapper.setId(patchDeleteBioextractorConfigurationId);
+			responseWrapper.setVersion(RequestValidator.VERSION);
+			responseWrapper.setErrors(RequestValidator.setErrorResponse(
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorMessage()));
+			return responseWrapper;
+		}
+		Optional<ResponseWrapperV2<BioextractorConfigurationResponseDto>> validationResponse =
+				requestValidator.validate(patchDeleteBioextractorConfigurationId, requestWrapper);
+		if (validationResponse.isPresent()) {
+			return validationResponse.get();
+		}
+		if (requestWrapper.getRequest() == null) {
+			ResponseWrapperV2<BioextractorConfigurationResponseDto> responseWrapper = new ResponseWrapperV2<>();
+			responseWrapper.setId(patchDeleteBioextractorConfigurationId);
+			responseWrapper.setVersion(RequestValidator.VERSION);
+			responseWrapper.setErrors(RequestValidator.setErrorResponse(
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorCode(),
+					ValidationErrorCode.INVALID_REQUEST_BODY.getErrorMessage()));
+			return responseWrapper;
+		}
+		inputValidator.validateRequestInput("bioExtractorConfigurationId", bioExtractorConfigurationId);
+		inputValidator.validateRequestInput("status", requestWrapper.getRequest().getStatus());
+		return partnerManagementService.deleteBioextractorConfiguration(bioExtractorConfigurationId, requestWrapper.getRequest());
+	}
 
 	private BioextractorConfigurationFilterDto populateBioextractorConfigurationFilterDto(
 			String sortFieldName, String sortType, Integer pageNo, Integer pageSize,
 			String configName, String bioextractorProviderName, String bioextractorProviderVersion,
-			String bioModality) {
+			String bioModality, String attributeName, String credentialDataFormat) {
 		inputValidator.validateRequestInput("sortFieldName", sortFieldName);
 		inputValidator.validateRequestInput("sortType", sortType);
 		inputValidator.validateRequestInput("configName", configName);
 		inputValidator.validateRequestInput("bioextractorProviderName", bioextractorProviderName);
 		inputValidator.validateRequestInput("bioextractorProviderVersion", bioextractorProviderVersion);
-		inputValidator.validateRequestInput("bioModality", bioModality);
+		inputValidator.validateRequestInput("attributeName", attributeName);
+		inputValidator.validateRequestInput("credentialDataFormat", credentialDataFormat);
 
 		BioextractorConfigurationFilterDto filterDto = new BioextractorConfigurationFilterDto();
 		if (configName != null) filterDto.setConfigName(configName.toLowerCase());
 		if (bioextractorProviderName != null) filterDto.setBioextractorProviderName(bioextractorProviderName.toLowerCase());
 		if (bioextractorProviderVersion != null) filterDto.setBioextractorProviderVersion(bioextractorProviderVersion.toLowerCase());
 		if (bioModality != null) filterDto.setBioModality(bioModality.toLowerCase());
+		if (attributeName != null) filterDto.setAttributeName(attributeName.toLowerCase());
+		if (credentialDataFormat != null) filterDto.setCredentialDataFormat(credentialDataFormat.toLowerCase());
 		return filterDto;
 	}
 }

@@ -19,7 +19,7 @@ public interface PartnerSummaryRepository extends BaseRepository<PartnerSummaryE
             "WHEN p.approvalStatus = 'approved' AND p.isActive = false THEN 'deactivated' " +
             "WHEN p.approvalStatus = 'InProgress' AND p.isActive = false THEN 'inactive' " +
             "END AS status, " +
-            "p.isActive, p.crDtimes) " +
+            "p.isActive, p.crDtimes, p.logoUrl, p.additionalInfo) " +
             "FROM PartnerV3 p " +
             "LEFT JOIN p.policyGroup pg " +
             "WHERE (:partnerId IS NULL OR lower(p.id) LIKE %:partnerId%) " +

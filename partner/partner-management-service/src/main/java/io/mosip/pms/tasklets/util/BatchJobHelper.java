@@ -291,6 +291,8 @@ public class BatchJobHelper {
 			return PartnerConstants.PARTNER_DOMAIN_DEVICE;
 		case PartnerConstants.FTM_PROVIDER_PARTNER_TYPE:
 			return PartnerConstants.PARTNER_DOMAIN_FTM;
+		case PartnerConstants.MISP_PARTNER_TYPE:
+			return PartnerConstants.PARTNER_DOMAIN_MISP;
 		default:
 			return PartnerConstants.PARTNER_DOMAIN_AUTH;
 		}
@@ -429,7 +431,7 @@ public class BatchJobHelper {
 		MISPLicenseKeyDetailsDto MISPLicenseKeyDetailsDto = new MISPLicenseKeyDetailsDto();
 		MISPLicenseKeyDetailsDto.setMispLicenseKeyName(mispLicenseDetails.getLicenseKeyName());
 		MISPLicenseKeyDetailsDto.setExpiryDateTime(mispLicenseDetails.getValidToDate().toString());
-		MISPLicenseKeyDetailsDto.setMispPartnerId(mispLicenseDetails.getId().getMispId());
+		MISPLicenseKeyDetailsDto.setMispPartnerId(mispLicenseDetails.getMispId());
 		MISPLicenseKeyDetailsDto.setExpiryPeriod(String.valueOf(expiryPeriod));
 
 		// Fetch the policy name and policy group name
@@ -438,7 +440,7 @@ public class BatchJobHelper {
 			if (optionalAuthPolicy.isEmpty()) {
 				log.debug("No Auth Policy found for policy id {} linked to MISP Partner Id {}",
 						mispLicenseDetails.getPolicyId(),
-						mispLicenseDetails.getId().getMispId());
+						mispLicenseDetails.getMispId());
 				return MISPLicenseKeyDetailsDto;
 			}
 			AuthPolicy authPolicy = optionalAuthPolicy.get();

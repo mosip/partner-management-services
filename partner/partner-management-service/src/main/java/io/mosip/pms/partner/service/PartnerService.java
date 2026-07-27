@@ -38,6 +38,7 @@ import io.mosip.pms.partner.response.dto.CACertificateResponseDto;
 import io.mosip.pms.partner.response.dto.EmailVerificationResponseDto;
 import io.mosip.pms.common.dto.PartnerCertDownloadResponeDto;
 import io.mosip.pms.partner.response.dto.PartnerCertificateResponseDto;
+import io.mosip.pms.partner.response.dto.CredentialTypesListDto;
 import io.mosip.pms.partner.response.dto.PartnerCredentialTypePolicyDto;
 import io.mosip.pms.partner.response.dto.PartnerResponse;
 import io.mosip.pms.partner.response.dto.PartnerSearchResponseDto;
@@ -140,16 +141,6 @@ public interface PartnerService {
     public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors);
 
 	/**
-	 * Submit bio extractor configuration requests against an in-progress partner policy mapping request.
-	 *
-	 * @param partnerId partner identifier
-	 * @param policyId  auth policy identifier
-	 * @param request bio-extractor request payload (includes partnerPolicyRequestId)
-	 * @return created request row identifiers
-	 */
-	String submitBioExtractorsRequest(String partnerId, String policyId, BioExtractorsRequestDto request);
-
-	/**
 	 * Submit credential type request against an in-progress partner policy mapping request.
 	 *
 	 * @param partnerId partner identifier
@@ -157,7 +148,6 @@ public interface PartnerService {
 	 * @param request credential type request payload (includes partnerPolicyRequestId)
 	 * @return success message
 	 */
-	String submitCredentialTypesRequest(String partnerId, String policyId, CredentialTypeRequestDto request);
 
     /**
      * Function to get biometric extractors of partner and policy
@@ -197,6 +187,8 @@ public interface PartnerService {
 	 * @throws IOException
 	 */
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType,String partnerId) throws JsonParseException, JsonMappingException, IOException;
+
+	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId);
 	
 	/**
 	 * 
@@ -260,7 +252,7 @@ public interface PartnerService {
 
 	ResponseWrapperV2<List<PartnerDtoV3>> getPartnersV3(String status, Boolean policyGroupAvailable, String partnerType);
 
-	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequest partnerRequest);
+	ResponseWrapperV2<PartnerResponse> createPartner(PartnerRequestDto partnerRequest);
 
     ResponseWrapperV2<PartnerExistsResponseDto> checkPartnerExists(PartnerExistsRequestDto request);
 }

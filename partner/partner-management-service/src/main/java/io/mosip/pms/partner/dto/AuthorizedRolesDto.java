@@ -92,7 +92,9 @@ public class AuthorizedRolesDto {
 	private List<String> postpartnerscredentialtypepolicies;
 	
 	private List<String> getpartnerscredentialtypepolicies;
-	
+
+	private List<String> getpartnerscredentialtypes;
+
 	private List<String> postpartnerscontactadd;
 	
 	private List<String> putpartners;
@@ -154,6 +156,8 @@ public class AuthorizedRolesDto {
 	private List<String> getbioextractorconfigurations;
 
 	private List<String> getbioextractorconfigurationdetails;
+	
+	private List<String> patchbioextractorconfigurationdelete;
 
 	//MISP License controller
 	

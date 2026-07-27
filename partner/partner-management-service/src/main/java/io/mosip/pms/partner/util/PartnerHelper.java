@@ -19,12 +19,17 @@ import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
 import io.mosip.pms.device.authdevice.repository.SecureBiometricInterfaceRepository;
+import io.mosip.pms.common.repository.PartnerRepository;
+import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerServiceAuditEnum;
 import io.mosip.pms.common.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.KeycloakUserDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
 import io.mosip.pms.partner.response.dto.FtmCertificateDownloadResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -35,11 +40,7 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public class PartnerHelper {
@@ -99,6 +100,7 @@ public class PartnerHelper {
         bioextractorConfigurationAliasToColumnMap.put("bioextractorProviderName", "bioextractorProviderName");
         bioextractorConfigurationAliasToColumnMap.put("bioextractorProviderVersion", "bioextractorProviderVersion");
         bioextractorConfigurationAliasToColumnMap.put("bioModality", "bioModality");
+        bioextractorConfigurationAliasToColumnMap.put("attributeName", "attributeName");
         bioextractorConfigurationAliasToColumnMap.put("createdDateTime", "crDtimes");
     }
 
@@ -170,16 +172,22 @@ public class PartnerHelper {
 
     public final Map<String, String> mispAliasToColumnMap = new HashMap<>();
     {
-        mispAliasToColumnMap.put("partnerId", "id.mispId");
+        mispAliasToColumnMap.put("partnerId", "m.mispId");
         mispAliasToColumnMap.put("orgName", "p.name");
         mispAliasToColumnMap.put("policyGroupName", "pg.name");
         mispAliasToColumnMap.put("policyName", "ap.name");
-        mispAliasToColumnMap.put("mispLicenseKey", "id.licenseKey");
-        mispAliasToColumnMap.put("mispLicenseKeyName", "licenseKeyName");
-        mispAliasToColumnMap.put("expiryDateTime", "validToDate");
-        mispAliasToColumnMap.put("status", "isActive");
-        mispAliasToColumnMap.put("createdDateTime", "createdDateTime");
+        mispAliasToColumnMap.put("maskedLicenseKey", "m.licenseKey");
+        mispAliasToColumnMap.put("licenseKeyName", "m.licenseKeyName");
+        mispAliasToColumnMap.put("expiryDateTime", "m.validToDate");
+        mispAliasToColumnMap.put("status", "m.isActive");
+        mispAliasToColumnMap.put("createdDateTime", "m.createdDateTime");
     }
+
+    @Autowired
+    PartnerRepository partnerRepository;
+
+    @Autowired
+    AuditUtil auditUtil;
 
     @Autowired
     SecureBiometricInterfaceRepository secureBiometricInterfaceRepository;
@@ -201,6 +209,9 @@ public class PartnerHelper {
 
     @Autowired
     private Environment environment;
+
+    @Value("${pmp.allowed.credential.types}")
+    private String allowedCredentialTypes;
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
@@ -411,6 +422,48 @@ public class PartnerHelper {
     private boolean isSortingRequestedWithoutPagination(String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
         return Objects.nonNull(sortFieldName) && Objects.nonNull(sortType)
                 && Objects.isNull(pageNo) && Objects.isNull(pageSize);
+    }
+
+    public Integer parsePageNo(String pageNo) {
+        if (pageNo == null) {
+            return null;
+        }
+        try {
+            int parsedPageNo = Integer.parseInt(pageNo);
+            if (parsedPageNo < 0) {
+                throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                        ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+            }
+            return parsedPageNo;
+        } catch (NumberFormatException ex) {
+            throw new PartnerServiceException(ErrorCode.INVALID_PAGE_NO.getErrorCode(),
+                    ErrorCode.INVALID_PAGE_NO.getErrorMessage());
+        }
+    }
+
+    public void validateCredentialTypes(String credentialType) {
+        if (!Arrays.stream(allowedCredentialTypes.split(",")).anyMatch(credentialType::equalsIgnoreCase)) {
+            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.MAP_POLICY_CREDENTIAL_TYPE_FAILURE, credentialType, "credentialType");
+            throw new PartnerServiceException(ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorCode(),
+                    ErrorCode.CREDENTIAL_TYPE_NOT_ALLOWED.getErrorMessage() + allowedCredentialTypes);
+        }
+    }
+
+    public Partner getValidPartner(String partnerId, boolean isToRetrieve) {
+        Optional<Partner> partnerById = partnerRepository.findById(partnerId);
+        if (partnerById.isEmpty()) {
+            auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
+            throw new PartnerServiceException(ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorCode(),
+                    ErrorCode.PARTNER_DOES_NOT_EXIST_EXCEPTION.getErrorMessage());
+        }
+        if (!isToRetrieve) {
+            if (!partnerById.get().getIsActive()) {
+                auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerId, "partnerId");
+                throw new PartnerServiceException(ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorCode(),
+                        ErrorCode.PARTNER_NOT_ACTIVE_EXCEPTION.getErrorMessage());
+            }
+        }
+        return partnerById.get();
     }
 
     public void checkIfPartnerIsNotActive(Partner partner) {

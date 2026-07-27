@@ -8,9 +8,12 @@ import io.mosip.pms.common.dto.TrustCertificateSummaryDto;
 import io.mosip.pms.common.response.dto.ResponseWrapperV2;
 import io.mosip.pms.partner.manager.dto.TrustCertificateFilterDto;
 import io.mosip.pms.partner.manager.dto.*;
+import io.mosip.pms.partner.request.dto.*;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIKeyUpdateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
+import io.mosip.pms.partner.request.dto.BioExtractorsRequestDto;
+import io.mosip.pms.partner.request.dto.BioextractorConfigurationDeleteRequestDto;
 import io.mosip.pms.partner.request.dto.BioextractorConfigurationRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupRequestDto;
 import io.mosip.pms.partner.request.dto.LinkPolicyGroupResponseDto;
@@ -88,11 +91,13 @@ public interface PartnerManagerService {
 	public String approveRejectPartnerPolicyMapping(String mappingkey, StatusRequestDto statusRequest);
 
 	/**
-	 * Fetch bio-extractor request rows submitted for a partner policy request.
-	 *
-	 * @param requestId business request id (req_id)
-	 * @return bio-extractor request rows
+	 * Submit bio-extractor request rows for a partner policy request.
+	 * `@param` requestId business request id (req_id)
+	 * `@param` request bio-extractor payload
+	 * `@return` submission result identifier/message
 	 */
+	String submitBioExtractorsRequest(String requestId, BioExtractorsRequestDto request);
+
 	BioExtractorsResponseWrapperV2 getPartnerPolicyRequestBioExtractors(String requestId);
 
 	/**
@@ -102,7 +107,8 @@ public interface PartnerManagerService {
 	 * @return credential type request row
 	 */
 	CredentialTypesResponseWrapperV2 getPartnerPolicyRequestCredentialTypes(String requestId);
-	
+	String submitCredentialTypesRequest(String requestId, CredentialTypeRequestDto request);
+
 	/**
 	 * 
 	 * @param partnerId
@@ -121,7 +127,11 @@ public interface PartnerManagerService {
 
 	public ResponseWrapperV2<PartnerDetailsV3Dto> getPartnerDetails(String partnerId);
 
+	public ResponseWrapperV2<AdminPartnerDetailsDto> getPartnerDetailsV2(String partnerId);
+
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> getAdminPartners(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto);
+
+	public ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryV2Dto>> getAdminPartnersV2(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerFilterDto partnerFilterDto);
 
 	public ResponseWrapperV2<PageResponseV2Dto<PartnerPolicyRequestSummaryDto>> getAllPartnerPolicyRequests(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, PartnerPolicyRequestFilterDto filterDto);
 
@@ -142,5 +152,8 @@ public interface PartnerManagerService {
 	ResponseWrapperV2<PageResponseV2Dto<BioextractorConfigurationDetailDto>> getBioextractorConfigurations(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, BioextractorConfigurationFilterDto filterDto);
 
 	ResponseWrapperV2<BioextractorConfigurationDetailDto> getBioextractorConfigurationById(String bioExtractorConfigurationId);
+	
+	ResponseWrapperV2<BioextractorConfigurationResponseDto> deleteBioextractorConfiguration(
+			String bioExtractorConfigurationId, BioextractorConfigurationDeleteRequestDto request);
 
 }

@@ -12,5 +12,9 @@ public class BioextractorConfigurationFilterDto {
 	private String bioextractorProviderVersion;
 
 	private String bioModality;
+
+	private String attributeName;
+
+	private String credentialDataFormat;
 }
 

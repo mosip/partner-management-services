@@ -17,6 +17,7 @@
 -- object: pms.misp_license | type: TABLE --
 -- DROP TABLE IF EXISTS pms.misp_license CASCADE;
 CREATE TABLE pms.misp_license(
+	misp_license_id character varying(36) NOT NULL,
 	misp_id character varying(36) NOT NULL,
 	license_key character varying(128) NOT NULL,
 	license_key_name character varying(128),
@@ -30,11 +31,14 @@ CREATE TABLE pms.misp_license(
 	upd_dtimes timestamp,
 	is_deleted boolean DEFAULT FALSE,
 	del_dtimes timestamp,
-	CONSTRAINT pk_mlic PRIMARY KEY (misp_id,license_key)
+	CONSTRAINT pk_mlic PRIMARY KEY (misp_license_id),
+	CONSTRAINT uk_mlic UNIQUE (misp_id,license_key)
 
 );
 -- ddl-end --
 COMMENT ON TABLE pms.misp_license IS 'MISP License: License key issued to MISP, using which an individual''s authentication request that is initiated from partners are authenticated.';
+-- ddl-end --
+COMMENT ON COLUMN pms.misp_license.misp_license_id IS 'MISP License ID: Unique surrogate identifier (primary key) for the license record.';
 -- ddl-end --
 COMMENT ON COLUMN pms.misp_license.misp_id IS 'MISP ID: MISP ID, refers to pmp.misp .id';
 -- ddl-end --
