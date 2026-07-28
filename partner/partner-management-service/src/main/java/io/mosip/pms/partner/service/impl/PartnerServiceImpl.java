@@ -526,7 +526,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param emailId
 	 */
 	private boolean validateEmail(String emailId) {
-		if (!emailId.matches(emailRegex)) {
+		if (emailId == null || !emailId.matches(emailRegex)) {
 			return false;
 		}
 		return true;
