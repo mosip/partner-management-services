@@ -13,6 +13,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -33,6 +35,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -59,6 +63,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -80,6 +86,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$ID:CreateBioExtractorConfiguration_With_InValid_ConfigName_reqsid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -100,6 +108,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "@%AutoConfig",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -126,6 +136,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "2",
       "sortFieldName": "$REMOVE$",
@@ -147,6 +159,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -168,6 +182,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_InValid_BioextractorProviderName_reqsid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -188,6 +204,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderName_Neg_reqsid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -214,6 +232,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_Valid_BioextractorProviderVersion_reqsid_bioextractorProviderVersion$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -235,6 +255,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_InValid_BioextractorProviderVersion_reqsid_bioextractorProviderVersion$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -255,6 +277,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_SpecialCharacter_BioextractorProviderVersion_reqsid_bioextractorProviderVersion$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -280,6 +304,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "@$Misp",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -306,6 +332,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -326,6 +354,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -351,6 +381,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$REMOVE$",
       "bioextractorProviderVersion": "$REMOVE$",
       "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -359,7 +391,7 @@ GetBioExtractorConfiguration:
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_REQUEST_ERROR_007"
+           "errorCode": "PMS_PRT_099"
         }
     ]
 }'
@@ -377,6 +409,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "id",
@@ -398,6 +432,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "id",
@@ -418,6 +454,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "invalid",
@@ -443,6 +481,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "id",
@@ -468,6 +508,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "@%#",
@@ -493,6 +535,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "1234",
@@ -518,6 +562,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "invalid",
@@ -543,6 +589,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "id",
@@ -568,6 +616,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -593,6 +643,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -619,6 +671,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "5",
       "sortFieldName": "$REMOVE$",
@@ -639,6 +693,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "5",
       "sortFieldName": "$REMOVE$",
@@ -664,6 +720,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "-1",
       "pageSize": "8",
       "sortFieldName": "$REMOVE$",
@@ -679,46 +737,56 @@ GetBioExtractorConfiguration:
   Pms_GetBioExtractorConfiguration_With_NonInteger_PageNo_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_30
-    description: Validate that the request to retrieve Bio Extractor Configurations fails with a bad request response when a non-integer value is provided for pageNo.
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when a non-integer value is provided for pageNo.
     role: partneradmin
     restMethod: get
-    checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
-    outputTemplate: pms/responseCode
+    outputTemplate: pms/error
     input: '{
       "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "abc",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "sortType": "$REMOVE$"
 }'
     output: '{
-      "responseCode": "400"
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_360"
+        }
+    ]
 }'
   Pms_GetBioExtractorConfiguration_With_Decimal_PageNo_Neg:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_31
-    description: Validate that the request to retrieve Bio Extractor Configurations fails with a bad request response when a decimal value is provided for pageNo.
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when a decimal value is provided for pageNo.
     role: partneradmin
     restMethod: get
-    checkOnlyStatusCodeInResponse: true
     inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
-    outputTemplate: pms/responseCode
+    outputTemplate: pms/error
     input: '{
       "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "1.5",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
       "sortType": "$REMOVE$"
 }'
     output: '{
-      "responseCode": "400"
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_360"
+        }
+    ]
 }'
   Pms_GetBioExtractorConfiguration_With_VeryLarge_PageNo:
     endPoint: /v1/partnermanager/bio-extractor-configurations
@@ -734,6 +802,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "1155",
       "pageSize": "8",
       "sortFieldName": "$REMOVE$",
@@ -755,6 +825,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "8",
       "sortFieldName": "$REMOVE$",
@@ -776,6 +848,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "500",
       "sortFieldName": "$REMOVE$",
@@ -796,6 +870,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "0",
       "pageSize": "-5",
       "sortFieldName": "$REMOVE$",
@@ -822,6 +898,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "abc",
       "sortFieldName": "$REMOVE$",
@@ -842,6 +920,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "$REMOVE$",
@@ -867,6 +947,8 @@ GetBioExtractorConfiguration:
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
       "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$REMOVE$",
       "pageNo": "$REMOVE$",
       "pageSize": "$REMOVE$",
       "sortFieldName": "id",
@@ -877,5 +959,105 @@ GetBioExtractorConfiguration:
         {
            "errorCode": "PMS_PS_ERROR_008"
          }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_AttributeName:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_39
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid attributeName is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "attributeName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_attributeName$",
+      "credentialDataFormat": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_AttributeName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_40
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when attributeName contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "attributeName": "@%#photo",
+      "credentialDataFormat": "$REMOVE$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_GetBioExtractorConfiguration_With_Valid_CredentialDataFormat:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_41
+    description: Validate that Bio Extractor Configurations are retrieved successfully when a valid credentialDataFormat is provided as the filter parameter.
+    role: partneradmin
+    restMethod: get
+    checkErrorsOnlyInResponse: true
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfigurationResult
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_credentialDataFormat$",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+}'
+  Pms_GetBioExtractorConfiguration_With_SpecialCharacter_CredentialDataFormat_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_GetBioExtractorConfiguration_42
+    description: Validate that the request to retrieve Bio Extractor Configurations fails when credentialDataFormat contains invalid special characters.
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfiguration/GetBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "bioModality": "$REMOVE$",
+      "bioextractorProviderName": "$REMOVE$",
+      "bioextractorProviderVersion": "$REMOVE$",
+      "configName": "$REMOVE$",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "@%#rawData",
+      "pageNo": "$REMOVE$",
+      "pageSize": "$REMOVE$",
+      "sortFieldName": "$REMOVE$",
+      "sortType": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
     ]
 }'

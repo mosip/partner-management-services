@@ -146,26 +146,7 @@ partnerPolicyMapping:
         }
        ]
     }'
-    
-   Pms_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
-      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
-      description: Validate that partner API key requests can be submitted and rejected successfully for all valid entries
-      role: partnerauth
-      checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
-      restMethod: post 
-      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
-      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
-      input: '{
-        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
-        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
-        "useCaseDescription": "Need to submit the payment",
-		"requesttime": "$TIMESTAMP$"
-    }'
-      output: '{
-    }'
-    
+
    Pms_SubmitPartnerApiKeyRequest_Approval_All_for_Deactivated_policy:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
@@ -293,6 +274,140 @@ partnerPolicyMapping:
         "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
         "policyName": "$ID:DefinePolicy_All_Valid_For_InProgressMapping_Policy_pms_sid_name$",
         "useCaseDescription": "Need to submit for Pending",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_SubmitPartnerApiKeyRequest_Rejection_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
+      description: Validate that partner API key requests can be submitted and rejected successfully for all valid entries
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefineDataSharePolicy_All_Valid_Smoke_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+
+   Pms_Credential_PartnerPolicyMapping_ForRejection_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_01
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_06
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for bio extractors negative validation tests
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_partnerPolicyMapping_For_AuthPartner_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_02
+      description: Validate that the same auth partner can be mapped to a second policy successfully
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_For_AuthPartner_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_partnerPolicyMapping_For_Policy_WithOut_FullName_Email_Gender_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_03
+      description: Validate that the auth partner can be mapped to a policy without FullName, Email and Gender claims
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_WithOut_FullName_Email_Gender_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_partnerPolicyMapping_For_Policy_WithOut_AllowedAuthTypes_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_04
+      description: Validate that the auth partner can be mapped to a policy without allowedAuthTypes configured
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_WithOut_AllowedAuthTypes_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_partnerPolicyMapping_For_Policy_WithOut_AllowedKycAttributes_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_05
+      description: Validate that the auth partner can be mapped to a policy without allowedKycAttributes configured
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_WithOut_AllowedKycAttributes_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'
       output: '{

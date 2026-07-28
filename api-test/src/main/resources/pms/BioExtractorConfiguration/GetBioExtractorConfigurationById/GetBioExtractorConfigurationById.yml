@@ -14,7 +14,9 @@ GetBioExtractorConfigurationById:
     "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
     "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
     "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
-    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$"
+    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+    "attributeName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_attributeName$",
+    "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_credentialDataFormat$"
 }'
 
   Pms_GetBioExtractorConfigurationById_With_Invalid_Token_Neg:
@@ -124,7 +126,9 @@ GetBioExtractorConfigurationById:
     "bioModality": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioModality$",
     "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderName$",
     "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_bioextractorProviderVersion$",
-    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$"
+    "configName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_configName$",
+    "attributeName": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_attributeName$",
+    "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_All_Valid_Smoke_reqsid_sid_credentialDataFormat$"
 }'
 
   Pms_GetBioExtractorConfigurationById_Without_PartnerAdmin_Neg:
@@ -146,10 +150,10 @@ GetBioExtractorConfigurationById:
     ]
 }'
 
-  Pms_GetBioExtractorConfigurationById_BioExtractorConfigurationId_has_AllowedSpecialCharactes_Neg:
+  Pms_GetBioExtractorConfigurationById_BioExtractorConfigurationId_has_AllowedSpecialCharactes_Valid:
     endPoint: /v1/partnermanager/bio-extractor-configurations/{bioExtractorConfigurationId}
     uniqueIdentifier: TC_PMS_GetBioExtractorConfigurationById_09
-    description: Validate that the request to retrieve Bio Extractor Configurations fails when an long value is provided as Bio Extractor ConfigurationId
+    description: Validate that the Bio extractor configuration is retrieved for the configuration created with allowed special characters
     role: partneradmin
     restMethod: get
     inputTemplate: pms/BioExtractorConfiguration/GetBioExtractorConfigurationById/GetBioExtractorConfigurationById
@@ -161,5 +165,7 @@ GetBioExtractorConfigurationById:
       "bioModality": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioModality$",
       "bioextractorProviderName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioextractorProviderName$",
       "bioextractorProviderVersion": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_bioextractorProviderVersion$",
-      "configName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_configName$"
+      "configName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_configName$",
+      "attributeName": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_attributeName$",
+      "credentialDataFormat": "$ID:CreateBioExtractorConfiguration_With_AllowedSpecialCharacters_reqsid_sid_credentialDataFormat$"
 }'

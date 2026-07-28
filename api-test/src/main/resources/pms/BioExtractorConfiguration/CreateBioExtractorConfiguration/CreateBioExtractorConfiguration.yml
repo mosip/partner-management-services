@@ -14,7 +14,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -34,7 +36,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config1",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -45,7 +49,7 @@ CreateBioExtractorConfiguration:
 }'
   Pms_CreateBioExtractorConfiguration_With_Valid_Data:
     endPoint: /v1/partnermanager/bio-extractor-configurations
-    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_03 
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_03
     description: Validate that a Bio Extractor Configuration is created successfully with valid input data.
     role: partneradmin
     restMethod: post
@@ -58,7 +62,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Iris_BioExtractor_Config",
       "bioextractorProviderName": "MosipProviderAuto1",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "iris"
+      "bioModality": "iris",
+      "attributeName": "iris",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -78,7 +84,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config2",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -102,7 +110,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$AutoTest_Face_Config",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -122,7 +132,9 @@ CreateBioExtractorConfiguration:
       "configName": "_$RUNCONTEXT$_InvalidAutoTest_Face_Config",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -142,7 +154,9 @@ CreateBioExtractorConfiguration:
       "configName": "",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -166,7 +180,9 @@ CreateBioExtractorConfiguration:
       "configName": "@%AutoConfig",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -190,7 +206,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config3",
       "bioextractorProviderName": "MosipProviderAuto2",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -210,7 +228,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config4",
       "bioextractorProviderName": "",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -234,7 +254,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config5",
       "bioextractorProviderName": "@%MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -258,7 +280,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config6",
       "bioextractorProviderName": "invalid",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -278,7 +302,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config7",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "version1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -286,7 +312,7 @@ CreateBioExtractorConfiguration:
   Pms_CreateBioExtractorConfiguration_With_InValid_BioextractorProviderVersion_reqsid:
     endPoint: /v1/partnermanager/bio-extractor-configurations
     uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_14
-    description: Validate that a Bio Extractor Configuration is created successfully even when bioextractorProviderVersion contains invalid. 
+    description: Validate that a Bio Extractor Configuration is created successfully even when bioextractorProviderVersion contains invalid.
     role: partneradmin
     restMethod: post
     inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
@@ -298,7 +324,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config8",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "invalid",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -318,7 +346,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config9",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -342,7 +372,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config10",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "@%#1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -366,7 +398,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config11",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "test",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -386,7 +420,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "finger"
+      "bioModality": "finger",
+      "attributeName": "fingerprint",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
@@ -406,7 +442,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config01",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "invalid"
+      "bioModality": "invalid",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -430,7 +468,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config02",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": ""
+      "bioModality": "",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -454,12 +494,14 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config03",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "@#%"
+      "bioModality": "@#%",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
         {
-           "errorCode": "PMS_REQUEST_ERROR_007"
+           "errorCode": "PMS_PRT_099"
         }
     ]
 }'
@@ -479,7 +521,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config04",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "finger"
+      "bioModality": "finger",
+      "attributeName": "fingerprint",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "responseCode": "400"
@@ -499,7 +543,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config05",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "finger"
+      "bioModality": "finger",
+      "attributeName": "fingerprint",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -523,7 +569,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Finger_BioExtractor_Config06",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "finger"
+      "bioModality": "finger",
+      "attributeName": "fingerprint",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -547,7 +595,9 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$Face_BioExtractor_Config",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "errors": [
@@ -571,8 +621,384 @@ CreateBioExtractorConfiguration:
       "configName": "$RUNCONTEXT$@#&-?!=_Auto",
       "bioextractorProviderName": "MosipProviderAuto",
       "bioextractorProviderVersion": "1.0",
-      "bioModality": "face"
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
 }'
     output: '{
       "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_For_Delete_Smoke_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_31
+    description: Validate that a Bio Extractor Configuration is created successfully to be used for delete tests.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Delete_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_For_AlreadyDeleted_sid:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_32
+    description: Validate that a Bio Extractor Configuration is created successfully to be deleted twice for the already-deleted negative test.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$AlreadyDeleted_BioExtractor_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Valid_TemplateData_IndividualBiometrics_Smoke:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_33
+    description: Validate that a Bio Extractor Configuration is created successfully when credentialDataFormat is templateData and attributeName is individualbiometrics.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$TemplateData_IndividualBiometrics_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "individualbiometrics",
+      "credentialDataFormat": "templateData"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Valid_TemplateData_IntroducerBiometrics:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_34
+    description: Validate that a Bio Extractor Configuration is created successfully when credentialDataFormat is templateData and attributeName is introducerbiometrics.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfigurationResult
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$TemplateData_IntroducerBiometrics_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "iris",
+      "attributeName": "introducerbiometrics",
+      "credentialDataFormat": "templateData"
+}'
+    output: '{
+      "status": "SUCCESS"
+}'
+  Pms_CreateBioExtractorConfiguration_With_Missing_AttributeName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_35
+    description: Validate that Bio Extractor Configuration creation fails when attributeName is missing from the request.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Missing_AttributeName_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "$REMOVE$",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Empty_AttributeName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_36
+    description: Validate that Bio Extractor Configuration creation fails when attributeName is empty.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Empty_AttributeName_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_AttributeName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_37
+    description: Validate that Bio Extractor Configuration creation fails when attributeName contains invalid special characters.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$SpecialChar_AttributeName_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "@%#photo",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_LongValue_AttributeName_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_38
+    description: Validate that Bio Extractor Configuration creation fails when attributeName exceeds the maximum allowed length.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$LongValue_AttributeName_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Missing_CredentialDataFormat_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_39
+    description: Validate that Bio Extractor Configuration creation fails when credentialDataFormat is missing from the request.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Missing_CredentialDataFormat_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "$REMOVE$"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Empty_CredentialDataFormat_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_40
+    description: Validate that Bio Extractor Configuration creation fails when credentialDataFormat is empty.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Empty_CredentialDataFormat_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": ""
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_SpecialCharacter_CredentialDataFormat_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_41
+    description: Validate that Bio Extractor Configuration creation fails when credentialDataFormat contains invalid special characters.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$SpecialChar_CredentialDataFormat_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "@%#rawData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_LongValue_CredentialDataFormat_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_42
+    description: Validate that Bio Extractor Configuration creation fails when credentialDataFormat exceeds the maximum allowed length.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$LongValue_CredentialDataFormat_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_COR_001"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Invalid_CredentialDataFormat_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_43
+    description: Validate that Bio Extractor Configuration creation fails when credentialDataFormat is not one of the allowed values (rawData, templateData).
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Invalid_CredentialDataFormat_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "photo",
+      "credentialDataFormat": "invalid"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Mismatched_AttributeName_For_RawData_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_44
+    description: Validate that Bio Extractor Configuration creation fails when attributeName does not match the expected value for the given bioModality under rawData format.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Mismatched_AttributeName_RawData_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "iris",
+      "credentialDataFormat": "rawData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+    ]
+}'
+  Pms_CreateBioExtractorConfiguration_With_Invalid_AttributeName_For_TemplateData_Neg:
+    endPoint: /v1/partnermanager/bio-extractor-configurations
+    uniqueIdentifier: TC_PMS_CreateBioExtractorConfiguration_45
+    description: Validate that Bio Extractor Configuration creation fails when attributeName is not an allowed value for templateData credentialDataFormat.
+    role: partneradmin
+    restMethod: post
+    inputTemplate: pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.bioextractor.configurations.post",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "configName": "$RUNCONTEXT$Invalid_AttributeName_TemplateData_Config",
+      "bioextractorProviderName": "MosipProviderAuto",
+      "bioextractorProviderVersion": "1.0",
+      "bioModality": "face",
+      "attributeName": "invalid",
+      "credentialDataFormat": "templateData"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_PRT_099"
+        }
+    ]
 }'

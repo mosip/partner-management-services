@@ -1,34 +1,34 @@
 {
-  "id": "string",
+  "id": "mosip.pms.partners.bioextractors.request.post",
   "metadata": {},
-  "partnerId":"{{partnerId}}",
-  "policyId":"{{policyId}}",
+  "requestId":"{{requestId}}",
   "request": {
-    "partnerPolicyRequestId": "{{partnerPolicyRequestId}}",
     "extractors": [
       {
         "attributeName": "photo",
         "biometric": "face",
         "biometricSubTypes": "mock",
         "extractorProvider": "mock",
-        "extractorProviderVersion": "1.1"
+        "extractorProviderVersion": "1.1",
+        "credentialDataFormat": "rawData"
       },
       {
         "attributeName": "iris",
         "biometric": "iris",
         "biometricSubTypes": "left",
         "extractorProvider": "mock",
-        "extractorProviderVersion": "1.1"
+        "extractorProviderVersion": "1.1",
+        "credentialDataFormat": "rawData"
       },
       {
         "attributeName": "fingerprint",
         "biometric": "finger",
-        "biometricSubTypes": "right",
         "extractorProvider": "mock",
-        "extractorProviderVersion": "1.1"
+        "extractorProviderVersion": "1.1",
+        "credentialDataFormat": "rawData"
       }
     ]
   },
-  "requesttime": "{{requesttime}}",
-  "version": "string"
+  "requestTime": "{{requestTime}}",
+  "version": "1.0"
 }

@@ -1,0 +1,25 @@
+{
+  "id": "mosip.pms.partners.bioextractors.request.post",
+  "metadata": {},
+  "requestId":"{{requestId}}",
+  "request": {
+    "extractors": [
+      {{#each extractors}}
+      {
+        "attributeName": "{{attributeName}}",
+        "biometric": "{{biometric}}",
+        {{#if biometricSubTypes}}
+        "biometricSubTypes": "{{biometricSubTypes}}",
+        {{/if}}
+        "extractorProvider": "{{extractorProvider}}",
+        "extractorProviderVersion": "{{extractorProviderVersion}}"
+        {{#if credentialDataFormat}}
+        ,"credentialDataFormat": "{{credentialDataFormat}}"
+        {{/if}}
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  },
+  "requestTime": "{{requestTime}}",
+  "version": "1.0"
+}

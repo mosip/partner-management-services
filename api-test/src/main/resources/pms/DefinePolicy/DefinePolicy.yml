@@ -832,3 +832,150 @@ definePolicy:
     "desc": "$RUNCONTEXT$desc in progress mapping mosip policy 19234",
     "is_Active": false
 }'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_PolicyMappingReject_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_32
+      description: Validate that a policy is successfully created for rejecting credential partner policy mapping
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner policy mapping reject",
+	"name": "$RUNCONTEXT$credential partner policy mapping reject",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner policy mapping reject",
+    "desc": "$RUNCONTEXT$credential partner policy mapping reject",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_37
+      description: Validate that a policy is successfully created for bio extractors negative validation tests
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner bio extractors neg",
+	"name": "$RUNCONTEXT$credential partner bio extractors neg",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner bio extractors neg",
+    "desc": "$RUNCONTEXT$credential partner bio extractors neg",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_For_AuthPartner_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_33
+      description: Validate that a policy is successfully created for mapping the same auth partner to a second approved policy
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+      "desc": "$RUNCONTEXT$desc mosip auth partner second policy 19234",
+      "name": "$RUNCONTEXT$mosip auth partner second policy 19234",
+      "attributeName": "fullName",
+      "authTokenType": "policy",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip auth partner second policy 19234",
+    "desc": "$RUNCONTEXT$desc mosip auth partner second policy 19234",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_WithOut_FullName_Email_Gender_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_34
+      description: Validate that a policy is successfully created without fullName, email and gender in allowedKycAttributes
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicyWithoutFullNameEmailGender
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+      "desc": "$RUNCONTEXT$desc mosip policy without fullname email gender",
+      "name": "$RUNCONTEXT$mosip policy without fullname email gender",
+      "authTokenType": "policy",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy without fullname email gender",
+    "desc": "$RUNCONTEXT$desc mosip policy without fullname email gender",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_WithOut_AllowedAuthTypes_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_35
+      description: Validate that a policy is successfully created with no allowedAuthTypes configured
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicyWithoutAllowedAuthTypes
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+      "desc": "$RUNCONTEXT$desc mosip policy without allowed auth types",
+      "name": "$RUNCONTEXT$mosip policy without allowed auth types",
+      "authTokenType": "policy",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy without allowed auth types",
+    "desc": "$RUNCONTEXT$desc mosip policy without allowed auth types",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_WithOut_AllowedKycAttributes_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_36
+      description: Validate that a policy is successfully created with no allowedKycAttributes configured
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicyWithoutAllowedKycAttributes
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+      "desc": "$RUNCONTEXT$desc mosip policy without allowed kyc attributes",
+      "name": "$RUNCONTEXT$mosip policy without allowed kyc attributes",
+      "authTokenType": "policy",
+      "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+      "policyType": "Auth",
+      "version": "1.0",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip policy without allowed kyc attributes",
+    "desc": "$RUNCONTEXT$desc mosip policy without allowed kyc attributes",
+    "is_Active": false
+}'

@@ -30,13 +30,11 @@ import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
 import io.mosip.testrig.apirig.utils.SecurityXSSException;
-import io.restassured.response.Response;
 
 public class DBValidator extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(DBValidator.class);
 	protected String testCaseName = "";
 	public static List<String> templateFields = new ArrayList<>();
-	public Response response = null;
 
 	@BeforeClass
 	public static void setLogLevel() {
@@ -80,12 +78,11 @@ public class DBValidator extends PMSUtil implements ITest {
 
 		JSONObject jsonObject = new JSONObject(replaceId);
 		logger.info(jsonObject.keySet());
-		Set<String> set = new TreeSet<>();
-		set.addAll(jsonObject.keySet());
-		String filterId = "";
-
-		if (set.stream().findFirst().isPresent())
-			filterId = set.stream().findFirst().get();
+		if (jsonObject.length() != 1) {
+			throw new AdminTestException("DBValidator input must contain exactly one filter field");
+		}
+		Set<String> set = new TreeSet<>(jsonObject.keySet());
+		String filterId = set.iterator().next();
 
 		logger.info(filterId);
 		String query = testCaseDTO.getEndPoint() + " " + filterId + " = " + "'" + jsonObject.getString(filterId) + "'";
