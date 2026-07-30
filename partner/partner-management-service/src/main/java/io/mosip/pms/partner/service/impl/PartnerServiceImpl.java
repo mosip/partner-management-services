@@ -526,7 +526,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 * @param emailId
 	 */
 	private boolean validateEmail(String emailId) {
-		if (!emailId.matches(emailRegex)) {
+		if (emailId == null || !emailId.matches(emailRegex)) {
 			return false;
 		}
 		return true;
@@ -596,7 +596,7 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 		partner.setAddress(keyManagerHelper.encryptData(partnerUpdateRequest.getAddress()));
 		partner.setContactNo(keyManagerHelper.encryptData(partnerUpdateRequest.getContactNumber()));
-		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo()== null ? "[]" : partnerUpdateRequest.getAdditionalInfo().toString());
+		partner.setAdditionalInfo(partnerUpdateRequest.getAdditionalInfo() == null ? null : partnerUpdateRequest.getAdditionalInfo().toString());
 		partner.setLogoUrl(partnerUpdateRequest.getLogoUrl());
 		partner.setUpdBy(getLoggedInUserId());
 		partner.setUpdDtimes(Timestamp.valueOf(LocalDateTime.now()));

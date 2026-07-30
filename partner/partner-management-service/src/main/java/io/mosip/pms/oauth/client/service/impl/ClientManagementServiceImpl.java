@@ -801,7 +801,10 @@ public class ClientManagementServiceImpl implements ClientManagementService {
 	}
 	
     private String getClientNameLanguageMapAsJsonString(Map<String, String> clientNameMap, String clientName) {
-        clientNameMap.put(NONE_LANG_KEY, clientName);
+		if (clientNameMap == null) {
+			clientNameMap = new HashMap<>();
+		}
+		clientNameMap.put(NONE_LANG_KEY, clientName);
         JSONObject clientNameObject = new JSONObject(clientNameMap);
         return clientNameObject.toString();
     }
