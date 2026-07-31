@@ -1646,7 +1646,7 @@
         <parameter name="ymlFile"
                    value="pms/GetListOfFtmChip/GetListOfFtmChipNegativeScenarios.yml"/>
         <parameter name="pathParams"
-                   value="sortFieldName,sortType,pageSize,pageNo,pageSize"/>
+                   value="sortFieldName,sortType,pageSize,pageNo"/>
         <classes>
             <class
                     name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
