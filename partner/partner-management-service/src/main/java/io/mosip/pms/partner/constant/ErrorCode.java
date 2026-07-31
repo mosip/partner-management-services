@@ -115,7 +115,7 @@ public enum ErrorCode {
 	DEACTIVATE_OIDC_CLIENT_ERROR("PMS_POLICY_ERROR_023", "Error while deactivating OIDC client."),
 	INVALID_STATUS_CODE("PMS_POLICY_ERROR_024", "Request status should be INACTIVE"),
 	PARTNER_TYPE_MANDATORY_FOR_PARTNER_ADMIN("PMS_POLICY_ERROR_030",
-			"For Partner Admin, partnerType is mandatory. Allowed values: MISP_Partner, ABIS_Partner, Manual_Adjudication."),
+			"For Partner Admin, partnerType is mandatory. Allowed values: MISP_Partner, ABIS_Partner, Manual_Adjudication, Online_Verification_Partner."),
 	PARTNER_TYPE_MISMATCH_FOR_USER("PMS_POLICY_ERROR_031",
 			"Invalid partnerType for logged in user"),
 	INVALID_STATUS_VALUE("PMS_PS_ERROR_009",
