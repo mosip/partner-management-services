@@ -1477,7 +1477,7 @@
 	</test>
 	<test name="PartnerApiKeyRequestFilter">
 		<parameter name="ymlFile"
-		           value="pms/FilterAPIs/PartnerApiKeyRequestFilter/PartnerApiKeyRequestFilter.yml"/>
+			value="pms/FilterAPIs/PartnerApiKeyRequestFilter/PartnerApiKeyRequestFilter.yml" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
@@ -1579,7 +1579,7 @@
 		<parameter name="pathParams" value="ftmId" />
 		<classes>
 			<class
-					name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>
+				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
 		</classes>
 	</test>
 	<test name="ApproveFTMChipDetail">
@@ -2105,10 +2105,10 @@
 	</test>
 	<test name="GetOriginalFtmCertifacteAfterDeactiveFtm">
 		<parameter name="ymlFile"
-		           value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml"/>
+			value="pms/GetOriginalFtmCertifacteAfterDeactiveFtm/GetOriginalFtmCertifacteAfterDeactiveFtm.yml" />
 		<classes>
 			<class
-					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
 	<test name="DeactivatePolicy">
@@ -2202,7 +2202,7 @@
 			value="pms/GetRootIntermediateExpiringCertificate/GetRootIntermediateExpiringCertificate.yml" />
 		<classes>
 			<class
-					name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam"/>
+				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
 	<test
