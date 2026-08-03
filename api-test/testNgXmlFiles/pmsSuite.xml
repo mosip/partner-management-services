@@ -604,7 +604,7 @@
 	<test name="CreateBioExtractorConfiguration">
 		<parameter name="ymlFile"
 			value="pms/BioExtractorConfiguration/CreateBioExtractorConfiguration/CreateBioExtractorConfiguration.yml" />
-		<parameter name="reqKeyName" value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality" />
+		<parameter name="reqKeyName" value="configName,bioextractorProviderName,bioextractorProviderVersion,bioModality,attributeName,credentialDataFormat" />
 		<parameter name="idKeyName" value="id" />
 		<classes>
 			<class
@@ -627,11 +627,19 @@
 					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
-
+	<test name="DeleteBioExtractorConfiguration">
+		<parameter name="ymlFile"
+		           value="pms/BioExtractorConfiguration/DeleteBioExtractorConfiguration/DeleteBioExtractorConfiguration.yml"/>
+		<parameter name="pathParams" value="bioExtractorConfigurationId"/>
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>
+		</classes>
+	</test>
 	<test name="AddBioExtractors">
 		<parameter name="ymlFile"
 			value="pms/credentialPartner/AddBioExtractors/AddBioExtractors.yml" />
-		<parameter name="pathParams" value="partnerId,policyId" />
+		<parameter name="pathParams" value="requestId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
@@ -640,10 +648,28 @@
 	<test name="MapPartnerAndPolicytoCredentialType">
 		<parameter name="ymlFile"
 		           value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml" />
-		<parameter name="pathParams" value="partnerId,policyId"/>
+		<parameter name="pathParams" value="requestId"/>
 		<classes>
 			<class
 					name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+		</classes>
+	</test>
+	<test name="GetBioExtractorRequests">
+		<parameter name="ymlFile"
+		           value="pms/GetBioExtractorRequests/GetBioExtractorRequests.yml"/>
+		<parameter name="pathParams" value="requestId"/>
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+		</classes>
+	</test>
+	<test name="GetCredentialTypesRequest">
+		<parameter name="ymlFile"
+		           value="pms/GetCredentialTypesRequest/GetCredentialTypesRequest.yml"/>
+		<parameter name="pathParams" value="requestId"/>
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
 		</classes>
 	</test>
 
@@ -669,6 +695,15 @@
 	<test name="GetPolicyforMappedPartnerAndCredentialtype">
 		<parameter name="ymlFile"
 		           value="pms/GetPolicyforMappedPartnerAndCredentialtype/GetPolicyforMappedPartnerAndCredentialtype.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+		</classes>
+	</test>
+	<test name="GetCredentialTypesByPartnerAndPolicy">
+		<parameter name="ymlFile"
+		           value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicy.yml"/>
+		<parameter name="pathParams" value="partnerId,policyId"/>
 		<classes>
 			<class
 					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -842,6 +877,25 @@
 		<parameter name="pathParams" value="partnerId" />
 		<classes>
 			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+		</classes>
+	</test>
+
+	<test name="GetListOfPartnersV2">
+		<parameter name="ymlFile"
+		           value="pms/GetListOfPartnersV2/GetListOfPartnersV2.yml"/>
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam"/>
+		</classes>
+	</test>
+
+	<test name="GetDetailsOfPartnerV2">
+		<parameter name="ymlFile"
+		           value="pms/GetDetailsOfPartnerV2/GetDetailsOfPartnerV2.yml"/>
+		<parameter name="pathParams" value="partnerId"/>
+		<classes>
+			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>
 	</test>
@@ -901,7 +955,15 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
-	
+
+	<test name="AuditLogCreateOIDCClient">
+		<parameter name="ymlFile" value="pms/AuditLog/AuditLogOidcClient.yml"/>
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.AuditValidator"/>
+		</classes>
+	</test>
+
 	<test name="UpdateOIDCAuthClient">
 		<parameter name="ymlFile"
 			value="pms/OIDCClientEnhancement/UpdateOIDCClient/UpdateOIDCClient.yml" />
@@ -1671,7 +1733,7 @@
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicense.yml" />
 		<parameter name="idKeyName"
-			value="id,partnerId,policyId,licenseKeyName,licenseKey" />
+			value="id,partnerId,policyId,licenseKeyName,licenseKey,mispLicenseId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1681,7 +1743,7 @@
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml" />
 		<parameter name="idKeyName"
-			value="id,partnerId,policyId,licenseKeyName,licenseKey" />
+			value="id,partnerId,policyId,licenseKeyName,licenseKey,mispLicenseId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
@@ -1690,7 +1752,7 @@
 	<test name="DeactivateMISPLicense">
 		<parameter name="ymlFile"
 			value="pms/DeactivateMISPLicense/DeactivateMISPLicense.yml" />
-		<parameter name="pathParams" value="partnerId" />
+		<parameter name="pathParams" value="mispLicenseId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
@@ -1721,6 +1783,9 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
+	<!-- GET /misp-licenses/{partnerId} has been replaced by
+    GET /misp-licenses/{mispLicenseId} per #1893 (MISP License UUID Refactor),
+    see test "GetMISPPartnerLicenseById" below.
 	<test name="GetMISPPartnerLicenseByPartnerId">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerId.yml" />
@@ -1734,6 +1799,15 @@
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/GetMISPPartnerLicenseByPartnerId/GetMISPPartnerLicenseByPartnerIdNegTC.yml" />
 		<parameter name="pathParams" value="partnerId" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+		</classes>
+	</test> -->
+	<test name="GetMISPPartnerLicenseById">
+		<parameter name="ymlFile"
+		           value="pms/MispLicenseV3/GetMISPPartnerLicenseById/GetMISPPartnerLicenseById.yml"/>
+		<parameter name="pathParams" value="mispLicenseId"/>
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
@@ -1912,6 +1986,9 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
 		</classes>
 	</test>
+	<!-- PUT /misp-licenses/{partnerId} was removed entirely per #1893 (MISP
+    License UUID Refactor) - regeneration is now done via a repeat POST
+    /misp-licenses call, see "GenerateMISPPartnerLicense" above.
 	<test name="RegenerateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/RegenerateMISPPartnerLicense/RegenerateMISPPartnerLicense.yml" />
@@ -1931,11 +2008,11 @@
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
 		</classes>
-	</test>
+	</test>-->
 	<test name="DeactivateMISPPartnerLicense">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense.yml" />
-		<parameter name="pathParams" value="partnerId" />
+		<parameter name="pathParams" value="mispLicenseId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
@@ -1944,7 +2021,7 @@
 	<test name="DeactivateMISPPartnerLicenseNegTC">
 		<parameter name="ymlFile"
 			value="pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicenseNegTC.yml" />
-		<parameter name="pathParams" value="partnerId" />
+		<parameter name="pathParams" value="mispLicenseId" />
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
