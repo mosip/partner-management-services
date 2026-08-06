@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-openid-bridge-api</artifactId>
-			<version>1.2.0.1</version>
+			<version>1.2.0.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -89,7 +89,7 @@
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-authcodeflowproxy-api</artifactId>
-			<version>1.2.0.1-B1</version>
+			<version>1.2.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nimbusds</groupId>
