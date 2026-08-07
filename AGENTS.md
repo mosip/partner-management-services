@@ -37,27 +37,27 @@ Other top-level directories:
 
 Build all PMS modules (skip tests, javadoc, and GPG signing for a fast local build):
 
-```
+```shell
 cd partner
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
 ```
 
 Run unit tests for a module (from within that module's directory, e.g. `partner/partner-management-service`):
 
-```
+```shell
 mvn test
 ```
 
 Build a Docker image for a given service:
 
-```
+```shell
 cd <service-folder>   # e.g. partner/partner-management-service
 docker build -f Dockerfile .
 ```
 
 Build and run the functional API test rig (see `api-test/CLAUDE.md` for full details, test dependency graph, and Keycloak role table):
 
-```
+```shell
 cd api-test
 mvn clean install -Dgpg.skip=true -Dmaven.gitcommitid.skip=true
 java -Dmodules=partner -Denv.user=<envUser> -Denv.endpoint=<baseUrl> -Denv.testLevel=smokeAndRegression \
@@ -90,7 +90,7 @@ Local overrides live in each service's `src/main/resources/application-dev.prope
 
 - Follow the existing commit/PR conventions visible in the repository's git history (conventional-style prefixes such as `fix:`, `feat:` are common).
 - Keep changes scoped to one service/module where possible; PMS's two services are independently deployable and independently versioned.
-- Do not commit generated files (`_rendered/`, `Chart.lock`, build `target/` directories) or environment-specific `application-dev.properties` credentials.
+- Do not commit generated files (`_rendered/`, `Chart.lock`, build `target/` directories) or real credentials in any local override file (`application-dev.properties`, `bootstrap.properties`, or equivalents).
 - License: this project is licensed under MPL 2.0 (`LICENSE`); do not introduce dependencies incompatible with that license without flagging it.
 
 ## Repository-Specific Considerations
