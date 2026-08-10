@@ -1,27 +1,46 @@
-# AGENTS.md
+# AGENTS.md — MOSIP Partner Management Services (repo root)
 
-## Repository Overview
+> REST APIs to onboard and manage partners, policies, and policy groups within a MOSIP deployment. No bundled front-end — the reference UI lives in [partner-management-portal](https://github.com/mosip/partner-management-portal).
 
-This repository contains the source for MOSIP's **Partner Management (PMS)** module, which exposes REST APIs used to onboard and manage partners, policies, and policy groups within a MOSIP deployment. It has no bundled front-end; the reference UI lives in a separate repository, [partner-management-portal](https://github.com/mosip/partner-management-portal).
+---
 
-The module is made up of two independently deployable Spring Boot services:
+## Guide index
 
-1. **Partner management service** — `partner/partner-management-service`
-2. **Policy management service** — `partner/policy-management-service`
+| Area | Path | Guide |
+|------|------|-------|
+| **Java / Maven** (partner-management-service, policy-management-service, pms-common, policy-validator) | `partner/` | [`partner/AGENTS.md`](partner/AGENTS.md) |
+| Fresh DB install (DDL) | `db_scripts/` | [`db_scripts/AGENTS.md`](db_scripts/AGENTS.md) |
+| Version upgrade SQL | `db_upgrade_scripts/` | [`db_upgrade_scripts/AGENTS.md`](db_upgrade_scripts/AGENTS.md) |
+| Cluster install scripts | `deploy/` | [`deploy/AGENTS.md`](deploy/AGENTS.md) |
+| K8s Helm charts | `helm/` | [`helm/AGENTS.md`](helm/AGENTS.md) |
+| Performance/load tests (JMeter) | `performance-test/` | [`performance-test/AGENTS.md`](performance-test/AGENTS.md) |
+| Functional API tests | `api-test/` | own [`api-test/CLAUDE.md`](api-test/CLAUDE.md) — not duplicated here |
+| PMS data model (Excel/diagram, no code) | `design/` | none — reference assets only |
 
-Supporting Maven modules:
+**Java build:** `cd partner && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true` (JDK 21, Maven 3.9.6).
 
-- `partner/pms-common` — shared code used by both services
-- `partner/policy-validator` — policy schema/JSON validation logic
+---
 
-Other top-level directories:
+## Repository layout (repo root)
 
-- `api-test` — TestNG-based functional/API test rig for PMS (own build, own `CLAUDE.md` with detailed test-authoring guidance)
-- `db_scripts`, `db_upgrade_scripts` — SQL schema and upgrade scripts (`mosip_pms` database)
-- `deploy`, `helm` — Kubernetes deployment scripts and Helm charts
-- `websub` — websub hub/consolidator components used by PMS for pub-sub notifications
-- `performance-test` — performance/load test assets
-- `docs` — supplementary documentation (e.g. `docs/configuration.md`)
+```text
+partner-management-services/       # git repo root (this AGENTS.md)
+├── partner/                       # Maven parent → see partner/AGENTS.md
+│   ├── partner-management-service/
+│   ├── policy-management-service/
+│   ├── pms-common/
+│   └── policy-validator/
+├── db_scripts/                    # Greenfield DB create → db_scripts/AGENTS.md
+├── db_upgrade_scripts/            # Incremental upgrades → db_upgrade_scripts/AGENTS.md
+├── deploy/                        # Shell installers → deploy/AGENTS.md
+├── helm/                          # Kubernetes Helm charts → helm/AGENTS.md
+├── performance-test/              # JMeter load tests → performance-test/AGENTS.md
+├── api-test/                      # TestNG functional test rig → own CLAUDE.md
+├── design/                        # Data model diagrams/spreadsheet (no code)
+└── docs/                          # Supplementary docs (e.g. docs/configuration.md)
+```
+
+`websub` and `_rendered` may appear in a local checkout but are **not tracked** on this branch — do not treat them as part of this repo's build.
 
 ## Technology Stack
 
@@ -48,12 +67,7 @@ Run unit tests for a module (from within that module's directory, e.g. `partner/
 mvn test
 ```
 
-Build a Docker image for a given service:
-
-```shell
-cd <service-folder>   # e.g. partner/partner-management-service
-docker build -f Dockerfile .
-```
+Full per-module build/run/Docker details: [`partner/AGENTS.md`](partner/AGENTS.md).
 
 Build and run the functional API test rig (see `api-test/CLAUDE.md` for full details, test dependency graph, and Keycloak role table):
 
@@ -95,6 +109,10 @@ Local overrides live in each service's `src/main/resources/application-dev.prope
 
 ## Repository-Specific Considerations
 
-- The `websub` directory bundles hub/consolidator components with their own README — treat it as a related-but-distinct component when scoping changes.
 - `api-test/CLAUDE.md` already documents the functional test rig in depth (test YAML/Handlebars format, TestNG suite wiring, Keycloak roles, dependency graph). Prefer that file over re-deriving test-rig conventions here.
 - API documentation is published externally at https://mosip.github.io/documentation/; this repo does not generate OpenAPI docs as part of the default build.
+- `design/` holds the PMS data-model spreadsheet and ER diagram (`design/data_model/`) — reference material only, not part of any build.
+
+---
+
+*Last updated: 2026-08-10.*
