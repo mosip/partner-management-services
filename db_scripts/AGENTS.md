@@ -1,6 +1,6 @@
 # AGENTS.md — `db_scripts/`
 
-> Greenfield PostgreSQL install for the `mosip_pms` database (single schema, unlike some other MOSIP repos).
+> Greenfield PostgreSQL install for the `mosip_pms` database.
 > Parent guide: [repo root `AGENTS.md`](../AGENTS.md).
 > Related: [`db_upgrade_scripts/AGENTS.md`](../db_upgrade_scripts/AGENTS.md).
 
@@ -33,7 +33,7 @@ db_scripts/
     └── drop_role.sql          # destructive reset (used by deploy.sh)
 ```
 
-There is a single schema, `mosip_pms` — PMS does not split data across multiple databases the way some other MOSIP modules do.
+There is a single schema, `mosip_pms`.
 
 ---
 
