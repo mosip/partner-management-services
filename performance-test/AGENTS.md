@@ -29,12 +29,14 @@ The main script (`Pmsrevamp_Test_Script.jmx`) is organized into numbered setup/p
 1. Download and install [Apache JMeter](https://jmeter.apache.org/download_jmeter.cgi).
 2. Open the relevant `.jmx` script, validate it for a single user, then dry-run for ~10 minutes before a full load run.
 3. `auth-demo-service` (from [mosip-functional-tests](https://github.com/mosip/mosip-functional-tests)) must be installed and reachable — the scripts use it to generate auth tokens, e.g.:
+
    ```shell
    java -Dmosip.base.url=https://api-internal.<env>.mosip.net -Dserver.port=8082 \
      -Dauth-token-generator.rest.clientId=mosip-resident-client \
      -Dauth-token-generator.rest.secretKey=<secret> -Dauth-token-generator.rest.appId=resident \
      -jar authentication-demo-service-<version>.jar
    ```
+
 4. Workload sizing follows Little's Law: `Users = TPS * (SLA + think time + pacing)`. Use JMeter's Constant Throughput Timer (hits/min = TPS × 60) to control request rate.
 
 ---

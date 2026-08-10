@@ -74,8 +74,11 @@ Build and run the functional API test rig (see `api-test/CLAUDE.md` for full det
 ```shell
 cd api-test
 mvn clean install -Dgpg.skip=true -Dmaven.gitcommitid.skip=true
-java -Dmodules=partner -Denv.user=<envUser> -Denv.endpoint=<baseUrl> -Denv.testLevel=smokeAndRegression \
-  -jar target/apitest-pms-<version>-jar-with-dependencies.jar
+ENV_USER="your-env-user"
+BASE_URL="https://your-base-url"
+APITEST_VERSION="your-version"
+java -Dmodules=partner -Denv.user="$ENV_USER" -Denv.endpoint="$BASE_URL" -Denv.testLevel=smokeAndRegression \
+  -jar "target/apitest-pms-${APITEST_VERSION}-jar-with-dependencies.jar"
 ```
 
 ## Configuration

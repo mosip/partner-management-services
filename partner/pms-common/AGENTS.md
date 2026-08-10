@@ -25,7 +25,7 @@ util/
 validator/
 ```
 
-Entities here map to tables defined in [`db_scripts/mosip_pms/ddl/`](../../db_scripts/AGENTS.md) — keep entity fields and DDL columns in sync.
+Entities here map to tables defined in [`db_scripts/mosip_pms/ddl/`](../../db_scripts/mosip_pms/ddl/) (see [`db_scripts/AGENTS.md`](../../db_scripts/AGENTS.md) for the full guide) — keep entity fields and DDL columns in sync.
 
 ---
 
@@ -37,7 +37,7 @@ mvn test
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
 ```
 
-This module produces a plain jar consumed by both deployable services — after any change here, rebuild the full `partner` reactor (`cd partner && mvn install ...`) and re-test both `partner-management-service` and `policy-management-service`, since a service-only build can pick up a stale jar from the local `~/.m2` repository.
+This module produces a plain jar consumed by both deployable services — after any change here, rebuild the full `partner` reactor. From the repository root: `cd partner && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true`; from inside `pms-common`, run `cd .. && mvn install ...` instead. Then re-test both `partner-management-service` and `policy-management-service` — a service-only build can otherwise pick up a stale jar from the local `~/.m2` repository.
 
 ---
 
@@ -53,6 +53,7 @@ This module produces a plain jar consumed by both deployable services — after 
 
 1. Add a `Dockerfile` or make this module independently deployable — it's intentionally a library.
 2. Introduce a dependency from `pms-common` back onto `partner-management-service` or `policy-management-service` — dependencies flow one way, service → common.
+3. Add a dependency from `pms-common` on `policy-validator` — the two library modules are independent of each other; neither depends on the other.
 
 ---
 

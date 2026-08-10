@@ -46,7 +46,7 @@ Only `policy-management-service` consumes this module — `partner-management-se
 
 ### Do not
 
-1. Add a dependency on `pms-common` entities/repositories unless genuinely needed — this module is meant to be a narrow, schema-focused validator.
+1. Add a dependency on `pms-common` — the two library modules are independent of each other; this module is meant to be a narrow, schema-focused validator.
 2. Make this module independently deployable (`Dockerfile`, `@SpringBootApplication`) — it's a library consumed only by `policy-management-service`.
 
 ---

@@ -47,7 +47,7 @@ cd db_upgrade_scripts/mosip_pms
 ## 4. Adding a new version hop
 
 1. Add both `sql/{from}_to_{to}_upgrade.sql` and `sql/{from}_to_{to}_rollback.sql` — never ship one without the other.
-2. Mirror the same schema change in [`db_scripts/mosip_pms/ddl/`](../db_scripts/AGENTS.md) so a fresh install ends up at the same schema as an upgraded one.
+2. Mirror the same schema change in [`db_scripts/mosip_pms/ddl/`](../db_scripts/mosip_pms/ddl/) (see [`db_scripts/AGENTS.md`](../db_scripts/AGENTS.md) for the full guide) so a fresh install ends up at the same schema as an upgraded one.
 3. Update this file's version chain list above when a new released version is added.
 
 ---

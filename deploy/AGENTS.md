@@ -67,9 +67,11 @@ cd deploy/pms-apitestrig
 ```
 
 Review `values.yaml` first to confirm which modules are enabled. Run manually via Rancher UI or:
+
 ```bash
-kubectl --kubeconfig=<k8s-config-file> -n apitestrig create job --from=cronjob/<cronjob-name> <job-name>
+kubectl --kubeconfig=/path/to/k8s-config-file -n apitestrig create job --from=cronjob/cronjob-name job-name
 ```
+
 Functional test sources live in repo `api-test/` (see [`api-test/CLAUDE.md`](../api-test/CLAUDE.md)).
 
 ---
@@ -83,7 +85,7 @@ cd deploy/keycloak
 ./keycloak-init.sh
 ```
 
-Run this before or alongside `deploy/pms/install.sh` — PMS services expect the Keycloak client to already exist.
+Run this before `deploy/pms/install.sh` — PMS services expect the Keycloak client to already exist.
 
 ---
 
