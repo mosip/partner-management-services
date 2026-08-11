@@ -10,7 +10,7 @@
 
 Use this folder for **fresh** environments only (sandbox init, empty Postgres). Do **not** use `deploy.sh` to alter an existing database that must retain data — it drops the database and role first. For an existing deployment, use [`db_upgrade_scripts/`](../db_upgrade_scripts/AGENTS.md) instead.
 
-Used automatically as part of [MOSIP Sandbox](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment) DB initialization.
+Used automatically as part of [MOSIP Sandbox](https://docs.mosip.io/1.2.0/readme/technology/sandbox-details) DB initialization.
 
 ---
 
