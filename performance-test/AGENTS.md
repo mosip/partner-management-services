@@ -34,13 +34,16 @@ The main script (`Pmsrevamp_Test_Script.jmx`) is organized into numbered setup/p
    auth-token-generator.rest.secretKey=${mosip_resident_client_secret}
    ```
 
+   Provision that file outside the repository (e.g. from your team's secret manager), owned by the service user with mode `600`, and never commit it. Point `AUTH_DEMO_CONFIG` at its actual path:
+
    ```shell
    MOSIP_ENV="your-env"
    AUTH_DEMO_VERSION="your-version"
+   AUTH_DEMO_CONFIG="/secure/auth-demo-service.properties"
    java "-Dmosip.base.url=https://api-internal.${MOSIP_ENV}.mosip.net" -Dserver.port=8082 \
      -Dauth-token-generator.rest.clientId=mosip-resident-client \
      -Dauth-token-generator.rest.appId=resident \
-     -Dspring.config.additional-location=file:/secure/auth-demo-service.properties \
+     "-Dspring.config.additional-location=file:${AUTH_DEMO_CONFIG}" \
      -jar "authentication-demo-service-${AUTH_DEMO_VERSION}.jar"
    ```
 

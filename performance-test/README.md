@@ -66,8 +66,8 @@
 * The following link provides installation of auth-demo-service 
 	* https://github.com/mosip/mosip-functional-tests/blob/master/README.md
 	
-* Navigate to the path where auth-demo-service has been installed and run following query for cellbox1 env.
-	*java -jar -Dmosip.base.url=https://api-internal.cellbox1.mosip.net -Dserver.port=8082 -Dauth-token-generator.rest.clientId=mosip-resident-client -Dauth-token-generator.rest.secretKey=abc@123 -Dauth-token-generator.rest.appId=resident authentication-demo-service-1.2.1-develop-SNAPSHOT.jar
+* Navigate to the path where auth-demo-service has been installed and run following query for cellbox1 env. Do not pass the client secret as a `-D` argument (it would show up in shell history/process listings/CI logs) — put it in an external properties file instead and reference it via `spring.config.additional-location`. See [AGENTS.md](AGENTS.md#3-how-to-run) for the full secure procedure.
+	*java -Dmosip.base.url=https://api-internal.cellbox1.mosip.net -Dserver.port=8082 -Dauth-token-generator.rest.clientId=mosip-resident-client -Dauth-token-generator.rest.appId=resident -Dspring.config.additional-location=file:/secure/auth-demo-service.properties -jar authentication-demo-service-1.2.1-develop-SNAPSHOT.jar
 
 ### Execution points for eSignet Authentication API's
 
