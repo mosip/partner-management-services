@@ -37,7 +37,7 @@ mvn test
 mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
 ```
 
-This module produces a plain jar consumed by both deployable services — after any change here, rebuild the full `partner` reactor. From the repository root: `cd partner && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true`; from inside `pms-common`, run `cd .. && mvn install ...` instead. Then re-test both `partner-management-service` and `policy-management-service` — a service-only build can otherwise pick up a stale jar from the local `~/.m2` repository.
+This module produces a plain jar consumed by both deployable services — after any change here, rebuild the full `partner` reactor. From the repository root: `cd partner && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true`; from inside `pms-common`, run `cd .. && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true` instead. Then re-test both `partner-management-service` and `policy-management-service` — a service-only build can otherwise pick up a stale jar from the local `~/.m2` repository.
 
 ---
 
