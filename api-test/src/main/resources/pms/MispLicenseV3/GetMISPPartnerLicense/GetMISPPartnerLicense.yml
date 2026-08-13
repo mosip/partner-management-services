@@ -802,19 +802,19 @@ GetMISPPartnerLicense:
         inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
         outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseUuidMaskedKeyResult
         input: '{
-        "pageNo": "0",
-        "pageSize": "1",
-        "partnerId": "$REMOVE$",
-        "orgName": "$REMOVE$",
-        "policyGroupName": "$REMOVE$",
-        "policyName": "$REMOVE$",
-        "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
-        "sortFieldName": "$REMOVE$",
-        "sortType": "$REMOVE$",
-        "status": "$REMOVE$",
-        "expiryPeriod": "$REMOVE$"
-}'
+            "pageNo": "0",
+            "pageSize": "1",
+            "partnerId": "$REMOVE$",
+            "orgName": "$REMOVE$",
+            "policyGroupName": "$REMOVE$",
+            "policyName": "$REMOVE$",
+            "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+            "sortFieldName": "$REMOVE$",
+            "sortType": "$REMOVE$",
+            "status": "$REMOVE$",
+            "expiryPeriod": "$REMOVE$"
+    }'
         output: '{
-    "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$",
-    "maskedLicenseKey": "$REGEXP:\\*+.{4}"
-}'
+        "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$",
+        "maskedLicenseKey": "$REGEXP:\\*+.{4}"
+    }'
