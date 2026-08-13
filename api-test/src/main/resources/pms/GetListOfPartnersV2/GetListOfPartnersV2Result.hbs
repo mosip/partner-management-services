@@ -1,11 +1,17 @@
 {
     "response": {
         "pageNo": "{{pageNo}}",
-        "partners": [
+        "data": [
             {{#each partners}}
             {
                 "logoUrl": "{{logoUrl}}",
                 "additionalInfo": "{{additionalInfo}}"
+                {{#if partnerId}},"partnerId": "{{partnerId}}"{{/if}}
+                {{#if partnerType}},"partnerType": "{{partnerType}}"{{/if}}
+                {{#if orgName}},"orgName": "{{orgName}}"{{/if}}
+                {{#if isActive}},"isActive": "{{isActive}}"{{/if}}
+                {{#if status}},"status": "{{status}}"{{/if}}
+                {{#if certificateUploadStatus}},"certificateUploadStatus": "{{certificateUploadStatus}}"{{/if}}
             }
             {{#unless @last}},{{/unless}}
             {{/each}}

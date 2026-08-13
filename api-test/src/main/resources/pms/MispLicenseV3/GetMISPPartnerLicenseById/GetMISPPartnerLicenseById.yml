@@ -13,7 +13,7 @@ GetMISPPartnerLicenseById:
     output: '{
       "mispLicenseId": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_mispLicenseId$",
       "status": "ACTIVE",
-      "maskedLicenseKey": "$REGEXP:\\\\*+.{4}",
+      "maskedLicenseKey": "$REGEXP:\\*+.{4}",
       "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
       "policyName": "$RUNCONTEXT$mosip policy MISP API Policy 12345",
       "policyDescription": "$RUNCONTEXT$desc mosip policy MISP API Policy 12345",
@@ -35,7 +35,7 @@ GetMISPPartnerLicenseById:
     output: '{
       "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$",
       "status": "INACTIVE",
-      "maskedLicenseKey": "$REGEXP:\\\\*+.{4}",
+      "maskedLicenseKey": "$REGEXP:\\*+.{4}",
       "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
       "policyName": "$RUNCONTEXT$mosip policy MISP API Policy 12345",
       "policyDescription": "$RUNCONTEXT$desc mosip policy MISP API Policy 12345",

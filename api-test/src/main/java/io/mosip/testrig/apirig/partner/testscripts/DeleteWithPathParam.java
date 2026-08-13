@@ -1,10 +1,12 @@
 package io.mosip.testrig.apirig.partner.testscripts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -21,6 +23,7 @@ import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
 import io.mosip.testrig.apirig.utils.AdminTestException;
+import io.mosip.testrig.apirig.utils.AdminTestUtil;
 import io.mosip.testrig.apirig.utils.AuthenticationTestException;
 import io.mosip.testrig.apirig.utils.GlobalConstants;
 import io.mosip.testrig.apirig.utils.OutputValidationUtil;
@@ -65,23 +68,45 @@ public class DeleteWithPathParam extends PMSUtil implements ITest {
 	public void test(TestCaseDTO testCaseDTO) throws AuthenticationTestException, AdminTestException, SecurityXSSException {
 		testCaseName = testCaseDTO.getTestCaseName();
 		testCaseName = PMSUtil.isTestCaseValidForExecution(testCaseDTO);
+		String[] templateFields = testCaseDTO.getTemplateFields();
 		if (HealthChecker.signalTerminateExecution) {
 			throw new SkipException(
 					GlobalConstants.TARGET_ENV_HEALTH_CHECK_FAILED + HealthChecker.healthCheckFailureMapS);
 		}
 
-		response = deleteWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
-				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
-				testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
+		if (testCaseDTO.getTemplateFields() != null && templateFields.length > 0) {
+			ArrayList<JSONObject> inputtestCases = AdminTestUtil.getInputTestCase(testCaseDTO);
+			ArrayList<JSONObject> outputtestcase = AdminTestUtil.getOutputTestCase(testCaseDTO);
+			for (int i = 0; i < languageList.size(); i++) {
+				response = deleteWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+						getJsonFromTemplate(inputtestCases.get(i).toString(), testCaseDTO.getInputTemplate()),
+						COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
 
-		validateResponse(response, testCaseName);
-		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
-				response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
-				testCaseDTO, response.getStatusCode());
+				Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
+						response.asString(),
+						getJsonFromTemplate(outputtestcase.get(i).toString(), testCaseDTO.getOutputTemplate()),
+						testCaseDTO, response.getStatusCode());
+				Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
 
-		Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
-		if (!OutputValidationUtil.publishOutputResult(ouputValid))
-			throw new AdminTestException("Failed at output validation");
+				if (!OutputValidationUtil.publishOutputResult(ouputValid))
+					throw new AdminTestException("Failed at output validation");
+			}
+		}
+
+		else {
+			response = deleteWithPathParamAndCookie(ApplnURI + testCaseDTO.getEndPoint(),
+					getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
+					testCaseDTO.getRole(), testCaseDTO.getTestCaseName());
+
+			validateResponse(response, testCaseName);
+			Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
+					response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
+					testCaseDTO, response.getStatusCode());
+
+			Reporter.log(ReportUtil.getOutputValidationReport(ouputValid));
+			if (!OutputValidationUtil.publishOutputResult(ouputValid))
+				throw new AdminTestException("Failed at output validation");
+		}
 	}
 
 	/**

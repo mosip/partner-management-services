@@ -74,7 +74,8 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$"
         }
       ]
 }'
@@ -94,7 +95,8 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "partnerType": "MISP_Partner"
         }
       ]
 }'
@@ -114,7 +116,8 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "isActive": "true"
         }
       ]
 }'
@@ -134,7 +137,8 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "status": "active"
         }
       ]
 }'
@@ -154,7 +158,8 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "certificateUploadStatus": "uploaded"
         }
       ]
 }'
@@ -176,7 +181,8 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "orgName": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_organizationName$"
         }
       ]
 }'
@@ -307,7 +313,10 @@ GetListOfPartnersV2:
       "partners": [
         {
           "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
+          "additionalInfo": "$IGNORE$",
+          "partnerType": "MISP_Partner",
+          "isActive": "true",
+          "certificateUploadStatus": "uploaded"
         }
       ]
 }'
