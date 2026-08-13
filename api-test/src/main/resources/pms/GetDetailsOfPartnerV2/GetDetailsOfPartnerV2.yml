@@ -51,3 +51,39 @@ GetDetailsOfPartnerV2:
       }
       ]
 }'
+   Pms_GetDetailsOfPartnerV2_Without_PartnerAdmin_Role_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v2/{partnerId}
+      description: Validate that a non-PARTNER_ADMIN role is forbidden from retrieving partner details
+      uniqueIdentifier: TC_PMS_GetPartnerDetailsV2_04
+      role: partnerauth
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartnerV2/getDetailsOfPartnerV2
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "KER-ATH-403"
+      }
+      ]
+}'
+   Pms_GetDetailsOfPartnerV2_SpecialCharactersIn_partnerId_Neg:
+      endPoint: /v1/partnermanager/admin-partners/v2/{partnerId}
+      description: Validate that partner details retrieval fails when partnerId contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetPartnerDetailsV2_05
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetDetailsOfPartnerV2/getDetailsOfPartnerV2
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "@#%^&ABCD"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+      }
+      ]
+}'

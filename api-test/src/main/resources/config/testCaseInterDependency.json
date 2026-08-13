@@ -1,4 +1,20 @@
 {
+    "TC_PMS_addBioExtractors_36": ["TC_PMS_partnerPolicyMapping_09"],
+    "TC_PMS_createCredentialPartnerSelfRegistration_04": ["TC_PMS_updatePolicyGroup_03"],
+    "TC_PMS_uploadCredentialPartnerCACert_04": ["TC_PMS_createCredentialPartnerSelfRegistration_04"],
+    "TC_PMS_uploadCredentialPartnerSubcaCert_05": ["TC_PMS_createCredentialPartnerSelfRegistration_04"],
+    "TC_PMS_uploadCredentialPartnerCert_02": ["TC_PMS_uploadCredentialPartnerCACert_04", "TC_PMS_uploadCredentialPartnerSubcaCert_05"],
+    "TC_PMS_partnerPolicyMapping_10": ["TC_PMS_uploadCredentialPartnerCert_02", "TC_PMS_publishPolicy_21"],
+    "TC_PMS_MapPartnerAndPolicytoCredentialType_18": ["TC_PMS_partnerPolicyMapping_10"],
+    "TC_PMS_createPartnerSelfRegistration_22": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_UploadCACertificate_12": ["TC_PMS_createPartnerSelfRegistration_22"],
+    "TC_PMS_UploadCACertificate_13": ["TC_PMS_createPartnerSelfRegistration_22"],
+    "TC_PMS_uploadPartnerCert_10": ["TC_PMS_UploadCACertificate_12", "TC_PMS_UploadCACertificate_13", "TC_PMS_createPartnerSelfRegistration_22"],
+    "TC_PMS_definePolicy_42": ["TC_PMS_definePolicyGroup_01"],
+    "TC_PMS_publishPolicy_22": ["TC_PMS_definePolicy_42"],
+    "TC_PMS_partnerPolicyMapping_11": ["TC_PMS_uploadPartnerCert_10", "TC_PMS_publishPolicy_22"],
+    "TC_PMS_ApproveAPIKey_25": ["TC_PMS_partnerPolicyMapping_11"],
+    "TC_PMS_MapPartnerAndPolicytoCredentialType_19": ["TC_PMS_ApproveAPIKey_25"],
     "TC_PMS_addBioExtractors_29": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addBioExtractors_28": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addBioExtractors_27": ["TC_PMS_partnerPolicyMapping_06"],
@@ -6,7 +22,11 @@
     "TC_PMS_addBioExtractors_25": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_GetMISPPartnerLicenseById_03": ["TC_PMS_GenerateMISPPartnerLicense_01"],
     "TC_PMS_addBioExtractors_24": ["TC_PMS_partnerPolicyMapping_06"],
-    "TC_PMS_GetMISPPartnerLicenseById_02": ["TC_PMS_GenerateMISPPartnerLicense_01"],
+    "TC_PMS_GetMISPPartnerLicenseById_02": [
+        "TC_PMS_GenerateMISPPartnerLicense_01",
+        "TC_PMS_DefineMISPPolicy_01",
+        "TC_PMS_definePolicyGroup_20"
+    ],
     "TC_PMS_addBioExtractors_23": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_addBioExtractors_22": ["TC_PMS_partnerPolicyMapping_06"],
     "TC_PMS_DeleteBioExtractorConfiguration_02": ["TC_PMS_CreateBioExtractorConfiguration_32"],
@@ -203,7 +223,11 @@
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_01"
     ],
-    "TC_PMS_GetMISPPartnerLicenseById_01": ["TC_PMS_GenerateMISPPartnerLicense_07"],
+    "TC_PMS_GetMISPPartnerLicenseById_01": [
+        "TC_PMS_GenerateMISPPartnerLicense_07",
+        "TC_PMS_DefineMISPPolicy_01",
+        "TC_PMS_definePolicyGroup_20"
+    ],
     "TC_PMS_saveUserConsent_01": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_GetBioExtractorRequests_03": ["TC_PMS_RequestAPIKeyForAuthPartner_01"],
     "TC_PMS_GetBioExtractorRequests_01": ["TC_PMS_RequestAPIKeyForAuthPartner_01"],
@@ -393,6 +417,8 @@
         "TC_PMS_createPartnerSelfRegistration_01"
     ],
     "TC_PMS_DeactivateMISPPartnerLicense_01": ["TC_PMS_GenerateMISPPartnerLicense_07"],
+    "TC_PMS_DBValidator_08": ["TC_PMS_DeactivateMISPPartnerLicense_01"],
+    "TC_PMS_GetMISPPartnerLicense_36": ["TC_PMS_DeactivateMISPPartnerLicense_01"],
     "TC_PMS_DeactivateFtm_20": ["TC_PMS_createFtmChipDetails_01"],
     "TC_PMS_publishPolicy_09": [
         "TC_PMS_definePolicyGroup_10",
@@ -745,6 +771,7 @@
         "TC_PMS_publishPolicy_01"
     ],
     "TC_PMS_GetNotificationsSeenTimestamp_01": ["TC_PMS_createPartnerSelfRegistration_01"],
+    "TC_PMS_GetNotificationsSeenTimestamp_02": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_CreateOIDCClient_65": [
         "TC_PMS_ApproveAPIKey_02",
         "TC_PMS_uploadPartnerCert_01",
@@ -823,6 +850,10 @@
     "TC_PMS_UploadCertificateMISPCASUBCA_08": ["TC_PMS_CreateMISPPartnerRegistration_04"],
     "TC_PMS_GetListOfPartners_45": ["TC_PMS_createPartnerSelfRegistration_01"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_19": [
+        "TC_PMS_CreateMISPPartnerRegistration_01",
+        "TC_PMS_DefineMISPPolicy_01"
+    ],
+    "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_27": [
         "TC_PMS_CreateMISPPartnerRegistration_01",
         "TC_PMS_DefineMISPPolicy_01"
     ],
@@ -914,6 +945,23 @@
         "TC_PMS_defineDataSharePolicy_01",
         "TC_PMS_createCredentialPartnerSelfRegistration_01"
     ],
+    "TC_DBDependent_InsertQuery_04": ["TC_PMS_GetCredentialTypesByPartnerAndPolicy_01"],
+    "TC_PMS_GetCredentialTypesByPartnerAndPolicy_14": ["TC_DBDependent_InsertQuery_04"],
+    "TC_DBDependent_InsertQuery_05": ["TC_PMS_GetCredentialTypesByPartnerAndPolicy_14"],
+    "TC_DBDependent_InsertQuery_06": ["TC_DBDependent_InsertQuery_05"],
+    "TC_PMS_GetCredentialTypesByPartnerAndPolicy_15": ["TC_DBDependent_InsertQuery_06"],
+    "TC_PMS_GetCredentialTypesByPartnerAndPolicy_16": [
+        "TC_PMS_defineDataSharePolicy_01",
+        "TC_PMS_createCredentialPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_GetCredentialTypesByPartnerAndPolicy_17": [
+        "TC_PMS_defineDataSharePolicy_01",
+        "TC_PMS_createCredentialPartnerSelfRegistration_01"
+    ],
+    "TC_PMS_GetCredentialTypesByPartnerAndPolicy_18": [
+        "TC_PMS_defineDataSharePolicy_01",
+        "TC_PMS_createCredentialPartnerSelfRegistration_01"
+    ],
     "TC_PMS_CreateOIDCClient_50": [
         "TC_PMS_ApproveAPIKey_02",
         "TC_PMS_uploadPartnerCert_01",
@@ -953,6 +1001,7 @@
     "TC_PMS_DBValidator_04": ["TC_PMS_GenerateMISPPartnerLicense_01"],
     "TC_PMS_uploadCredentialPartnerCACert_02": ["TC_PMS_createCredentialPartnerSelfRegistration_01"],
     "TC_PMS_DBValidator_06": ["TC_PMS_CreateOIDCClient_01"],
+    "TC_PMS_DBValidator_07": ["TC_PMS_GenerateMISPPartnerLicense_01"],
     "TC_PMS_UploadABISPartnerCertificate_01": [
         "TC_PMS_CreateABISPartnerRegistration_01",
         "TC_PMS_UploadCertificateABISCASUBCA_02",
@@ -1027,6 +1076,7 @@
     ],
     "TC_PMS_GetBioExtractorConfigurationById_02": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_22": ["TC_PMS_CreateMISPPartnerRegistration_01"],
+    "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_26": ["TC_PMS_CreateMISPPartnerRegistration_01", "TC_PMS_definePolicy_01"],
     "TC_PMS_partnerPolicyMapping_03": [
         "TC_PMS_createPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_34"
@@ -1832,6 +1882,7 @@
     "TC_PMS_UploadCACertificate_10": ["TC_PMS_createPartnerSelfRegistration_21"],
     "TC_PMS_DeactivateSBIWithAssociatedDevices_20": ["TC_PMS_createSaveSecureBiometricInterface_01"],
     "TC_PMS_DeactivateSBIWithAssociatedDevices_22": ["TC_PMS_createSaveSecureBiometricInterface_01"],
+    "TC_PMS_GetAllDeviceListMappedwithSbi_02": ["TC_PMS_DeactivateSBIWithAssociatedDevices_22"],
     "TC_PMS_DeactivateSBIWithAssociatedDevices_21": ["TC_PMS_createSaveSecureBiometricInterface_09"],
     "TC_PMS_UploadCACertificate_03": ["TC_PMS_createPartnerSelfRegistration_06"],
     "TC_PMS_UploadCACertificate_02": ["TC_PMS_createPartnerSelfRegistration_01"],

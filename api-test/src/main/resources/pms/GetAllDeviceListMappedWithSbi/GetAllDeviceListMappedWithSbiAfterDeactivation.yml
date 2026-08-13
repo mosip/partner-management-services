@@ -1,0 +1,19 @@
+GetAllDeviceListMappedWithSbiAfterDeactivation:
+   Pms_GetAllDeviceListMappedWithSbi_After_SBI_Deactivation:
+      endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}/devices
+      role: partnerdevice
+      description: Validate that devices associated with an SBI are deactivated when the SBI is deactivated
+      uniqueIdentifier: TC_PMS_GetAllDeviceListMappedwithSbi_02
+      checkErrorsOnlyInResponse: true
+      restMethod: get
+      inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
+      outputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiAfterDeactivationResult
+      input: '{
+       "sbiId": "$ID:SaveSecureBiometricInterfaceCreateDto_DeviceProvider_AllValid_Smoke_sid_id$"
+}'
+      output: ' {
+      "deviceTypeCode": "Face",
+      "deviceSubTypeCode": "Full face",
+      "deviceProviderId": "$RUNCONTEXT$pms-111998",
+      "isActive": false
+}'

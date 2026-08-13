@@ -714,3 +714,142 @@ AddBioExtractors:
     }
   ]
 }'
+   Pms_AddBioExtractors_Without_Biometric_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_34
+      description: Validate that adding bio extractors fails when biometric attribute is not provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"$REMOVE$",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_SpecialCharactersIn_BiometricSubTypes_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_35
+      description: Validate that adding bio extractors fails when special characters are provided as biometricSubTypes
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"!@#$%^&*()",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_007"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_With_Empty_BiometricSubTypes_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_36
+      description: Validate that adding bio extractors fails when biometricSubTypes is empty
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsEmptySubTypesNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_Without_BiometricSubTypes_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_37
+      description: Validate that adding bio extractors fails when biometricSubTypes parameter is not provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"$REMOVE$",
+  "extractorProvider":"mock",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_099"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_Without_ExtractorProvider_Neg:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_38
+      description: Validate that adding bio extractors fails when extractorProvider parameter is not provided
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+      outputTemplate: pms/error
+      input: '{
+  "requestTime": "$TIMESTAMP$",
+  "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
+  "attributeName":"photo",
+  "biometric":"face",
+  "biometricSubTypes":"mock",
+  "extractorProvider":"$REMOVE$",
+  "extractorProviderVersion":"1.1"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_COR_001"
+    }
+  ]
+}'
+   Pms_AddBioExtractors_MultipleUniqueExtractors_SingleRequest_Positive:
+      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+      uniqueIdentifier: TC_PMS_addBioExtractors_39
+      description: Validate that multiple unique (non-duplicate) extractors can be submitted successfully within a single bio-extractors request
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsCustomAttribute
+      outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
+      input: '{
+    "requestTime": "$TIMESTAMP$",
+	"requestId": "$ID:Credential_PartnerPolicyMapping_ForBioExtractorsMultiple_All_Valid_sid_mappingkey$",
+	"extractors":[
+	{"attributeName":"photo","biometric":"face","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"},
+	{"attributeName":"iris","biometric":"iris","biometricSubTypes":"mock","extractorProvider":"mock","extractorProviderVersion":"1.1"}
+	]
+  }'
+      output: '{
+      "response": "Bio extract request submitted successfully."
+      }'

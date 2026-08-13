@@ -248,12 +248,31 @@ partnerPolicyMapping:
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post 
+      restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
         "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
         "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_sid_name$",
+        "useCaseDescription": "Need to submit for Rejecting",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_partnerPolicyMapping_ForRejecting_Retry_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_11
+      description: Validate that all valid partner-policy mappings are accessible and correctly listed during API key rejection processes (dedicated mapping for the second, isolated auth partner, since the original partner's one-time auth credential-type mapping slot is already consumed by TC_PMS_MapPartnerAndPolicytoCredentialType_01)
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_uploadPartnerCert_10,TC_PMS_publishPolicy_22
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_ForRejectMappingRetry_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_Retry_sid_name$",
         "useCaseDescription": "Need to submit for Rejecting",
 		"requesttime": "$TIMESTAMP$"
     }'
@@ -331,6 +350,82 @@ partnerPolicyMapping:
       input: '{
         "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
         "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForBioExtractorsEmptySubTypesNeg_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_09
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the bio extractors empty-biometricSubTypes negative validation test (kept isolated from the shared BioExtractorsNeg mapping AND its policy, because the API currently accepts an empty biometricSubTypes and consumes the mapping, and reusing the same policy against the same partner while the shared mapping is still pending fails with "already pending for approval")
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_publishPolicy_23
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForBioExtractorsMultiple_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_07
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the bio extractors multiple-unique-extractors-in-one-request positive validation test
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForCredentialTypePartnerRole_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_08
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the credential-types-request PARTNER role positive validation test
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForCredentialTypePartnerRole_Retry_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_10
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the credential-types-request PARTNER role positive validation test (dedicated mapping for the second, isolated credential partner, since the original partner's one-time auth credential-type mapping slot is already consumed by other tests sharing that fixture)
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_uploadCredentialPartnerCert_02,TC_PMS_publishPolicy_21
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_ForCredentialTypeRole_All_Valid_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'

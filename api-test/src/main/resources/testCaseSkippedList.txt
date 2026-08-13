@@ -1,2 +1,7 @@
-##### JIRA number;testcase 
+##### JIRA number;testcase
 #MOSIP-12456------Mimoto_AddIdentity_Binding_smoke_Pos
+PMS-KNOWN-ISSUE------Pms_AddBioExtractors_Without_BiometricSubTypes_Neg
+PMS-KNOWN-ISSUE------Pms_AddBioExtractors_With_Empty_BiometricSubTypes_Neg
+PMS-KNOWN-ISSUE------Pms_GetDetailsOfPartnerV2_SpecialCharactersIn_partnerId_Neg
+PMS-KNOWN-ISSUE------Pms_GenerateMISPPartnerLicenseNegativeScenarios_Deactivated_Partner_Neg
+PMS-KNOWN-ISSUE------Pms_DBValidator_All_Valid_Smoke_data_created_for_MISPLicense

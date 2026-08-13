@@ -297,6 +297,116 @@ createPublishPolicy:
         "is_Active": true
     }'
 
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_19
+      description: Validate that a policy can be published successfully for the bio extractors multiple-unique-extractors-in-one-request positive validation test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_20
+      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role positive validation test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_23
+      description: Validate that a policy can be published successfully for bio extractors negative validation tests (dedicated policy for the empty-biometricSubTypes mapping)
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping_Retry:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_22
+      description: Validate that a policy can be published successfully even when associated policy mappings are rejected (dedicated policy for the second, isolated auth partner used by the "parent not in progress" credential-types-request negative test)
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_Retry_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_Retry_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_21
+      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role positive validation test (dedicated policy for the second, isolated credential partner)
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
    Pms_PublishPolicy_For_AuthPartner_sid:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_14
