@@ -2,7 +2,7 @@ ApproveMappingKeyForRejectMappingRetry:
    Pms_ApproveMappingKey_Reject_Retry_All_Valid:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       uniqueIdentifier: TC_PMS_ApproveAPIKey_25
-      description: Validate that a mapping key is successfully rejected when all input parameters are valid (dedicated reject step for the second, isolated auth partner used by the "parent not in progress" credential-types-request negative test; run as its own early test block, ahead of MapPartnerAndPolicytoCredentialType, since the main ApproveMappingKey test block runs after it in the suite and can't guarantee this reject completes in time)
+      description: Validate that a mapping key is successfully rejected when all input parameters are valid
       role: partneradmin
       additionalDependencies: TC_PMS_partnerPolicyMapping_11
       restMethod: put

@@ -525,7 +525,7 @@ createPartnerSelfRegistration:
 
    Pms_PartnerSelfRegistration_ForRejectMappingRetry_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners
-      description: Validate that a partner successfully completes self registration when all required inputs are valid (dedicated second auth partner, isolated from the shared pms-111999 fixture so the credential-types-request "parent not in progress" negative test has its own partner that has never had a successful auth credential-type submission)
+      description: Validate that a partner successfully completes self registration when all required inputs are valid
       role: partnerauth
       uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_22
       restMethod: post

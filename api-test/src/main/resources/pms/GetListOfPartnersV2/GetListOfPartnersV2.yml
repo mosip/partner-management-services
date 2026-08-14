@@ -322,7 +322,7 @@ GetListOfPartnersV2:
 }'
    Pms_GetListOfPartnersV2_Unrecognized_SortType_Value_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&sortFieldName=partnerId&sortType=INVALID
-      description: Validate behavior when an unrecognized sortType value is provided - the controller only format-validates this field (no allowed-value enum check found in source), so it is expected to pass through rather than throw a business error
+      description: Validate behavior when an unrecognized sortType value is provided
       role: partneradmin
       checkOnlyStatusCodeInResponse: true
       restMethod: get
@@ -336,7 +336,7 @@ GetListOfPartnersV2:
 }'
    Pms_GetListOfPartnersV2_Unrecognized_CertificateUploadStatus_Value_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&certificateUploadStatus=uploaded_wrong
-      description: Validate behavior when an unrecognized certificateUploadStatus value is provided - no allowed-value enum check exists in source for this filter, so it is expected to return an empty result set rather than an error
+      description: Validate behavior when an unrecognized certificateUploadStatus value is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get
@@ -350,7 +350,7 @@ GetListOfPartnersV2:
 }'
    Pms_GetListOfPartnersV2_Unrecognized_Status_Value_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&status=unknown_status
-      description: Validate behavior when an unrecognized status value is provided - no allowed-value enum check exists in source for this filter, so it is expected to return an empty result set rather than an error
+      description: Validate behavior when an unrecognized status value is provided
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get

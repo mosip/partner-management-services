@@ -210,7 +210,7 @@ UploadCACertificate:
    Pms_UploadCACertificate_ForRejectMappingRetry_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_12
-      description: Validate that uploading a CA Certificate with all valid inputs is successful and reflected correctly (for the dedicated second auth partner used by the "parent not in progress" credential-types-request negative test)
+      description: Validate that uploading a CA Certificate with all valid inputs is successful and reflected correctly (retry scenario)
       role: partneradmin
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_22
       restMethod: post
@@ -229,7 +229,7 @@ UploadCACertificate:
    Pms_UploadSubCACertificate_ForRejectMappingRetry_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCACertificate_13
-      description: Validate that uploading a Sub CA Certificate with all valid inputs is successful and reflected correctly (for the dedicated second auth partner used by the "parent not in progress" credential-types-request negative test)
+      description: Validate that uploading a Sub CA Certificate with all valid inputs is successful and reflected correctly (retry scenario)
       role: partneradmin
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_22
       restMethod: post

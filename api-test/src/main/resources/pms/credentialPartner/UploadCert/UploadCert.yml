@@ -20,7 +20,7 @@ uploadPartnerCert:
    Pms_UploadCert_ForCredentialTypeRole_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_uploadCredentialPartnerCert_02
-      description: Validate that certificates are successfully uploaded when all inputs are valid (for the dedicated second credential partner used by the credential-types-request PARTNER role positive test)
+      description: Validate that certificates are successfully uploaded when all inputs are valid (second credential partner)
       role: partner
       additionalDependencies: TC_PMS_uploadCredentialPartnerCACert_04,TC_PMS_uploadCredentialPartnerSubcaCert_05
       checkErrorsOnlyInResponse: true

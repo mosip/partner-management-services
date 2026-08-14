@@ -344,7 +344,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_23
-      description: Validate that a policy can be published successfully for bio extractors negative validation tests (dedicated policy for the empty-biometricSubTypes mapping)
+      description: Validate that a policy can be published successfully for the bio extractors empty-biometricSubTypes negative validation test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -366,7 +366,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping_Retry:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_22
-      description: Validate that a policy can be published successfully even when associated policy mappings are rejected (dedicated policy for the second, isolated auth partner used by the "parent not in progress" credential-types-request negative test)
+      description: Validate that a policy can be published successfully even when associated policy mappings are rejected (retry scenario)
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -388,7 +388,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_21
-      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role positive validation test (dedicated policy for the second, isolated credential partner)
+      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role positive validation test (retry scenario)
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy

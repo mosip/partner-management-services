@@ -961,7 +961,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_43
-      description: Validate that a policy is successfully created for bio extractors negative validation tests (dedicated policy for the empty-biometricSubTypes mapping, isolated from the shared BioExtractorsNeg policy so a second pending mapping against the same partner+policy doesn't collide with "already pending for approval")
+      description: Validate that a policy is successfully created for the bio extractors empty-biometricSubTypes negative validation test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -986,7 +986,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_Reject_Policy_pms_Retry_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_42
-      description: Validate that a policy is successfully created when the PMS has a rejected policy (dedicated policy for the second, isolated auth partner used by the "parent not in progress" credential-types-request negative test)
+      description: Validate that a policy is successfully created when the PMS has a rejected policy (retry scenario)
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -1011,7 +1011,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_41
-      description: Validate that a policy is successfully created for the credential-types-request PARTNER role positive validation test (dedicated policy for the second, isolated credential partner)
+      description: Validate that a policy is successfully created for the credential-types-request PARTNER role positive validation test (retry scenario)
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy

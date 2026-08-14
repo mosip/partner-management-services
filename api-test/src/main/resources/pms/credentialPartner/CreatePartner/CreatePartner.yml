@@ -77,7 +77,7 @@ CreatePartnerSelfRegistration:
    Pms_PartnerSelfRegistration_credentialpartner_ForCredentialTypeRole_All_Valid_sid:
       endPoint: /v1/partnermanager/partners
       uniqueIdentifier: TC_PMS_createCredentialPartnerSelfRegistration_04
-      description: Validate that a credential partner successfully completes self-registration when all inputs are valid (dedicated second credential partner, isolated from the shared MOVP-AUTOMATION fixture so the credential-types-request PARTNER role positive test has its own never-before-mapped partner)
+      description: Validate that a credential partner successfully completes self-registration when all inputs are valid (second partner)
       role: partner
       restMethod: post
       inputTemplate: pms/credentialPartner/CreatePartner/createPartner
