@@ -265,7 +265,6 @@ partnerPolicyMapping:
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_11
       description: Validate that all valid partner-policy mappings are accessible and correctly listed during API key rejection processes (retry scenario)
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadPartnerCert_10,TC_PMS_publishPolicy_22
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -361,7 +360,6 @@ partnerPolicyMapping:
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_09
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the bio extractors empty-biometricSubTypes negative validation test
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_publishPolicy_23
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -380,7 +378,6 @@ partnerPolicyMapping:
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_07
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the bio extractors multiple-unique-extractors-in-one-request positive validation test
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -399,7 +396,6 @@ partnerPolicyMapping:
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_08
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the credential-types-request PARTNER role positive validation test
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -418,7 +414,6 @@ partnerPolicyMapping:
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_10
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the credential-types-request PARTNER role positive validation test (retry scenario)
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadCredentialPartnerCert_02,TC_PMS_publishPolicy_21
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping

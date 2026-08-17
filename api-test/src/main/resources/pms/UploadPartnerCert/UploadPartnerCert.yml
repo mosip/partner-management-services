@@ -162,7 +162,6 @@ uploadPartnerCert:
       uniqueIdentifier: TC_PMS_uploadPartnerCert_10
       description: Validate that uploading a Partner Certificate with all valid inputs including sid is successful (retry scenario)
       role: partnerauth
-      checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_UploadCACertificate_12, TC_PMS_UploadCACertificate_13
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert

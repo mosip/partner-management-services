@@ -23,7 +23,6 @@ uploadPartnerCert:
       description: Validate that certificates are successfully uploaded when all inputs are valid (second credential partner)
       role: partner
       additionalDependencies: TC_PMS_uploadCredentialPartnerCACert_04,TC_PMS_uploadCredentialPartnerSubcaCert_05
-      checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/credentialPartner/UploadCert/uploadCert
       outputTemplate: pms/credentialPartner/UploadCert/uploadCertResult

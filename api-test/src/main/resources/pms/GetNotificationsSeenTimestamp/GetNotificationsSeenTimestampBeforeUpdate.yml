@@ -4,7 +4,6 @@ GetNotificationsSeenTimestampBeforeUpdate:
       role: partneradmin
       description: Validate that the notifications-seen-timestamp is null for a user who has never had it updated
       uniqueIdentifier: TC_PMS_GetNotificationsSeenTimestamp_02
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestamp
       outputTemplate: pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestampBeforeUpdateResult

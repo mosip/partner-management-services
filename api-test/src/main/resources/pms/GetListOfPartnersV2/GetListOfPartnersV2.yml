@@ -35,7 +35,6 @@ GetListOfPartnersV2:
       description: Validate that a custom pageSize is honored
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_03
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -49,7 +48,6 @@ GetListOfPartnersV2:
       description: Validate that filtering by partnerId returns the matching partner
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_04
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2FilterInput
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -70,7 +68,6 @@ GetListOfPartnersV2:
       description: Validate that filtering by partnerType returns only that partner type
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_05
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -89,7 +86,6 @@ GetListOfPartnersV2:
       description: Validate that filtering by isActive=true returns only active partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_06
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -108,7 +104,6 @@ GetListOfPartnersV2:
       description: Validate that filtering by status=active returns matching partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_07
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -127,7 +122,6 @@ GetListOfPartnersV2:
       description: Validate that filtering by certificateUploadStatus=uploaded returns matching partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_08
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -146,7 +140,6 @@ GetListOfPartnersV2:
       description: Validate that filtering by orgName returns matching partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_09
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2FilterInput
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -167,7 +160,6 @@ GetListOfPartnersV2:
       description: Validate that sorting ascending by partnerId succeeds
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_10
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -258,7 +250,6 @@ GetListOfPartnersV2:
       description: Validate that combining partnerType, isActive and certificateUploadStatus filters together succeeds
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_16
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
@@ -292,7 +283,6 @@ GetListOfPartnersV2:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&certificateUploadStatus=uploaded_wrong
       description: Validate behavior when an unrecognized certificateUploadStatus value is provided
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_18
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
@@ -306,7 +296,6 @@ GetListOfPartnersV2:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&status=unknown_status
       description: Validate behavior when an unrecognized status value is provided
       role: partneradmin
-      checkErrorsOnlyInResponse: true
       restMethod: get
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_19
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
