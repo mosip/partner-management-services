@@ -4,7 +4,6 @@ GetAllDeviceListMappedWithSbiAfterDeactivation:
       role: partnerdevice
       description: Validate that devices associated with an SBI are deactivated when the SBI is deactivated
       uniqueIdentifier: TC_PMS_GetAllDeviceListMappedwithSbi_02
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbi
       outputTemplate: pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiAfterDeactivationResult

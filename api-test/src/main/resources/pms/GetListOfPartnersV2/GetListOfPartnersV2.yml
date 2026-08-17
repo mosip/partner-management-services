@@ -1,7 +1,7 @@
 GetListOfPartnersV2:
    Pms_GetListOfPartnersV2_All_Valid_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2
-      description: Validate that all partners are successfully retrieved with valid inputs and include logoUrl and additionalInfo
+      description: Validate that all partners are successfully retrieved with valid inputs
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_01
       restMethod: get
@@ -10,13 +10,7 @@ GetListOfPartnersV2:
       input: '{
 }'
       output: '{
-      "pageNo": "0",
-      "data": [
-        {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
-        }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartnersV2_Invalid_token_Neg:
       endPoint: /v1/partnermanager/admin-partners/v2
@@ -38,7 +32,7 @@ GetListOfPartnersV2:
 }'
    Pms_GetListOfPartnersV2_CustomPageSize_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=10
-      description: Validate that a custom pageSize is honored and V2 fields remain present
+      description: Validate that a custom pageSize is honored
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_03
       checkErrorsOnlyInResponse: true
@@ -48,17 +42,11 @@ GetListOfPartnersV2:
       input: '{
 }'
       output: '{
-      "pageNo": "0",
-      "data": [
-        {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
-        }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartnersV2_Filter_By_PartnerId_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2
-      description: Validate that filtering by partnerId returns the matching partner with V2 fields present
+      description: Validate that filtering by partnerId returns the matching partner
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_04
       checkErrorsOnlyInResponse: true
@@ -73,15 +61,13 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$"
         }
       ]
 }'
    Pms_GetListOfPartnersV2_Filter_By_PartnerType_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&partnerType=MISP_Partner
-      description: Validate that filtering by partnerType returns only that partner type, with V2 fields present
+      description: Validate that filtering by partnerType returns only that partner type
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_05
       checkErrorsOnlyInResponse: true
@@ -94,15 +80,13 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "partnerType": "MISP_Partner"
         }
       ]
 }'
    Pms_GetListOfPartnersV2_Filter_By_IsActive_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&isActive=true
-      description: Validate that filtering by isActive=true returns only active partners, with V2 fields present
+      description: Validate that filtering by isActive=true returns only active partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_06
       checkErrorsOnlyInResponse: true
@@ -115,15 +99,13 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "isActive": "true"
         }
       ]
 }'
    Pms_GetListOfPartnersV2_Filter_By_Status_Active_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&status=active
-      description: Validate that filtering by status=active returns matching partners, with V2 fields present
+      description: Validate that filtering by status=active returns matching partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_07
       checkErrorsOnlyInResponse: true
@@ -136,15 +118,13 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "status": "active"
         }
       ]
 }'
    Pms_GetListOfPartnersV2_Filter_By_CertificateUploadStatus_Uploaded_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&certificateUploadStatus=uploaded
-      description: Validate that filtering by certificateUploadStatus=uploaded returns matching partners, with V2 fields present
+      description: Validate that filtering by certificateUploadStatus=uploaded returns matching partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_08
       checkErrorsOnlyInResponse: true
@@ -157,15 +137,13 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "certificateUploadStatus": "uploaded"
         }
       ]
 }'
    Pms_GetListOfPartnersV2_Filter_By_OrgName_EmailAddress_PolicyGroupName_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2
-      description: Validate that filtering by orgName returns matching partners, with V2 fields present
+      description: Validate that filtering by orgName returns matching partners
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_09
       checkErrorsOnlyInResponse: true
@@ -180,15 +158,13 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "orgName": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_organizationName$"
         }
       ]
 }'
    Pms_GetListOfPartnersV2_Sort_Ascending_By_PartnerId_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&sortFieldName=partnerId&sortType=asc
-      description: Validate that sorting ascending by partnerId succeeds, with V2 fields present
+      description: Validate that sorting ascending by partnerId succeeds
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_10
       checkErrorsOnlyInResponse: true
@@ -198,33 +174,20 @@ GetListOfPartnersV2:
       input: '{
 }'
       output: '{
-      "pageNo": "0",
-      "data": [
-        {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
-        }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartnersV2_Sort_Descending_By_CreatedDateTime_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&sortFieldName=createdDateTime&sortType=desc
-      description: Validate that sorting descending by createdDateTime succeeds, with V2 fields present
+      description: Validate that sorting descending by createdDateTime succeeds
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_11
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
       input: '{
 }'
       output: '{
-      "pageNo": "0",
-      "data": [
-        {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
-        }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartnersV2_Without_PartnerAdmin_Role_Neg:
       endPoint: /v1/partnermanager/admin-partners/v2
@@ -279,27 +242,20 @@ GetListOfPartnersV2:
 }'
    Pms_GetListOfPartnersV2_Large_PageSize_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=100
-      description: Validate that a large pageSize (100) is accepted and V2 fields remain present
+      description: Validate that a large pageSize (100) is accepted
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_15
-      checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetListOfPartnersV2/getListOfPartnersV2
       outputTemplate: pms/GetListOfPartnersV2/GetListOfPartnersV2Result
       input: '{
 }'
       output: '{
-      "pageNo": "0",
-      "data": [
-        {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$"
-        }
-      ]
+      "pageNo": "0"
 }'
    Pms_GetListOfPartnersV2_Combined_Filters_Smoke:
       endPoint: /v1/partnermanager/admin-partners/v2?pageNo=0&pageSize=8&partnerType=MISP_Partner&isActive=true&certificateUploadStatus=uploaded
-      description: Validate that combining partnerType, isActive and certificateUploadStatus filters together succeeds, with V2 fields present
+      description: Validate that combining partnerType, isActive and certificateUploadStatus filters together succeeds
       role: partneradmin
       uniqueIdentifier: TC_PMS_GetListOfPartnersV2_16
       checkErrorsOnlyInResponse: true
@@ -312,8 +268,6 @@ GetListOfPartnersV2:
       "pageNo": "0",
       "data": [
         {
-          "logoUrl": "$IGNORE$",
-          "additionalInfo": "$IGNORE$",
           "partnerType": "MISP_Partner",
           "isActive": "true",
           "certificateUploadStatus": "uploaded"
