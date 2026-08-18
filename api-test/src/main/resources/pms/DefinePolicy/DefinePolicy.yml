@@ -861,7 +861,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_37
-      description: Validate that a policy is successfully created for bio extractors negative validation tests
+      description: Validate that a policy is successfully created for bio extractors negative tests
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -886,7 +886,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_38
-      description: Validate that a policy is successfully created for the bio extractors multiple-unique-extractors-in-one-request positive validation test
+      description: Validate that a policy is successfully created for the bio extractors multiple-extractors test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -936,7 +936,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_39
-      description: Validate that a policy is successfully created for the credential-types-request PARTNER role positive validation test
+      description: Validate that a policy is successfully created for the credential-types-request PARTNER role test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -961,7 +961,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_43
-      description: Validate that a policy is successfully created for the bio extractors empty-biometricSubTypes negative validation test
+      description: Validate that a policy is successfully created for the bio extractors empty-biometricSubTypes test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -1011,7 +1011,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_41
-      description: Validate that a policy is successfully created for the credential-types-request PARTNER role positive validation test (retry scenario)
+      description: Validate that a policy is successfully created for the credential-types-request PARTNER role test (retry scenario)
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy

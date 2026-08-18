@@ -278,7 +278,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_18
-      description: Validate that a policy can be published successfully for bio extractors negative validation tests
+      description: Validate that a policy can be published successfully for bio extractors negative tests
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -300,7 +300,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_19
-      description: Validate that a policy can be published successfully for the bio extractors multiple-unique-extractors-in-one-request positive validation test
+      description: Validate that a policy can be published successfully for the bio extractors multiple-extractors test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -322,7 +322,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_20
-      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role positive validation test
+      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -344,7 +344,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_23
-      description: Validate that a policy can be published successfully for the bio extractors empty-biometricSubTypes negative validation test
+      description: Validate that a policy can be published successfully for the bio extractors empty-biometricSubTypes test
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -388,7 +388,7 @@ createPublishPolicy:
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_21
-      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role positive validation test (retry scenario)
+      description: Validate that a policy can be published successfully for the credential-types-request PARTNER role test (retry scenario)
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
