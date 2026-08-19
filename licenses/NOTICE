@@ -3,7 +3,7 @@ COPYRIGHT NOTICES
 ================================================================================
 
 This file contains the copyright notices and license information for all
-third-party packages used in the MOSIP Khazana project. Each package's 
+third-party packages used in the MOSIP Partner Management Services project. Each 
 copyright holder, year range, and license terms are listed below.
 
 ALL libraries listed require copyright notice preservation as mandated by
@@ -383,7 +383,7 @@ Build/Analysis Tools Note:
 ABOUT THIS PROJECT
 ================================================================================
 
-Project: MOSIP Khazana - Object Store Service
+Project: MOSIP Partner Management Services
 License: Mozilla Public License 2.0 (MPL-2.0)
 Copyright: (C) 2018-present MOSIP Contributors
 

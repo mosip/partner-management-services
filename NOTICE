@@ -1,30 +1,170 @@
-NOTICE
+NOTICES
 
-This product includes third-party software components.
-The following attributions are provided as required by their respective licenses.
+Copyright © MOSIP.
+All rights reserved.
 
+This project includes third-party components distributed under licenses
+that require attribution. Only those components with attribution-required
+licenses are listed below.
+
+A complete per-package inventory of everything distributed is in
+THIRD-PARTY-NOTICES, generated from SBOM.json.
+
+===========================
 Apache License 2.0
-This product includes software developed by the Apache Software Foundation
-and other contributors.
-http://www.apache.org/licenses/LICENSE-2.0
+==================
 
-BSD Licenses (2-Clause and 3-Clause)
-This product includes software licensed under BSD licenses.
-Copyright © the respective authors.
+The majority of this project's dependencies are Apache-2.0. They are listed
+individually in THIRD-PARTY-NOTICES. Attribution and NOTICE files supplied by
+those projects are preserved.
 
+===========================
 MIT License
-This product includes software licensed under the MIT License.
-Copyright © the respective authors.
+===========
 
+• com.auth0:java-jwt
+• com.auth0:jwks-rsa
+• org.slf4j:slf4j-api
+• org.slf4j:jul-to-slf4j
+• org.slf4j:jcl-over-slf4j
+• org.projectlombok:lombok
+• org.bouncycastle:bcprov-jdk18on (Bouncy Castle Licence - MIT text)
+
+===========================
+BSD Licenses
+============
+
+• org.hdrhistogram:HdrHistogram (BSD-2-Clause, elected over CC0)
+• org.antlr:antlr4-runtime (BSD-3-Clause)
+• com.thoughtworks.paranamer:paranamer (BSD-3-Clause)
+
+===========================
 Mozilla Public License 2.0 (MPL-2.0)
-This product includes software licensed under the Mozilla Public License, Version 2.0.
-https://www.mozilla.org/MPL/2.0/
+====================================
 
-Eclipse Licenses (EDL-1.0 / EPL-2.0)
-This product includes software licensed under Eclipse licenses.
-https://www.eclipse.org/legal/
+This project is itself licensed under MPL-2.0. The following dependencies are
+also MPL-2.0:
 
-GNU LGPL / GPL
-This product includes software licensed under the GNU Lesser General Public License (LGPL)
-and the GNU General Public License (GPL).
-These components are used in compliance with their respective licenses.
+• io.mosip.kernel:kernel-core
+• io.mosip.kernel:kernel-auth-adapter
+• io.mosip.kernel:kernel-authcodeflowproxy-api
+• io.mosip.kernel:kernel-dataaccess-hibernate
+• io.mosip.kernel:kernel-logger-logback
+• io.mosip.kernel:kernel-templatemanager-velocity
+• io.mosip.kernel:kernel-websubclient-api
+
+===========================
+Eclipse Distribution License 1.0 (EDL-1.0)
+==========================================
+
+EDL-1.0 is the BSD 3-Clause text.
+
+• com.sun.istack:istack-commons-runtime
+• com.sun.xml.fastinfoset:FastInfoset (Apache-2.0 elected)
+• jakarta.activation:jakarta.activation-api
+• jakarta.persistence:jakarta.persistence-api (EDL-1.0 elected over EPL-2.0)
+• jakarta.xml.bind:jakarta.xml.bind-api
+• javax.persistence:javax.persistence-api (EDL-1.0 elected over EPL-1.0)
+• org.glassfish.jaxb:txw2
+• org.jvnet.staxex:stax-ex
+
+===========================
+Eclipse Public License (EPL)
+============================
+
+• org.aspectj:aspectjweaver (EPL-2.0)
+• org.junit.platform:junit-platform-commons (EPL-2.0)
+• org.junit.platform:junit-platform-engine (EPL-2.0)
+• org.junit.vintage:junit-vintage-engine (EPL-2.0)
+• ch.qos.logback:logback-classic (EPL-1.0 option; see LGPL-2.1 below)
+• ch.qos.logback:logback-core (EPL-1.0 option; see LGPL-2.1 below)
+• ch.qos.logback:logback-access (EPL-1.0 option; see LGPL-2.1 below)
+• com.h2database:h2 (MPL-2.0 elected over EPL-1.0)
+
+===========================
+LGPL-2.1
+========
+
+The following components are available under the GNU Lesser General Public
+License, version 2.1:
+
+• ch.qos.logback:logback-classic (LGPL-2.1 option)
+• ch.qos.logback:logback-core (LGPL-2.1 option)
+• ch.qos.logback:logback-access (LGPL-2.1 option)
+• org.hibernate.orm:hibernate-core
+• org.hibernate.orm:hibernate-hikaricp
+• org.hibernate.common:hibernate-commons-annotations
+• com.mchange:c3p0 (LGPL-2.1 option)
+• com.mchange:mchange-commons-java (LGPL-2.1 option)
+• com.google.code.findbugs:annotations
+
+These components are used in unmodified form and are dynamically linked. This
+project contains no derivative works of them.
+
+Source code for these components is available from the upstream projects:
+  Logback   - https://github.com/qos-ch/logback
+  Hibernate - https://github.com/hibernate/hibernate-orm
+  c3p0      - https://github.com/swaldman/c3p0
+
+A copy of the corresponding source for the exact versions distributed is
+available on request from the maintainers of this repository.
+
+===========================
+GPL-2.0 with Classpath Exception
+================================
+
+The Classpath Exception permits linking these libraries with independent
+modules without extending GPL terms to those modules.
+
+• jakarta.annotation:jakarta.annotation-api (elected over EPL-2.0)
+• jakarta.transaction:jakarta.transaction-api (elected over EPL-2.0)
+
+===========================
+Common Development and Distribution License (CDDL)
+==================================================
+
+CDDL is elected for each of the following, in preference to the GPL-2.0
+alternative offered alongside it.
+
+• javax.activation:activation (CDDL-1.0)
+• javax.activation:javax.activation-api (CDDL-1.1)
+• javax.interceptor:javax.interceptor-api (CDDL-1.1)
+• javax.transaction:javax.transaction-api (CDDL-1.1)
+• javax.xml.bind:jaxb-api (CDDL-1.1)
+• org.glassfish.jaxb:jaxb-runtime (CDDL-1.1)
+
+===========================
+Apache License 1.1
+==================
+
+• sslext:sslext
+
+Apache-1.1 carries an acknowledgement clause that Apache-2.0 removed. The
+acknowledgement is reproduced here:
+
+  "This product includes software developed by the Apache Software Foundation
+   (http://www.apache.org/)."
+
+===========================
+Public Domain / No License Declared
+===================================
+
+The following declare no license, or dedicate to the public domain. No
+attribution obligation attaches to them; they are listed for completeness.
+
+• aopalliance:aopalliance (public domain)
+• org.latencyutils:LatencyUtils (CC0)
+• antlr:antlr
+• commons-beanutils:commons-beanutils
+• dom4j:dom4j
+• net.jcip:jcip-annotations
+• oro:oro
+• org.json:json
+
+---
+
+Full license texts are available in the `licenses/` directory.
+
+Test-scope dependencies are not listed above. They are used only to build and
+test this project, are not part of any distributed artifact, and therefore carry
+no distribution obligations.
