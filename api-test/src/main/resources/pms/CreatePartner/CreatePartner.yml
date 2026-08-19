@@ -522,3 +522,26 @@ createPartnerSelfRegistration:
      }
    ]
 }'
+
+   Pms_PartnerSelfRegistration_ForRejectMappingRetry_All_Valid_Smoke_sid:
+      endPoint: /v1/partnermanager/partners
+      description: Validate that a partner successfully completes self registration when all required inputs are valid
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_22
+      restMethod: post
+      inputTemplate: pms/CreatePartner/createPartner
+      outputTemplate: pms/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "8553967572",
+    "emailId": "$RUNCONTEXT$mosip-rejmap19@gmail.com",
+    "organizationName": "$RUNCONTEXT$pms-REJMAP19",
+    "partnerId": "$RUNCONTEXT$pms-REJMAP19",
+    "partnerType": "AUTH_PARTNER",
+    "policyGroup": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$pms-REJMAP19",
+        "status": "InProgress"
+    }'

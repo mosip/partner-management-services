@@ -148,11 +148,30 @@ uploadPartnerCert:
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
-      input: '{  
+      input: '{
   "requesttime": "$TIMESTAMP$",
   "certificateData": "$PARTNERCERT$",
   "partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",
   "partnerDomain": "DEVICE"
+}'
+      output: ' {
+}'
+
+   Pms_UploadPartnerCert_ForRejectMappingRetry_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadPartnerCert_10
+      description: Validate that uploading a Partner Certificate with all valid inputs including sid is successful (retry scenario)
+      role: partnerauth
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_UploadCACertificate_12, TC_PMS_UploadCACertificate_13
+      restMethod: post
+      inputTemplate: pms/UploadPartnerCert/uploadCert
+      outputTemplate: pms/UploadPartnerCert/uploadCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_ForRejectMappingRetry_All_Valid_Smoke_sid_partnerId$",
+  "partnerDomain": "AUTH"
 }'
       output: ' {
 }'

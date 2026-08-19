@@ -107,3 +107,18 @@ DBValidator:
     }'
       output: '{
     }'
+
+   Pms_DBValidator_All_Valid_Smoke_data_created_for_MISPLicense:
+      endPoint: SELECT * FROM pms.misp_license WHERE is_active = true AND
+      uniqueIdentifier: TC_PMS_DBValidator_07
+      description: Validate that the MISP license record generated via the API is correctly stored and active in the pms database
+      role: pms
+      restMethod: post
+      additionalDependencies: TC_PMS_GenerateMISPPartnerLicense_01
+      inputTemplate: pms/DbValidatorTest/dbValidatorTestOidcClient
+      outputTemplate: pms/DbValidatorTest/dbValidatorTestOidcClientResult
+      input: '{
+      "misp_license_id": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$"
+    }'
+      output: '{
+    }'

@@ -793,3 +793,28 @@ GetMISPPartnerLicense:
 }'
         output: '{
 }'
+    Pms_GetMISPPartnerLicense_Verify_UUID_And_MaskedKey:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_35
+        description: Validate that each MISP license record returned in the list response has a UUID-format mispLicenseId and a masked (not raw) licenseKey
+        role: partneradmin
+        restMethod: get
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseUuidMaskedKeyResult
+        input: '{
+            "pageNo": "0",
+            "pageSize": "1",
+            "partnerId": "$REMOVE$",
+            "orgName": "$REMOVE$",
+            "policyGroupName": "$REMOVE$",
+            "policyName": "$REMOVE$",
+            "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_licenseKeyName$",
+            "sortFieldName": "$REMOVE$",
+            "sortType": "$REMOVE$",
+            "status": "$REMOVE$",
+            "expiryPeriod": "$REMOVE$"
+    }'
+        output: '{
+        "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$",
+        "maskedLicenseKey": "$REGEXP:\\*+.{4}"
+    }'

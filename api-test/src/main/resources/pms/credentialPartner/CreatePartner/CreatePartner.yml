@@ -73,3 +73,26 @@ CreatePartnerSelfRegistration:
     }
   ]
     }'
+
+   Pms_PartnerSelfRegistration_credentialpartner_ForCredentialTypeRole_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners
+      uniqueIdentifier: TC_PMS_createCredentialPartnerSelfRegistration_04
+      description: Validate that a credential partner successfully completes self-registration when all inputs are valid (second partner)
+      role: partner
+      restMethod: post
+      inputTemplate: pms/credentialPartner/CreatePartner/createPartner
+      outputTemplate: pms/credentialPartner/CreatePartner/createPartnerResult
+      input: '{
+    "address": "Bangalore",
+    "contactNumber": "9553967572",
+    "emailId": "$RUNCONTEXT$movp-ct18@gmail.com",
+    "organizationName": "$RUNCONTEXT$MOVP-CT18-AUTOMATION",
+    "partnerId": "$RUNCONTEXT$MOVP-CT18-AUTOMATION",
+    "partnerType": "Credential_Partner",
+    "policyGroup": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+        "partnerId": "$RUNCONTEXT$MOVP-CT18-AUTOMATION",
+        "status": "InProgress"
+    }'

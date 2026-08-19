@@ -12,7 +12,14 @@ GetMISPPartnerLicenseById:
 }'
     output: '{
       "mispLicenseId": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_mispLicenseId$",
-      "status": "ACTIVE"
+      "status": "ACTIVE",
+      "maskedLicenseKey": "$REGEXP:\\*+.{4}",
+      "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+      "policyName": "$RUNCONTEXT$mosip policy MISP API Policy 12345",
+      "policyDescription": "$RUNCONTEXT$desc mosip policy MISP API Policy 12345",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyGroupName": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
+      "policyGroupDescription": "$RUNCONTEXT$mosip policy group MISP"
 }'
   Pms_GetMISPPartnerLicenseById_Old_License_Is_Inactive_After_Regenerate:
     endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
@@ -27,7 +34,14 @@ GetMISPPartnerLicenseById:
 }'
     output: '{
       "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$",
-      "status": "INACTIVE"
+      "status": "INACTIVE",
+      "maskedLicenseKey": "$REGEXP:\\*+.{4}",
+      "policyId": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_id$",
+      "policyName": "$RUNCONTEXT$mosip policy MISP API Policy 12345",
+      "policyDescription": "$RUNCONTEXT$desc mosip policy MISP API Policy 12345",
+      "policyGroupId": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_id$",
+      "policyGroupName": "$ID:DefinePolicyGroup_MISP_PolicyGroup_All_Valid_Smoke_sid_name$",
+      "policyGroupDescription": "$RUNCONTEXT$mosip policy group MISP"
 }'
   Pms_GetMISPPartnerLicenseById_Invalid_Token_Neg:
     endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
@@ -57,6 +71,24 @@ GetMISPPartnerLicenseById:
     outputTemplate: pms/error
     input: '{
       "mispLicenseId": "@@invalid-mispLicenseId"
+}'
+    output: '{
+      "errors": [
+        {
+           "errorCode": "PMS_MSP_441"
+        }
+    ]
+}'
+  Pms_GetMISPPartnerLicenseById_Literal_Null_String_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
+    uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseById_05
+    description: Validate that the API returns an error when the literal string "null" is provided as the mispLicenseId
+    role: partneradmin
+    restMethod: get
+    inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicenseById/getMISPPartnerLicenseById
+    outputTemplate: pms/error
+    input: '{
+      "mispLicenseId": "null"
 }'
     output: '{
       "errors": [

@@ -861,7 +861,7 @@ definePolicy:
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsNeg_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_37
-      description: Validate that a policy is successfully created for bio extractors negative validation tests
+      description: Validate that a policy is successfully created for bio extractors negative tests
       role: partneradmin
       restMethod: post
       inputTemplate: pms/DefinePolicy/definePolicy
@@ -880,6 +880,156 @@ definePolicy:
     "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "name": "$RUNCONTEXT$credential partner bio extractors neg",
     "desc": "$RUNCONTEXT$credential partner bio extractors neg",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_38
+      description: Validate that a policy is successfully created for the bio extractors multiple-extractors test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner bio extractors multiple",
+	"name": "$RUNCONTEXT$credential partner bio extractors multiple",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner bio extractors multiple",
+    "desc": "$RUNCONTEXT$credential partner bio extractors multiple",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_NeverPublished_InProgress_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_40
+      description: Validate that a policy is successfully created and intentionally left unpublished (in-progress) for tests that need a non-active policy
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$never published in progress policy",
+	"name": "$RUNCONTEXT$never published in progress policy",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$never published in progress policy",
+    "desc": "$RUNCONTEXT$never published in progress policy",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_39
+      description: Validate that a policy is successfully created for the credential-types-request PARTNER role test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner credential type role",
+	"name": "$RUNCONTEXT$credential partner credential type role",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner credential type role",
+    "desc": "$RUNCONTEXT$credential partner credential type role",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_43
+      description: Validate that a policy is successfully created for the bio extractors empty-biometricSubTypes test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner bio extractors empty subtypes neg",
+	"name": "$RUNCONTEXT$credential partner bio extractors empty subtypes neg",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner bio extractors empty subtypes neg",
+    "desc": "$RUNCONTEXT$credential partner bio extractors empty subtypes neg",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_Reject_Policy_pms_Retry_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_42
+      description: Validate that a policy is successfully created when the PMS has a rejected policy (retry scenario)
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$desc reject mosip policy retry 19234",
+	"name": "$RUNCONTEXT$mosip reject policy retry 19234",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:DefinePolicyGroup_All_Valid_Smoke_pms_sid_name$",
+    "name": "$RUNCONTEXT$mosip reject policy retry 19234",
+    "desc": "$RUNCONTEXT$desc reject mosip policy retry 19234",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypePartnerRole_Retry_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_41
+      description: Validate that a policy is successfully created for the credential-types-request PARTNER role test (retry scenario)
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner credential type role retry",
+	"name": "$RUNCONTEXT$credential partner credential type role retry",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner credential type role retry",
+    "desc": "$RUNCONTEXT$credential partner credential type role retry",
     "is_Active": false
 }'
 

@@ -15,4 +15,22 @@ uploadPartnerCert:
   "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
 }'
       output: ' {
-}'   
+}'
+
+   Pms_UploadCert_ForCredentialTypeRole_All_Valid_Smoke:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_uploadCredentialPartnerCert_02
+      description: Validate that certificates are successfully uploaded when all inputs are valid (second credential partner)
+      role: partner
+      additionalDependencies: TC_PMS_uploadCredentialPartnerCACert_04,TC_PMS_uploadCredentialPartnerSubcaCert_05
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      inputTemplate: pms/credentialPartner/UploadCert/uploadCert
+      outputTemplate: pms/credentialPartner/UploadCert/uploadCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$PARTNERCERT$",
+  "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_ForCredentialTypeRole_All_Valid_sid_partnerId$"
+}'
+      output: ' {
+}'
