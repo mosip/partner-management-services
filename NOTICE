@@ -114,12 +114,15 @@ available on request from the maintainers of this repository.
 GPL-2.0 with Classpath Exception
 ================================
 
-Jakarta EE specification APIs, offered under a choice of EPL-2.0 or GPL-2.0
+Jakarta EE specification API, offered under a choice of EPL-2.0 or GPL-2.0
 with the Classpath Exception. This project elects GPL-2.0 with the Classpath
 Exception, which expressly permits linking with independent modules without
 extending GPL terms to them.
 
-• jakarta.annotation:jakarta.annotation-api
+jakarta.annotation-api previously appeared here. It has been replaced by
+org.apache.tomcat:tomcat-annotations-api (Apache-2.0), which supplies the same
+jakarta.annotation.* API.
+
 • jakarta.transaction:jakarta.transaction-api
 
 ===========================
