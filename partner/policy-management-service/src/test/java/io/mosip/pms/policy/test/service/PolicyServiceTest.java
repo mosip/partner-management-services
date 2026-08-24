@@ -188,6 +188,8 @@ public class PolicyServiceTest {
 		ReflectionTestUtils.setField(service, "pageUtils", pageUtils);
 		ReflectionTestUtils.setField(service, "filterHelper", filterHelper);
 		ReflectionTestUtils.setField(service, "mapper", mapper);
+		ReflectionTestUtils.setField(service, "partnerPolicyRequestRepository", partnerPolicyRequestRepository);
+		ReflectionTestUtils.setField(service, "policySummaryRepository", policySummaryRepository);
 
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any());
@@ -219,6 +221,19 @@ public class PolicyServiceTest {
 	public void createPolicyGroupTest_S001() {
 		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroupData());
 		service.createPolicyGroup(createPolicyGroupRequest());
+	}
+
+	@Test
+	public void testCreatePolicyGroup_IdGenerationRetriesExhausted_ThrowsException() {
+		ReflectionTestUtils.setField(service, "maxRetries", 0);
+		Mockito.when(policyGroupRepository.findByName("Test")).thenReturn(policyGroupData());
+		Mockito.when(policyGroupRepository.existsById(Mockito.anyString())).thenReturn(true);
+		try {
+			service.createPolicyGroup(createPolicyGroupRequest());
+			fail("Expected PolicyManagementServiceException");
+		} catch (PolicyManagementServiceException ex) {
+			assertEquals(ErrorMessages.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(), ex.getErrorCode());
+		}
 	}
 	
 	@Test(expected = PolicyManagementServiceException.class)
@@ -1507,6 +1522,182 @@ public class PolicyServiceTest {
 		assertNotNull(response.getErrors());
 		assertEquals(ErrorMessages.ACTIVE_AND_DRAFT_POLICIES_EXISTS_UNDER_POLICY_GROUP.getErrorCode(),
 				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testGetPolicyGroups_Success() {
+		PolicyGroup group = new PolicyGroup();
+		group.setId("PG1");
+		group.setName("Banking");
+		group.setDesc("Banking group");
+		when(policyGroupRepository.findAllActivePolicyGroups()).thenReturn(Collections.singletonList(group));
+
+		ResponseWrapperV2<List<PolicyGroupDto>> response = service.getPolicyGroups();
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().size());
+		assertEquals("PG1", response.getResponse().get(0).getId());
+	}
+
+	@Test
+	public void testGetPolicyGroups_EmptyList_SetsErrors() {
+		when(policyGroupRepository.findAllActivePolicyGroups()).thenReturn(new ArrayList<>());
+
+		ResponseWrapperV2<List<PolicyGroupDto>> response = service.getPolicyGroups();
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_GROUPS_NOT_AVAILABLE.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testGetAllPolicies_WithResults_Success() {
+		String sortFieldName = "createdDateTime";
+		String sortType = "desc";
+		int pageNo = 0;
+		int pageSize = 8;
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		filterDto.setPolicyId("123");
+		filterDto.setPolicyType("Auth");
+		filterDto.setPolicyName("abc");
+		filterDto.setPolicyDescription("desc");
+		filterDto.setPolicyGroupName("default");
+
+		PolicySummaryEntity entity = new PolicySummaryEntity();
+		Page<PolicySummaryEntity> page = new PageImpl<>(Collections.singletonList(entity));
+		when(policySummaryRepository.getSummaryOfAllPolicies(anyString(), anyString(), anyString(), anyString(), anyString(), any(), any()))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response =
+				service.getAllPolicies(sortFieldName, sortType, pageNo, pageSize, filterDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().getData().size());
+	}
+
+	@Test
+	public void testGetAllPolicies_StatusSortAsc_Success() {
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		filterDto.setPolicyId("123");
+		filterDto.setPolicyType("Auth");
+		filterDto.setPolicyName("abc");
+		filterDto.setPolicyDescription("desc");
+		filterDto.setPolicyGroupName("default");
+		filterDto.setStatus("ACTIVE");
+
+		Page<PolicySummaryEntity> page = new PageImpl<>(new ArrayList<>());
+		when(policySummaryRepository.getSummaryOfAllPoliciesByStatusAsc(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any()))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response =
+				service.getAllPolicies("status", "asc", 0, 8, filterDto);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void testGetAllPolicies_StatusSortDesc_Success() {
+		PolicyFilterDto filterDto = new PolicyFilterDto();
+		filterDto.setPolicyId("123");
+		filterDto.setPolicyType("Auth");
+		filterDto.setPolicyName("abc");
+		filterDto.setPolicyDescription("desc");
+		filterDto.setPolicyGroupName("default");
+		filterDto.setStatus("ACTIVE");
+
+		Page<PolicySummaryEntity> page = new PageImpl<>(new ArrayList<>());
+		when(policySummaryRepository.getSummaryOfAllPoliciesByStatusDesc(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any()))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<PolicySummaryDto>> response =
+				service.getAllPolicies("status", "desc", 0, 8, filterDto);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void testDeactivatePolicy_ApprovedPartnerPolicyRequestExists_ErrorsSet() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById("policyABC")).thenReturn(Optional.of(authPolicy));
+		PartnerPolicyRequest approvedReq = new PartnerPolicyRequest();
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode("policyABC", PolicyManagementService.APPROVED))
+				.thenReturn(Collections.singletonList(approvedReq));
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> response = service.deactivatePolicy("policyABC", requestDto);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_HAS_APPROVED_PARTNER_POLICY_REQUEST_ERROR.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivatePolicy_PendingPartnerPolicyRequestExists_ErrorsSet() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById("policyABC")).thenReturn(Optional.of(authPolicy));
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode("policyABC", PolicyManagementService.APPROVED))
+				.thenReturn(new ArrayList<>());
+		PartnerPolicyRequest pendingReq = new PartnerPolicyRequest();
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode("policyABC", PolicyManagementService.IN_PROGRESS))
+				.thenReturn(Collections.singletonList(pendingReq));
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> response = service.deactivatePolicy("policyABC", requestDto);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_HAS_PENDING_PARTNER_POLICY_REQUEST_ERROR.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivatePolicy_NotApprovedPolicySchemaNull_ErrorsSet() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(false);
+		authPolicy.setPolicySchema(null);
+		when(authPolicyRepository.findById("policyABC")).thenReturn(Optional.of(authPolicy));
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> response = service.deactivatePolicy("policyABC", requestDto);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_NOT_APPROVED.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivatePolicy_AlreadyDeactivated_ErrorsSet() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setIsActive(false);
+		authPolicy.setPolicySchema("{}");
+		when(authPolicyRepository.findById("policyABC")).thenReturn(Optional.of(authPolicy));
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> response = service.deactivatePolicy("policyABC", requestDto);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorMessages.POLICY_ALREADY_DEACTIVATED.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testDeactivatePolicy_FullSuccess() {
+		DeactivateRequestDto requestDto = new DeactivateRequestDto();
+		requestDto.setStatus("De-Activate");
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("policyABC");
+		authPolicy.setIsActive(true);
+		when(authPolicyRepository.findById("policyABC")).thenReturn(Optional.of(authPolicy));
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode("policyABC", PolicyManagementService.APPROVED))
+				.thenReturn(new ArrayList<>());
+		when(partnerPolicyRequestRepository.findByPolicyIdAndStatusCode("policyABC", PolicyManagementService.IN_PROGRESS))
+				.thenReturn(new ArrayList<>());
+		AuthPolicy savedPolicy = new AuthPolicy();
+		savedPolicy.setId("policyABC");
+		savedPolicy.setIsActive(false);
+		when(authPolicyRepository.save(any())).thenReturn(savedPolicy);
+
+		ResponseWrapperV2<DeactivatePolicyResponseDto> response = service.deactivatePolicy("policyABC", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals("policyABC", response.getResponse().getPolicyId());
+		assertEquals(false, response.getResponse().getIsActive());
 	}
 
 }

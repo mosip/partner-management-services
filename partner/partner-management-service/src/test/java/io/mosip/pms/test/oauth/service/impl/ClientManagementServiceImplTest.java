@@ -70,7 +70,9 @@ import io.mosip.pms.common.helper.WebSubPublisher;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.oauth.client.service.impl.ClientManagementServiceImpl;
 import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.exception.PartnerServiceException;
+import io.mosip.pms.common.util.AuthenticationContextRefUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -120,6 +122,9 @@ public class ClientManagementServiceImplTest {
 
 	@MockBean
 	PolicyGroupRepository policyGroupRepository;
+
+	@MockBean
+	AuthenticationContextRefUtil authenticationContextClassRefUtil;
 
 	Map<String, Object> public_key;
 	
@@ -1427,6 +1432,276 @@ public class ClientManagementServiceImplTest {
 		mosipUserDto.setUserId("123");
 		mosipUserDto.setMail("abc@gmail.com");
 		return mosipUserDto;
+	}
+
+	private static final String MINIMAL_POLICY_JSON =
+			"{\"allowedKycAttributes\":[{\"attributeName\":\"fullName\",\"format\":null}],"
+			+ "\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":false}]}";
+
+	private void grantAdminAuthority() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+	}
+
+	private ClientDetailCreateRequest buildCreateRequest() {
+		ClientDetailCreateRequest createRequest = new ClientDetailCreateRequest();
+		createRequest.setName("ClientName");
+		createRequest.setAuthPartnerId("AuthPartnerId1");
+		createRequest.setPolicyId("PolicyID1");
+		createRequest.setClientAuthMethods(Collections.singletonList("private_key_jwt"));
+		createRequest.setGrantTypes(Collections.singletonList("authorization_code"));
+		createRequest.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		createRequest.setRedirectUris(Collections.singletonList("https://testcase.pms.net/browse/OIDCClient"));
+		createRequest.setPublicKey(public_key);
+		return createRequest;
+	}
+
+	private Partner buildAuthPartner(boolean isActive) {
+		Partner partner = new Partner();
+		partner.setId("AuthPartnerId1");
+		partner.setUserId("partnerUserId1");
+		partner.setPartnerTypeCode("Auth_Partner");
+		partner.setIsActive(isActive);
+		partner.setCertificateAlias("cert-alias-1");
+		return partner;
+	}
+
+	private AuthPolicy buildAuthPolicy() {
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("PolicyID1");
+		authPolicy.setName("Banking");
+		authPolicy.setPolicy_type("Auth");
+		authPolicy.setPolicyFileId(MINIMAL_POLICY_JSON);
+		authPolicy.setIsActive(true);
+		authPolicy.setValidFromDate(LocalDateTime.now().minusDays(1));
+		authPolicy.setValidToDate(LocalDateTime.now().plusYears(1));
+		return authPolicy;
+	}
+
+	private PartnerPolicyRequest buildPolicyMappingRequest(Partner partner) {
+		PartnerPolicyRequest req = new PartnerPolicyRequest();
+		req.setPartner(partner);
+		return req;
+	}
+
+	private void stubEsignetAndCertCalls() throws Exception {
+		Map<String, Object> idpResponse = new HashMap<>();
+		ClientDetailResponse idpClientResponse = new ClientDetailResponse();
+		idpClientResponse.setClientId("clientId1");
+		idpClientResponse.setStatus("ACTIVE");
+		idpResponse.put("response", idpClientResponse);
+		when(restUtil.postApi(any(), any(), anyString(), anyString(), any(MediaType.class), any(), eq(Map.class)))
+				.thenReturn(idpResponse);
+
+		Map<String, Object> certApiResponse = new HashMap<>();
+		PartnerCertDownloadResponeDto certResponse = new PartnerCertDownloadResponeDto();
+		certResponse.setCertificateData("cert-data-1");
+		certApiResponse.put("response", certResponse);
+		when(restUtil.getApi(any(), any(), eq(Map.class))).thenReturn(certApiResponse);
+
+		when(authenticationContextClassRefUtil.getPolicySupportedClaims(any())).thenReturn(Collections.singleton("fullName"));
+		when(authenticationContextClassRefUtil.getAuthFactors(any())).thenReturn(Collections.singleton("otp"));
+
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+
+	@Test
+	public void testCreateOIDCClient_FullSuccess() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(true)));
+		when(authPolicyRepository.findById("PolicyID1")).thenReturn(Optional.of(buildAuthPolicy()));
+		Partner authPartner = buildAuthPartner(true);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("AuthPartnerId1", "PolicyID1"))
+				.thenReturn(Collections.singletonList(buildPolicyMappingRequest(authPartner)));
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("partnerUserId1", "PolicyID1", PartnerConstants.APPROVED))
+				.thenReturn(Collections.singletonList(buildPolicyMappingRequest(authPartner)));
+		stubEsignetAndCertCalls();
+
+		ClientDetailResponse response = serviceImpl.createOIDCClient(buildCreateRequest());
+		assertNotNull(response);
+		Mockito.verify(clientDetailRepository, Mockito.atLeastOnce()).save(Mockito.any(ClientDetail.class));
+	}
+
+	@Test
+	public void testCreateOAuthClient_FullSuccess() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(true)));
+		when(authPolicyRepository.findById("PolicyID1")).thenReturn(Optional.of(buildAuthPolicy()));
+		Partner authPartner = buildAuthPartner(true);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("AuthPartnerId1", "PolicyID1"))
+				.thenReturn(Collections.singletonList(buildPolicyMappingRequest(authPartner)));
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("partnerUserId1", "PolicyID1", PartnerConstants.APPROVED))
+				.thenReturn(Collections.singletonList(buildPolicyMappingRequest(authPartner)));
+		stubEsignetAndCertCalls();
+
+		ClientDetailCreateRequestV2 v2Request = new ClientDetailCreateRequestV2();
+		v2Request.setName("ClientName");
+		v2Request.setAuthPartnerId("AuthPartnerId1");
+		v2Request.setPolicyId("PolicyID1");
+		v2Request.setClientAuthMethods(Collections.singletonList("private_key_jwt"));
+		v2Request.setGrantTypes(Collections.singletonList("authorization_code"));
+		v2Request.setLogoUri("https://testcase.pms.net/browse/OIDCClient.png");
+		v2Request.setRedirectUris(Collections.singletonList("https://testcase.pms.net/browse/OIDCClient"));
+		v2Request.setPublicKey(public_key);
+		Map<String, String> langMap = new HashMap<>();
+		langMap.put("eng", "Client Name");
+		v2Request.setClientNameLangMap(langMap);
+
+		ClientDetailResponse response = serviceImpl.createOAuthClient(v2Request);
+		assertNotNull(response);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_DuplicateClient_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		ClientDetail existing = new ClientDetail();
+		existing.setId("existing");
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.of(existing));
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_NonAdmin_UserNotFound_ThrowsException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, new ArrayList<GrantedAuthority>(), null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
+
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_NonAdmin_PartnerNotBelongsToUser_ThrowsException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, new ArrayList<GrantedAuthority>(), null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		Partner userPartner = new Partner();
+		userPartner.setId("SomeOtherPartnerId");
+		when(partnerServiceRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(userPartner));
+
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_InvalidPartnerId_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.empty());
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_InvalidPartnerType_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		Partner partner = buildAuthPartner(true);
+		partner.setPartnerTypeCode("Device_Provider");
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(partner));
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_PartnerNotActive_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(false)));
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_PolicyNotExist_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(true)));
+		when(authPolicyRepository.findById("PolicyID1")).thenReturn(Optional.empty());
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_PolicyTypeMismatch_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(true)));
+		AuthPolicy policy = buildAuthPolicy();
+		policy.setPolicy_type("KYC");
+		when(authPolicyRepository.findById("PolicyID1")).thenReturn(Optional.of(policy));
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_PolicyMappingNotExists_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(true)));
+		when(authPolicyRepository.findById("PolicyID1")).thenReturn(Optional.of(buildAuthPolicy()));
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("AuthPartnerId1", "PolicyID1"))
+				.thenReturn(new ArrayList<>());
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testCreateOIDCClient_PolicyNotApproved_ThrowsException() throws Exception {
+		grantAdminAuthority();
+		when(clientDetailRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(partnerRepository.findById("AuthPartnerId1")).thenReturn(Optional.of(buildAuthPartner(true)));
+		when(authPolicyRepository.findById("PolicyID1")).thenReturn(Optional.of(buildAuthPolicy()));
+		Partner authPartner = buildAuthPartner(true);
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyId("AuthPartnerId1", "PolicyID1"))
+				.thenReturn(Collections.singletonList(buildPolicyMappingRequest(authPartner)));
+		when(partnerPolicyRequestRepository.findByPartnerIdAndPolicyIdAndStatusCode("partnerUserId1", "PolicyID1", PartnerConstants.APPROVED))
+				.thenReturn(new ArrayList<>());
+		serviceImpl.createOIDCClient(buildCreateRequest());
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeCreateEsignetServiceCall_ErrorList_ThrowsException() throws Exception {
+		Map<String, Object> errorMap = new HashMap<>();
+		errorMap.put("errorCode", "ERR010");
+		errorMap.put("errorMessage", "esignet failure");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("errors", Collections.singletonList(errorMap));
+		when(restUtil.postApi(any(), any(), anyString(), anyString(), any(MediaType.class), any(), eq(Map.class)))
+				.thenReturn(apiResponse);
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeCreateEsignetServiceCall", new Object(), "https://esignet.test/create");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeCreateEsignetServiceCall_EmptyErrorList_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("errors", new ArrayList<>());
+		when(restUtil.postApi(any(), any(), anyString(), anyString(), any(MediaType.class), any(), eq(Map.class)))
+				.thenReturn(apiResponse);
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeCreateEsignetServiceCall", new Object(), "https://esignet.test/create");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testMakeCreateEsignetServiceCall_NullResponseNoErrors_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		when(restUtil.postApi(any(), any(), anyString(), anyString(), any(MediaType.class), any(), eq(Map.class)))
+				.thenReturn(apiResponse);
+		ReflectionTestUtils.invokeMethod(serviceImpl, "makeCreateEsignetServiceCall", new Object(), "https://esignet.test/create");
 	}
 
 }
