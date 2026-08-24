@@ -1524,8 +1524,6 @@ public class PolicyServiceTest {
 				response.getErrors().get(0).getErrorCode());
 	}
 
-	// ==================== Additional coverage tests (sonar coverage uplift) ====================
-
 	@Test
 	public void testGetPolicyGroups_Success() {
 		PolicyGroup group = new PolicyGroup();

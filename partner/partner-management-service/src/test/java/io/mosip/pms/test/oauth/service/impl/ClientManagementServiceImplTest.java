@@ -1434,8 +1434,6 @@ public class ClientManagementServiceImplTest {
 		return mosipUserDto;
 	}
 
-	// ==================== Additional coverage tests (sonar coverage uplift) ====================
-
 	private static final String MINIMAL_POLICY_JSON =
 			"{\"allowedKycAttributes\":[{\"attributeName\":\"fullName\",\"format\":null}],"
 			+ "\"allowedAuthTypes\":[{\"authType\":\"otp\",\"authSubType\":null,\"mandatory\":false}]}";

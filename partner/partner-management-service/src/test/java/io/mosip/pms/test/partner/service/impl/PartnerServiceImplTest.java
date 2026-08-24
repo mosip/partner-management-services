@@ -1642,8 +1642,6 @@ public class PartnerServiceImplTest {
 		assertNotNull(responseWrapper);
 	}
 
-	// ==================== Additional coverage tests (sonar coverage uplift) ====================
-
 	private void grantAuthorities(AuthUserDetails authUserDetails) throws Exception {
 		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
 		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);

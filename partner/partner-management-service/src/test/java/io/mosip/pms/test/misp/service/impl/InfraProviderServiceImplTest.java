@@ -399,8 +399,6 @@ public class InfraProviderServiceImplTest {
 		assertEquals(entities.size(), result.getData().size());
 	}
 
-	// ==================== Additional coverage tests (sonar coverage uplift) ====================
-
 	@Test
 	public void testRegenerateKey_NewLicense_NoPolicy_Success() {
 		String mispId = "MISP1";

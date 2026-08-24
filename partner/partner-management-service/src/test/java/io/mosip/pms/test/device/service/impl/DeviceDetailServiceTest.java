@@ -711,8 +711,6 @@ public class DeviceDetailServiceTest {
 		return mosipUserDto;
 	}
 
-	// ==================== Additional coverage tests (sonar coverage uplift) ====================
-
 	private void grantAdminAuthority() throws Exception {
 		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
