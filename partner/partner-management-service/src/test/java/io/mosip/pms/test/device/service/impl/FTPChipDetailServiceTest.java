@@ -26,11 +26,14 @@ import io.mosip.pms.device.authdevice.entity.FtmDetailSummaryEntity;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.FtmDetailsSummaryRepository;
 import io.mosip.pms.device.authdevice.service.impl.FTPChipDetailServiceImpl;
+import io.mosip.pms.device.dto.FtmChipDetailsDto;
 import io.mosip.pms.device.dto.FtmChipFilterDto;
 import io.mosip.pms.device.response.dto.FtmDetailResponseDto;
 import io.mosip.pms.device.response.dto.FtmDetailSummaryDto;
 import io.mosip.pms.device.response.dto.FtpCertDownloadResponeDto;
 import io.mosip.pms.device.response.dto.FtpCertificateResponseDto;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
 import io.mosip.pms.partner.dto.DataShareDto;
 import io.mosip.pms.partner.dto.DataShareResponseDto;
 import io.mosip.pms.partner.exception.PartnerServiceException;
@@ -1803,5 +1806,324 @@ public class FTPChipDetailServiceTest {
 	@Test
 	public void ftmChipDetailExceptionTest() throws Exception {
 		ftpChipDetailService.ftmChipDetail();
+	}
+
+	// ==================== Additional coverage tests (sonar coverage uplift) ====================
+
+	private void grantAdminAuthority() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+	}
+
+	@Test
+	public void testGetCertificate_FullSuccess() throws IOException {
+		when(environment.getProperty(anyString())).thenReturn("https://test/getPartnerCertificate");
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("ChipId1");
+		ftpChipDetail.setCertificateAlias("alias-1");
+		when(ftpChipDetailRepository.findById("ChipId1")).thenReturn(Optional.of(ftpChipDetail));
+
+		FtpCertDownloadResponeDto certDto = new FtpCertDownloadResponeDto();
+		certDto.setCertificateData("cert-data-1");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", certDto);
+		when(restUtil.getApi(any(), any(), any())).thenReturn(apiResponse);
+		when(objectMapper.writeValueAsString(any())).thenReturn("{\"certificateData\":\"cert-data-1\"}");
+		when(objectMapper.readValue(anyString(), eq(FtpCertDownloadResponeDto.class))).thenReturn(certDto);
+
+		FtpCertDownloadResponeDto response = ftpChipDetailService.getCertificate(new FtpChipCertDownloadRequestDto("ChipId1"));
+		assertNotNull(response);
+		assertEquals("cert-data-1", response.getCertificateData());
+	}
+
+	@Test
+	public void testGetPartnersFtmChipDetails_FullSuccess() {
+		FtmChipFilterDto filterDto = new FtmChipFilterDto();
+		filterDto.setPartnerId("P1");
+		filterDto.setOrgName("Org");
+		filterDto.setFtmId("F1");
+		filterDto.setMake("Make");
+		filterDto.setModel("Model");
+		filterDto.setStatus("approved");
+
+		FtmDetailSummaryEntity entity = new FtmDetailSummaryEntity();
+		Page<FtmDetailSummaryEntity> page = new PageImpl<>(Collections.singletonList(entity));
+		when(ftmDetailsSummaryRepository.getSummaryOfPartnersFtmDetails(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any()))
+				.thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<FtmDetailSummaryDto>> response =
+				ftpChipDetailService.getPartnersFtmChipDetails(null, null, 0, 8, filterDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().getData().size());
+	}
+
+	@Test
+	public void testDeactivateFtm_FullSuccess() throws Exception {
+		grantAdminAuthority();
+		DeactivateFtmRequestDto requestDto = new DeactivateFtmRequestDto();
+		requestDto.setStatus(PartnerConstants.DEACTIVATE);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(new Partner()));
+
+		FTPChipDetail ftm = new FTPChipDetail();
+		ftm.setFtpChipDetailId("FTM1");
+		ftm.setApprovalStatus("approved");
+		ftm.setActive(true);
+		when(ftpChipDetailRepository.findById("FTM1")).thenReturn(Optional.of(ftm));
+
+		FTPChipDetail savedFtm = new FTPChipDetail();
+		savedFtm.setFtpChipDetailId("FTM1");
+		savedFtm.setApprovalStatus("approved");
+		savedFtm.setActive(false);
+		when(ftpChipDetailRepository.save(any())).thenReturn(savedFtm);
+
+		ResponseWrapperV2<FtmDetailResponseDto> response = ftpChipDetailService.deactivateFtm("FTM1", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals("FTM1", response.getResponse().getFtmId());
+		assertEquals(false, response.getResponse().isActive());
+	}
+
+	@Test
+	public void testCreateFtpChipDetails_IdGenerationRetriesExhausted_ThrowsException() {
+		ReflectionTestUtils.setField(ftpChipDetailService, "maxRetries", 0);
+		FtpChipDetailDto dto = new FtpChipDetailDto();
+		dto.setFtpProviderId("P1");
+		dto.setMake("Make");
+		dto.setModel("Model");
+		Partner partner = new Partner();
+		partner.setId("P1");
+		partner.setName("Partner Name");
+		when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("P1")).thenReturn(partner);
+		when(ftpChipDetailRepository.findByUniqueKey(anyString(), anyString(), anyString())).thenReturn(null);
+		when(ftpChipDetailRepository.existsById(anyString())).thenReturn(true);
+
+		try {
+			ftpChipDetailService.createFtpChipDetails(dto);
+			fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException ex) {
+			assertEquals(ErrorCode.UNABLE_TO_GENERATE_UNIQUE_ID.getErrorCode(), ex.getErrorCode());
+		}
+	}
+
+	@Test
+	public void testFtmChipDetail_WithCertificate_FullSuccess() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		ReflectionTestUtils.setField(ftpChipDetailService, "isCaSignedPartnerCertificateAvailable", true);
+
+		Partner partner = new Partner();
+		partner.setId("P1");
+		partner.setIsActive(true);
+		partner.setApprovalStatus("approved");
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(partner));
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		Mockito.doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
+
+		FTPChipDetail ftm = new FTPChipDetail();
+		ftm.setFtpChipDetailId("FTM1");
+		ftm.setFtpProviderId("P1");
+		ftm.setCertificateAlias("alias-1");
+		ftm.setMake("Make");
+		ftm.setModel("Model");
+		ftm.setApprovalStatus("approved");
+		ftm.setActive(true);
+		when(ftpChipDetailRepository.findByProviderId("P1")).thenReturn(Collections.singletonList(ftm));
+
+		FtmCertificateDownloadResponseDto certDto = new FtmCertificateDownloadResponseDto();
+		when(partnerHelper.getCertificate(eq("alias-1"), anyString(), eq(FtmCertificateDownloadResponseDto.class)))
+				.thenReturn(certDto);
+		Mockito.doNothing().when(partnerHelper).populateFtmCertificateExpiryState(any());
+
+		ResponseWrapperV2<List<FtmChipDetailsDto>> response = ftpChipDetailService.ftmChipDetail();
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().size());
+		assertEquals("FTM1", response.getResponse().get(0).getFtmId());
+	}
+
+	@Test
+	public void testFtmChipDetail_NoCertificate_Success() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		ReflectionTestUtils.setField(ftpChipDetailService, "isCaSignedPartnerCertificateAvailable", true);
+
+		Partner partner = new Partner();
+		partner.setId("P2");
+		partner.setIsActive(true);
+		partner.setApprovalStatus("approved");
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(partner));
+		when(partnerHelper.checkIfPartnerIsFtmPartner(any())).thenReturn(true);
+		Mockito.doNothing().when(partnerHelper).validatePartnerId(any(), anyString());
+
+		FTPChipDetail ftm = new FTPChipDetail();
+		ftm.setFtpChipDetailId("FTM2");
+		ftm.setFtpProviderId("P2");
+		ftm.setCertificateAlias(null);
+		ftm.setMake("Make");
+		ftm.setModel("Model");
+		ftm.setApprovalStatus("pending_cert_upload");
+		ftm.setActive(false);
+		when(ftpChipDetailRepository.findByProviderId("P2")).thenReturn(Collections.singletonList(ftm));
+
+		ResponseWrapperV2<List<FtmChipDetailsDto>> response = ftpChipDetailService.ftmChipDetail();
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().size());
+		assertEquals(Boolean.FALSE, response.getResponse().get(0).getIsCertificateAvailable());
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testGetCertificate_ErrorList_ThrowsException() throws IOException {
+		when(environment.getProperty(anyString())).thenReturn("https://test/getPartnerCertificate");
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("ChipErr1");
+		ftpChipDetail.setCertificateAlias("alias-err1");
+		when(ftpChipDetailRepository.findById("ChipErr1")).thenReturn(Optional.of(ftpChipDetail));
+
+		Map<String, Object> errorMap = new HashMap<>();
+		errorMap.put("errorCode", "ERR020");
+		errorMap.put("message", "cert fetch failed");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("errors", Collections.singletonList(errorMap));
+		when(restUtil.getApi(any(), any(), any())).thenReturn(apiResponse);
+
+		ftpChipDetailService.getCertificate(new FtpChipCertDownloadRequestDto("ChipErr1"));
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testGetCertificate_EmptyErrorList_ThrowsException() throws IOException {
+		when(environment.getProperty(anyString())).thenReturn("https://test/getPartnerCertificate");
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("ChipErr2");
+		ftpChipDetail.setCertificateAlias("alias-err2");
+		when(ftpChipDetailRepository.findById("ChipErr2")).thenReturn(Optional.of(ftpChipDetail));
+
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("errors", new ArrayList<>());
+		when(restUtil.getApi(any(), any(), any())).thenReturn(apiResponse);
+
+		ftpChipDetailService.getCertificate(new FtpChipCertDownloadRequestDto("ChipErr2"));
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testGetCertificate_NullResponseNoErrors_ThrowsException() throws IOException {
+		when(environment.getProperty(anyString())).thenReturn("https://test/getPartnerCertificate");
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("ChipErr3");
+		ftpChipDetail.setCertificateAlias("alias-err3");
+		when(ftpChipDetailRepository.findById("ChipErr3")).thenReturn(Optional.of(ftpChipDetail));
+
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		when(restUtil.getApi(any(), any(), any())).thenReturn(apiResponse);
+
+		ftpChipDetailService.getCertificate(new FtpChipCertDownloadRequestDto("ChipErr3"));
+	}
+
+	@Test
+	public void testGetPartnerCertFromChain_RealCert_Success() throws Exception {
+		String realCert = "MIIDQTCCAimgAwIBAgIUVav5JwrZBpNNNDWerZf8cTewBPQwDQYJKoZIhvcNAQELBQAwMDELMAkGA1UEBhMCSU4xDjAMBgNVBAoMBU1PU0lQMREwDwYDVQQDDAhwbXMtdGVzdDAeFw0yNjA4MjQwNjIyMzlaFw0zNjA4MjEwNjIyMzlaMDAxCzAJBgNVBAYTAklOMQ4wDAYDVQQKDAVNT1NJUDERMA8GA1UEAwwIcG1zLXRlc3QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIalDW7ydF31vC7-jmkfRW23go2iHOSRiTiKK75eSEyFsnJphTN2M8ntZDwQcY8W1TlhXY3MvEguN9NtJbDzjVcTb-1I4Y-1UbJLP_VPwTtztocb1BHSVmS2BH2Rv1hUi8KD92LSaI9ksV37htlZ7QqdABuPoOM_hMfLdp58dDSbI0arLjmxBKE2kpgEMeOOA7i8-MMs-z7vHBPAuX-Tcx8A0ncaGi6H16BlCHk7wrkN-ai2RVACL8b16IsOGo68IsStUxbvNeQ7985YALGmPJhTUjSuo2vE7en9n1pp-qWJZrdKAh_9PD_M07wThIZTR7mtsDYby-R7PogIgiNz59AgMBAAGjUzBRMB0GA1UdDgQWBBQn-SgcIG_CgG7CzGKzdTzimX7u5jAfBgNVHSMEGDAWgBQn-SgcIG_CgG7CzGKzdTzimX7u5jAPBgNVHRMBAf8EBTADAQH_MA0GCSqGSIb3DQEBCwUAA4IBAQAQDH_080dhamZFOeElze_AkxgC9RS9i60IVm1ecSMY4n7qO65CyCHe9dqkruRrwljbJVtbUGh5IWE4B23Hxq9DprT9qLkKwBWTnTpptrV6ghppY7hoklC8XX3ZH3n0e7SRF6Hbv3cYdJSnWoCsMlw-ZhEWZzfjMwh8XQ-Y1PToA_ORRzynE7efhS6QWuK9cc3BVl2HUMLyUDau-oT1X9iT9qlV11FHYhNM6KLtFzPAqYwBxeboN2Zty1xBvsv-3ZP5uQGW_OBtxCt6L57Ic7RuTpCSHg52DNI4i0ZQyOpGugAw79_M1dW5Ag-vjVg8u7St6PRHg04jIyTl-tMWRFEv";
+		String result = ReflectionTestUtils.invokeMethod(ftpChipDetailService, "getPartnerCertFromChain", realCert);
+		assertNotNull(result);
+		assertTrue(result.contains("BEGIN CERTIFICATE"));
+		assertTrue(result.contains("END CERTIFICATE"));
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadCertificate_EmptyErrorList_ThrowsException() throws IOException {
+		doNothing().when(auditUtil)
+				.auditRequest((String) any(), (String) any(), (String) any(), (String) any(), (String) any(), (String) any());
+		when(environment.getProperty(any())).thenReturn("Property");
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setActive(true);
+		ftpChipDetail.setApprovalStatus("approved");
+		ftpChipDetail.setFtpChipDetailId("ChipId");
+		ftpChipDetail.setFtpProviderId("ProviderId");
+		when(ftpChipDetailRepository.findById((String) any())).thenReturn(Optional.of(ftpChipDetail));
+
+		Partner partner = new Partner();
+		partner.setId("Id");
+		partner.setIsActive(true);
+		partner.setPartnerTypeCode("Partner Type Code");
+		when(partnerServiceRepository.findByIdAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue((String) any()))
+				.thenReturn(partner);
+
+		Map<String, Object> uploadApiResponse = new HashMap<>();
+		uploadApiResponse.put("errors", new ArrayList<>());
+		when(restUtil.postApi(any(), any(), any(), any(), any(), any(), any())).thenReturn(uploadApiResponse);
+
+		ftpChipDetailService.uploadCertificate(new FtpChipCertificateRequestDto("ProviderId", "ChipId", true, "Certificate Data",
+				"Organization Name", "Partner Domain"));
+	}
+
+	@Test
+	public void testGetFtmCertificateData_Admin_FullSuccess() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(new Partner()));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		FTPChipDetail ftm = new FTPChipDetail();
+		ftm.setFtpChipDetailId("FTMCERT1");
+		ftm.setApprovalStatus("approved");
+		ftm.setActive(true);
+		ftm.setCertificateAlias("alias-cert1");
+		when(ftpChipDetailRepository.findById("FTMCERT1")).thenReturn(Optional.of(ftm));
+
+		FtmCertificateDownloadResponseDto certDto = new FtmCertificateDownloadResponseDto();
+		when(partnerHelper.getCertificate(eq("alias-cert1"), anyString(), eq(FtmCertificateDownloadResponseDto.class)))
+				.thenReturn(certDto);
+		Mockito.doNothing().when(partnerHelper).populateFtmCertificateExpiryState(any());
+
+		ResponseWrapperV2<FtmCertificateDownloadResponseDto> response = ftpChipDetailService.getFtmCertificateData("FTMCERT1");
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateFtmId_Null_ThrowsException() {
+		FTPChipDetailServiceImpl.validateFtmId(null);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateFtmId_Blank_ThrowsException() {
+		FTPChipDetailServiceImpl.validateFtmId("");
+	}
+
+	@Test
+	public void testValidateFtmId_Valid_NoException() {
+		FTPChipDetailServiceImpl.validateFtmId("FTM123");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateFtmChipDetail_Empty_ThrowsException() {
+		FTPChipDetailServiceImpl.validateFtmChipDetail(Optional.empty());
+	}
+
+	@Test
+	public void testValidateFtmChipDetail_Present_NoException() {
+		FTPChipDetailServiceImpl.validateFtmChipDetail(Optional.of(new FTPChipDetail()));
 	}
 }

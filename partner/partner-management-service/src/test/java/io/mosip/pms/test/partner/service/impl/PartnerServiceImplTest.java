@@ -45,12 +45,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.AopTestUtils;
 import org.springframework.test.util.ReflectionTestUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.pms.common.exception.ApiAccessibleException;
 import io.mosip.pms.common.entity.AuthPolicy;
 import io.mosip.pms.common.entity.BiometricExtractorProvider;
 import io.mosip.pms.common.entity.Partner;
@@ -103,6 +105,9 @@ public class PartnerServiceImplTest {
 	
 	@Autowired
 	private PartnerServiceImpl pserviceImpl;
+
+	/** Unwrapped (non-proxy) target, needed for reflectively invoking private methods that read @Autowired fields. */
+	private PartnerServiceImpl pserviceTarget;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -166,6 +171,7 @@ public class PartnerServiceImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+		pserviceTarget = AopTestUtils.getUltimateTargetObject(pserviceImpl);
 		ReflectionTestUtils.setField(pserviceImpl, "policyGroupRepository", policyGroupRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "partnerRepository", partnerRepository);
 		ReflectionTestUtils.setField(pserviceImpl, "authPolicyRepository", authPolicyRepository);
@@ -1634,6 +1640,569 @@ public class PartnerServiceImplTest {
 		when(policyGroupRepository.findPolicyGroupById(any())).thenReturn(policyGroup);
 		ResponseWrapperV2<List<PartnerDtoV3>> responseWrapper = pserviceImpl.getPartnersV3("approved", true, "Auth_Partner");
 		assertNotNull(responseWrapper);
+	}
+
+	// ==================== Additional coverage tests (sonar coverage uplift) ====================
+
+	private void grantAuthorities(AuthUserDetails authUserDetails) throws Exception {
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+	}
+
+	private static final String REAL_CERT_CHAIN_B64URL = "MIIDQTCCAimgAwIBAgIUVav5JwrZBpNNNDWerZf8cTewBPQwDQYJKoZIhvcNAQELBQAwMDELMAkGA1UEBhMCSU4xDjAMBgNVBAoMBU1PU0lQMREwDwYDVQQDDAhwbXMtdGVzdDAeFw0yNjA4MjQwNjIyMzlaFw0zNjA4MjEwNjIyMzlaMDAxCzAJBgNVBAYTAklOMQ4wDAYDVQQKDAVNT1NJUDERMA8GA1UEAwwIcG1zLXRlc3QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIalDW7ydF31vC7-jmkfRW23go2iHOSRiTiKK75eSEyFsnJphTN2M8ntZDwQcY8W1TlhXY3MvEguN9NtJbDzjVcTb-1I4Y-1UbJLP_VPwTtztocb1BHSVmS2BH2Rv1hUi8KD92LSaI9ksV37htlZ7QqdABuPoOM_hMfLdp58dDSbI0arLjmxBKE2kpgEMeOOA7i8-MMs-z7vHBPAuX-Tcx8A0ncaGi6H16BlCHk7wrkN-ai2RVACL8b16IsOGo68IsStUxbvNeQ7985YALGmPJhTUjSuo2vE7en9n1pp-qWJZrdKAh_9PD_M07wThIZTR7mtsDYby-R7PogIgiNz59AgMBAAGjUzBRMB0GA1UdDgQWBBQn-SgcIG_CgG7CzGKzdTzimX7u5jAfBgNVHSMEGDAWgBQn-SgcIG_CgG7CzGKzdTzimX7u5jAPBgNVHRMBAf8EBTADAQH_MA0GCSqGSIb3DQEBCwUAA4IBAQAQDH_080dhamZFOeElze_AkxgC9RS9i60IVm1ecSMY4n7qO65CyCHe9dqkruRrwljbJVtbUGh5IWE4B23Hxq9DprT9qLkKwBWTnTpptrV6ghppY7hoklC8XX3ZH3n0e7SRF6Hbv3cYdJSnWoCsMlw-ZhEWZzfjMwh8XQ-Y1PToA_ORRzynE7efhS6QWuK9cc3BVl2HUMLyUDau-oT1X9iT9qlV11FHYhNM6KLtFzPAqYwBxeboN2Zty1xBvsv-3ZP5uQGW_OBtxCt6L57Ic7RuTpCSHg52DNI4i0ZQyOpGugAw79_M1dW5Ag-vjVg8u7St6PRHg04jIyTl-tMWRFEv";
+
+	// ---- getPartnerCertFromChain (private, real X.509 parsing) ----
+
+	@Test
+	public void testGetPartnerCertFromChain_RealCert_Success() throws Exception {
+		String result = ReflectionTestUtils.invokeMethod(pserviceTarget, "getPartnerCertFromChain", REAL_CERT_CHAIN_B64URL);
+		assertNotNull(result);
+		assertTrue(result.contains("BEGIN CERTIFICATE"));
+		assertTrue(result.contains("END CERTIFICATE"));
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testGetPartnerCertFromChain_InvalidData_ThrowsException() throws Exception {
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "getPartnerCertFromChain", "bm90LWEtdmFsaWQtY2VydA");
+	}
+
+	// ---- uploadCACertificate ----
+
+	@Test
+	public void testUploadCACertificate_RealSuccess() throws Exception {
+		CACertificateResponseDto expectedResponse = new CACertificateResponseDto();
+		expectedResponse.setStatus("Active");
+		expectedResponse.setTimestamp(LocalDateTime.now());
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", expectedResponse);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadCACertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		CACertificateRequestDto requestDto = new CACertificateRequestDto();
+		requestDto.setCertificateData("cert_data");
+		requestDto.setPartnerDomain("Auth");
+		CACertificateResponseDto actualResponse = pserviceImpl.uploadCACertificate(requestDto);
+
+		assertNotNull(actualResponse);
+		assertEquals("Active", actualResponse.getStatus());
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadCACertificate_ErrorList_ThrowsException() throws Exception {
+		Map<String, Object> errorMap = new HashMap<>();
+		errorMap.put(PartnerConstants.ERRORCODE, "ERR001");
+		errorMap.put(PartnerConstants.ERRORMESSAGE, "Something failed");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put(PartnerConstants.ERRORS, Collections.singletonList(errorMap));
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadCACertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		CACertificateRequestDto requestDto = new CACertificateRequestDto();
+		requestDto.setCertificateData("cert_data");
+		requestDto.setPartnerDomain("Auth");
+		pserviceImpl.uploadCACertificate(requestDto);
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadCACertificate_EmptyErrorList_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put(PartnerConstants.ERRORS, new ArrayList<>());
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadCACertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		CACertificateRequestDto requestDto = new CACertificateRequestDto();
+		requestDto.setCertificateData("cert_data");
+		requestDto.setPartnerDomain("Auth");
+		pserviceImpl.uploadCACertificate(requestDto);
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadCACertificate_NullResponseNoErrors_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadCACertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		CACertificateRequestDto requestDto = new CACertificateRequestDto();
+		requestDto.setCertificateData("cert_data");
+		requestDto.setPartnerDomain("Auth");
+		pserviceImpl.uploadCACertificate(requestDto);
+	}
+
+	// ---- uploadPartnerCertificate ----
+
+	@Test
+	public void testUploadPartnerCertificate_FullSuccess_FtmDomain() throws Exception {
+		Partner partner = createPartner(Boolean.TRUE);
+		Mockito.when(partnerRepository.findById("PID1")).thenReturn(Optional.of(partner));
+
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Credential_Partner");
+		partnerType.setIsPolicyRequired(true);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(Collections.singletonList(partnerType));
+
+		PartnerCertificateResponseDto expectedResponse = new PartnerCertificateResponseDto();
+		expectedResponse.setCertificateId("CERT123");
+		expectedResponse.setSignedCertificateData(REAL_CERT_CHAIN_B64URL);
+		expectedResponse.setTimestamp(LocalDateTime.now());
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", expectedResponse);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		DataShareResponseDto dataShareResponseDto = new DataShareResponseDto();
+		DataShareDto dataShareDto = new DataShareDto();
+		dataShareDto.setUrl("https://datashare.url/x");
+		dataShareResponseDto.setDataShare(dataShareDto);
+		when(restUtil.postApi(eq("https://dev.mosip.io/v1/datashare/create"), any(), eq(""), eq(""),
+				eq(MediaType.MULTIPART_FORM_DATA), any(), eq(DataShareResponseDto.class))).thenReturn(dataShareResponseDto);
+
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
+
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID1");
+		requestDto.setPartnerDomain("FTM");
+		requestDto.setCertificateData("cert_data");
+
+		PartnerCertificateResponseDto actualResponse = pserviceImpl.uploadPartnerCertificate(requestDto);
+
+		assertNotNull(actualResponse);
+		assertEquals("CERT123", actualResponse.getCertificateId());
+		Mockito.verify(partnerRepository, Mockito.atLeastOnce()).save(Mockito.any(Partner.class));
+	}
+
+	@Test
+	public void testUploadPartnerCertificate_NonFtmDomain_Success() throws Exception {
+		Partner partner = createPartner(Boolean.TRUE);
+		Mockito.when(partnerRepository.findById("PID7")).thenReturn(Optional.of(partner));
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Credential_Partner");
+		partnerType.setIsPolicyRequired(false);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(Collections.singletonList(partnerType));
+
+		PartnerCertificateResponseDto expectedResponse = new PartnerCertificateResponseDto();
+		expectedResponse.setCertificateId("CERT789");
+		expectedResponse.setSignedCertificateData(REAL_CERT_CHAIN_B64URL);
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", expectedResponse);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		CACertificateResponseDto otherDomainResponse = new CACertificateResponseDto();
+		otherDomainResponse.setStatus("Active");
+		Map<String, Object> otherDomainApiResponse = new HashMap<>();
+		otherDomainApiResponse.put("response", otherDomainResponse);
+		when(restUtil.postApi(eq("http://kernel-keymanager-service/v1/keymanager/uploadOtherDomainCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(otherDomainApiResponse);
+
+		DataShareResponseDto dataShareResponseDto = new DataShareResponseDto();
+		DataShareDto dataShareDto = new DataShareDto();
+		dataShareDto.setUrl("https://datashare.url/y");
+		dataShareResponseDto.setDataShare(dataShareDto);
+		when(restUtil.postApi(eq("https://dev.mosip.io/v1/datashare/create"), any(), eq(""), eq(""),
+				eq(MediaType.MULTIPART_FORM_DATA), any(), eq(DataShareResponseDto.class))).thenReturn(dataShareResponseDto);
+
+		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(), Mockito.any(), Mockito.any());
+
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID7");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+
+		PartnerCertificateResponseDto actualResponse = pserviceImpl.uploadPartnerCertificate(requestDto);
+		assertNotNull(actualResponse);
+		assertEquals("CERT789", actualResponse.getCertificateId());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testUploadPartnerCertificate_PartnerNotActive_ThrowsException() throws Exception {
+		Partner partner = createPartner(Boolean.FALSE);
+		Mockito.when(partnerRepository.findById("PID2")).thenReturn(Optional.of(partner));
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID2");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+		pserviceImpl.uploadPartnerCertificate(requestDto);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testUploadPartnerCertificate_PolicyGroupNotMapped_ThrowsException() throws Exception {
+		Partner partner = createPartner(Boolean.TRUE);
+		partner.setPolicyGroupId(null);
+		Mockito.when(partnerRepository.findById("PID3")).thenReturn(Optional.of(partner));
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Credential_Partner");
+		partnerType.setIsPolicyRequired(true);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(Collections.singletonList(partnerType));
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID3");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+		pserviceImpl.uploadPartnerCertificate(requestDto);
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadPartnerCertificate_ApiErrorList_ThrowsException() throws Exception {
+		Partner partner = createPartner(Boolean.TRUE);
+		Mockito.when(partnerRepository.findById("PID4")).thenReturn(Optional.of(partner));
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Credential_Partner");
+		partnerType.setIsPolicyRequired(false);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(Collections.singletonList(partnerType));
+
+		Map<String, Object> errorMap = new HashMap<>();
+		errorMap.put(PartnerConstants.ERRORCODE, "ERR002");
+		errorMap.put(PartnerConstants.ERRORMESSAGE, "Upload failed");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put(PartnerConstants.ERRORS, Collections.singletonList(errorMap));
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID4");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+		pserviceImpl.uploadPartnerCertificate(requestDto);
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadPartnerCertificate_NullResponse_ThrowsException() throws Exception {
+		Partner partner = createPartner(Boolean.TRUE);
+		Mockito.when(partnerRepository.findById("PID5")).thenReturn(Optional.of(partner));
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Credential_Partner");
+		partnerType.setIsPolicyRequired(false);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(Collections.singletonList(partnerType));
+
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID5");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+		pserviceImpl.uploadPartnerCertificate(requestDto);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testUploadPartnerCertificate_InvalidCertChain_ThrowsException() throws Exception {
+		Partner partner = createPartner(Boolean.TRUE);
+		Mockito.when(partnerRepository.findById("PID6")).thenReturn(Optional.of(partner));
+		PartnerType partnerType = new PartnerType();
+		partnerType.setCode("Credential_Partner");
+		partnerType.setIsPolicyRequired(false);
+		Mockito.when(partnerTypeRepository.findAll()).thenReturn(Collections.singletonList(partnerType));
+
+		PartnerCertificateResponseDto expectedResponse = new PartnerCertificateResponseDto();
+		expectedResponse.setCertificateId("CERT_BAD");
+		expectedResponse.setSignedCertificateData("not-valid-cert-data");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", expectedResponse);
+		when(restUtil.postApi(eq("https://localhost/v1/keymanager/uploadPartnerCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		PartnerCertificateUploadRequestDto requestDto = new PartnerCertificateUploadRequestDto();
+		requestDto.setPartnerId("PID6");
+		requestDto.setPartnerDomain("Auth");
+		requestDto.setCertificateData("cert_data");
+		pserviceImpl.uploadPartnerCertificate(requestDto);
+	}
+
+	// ---- uploadOtherDomainCertificate (private) ----
+
+	@Test
+	public void testUploadOtherDomainCertificate_Reflection_RealSuccess() throws Exception {
+		CACertificateResponseDto expectedResponse = new CACertificateResponseDto();
+		expectedResponse.setStatus("Active");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", expectedResponse);
+		when(restUtil.postApi(eq("http://kernel-keymanager-service/v1/keymanager/uploadOtherDomainCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "uploadOtherDomainCertificate", "signed-cert-data", "partner-id-1");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadOtherDomainCertificate_MappingFailure_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", "not-a-valid-dto-shape-####");
+		when(restUtil.postApi(eq("http://kernel-keymanager-service/v1/keymanager/uploadOtherDomainCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "uploadOtherDomainCertificate", "signed-cert-data", "partner-id-2");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadOtherDomainCertificate_ErrorList_ThrowsException() throws Exception {
+		Map<String, Object> errorMap = new HashMap<>();
+		errorMap.put(PartnerConstants.ERRORCODE, "ERR003");
+		errorMap.put(PartnerConstants.ERRORMESSAGE, "Other domain failed");
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put(PartnerConstants.ERRORS, Collections.singletonList(errorMap));
+		when(restUtil.postApi(eq("http://kernel-keymanager-service/v1/keymanager/uploadOtherDomainCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "uploadOtherDomainCertificate", "signed-cert-data", "partner-id-3");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadOtherDomainCertificate_EmptyErrorList_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put(PartnerConstants.ERRORS, new ArrayList<>());
+		when(restUtil.postApi(eq("http://kernel-keymanager-service/v1/keymanager/uploadOtherDomainCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "uploadOtherDomainCertificate", "signed-cert-data", "partner-id-4");
+	}
+
+	@Test(expected = ApiAccessibleException.class)
+	public void testUploadOtherDomainCertificate_NullResponseNoErrors_ThrowsException() throws Exception {
+		Map<String, Object> apiResponse = new HashMap<>();
+		apiResponse.put("response", null);
+		when(restUtil.postApi(eq("http://kernel-keymanager-service/v1/keymanager/uploadOtherDomainCertificate"), any(), eq(""), eq(""),
+				eq(MediaType.APPLICATION_JSON), any(), eq(Map.class))).thenReturn(apiResponse);
+
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "uploadOtherDomainCertificate", "signed-cert-data", "partner-id-5");
+	}
+
+	// ---- getPartnerCertificateData / validateCertificateAlias / validateUser ----
+
+	@Test
+	public void testGetPartnerCertificateData_Admin_FullSuccess() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(createPartner(Boolean.TRUE)));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		Partner targetPartner = createPartner(Boolean.TRUE);
+		targetPartner.setCertificateAlias("alias-123");
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("TARGET1");
+		when(partnerRepository.findById("TARGET1")).thenReturn(Optional.of(targetPartner));
+
+		OriginalCertDownloadResponseDto certDto = new OriginalCertDownloadResponseDto();
+		certDto.setMosipSignedCertificateData("mosip-cert");
+		when(partnerHelper.getCertificate(eq("alias-123"), eq("pmp.partner.original.certificate.get.rest.uri"), eq(OriginalCertDownloadResponseDto.class)))
+				.thenReturn(certDto);
+		Mockito.doNothing().when(partnerHelper).populateCertificateExpiryState(any());
+
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> response = pserviceImpl.getPartnerCertificateData(requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals("mosip-cert", response.getResponse().getMosipSignedCertificateData());
+	}
+
+	@Test
+	public void testGetPartnerCertificateData_DeactivatedPartner_ErrorsSet() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(createPartner(Boolean.TRUE)));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		Partner targetPartner = createPartner(Boolean.TRUE);
+		targetPartner.setCertificateAlias("alias-deact");
+		targetPartner.setApprovalStatus("approved");
+		targetPartner.setIsActive(false);
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("TARGET_DEACT");
+		when(partnerRepository.findById("TARGET_DEACT")).thenReturn(Optional.of(targetPartner));
+
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> response = pserviceImpl.getPartnerCertificateData(requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+	}
+
+	@Test
+	public void testGetPartnerCertificateData_ApiAccessibleException_ErrorsSet() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(createPartner(Boolean.TRUE)));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		Partner targetPartner = createPartner(Boolean.TRUE);
+		targetPartner.setCertificateAlias("alias-api");
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("TARGET_API");
+		when(partnerRepository.findById("TARGET_API")).thenReturn(Optional.of(targetPartner));
+		when(partnerHelper.getCertificate(eq("alias-api"), anyString(), eq(OriginalCertDownloadResponseDto.class)))
+				.thenThrow(new ApiAccessibleException("CODE1", "msg1"));
+
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> response = pserviceImpl.getPartnerCertificateData(requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+	}
+
+	@Test
+	public void testGetPartnerCertificateData_GenericException_ErrorsSet() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(createPartner(Boolean.TRUE)));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+
+		Partner targetPartner = createPartner(Boolean.TRUE);
+		targetPartner.setCertificateAlias("alias-err");
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("TARGET_ERR");
+		when(partnerRepository.findById("TARGET_ERR")).thenReturn(Optional.of(targetPartner));
+		when(partnerHelper.getCertificate(eq("alias-err"), anyString(), eq(OriginalCertDownloadResponseDto.class)))
+				.thenThrow(new RuntimeException("boom"));
+
+		ResponseWrapperV2<OriginalCertDownloadResponseDto> response = pserviceImpl.getPartnerCertificateData(requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertFalse(response.getErrors().isEmpty());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateCertificateAlias_NullAlias_ThrowsException() {
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("X");
+		Partner partner = createPartner(Boolean.TRUE);
+		partner.setCertificateAlias(null);
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validateCertificateAlias", requestDto, partner);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateCertificateAlias_EmptyAlias_ThrowsException() {
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("X");
+		Partner partner = createPartner(Boolean.TRUE);
+		partner.setCertificateAlias("");
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validateCertificateAlias", requestDto, partner);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateUser_UserIdNotFound_ThrowsException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
+
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("anything");
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validateUser", requestDto);
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidateUser_NonAdminDoesNotBelong_ThrowsException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Partner userPartner = createPartner(Boolean.TRUE);
+		userPartner.setId("OTHER_PARTNER_ID");
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(userPartner));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("TARGET_NOT_OWNED");
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validateUser", requestDto);
+	}
+
+	@Test
+	public void testValidateUser_NonAdminBelongs_NoException() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		grantAuthorities(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Partner userPartner = createPartner(Boolean.TRUE);
+		userPartner.setId("OWNED_PARTNER_ID");
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(userPartner));
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		PartnerCertDownloadRequestDto requestDto = new PartnerCertDownloadRequestDto();
+		requestDto.setPartnerId("OWNED_PARTNER_ID");
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validateUser", requestDto);
+	}
+
+	// ---- validatePolicyGroupAndPolicy (private) ----
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidatePolicyGroupAndPolicy_PolicyNotExist_ThrowsException() {
+		Mockito.when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("noPolicy"))
+				.thenReturn(new ArrayList<>());
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validatePolicyGroupAndPolicy", "12345", "noPolicy");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidatePolicyGroupAndPolicy_GroupPolicyNotExist_ThrowsException() {
+		AuthPolicy authPolicy = createAuthPolicy();
+		authPolicy.setPolicyGroup(null);
+		Mockito.when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("Banking"))
+				.thenReturn(Collections.singletonList(authPolicy));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("otherGroup", "Banking")).thenReturn(null);
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validatePolicyGroupAndPolicy", "otherGroup", "Banking");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidatePolicyGroupAndPolicy_PolicyNotActive_ThrowsException() {
+		AuthPolicy authPolicy = createAuthPolicy();
+		authPolicy.setIsActive(false);
+		Mockito.when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("Banking"))
+				.thenReturn(Collections.singletonList(authPolicy));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Banking")).thenReturn(authPolicy);
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validatePolicyGroupAndPolicy", "12345", "Banking");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidatePolicyGroupAndPolicy_PolicyExpired_ThrowsException() {
+		AuthPolicy authPolicy = createAuthPolicy();
+		authPolicy.setValidToDate(LocalDateTime.now().minusDays(1));
+		Mockito.when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("Banking"))
+				.thenReturn(Collections.singletonList(authPolicy));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Banking")).thenReturn(authPolicy);
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validatePolicyGroupAndPolicy", "12345", "Banking");
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testValidatePolicyGroupAndPolicy_PolicyGroupNotActive_ThrowsException() {
+		AuthPolicy authPolicy = createAuthPolicy();
+		authPolicy.getPolicyGroup().setIsActive(false);
+		Mockito.when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("Banking"))
+				.thenReturn(Collections.singletonList(authPolicy));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Banking")).thenReturn(authPolicy);
+		ReflectionTestUtils.invokeMethod(pserviceTarget, "validatePolicyGroupAndPolicy", "12345", "Banking");
+	}
+
+	@Test
+	public void testValidatePolicyGroupAndPolicy_Success() {
+		AuthPolicy authPolicy = createAuthPolicy();
+		Mockito.when(authPolicyRepository.findByPolicyNameAndIsDeletedFalseorIsDeletedIsNullAndIsActiveTrue("Banking"))
+				.thenReturn(Collections.singletonList(authPolicy));
+		Mockito.when(authPolicyRepository.findByPolicyGroupIdAndName("12345", "Banking")).thenReturn(authPolicy);
+		AuthPolicy result = ReflectionTestUtils.invokeMethod(pserviceTarget, "validatePolicyGroupAndPolicy", "12345", "Banking");
+		assertNotNull(result);
+		assertEquals("Banking", result.getName());
 	}
 
 }

@@ -59,6 +59,13 @@ import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.partner.manager.constant.ErrorCode;
 import io.mosip.pms.partner.manager.constant.PartnerManageEnum;
 import io.mosip.pms.partner.manager.exception.PartnerManagerServiceException;
+import io.mosip.pms.partner.manager.dto.ApiKeyFilterDto;
+import io.mosip.pms.partner.manager.dto.ApiKeyRequestSummaryDto;
+import io.mosip.pms.partner.manager.dto.PartnerDetailsResponse;
+import io.mosip.pms.partner.manager.dto.PartnerFilterDto;
+import io.mosip.pms.partner.manager.dto.PartnerSummaryDto;
+import io.mosip.pms.common.entity.ApiKeyRequestsSummaryEntity;
+import io.mosip.pms.common.entity.PartnerSummaryEntity;
 import io.mosip.pms.partner.manager.service.impl.PartnerManagementServiceImpl;
 import io.mosip.pms.partner.request.dto.APIKeyGenerateRequestDto;
 import io.mosip.pms.partner.request.dto.APIkeyStatusUpdateRequestDto;
@@ -148,8 +155,11 @@ public class PartnerManagementServiceImplTest {
 		ReflectionTestUtils.setField(partnerManagementImpl, "extractorProviderRepository", extractorProviderRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "mispLicenseRepository", mispLicenseRepository);
 		ReflectionTestUtils.setField(partnerManagementImpl, "webSubPublisher", webSubPublisher);
-		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);		
-//		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);		
+		ReflectionTestUtils.setField(partnerManagementImpl, "restUtil", restUtil);
+//		ReflectionTestUtils.setField(partnerManagementImpl, "mapper", mapper);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerSummaryRepository", partnerSummaryRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "apiKeyRequestSummaryRepository", apiKeyRequestSummaryRepository);
+		ReflectionTestUtils.setField(partnerManagementImpl, "partnerHelper", partnerHelper);
 		Mockito.doNothing().when(webSubPublisher).notify(Mockito.any(),Mockito.any(),Mockito.any());
 		Mockito.doNothing().when(audit).setAuditRequestDto(Mockito.any(PartnerManageEnum.class));
 		Mockito.doNothing().when(notificationService).sendNotications(Mockito.any(), Mockito.any());
@@ -1857,5 +1867,105 @@ public class PartnerManagementServiceImplTest {
 		mosipUserDto.setUserId("123");
 		mosipUserDto.setMail("abc@gmail.com");
 		return mosipUserDto;
+	}
+
+	// ==================== Additional coverage tests (sonar coverage uplift) ====================
+
+	private void grantAdminAuthority() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+	}
+
+	@Test
+	public void testGetPartners_NoFilter_Success() {
+		Partner partner = new Partner();
+		partner.setId("P1");
+		partner.setIsActive(true);
+		partner.setName("Partner One");
+		partner.setContactNo("9876543210");
+		partner.setEmailId("p1@test.com");
+		partner.setAddress("addr");
+		partner.setPartnerTypeCode("Auth_Partner");
+		when(partnerRepository.findAll()).thenReturn(Collections.singletonList(partner));
+
+		PartnerDetailsResponse response = partnerManagementImpl.getPartners(Optional.empty());
+		assertNotNull(response);
+		assertNotNull(response.getPartners());
+		assertEquals(1, response.getPartners().size());
+		assertEquals("P1", response.getPartners().get(0).getPartnerID());
+	}
+
+	@Test
+	public void testGetPartners_WithFilter_Success() {
+		Partner partner = new Partner();
+		partner.setId("P2");
+		partner.setIsActive(false);
+		partner.setName("Partner Two");
+		when(partnerRepository.findByPartnerType("Auth_Partner")).thenReturn(Collections.singletonList(partner));
+
+		PartnerDetailsResponse response = partnerManagementImpl.getPartners(Optional.of("Auth_Partner"));
+		assertNotNull(response);
+		assertEquals(1, response.getPartners().size());
+		assertEquals("P2", response.getPartners().get(0).getPartnerID());
+	}
+
+	@Test(expected = PartnerManagerServiceException.class)
+	public void testGetPartners_EmptyResult_ThrowsException() {
+		when(partnerRepository.findAll()).thenReturn(new ArrayList<>());
+		partnerManagementImpl.getPartners(Optional.empty());
+	}
+
+	@Test
+	public void testGetAdminPartners_FullSuccess() {
+		PartnerFilterDto filterDto = new PartnerFilterDto();
+		filterDto.setPartnerId("P1");
+		filterDto.setPartnerTypeCode("Auth_Partner");
+		filterDto.setOrganizationName("Org");
+		filterDto.setPolicyGroupName("PG");
+		filterDto.setCertificateUploadStatus("uploaded");
+		filterDto.setEmailAddress("p1@test.com");
+		filterDto.setIsActive(true);
+
+		PartnerSummaryEntity entity = new PartnerSummaryEntity();
+		Page<PartnerSummaryEntity> page = new PageImpl<>(Collections.singletonList(entity));
+		when(partnerSummaryRepository.getSummaryOfAllPartners(anyString(), anyString(), anyString(), anyString(),
+				anyString(), anyString(), any(), any())).thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<PartnerSummaryDto>> response =
+				partnerManagementImpl.getAdminPartners(null, null, 0, 8, filterDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().getData().size());
+	}
+
+	@Test
+	public void testGetAllApiKeyRequests_Admin_FullSuccess() throws Exception {
+		grantAdminAuthority();
+		ApiKeyFilterDto filterDto = new ApiKeyFilterDto();
+		filterDto.setPartnerId("P1");
+		filterDto.setApiKeyLabel("label");
+		filterDto.setOrgName("Org");
+		filterDto.setPolicyName("Policy");
+		filterDto.setPolicyGroupName("PG");
+		filterDto.setStatus("approved");
+
+		ApiKeyRequestsSummaryEntity entity = new ApiKeyRequestsSummaryEntity();
+		Page<ApiKeyRequestsSummaryEntity> page = new PageImpl<>(Collections.singletonList(entity));
+		when(apiKeyRequestSummaryRepository.getSummaryOfAllApiKeyRequests(anyString(), anyString(), anyString(),
+				anyString(), anyString(), anyString(), any(), anyBoolean(), any())).thenReturn(page);
+
+		ResponseWrapperV2<PageResponseV2Dto<ApiKeyRequestSummaryDto>> response =
+				partnerManagementImpl.getAllApiKeyRequests(null, null, null, null, filterDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(1, response.getResponse().getData().size());
 	}
 }

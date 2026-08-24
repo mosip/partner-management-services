@@ -33,8 +33,12 @@ import io.mosip.pms.device.request.dto.DeviceDetailUpdateDto;
 import io.mosip.pms.device.request.dto.DeviceSearchDto;
 import io.mosip.pms.device.request.dto.DeactivateDeviceRequestDto;
 import io.mosip.pms.device.request.dto.UpdateDeviceDetailStatusDto;
+import io.mosip.pms.device.response.dto.DeviceDetailResponseDto;
 import io.mosip.pms.device.util.AuditUtil;
 import io.mosip.pms.device.util.DeviceHelper;
+import io.mosip.pms.partner.constant.ErrorCode;
+import io.mosip.pms.partner.constant.PartnerConstants;
+import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.request.dto.SbiAndDeviceMappingRequestDto;
 import io.mosip.pms.partner.util.PartnerHelper;
 import io.mosip.pms.test.PartnerManagementServiceTest;
@@ -49,18 +53,24 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
@@ -699,5 +709,148 @@ public class DeviceDetailServiceTest {
 		mosipUserDto.setUserId("123");
 		mosipUserDto.setMail("abc@gmail.com");
 		return mosipUserDto;
+	}
+
+	// ==================== Additional coverage tests (sonar coverage uplift) ====================
+
+	private void grantAdminAuthority() throws Exception {
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		Collection<GrantedAuthority> newAuthorities = List.of(new SimpleGrantedAuthority("PARTNER_ADMIN"));
+		Method addAuthoritiesMethod = AuthUserDetails.class.getDeclaredMethod("addAuthorities", Collection.class, String.class);
+		addAuthoritiesMethod.setAccessible(true);
+		addAuthoritiesMethod.invoke(authUserDetails, newAuthorities, null);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+	}
+
+	@Test
+	public void testDeactivateDevice_FullSuccess() throws Exception {
+		grantAdminAuthority();
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus(PartnerConstants.DEACTIVATE);
+		when(partnerRepository.findByUserId(anyString())).thenReturn(Collections.singletonList(new Partner()));
+
+		DeviceDetail device = new DeviceDetail();
+		device.setId("DEV1");
+		device.setApprovalStatus("approved");
+		device.setIsActive(true);
+		when(deviceDetailRepository.findById("DEV1")).thenReturn(Optional.of(device));
+
+		DeviceDetail savedDevice = new DeviceDetail();
+		savedDevice.setId("DEV1");
+		savedDevice.setApprovalStatus("approved");
+		savedDevice.setIsActive(false);
+		when(deviceDetailRepository.save(any())).thenReturn(savedDevice);
+
+		ResponseWrapperV2<DeviceDetailResponseDto> response = deviceDetaillService.deactivateDevice("DEV1", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals("DEV1", response.getResponse().getDeviceId());
+		assertEquals(false, response.getResponse().isActive());
+	}
+
+	@Test(expected = PartnerServiceException.class)
+	public void testDeactivateDevice_InvalidStatus_ThrowsException() {
+		DeactivateDeviceRequestDto requestDto = new DeactivateDeviceRequestDto();
+		requestDto.setStatus("bad-status");
+		ResponseWrapperV2<DeviceDetailResponseDto> response = deviceDetaillService.deactivateDevice("DEV1", requestDto);
+		if (response.getErrors() != null) {
+			throw new PartnerServiceException(response.getErrors().get(0).getErrorCode(), response.getErrors().get(0).getMessage());
+		}
+	}
+
+	@Test
+	public void testApproveOrRejectMappingDeviceToSbi_ApproveFullSuccess() throws Exception {
+		grantAdminAuthority();
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("P1");
+		requestDto.setSbiId("SBI1");
+		requestDto.setStatus(DeviceConstant.APPROVED);
+		Mockito.doNothing().when(partnerHelper).validateSbiDeviceMapping(anyString(), anyString(), anyString());
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		deviceDetailSBI.setProviderId("P1");
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId("P1", "SBI1", "DEV1"))
+				.thenReturn(deviceDetailSBI);
+
+		DeviceDetail entity = new DeviceDetail();
+		entity.setId("DEV1");
+		when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull("DEV1")).thenReturn(entity);
+		when(deviceDetailRepository.save(any())).thenReturn(entity);
+
+		ResponseWrapperV2<Boolean> response = deviceDetaillService.approveOrRejectMappingDeviceToSbi("DEV1", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(Boolean.TRUE, response.getResponse());
+	}
+
+	@Test
+	public void testApproveOrRejectMappingDeviceToSbi_RejectFullSuccess() throws Exception {
+		grantAdminAuthority();
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("P1");
+		requestDto.setSbiId("SBI1");
+		requestDto.setStatus(DeviceConstant.REJECTED);
+		Mockito.doNothing().when(partnerHelper).validateSbiDeviceMapping(anyString(), anyString(), anyString());
+
+		DeviceDetailSBI deviceDetailSBI = new DeviceDetailSBI();
+		deviceDetailSBI.setProviderId("P1");
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId("P1", "SBI1", "DEV2"))
+				.thenReturn(deviceDetailSBI);
+
+		DeviceDetail entity = new DeviceDetail();
+		entity.setId("DEV2");
+		when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull("DEV2")).thenReturn(entity);
+		when(deviceDetailRepository.save(any())).thenReturn(entity);
+
+		ResponseWrapperV2<Boolean> response = deviceDetaillService.approveOrRejectMappingDeviceToSbi("DEV2", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getResponse());
+		assertEquals(Boolean.TRUE, response.getResponse());
+	}
+
+	@Test
+	public void testApproveOrRejectMappingDeviceToSbi_NullSbiId_Approve_ErrorsSet() {
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("P1");
+		requestDto.setSbiId(null);
+		requestDto.setStatus(DeviceConstant.APPROVED);
+
+		ResponseWrapperV2<Boolean> response = deviceDetaillService.approveOrRejectMappingDeviceToSbi("DEV3", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.NO_SBI_FOUND_FOR_APPROVE.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testApproveOrRejectMappingDeviceToSbi_NullSbiId_Reject_ErrorsSet() {
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("P1");
+		requestDto.setSbiId(null);
+		requestDto.setStatus(DeviceConstant.REJECTED);
+
+		ResponseWrapperV2<Boolean> response = deviceDetaillService.approveOrRejectMappingDeviceToSbi("DEV4", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.NO_SBI_FOUND_FOR_REJECT.getErrorCode(), response.getErrors().get(0).getErrorCode());
+	}
+
+	@Test
+	public void testApproveOrRejectMappingDeviceToSbi_MappingNotExists_ErrorsSet() {
+		SbiAndDeviceMappingRequestDto requestDto = new SbiAndDeviceMappingRequestDto();
+		requestDto.setPartnerId("P1");
+		requestDto.setSbiId("SBI1");
+		requestDto.setStatus(DeviceConstant.APPROVED);
+		Mockito.doNothing().when(partnerHelper).validateSbiDeviceMapping(anyString(), anyString(), anyString());
+		when(deviceDetailSbiRepository.findByDeviceProviderIdAndSbiIdAndDeviceDetailId(anyString(), anyString(), anyString()))
+				.thenReturn(null);
+
+		ResponseWrapperV2<Boolean> response = deviceDetaillService.approveOrRejectMappingDeviceToSbi("DEV5", requestDto);
+		assertNotNull(response);
+		assertNotNull(response.getErrors());
+		assertEquals(ErrorCode.SBI_DEVICE_MAPPING_NOT_EXISTS.getErrorCode(), response.getErrors().get(0).getErrorCode());
 	}
 }

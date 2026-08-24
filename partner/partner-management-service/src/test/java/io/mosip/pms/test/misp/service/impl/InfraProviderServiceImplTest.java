@@ -2,6 +2,7 @@ package io.mosip.pms.test.misp.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +35,14 @@ import io.mosip.pms.common.repository.MispLicenseRepository;
 import io.mosip.pms.common.repository.PartnerPolicyRequestRepository;
 import io.mosip.pms.common.repository.PartnerServiceRepository;
 import io.mosip.pms.common.validator.FilterColumnValidator;
+import io.mosip.pms.partner.misp.dto.MISPLicenseResponseDto;
 import io.mosip.pms.partner.misp.exception.MISPServiceException;
 import io.mosip.pms.partner.misp.service.impl.InfraProviderServiceImpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -394,4 +399,140 @@ public class InfraProviderServiceImplTest {
 		assertEquals(entities.size(), result.getData().size());
 	}
 
+	// ==================== Additional coverage tests (sonar coverage uplift) ====================
+
+	@Test
+	public void testRegenerateKey_NewLicense_NoPolicy_Success() {
+		String mispId = "MISP1";
+		Partner partner = new Partner();
+		partner.setId(mispId);
+		partner.setIsActive(true);
+		when(partnerRepository.findById(mispId)).thenReturn(Optional.of(partner));
+		when(mispLicenseRepository.findByMispIdandExpirydate(mispId)).thenReturn(new ArrayList<>());
+		when(mispLicenseRepository.findByMispId(mispId)).thenReturn(Collections.singletonList(new MISPLicenseEntity()));
+		when(partnerPolicyRequestRepository.findByPartnerId(mispId)).thenReturn(new ArrayList<>());
+
+		MISPLicenseResponseDto response = infraProviderServiceImpl.regenerateKey(mispId);
+		assertNotNull(response);
+		assertNotNull(response.getLicenseKey());
+		assertEquals(mispId, response.getProviderId());
+		assertEquals("Active", response.getLicenseKeyStatus());
+	}
+
+	@Test
+	public void testRegenerateKey_NewLicense_WithApprovedPolicy_Success() {
+		String mispId = "MISP2";
+		Partner partner = new Partner();
+		partner.setId(mispId);
+		partner.setIsActive(true);
+		when(partnerRepository.findById(mispId)).thenReturn(Optional.of(partner));
+		when(mispLicenseRepository.findByMispIdandExpirydate(mispId)).thenReturn(new ArrayList<>());
+		when(mispLicenseRepository.findByMispId(mispId)).thenReturn(Collections.singletonList(new MISPLicenseEntity()));
+
+		PartnerPolicyRequest policyReq = new PartnerPolicyRequest();
+		policyReq.setPolicyId("POLICY1");
+		policyReq.setStatusCode("approved");
+		when(partnerPolicyRequestRepository.findByPartnerId(mispId)).thenReturn(Collections.singletonList(policyReq));
+
+		AuthPolicy authPolicy = new AuthPolicy();
+		authPolicy.setId("POLICY1");
+		authPolicy.setName("Banking");
+		authPolicy.setIsActive(true);
+		authPolicy.setValidFromDate(LocalDateTime.now().minusDays(1));
+		authPolicy.setValidToDate(LocalDateTime.now().plusYears(1));
+		authPolicy.setPolicyFileId("{}");
+		when(authPolicyRepository.findById("POLICY1")).thenReturn(Optional.of(authPolicy));
+
+		MISPLicenseResponseDto response = infraProviderServiceImpl.regenerateKey(mispId);
+		assertNotNull(response);
+		assertNotNull(response.getLicenseKey());
+		assertEquals(mispId, response.getProviderId());
+	}
+
+	@Test(expected = MISPServiceException.class)
+	public void testRegenerateKey_PolicyNotApproved_ThrowsException() {
+		String mispId = "MISP3";
+		Partner partner = new Partner();
+		partner.setId(mispId);
+		partner.setIsActive(true);
+		when(partnerRepository.findById(mispId)).thenReturn(Optional.of(partner));
+		when(mispLicenseRepository.findByMispIdandExpirydate(mispId)).thenReturn(new ArrayList<>());
+		when(mispLicenseRepository.findByMispId(mispId)).thenReturn(Collections.singletonList(new MISPLicenseEntity()));
+
+		PartnerPolicyRequest policyReq = new PartnerPolicyRequest();
+		policyReq.setPolicyId("POLICY1");
+		policyReq.setStatusCode("pending");
+		when(partnerPolicyRequestRepository.findByPartnerId(mispId)).thenReturn(Collections.singletonList(policyReq));
+
+		infraProviderServiceImpl.regenerateKey(mispId);
+	}
+
+	@Test
+	public void testRegenerateKey_ExistingValidLicense_Success() {
+		String mispId = "MISP4";
+		Partner partner = new Partner();
+		partner.setId(mispId);
+		partner.setIsActive(true);
+		when(partnerRepository.findById(mispId)).thenReturn(Optional.of(partner));
+
+		MISPLicenseEntity existingLicense = new MISPLicenseEntity();
+		existingLicense.setLicenseKey("EXISTING_KEY");
+		existingLicense.setValidToDate(LocalDateTime.now().plusYears(1));
+		when(mispLicenseRepository.findByMispIdandExpirydate(mispId)).thenReturn(Collections.singletonList(existingLicense));
+		when(mispLicenseRepository.findByMispId(mispId)).thenReturn(Collections.singletonList(existingLicense));
+		when(partnerPolicyRequestRepository.findByPartnerId(mispId)).thenReturn(new ArrayList<>());
+
+		MISPLicenseResponseDto response = infraProviderServiceImpl.regenerateKey(mispId);
+		assertNotNull(response);
+		assertEquals("EXISTING_KEY", response.getLicenseKey());
+		assertEquals(mispId, response.getProviderId());
+	}
+
+	@Test(expected = MISPServiceException.class)
+	public void testRegenerateKey_MispInactive_ThrowsException() {
+		String mispId = "MISP5";
+		Partner partner = new Partner();
+		partner.setId(mispId);
+		partner.setIsActive(false);
+		when(partnerRepository.findById(mispId)).thenReturn(Optional.of(partner));
+		infraProviderServiceImpl.regenerateKey(mispId);
+	}
+
+	@Test(expected = MISPServiceException.class)
+	public void testRegenerateKey_NoLicenseAssociated_ThrowsException() {
+		String mispId = "MISP6";
+		Partner partner = new Partner();
+		partner.setId(mispId);
+		partner.setIsActive(true);
+		when(partnerRepository.findById(mispId)).thenReturn(Optional.of(partner));
+		when(mispLicenseRepository.findByMispIdandExpirydate(mispId)).thenReturn(new ArrayList<>());
+		when(mispLicenseRepository.findByMispId(mispId)).thenReturn(new ArrayList<>());
+		infraProviderServiceImpl.regenerateKey(mispId);
+	}
+
+	@Test
+	public void testUpdateInfraProvider_FullSuccess() {
+		MISPLicenseEntity entity = new MISPLicenseEntity();
+		entity.setMispId("MISP7");
+		entity.setLicenseKey("KEY7");
+		entity.setValidToDate(LocalDateTime.now().plusYears(1));
+		when(mispLicenseRepository.findByIdAndKey("MISP7", "KEY7")).thenReturn(entity);
+		when(mispLicenseRepository.save(any())).thenReturn(entity);
+
+		MISPLicenseResponseDto response = infraProviderServiceImpl.updateInfraProvider("MISP7", "KEY7", "active");
+		assertNotNull(response);
+		assertEquals("KEY7", response.getLicenseKey());
+		assertEquals("active", response.getLicenseKeyStatus());
+	}
+
+	@Test(expected = MISPServiceException.class)
+	public void testUpdateInfraProvider_InvalidStatus_ThrowsException() {
+		infraProviderServiceImpl.updateInfraProvider("MISP8", "KEY8", "bogus-status");
+	}
+
+	@Test(expected = MISPServiceException.class)
+	public void testUpdateInfraProvider_LicenseNotFound_ThrowsException() {
+		when(mispLicenseRepository.findByIdAndKey(anyString(), anyString())).thenReturn(null);
+		infraProviderServiceImpl.updateInfraProvider("MISP9", "KEY9", "active");
+	}
 }
