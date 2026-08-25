@@ -258,7 +258,7 @@ UploadCertificateMISPCASUBCA:
    Pms_UploadCACertificate_For_DBValidator_Only:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_17
-      description: Upload valid CA certificate for the MISP partner dedicated to TC_PMS_DBValidator_07
+      description: Upload valid CA certificate for the DBValidator_07 MISP partner
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/UploadCertificate/UploadCertificateRoot
@@ -274,7 +274,7 @@ UploadCertificateMISPCASUBCA:
    Pms_UploadSUBCACertificate_For_DBValidator_Only:
       endPoint: /v1/partnermanager/partners/certificate/ca/upload
       uniqueIdentifier: TC_PMS_UploadCertificateMISPCASUBCA_18
-      description: Upload valid SUBCA certificate for the MISP partner dedicated to TC_PMS_DBValidator_07
+      description: Upload valid SUBCA certificate for the DBValidator_07 MISP partner
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/UploadCertificate/UploadCertificateRoot

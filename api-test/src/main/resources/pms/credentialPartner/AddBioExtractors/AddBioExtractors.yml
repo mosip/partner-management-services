@@ -785,7 +785,7 @@ AddBioExtractors:
    Pms_AddBioExtractors_Without_BiometricSubTypes_Positive:
       endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_37
-      description: Validate that adding bio extractors succeeds when biometricSubTypes parameter is not provided, since it is an optional field
+      description: Validate that adding bio extractors succeeds when biometricSubTypes parameter is not provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute

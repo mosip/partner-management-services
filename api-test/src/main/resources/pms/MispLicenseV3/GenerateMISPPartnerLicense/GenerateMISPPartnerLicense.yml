@@ -173,7 +173,7 @@ GenerateMISPPartnerLicense:
    Pms_GenerateMISPPartnerLicense_For_DBValidator_Only_sid:
       endPoint: /v1/partnermanager/misp-licenses
       uniqueIdentifier: TC_PMS_GenerateMISPPartnerLicense_09
-      description: Generate a MISP partner license for a dedicated partner used only by TC_PMS_DBValidator_07, so this license is never regenerated or deactivated by unrelated test flows
+      description: Generate a dedicated MISP partner license for TC_PMS_DBValidator_07
       role: partneradmin
       restMethod: post
       additionalDependencies: TC_PMS_CreateMISPPartnerRegistration_19,TC_PMS_UploadMISPPartnerCertificate_09,TC_PMS_ApproveAPIKey_26

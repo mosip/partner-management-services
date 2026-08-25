@@ -527,7 +527,7 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_For_DBValidator_Only_sid:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_11
-      description: Submit the policy-mapping request required before a license can be generated, for the MISP partner dedicated to TC_PMS_DBValidator_07 (required per InfraProviderServiceImpl.validatePolicy, which needs an approved PartnerPolicyRequest for this partner+policy)
+      description: Submit the policy-mapping request for the DBValidator_07 MISP partner
       role: partneradmin
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_UploadMISPPartnerCertificate_09

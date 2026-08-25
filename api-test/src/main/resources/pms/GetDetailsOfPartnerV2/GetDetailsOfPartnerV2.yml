@@ -71,7 +71,7 @@ GetDetailsOfPartnerV2:
 }'
    Pms_GetDetailsOfPartnerV2_SpecialCharactersIn_partnerId_Neg:
       endPoint: /v1/partnermanager/admin-partners/v2/{partnerId}
-      description: Validate that partner details retrieval fails when partnerId contains characters outside the allowed format. The special characters trigger rejection at the gateway/servlet layer before reaching the app's own validation, so only the HTTP status is checked rather than the app's structured error body.
+      description: Validate that partner details retrieval fails when partnerId contains characters outside the allowed format
       uniqueIdentifier: TC_PMS_GetPartnerDetailsV2_05
       role: partneradmin
       restMethod: get

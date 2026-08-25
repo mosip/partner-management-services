@@ -138,7 +138,7 @@ UploadMISPPartnerCertificate:
    Pms_UploadMISPPartnerCertificate_For_DBValidator_Only:
       endPoint: /v1/partnermanager/partners/certificate/upload
       uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_09
-      description: Upload the leaf certificate that activates the MISP partner dedicated to TC_PMS_DBValidator_07 (activation requires certificateAlias to be set, per PartnerServiceImpl.uploadPartnerCertificate)
+      description: Upload the partner certificate for the DBValidator_07 MISP partner
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: post

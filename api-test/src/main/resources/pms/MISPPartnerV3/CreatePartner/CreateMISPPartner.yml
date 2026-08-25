@@ -460,7 +460,7 @@ CreateMISPPartner:
    Pms_MISPPartnerRegistration_For_DBValidator_Only_sid:
       endPoint: /v1/partnermanager/partners/v3
       uniqueIdentifier: TC_PMS_CreateMISPPartnerRegistration_19
-      description: Register a MISP partner used only to generate a license for TC_PMS_DBValidator_07, so this license is never regenerated or deactivated by unrelated test flows
+      description: Register a dedicated MISP partner for TC_PMS_DBValidator_07
       role: partneradmin
       restMethod: post
       inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner

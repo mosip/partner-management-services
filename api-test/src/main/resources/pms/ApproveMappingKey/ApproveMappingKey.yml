@@ -458,7 +458,7 @@ ApproveMappingKey:
    Pms_ApproveMappingKey_For_DBValidator_Only_sid:
       endPoint: /v1/partnermanager/partners/policy/{mappingkey}
       uniqueIdentifier: TC_PMS_ApproveAPIKey_26
-      description: Approve the policy-mapping request for the MISP partner dedicated to TC_PMS_DBValidator_07, so license generation passes the approved-policy check
+      description: Approve the policy-mapping request for the DBValidator_07 MISP partner
       role: partneradmin
       additionalDependencies: TC_PMS_RequestAPIKeyForAuthPartner_11
       restMethod: put
