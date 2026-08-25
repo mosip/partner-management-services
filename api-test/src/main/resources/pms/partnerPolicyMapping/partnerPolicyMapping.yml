@@ -524,3 +524,22 @@ partnerPolicyMapping:
       output: '{
         "message": "Policy mapping request submitted successfully."
     }'
+   Pms_partnerPolicyMapping_For_DBValidator_Only_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_11
+      description: Submit the policy-mapping request required before a license can be generated, for the MISP partner dedicated to TC_PMS_DBValidator_07 (required per InfraProviderServiceImpl.validatePolicy, which needs an approved PartnerPolicyRequest for this partner+policy)
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_UploadMISPPartnerCertificate_09
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:MISPPartnerRegistration_For_DBValidator_Only_sid_partnerId$",
+        "policyName": "$ID:DefineMISPPolicy_All_Valid_Smoke_pms_sid_name$",
+        "useCaseDescription": "Need to generate a MISP license",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "message": "Policy mapping request submitted successfully."
+    }'
