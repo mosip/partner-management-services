@@ -135,3 +135,20 @@ UploadMISPPartnerCertificate:
 }'
       output: ' {
 }'
+   Pms_UploadMISPPartnerCertificate_For_DBValidator_Only:
+      endPoint: /v1/partnermanager/partners/certificate/upload
+      uniqueIdentifier: TC_PMS_UploadMISPPartnerCertificate_09
+      description: Upload the partner certificate for the DBValidator_07 MISP partner
+      role: partneradmin
+      checkErrorsOnlyInResponse: true
+      restMethod: post
+      additionalDependencies: TC_PMS_UploadCertificateMISPCASUBCA_17,TC_PMS_UploadCertificateMISPCASUBCA_18
+      inputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertificate
+      outputTemplate: pms/MISPPartnerV3/UploadMISPPartnerCertificate/UploadMISPPartnerCertResult
+      input: '{
+  "requesttime": "$TIMESTAMP$",
+  "certificateData": "$MISPPARTNERCERT$",
+  "partnerId": "$ID:MISPPartnerRegistration_For_DBValidator_Only_sid_partnerId$"
+}'
+      output: ' {
+}'

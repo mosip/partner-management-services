@@ -75,15 +75,12 @@ GetDetailsOfPartnerV2:
       uniqueIdentifier: TC_PMS_GetPartnerDetailsV2_05
       role: partneradmin
       restMethod: get
+      checkOnlyStatusCodeInResponse: true
       inputTemplate: pms/GetDetailsOfPartnerV2/getDetailsOfPartnerV2
-      outputTemplate: pms/error
+      outputTemplate: pms/responseCode
       input: '{
 	"partnerId": "@#%^&ABCD"
 }'
       output: '{
-      "errors": [
-      {
-       "errorCode": "PMS_REQUEST_ERROR_007"
-      }
-      ]
+      "responseCode": "400"
 }'

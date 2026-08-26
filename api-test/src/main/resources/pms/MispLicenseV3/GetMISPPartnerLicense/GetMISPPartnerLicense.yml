@@ -816,5 +816,5 @@ GetMISPPartnerLicense:
     }'
         output: '{
         "mispLicenseId": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$",
-        "maskedLicenseKey": "$REGEXP:\\*+.{4}"
+        "maskedLicenseKey": "$REGEXP:\\\\*+.{4}"
     }'

@@ -670,15 +670,6 @@
                     name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams"/>
         </classes>
     </test>
-    <test name="MapPartnerAndPolicytoCredentialType">
-        <parameter name="ymlFile"
-                   value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml"/>
-        <parameter name="pathParams" value="requestId"/>
-        <classes>
-            <class
-                    name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams"/>
-        </classes>
-    </test>
 	<test name="ApproveMappingKeyForRejectMappingRetry">
 		<parameter name="ymlFile"
 				   value="pms/ApproveMappingKey/ApproveMappingKeyForRejectMappingRetry.yml" />
@@ -688,6 +679,15 @@
 					name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
 		</classes>
 	</test>
+    <test name="MapPartnerAndPolicytoCredentialType">
+        <parameter name="ymlFile"
+                   value="pms/MapPartnerAndPolicytoCredentialType/MapPartnerAndPolicytoCredentialType.yml"/>
+        <parameter name="pathParams" value="requestId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams"/>
+        </classes>
+    </test>
     <test name="GetBioExtractorRequests">
         <parameter name="ymlFile"
                    value="pms/GetBioExtractorRequests/GetBioExtractorRequests.yml"/>
@@ -1825,16 +1825,6 @@
                     name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId"/>
         </classes>
     </test>
-    <test name="GenerateMISPPartnerLicenseNegativeScenarios">
-        <parameter name="ymlFile"
-                   value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml"/>
-        <parameter name="idKeyName"
-                   value="id,partnerId,policyId,licenseKeyName,licenseKey,mispLicenseId"/>
-        <classes>
-            <class
-                    name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId"/>
-        </classes>
-    </test>
     <test name="DeactivateMISPLicense">
         <parameter name="ymlFile"
                    value="pms/DeactivateMISPLicense/DeactivateMISPLicense.yml"/>
@@ -1851,6 +1841,16 @@
         <classes>
             <class
                     name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody"/>
+        </classes>
+    </test>
+    <test name="GenerateMISPPartnerLicenseNegativeScenarios">
+        <parameter name="ymlFile"
+                   value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml"/>
+        <parameter name="idKeyName"
+                   value="id,partnerId,policyId,licenseKeyName,licenseKey,mispLicenseId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId"/>
         </classes>
     </test>
     <test name="GetMISPPartnerLicense">

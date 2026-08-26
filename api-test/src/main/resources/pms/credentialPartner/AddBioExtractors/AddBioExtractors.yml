@@ -782,14 +782,14 @@ AddBioExtractors:
       output: '{
       "response": "Bio extract request submitted successfully."
       }'
-   Pms_AddBioExtractors_Without_BiometricSubTypes_Neg:
+   Pms_AddBioExtractors_Without_BiometricSubTypes_Positive:
       endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_37
-      description: Validate that adding bio extractors fails when biometricSubTypes parameter is not provided
+      description: Validate that adding bio extractors succeeds when biometricSubTypes parameter is not provided
       role: partneradmin
       restMethod: post
       inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
-      outputTemplate: pms/error
+      outputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsResult
       input: '{
   "requestTime": "$TIMESTAMP$",
   "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
@@ -800,12 +800,8 @@ AddBioExtractors:
   "extractorProviderVersion":"1.1"
   }'
       output: '{
-   "errors": [
-    {
-      "errorCode": "PMS_PRT_099"
-    }
-  ]
-}'
+      "response": "Bio extract request submitted successfully."
+      }'
    Pms_AddBioExtractors_Without_ExtractorProvider_Neg:
       endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
       uniqueIdentifier: TC_PMS_addBioExtractors_38

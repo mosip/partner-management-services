@@ -114,11 +114,11 @@ DBValidator:
       description: Validate that the MISP license record generated via the API is correctly stored and active in the pms database
       role: pms
       restMethod: post
-      additionalDependencies: TC_PMS_GenerateMISPPartnerLicense_01
+      additionalDependencies: TC_PMS_GenerateMISPPartnerLicense_09
       inputTemplate: pms/DbValidatorTest/dbValidatorTestOidcClient
       outputTemplate: pms/DbValidatorTest/dbValidatorTestOidcClientResult
       input: '{
-      "misp_license_id": "$ID:GenerateMISPPartnerLicense_All_Valid_Smoke_sid_mispLicenseId$"
+      "misp_license_id": "$ID:GenerateMISPPartnerLicense_For_DBValidator_Only_sid_mispLicenseId$"
     }'
       output: '{
     }'

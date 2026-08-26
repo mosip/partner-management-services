@@ -3,16 +3,7 @@
         "pageNo": "{{pageNo}}",
         "data": [
             {{#each data}}
-            {
-                {{#if logoUrl}}"logoUrl": "{{logoUrl}}",{{/if}}
-                {{#if additionalInfo}}"additionalInfo": "{{additionalInfo}}",{{/if}}
-                {{#if partnerId}}"partnerId": "{{partnerId}}",{{/if}}
-                {{#if partnerType}}"partnerType": "{{partnerType}}",{{/if}}
-                {{#if orgName}}"orgName": "{{orgName}}",{{/if}}
-                {{#if isActive}}"isActive": "{{isActive}}",{{/if}}
-                {{#if status}}"status": "{{status}}",{{/if}}
-                {{#if certificateUploadStatus}}"certificateUploadStatus": "{{certificateUploadStatus}}",{{/if}}
-            }
+            {{json this}}
             {{#unless @last}},{{/unless}}
             {{/each}}
         ]
