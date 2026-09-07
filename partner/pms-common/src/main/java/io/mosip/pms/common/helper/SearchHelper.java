@@ -579,6 +579,6 @@ public class SearchHelper {
 	
 	public boolean isLoggedInUserFilterRequired() {
 		return UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
-				.noneMatch(authority -> requiredroles.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
+				.anyMatch(authority -> requiredroles.contains(authority.getAuthority()));
 	}
 }

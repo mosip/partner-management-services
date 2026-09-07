@@ -2359,11 +2359,9 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test(expected = PartnerServiceException.class)
-	public void getPartnerDetails_whenLoggedInUserNotAuthorized_throws() {
-		Mockito.doThrow(new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-				ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
-				.when(partnerHelper).validateLoggedInUserAuthorization("12345");
-		pserviceImpl.getPartnerDetails("12345");
+	public void validateLoggedInUserAuthorization_whenFilterRequiredAndIdMismatch_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.validateLoggedInUserAuthorization("not-logged-in-partner-id");
 	}
 
 	@Test

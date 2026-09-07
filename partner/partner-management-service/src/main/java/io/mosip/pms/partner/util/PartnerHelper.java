@@ -10,7 +10,6 @@ import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
-import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
@@ -212,11 +211,11 @@ public class PartnerHelper {
     @Autowired
     private Environment environment;
 
-    @Autowired
-    private SearchHelper searchHelper;
-
     @Value("${pmp.allowed.credential.types}")
     private String allowedCredentialTypes;
+
+    @Value("${mosip.pms.required.roles:PARTNER_ADMIN}")
+    private List<String> requiredRolesForOwnershipCheck;
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
@@ -375,7 +374,9 @@ public class PartnerHelper {
      * @param loggedInUserId the owner id of the resource being accessed
      */
     public void validateLoggedInUserAuthorization(String loggedInUserId) {
-        if (searchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(UserDetailUtil.getLoggedInUserId())) {
+        boolean ownershipFilterRequired = UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
+                .noneMatch(authority -> requiredRolesForOwnershipCheck.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
+        if (ownershipFilterRequired && !loggedInUserId.equals(UserDetailUtil.getLoggedInUserId())) {
             throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
                     ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
         }
