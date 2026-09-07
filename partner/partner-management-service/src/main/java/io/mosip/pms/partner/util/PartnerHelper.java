@@ -15,7 +15,6 @@ import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
-import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
@@ -214,9 +213,6 @@ public class PartnerHelper {
     @Value("${pmp.allowed.credential.types}")
     private String allowedCredentialTypes;
 
-    @Value("${mosip.pms.required.roles:PARTNER_ADMIN}")
-    private List<String> requiredRolesForOwnershipCheck;
-
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
             Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
@@ -367,19 +363,6 @@ public class PartnerHelper {
             return true;
         }
         return false;
-    }
-
-    /**
-     * validates that the logged-in user is authorized to act on the given owner id (partner/provider id)
-     * @param loggedInUserId the owner id of the resource being accessed
-     */
-    public void validateLoggedInUserAuthorization(String loggedInUserId) {
-        boolean ownershipFilterRequired = UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
-                .noneMatch(authority -> requiredRolesForOwnershipCheck.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
-        if (ownershipFilterRequired && !loggedInUserId.equals(UserDetailUtil.getLoggedInUserId())) {
-            throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-                    ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-        }
     }
 
     public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {

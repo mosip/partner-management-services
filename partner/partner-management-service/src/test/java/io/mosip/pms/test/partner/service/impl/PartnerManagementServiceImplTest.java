@@ -117,6 +117,22 @@ public class PartnerManagementServiceImplTest {
 		mosipUserDto.setUserId(userId);
 		return new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, userId);
 	}
+
+	private void mockBridgeAuthUserDetails(String userId, String... roles) {
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails(userId);
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		for (String role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role));
+		}
+		authUserDetails.addRoleAuthorities(authorities);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+	}
+
+	private void mockPrivilegedSecurityContext() {
+		mockBridgeAuthUserDetails("test-admin", "PARTNER_ADMIN");
+	}
 	
 	@Autowired
 	private PartnerManagementServiceImpl partnerManagementImpl;
@@ -3558,9 +3574,6 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_userMismatch_returnsError() {
-		Mockito.doThrow(new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-				io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
-				.when(partnerHelper).validateLoggedInUserAuthorization("other-partner");
 		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
