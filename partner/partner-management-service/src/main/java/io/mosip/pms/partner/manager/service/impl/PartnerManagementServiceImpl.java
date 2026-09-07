@@ -1226,8 +1226,17 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		return responseWrapper;
 	}
 
+	@Value("${mosip.pms.required.roles:PARTNER_ADMIN}")
+	private List<String> requiredroles;
+
+	/**
+	 * validates that the logged-in user is authorized to act on the given owner id (partner id)
+	 * @param loggedInUserId the owner id of the resource being accessed
+	 */
 	private void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if (partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
+		boolean ownershipFilterRequired = UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
+				.noneMatch(authority -> requiredroles.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
+		if (ownershipFilterRequired && !loggedInUserId.equals(getLoggedInUserId())) {
 			throw new PartnerServiceException(
 					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
 					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
