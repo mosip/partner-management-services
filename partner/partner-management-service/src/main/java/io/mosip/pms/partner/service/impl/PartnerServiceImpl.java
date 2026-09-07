@@ -546,7 +546,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
@@ -580,7 +580,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse updatePartnerDetails(PartnerUpdateDto partnerUpdateRequest, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		if (!validateMobileNumeber(partnerUpdateRequest.getContactNumber())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
@@ -788,7 +788,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerCertificateResponseDto uploadPartnerCertificate(
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
+		partnerHelper.validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
 		Partner partner = partnerHelper.getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
@@ -1798,7 +1798,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerPolicyMappingResponseDto requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
 				partnerAPIKeyRequest.getPolicyName());
@@ -2134,17 +2134,6 @@ public class PartnerServiceImpl implements PartnerService {
 		return responseWrapper;
 	}
 
-	/**
-	 * validates the loggedInUser authorization
-	 * @param loggedInUserId
-	 */
-	public void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if(partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
-	}
-	
 	/**
 	 * 
 	 * @return

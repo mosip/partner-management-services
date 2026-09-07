@@ -928,7 +928,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		String partnerId = parentPolicyRequest.getPartner().getId();
 		String policyId = parentPolicyRequest.getPolicyId();
 
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		partnerHelper.getValidPartner(partnerId, false);
 
 		String parentStatus = parentPolicyRequest.getStatusCode();
@@ -1045,7 +1045,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 			}
 			String partnerId = parentRequest.getPartner().getId();
-			validateLoggedInUserAuthorization(partnerId);
+			partnerHelper.validateLoggedInUserAuthorization(partnerId);
 
 			List<PartnerPolicyBioextractRequest> rows =
 					partnerPolicyBioextractRequestRepository
@@ -1108,7 +1108,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 		String partnerId = parentPolicyRequest.getPartner().getId();
 		String policyId = parentPolicyRequest.getPolicyId();
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		partnerHelper.getValidPartner(partnerId, false);
 
 		String credentialType = request.getCredentialType().trim();
@@ -1192,7 +1192,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 						io.mosip.pms.partner.constant.ErrorCode.NO_DETAILS_FOUND.getErrorMessage());
 			}
 			String partnerId = parentRequest.getPartner().getId();
-			validateLoggedInUserAuthorization(partnerId);
+			partnerHelper.validateLoggedInUserAuthorization(partnerId);
 
 			Optional<PartnerPolicyCredentialTypeRequest> row =
 					partnerPolicyCredentialTypeRequestRepository
@@ -1224,14 +1224,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 		responseWrapper.setId("mosip.pms.partner.policy.request.credential.types.get");
 		responseWrapper.setVersion("1.0");
 		return responseWrapper;
-	}
-
-	private void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if (partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
-			throw new PartnerServiceException(
-					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
 	}
 
 	private String getLoggedInUserId() {

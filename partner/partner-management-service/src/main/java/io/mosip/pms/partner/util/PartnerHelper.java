@@ -10,11 +10,13 @@ import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
 import io.mosip.pms.common.util.PMSLogger;
 import io.mosip.pms.common.util.RestUtil;
+import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
 import io.mosip.pms.device.authdevice.repository.DeviceDetailRepository;
@@ -210,6 +212,9 @@ public class PartnerHelper {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private SearchHelper searchHelper;
+
     @Value("${pmp.allowed.credential.types}")
     private String allowedCredentialTypes;
 
@@ -363,6 +368,17 @@ public class PartnerHelper {
             return true;
         }
         return false;
+    }
+
+    /**
+     * validates that the logged-in user is authorized to act on the given owner id (partner/provider id)
+     * @param loggedInUserId the owner id of the resource being accessed
+     */
+    public void validateLoggedInUserAuthorization(String loggedInUserId) {
+        if (searchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(UserDetailUtil.getLoggedInUserId())) {
+            throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+                    ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+        }
     }
 
     public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {

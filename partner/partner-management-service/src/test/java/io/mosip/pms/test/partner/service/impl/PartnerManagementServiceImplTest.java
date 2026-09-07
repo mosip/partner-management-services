@@ -3558,7 +3558,9 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_userMismatch_returnsError() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Mockito.doThrow(new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
+				.when(partnerHelper).validateLoggedInUserAuthorization("other-partner");
 		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
