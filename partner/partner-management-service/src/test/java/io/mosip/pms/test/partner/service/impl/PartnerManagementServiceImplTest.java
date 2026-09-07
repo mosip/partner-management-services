@@ -3341,7 +3341,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_success_mapsRows() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3376,7 +3376,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_success_trimsValue() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3547,11 +3547,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_matchingUser_success() throws Exception {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
 
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -3574,10 +3570,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_userMismatch_returnsError() {
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
 
 		Partner partner = new Partner();
 		partner.setId("other-partner");
@@ -3599,7 +3592,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_nullRows_treatedAsEmptyList() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3623,7 +3616,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_optionalRowEmpty() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3663,7 +3656,7 @@ public class PartnerManagementServiceImplTest {
         parent.setStatusCode(PartnerConstants.IN_PROGRESS);
         parent.setIsDeleted(false);
 
-        Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+        mockPrivilegedSecurityContext();
         when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
         when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(partner));
         when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
@@ -3701,7 +3694,7 @@ public class PartnerManagementServiceImplTest {
         parent.setStatusCode(PartnerConstants.IN_PROGRESS);
         parent.setIsDeleted(false);
 
-        Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+        mockPrivilegedSecurityContext();
         when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
         when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(false))).thenThrow(
                 new io.mosip.pms.partner.exception.PartnerServiceException(
@@ -3769,7 +3762,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_parentStatusNotInProgress_throws() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest("Approved");
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3781,7 +3774,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_duplicateRequest_throws() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3794,7 +3787,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_saveIntegrityViolation_throws() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3810,7 +3803,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void submitCredentialTypesRequest_success_returnsMessage() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3840,11 +3833,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_loggedInFilterRequired_matchingUser() throws Exception {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
 
 		Partner partner = new Partner();
 		partner.setId("123");
