@@ -33,6 +33,7 @@ public class TestSecurityConfig {
 
 	@Bean
 	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
+		// codeql[java/spring-disabled-csrf-protection] Test-only in-memory security config, never used in production.
 		httpSecurity.csrf(csrf -> csrf.disable());
 		httpSecurity.authorizeHttpRequests(cfg -> cfg.anyRequest().permitAll());
 		return httpSecurity.build();
