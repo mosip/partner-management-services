@@ -154,8 +154,9 @@ public class KeycloakImpl{
 	private String getIDfromUserID(String userName, String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put("realmId", realmId);
+		pathParams.put("userName", userName);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakBaseUrl.concat("/users?username=").concat(userName));
+				.fromUriString(keycloakBaseUrl.concat("/users")).queryParam("username", "{userName}");
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes = null;
@@ -191,8 +192,9 @@ public class KeycloakImpl{
 	public boolean isUserAlreadyPresent(String userName, String realmId) {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put("realmId", realmId);
+		pathParams.put("userName", userName);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
-				.fromUriString(keycloakBaseUrl.concat("/users?username=").concat(userName));
+				.fromUriString(keycloakBaseUrl.concat("/users")).queryParam("username", "{userName}");
 		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes = null;

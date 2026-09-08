@@ -1,5 +1,8 @@
 name: PostgreSQL Test
 
+permissions:
+  contents: read
+
 on:
   release:
     types: [published]
