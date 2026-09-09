@@ -107,6 +107,7 @@ public class PolicyManagementController {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		requestValidator.validateReqTime(createRequest.getRequesttime());
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
+		inputValidator.validateRequestInput("policyGroupName", createRequest.getRequest().getName());
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.createPolicyGroup(createRequest.getRequest());
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
@@ -122,6 +123,7 @@ public class PolicyManagementController {
 			@RequestBody @Valid RequestWrapper<PolicyGroupUpdateRequestDto> createRequest) {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY_GROUP, createRequest.getRequest().getName(), "policyGroupName");
+		inputValidator.validateRequestInput("policyGroupName", createRequest.getRequest().getName());
 		PolicyGroupCreateResponseDto responseDto = policyManagementService.updatePolicyGroup(createRequest.getRequest(), policygroupId);
 		ResponseWrapper<PolicyGroupCreateResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(responseDto);
@@ -138,8 +140,9 @@ public class PolicyManagementController {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		auditUtil.setAuditRequestDto(PolicyManageEnum.CREATE_POLICY, createRequest.getRequest().getName(), "policyName");
+		inputValidator.validateRequestInput("name", createRequest.getRequest().getName());
 		PolicyCreateResponseDto responseDto = policyManagementService.
-				createPolicies(createRequest.getRequest());		
+				createPolicies(createRequest.getRequest());
 		response.setId(createRequest.getId());
 		response.setVersion(createRequest.getVersion());
 		response.setResponse(responseDto);		
@@ -167,6 +170,7 @@ public class PolicyManagementController {
 			throws Exception {
 		logger.info("Calling PolicyManagementService from PolicyManagementController.");
 		auditUtil.setAuditRequestDto(PolicyManageEnum.UPDATE_POLICY, updateRequestDto.getRequest().getName(), "policyName");
+		inputValidator.validateRequestInput("name", updateRequestDto.getRequest().getName());
 		ResponseWrapper<PolicyCreateResponseDto> response = new ResponseWrapper<PolicyCreateResponseDto>();
 		PolicyCreateResponseDto responseDto = policyManagementService.updatePolicies(updateRequestDto.getRequest(),
 				policyId);
