@@ -623,6 +623,7 @@ public class PartnerServiceController {
 		requestValidator.validateReqTime(request.getRequesttime());
 		ResponseWrapper<APIKeyGenerateResponseDto> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerManageEnum.GENERATE_API_KEY, partnerId, "partnerId");
+		inputValidator.validateRequestInput("label", request.getRequest().getLabel());
 		response.setResponse(partnerManagerService.generateAPIKey(partnerId, request.getRequest()));
 		response.setId(request.getId());
 		response.setVersion(request.getVersion());
