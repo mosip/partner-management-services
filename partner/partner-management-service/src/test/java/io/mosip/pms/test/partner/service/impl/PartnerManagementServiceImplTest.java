@@ -966,10 +966,7 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 		try {
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456",statusDto);
 		}catch (PartnerManagerServiceException e) {
@@ -988,14 +985,11 @@ public class PartnerManagementServiceImplTest {
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
-	
+
 	@Test
 	public void updateAPIKeyStatusTest03() {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
@@ -1004,13 +998,14 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 		try {
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 		}catch (PartnerManagerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void updateAPIKeyStatusTest04() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
@@ -1022,20 +1017,14 @@ public class PartnerManagementServiceImplTest {
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
 
 	@Test
 	public void updateAPIKeyStatusTest05() throws Exception {
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "Auth_Partner");
 
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
@@ -1056,10 +1045,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void updateAPIKeyStatusTest06() throws Exception {
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "Auth_Partner");
 
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
@@ -1075,7 +1061,24 @@ public class PartnerManagementServiceImplTest {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 	}
-	
+
+	@Test
+	public void updateAPIKeyStatus_whenOwnershipCheckFails_throws() {
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
+
+		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
+		statusDto.setLabel("456");
+		statusDto.setStatus("De-Active");
+
+		try {
+			partnerManagementImpl.updateAPIKeyStatus("not-logged-in-partner-id", "456", statusDto);
+			org.junit.Assert.fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode()));
+		}
+		Mockito.verifyNoInteractions(partnerPolicyRepository);
+	}
+
 	@Test
 	public void approveRejectPartnerPolicyMappingTest01() {
 		StatusRequestDto request = new StatusRequestDto();

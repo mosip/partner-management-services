@@ -705,6 +705,12 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test(expected = PartnerServiceException.class)
+	public void addBiometricExtractors_whenOwnershipCheckFails_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.addBiometricExtractors("not-logged-in-partner-id", "12345", getExtractorsInput());
+	}
+
+	@Test(expected = PartnerServiceException.class)
 	public void addBiometricExtractorsTest_001() {
 		Partner part = createPartner(Boolean.TRUE);
 		String partnerId = "12345";
@@ -806,6 +812,12 @@ public class PartnerServiceImplTest {
 		pserviceImpl.addBiometricExtractors("12345", "12345", getExtractorsInput());
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void getBiometricExtractors_whenOwnershipCheckFails_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.getBiometricExtractors("not-logged-in-partner-id", "12345");
+	}
+
 	@Test(expected = PartnerServiceException.class)
 	public void getBiometricExtractorsTest_001() {
 		List<BiometricExtractorProvider> data = new ArrayList<>();
@@ -969,6 +981,12 @@ public class PartnerServiceImplTest {
 
 	
 	@Test(expected = PartnerServiceException.class)
+	public void retrieveAllApiKeyRequestsSubmittedByPartner_whenOwnershipCheckFails_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner("not-logged-in-partner-id");
+	}
+
+	@Test(expected = PartnerServiceException.class)
 	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S1() {
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner("12345");
 	}	
@@ -1053,8 +1071,14 @@ public class PartnerServiceImplTest {
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void getPartnerCredentialTypePolicy_whenOwnershipCheckFails_throws() throws JsonParseException, JsonMappingException, IOException {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.getPartnerCredentialTypePolicy("euin", "not-logged-in-partner-id");
+	}
+
 	@Test
-	public void getPartnerCredentialTypePolicy_001() throws JsonParseException, JsonMappingException, IOException {		
+	public void getPartnerCredentialTypePolicy_001() throws JsonParseException, JsonMappingException, IOException {
 		PartnerPolicyCredentialType response = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
 		key.setCredentialType("euin");
@@ -1231,6 +1255,15 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test
+	public void searchPartnerApiKeyRequests_whenOwnershipLookupFails_returnsEmptyAndSkipsSearch() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+		PageResponseDto<PolicyRequestSearchResponseDto> result = pserviceImpl.searchPartnerApiKeyRequests(searchDto);
+		assertTrue(result.getData() == null || result.getData().isEmpty());
+		Mockito.verify(partnerSearchHelper, Mockito.never()).search(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+
+	@Test
 	public void searchPartnerApiKeyRequestsTest() throws Exception {
 		SearchFilter partnerNameSearchFilter = new SearchFilter();
 		partnerNameSearchFilter.setColumnName("partnerName");
@@ -1276,6 +1309,15 @@ public class PartnerServiceImplTest {
 		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
 	}
 	
+	@Test
+	public void searchPartnerApiKeys_whenOwnershipLookupFails_returnsEmptyAndSkipsSearch() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+		PageResponseDto<PartnerPolicySearchResponseDto> result = pserviceImpl.searchPartnerApiKeys(searchDto);
+		assertTrue(result.getData() == null || result.getData().isEmpty());
+		Mockito.verify(partnerSearchHelper, Mockito.never()).search(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+
 	@Test
 	public void searchPartnerApiKeysTest() throws JsonProcessingException {
 		SearchFilter partnerNameSearchFilter = new SearchFilter();

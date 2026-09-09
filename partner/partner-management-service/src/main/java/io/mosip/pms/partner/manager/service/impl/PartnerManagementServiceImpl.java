@@ -1325,6 +1325,7 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 
 	@Override
 	public String updateAPIKeyStatus(String partnerId, String policyId, APIkeyStatusUpdateRequestDto request) {
+		validateLoggedInUserAuthorization(partnerId);
 		PartnerPolicy policyByLabel = partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(partnerId, policyId,
 				request.getLabel());
 		if(policyByLabel == null) {

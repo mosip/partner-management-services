@@ -530,6 +530,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), input.getDeviceDetailId()));
 		}
+		validateLoggedInUserAuthorization(validDeviceDetail.getDeviceProviderId());
 		if(!validDeviceDetail.getIsActive() && validDeviceDetail.getApprovalStatus().equalsIgnoreCase(CommonConstant.REJECTED)) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
@@ -628,9 +629,10 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 									SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId())),
 					"AUT-016", input.getSbiId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorCode(),
-					String.format(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId()));			
-			
+					String.format(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId()));
+
 		}
+		validateLoggedInUserAuthorization(deviceDetailFromDb.getProviderId());
 		deviceDetailSbiRepository.delete(deviceDetailFromDb);
 		return "Success";
 	}
@@ -1226,5 +1228,16 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 	private String getUserId() {
 		String userId = authUserDetails().getUserId();
 		return userId;
+	}
+
+	/**
+	 * validates that the logged-in user is authorized to act on the given owner id (partner id)
+	 * @param loggedInUserId the owner id of the resource being accessed
+	 */
+	private void validateLoggedInUserAuthorization(String loggedInUserId) {
+		if (searchHelper.isLoggedInUserFilterRequired() && !getUserId().equals(loggedInUserId)) {
+			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+		}
 	}
 }

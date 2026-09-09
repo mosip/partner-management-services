@@ -457,6 +457,25 @@ public class SBIServiceTest {
 		return request;
 	}
 
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void mapDeviceDetailAndSbi_whenOwnershipCheckFails_throws() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		deviceDetail.setDeviceProviderId("12345");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(), request.getSbiId())).thenReturn(null);
+		Mockito.when(deviceDetailRepository.findByIdAndIsDeletedFalseOrIsDeletedIsNull(request.getDeviceDetailId())).thenReturn(deviceDetail);
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+
+		secureBiometricInterfaceService.mapDeviceDetailAndSbi(request);
+	}
+
 	@Test
 	public void mapDeviceDetailAndSbiTest01() {
 		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
@@ -584,6 +603,29 @@ public class SBIServiceTest {
 		}catch(RequestException e) {
 			assertTrue(e.getErrors().get(0).getErrorCode().equals(SecureBiometricInterfaceConstant.SBI_EXPIRED.getErrorCode()));
 		}
+	}
+
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void deleteDeviceDetailAndSbiMapping_whenOwnershipCheckFails_throws() {
+		DeviceDetailSBIMappingDto request = new DeviceDetailSBIMappingDto();
+		DeviceDetailSBI validRecords = new DeviceDetailSBI();
+		DeviceDetailSBIPK key = new DeviceDetailSBIPK();
+		key.setDeviceDetailId("deviceDetailId");
+		key.setSbiId("sbiid");
+		validRecords.setId(key);
+		validRecords.setProviderId("12345");
+		request.setDeviceDetailId("deviceDetailId");
+		request.setSbiId("sbiid");
+		Mockito.when(deviceDetailSbiRepository.findByDeviceDetailAndSbi(request.getDeviceDetailId(), request.getSbiId())).thenReturn(validRecords);
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+
+		secureBiometricInterfaceService.deleteDeviceDetailAndSbiMapping(request);
 	}
 
 	@Test

@@ -659,6 +659,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerId) {
+		validateLoggedInUserAuthorization(partnerId);
 		List<PartnerPolicyRequest> apikeyRequestsByPartner = partnerPolicyRequestRepository.findByPartnerId(partnerId);
 		if (apikeyRequestsByPartner.isEmpty()) {
 			LOGGER.error("No apiKey requests exists for given partner {} ", partnerId);  			
@@ -1016,6 +1017,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
+		validateLoggedInUserAuthorization(partnerId);
 		if (isApprovedPolicyRequestExists(partnerId, policyId)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
@@ -1095,6 +1097,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public ExtractorsDto getBiometricExtractors(String partnerId, String policyId) {
+		validateLoggedInUserAuthorization(partnerId);
 		List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository
 				.findByPartnerAndPolicyId(partnerId, policyId);
 		if (extractorsFromDb.isEmpty()) {
@@ -1280,6 +1283,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType, String partnerId)
 			throws JsonParseException, JsonMappingException, IOException {
+		validateLoggedInUserAuthorization(partnerId);
 		PartnerPolicyCredentialType partnerCredentialTypePolicy = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndCrdentialType(partnerId, credentialType);
 		if (partnerCredentialTypePolicy == null) {
@@ -1447,10 +1451,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {	
+			if(loggedInPartner.isPresent()) {
 				SearchFilter loggedInUserSearchFilter = new SearchFilter();
 				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
 				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
+			} else {
+				// no partner record for the logged-in user: fail closed instead of falling through to unscoped results
+				return pageDto;
 			}
 		}
 		Page<PartnerPolicy> page = partnerSearchHelper.search(PartnerPolicy.class, dto, null);
@@ -1551,10 +1558,13 @@ public class PartnerServiceImpl implements PartnerService {
 		
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
-			if(loggedInPartner.isPresent()) {				
+			if(loggedInPartner.isPresent()) {
 				SearchFilter loggedInUserSearchFilter = new SearchFilter();
 				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
 				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
+			} else {
+				// no partner record for the logged-in user: fail closed instead of trusting a caller-supplied partnerId filter
+				return pageDto;
 			}
 		}
 		Page<PartnerPolicyRequest> page = partnerSearchHelper.search(PartnerPolicyRequest.class, dto,
