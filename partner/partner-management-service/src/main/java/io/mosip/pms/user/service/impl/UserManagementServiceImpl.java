@@ -76,6 +76,11 @@ public class UserManagementServiceImpl implements UserManagementService{
 		boolean isPolicyManager = allowPolicyManager
 				&& partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
 		if (!isAdmin && !isPolicyManager) {
+			if (!getUserId().equals(userId)) {
+				LOGGER.info("sessionId", "idType", "id", "Logged-in user is not authorized to access this user id.");
+				throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+						ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+			}
 			List<Partner> partnerList = partnerRepository.findByUserId(userId);
 			if (partnerList.isEmpty()) {
 				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");

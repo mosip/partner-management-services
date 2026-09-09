@@ -318,6 +318,17 @@ public class PartnerServiceImplTest {
 
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void addContact_whenOwnershipCheckFails_throws() throws Exception {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		AddContactRequestDto addContactRequestDto = new AddContactRequestDto();
+		addContactRequestDto.setAddress("Banglore");
+		addContactRequestDto.setContactNumber("123456789");
+		addContactRequestDto.setEmailId("xyz@gmail.com");
+		addContactRequestDto.setIs_Active(true);
+		pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, "not-logged-in-partner-id");
+	}
+
 	@Test
 	public void addContact_test() throws Exception{
 		AddContactRequestDto addContactRequestDto = new AddContactRequestDto();
@@ -989,6 +1000,12 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test(expected = PartnerServiceException.class)
+	public void mapPartnerPolicyCredentialType_whenOwnershipCheckFails_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.mapPartnerPolicyCredentialType("euin", "not-logged-in-partner-id", "12345");
+	}
+
+	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_001() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
 		Mockito.when(partnerHelper.getValidPartner(Mockito.eq("12345"), Mockito.eq(false))).thenReturn(partner.get());
@@ -1173,6 +1190,12 @@ public class PartnerServiceImplTest {
 		}
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void updatePolicyGroup_whenOwnershipCheckFails_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		pserviceImpl.updatePolicyGroup("not-logged-in-partner-id", "policygroupname");
+	}
+
 	@Test
 	public void updatePolicyGroupTest() {
 		Optional<Partner> partner = Optional.of(createPartner(true));

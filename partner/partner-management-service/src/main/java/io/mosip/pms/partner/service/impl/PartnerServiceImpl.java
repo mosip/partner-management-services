@@ -683,6 +683,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId) {
+		validateLoggedInUserAuthorization(partnerId);
 		if (!validateEmail(request.getEmailId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
@@ -1187,6 +1188,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyName) {
+		validateLoggedInUserAuthorization(partnerId);
 		partnerHelper.validateCredentialTypes(credentialType);
 		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
@@ -1753,6 +1755,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	@Override
 	public String updatePolicyGroup(String partnerId, String policyGroupName) {
+		validateLoggedInUserAuthorization(partnerId);
 		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		//Approved partners policy group should not be updated
 		if (partner.getIsActive()) {

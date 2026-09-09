@@ -264,17 +264,38 @@ public class UserManagementServiceImplTest {
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
 
 		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
-		userDetails.setUpdBy("12345");
+		userDetails.setUpdBy("123");
 		userDetails.setUpdDtimes(LocalDateTime.now());
 		when(userDetailsRepository.save(any())).thenReturn(userDetails);
-		userManagementServiceImpl.updateNotificationsSeenTimestamp("12345", requestDto);
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
 
 		NotificationsSeenRequestDto requestDto1 = new NotificationsSeenRequestDto();
-		userManagementServiceImpl.updateNotificationsSeenTimestamp("12345", requestDto1);
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto1);
 
 		partnerList = new ArrayList<>();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		userManagementServiceImpl.updateNotificationsSeenTimestamp("12345", requestDto);
+		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
+	}
+
+	@Test
+	public void updateNotificationsSeenTimestamp_whenUserIdDoesNotMatchLoggedInUser_setsUnauthorizedError() {
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "ROLE_PARTNER");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
+		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
+
+		ResponseWrapperV2<NotificationsSeenResponseDto> response =
+				userManagementServiceImpl.updateNotificationsSeenTimestamp("someone-else", requestDto);
+
+		assertNotNull(response);
+		assertTrue(response.getErrors() != null && !response.getErrors().isEmpty());
+		assertEquals(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+		Mockito.verify(partnerRepository, Mockito.never()).findByUserId(anyString());
 	}
 
 	@Test
@@ -304,11 +325,29 @@ public class UserManagementServiceImplTest {
 		userDetails.setUpdBy("abc");
 		userDetails.setUpdDtimes(LocalDateTime.now());
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
-		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
 
 		partnerList = new ArrayList<>();
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
-		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
+	}
+
+	@Test
+	public void getNotificationsSeenTimestamp_whenUserIdDoesNotMatchLoggedInUser_setsUnauthorizedError() {
+		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "ROLE_PARTNER");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+
+		ResponseWrapperV2<NotificationsSeenResponseDto> response =
+				userManagementServiceImpl.getNotificationsSeenTimestamp("someone-else");
+
+		assertNotNull(response);
+		assertTrue(response.getErrors() != null && !response.getErrors().isEmpty());
+		assertEquals(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				response.getErrors().get(0).getErrorCode());
+		Mockito.verify(partnerRepository, Mockito.never()).findByUserId(anyString());
 	}
 
 	@Test
@@ -326,7 +365,7 @@ public class UserManagementServiceImplTest {
 		partnerList.add(partner);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(partnerList);
 		when(partnerRepository.findById(anyString())).thenReturn(Optional.of(partner));
-		userManagementServiceImpl.getNotificationsSeenTimestamp("12345");
+		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
 	}
 
 	@Test
