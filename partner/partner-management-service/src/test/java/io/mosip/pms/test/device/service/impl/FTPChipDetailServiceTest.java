@@ -1066,6 +1066,24 @@ public class FTPChipDetailServiceTest {
 		verify(restUtil).getApi((String) any(), (Map<String, String>) any(), (Class<Object>) any());
 	}
 
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void getCertificate_whenOwnershipCheckFails_throws() throws IOException {
+		FTPChipDetail ftpChipDetail = new FTPChipDetail();
+		ftpChipDetail.setFtpChipDetailId("ChipId");
+		ftpChipDetail.setFtpProviderId("999");
+		ftpChipDetail.setCertificateAlias("Certificate Alias");
+		when(ftpChipDetailRepository.findById((String) any())).thenReturn(Optional.of(ftpChipDetail));
+
+		io.mosip.kernel.openid.bridge.model.MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+
+		ftpChipDetailService.getCertificate(new FtpChipCertDownloadRequestDto("ChipId"));
+	}
+
 	@Test (expected = RequestException.class)
 	public void testGetCertificate2() throws IOException {
 		doNothing().when(auditUtil)
