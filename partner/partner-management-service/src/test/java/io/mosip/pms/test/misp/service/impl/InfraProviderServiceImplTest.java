@@ -56,6 +56,9 @@ public class InfraProviderServiceImplTest {
 	@Autowired
 	InfraProviderServiceImpl infraProviderServiceImpl;
 
+	@Autowired
+	io.mosip.pms.partner.util.PartnerHelper partnerHelper;
+
 	@Mock
 	private WebSubPublisher webSubPublisher;
 
@@ -104,6 +107,7 @@ public class InfraProviderServiceImplTest {
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "searchHelper", searchHelper);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "filterColumnValidator", filterColumnValidator);
+		ReflectionTestUtils.setField(partnerHelper, "searchHelper", searchHelper);
 		Mockito.doNothing().when(webSubPublisher).notify(any(), any(), any());
 		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
 		Mockito.when(filterColumnValidator.validate(any(), any(), any())).thenReturn(true);

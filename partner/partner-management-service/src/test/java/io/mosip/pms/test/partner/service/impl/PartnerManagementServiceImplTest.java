@@ -1070,6 +1070,10 @@ public class PartnerManagementServiceImplTest {
 		statusDto.setLabel("456");
 		statusDto.setStatus("De-Active");
 
+		Mockito.doThrow(new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+
 		try {
 			partnerManagementImpl.updateAPIKeyStatus("not-logged-in-partner-id", "456", statusDto);
 			org.junit.Assert.fail("Expected PartnerServiceException");
@@ -3583,6 +3587,9 @@ public class PartnerManagementServiceImplTest {
 		parent.setPartner(partner);
 
 		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.doThrow(new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
+				.when(partnerHelper).validateLoggedInUserAuthorization("other-partner");
 
 		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
 				partnerManagementImpl.getPartnerPolicyRequestBioExtractors("req-1");

@@ -1079,7 +1079,8 @@ public class FTPChipDetailServiceTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization(any());
 
 		ftpChipDetailService.getCertificate(new FtpChipCertDownloadRequestDto("ChipId"));
 	}

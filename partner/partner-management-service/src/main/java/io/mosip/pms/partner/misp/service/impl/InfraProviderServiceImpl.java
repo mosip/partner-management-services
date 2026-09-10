@@ -165,7 +165,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public MISPLicenseResponseDto approveInfraProvider(String mispId) {
-		validateLoggedInUserAuthorization(mispId);
+		partnerHelper.validateLoggedInUserAuthorization(mispId);
 		List<MISPLicenseEntity> mispLicenseFromDb = mispLicenseRepository.findByMispId(mispId);
 		if (!mispLicenseFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_EXISTS.getErrorCode(),
@@ -449,16 +449,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		return pageDto;
 	}
 
-	/**
-	 * validates the loggedInUser authorization
-	 * @param loggedInUserId
-	 */
-	public void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if(searchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
-	}
 
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> getAllMISPLicenses(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, MISPFilterDto filterDto) {

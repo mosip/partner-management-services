@@ -438,7 +438,7 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
 					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());
 		}
-		validateLoggedInUserAuthorization(chipDetail.get().getFtpProviderId());
+		partnerHelper.validateLoggedInUserAuthorization(chipDetail.get().getFtpProviderId());
 		if(chipDetail.get().getCertificateAlias() == null) {
 			auditUtil.auditRequest(
 					String.format(
@@ -951,16 +951,5 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 	private String getUserId() {
 		String userId = authUserDetails().getUserId();
 		return userId;
-	}
-
-	/**
-	 * validates that the logged-in user is authorized to act on the given owner id (ftp provider id)
-	 * @param loggedInUserId the owner id of the resource being accessed
-	 */
-	private void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if (searchHelper.isLoggedInUserFilterRequired() && !getUserId().equals(loggedInUserId)) {
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
 	}
 }

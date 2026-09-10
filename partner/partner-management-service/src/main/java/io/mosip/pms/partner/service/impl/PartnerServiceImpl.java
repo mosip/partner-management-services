@@ -546,7 +546,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public RetrievePartnerDetailsResponse getPartnerDetails(String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		RetrievePartnerDetailsResponse response = new RetrievePartnerDetailsResponse();
 		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		response.setPartnerID(partner.getId());
@@ -580,7 +580,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerResponse updatePartnerDetails(PartnerUpdateDto partnerUpdateRequest, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		if (!validateMobileNumeber(partnerUpdateRequest.getContactNumber())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.UPDATE_PARTNER_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_MOBILE_NUMBER_EXCEPTION.getErrorCode(),
@@ -659,7 +659,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public List<APIkeyRequests> retrieveAllApiKeyRequestsSubmittedByPartner(String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		List<PartnerPolicyRequest> apikeyRequestsByPartner = partnerPolicyRequestRepository.findByPartnerId(partnerId);
 		if (apikeyRequestsByPartner.isEmpty()) {
 			LOGGER.error("No apiKey requests exists for given partner {} ", partnerId);  			
@@ -684,7 +684,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String createAndUpdateContactDetails(AddContactRequestDto request, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		if (!validateEmail(request.getEmailId())) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.INVALID_EMAIL_ID_EXCEPTION.getErrorCode(),
@@ -790,7 +790,7 @@ public class PartnerServiceImpl implements PartnerService {
 	public PartnerCertificateResponseDto uploadPartnerCertificate(
 			PartnerCertificateUploadRequestDto partnerCertRequesteDto)
 			throws JsonParseException, JsonMappingException, JsonProcessingException, IOException {
-		validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
+		partnerHelper.validateLoggedInUserAuthorization(partnerCertRequesteDto.getPartnerId());
 		Partner partner = partnerHelper.getValidPartner(partnerCertRequesteDto.getPartnerId(), true);
 		if (!partner.getApprovalStatus().equals(PartnerConstants.IN_PROGRESS) && !partner.getIsActive()) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.RETRIVE_PARTNER_FAILURE, partnerCertRequesteDto.getPartnerId(), "partnerId");
@@ -1017,7 +1017,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String addBiometricExtractors(String partnerId, String policyId, ExtractorsDto extractors) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		if (isApprovedPolicyRequestExists(partnerId, policyId)) {
 			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_BIO_EXTRACTORS_FAILURE, partnerId, "partnerId");
 			throw new PartnerServiceException(ErrorCode.PARTNER_API_KEY_REQUEST_APPROVED.getErrorCode(),
@@ -1097,7 +1097,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public ExtractorsDto getBiometricExtractors(String partnerId, String policyId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		List<BiometricExtractorProvider> extractorsFromDb = extractorProviderRepository
 				.findByPartnerAndPolicyId(partnerId, policyId);
 		if (extractorsFromDb.isEmpty()) {
@@ -1191,7 +1191,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public String mapPartnerPolicyCredentialType(String credentialType, String partnerId, String policyName) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		partnerHelper.validateCredentialTypes(credentialType);
 		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
@@ -1228,28 +1228,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public CredentialTypesListDto getCredentialTypesByPartnerAndPolicy(String partnerId, String policyId) {
-		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
-		if (!isAdmin) {
-			String userId = getUserId();
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.error("User id does not exist.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
-			}
-			boolean isPartnerBelongsToUser = false;
-			for (Partner partner : partnerList) {
-				if (partner.getId().equals(partnerId)) {
-					isPartnerBelongsToUser = true;
-					break;
-				}
-			}
-			if (!isPartnerBelongsToUser) {
-				LOGGER.error("The given partner ID does not belong to the user.");
-				throw new PartnerServiceException(ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorCode(),
-						ErrorCode.PARTNER_NOT_BELONGS_TO_THE_USER.getErrorMessage());
-			}
-		}
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		if (!Arrays.stream(credentialTypesRequiredPartnerTypes.split(","))
 				.anyMatch(partner.getPartnerTypeCode()::equalsIgnoreCase)) {
@@ -1283,7 +1262,7 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType, String partnerId)
 			throws JsonParseException, JsonMappingException, IOException {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		PartnerPolicyCredentialType partnerCredentialTypePolicy = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndCrdentialType(partnerId, credentialType);
 		if (partnerCredentialTypePolicy == null) {
@@ -1765,7 +1744,7 @@ public class PartnerServiceImpl implements PartnerService {
 	 */
 	@Override
 	public String updatePolicyGroup(String partnerId, String policyGroupName) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		Partner partner = partnerHelper.getValidPartner(partnerId, true);
 		//Approved partners policy group should not be updated
 		if (partner.getIsActive()) {
@@ -1811,7 +1790,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerPolicyMappingResponseDto requestForPolicyMapping(PartnerPolicyMappingRequest partnerAPIKeyRequest, String partnerId) {
-		validateLoggedInUserAuthorization(partnerId);
+		partnerHelper.validateLoggedInUserAuthorization(partnerId);
 		Partner partner = partnerHelper.getValidPartner(partnerId, false);
 		AuthPolicy authPolicy = validatePolicyGroupAndPolicy(partner.getPolicyGroupId(),
 				partnerAPIKeyRequest.getPolicyName());
@@ -2148,18 +2127,7 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	/**
-	 * validates the loggedInUser authorization
-	 * @param loggedInUserId
-	 */
-	public void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if(partnerSearchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
-	}
-	
-	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<String> getSystemSupportedLanguageCodes() {		
