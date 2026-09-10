@@ -670,6 +670,26 @@ public class InfraProviderServiceImplTest {
 		infraProviderServiceImpl.filterValues(filterValueDto);
 	}
 
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void filterValues_whenOptionalFilterMismatchesLoggedInUser_throws() {
+		FilterDto filterDto = new FilterDto();
+		filterDto.setColumnName("licenseKey");
+		filterDto.setText("test");
+		filterDto.setType("all");
+		FilterValueDto filterValueDto = new FilterValueDto();
+		filterValueDto.setFilters(new ArrayList<>(List.of(filterDto)));
+		SearchFilter conflictingMispIdFilter = new SearchFilter();
+		conflictingMispIdFilter.setColumnName("misp_id");
+		conflictingMispIdFilter.setValue("other-misp");
+		filterValueDto.setOptionalFilters(new ArrayList<>(List.of(conflictingMispIdFilter)));
+
+		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(searchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.eq("misp_id"));
+
+		infraProviderServiceImpl.filterValues(filterValueDto);
+	}
+
 	@Test
 	public void testSearchWithSearchDto_thenSuccess() {
 		SearchDto dto = new SearchDto();

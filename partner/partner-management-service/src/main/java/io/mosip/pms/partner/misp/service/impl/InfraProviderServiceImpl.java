@@ -416,6 +416,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (searchHelper.isLoggedInUserFilterRequired()) {
+			if (filterValueDto.getOptionalFilters() != null) {
+				searchHelper.validateLoggedInUserFilter(filterValueDto.getOptionalFilters(), "misp_id");
+			}
 			SearchFilter loggedInUserFilterDto = new SearchFilter();
 			loggedInUserFilterDto.setColumnName("misp_id");
 			loggedInUserFilterDto.setValue(getLoggedInUserId());

@@ -410,7 +410,20 @@ public class PartnerServiceImplTest {
 				.thenReturn(filtersData);
 		pserviceImpl.filterValues(deviceFilterValueDto);
 	}
-	
+
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void partnerFilterValues_whenOptionalFilterMismatchesLoggedInUser_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		SearchFilter conflictingIdFilter = new SearchFilter();
+		conflictingIdFilter.setColumnName("id");
+		conflictingIdFilter.setValue("auth-p1");
+		deviceFilterValueDto.setOptionalFilters(new ArrayList<>(List.of(conflictingIdFilter)));
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(partnerSearchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.eq("id"));
+
+		pserviceImpl.filterValues(deviceFilterValueDto);
+	}
+
 	@Test
 	public void apiKeyRequestFilterTest() {
 		List<FilterData> filtersData = new ArrayList<>();
