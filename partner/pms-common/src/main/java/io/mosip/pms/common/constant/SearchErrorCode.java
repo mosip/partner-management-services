@@ -23,7 +23,8 @@ public enum SearchErrorCode {
 	FAILED_TO_FETCH_CLAIMS("PMS-MSD-393","Failed to fetch claims from mapping file"),
 	FAILED_TO_FETCH_ACRVALUES("PMS-MSD-394","failed to fetch acr values from mapping file"),
 	INVALID_VALUE_VALUES("PMS-MSD-392", "Both value and values cannot be present"),
-	FAILED_TO_FETCH_AMR("PMS-MSD-395","Failed to fetch AMR's from mapping file");
+	FAILED_TO_FETCH_AMR("PMS-MSD-395","Failed to fetch AMR's from mapping file"),
+	LOGGEDIN_USER_NOT_AUTHORIZED("PMS-MSD-396", "User not authorized.");
      
 	/**
 	 * The error code.

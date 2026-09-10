@@ -1261,6 +1261,23 @@ public class PartnerServiceImplTest {
 		Mockito.verify(partnerSearchHelper, Mockito.never()).search(Mockito.any(), Mockito.any(), Mockito.any());
 	}
 
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void searchPartnerApiKeyRequests_whenPartnerIdFilterMismatchesLoggedInUser_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Partner loggedInPartner = createPartner(true);
+		loggedInPartner.setId("authp25");
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.of(loggedInPartner));
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(partnerSearchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.anyString());
+
+		SearchFilter partnerIdFilter = new SearchFilter();
+		partnerIdFilter.setColumnName("partnerId");
+		partnerIdFilter.setValue("auth-p1");
+		searchDto.getFilters().add(partnerIdFilter);
+
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
+	}
+
 	@Test
 	public void searchPartnerApiKeyRequestsTest() throws Exception {
 		SearchFilter partnerNameSearchFilter = new SearchFilter();
@@ -1314,6 +1331,23 @@ public class PartnerServiceImplTest {
 		PageResponseDto<PartnerPolicySearchResponseDto> result = pserviceImpl.searchPartnerApiKeys(searchDto);
 		assertTrue(result.getData() == null || result.getData().isEmpty());
 		Mockito.verify(partnerSearchHelper, Mockito.never()).search(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void searchPartnerApiKeys_whenPartnerIdFilterMismatchesLoggedInUser_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Partner loggedInPartner = createPartner(true);
+		loggedInPartner.setId("authp25");
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.of(loggedInPartner));
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(partnerSearchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.anyString());
+
+		SearchFilter partnerIdFilter = new SearchFilter();
+		partnerIdFilter.setColumnName("partnerId");
+		partnerIdFilter.setValue("auth-p1");
+		searchDto.getFilters().add(partnerIdFilter);
+
+		pserviceImpl.searchPartnerApiKeys(searchDto);
 	}
 
 	@Test

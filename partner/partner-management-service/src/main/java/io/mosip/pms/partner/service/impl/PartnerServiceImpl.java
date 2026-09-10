@@ -1431,6 +1431,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
 			if(loggedInPartner.isPresent()) {
+				partnerSearchHelper.validateLoggedInUserFilter(partnerIdSearchFilter.map(List::of).orElse(List.of()), "partnerId");
 				SearchFilter loggedInUserSearchFilter = new SearchFilter();
 				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
 				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);
@@ -1538,6 +1539,7 @@ public class PartnerServiceImpl implements PartnerService {
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
 			Optional<Partner> loggedInPartner = partnerRepository.findById(getLoggedInUserId());
 			if(loggedInPartner.isPresent()) {
+				partnerSearchHelper.validateLoggedInUserFilter(partnerIdSearchFilter.map(List::of).orElse(List.of()), "partnerId");
 				SearchFilter loggedInUserSearchFilter = new SearchFilter();
 				loggedInUserSearchFilter.setValue(loggedInPartner.get().getId());
 				partnerIdSearchFilter = Optional.of(loggedInUserSearchFilter);

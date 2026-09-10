@@ -567,6 +567,7 @@ public class SearchHelper {
 	private SearchDto addPartnerFilter(SearchDto searchDto, String partnerIdColumn) {
 		AuthUserDetails loggedInUserDetails = UserDetailUtil.getLoggedInUserDetails();
 		if (isLoggedInUserFilterRequired()) {
+			validateLoggedInUserFilter(searchDto.getFilters(), partnerIdColumn);
 			SearchFilter partnerIdSearchFilter = new SearchFilter();
 			partnerIdSearchFilter.setColumnName(partnerIdColumn);
 			partnerIdSearchFilter.setType("equals");
@@ -576,9 +577,34 @@ public class SearchHelper {
 		}
 		return searchDto;
 	}
-	
+
+	/**
+	 * Rejects a caller-supplied filter on {@code columnName} whose value doesn't match the
+	 * logged-in user's own id, instead of silently overriding/AND-ing it away into an empty
+	 * result. No-op when filtering by logged-in user doesn't apply (e.g. admin callers) or
+	 * when the caller didn't filter on that column at all.
+	 */
+	public void validateLoggedInUserFilter(List<SearchFilter> filters, String columnName) {
+		filters.stream()
+				.filter(f -> columnName.equalsIgnoreCase(f.getColumnName())).findFirst().ifPresent(f -> {
+					if (isLoggedInUserMismatch(f.getValue())) {
+						throw new RequestException(SearchErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+								SearchErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+					}
+				});
+	}
+
 	public boolean isLoggedInUserFilterRequired() {
 		return UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
 				.noneMatch(authority -> requiredroles.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
+	}
+
+	/**
+	 * True when filtering by logged-in user applies and {@code value} isn't the logged-in
+	 * user's own id. Shared by {@link #validateLoggedInUserFilter} and by
+	 * PartnerHelper#validateLoggedInUserAuthorization, which depends on this class.
+	 */
+	public boolean isLoggedInUserMismatch(String value) {
+		return isLoggedInUserFilterRequired() && value != null && !value.equals(UserDetailUtil.getLoggedInUserDetails().getUserId());
 	}
 }
