@@ -578,12 +578,7 @@ public class SearchHelper {
 		return searchDto;
 	}
 
-	/**
-	 * Rejects a caller-supplied filter on {@code columnName} whose value doesn't match the
-	 * logged-in user's own id, instead of silently overriding/AND-ing it away into an empty
-	 * result. No-op when filtering by logged-in user doesn't apply (e.g. admin callers) or
-	 * when the caller didn't filter on that column at all.
-	 */
+	// Rejects a caller-supplied filter on columnName that conflicts with the logged-in user's own id, instead of silently AND-ing it away into an empty result.
 	public void validateLoggedInUserFilter(List<SearchFilter> filters, String columnName) {
 		filters.stream()
 				.filter(f -> columnName.equalsIgnoreCase(f.getColumnName())).findFirst().ifPresent(f -> {
@@ -599,11 +594,7 @@ public class SearchHelper {
 				.noneMatch(authority -> requiredroles.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
 	}
 
-	/**
-	 * True when filtering by logged-in user applies and {@code value} isn't the logged-in
-	 * user's own id. Shared by {@link #validateLoggedInUserFilter} and by
-	 * PartnerHelper#validateLoggedInUserAuthorization, which depends on this class.
-	 */
+	// True when ownership filtering applies and value isn't the logged-in user's own id; shared by validateLoggedInUserFilter and PartnerHelper#validateLoggedInUserAuthorization.
 	public boolean isLoggedInUserMismatch(String value) {
 		return isLoggedInUserFilterRequired() && value != null && !value.equals(UserDetailUtil.getLoggedInUserDetails().getUserId());
 	}
