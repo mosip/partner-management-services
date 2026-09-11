@@ -282,6 +282,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public List<MISPLicenseEntity> getInfraProvider() {
+		if (!partnerHelper.isOwnershipFilterExempt()) {
+			return mispLicenseRepository.findByMispId(getLoggedInUserId());
+		}
 		return mispLicenseRepository.findAll();
 	}
 
