@@ -1383,6 +1383,13 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public FilterResponseCodeDto apiKeyRequestFilter(FilterValueDto filterValueDto) {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
+		// PartnerPolicyRequest has no flat partnerId column for the generic filter builder to scope on
+		// (ownership is via a partner relationship, unlike Partner.id used in filterValues above), so
+		// fail closed for non-exempt callers instead of returning filter values across every partner's requests.
+		if (partnerSearchHelper.isLoggedInUserFilterRequired()) {
+			auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.FILTER_PARTNER_APIKEY_REQUESTS_SUCCESS);
+			return filterResponseDto;
+		}
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (filterColumnValidator.validate(FilterDto.class, filterValueDto.getFilters(), PartnerPolicyRequest.class)) {
 			for (FilterDto filterDto : filterValueDto.getFilters()) {
