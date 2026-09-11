@@ -252,6 +252,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public MISPLicenseResponseDto updateInfraProvider(String id, String licenseKey, String status) {
+		partnerHelper.validateLoggedInUserAuthorization(id);
 		if (!(status.toLowerCase().equals(ACTIVE_STATUS) || status.toLowerCase().equals(NOTACTIVE_STATUS))) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorCode(),
 					MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorMessage());
@@ -310,6 +311,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public MISPLicenseResponseDto regenerateKey(String mispId) {
+		partnerHelper.validateLoggedInUserAuthorization(mispId);
 		Optional<Partner> partnerFromDb = partnerRepository.findById(mispId);
 		if (partnerFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
