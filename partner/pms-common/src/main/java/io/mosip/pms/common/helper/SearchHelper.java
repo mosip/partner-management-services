@@ -52,7 +52,7 @@ public class SearchHelper {
 
 	private static final String IS_ACTIVE_COLUMN_NAME = "isActive";
 	
-	@Value("${mosip.pms.ownership.filter.exempt.roles:PARTNER_ADMIN}")
+	@Value("${mosip.pms.required.roles:PARTNER_ADMIN}")
 	private List<String> requiredroles;
 
 	/**

@@ -381,7 +381,7 @@ public class PartnerHelper {
     }
 
     /**
-     * True when the logged-in user's role is configured (via mosip.pms.ownership.filter.exempt.roles)
+     * True when the logged-in user's role is configured (via mosip.pms.required.roles)
      * as exempt from ownership-based filtering, e.g. PARTNER_ADMIN.
      */
     public boolean isOwnershipFilterExempt() {
