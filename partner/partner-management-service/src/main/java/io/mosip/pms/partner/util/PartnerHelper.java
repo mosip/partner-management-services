@@ -380,6 +380,14 @@ public class PartnerHelper {
         }
     }
 
+    /**
+     * True when the logged-in user's role is configured (via mosip.pms.ownership.filter.exempt.roles)
+     * as exempt from ownership-based filtering, e.g. PARTNER_ADMIN.
+     */
+    public boolean isOwnershipFilterExempt() {
+        return !searchHelper.isLoggedInUserFilterRequired();
+    }
+
     public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
         // Validate sortFieldName and sortType
         if ((Objects.nonNull(sortFieldName) && Objects.isNull(sortType)) || (Objects.isNull(sortFieldName) && Objects.nonNull(sortType))) {

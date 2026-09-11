@@ -912,6 +912,8 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public PartnerCertDownloadResponeDto getPartnerCertificate(PartnerCertDownloadRequestDto certDownloadRequestDto) throws JsonProcessingException {
+		validateUser(certDownloadRequestDto);
+
 		// Fetch partner from DB
 		Optional<Partner> partnerFromDb = getPartner(certDownloadRequestDto);
 		Partner partner = partnerFromDb.get();
@@ -1412,9 +1414,9 @@ public class PartnerServiceImpl implements PartnerService {
 		partnerIdSearchFilter = dto.getFilters().stream()
 				.filter(cn -> cn.getColumnName().equalsIgnoreCase("partnerId")).findFirst();
 		if(partnerIdSearchFilter.isPresent()) {
-			Optional<Partner> loggedInPartner = partnerRepository.findById(partnerIdSearchFilter.get().getValue());
-			if (loggedInPartner.isPresent()) {
-				partnerIdSearchFilter.get().setValue(loggedInPartner.get().getId());
+			Optional<Partner> partnerFromIdFilter = partnerRepository.findById(partnerIdSearchFilter.get().getValue());
+			if (partnerFromIdFilter.isPresent()) {
+				partnerIdSearchFilter.get().setValue(partnerFromIdFilter.get().getId());
 			}
 			dto.getFilters().removeIf(f -> f.getColumnName().equalsIgnoreCase("partnerId"));
 		}

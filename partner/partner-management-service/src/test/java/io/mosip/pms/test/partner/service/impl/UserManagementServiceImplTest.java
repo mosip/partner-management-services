@@ -29,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import io.mosip.pms.partner.constant.ErrorCode;
 import io.mosip.pms.partner.dto.MosipUserDto;
 import io.mosip.pms.partner.dto.UserRegistrationRequestDto;
+import io.mosip.pms.partner.exception.PartnerServiceException;
 import io.mosip.pms.partner.keycloak.service.KeycloakImpl;
 import io.mosip.pms.user.service.impl.UserManagementServiceImpl;
 
@@ -91,6 +92,20 @@ public class UserManagementServiceImplTest {
 		ReflectionTestUtils.setField(userManagementServiceImpl, "getUserConsentGivenId", "get.consent.id");
 		ReflectionTestUtils.setField(userManagementServiceImpl, "putNotificationsSeenTimestampId", "put.notification.id");
 		ReflectionTestUtils.setField(userManagementServiceImpl, "getNotificationsSeenTimestampId", "get.notification.id");
+		// Mirrors PartnerHelper#validateLoggedInUserAuthorization: no-op when exempt (e.g. admin),
+		// otherwise throws on mismatch against the currently mocked logged-in user.
+		Mockito.doAnswer(invocation -> {
+			String requestedUserId = invocation.getArgument(0);
+			if (!partnerHelper.isOwnershipFilterExempt()) {
+				AuthUserDetails details = (AuthUserDetails) SecurityContextHolder.getContext()
+						.getAuthentication().getPrincipal();
+				if (details == null || !details.getUserId().equals(requestedUserId)) {
+					throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+							ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+				}
+			}
+			return null;
+		}).when(partnerHelper).validateLoggedInUserAuthorization(anyString());
 	}
 
 	@After
@@ -117,7 +132,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -145,7 +160,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -171,7 +186,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -192,7 +207,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -220,7 +235,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -241,7 +256,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
 		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
@@ -283,7 +298,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
 		requestDto.setNotificationsSeenDtimes(LocalDateTime.now());
@@ -304,7 +319,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -338,7 +353,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		ResponseWrapperV2<NotificationsSeenResponseDto> response =
 				userManagementServiceImpl.getNotificationsSeenTimestamp("someone-else");
@@ -356,7 +371,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		Partner partner = new Partner();
@@ -374,7 +389,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		UserDetails userDetails = new UserDetails();
@@ -389,7 +404,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
@@ -404,7 +419,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -420,7 +435,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.empty());
 		userManagementServiceImpl.isUserConsentGiven();
@@ -432,7 +447,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
@@ -449,7 +464,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -468,7 +483,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -484,7 +499,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -500,7 +515,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
@@ -517,7 +532,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		partnerList.add(new Partner());
@@ -535,7 +550,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenThrow(new RuntimeException("Test exception"));
+		when(partnerHelper.isOwnershipFilterExempt()).thenThrow(new RuntimeException("Test exception"));
 
 		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
 		userManagementServiceImpl.updateNotificationsSeenTimestamp("123", requestDto);
@@ -547,7 +562,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		partnerList.add(new Partner());
@@ -570,7 +585,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
 		userDetails.setNotificationsSeenDtimes(LocalDateTime.now());
@@ -584,7 +599,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenThrow(new RuntimeException("Test exception"));
+		when(partnerHelper.isOwnershipFilterExempt()).thenThrow(new RuntimeException("Test exception"));
 		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
 	}
 
@@ -594,7 +609,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -614,7 +629,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		partnerList.add(new Partner());
@@ -639,7 +654,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
 
 		NotificationsSeenRequestDto requestDto = new NotificationsSeenRequestDto();
@@ -653,7 +668,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		partnerList.add(new Partner());
@@ -671,7 +686,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		partnerList.add(new Partner());
@@ -690,7 +705,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
 		userManagementServiceImpl.getNotificationsSeenTimestamp("123");
 	}
@@ -701,7 +716,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
 		partnerList.add(new Partner());
@@ -716,7 +731,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
 		userManagementServiceImpl.saveUserConsent();
@@ -728,7 +743,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -755,7 +770,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
@@ -779,7 +794,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 		when(userDetailsRepository.findByUserId(anyString())).thenThrow(new RuntimeException("db failure"));
 
 		ResponseWrapperV2<NotificationsSeenResponseDto> response =
@@ -797,7 +812,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 		when(partnerRepository.findByUserId(anyString())).thenReturn(new ArrayList<>());
 		userManagementServiceImpl.isUserConsentGiven();
@@ -809,7 +824,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(false);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(false);
 		when(partnerHelper.isPolicyManager(anyString())).thenReturn(false);
 
 		List<Partner> partnerList = new ArrayList<>();
@@ -829,7 +844,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
 		userDetails.setUserId("123");
@@ -849,7 +864,7 @@ public class UserManagementServiceImplTest {
 		SecurityContextHolder.setContext(securityContext);
 		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		when(securityContext.getAuthentication()).thenReturn(authentication);
-		when(partnerHelper.isPartnerAdmin(anyString())).thenReturn(true);
+		when(partnerHelper.isOwnershipFilterExempt()).thenReturn(true);
 
 		UserDetails userDetails = new UserDetails();
 		when(userDetailsRepository.findByUserId(anyString())).thenReturn(Optional.of(userDetails));
