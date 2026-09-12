@@ -436,8 +436,9 @@ public class FTPChipDetailServiceImpl implements FtpChipDetailService {
 							FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage()),
 					"AUT-003", certDownloadRequestDto.getFtpChipDetailId(), "ftpChipId");
 			throw new RequestException(FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorCode(),
-					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());			
+					FoundationalTrustProviderErrorMessages.FTP_CHIP_ID_NOT_EXISTS.getErrorMessage());
 		}
+		partnerHelper.validateLoggedInUserAuthorization(chipDetail.get().getFtpProviderId());
 		if(chipDetail.get().getCertificateAlias() == null) {
 			auditUtil.auditRequest(
 					String.format(

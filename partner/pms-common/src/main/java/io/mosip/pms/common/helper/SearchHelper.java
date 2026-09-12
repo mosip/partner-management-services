@@ -567,6 +567,7 @@ public class SearchHelper {
 	private SearchDto addPartnerFilter(SearchDto searchDto, String partnerIdColumn) {
 		AuthUserDetails loggedInUserDetails = UserDetailUtil.getLoggedInUserDetails();
 		if (isLoggedInUserFilterRequired()) {
+			validateLoggedInUserFilter(searchDto.getFilters(), partnerIdColumn);
 			SearchFilter partnerIdSearchFilter = new SearchFilter();
 			partnerIdSearchFilter.setColumnName(partnerIdColumn);
 			partnerIdSearchFilter.setType("equals");
@@ -576,9 +577,25 @@ public class SearchHelper {
 		}
 		return searchDto;
 	}
-	
+
+	// Rejects a caller-supplied filter on columnName that conflicts with the logged-in user's own id, instead of silently AND-ing it away into an empty result.
+	public void validateLoggedInUserFilter(List<SearchFilter> filters, String columnName) {
+		filters.stream()
+				.filter(f -> columnName.equalsIgnoreCase(f.getColumnName())).findFirst().ifPresent(f -> {
+					if (isLoggedInUserMismatch(f.getValue())) {
+						throw new RequestException(SearchErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+								SearchErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+					}
+				});
+	}
+
 	public boolean isLoggedInUserFilterRequired() {
 		return UserDetailUtil.getLoggedInUserDetails().getAuthorities().stream()
-				.anyMatch(authority -> requiredroles.contains(authority.getAuthority()));
+				.noneMatch(authority -> requiredroles.contains(authority.getAuthority().replaceFirst("^ROLE_", "")));
+	}
+
+	// True when ownership filtering applies and value isn't the logged-in user's own id; shared by validateLoggedInUserFilter and PartnerHelper#validateLoggedInUserAuthorization.
+	public boolean isLoggedInUserMismatch(String value) {
+		return isLoggedInUserFilterRequired() && value != null && !value.equals(UserDetailUtil.getLoggedInUserDetails().getUserId());
 	}
 }

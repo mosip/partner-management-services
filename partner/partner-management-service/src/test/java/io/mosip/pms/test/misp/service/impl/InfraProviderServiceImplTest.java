@@ -56,6 +56,9 @@ public class InfraProviderServiceImplTest {
 	@Autowired
 	InfraProviderServiceImpl infraProviderServiceImpl;
 
+	@Autowired
+	io.mosip.pms.partner.util.PartnerHelper partnerHelper;
+
 	@Mock
 	private WebSubPublisher webSubPublisher;
 
@@ -104,6 +107,7 @@ public class InfraProviderServiceImplTest {
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "webSubPublisher", webSubPublisher);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "searchHelper", searchHelper);
 		ReflectionTestUtils.setField(infraProviderServiceImpl, "filterColumnValidator", filterColumnValidator);
+		ReflectionTestUtils.setField(partnerHelper, "searchHelper", searchHelper);
 		Mockito.doNothing().when(webSubPublisher).notify(any(), any(), any());
 		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
 		Mockito.when(filterColumnValidator.validate(any(), any(), any())).thenReturn(true);
@@ -663,6 +667,26 @@ public class InfraProviderServiceImplTest {
 		searchDtos.add(searchDto);
 		filterValueDto.setFilters(filterDtos);
 		Mockito.when(filterHelper.filterValuesWithCode(any(), any(), any(), any())).thenReturn(filtersData);
+		infraProviderServiceImpl.filterValues(filterValueDto);
+	}
+
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void filterValues_whenOptionalFilterMismatchesLoggedInUser_throws() {
+		FilterDto filterDto = new FilterDto();
+		filterDto.setColumnName("licenseKey");
+		filterDto.setText("test");
+		filterDto.setType("all");
+		FilterValueDto filterValueDto = new FilterValueDto();
+		filterValueDto.setFilters(new ArrayList<>(List.of(filterDto)));
+		SearchFilter conflictingMispIdFilter = new SearchFilter();
+		conflictingMispIdFilter.setColumnName("misp_id");
+		conflictingMispIdFilter.setValue("other-misp");
+		filterValueDto.setOptionalFilters(new ArrayList<>(List.of(conflictingMispIdFilter)));
+
+		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(searchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.eq("misp_id"));
+
 		infraProviderServiceImpl.filterValues(filterValueDto);
 	}
 

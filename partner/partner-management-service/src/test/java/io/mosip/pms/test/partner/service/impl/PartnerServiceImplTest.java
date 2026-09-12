@@ -318,6 +318,18 @@ public class PartnerServiceImplTest {
 
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void addContact_whenOwnershipCheckFails_throws() throws Exception {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		AddContactRequestDto addContactRequestDto = new AddContactRequestDto();
+		addContactRequestDto.setAddress("Banglore");
+		addContactRequestDto.setContactNumber("123456789");
+		addContactRequestDto.setEmailId("xyz@gmail.com");
+		addContactRequestDto.setIs_Active(true);
+		pserviceImpl.createAndUpdateContactDetails(addContactRequestDto, "not-logged-in-partner-id");
+	}
+
 	@Test
 	public void addContact_test() throws Exception{
 		AddContactRequestDto addContactRequestDto = new AddContactRequestDto();
@@ -398,7 +410,20 @@ public class PartnerServiceImplTest {
 				.thenReturn(filtersData);
 		pserviceImpl.filterValues(deviceFilterValueDto);
 	}
-	
+
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void partnerFilterValues_whenOptionalFilterMismatchesLoggedInUser_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		SearchFilter conflictingIdFilter = new SearchFilter();
+		conflictingIdFilter.setColumnName("id");
+		conflictingIdFilter.setValue("auth-p1");
+		deviceFilterValueDto.setOptionalFilters(new ArrayList<>(List.of(conflictingIdFilter)));
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(partnerSearchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.eq("id"));
+
+		pserviceImpl.filterValues(deviceFilterValueDto);
+	}
+
 	@Test
 	public void apiKeyRequestFilterTest() {
 		List<FilterData> filtersData = new ArrayList<>();
@@ -694,6 +719,13 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test(expected = PartnerServiceException.class)
+	public void addBiometricExtractors_whenOwnershipCheckFails_throws() {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		pserviceImpl.addBiometricExtractors("not-logged-in-partner-id", "12345", getExtractorsInput());
+	}
+
+	@Test(expected = PartnerServiceException.class)
 	public void addBiometricExtractorsTest_001() {
 		Partner part = createPartner(Boolean.TRUE);
 		String partnerId = "12345";
@@ -796,6 +828,13 @@ public class PartnerServiceImplTest {
 	}
 	
 	@Test(expected = PartnerServiceException.class)
+	public void getBiometricExtractors_whenOwnershipCheckFails_throws() {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		pserviceImpl.getBiometricExtractors("not-logged-in-partner-id", "12345");
+	}
+
+	@Test(expected = PartnerServiceException.class)
 	public void getBiometricExtractorsTest_001() {
 		List<BiometricExtractorProvider> data = new ArrayList<>();
 		Mockito.when(extractorProviderRepository.findByPartnerAndPolicyId("12345", "12345")).thenReturn(data);
@@ -871,18 +910,9 @@ public class PartnerServiceImplTest {
 	}
 
 	@Test(expected = PartnerServiceException.class)
-	public void getCredentialTypesByPartnerAndPolicyTest_004_nonAdminUserNotFound() {
-		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(false);
-		Mockito.when(partnerRepository.findByUserId(Mockito.anyString())).thenReturn(new ArrayList<>());
-		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void getCredentialTypesByPartnerAndPolicyTest_005_nonAdminPartnerNotBelongToUser() {
-		Mockito.when(partnerHelper.isPartnerAdmin(Mockito.anyString())).thenReturn(false);
-		Partner other = new Partner();
-		other.setId("other-partner");
-		Mockito.when(partnerRepository.findByUserId(Mockito.anyString())).thenReturn(List.of(other));
+	public void getCredentialTypesByPartnerAndPolicy_whenOwnershipCheckFails_throws() {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("12345");
 		pserviceImpl.getCredentialTypesByPartnerAndPolicy("12345", "p001");
 	}
 
@@ -958,6 +988,13 @@ public class PartnerServiceImplTest {
 
 	
 	@Test(expected = PartnerServiceException.class)
+	public void retrieveAllApiKeyRequestsSubmittedByPartner_whenOwnershipCheckFails_throws() {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner("not-logged-in-partner-id");
+	}
+
+	@Test(expected = PartnerServiceException.class)
 	public void retrieveAllApiKeyRequestsSubmittedByPartnerTest_S1() {
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner("12345");
 	}	
@@ -988,6 +1025,13 @@ public class PartnerServiceImplTest {
 		pserviceImpl.retrieveAllApiKeyRequestsSubmittedByPartner(partnerId);
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void mapPartnerPolicyCredentialType_whenOwnershipCheckFails_throws() {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		pserviceImpl.mapPartnerPolicyCredentialType("euin", "not-logged-in-partner-id", "12345");
+	}
+
 	@Test(expected = PartnerServiceException.class)
 	public void mapPartnerPolicyCredentialType_001() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
@@ -1036,8 +1080,15 @@ public class PartnerServiceImplTest {
 		pserviceImpl.mapPartnerPolicyCredentialType("euin", "12345", "12345678");
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void getPartnerCredentialTypePolicy_whenOwnershipCheckFails_throws() throws JsonParseException, JsonMappingException, IOException {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		pserviceImpl.getPartnerCredentialTypePolicy("euin", "not-logged-in-partner-id");
+	}
+
 	@Test
-	public void getPartnerCredentialTypePolicy_001() throws JsonParseException, JsonMappingException, IOException {		
+	public void getPartnerCredentialTypePolicy_001() throws JsonParseException, JsonMappingException, IOException {
 		PartnerPolicyCredentialType response = new PartnerPolicyCredentialType();
 		PartnerPolicyCredentialTypePK key = new PartnerPolicyCredentialTypePK();
 		key.setCredentialType("euin");
@@ -1173,6 +1224,13 @@ public class PartnerServiceImplTest {
 		}
 	}
 	
+	@Test(expected = PartnerServiceException.class)
+	public void updatePolicyGroup_whenOwnershipCheckFails_throws() {
+		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+		pserviceImpl.updatePolicyGroup("not-logged-in-partner-id", "policygroupname");
+	}
+
 	@Test
 	public void updatePolicyGroupTest() {
 		Optional<Partner> partner = Optional.of(createPartner(true));
@@ -1207,6 +1265,32 @@ public class PartnerServiceImplTest {
 		}
 	}
 	
+	@Test
+	public void searchPartnerApiKeyRequests_whenOwnershipLookupFails_returnsEmptyAndSkipsSearch() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+		PageResponseDto<PolicyRequestSearchResponseDto> result = pserviceImpl.searchPartnerApiKeyRequests(searchDto);
+		assertTrue(result.getData() == null || result.getData().isEmpty());
+		Mockito.verify(partnerSearchHelper, Mockito.never()).search(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void searchPartnerApiKeyRequests_whenPartnerIdFilterMismatchesLoggedInUser_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Partner loggedInPartner = createPartner(true);
+		loggedInPartner.setId("authp25");
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.of(loggedInPartner));
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(partnerSearchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.anyString());
+
+		SearchFilter partnerIdFilter = new SearchFilter();
+		partnerIdFilter.setColumnName("partnerId");
+		partnerIdFilter.setValue("auth-p1");
+		searchDto.getFilters().add(partnerIdFilter);
+
+		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
+	}
+
 	@Test
 	public void searchPartnerApiKeyRequestsTest() throws Exception {
 		SearchFilter partnerNameSearchFilter = new SearchFilter();
@@ -1253,6 +1337,32 @@ public class PartnerServiceImplTest {
 		pserviceImpl.searchPartnerApiKeyRequests(searchDto);
 	}
 	
+	@Test
+	public void searchPartnerApiKeys_whenOwnershipLookupFails_returnsEmptyAndSkipsSearch() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+		PageResponseDto<PartnerPolicySearchResponseDto> result = pserviceImpl.searchPartnerApiKeys(searchDto);
+		assertTrue(result.getData() == null || result.getData().isEmpty());
+		Mockito.verify(partnerSearchHelper, Mockito.never()).search(Mockito.any(), Mockito.any(), Mockito.any());
+	}
+
+	@Test(expected = io.mosip.pms.common.exception.RequestException.class)
+	public void searchPartnerApiKeys_whenPartnerIdFilterMismatchesLoggedInUser_throws() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+		Partner loggedInPartner = createPartner(true);
+		loggedInPartner.setId("authp25");
+		when(partnerRepository.findById(Mockito.any())).thenReturn(Optional.of(loggedInPartner));
+		Mockito.doThrow(new io.mosip.pms.common.exception.RequestException("PMS-MSD-396", "User not authorized."))
+				.when(partnerSearchHelper).validateLoggedInUserFilter(Mockito.anyList(), Mockito.anyString());
+
+		SearchFilter partnerIdFilter = new SearchFilter();
+		partnerIdFilter.setColumnName("partnerId");
+		partnerIdFilter.setValue("auth-p1");
+		searchDto.getFilters().add(partnerIdFilter);
+
+		pserviceImpl.searchPartnerApiKeys(searchDto);
+	}
+
 	@Test
 	public void searchPartnerApiKeysTest() throws JsonProcessingException {
 		SearchFilter partnerNameSearchFilter = new SearchFilter();
@@ -2356,12 +2466,6 @@ public class PartnerServiceImplTest {
 		when(partnerHelper.getValidPartner(eq("12345"), eq(true))).thenReturn(p);
 		when(policyGroupRepository.findById("missing-pg")).thenReturn(Optional.empty());
 		pserviceImpl.getPartnerDetails("12345");
-	}
-
-	@Test(expected = PartnerServiceException.class)
-	public void validateLoggedInUserAuthorization_whenFilterRequiredAndIdMismatch_throws() {
-		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		pserviceImpl.validateLoggedInUserAuthorization("not-logged-in-partner-id");
 	}
 
 	@Test
