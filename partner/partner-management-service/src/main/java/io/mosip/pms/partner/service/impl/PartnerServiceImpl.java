@@ -1353,7 +1353,9 @@ public class PartnerServiceImpl implements PartnerService {
 		}
 
 		if(partnerSearchHelper.isLoggedInUserFilterRequired()) {
-			if (filterValueDto.getOptionalFilters() != null) {
+			if (filterValueDto.getOptionalFilters() == null) {
+				filterValueDto.setOptionalFilters(new ArrayList<>());
+			} else {
 				partnerSearchHelper.validateLoggedInUserFilter(filterValueDto.getOptionalFilters(), "id");
 			}
 			SearchFilter loggedInUserFilterDto = new SearchFilter();
