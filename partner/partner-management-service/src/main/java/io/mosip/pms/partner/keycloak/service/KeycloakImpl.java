@@ -157,7 +157,7 @@ public class KeycloakImpl{
 		pathParams.put("userName", userName);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
 				.fromUriString(keycloakBaseUrl.concat("/users")).queryParam("username", "{userName}");
-		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
+		String response = callKeycloakService(uriComponentsBuilder.encode().buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes = null;
 		try {
@@ -195,7 +195,7 @@ public class KeycloakImpl{
 		pathParams.put("userName", userName);
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
 				.fromUriString(keycloakBaseUrl.concat("/users")).queryParam("username", "{userName}");
-		String response = callKeycloakService(uriComponentsBuilder.buildAndExpand(pathParams).toString(),
+		String response = callKeycloakService(uriComponentsBuilder.encode().buildAndExpand(pathParams).toString(),
 				HttpMethod.GET, null);
 		JsonNode jsonNodes = null;
 		try {
