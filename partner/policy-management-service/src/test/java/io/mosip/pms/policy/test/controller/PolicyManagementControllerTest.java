@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -172,7 +173,7 @@ public class PolicyManagementControllerTest {
 	public void publishPolicyTest() throws Exception{
 		PolicyResponseDto response = new PolicyResponseDto();
 		Mockito.when(policyManagementService.publishPolicy(Mockito.any(),Mockito.any())).thenReturn(response);
-		mockMvc.perform(MockMvcRequestBuilders.post("/policies/12345/group/12345/publish")).
+		mockMvc.perform(MockMvcRequestBuilders.post("/policies/12345/group/12345/publish").with(csrf())).
 		andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -182,7 +183,7 @@ public class PolicyManagementControllerTest {
 		PageResponseDto<SearchAuthPolicy> response = new PageResponseDto<SearchAuthPolicy>();
 		 Mockito.when(policyManagementService.searchPolicy(Mockito.any())).thenReturn(response);
 		 RequestWrapper<PolicySearchDto> policySearchDto = createPolicySearchhRequest();
-		 mockMvc.perform(post("/policies/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+		 mockMvc.perform(post("/policies/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(policySearchDto))).andExpect(status().isOk());
 	}
 
@@ -192,7 +193,7 @@ public class PolicyManagementControllerTest {
 		PageResponseDto<PolicyGroup> response = new PageResponseDto<PolicyGroup>();
 		 Mockito.when(policyManagementService.searchPolicyGroup(Mockito.any())).thenReturn(response);
 		 RequestWrapper<SearchDto> policyGroupSearchDto = createPolicyGroupSearchhRequest();
-		 mockMvc.perform(post("/policies/group/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+		 mockMvc.perform(post("/policies/group/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(policyGroupSearchDto))).andExpect(status().isOk());
 	}
 
@@ -202,7 +203,7 @@ public class PolicyManagementControllerTest {
 		FilterResponseCodeDto response = new FilterResponseCodeDto();
 		Mockito.when(policyManagementService.policyGroupFilterValues(Mockito.any())).thenReturn(response);
 		RequestWrapper<FilterValueDto> policyGroupFilterValueDto = createPolicyGFilterRequest();
-		 mockMvc.perform(post("/policies/group/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+		 mockMvc.perform(post("/policies/group/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(policyGroupFilterValueDto))).andExpect(status().isOk());
 
 	}
@@ -213,7 +214,7 @@ public class PolicyManagementControllerTest {
 		FilterResponseCodeDto response = new FilterResponseCodeDto();
 		Mockito.when(policyManagementService.policyFilterValues(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyFilterValueDto> policyFilterValueDto = createPolicyFilterrRequest();
-		 mockMvc.perform(post("/policies/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+		 mockMvc.perform(post("/policies/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(policyFilterValueDto))).andExpect(status().isOk());
 	}
 
@@ -223,7 +224,7 @@ public class PolicyManagementControllerTest {
 		PolicyGroupCreateResponseDto response = new PolicyGroupCreateResponseDto();
 		Mockito.when(policyManagementService.createPolicyGroup(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyGroupCreateRequestDto> request = createPolicyGroupRequest();
-		mockMvc.perform(post("/policies/group/new").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/policies/group/new").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -233,7 +234,7 @@ public class PolicyManagementControllerTest {
 		PolicyCreateResponseDto response = new PolicyCreateResponseDto();
 		Mockito.when(policyManagementService.createPolicies(Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyCreateRequestDto> request = createPolicyRequest();
-		mockMvc.perform(post("/policies").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/policies").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -244,7 +245,7 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.updatePolicyGroup(Mockito.any(),Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyGroupUpdateRequestDto> request = createPolicyGroupUpdateRequest();
 
-		mockMvc.perform(put("/policies/group/12345").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(put("/policies/group/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -255,7 +256,7 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.updatePolicies(Mockito.any(),Mockito.any())).thenReturn(response);
 		RequestWrapper<PolicyUpdateRequestDto> request = createPolicyUpdateRequest();
 
-		mockMvc.perform(put("/policies/12345").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(put("/policies/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -267,7 +268,7 @@ public class PolicyManagementControllerTest {
 		RequestWrapper<PolicyStatusUpdateRequestDto> request = createPolicyStatusUpateRequest();
 
 		policyManagementController.updatePolicyStatus(request, "12345", "12345");
-		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345/group/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -873,7 +874,7 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.deactivatePolicy(anyString(), any()))
 				.thenReturn(responseWrapper);
 		policyManagementController.deactivatePolicy("12345", requestWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 
 	}
@@ -892,7 +893,7 @@ public class PolicyManagementControllerTest {
 		Mockito.when(policyManagementService.deactivatePolicyGroup(anyString(), any())).thenReturn(responseWrapper);
 
 		policyManagementController.deactivatePolicyGroup("12345", requestWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 
 	}
@@ -908,7 +909,7 @@ public class PolicyManagementControllerTest {
 		Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
 
 		policyManagementController.deactivatePolicyGroup("12345", requestWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/policies/group/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
