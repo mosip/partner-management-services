@@ -2,6 +2,7 @@ package io.mosip.pms.test.device.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -277,7 +278,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void createFTPChipDetailTest() throws Exception {
 		   RequestWrapper<FtpChipDetailDto> request = createRequest(true);
-		   mockMvc.perform(post("/ftpchipdetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+		   mockMvc.perform(post("/ftpchipdetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	   }
 	   
@@ -285,7 +286,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void createFTPChipDetailTest_01() throws Exception {
 		   RequestWrapper<FtpChipDetailDto> request = createRequest(false);
-		   mockMvc.perform(post("/ftpchipdetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+		   mockMvc.perform(post("/ftpchipdetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	   }
 	   
@@ -293,7 +294,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void updateFTPDetailsTest() throws Exception {
 	    	RequestWrapper<FtpChipDetailUpdateDto> request = updateRequest(true);
-	    	mockMvc.perform(put("/ftpchipdetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(put("/ftpchipdetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
 	   
@@ -301,7 +302,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void updateFTPDetailsTest_01() throws Exception {
 	    	RequestWrapper<FtpChipDetailUpdateDto> request = updateRequest(false);
-	    	mockMvc.perform(put("/ftpchipdetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(put("/ftpchipdetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
 	   
@@ -309,7 +310,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void approveFTPChipDetailsTest() throws JsonProcessingException, Exception {
 	    	RequestWrapper<FtpChipDetailStatusDto> createrequest=approvalRequest(true);
-	    	mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());  
 	   }
 	   
@@ -317,7 +318,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void approveFTPChipDetailsTest_01() throws JsonProcessingException, Exception {
 	    	RequestWrapper<FtpChipDetailStatusDto> createrequest=approvalRequest(false);
-	    	mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());  
 	   }
 	   
@@ -325,7 +326,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void FTPChipDetailsSearchTest() throws JsonProcessingException, Exception {
 	    	RequestWrapper<DeviceSearchDto> request = searchRequest();
-	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
 	    
@@ -333,7 +334,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void regFTPChipDetailsSearchTest() throws JsonProcessingException, Exception {
 	    	RequestWrapper<DeviceSearchDto> request = RegSearchRequest();
-	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
 	    
@@ -341,7 +342,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void uploadPartnerCertificateTest() throws JsonProcessingException, Exception {
 	    	RequestWrapper<FtpChipCertificateRequestDto> request = uploadRequest(true);
-	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/uploadcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/uploadcertificate").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
 	    
@@ -349,7 +350,7 @@ public class FTPChipDetailControllerTest {
 	    @WithMockUser(roles = {"PARTNER_ADMIN"})
 	    public void uploadPartnerCertificateTest_01() throws JsonProcessingException, Exception {
 	    	RequestWrapper<FtpChipCertificateRequestDto> request = uploadRequest(false);
-	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/uploadcertificate").contentType(MediaType.APPLICATION_JSON_VALUE)
+	    	mockMvc.perform(MockMvcRequestBuilders.post("/ftpchipdetail/uploadcertificate").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 	                .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	    }
 	    
@@ -393,7 +394,7 @@ public class FTPChipDetailControllerTest {
 			FtmDetailResponseDto ftmDetailResponseDto = new FtmDetailResponseDto();
 			responseWrapper.setResponse(ftmDetailResponseDto);
 			Mockito.when(ftpChipDetaillService.deactivateFtm(Mockito.any(), Mockito.any())).thenReturn(responseWrapper);
-			mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail/1232").contentType(MediaType.APPLICATION_JSON_VALUE)
+			mockMvc.perform(MockMvcRequestBuilders.patch("/ftpchipdetail/1232").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 					.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 		}
 

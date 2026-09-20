@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +26,6 @@ import org.springframework.security.web.firewall.HttpFirewall;
 @EnableMethodSecurity
 public class TestSecurityConfig {
 
-
 	@Bean
 	public HttpFirewall defaultHttpFirewall() {
 		return new DefaultHttpFirewall();
@@ -33,8 +33,7 @@ public class TestSecurityConfig {
 
 	@Bean
 	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
-		// codeql[java/spring-disabled-csrf-protection] Test-only in-memory security config, never used in production.
-		httpSecurity.csrf(csrf -> csrf.disable());
+		httpSecurity.csrf(Customizer.withDefaults());
 		httpSecurity.authorizeHttpRequests(cfg -> cfg.anyRequest().permitAll());
 		return httpSecurity.build();
 	}

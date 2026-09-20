@@ -38,6 +38,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -114,7 +115,7 @@ public class ClientManagementControllerTest {
         requestWrapper.setRequest(clientDetailCreateRequestV2);
         String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/oauth/client")
+        mockMvc.perform(MockMvcRequestBuilders.post("/oauth/client").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -164,7 +165,7 @@ public class ClientManagementControllerTest {
         requestWrapper.setRequest(clientDetailUpdateRequestV2);
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
         doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
-        mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -194,7 +195,7 @@ public class ClientManagementControllerTest {
         requestWrapper.setRequest(clientDetailUpdateRequestV2);
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
         doNothing().when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
-        mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123~1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/oauth/client/123~1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -226,7 +227,7 @@ public class ClientManagementControllerTest {
         Mockito.when(clientManagementService.createOIDCClient(Mockito.any()))
                 .thenReturn(responseDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/oidc/client")
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc/client").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(requestWrapper)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -260,7 +261,7 @@ public class ClientManagementControllerTest {
         String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
 
         // Perform PUT request
-        mockMvc.perform(MockMvcRequestBuilders.put("/oidc/client/123")
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc/client/123").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -294,7 +295,7 @@ public class ClientManagementControllerTest {
         String requestJson = new ObjectMapper().writeValueAsString(requestWrapper);
 
         // Perform PUT request
-        mockMvc.perform(MockMvcRequestBuilders.put("/oidc/client/1~23")
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc/client/1~23").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -430,7 +431,7 @@ public class ClientManagementControllerTest {
         Mockito.when(clientManagementService.createOIDCClientV2(any(ClientDetailCreateRequestV3.class)))
                 .thenReturn(responseWrapper);
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -455,7 +456,7 @@ public class ClientManagementControllerTest {
         Mockito.doThrow(new PartnerServiceException("INVALID_INPUT", "policyId cannot be empty"))
                 .when(inputValidator).validateRequestInput(anyString(), eq(""));
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -469,7 +470,7 @@ public class ClientManagementControllerTest {
         requestWrapper.setRequestTime(LocalDateTime.now());
         requestWrapper.setVersion("1.0");
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -495,7 +496,7 @@ public class ClientManagementControllerTest {
         Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients")
+        mockMvc.perform(MockMvcRequestBuilders.post("/oidc-clients").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -636,7 +637,7 @@ public class ClientManagementControllerTest {
                 .thenReturn(responseWrapper);
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -666,7 +667,7 @@ public class ClientManagementControllerTest {
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
         try {
-            mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/invalid~client@id")
+            mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/invalid~client@id").with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson));
             org.junit.Assert.fail("Expected PartnerServiceException for invalid clientId");
@@ -696,7 +697,7 @@ public class ClientManagementControllerTest {
                 .when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -720,7 +721,7 @@ public class ClientManagementControllerTest {
                 .when(inputValidator).validateRequestInput(eq("clientName"), eq(""));
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -745,7 +746,7 @@ public class ClientManagementControllerTest {
         doReturn(Optional.of(validationErrorResponse)).when(requestValidator).validate(anyString(), any());
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.put("/oidc-clients/{clientId}", clientId).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
@@ -778,7 +779,7 @@ public class ClientManagementControllerTest {
                 .thenReturn(responseWrapper);
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -801,7 +802,7 @@ public class ClientManagementControllerTest {
         doNothing().when(featureAvailabilityUtil).validateOidcClientAdditionalInfoFeatureAvailable();
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", invalidClientId)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", invalidClientId).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson));
     }
@@ -825,7 +826,7 @@ public class ClientManagementControllerTest {
         doReturn(Optional.of(validationErrorResponse)).when(requestValidator).validate(anyString(), any());
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId).with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -851,7 +852,7 @@ public class ClientManagementControllerTest {
                 .when(inputValidator).validateRequestInput(eq("status"), eq(""));
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson));
     }
@@ -871,7 +872,7 @@ public class ClientManagementControllerTest {
                 .when(featureAvailabilityUtil).validateOidcClientFeatureEnabled();
 
         String requestJson = objectMapper.writeValueAsString(requestWrapper);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/oidc-clients/{clientId}", clientId).with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson));
     }

@@ -2,6 +2,7 @@ package io.mosip.pms.test.partner.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
@@ -60,7 +61,7 @@ public class UserControllerTest {
     	MosipUserDto response = new MosipUserDto();
 		Mockito.when(userManagementService.registerUser(Mockito.any())).thenReturn(response);
 		RequestWrapper<UserRegistrationRequestDto> request = createRequest();
-		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/users").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
@@ -86,7 +87,7 @@ public class UserControllerTest {
 		UserDetailsDto userDetailsDto = new UserDetailsDto();
 		responseWrapper.setResponse(userDetailsDto);
 		Mockito.when(userManagementService.saveUserConsent()).thenReturn(responseWrapper);
-		mockMvc.perform(post("/users/user-consent").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/users/user-consent").with(csrf()).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
 
@@ -123,7 +124,7 @@ public class UserControllerTest {
 		responseWrapper.setResponse(notificationsSeenResponseDto);
 
 		Mockito.when(userManagementService.updateNotificationsSeenTimestamp(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.put("/users/test123/notifications-seen-timestamp").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.put("/users/test123/notifications-seen-timestamp").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
@@ -139,7 +140,7 @@ public class UserControllerTest {
 		responseWrapper.setResponse(notificationsSeenResponseDto);
 
 		Mockito.when(userManagementService.updateNotificationsSeenTimestamp(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.put("/users/test123/notifications-seen-timestamp").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.put("/users/test123/notifications-seen-timestamp").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 

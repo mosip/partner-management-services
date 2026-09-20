@@ -1,6 +1,7 @@
 package io.mosip.pms.test.misp.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,7 +84,7 @@ public class MISPLicenseControllerTest {
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		Mockito.when(infraProvidertService.approveInfraProvider(Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPLicenseRequestDto> request = createRequest();
-		mockMvc.perform(post("/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/misps").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	}
 
@@ -93,7 +94,7 @@ public class MISPLicenseControllerTest {
 		MISPLicenseResponseDto response = new MISPLicenseResponseDto();
 		Mockito.when(infraProvidertService.updateInfraProvider(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(response);
 		RequestWrapper<MISPLicenseUpdateRequestDto> request = createUpdateRequest();
-		mockMvc.perform(put("/misps").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/misps").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -117,7 +118,7 @@ public class MISPLicenseControllerTest {
 	public void filterValues () throws Exception{
 		FilterResponseCodeDto response = new FilterResponseCodeDto();
 		Mockito.when(infraProvidertService.filterValues(createFilterRequest().getRequest())).thenReturn(response);
-		mockMvc.perform(post("/misps/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/misps/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createFilterRequest()))).andExpect(status().isOk());
 	}
 
@@ -126,7 +127,7 @@ public class MISPLicenseControllerTest {
 	public void search () throws Exception{
 		PageResponseDto<MISPLicenseEntity> response = new PageResponseDto<MISPLicenseEntity>();
 		Mockito.when(infraProvidertService.search(searchRequest().getRequest())).thenReturn(response);
-		mockMvc.perform(post("/misps/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(post("/misps/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(searchRequest()))).andExpect(status().isOk());
 	}
 
@@ -139,7 +140,7 @@ public class MISPLicenseControllerTest {
 		data.add(entity);
 		pageResponse.setData(data);
 		Mockito.when(infraProvidertService.search(any(SearchDto.class))).thenReturn(pageResponse);
-		mockMvc.perform(post("/misps/search")
+		mockMvc.perform(post("/misps/search").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(searchRequest())))
 				.andExpect(status().isOk());
@@ -360,7 +361,7 @@ public class MISPLicenseControllerTest {
 		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
 		Mockito.when(infraProvidertService.generateMISPLicense(generateMISPRequest())).thenReturn(generateMISPResponseWrapper());
-		mockMvc.perform(MockMvcRequestBuilders.post("/misp-licenses").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.post("/misp-licenses").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(generateMISPRequestWrapper()))).andExpect(status().isOk());
 	}
 
@@ -369,7 +370,7 @@ public class MISPLicenseControllerTest {
 	public void generateMispLicenseTest_InvalidRequest() throws Exception {
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
 		Mockito.when(infraProvidertService.generateMISPLicense(generateMISPRequest())).thenReturn(generateMISPResponseWrapper());
-		mockMvc.perform(MockMvcRequestBuilders.post("/misp-licenses").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.post("/misp-licenses").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(generateMISPRequestWrapper()))).andExpect(status().isOk());
 	}
 
@@ -416,7 +417,7 @@ public class MISPLicenseControllerTest {
 		Mockito.when(infraProvidertService.updateMISPLicense(eq(mispLicenseId), any(MISPLicensePatchRequestDto.class)))
 				.thenReturn(updateMISPResponseWrapper());
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId).with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(updateMISPRequestWrapper())))
 				.andExpect(status().isOk());
@@ -431,7 +432,7 @@ public class MISPLicenseControllerTest {
 		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId).with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(updateMISPRequestWrapper())))
 				.andExpect(status().isOk());
@@ -452,7 +453,7 @@ public class MISPLicenseControllerTest {
 		requestWrapper.setRequest(patchRequest);
 		Mockito.when(infraProvidertService.updateMISPLicense(anyString(), any())).thenReturn(updateMISPResponseWrapper());
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/misp-licenses/" + mispLicenseId).with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());

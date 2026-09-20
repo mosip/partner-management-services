@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -142,7 +143,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.updatePolicyAgainstApikey(partnersPolicyMappingRequest,partnerID,
 				partnerAPIKey)).thenReturn(partnersPolicyMappingResponse);
 		
-		mockMvc.perform(put("/partners/67899/apikey/45678/policies").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(put("/partners/67899/apikey/45678/policies").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	}
 	
@@ -164,7 +165,7 @@ public class PartnerManagementControllerTest {
 		request.setRequesttime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		request.setMetadata("{}");
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -225,7 +226,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.approveRejectPartnerPolicyMapping(any(), any()))
 				.thenReturn("Success");
 		
-		mockMvc.perform(MockMvcRequestBuilders.put("/partners/policy/56789").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.put("/partners/policy/56789").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
 	}
 	
@@ -244,7 +245,7 @@ public class PartnerManagementControllerTest {
 		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",requestDto))
 				.thenReturn("Success");
 		
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -309,7 +310,7 @@ public class PartnerManagementControllerTest {
 		requestWrapper.setVersion("1.0");
 		Mockito.when(partnerManagementService.updateAPIKeyStatus("1234","456",apIkeyStatusUpdateRequestDto))
 				.thenReturn("Success");
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -340,7 +341,7 @@ public class PartnerManagementControllerTest {
 
 		partnerManagementController.activateDeactivatePartnerAPIKey("1234", "456", requestWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/policy/456/apiKey/status").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -721,7 +722,7 @@ public class PartnerManagementControllerTest {
 		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
 		Mockito.when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
 		Mockito.when(partnerManagementService.linkPolicyGroup(anyString(), any())).thenReturn(getResponseWrapper());
-		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(getRequestWrapper()))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -730,7 +731,7 @@ public class PartnerManagementControllerTest {
 	public void linkPolicyGroupTest_InvalidRequest() throws Exception {
 		Mockito.when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
 		Mockito.when(partnerManagementService.linkPolicyGroup(anyString(), any())).thenReturn(getResponseWrapper());
-		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.post("/123/policy-group").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(getRequestWrapper()))).andExpect(status().isOk());
 	}
 
@@ -745,7 +746,7 @@ public class PartnerManagementControllerTest {
 		ResponseWrapperV2<io.mosip.pms.partner.response.dto.APIKeyUpdateResponseDto> errorResponse = new ResponseWrapperV2<>();
 		Mockito.doReturn(Optional.of(errorResponse)).when(requestValidator).validate(anyString(), any());
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());
@@ -763,7 +764,7 @@ public class PartnerManagementControllerTest {
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.updateAPIKey(anyString(), anyString(), anyString(), any())).thenReturn(response);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());
@@ -783,7 +784,7 @@ public class PartnerManagementControllerTest {
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.updateAPIKey(anyString(), anyString(), anyString(), any())).thenReturn(response);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());
@@ -802,7 +803,7 @@ public class PartnerManagementControllerTest {
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.updateAPIKey(anyString(), anyString(), anyString(), any())).thenReturn(response);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());
@@ -820,7 +821,7 @@ public class PartnerManagementControllerTest {
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.updateAPIKey(anyString(), anyString(), anyString(), any())).thenReturn(response);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/partners/partner123/policies/policy456/api-keys/apiKeyName123").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper)))
 				.andExpect(status().isOk());
@@ -954,7 +955,7 @@ public class PartnerManagementControllerTest {
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.createBioextractorConfiguration(any())).thenReturn(responseWrapper);
 
-		mockMvc.perform(post("/bio-extractor-configurations")
+		mockMvc.perform(post("/bio-extractor-configurations").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
 				.andExpect(status().isOk());
@@ -968,7 +969,7 @@ public class PartnerManagementControllerTest {
 		RequestWrapperV2<BioextractorConfigurationRequestDto> wrapper = buildBioextractorConfigRequestWrapper();
 		wrapper.getRequest().setBioextractorProviderName("Provider<Bad>");
 
-		mockMvc.perform(post("/bio-extractor-configurations")
+		mockMvc.perform(post("/bio-extractor-configurations").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(status().isOk())
@@ -982,7 +983,7 @@ public class PartnerManagementControllerTest {
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> errorWrapper = new ResponseWrapperV2<>();
 		Mockito.doReturn(Optional.of(errorWrapper)).when(requestValidator).validate(anyString(), any());
 
-		mockMvc.perform(post("/bio-extractor-configurations")
+		mockMvc.perform(post("/bio-extractor-configurations").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(buildBioextractorConfigRequestWrapper())))
 				.andExpect(status().isOk());
@@ -1073,7 +1074,7 @@ public class PartnerManagementControllerTest {
 		Mockito.doReturn(Optional.empty()).when(requestValidator).validate(anyString(), any());
 		Mockito.when(partnerManagementService.deleteBioextractorConfiguration(anyString(), any())).thenReturn(responseWrapper);
 		
-		mockMvc.perform(MockMvcRequestBuilders.patch("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(buildBioextractorConfigDeleteRequestWrapper())))
 				.andExpect(status().isOk());
@@ -1086,7 +1087,7 @@ public class PartnerManagementControllerTest {
 		ResponseWrapperV2<BioextractorConfigurationResponseDto> errorWrapper = new ResponseWrapperV2<>();
 		Mockito.doReturn(Optional.of(errorWrapper)).when(requestValidator).validate(anyString(), any());
 		
-		mockMvc.perform(MockMvcRequestBuilders.patch("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1")
+		mockMvc.perform(MockMvcRequestBuilders.patch("/bio-extractor-configurations/{bioExtractorConfigurationId}", "cfg-id-1").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(buildBioextractorConfigDeleteRequestWrapper())))
 				.andExpect(status().isOk());
@@ -1122,7 +1123,7 @@ public class PartnerManagementControllerTest {
 	public void submitCredentialTypesRequestTest() throws Exception {
 		Mockito.when(partnerManagementService.submitCredentialTypesRequest(eq("req-1"), any(CredentialTypeRequestDto.class)))
 				.thenReturn("ok");
-		mockMvc.perform(post("/partner-policy-requests/{requestId}/credential-types-request", "req-1")
+		mockMvc.perform(post("/partner-policy-requests/{requestId}/credential-types-request", "req-1").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(createSubmitCredentialTypesRequest())))
 				.andExpect(status().isOk());
@@ -1228,7 +1229,7 @@ public class PartnerManagementControllerTest {
 	public void submitBioExtractorsRequestTest() throws Exception {
 		when(partnerManagementService.submitBioExtractorsRequest(eq("req-1"), any(BioExtractorsRequestDto.class)))
 				.thenReturn("Bio extract request submitted successfully.");
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(createSubmitBioExtractorsRequest())))
 				.andExpect(status().isOk());
@@ -1241,7 +1242,7 @@ public class PartnerManagementControllerTest {
 		RequestWrapperV2<BioExtractorsRequestDto> wrapper = createSubmitBioExtractorsRequest();
 		wrapper.getRequest().getExtractors().get(0).setExtractorProvider("Provider<Bad>");
 
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(status().isOk())
@@ -1258,7 +1259,7 @@ public class PartnerManagementControllerTest {
 		extractors.add(null);
 		wrapper.getRequest().setExtractors(extractors);
 
-		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request")
+		mockMvc.perform(post("/partner-policy-requests/req-1/bio-extractors-request").with(csrf())
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(objectMapper.writeValueAsString(wrapper)))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
