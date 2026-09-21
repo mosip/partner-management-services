@@ -1,30 +1,153 @@
-NOTICE
+NOTICES
 
-This product includes third-party software components.
-The following attributions are provided as required by their respective licenses.
+Copyright © MOSIP.
+All rights reserved.
 
+This project includes third-party components distributed under licenses
+that require attribution. Only those components with attribution-required
+licenses are listed below.
+
+A complete per-package inventory of everything distributed is in
+THIRD-PARTY-NOTICES, generated from SBOM.json.
+
+===========================
 Apache License 2.0
-This product includes software developed by the Apache Software Foundation
-and other contributors.
-http://www.apache.org/licenses/LICENSE-2.0
+==================
 
-BSD Licenses (2-Clause and 3-Clause)
-This product includes software licensed under BSD licenses.
-Copyright © the respective authors.
+The majority of this project's dependencies are Apache-2.0 and are listed
+individually in THIRD-PARTY-NOTICES. NOTICE and attribution files supplied by
+those projects are preserved.
 
+===========================
 MIT License
-This product includes software licensed under the MIT License.
-Copyright © the respective authors.
+===========
 
+• com.auth0:java-jwt
+• com.auth0:jwks-rsa
+• org.slf4j:slf4j-api
+• org.slf4j:jul-to-slf4j
+• org.slf4j:jcl-over-slf4j
+• org.bouncycastle:bcprov-jdk18on (Bouncy Castle Licence — MIT text)
+
+===========================
+BSD Licenses
+============
+
+• org.hdrhistogram:HdrHistogram (BSD-2-Clause elected over CC0)
+• org.antlr:antlr4-runtime (BSD-3-Clause)
+
+===========================
 Mozilla Public License 2.0 (MPL-2.0)
-This product includes software licensed under the Mozilla Public License, Version 2.0.
-https://www.mozilla.org/MPL/2.0/
+====================================
 
-Eclipse Licenses (EDL-1.0 / EPL-2.0)
-This product includes software licensed under Eclipse licenses.
-https://www.eclipse.org/legal/
+This project is itself licensed under MPL-2.0. The following dependencies are
+also MPL-2.0:
 
-GNU LGPL / GPL
-This product includes software licensed under the GNU Lesser General Public License (LGPL)
-and the GNU General Public License (GPL).
-These components are used in compliance with their respective licenses.
+• io.mosip.kernel:kernel-core
+• io.mosip.kernel:kernel-auth-adapter
+• io.mosip.kernel:kernel-authcodeflowproxy-api
+• io.mosip.kernel:kernel-dataaccess-hibernate
+• io.mosip.kernel:kernel-logger-logback
+• io.mosip.kernel:kernel-templatemanager-velocity
+• io.mosip.kernel:kernel-websubclient-api
+• io.mosip.kernel:kernel-openid-bridge-api
+• org.javassist:javassist (Apache-2.0 elected; the MPL option offered is 1.1,
+  not 2.0)
+
+===========================
+Eclipse Distribution License 1.0 (EDL-1.0)
+==========================================
+
+EDL-1.0 is the BSD 3-Clause text.
+
+• com.sun.istack:istack-commons-runtime
+• com.sun.xml.fastinfoset:FastInfoset (Apache-2.0 elected over EDL-1.0)
+• jakarta.activation:jakarta.activation-api
+• jakarta.persistence:jakarta.persistence-api (EDL-1.0 elected over EPL-2.0)
+• jakarta.xml.bind:jakarta.xml.bind-api
+• org.glassfish.jaxb:txw2
+• org.jvnet.staxex:stax-ex
+
+===========================
+Eclipse Public License (EPL)
+============================
+
+• org.aspectj:aspectjweaver (EPL-2.0)
+• ch.qos.logback:logback-classic (EPL-1.0 option; LGPL-2.1 elected — see below)
+• ch.qos.logback:logback-core (EPL-1.0 option; LGPL-2.1 elected — see below)
+• ch.qos.logback:logback-access (EPL-1.0 option; LGPL-2.1 elected — see below)
+• junit:junit (EPL-1.0)
+• org.junit.jupiter:junit-jupiter (EPL-2.0)
+• org.junit.jupiter:junit-jupiter-api (EPL-2.0)
+• org.junit.jupiter:junit-jupiter-engine (EPL-2.0)
+• org.junit.jupiter:junit-jupiter-params (EPL-2.0)
+• org.junit.platform:junit-platform-commons (EPL-2.0)
+• org.junit.platform:junit-platform-engine (EPL-2.0)
+• org.junit.vintage:junit-vintage-engine (EPL-2.0)
+• com.h2database:h2 (EPL-1.0 option; MPL-2.0 elected)
+
+===========================
+LGPL-2.1
+========
+
+The following components are available under the GNU Lesser General Public
+License, version 2.1:
+
+• ch.qos.logback:logback-classic
+• ch.qos.logback:logback-core
+• ch.qos.logback:logback-access
+• org.hibernate.orm:hibernate-core
+• org.hibernate.orm:hibernate-hikaricp
+• org.hibernate.common:hibernate-commons-annotations
+
+These components are used in unmodified form and are dynamically linked. This
+project contains no derivative works of them.
+
+Source code for these components is available from the upstream projects:
+  Logback   — https://github.com/qos-ch/logback
+  Hibernate — https://github.com/hibernate/hibernate-orm
+
+A copy of the corresponding source for the exact versions distributed is
+available on request from the maintainers of this repository.
+
+===========================
+GPL-2.0 with Classpath Exception
+================================
+
+Jakarta EE specification API, offered under a choice of EPL-2.0 or GPL-2.0
+with the Classpath Exception. This project elects GPL-2.0 with the Classpath
+Exception, which expressly permits linking with independent modules without
+extending GPL terms to them.
+
+jakarta.annotation-api previously appeared here. It has been replaced by
+org.apache.tomcat:tomcat-annotations-api (Apache-2.0), which supplies the same
+jakarta.annotation.* API.
+
+• jakarta.transaction:jakarta.transaction-api
+
+===========================
+Common Development and Distribution License (CDDL)
+==================================================
+
+CDDL is elected for each of the following, in preference to the GPL-2.0
+alternative offered alongside it.
+
+• javax.activation:javax.activation-api (CDDL-1.1)
+• javax.transaction:javax.transaction-api (CDDL-1.1)
+• javax.xml.bind:jaxb-api (CDDL-1.1)
+• org.glassfish.jaxb:jaxb-runtime (CDDL-1.1)
+
+===========================
+Public Domain / No License Declared
+===================================
+
+No attribution obligation attaches to these; they are listed for completeness.
+
+• aopalliance:aopalliance (public domain)
+• org.latencyutils:LatencyUtils (CC0-1.0)
+• org.json:json (declared "public domain", but carries a field-of-use clause;
+  see THIRD-PARTY-NOTICES)
+
+---
+
+Full license texts are available in the `licenses/` directory.
