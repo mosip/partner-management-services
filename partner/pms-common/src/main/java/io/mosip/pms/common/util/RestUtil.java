@@ -264,6 +264,7 @@ public class RestUtil {
 		T result = null;
 		UriComponentsBuilder builder = null;
 		if (apiUrl != null) {
+			validateApiUrlScheme(apiUrl);
 			builder = UriComponentsBuilder.fromUriString(apiUrl);
 			URI urlWithPath = builder.build(pathsegments);
 			RestTemplate restTemplate;
@@ -295,6 +296,7 @@ public class RestUtil {
 		T result = null;
 		UriComponentsBuilder builder = null;
 		if (apiUrl != null) {
+			validateApiUrlScheme(apiUrl);
 			builder = UriComponentsBuilder.fromUriString(apiUrl);
 			URI urlWithPath = builder.build(pathsegments);
 			RestTemplate restTemplate;
@@ -311,6 +313,20 @@ public class RestUtil {
 
 		}
 		return result;
+	}
+
+	/**
+	 * Rejects any apiUrl that is not http/https, blocking scheme-based request
+	 * forgery (e.g. file:, jar:) when a caller passes an externally influenced URL.
+	 *
+	 * @param apiUrl the URL to validate
+	 */
+	private void validateApiUrlScheme(String apiUrl) {
+		String scheme = UriComponentsBuilder.fromUriString(apiUrl).build().getScheme();
+		if (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme)) {
+			throw new ApiAccessibleException(ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorCode(),
+					ApiAccessibleExceptionConstant.API_NOT_ACCESSIBLE_EXCEPTION.getErrorMessage());
+		}
 	}
 
 	/**

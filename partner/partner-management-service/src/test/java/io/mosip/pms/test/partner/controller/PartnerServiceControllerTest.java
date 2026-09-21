@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -128,7 +129,7 @@ public class PartnerServiceControllerTest {
         when(partnerService.savePartner(any())).thenReturn(response);
         RequestWrapper<PartnerRequest> request = createRequest();
 
-        mockMvc.perform(post("/partners").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/partners").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -136,7 +137,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void addContactsTest() throws Exception {
         when(partnerService.createAndUpdateContactDetails(any(), any())).thenReturn(new String());
-        mockMvc.perform(post("/partners/12345/contact/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/partners/12345/contact/add").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(addContactRequestWrapper()))).andExpect(status().isOk());
     }
     
@@ -145,7 +146,7 @@ public class PartnerServiceControllerTest {
     public void uploadCACertificateTest() throws Exception{
     	CACertificateResponseDto response = new CACertificateResponseDto();
         when(partnerService.uploadCACertificate(cACertificateRequest())).thenReturn(response);
-        mockMvc.perform(post("/partners/certificate/ca/upload").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/partners/certificate/ca/upload").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createCACertificateRequest()))).andExpect(status().isOk());
     }
     
@@ -154,7 +155,7 @@ public class PartnerServiceControllerTest {
     public void uploadPartnerCertificateTest() throws Exception{
     	PartnerCertificateResponseDto response = new PartnerCertificateResponseDto();
         when(partnerService.uploadPartnerCertificate(any())).thenReturn(response);
-        mockMvc.perform(post("/partners/certificate/upload").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/partners/certificate/upload").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(partnerCertificateRequest()))).andExpect(status().isOk());
     }
     
@@ -162,7 +163,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void addBiometricExtractorsTest() throws JsonProcessingException, Exception {
     	when(partnerService.addBiometricExtractors("123456", "12345", getExtractorsInput())).thenReturn(new String());
-    	mockMvc.perform(post("/partners/123456/bioextractors/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(post("/partners/123456/bioextractors/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createAddBiometricExtractorRequest()))).andExpect(status().isOk());
     }
 
@@ -187,7 +188,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void mapPolicyToCredentialTypeTest() throws Exception{
         when(partnerService.mapPartnerPolicyCredentialType(anyString(), anyString(), anyString())).thenReturn(new String());
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/12345/credentialtype/12345/policies/12345")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/12345/credentialtype/12345/policies/12345").with(csrf())).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test
@@ -264,7 +265,7 @@ public class PartnerServiceControllerTest {
     	when(partnerService.updatePartnerDetail(any(), any())).thenReturn(response);
     	RequestWrapper<PartnerUpdateRequest> request = updateRequest();
     	
-    	mockMvc.perform(put("/partners/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(put("/partners/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
@@ -292,7 +293,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void searchPartnerTest() throws Exception{
     	RequestWrapper<PartnerSearchDto> request = createSearchPartnerRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -300,7 +301,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void searchPartnerTypeTest() throws Exception{
     	RequestWrapper<SearchDto> request = createSearchPartnerTypeRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/partnertype/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/partnertype/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -308,7 +309,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void searchApikeyRequestTest() throws Exception{
     	RequestWrapper<SearchDto> request = createSearchPartnerTypeRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/request/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/request/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -316,7 +317,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void searchApikeyTest() throws Exception{
     	RequestWrapper<SearchDto> request = createSearchPartnerTypeRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -324,7 +325,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void filterValuesTest() throws Exception{
     	RequestWrapper<FilterValueDto> request = createFilterRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
@@ -332,7 +333,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void apikeyRequetsFilterValuesTest() throws Exception{
     	RequestWrapper<FilterValueDto> request = createFilterRequest();
-        mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/request/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.post("/partners/apikey/request/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -340,7 +341,7 @@ public class PartnerServiceControllerTest {
     @WithMockUser(roles = {"PARTNER"})
     public void updatePolicyGroup() throws Exception{    
     	when(partnerService.updatePolicyGroup(any(), any())).thenReturn("Success");
-    	mockMvc.perform(put("/partners/1234/policygroup/5678")).andExpect(MockMvcResultMatchers.status().isOk());
+    	mockMvc.perform(put("/partners/1234/policygroup/5678").with(csrf())).andExpect(MockMvcResultMatchers.status().isOk());
     }
     
     @Test    
@@ -351,7 +352,7 @@ public class PartnerServiceControllerTest {
     	EmailVerificationRequestDto requestDto = new EmailVerificationRequestDto();
     	request.setRequest(requestDto);
     	when(partnerService.isPartnerExistsWithEmail(request.getRequest().getEmailId())).thenReturn(response);
-    	mockMvc.perform(put("/partners/email/verify").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(put("/partners/email/verify").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -368,7 +369,7 @@ public class PartnerServiceControllerTest {
         when(partnerService.requestForPolicyMapping(any(PartnerPolicyMappingRequest.class), eq("1234")))
                 .thenReturn(response);
 
-        MvcResult result = mockMvc.perform(post("/partners/1234/policy/map")
+        MvcResult result = mockMvc.perform(post("/partners/1234/policy/map").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -387,7 +388,7 @@ public class PartnerServiceControllerTest {
         requestDto.setLabel("123");
     	request.setRequest(requestDto);
     	when(partnerManagerService.generateAPIKey("1234",requestDto)).thenReturn(response);
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/generate/apikey").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/partners/1234/generate/apikey").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
     			.content(objectMapper.writeValueAsString(request))).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -423,7 +424,7 @@ public class PartnerServiceControllerTest {
         java.util.Optional raw = java.util.Optional.of(validation);
         Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(raw);
 
-        mockMvc.perform(put("/partners/exists")
+        mockMvc.perform(put("/partners/exists").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(createPartnerExistsRequestWrapper())))
                 .andExpect(status().isOk());
@@ -439,7 +440,7 @@ public class PartnerServiceControllerTest {
         Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(java.util.Optional.empty());
         when(partnerService.checkPartnerExists(any())).thenReturn(response);
 
-        mockMvc.perform(put("/partners/exists")
+        mockMvc.perform(put("/partners/exists").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(createPartnerExistsRequestWrapper())))
                 .andExpect(status().isOk());
@@ -455,7 +456,7 @@ public class PartnerServiceControllerTest {
         java.util.Optional raw = java.util.Optional.of(validation);
         Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(raw);
 
-        mockMvc.perform(post("/partners/v3")
+        mockMvc.perform(post("/partners/v3").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(createCreatePartnerRequestWrapper())))
                 .andExpect(status().isOk());
@@ -471,7 +472,7 @@ public class PartnerServiceControllerTest {
         Mockito.when(requestValidator.validate(anyString(), any(RequestWrapperV2.class))).thenReturn(java.util.Optional.empty());
         when(partnerService.createPartner(any())).thenReturn(response);
 
-        mockMvc.perform(post("/partners/v3")
+        mockMvc.perform(post("/partners/v3").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(createCreatePartnerRequestWrapper())))
                 .andExpect(status().isOk());
@@ -790,7 +791,7 @@ public class PartnerServiceControllerTest {
 
         Mockito.when(partnerService.registerPartner(partnerRequestDto)).thenReturn(partnerResponse);
 
-        mockMvc.perform(post("/partners/v2")
+        mockMvc.perform(post("/partners/v2").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(requestWrapper)))
                 .andExpect(status().isOk()).andReturn();
@@ -830,7 +831,7 @@ public class PartnerServiceControllerTest {
         request.setId("test-id");
         request.setVersion("1.0");
 
-        mockMvc.perform(put("/partners/v2/12345")
+        mockMvc.perform(put("/partners/v2/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -850,7 +851,7 @@ public class PartnerServiceControllerTest {
         request.setId("test-id");
         request.setVersion("1.0");
 
-        mockMvc.perform(put("/partners/v2/12345")
+        mockMvc.perform(put("/partners/v2/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -865,7 +866,7 @@ public class PartnerServiceControllerTest {
         request.setId("test-id");
         request.setVersion("1.0");
 
-        mockMvc.perform(put("/partners/v2/12345")
+        mockMvc.perform(put("/partners/v2/12345").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError());

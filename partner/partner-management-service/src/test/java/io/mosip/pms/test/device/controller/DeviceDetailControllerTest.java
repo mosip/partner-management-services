@@ -52,6 +52,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -325,7 +326,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void createDeviceDetailTest() throws Exception {
     	RequestWrapper<DeviceDetailDto> request = createRequest (true);
-        mockMvc.perform(post("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -333,7 +334,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void createDeviceDetailTest_01() throws Exception {
     	RequestWrapper<DeviceDetailDto> request = createRequest (false);
-        mockMvc.perform(post("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
@@ -341,7 +342,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void updateDeviceDetailsTest() throws Exception {
     	RequestWrapper<DeviceDetailUpdateDto> request = updateRequest(true);
-    	mockMvc.perform(put("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(put("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -349,7 +350,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void updateDeviceDetailsTest_01() throws Exception {
     	RequestWrapper<DeviceDetailUpdateDto> request = updateRequest(false);
-    	mockMvc.perform(put("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(put("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -357,14 +358,14 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void approveDeviceDetailsTest() throws JsonProcessingException, Exception {
     	RequestWrapper<UpdateDeviceDetailStatusDto> createrequest=approvalRequest(true);
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     @Test
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void approveDeviceDetailsTest_01() throws JsonProcessingException, Exception {
     	RequestWrapper<UpdateDeviceDetailStatusDto> createrequest=approvalRequest(false);
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -372,7 +373,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void deviceDetailsSearchTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> request = searchRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -380,7 +381,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void regDeviceDetailsSearchTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> request = RegSearchRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -388,7 +389,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void deviceTypeSearchTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> request = searchRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
        }   
 
@@ -396,7 +397,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void createDeviceDetailTest_regdevice() throws Exception {
     	RequestWrapper<DeviceDetailDto> createrequest=createRequest(true);
-        mockMvc.perform(post("/devicedetail").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/devicedetail").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());
     }
 
@@ -404,7 +405,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void regDeviceTypeSearchTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> request = RegSearchRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -412,7 +413,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void filterRegDeviceTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceFilterValueDto> request = filterRegRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -420,7 +421,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void filterDeviceTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceFilterValueDto> request = filterRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -428,7 +429,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void filterRegDeviceTypeTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceFilterValueDto> request = filterRegRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -436,7 +437,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void filterDeviceTypeTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceFilterValueDto> request = filterRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceType/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -444,7 +445,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void filterRegDeviceSubTypeTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceFilterValueDto> request = filterRegRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceSubType/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceSubType/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
     
@@ -452,7 +453,7 @@ public class DeviceDetailControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void filterDeviceSubTypeTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceFilterValueDto> request = filterRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceSubType/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/devicedetail/deviceSubType/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(request))).andExpect(status().isOk());
     }
 
@@ -469,7 +470,7 @@ public class DeviceDetailControllerTest {
 
         Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
@@ -489,7 +490,7 @@ public class DeviceDetailControllerTest {
 
         Mockito.when(deviceDetaillService.deactivateDevice(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/devicedetail/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
@@ -566,7 +567,7 @@ public class DeviceDetailControllerTest {
         ResponseWrapperV2<Boolean> responseWrapper = new ResponseWrapperV2<>();
         responseWrapper.setResponse(true);
         Mockito.when(deviceDetaillService.approveOrRejectMappingDeviceToSbi(any(), any())).thenReturn(responseWrapper);
-        mockMvc.perform(post("/devicedetail/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/devicedetail/1234/approval").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
@@ -584,7 +585,7 @@ public class DeviceDetailControllerTest {
         ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
         when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
         Mockito.when(deviceDetaillService.approveOrRejectMappingDeviceToSbi(any(), any())).thenReturn(responseWrapper);
-        mockMvc.perform(post("/devicedetail/1234/approval").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/devicedetail/1234/approval").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
     
