@@ -630,8 +630,75 @@ public class InfraProviderServiceImplTest {
 		infraProviderServiceImpl.getInfraProvider();
 	}
 
+	private void setLoggedInUser(String userId) {
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails userDetails =
+				Mockito.mock(io.mosip.kernel.openid.bridge.model.AuthUserDetails.class);
+		when(userDetails.getUserId()).thenReturn(userId);
+		org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+				new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(userDetails, null, new ArrayList<>()));
+	}
+
+	private MISPLicenseEntity licenseOf(String mispId) {
+		MISPLicenseEntity entity = new MISPLicenseEntity();
+		entity.setMispId(mispId);
+		entity.setIsActive(true);
+		return entity;
+	}
+
 	@Test
-	public void filterValuesTest() {		
+	public void getInfraProvider_nonExemptRole_returnsOnlyOwnLicenses() {
+		try {
+			setLoggedInUser("misp-1");
+			Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+			List<MISPLicenseEntity> ownLicenses = List.of(licenseOf("misp-1"));
+			Mockito.when(mispLicenseRepository.findByMispId("misp-1")).thenReturn(ownLicenses);
+			Mockito.when(mispLicenseRepository.findAll()).thenReturn(List.of(licenseOf("misp-1"), licenseOf("misp-2")));
+
+			List<MISPLicenseEntity> result = infraProviderServiceImpl.getInfraProvider();
+
+			assertEquals(1, result.size());
+			assertEquals("misp-1", result.get(0).getMispId());
+			verify(mispLicenseRepository, never()).findAll();
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test
+	public void getInfraProvider_exemptRole_returnsAllLicenses() {
+		Mockito.when(searchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		Mockito.when(mispLicenseRepository.findAll()).thenReturn(List.of(licenseOf("misp-1"), licenseOf("misp-2")));
+
+		List<MISPLicenseEntity> result = infraProviderServiceImpl.getInfraProvider();
+
+		assertEquals(2, result.size());
+		verify(mispLicenseRepository, never()).findByMispId(anyString());
+	}
+
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void updateInfraProvider_mismatchedMispId_throws() {
+		Mockito.when(searchHelper.isLoggedInUserMismatch("other-misp")).thenReturn(true);
+		try {
+			infraProviderServiceImpl.updateInfraProvider("other-misp", "12345", "active");
+		} finally {
+			verify(mispLicenseV2Repository, never()).findByPartnerIdAndLicenseKey(any(), any());
+			verify(mispLicenseV2Repository, never()).save(any());
+		}
+	}
+
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void regenerateKey_mismatchedMispId_throws() {
+		Mockito.when(searchHelper.isLoggedInUserMismatch("other-misp")).thenReturn(true);
+		try {
+			infraProviderServiceImpl.regenerateKey("other-misp");
+		} finally {
+			verify(partnerRepository, never()).findById(any());
+			verify(mispLicenseRepository, never()).save(any());
+		}
+	}
+
+	@Test
+	public void filterValuesTest() {
 		List<FilterData> filtersData = new ArrayList<>();
 		FilterData filterData = new FilterData("test","test");
 		filtersData.add(filterData);

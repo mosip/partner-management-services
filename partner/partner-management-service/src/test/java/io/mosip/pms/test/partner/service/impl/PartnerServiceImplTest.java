@@ -434,6 +434,16 @@ public class PartnerServiceImplTest {
 				.thenReturn(filtersData);
 		pserviceImpl.apiKeyRequestFilter(deviceFilterValueDto);
 		}
+
+	@Test
+	public void apiKeyRequestFilter_nonExemptRole_failsClosedWithoutQueryingFilterValues() {
+		when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
+
+		io.mosip.pms.device.response.dto.FilterResponseCodeDto response = pserviceImpl.apiKeyRequestFilter(deviceFilterValueDto);
+
+		org.junit.Assert.assertNull(response.getFilters());
+		Mockito.verify(filterHelper, Mockito.never()).filterValuesWithCode(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+	}
 	
 	@Test
 	@WithMockUser(roles = {"PARTNER"})
