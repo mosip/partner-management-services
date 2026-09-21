@@ -75,6 +75,8 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
             log.info("As per configuration, skip the API keys which created by partner ids: {}", skipPartnerIds);
             List<PartnerPolicy> apiKeyList = partnerPolicyRepository.findAllActiveApiKeys();
             for (PartnerPolicy apiKeyDetails : apiKeyList) {
+                String partnerId = apiKeyDetails.getPartner().getId();
+                String apiKeyLabel = apiKeyDetails.getLabel();
                 try {
                     if(!skipPartnerIds.contains(apiKeyDetails.getPartner().getId())) {
                         if (apiKeyDetails.getValidToDatetime() != null &&
@@ -97,23 +99,23 @@ public class ApiKeyExpiryAutoDeactivationTasklet implements Tasklet {
                             // Audit log
                             auditUtil.setAuditRequestDto(
                                     PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_SUCCESS,
-                                    apiKeyDetails.getPolicyApiKey(),
-                                    "apiKeyId",
+                                    partnerId,
+                                    "partnerId",
                                     AuditConstant.AUDIT_SYSTEM
                             );
 
                             // TODO: Send email notification to partner
 
                             deactivatedCount++;
-                            log.info("Deactivated expired API Key with id {} for partner id : {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId());
+                            log.info("Deactivated expired API Key '{}' for partner id : {}", apiKeyLabel, partnerId);
                         }
                     }
                 } catch (Exception e) {
-                    log.error("Error deactivating API Key with id {} for partner id {}: {}", apiKeyDetails.getPolicyApiKey(), apiKeyDetails.getPartner().getId(), e.getMessage(), e);
+                    log.error("Error deactivating API Key '{}' for partner id {}: {}", apiKeyLabel, partnerId, e.getMessage(), e);
                     auditUtil.setAuditRequestDto(
                             PartnerServiceAuditEnum.DEACTIVATE_EXPIRED_API_KEY_FAILURE,
-                            apiKeyDetails.getPolicyApiKey(),
-                            "apiKeyId",
+                            partnerId,
+                            "partnerId",
                             AuditConstant.AUDIT_SYSTEM
                     );
                 }
