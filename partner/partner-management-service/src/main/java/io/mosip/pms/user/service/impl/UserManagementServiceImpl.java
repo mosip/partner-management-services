@@ -72,15 +72,17 @@ public class UserManagementServiceImpl implements UserManagementService{
 	}
 
 	private void validateAccess(String userId, boolean allowPolicyManager) {
-		boolean isAdmin = partnerHelper.isPartnerAdmin(authUserDetails().getAuthorities().toString());
 		boolean isPolicyManager = allowPolicyManager
 				&& partnerHelper.isPolicyManager(authUserDetails().getAuthorities().toString());
-		if (!isAdmin && !isPolicyManager) {
-			List<Partner> partnerList = partnerRepository.findByUserId(userId);
-			if (partnerList.isEmpty()) {
-				LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
-				throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
-						ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+		if (!isPolicyManager) {
+			partnerHelper.validateLoggedInUserAuthorization(userId);
+			if (!partnerHelper.isOwnershipFilterExempt()) {
+				List<Partner> partnerList = partnerRepository.findByUserId(userId);
+				if (partnerList.isEmpty()) {
+					LOGGER.info("sessionId", "idType", "id", "User id does not exists.");
+					throw new PartnerServiceException(ErrorCode.USER_ID_NOT_EXISTS.getErrorCode(),
+							ErrorCode.USER_ID_NOT_EXISTS.getErrorMessage());
+				}
 			}
 		}
 	}

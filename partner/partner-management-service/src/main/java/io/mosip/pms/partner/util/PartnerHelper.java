@@ -10,6 +10,7 @@ import io.mosip.pms.common.dto.TrustCertTypeListResponseDto;
 import io.mosip.pms.common.entity.Partner;
 import io.mosip.pms.common.entity.PolicyGroup;
 import io.mosip.pms.common.exception.ApiAccessibleException;
+import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
@@ -205,6 +206,9 @@ public class PartnerHelper {
     RestUtil restUtil;
 
     @Autowired
+    SearchHelper searchHelper;
+
+    @Autowired
     private ObjectMapper mapper;
 
     @Autowired
@@ -363,6 +367,25 @@ public class PartnerHelper {
             return true;
         }
         return false;
+    }
+
+    /**
+     * validates that the logged-in user is authorized to act on the given owner id (e.g. partner id)
+     * @param loggedInUserId the owner id of the resource being accessed
+     */
+    public void validateLoggedInUserAuthorization(String loggedInUserId) {
+        if (searchHelper.isLoggedInUserMismatch(loggedInUserId)) {
+            throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+                    ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
+        }
+    }
+
+    /**
+     * True when the logged-in user's role is configured (via mosip.pms.required.roles)
+     * as exempt from ownership-based filtering, e.g. PARTNER_ADMIN.
+     */
+    public boolean isOwnershipFilterExempt() {
+        return !searchHelper.isLoggedInUserFilterRequired();
     }
 
     public void validateRequestParameters(Map<String, String> aliasToColumnMap, String sortFieldName, String sortType, Integer pageNo, Integer pageSize) {
