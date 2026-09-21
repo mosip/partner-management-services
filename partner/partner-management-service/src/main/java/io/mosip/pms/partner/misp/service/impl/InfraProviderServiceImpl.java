@@ -165,7 +165,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public MISPLicenseResponseDto approveInfraProvider(String mispId) {
-		validateLoggedInUserAuthorization(mispId);
+		partnerHelper.validateLoggedInUserAuthorization(mispId);
 		List<MISPLicenseEntity> mispLicenseFromDb = mispLicenseRepository.findByMispId(mispId);
 		if (!mispLicenseFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_LICENSE_KEY_EXISTS.getErrorCode(),
@@ -252,6 +252,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public MISPLicenseResponseDto updateInfraProvider(String id, String licenseKey, String status) {
+		partnerHelper.validateLoggedInUserAuthorization(id);
 		if (!(status.toLowerCase().equals(ACTIVE_STATUS) || status.toLowerCase().equals(NOTACTIVE_STATUS))) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorCode(),
 					MISPErrorMessages.MISP_STATUS_CODE_EXCEPTION.getErrorMessage());
@@ -281,6 +282,9 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public List<MISPLicenseEntity> getInfraProvider() {
+		if (!partnerHelper.isOwnershipFilterExempt()) {
+			return mispLicenseRepository.findByMispId(getLoggedInUserId());
+		}
 		return mispLicenseRepository.findAll();
 	}
 
@@ -310,6 +314,7 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 	 */
 	@Override
 	public MISPLicenseResponseDto regenerateKey(String mispId) {
+		partnerHelper.validateLoggedInUserAuthorization(mispId);
 		Optional<Partner> partnerFromDb = partnerRepository.findById(mispId);
 		if (partnerFromDb.isEmpty()) {
 			throw new MISPServiceException(MISPErrorMessages.MISP_ID_NOT_EXISTS.getErrorCode(),
@@ -416,6 +421,11 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		FilterResponseCodeDto filterResponseDto = new FilterResponseCodeDto();
 		List<ColumnCodeValue> columnValueList = new ArrayList<>();
 		if (searchHelper.isLoggedInUserFilterRequired()) {
+			if (filterValueDto.getOptionalFilters() == null) {
+				filterValueDto.setOptionalFilters(new ArrayList<>());
+			} else {
+				searchHelper.validateLoggedInUserFilter(filterValueDto.getOptionalFilters(), "misp_id");
+			}
 			SearchFilter loggedInUserFilterDto = new SearchFilter();
 			loggedInUserFilterDto.setColumnName("misp_id");
 			loggedInUserFilterDto.setValue(getLoggedInUserId());
@@ -449,16 +459,6 @@ public class InfraProviderServiceImpl implements InfraServiceProviderService {
 		return pageDto;
 	}
 
-	/**
-	 * validates the loggedInUser authorization
-	 * @param loggedInUserId
-	 */
-	public void validateLoggedInUserAuthorization(String loggedInUserId) {
-		if(searchHelper.isLoggedInUserFilterRequired() && !loggedInUserId.equals(getLoggedInUserId())) {
-			throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
-					ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
-		}
-	}
 
 	@Override
 	public ResponseWrapperV2<PageResponseV2Dto<MISPLicenseSummaryDto>> getAllMISPLicenses(String sortFieldName, String sortType, Integer pageNo, Integer pageSize, MISPFilterDto filterDto) {

@@ -530,6 +530,7 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 			throw new RequestException(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorCode(), String
 					.format(DeviceDetailExceptionsConstant.DEVICE_DETAIL_NOT_FOUND.getErrorMessage(), input.getDeviceDetailId()));
 		}
+		partnerHelper.validateLoggedInUserAuthorization(validDeviceDetail.getDeviceProviderId());
 		if(!validDeviceDetail.getIsActive() && validDeviceDetail.getApprovalStatus().equalsIgnoreCase(CommonConstant.REJECTED)) {
 			auditUtil.auditRequest(
 					String.format(DeviceConstant.FAILURE_UPDATE, DeviceDetail.class.getCanonicalName()),
@@ -628,9 +629,10 @@ public class SecureBiometricInterfaceServiceImpl implements SecureBiometricInter
 									SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId())),
 					"AUT-016", input.getSbiId(), "sbiId");
 			throw new RequestException(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorCode(),
-					String.format(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId()));			
-			
+					String.format(SecureBiometricInterfaceConstant.DD_SBI_MAPPING_NOT_EXISTS.getErrorMessage(), input.getSbiId()));
+
 		}
+		partnerHelper.validateLoggedInUserAuthorization(deviceDetailFromDb.getProviderId());
 		deviceDetailSbiRepository.delete(deviceDetailFromDb);
 		return "Success";
 	}
