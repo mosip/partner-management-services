@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -281,14 +282,14 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void createsbiTest() throws Exception {      
 
-        mockMvc.perform(post("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/securebiometricinterface").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createRequest))).andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void updatesbiTest() throws Exception {
-    	mockMvc.perform(put("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(put("/securebiometricinterface").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(updateRequest))).andExpect(status().isOk());
     }
     
@@ -296,7 +297,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void approveDeviceDetailsTest() throws JsonProcessingException, Exception {
     	RequestWrapper<SecureBiometricInterfaceStatusUpdateDto> createrequest=approvalRequest(false);
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -304,7 +305,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void searchSecureBiometricTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> createrequest=searchRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -312,7 +313,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"PARTNER_ADMIN"})
     public void approveDeviceDetailsTest_regDevice() throws JsonProcessingException, Exception {
     	RequestWrapper<SecureBiometricInterfaceStatusUpdateDto> createrequest=approvalRequest(true);
-    	mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -320,7 +321,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void createsbiTest_regDevice() throws Exception {
     	RequestWrapper<SecureBiometricInterfaceCreateDto> createRequest=createRequest(true);
-        mockMvc.perform(post("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(post("/securebiometricinterface").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createRequest))).andExpect(status().isOk());
     }
 
@@ -328,7 +329,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void updatesbiTest_regDevice() throws Exception {
     	RequestWrapper<SecureBiometricInterfaceUpdateDto> updateRequest=updateRequest(true);
-    	mockMvc.perform(put("/securebiometricinterface").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(put("/securebiometricinterface").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(updateRequest))).andExpect(status().isOk());
     }
     
@@ -336,7 +337,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void searchRegSecureBiometricTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> createrequest=searchRegRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -344,7 +345,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void filterSecureBiometricTest() throws JsonProcessingException, Exception {
     	RequestWrapper<FilterValueDto> createrequest=createFilterRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/filtervalues").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/filtervalues").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -352,7 +353,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void mapDeviceDetailsTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceDetailSBIMappingDto> createrequest=createMappingRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.put("/securebiometricinterface/devicedetails/map").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.put("/securebiometricinterface/devicedetails/map").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
     
@@ -360,7 +361,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void removeMapDeviceDetailsTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceDetailSBIMappingDto> removeMappingrequest=createMappingRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.put("/securebiometricinterface/devicedetails/map/remove").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.put("/securebiometricinterface/devicedetails/map/remove").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(removeMappingrequest))).andExpect(status().isOk());    	
     }
     
@@ -368,7 +369,7 @@ public class SecureBiometricInterfaceControllerTest {
     @WithMockUser(roles = {"DEVICE_PROVIDER"})
     public void searchMappedDeviceDetailsSecureBiometricTest() throws JsonProcessingException, Exception {
     	RequestWrapper<DeviceSearchDto> createrequest=searchRequest();
-    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/devicedetails/map/search").contentType(MediaType.APPLICATION_JSON_VALUE)
+    	mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/devicedetails/map/search").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(createrequest))).andExpect(status().isOk());    	
     }
 
@@ -398,7 +399,7 @@ public class SecureBiometricInterfaceControllerTest {
 
 		Mockito.when(secureBiometricInterfaceService.deactivateSbi(Mockito.anyString(), Mockito.any())).thenReturn(responseWrapper);
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface/1234").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/securebiometricinterface/1234").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
@@ -475,7 +476,7 @@ public class SecureBiometricInterfaceControllerTest {
 		ResponseWrapperV2<Object> errorResponseWrapper = new ResponseWrapperV2<>();
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.of(errorResponseWrapper));
 		Mockito.when(secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123")).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/sbi123/devices").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/sbi123/devices").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 
@@ -501,7 +502,7 @@ public class SecureBiometricInterfaceControllerTest {
 		responseWrapper.setResponse(dto);
 		when(requestValidator.validate(any(), any())).thenReturn(Optional.empty());
 		Mockito.when(secureBiometricInterfaceService.addDeviceToSbi(requestDto, "sbi123")).thenReturn(responseWrapper);
-		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/sbi123/devices").contentType(MediaType.APPLICATION_JSON_VALUE)
+		mockMvc.perform(MockMvcRequestBuilders.post("/securebiometricinterface/sbi123/devices").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
 	}
 }

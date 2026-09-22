@@ -117,6 +117,22 @@ public class PartnerManagementServiceImplTest {
 		mosipUserDto.setUserId(userId);
 		return new io.mosip.kernel.openid.bridge.model.AuthUserDetails(mosipUserDto, userId);
 	}
+
+	private void mockBridgeAuthUserDetails(String userId, String... roles) {
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails(userId);
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		for (String role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role));
+		}
+		authUserDetails.addRoleAuthorities(authorities);
+		SecurityContextHolder.setContext(securityContext);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+	}
+
+	private void mockPrivilegedSecurityContext() {
+		mockBridgeAuthUserDetails("test-admin", "PARTNER_ADMIN");
+	}
 	
 	@Autowired
 	private PartnerManagementServiceImpl partnerManagementImpl;
@@ -950,10 +966,7 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(getPartnerPolicy());
 
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 		try {
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456",statusDto);
 		}catch (PartnerManagerServiceException e) {
@@ -972,14 +985,11 @@ public class PartnerManagementServiceImplTest {
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
-	
+
 	@Test
 	public void updateAPIKeyStatusTest03() {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
@@ -988,13 +998,14 @@ public class PartnerManagementServiceImplTest {
 		Mockito.when(partnerPolicyRepository.findByPartnerIdPolicyIdAndLabel(Mockito.any(), Mockito.any(),
 				Mockito.any())).thenReturn(null);
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 		try {
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 		}catch (PartnerManagerServiceException e) {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_POLICY_LABEL_NOT_EXISTS.getErrorCode()));
 		}
 	}
-	
+
 	@Test
 	public void updateAPIKeyStatusTest04() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
@@ -1006,20 +1017,14 @@ public class PartnerManagementServiceImplTest {
 				Mockito.any())).thenReturn(getPartnerPolicy());
 		Mockito.when(authPolicyRepository.findById(Mockito.any())).thenReturn(Optional.of(getAuthPolicies().get(0)));
 
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "PARTNER_ADMIN");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "PARTNER_ADMIN");
 
 		partnerManagementImpl.updateAPIKeyStatus("1234", "456", statusDto);
 	}
 
 	@Test
 	public void updateAPIKeyStatusTest05() throws Exception {
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "Auth_Partner");
 
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
@@ -1040,10 +1045,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void updateAPIKeyStatusTest06() throws Exception {
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("1234", "Auth_Partner");
 
 		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
 		statusDto.setLabel("456");
@@ -1059,7 +1061,28 @@ public class PartnerManagementServiceImplTest {
 			assertTrue(e.getErrorCode().equals(ErrorCode.PARTNER_APIKEY_NOT_ACTIVE_EXCEPTION.getErrorCode()));
 		}
 	}
-	
+
+	@Test
+	public void updateAPIKeyStatus_whenOwnershipCheckFails_throws() {
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
+
+		APIkeyStatusUpdateRequestDto statusDto = new APIkeyStatusUpdateRequestDto();
+		statusDto.setLabel("456");
+		statusDto.setStatus("De-Active");
+
+		Mockito.doThrow(new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
+				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+
+		try {
+			partnerManagementImpl.updateAPIKeyStatus("not-logged-in-partner-id", "456", statusDto);
+			org.junit.Assert.fail("Expected PartnerServiceException");
+		} catch (PartnerServiceException e) {
+			assertTrue(e.getErrorCode().equals(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode()));
+		}
+		Mockito.verifyNoInteractions(partnerPolicyRepository);
+	}
+
 	@Test
 	public void approveRejectPartnerPolicyMappingTest01() {
 		StatusRequestDto request = new StatusRequestDto();
@@ -3325,7 +3348,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_success_mapsRows() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3360,7 +3383,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_success_trimsValue() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3531,11 +3554,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_matchingUser_success() throws Exception {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
 
 		Partner partner = new Partner();
 		partner.setId("123");
@@ -3558,11 +3577,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_loggedInFilterRequired_userMismatch_returnsError() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		AuthUserDetails authUserDetails = mockAuthUserDetails("123", "Auth_Partner");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
 
 		Partner partner = new Partner();
 		partner.setId("other-partner");
@@ -3572,6 +3587,9 @@ public class PartnerManagementServiceImplTest {
 		parent.setPartner(partner);
 
 		when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
+		Mockito.doThrow(new PartnerServiceException(io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
+				io.mosip.pms.partner.constant.ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage()))
+				.when(partnerHelper).validateLoggedInUserAuthorization("other-partner");
 
 		io.mosip.pms.partner.response.dto.BioExtractorsResponseWrapperV2 resp =
 				partnerManagementImpl.getPartnerPolicyRequestBioExtractors("req-1");
@@ -3584,7 +3602,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestBioExtractors_nullRows_treatedAsEmptyList() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3608,7 +3626,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_optionalRowEmpty() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 
 		Partner partner = new Partner();
 		partner.setId("partner-1");
@@ -3648,7 +3666,7 @@ public class PartnerManagementServiceImplTest {
         parent.setStatusCode(PartnerConstants.IN_PROGRESS);
         parent.setIsDeleted(false);
 
-        Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+        mockPrivilegedSecurityContext();
         when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
         when(partnerRepository.findById(partnerId)).thenReturn(Optional.of(partner));
         when(partnerPolicyBioextractRequestRepository.existsByPartnerPolicyRequestId(requestId)).thenReturn(true);
@@ -3686,7 +3704,7 @@ public class PartnerManagementServiceImplTest {
         parent.setStatusCode(PartnerConstants.IN_PROGRESS);
         parent.setIsDeleted(false);
 
-        Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+        mockPrivilegedSecurityContext();
         when(partnerPolicyRequestRepository.findByReqId(requestId)).thenReturn(parent);
         when(partnerHelper.getValidPartner(Mockito.eq(partnerId), Mockito.eq(false))).thenThrow(
                 new io.mosip.pms.partner.exception.PartnerServiceException(
@@ -3754,7 +3772,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_parentStatusNotInProgress_throws() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest("Approved");
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3766,7 +3784,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_duplicateRequest_throws() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3779,7 +3797,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test(expected = PartnerServiceException.class)
 	public void submitCredentialTypesRequest_saveIntegrityViolation_throws() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3795,7 +3813,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void submitCredentialTypesRequest_success_returnsMessage() {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(false);
+		mockPrivilegedSecurityContext();
 		PartnerPolicyRequest parent = createPartnerPolicyRequest(PartnerConstants.IN_PROGRESS);
 		Mockito.when(partnerPolicyRequestRepository.findByReqId("req-1")).thenReturn(parent);
 		Mockito.when(partnerHelper.getValidPartner("p1", false)).thenReturn(parent.getPartner());
@@ -3825,11 +3843,7 @@ public class PartnerManagementServiceImplTest {
 
 	@Test
 	public void getPartnerPolicyRequestCredentialTypes_loggedInFilterRequired_matchingUser() throws Exception {
-		Mockito.when(partnerSearchHelper.isLoggedInUserFilterRequired()).thenReturn(true);
-		io.mosip.kernel.openid.bridge.model.AuthUserDetails authUserDetails = mockBridgeAuthUserDetails("123");
-		SecurityContextHolder.setContext(securityContext);
-		when(authentication.getPrincipal()).thenReturn(authUserDetails);
-		when(securityContext.getAuthentication()).thenReturn(authentication);
+		mockBridgeAuthUserDetails("123", "Auth_Partner");
 
 		Partner partner = new Partner();
 		partner.setId("123");

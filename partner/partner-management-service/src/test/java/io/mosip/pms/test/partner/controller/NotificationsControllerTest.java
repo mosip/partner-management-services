@@ -34,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -143,7 +144,7 @@ public class NotificationsControllerTest {
         Mockito.when(notificationsService.dismissNotification("12345", requestDto))
                 .thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/notifications/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/notifications/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 
@@ -179,7 +180,7 @@ public class NotificationsControllerTest {
         Mockito.when(notificationsService.dismissNotification("12345", requestDto))
                 .thenReturn(responseWrapper);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/notifications/12345").contentType(MediaType.APPLICATION_JSON_VALUE)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/notifications/12345").with(csrf()).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(requestWrapper))).andExpect(status().isOk());
     }
 }
