@@ -39,7 +39,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PRT_055"
        }
        ]
 }'
@@ -61,7 +61,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       output: '{
       "errors": [
       {
-       "errorCode": "PMS_CERTIFICATE_ERROR_002"
+       "errorCode": "PMS_PRT_055"
        }
        ]
 }'
@@ -388,7 +388,7 @@ UpdateNotificationSeenTimestampNegativeScenarios:
       output: '{
       "errors": [
        {
-          "errorCode": "PMS_CERTIFICATE_ERROR_002"
+          "errorCode": "PMS_PRT_055"
        }
        ]
 }'

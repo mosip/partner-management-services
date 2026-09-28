@@ -17,3 +17,22 @@ GetPartnerApiKeyRequest:
     }
   ]      
 }'
+   Pms_GetPartnerApiKeyRequest_CrossPartner_BOLA_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/apikey/request
+      uniqueIdentifier: TC_PMS_GetPartnerApiKeyRequest_02
+      description: Validate that a partner cannot retrieve the API key requests of a partner it does not own
+      role: partnerauth
+      restMethod: get
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      inputTemplate: pms/GetPartnerApiKeyRequest/getPartnerApiKeyRequest
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_055"
+    }
+  ]
+}'

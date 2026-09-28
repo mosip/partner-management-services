@@ -51,7 +51,7 @@ definePolicy:
     "name": "$RUNCONTEXT$mosip policy",
     "desc": "$RUNCONTEXT$desc mosip policy",
     "is_Active": false
-}' 
+}'
 
    Pms_DefinePolicy_All_Valid_For_Test_AuthTypeToken_Null_Neg:
       endPoint: /v1/policymanager/policies
@@ -313,34 +313,34 @@ definePolicy:
     }
   ]
 }'
-#   Pms_DefinePolicy_AlreadyExists_InValid:
-#      endPoint: /v1/policymanager/policies
-#      role: partneradmin
-#      description: Define policy for existing policy
-#      uniqueIdentifier: TC_PMS_definePolicy_12
-#      restMethod: post
-#      inputTemplate: pms/DefinePolicy/definePolicy
-#      outputTemplate: pms/error
-#      input: '{
-#      "desc": "desc mosip policy",
-#      "name": "mosip policy Neg",
-#      "authSubType": "FINGER",
-#      "authType": "bio",
-#      "mandatory": true,
-#      "attributeName": "string",
-#      "authTokenType": "partner",
-#      "policyGroupName": "mosip policy group",
-#      "policyType": "Auth",
-#      "version": "1.0",
-#      "requesttime": "$TIMESTAMP$"
-#}'
-#      output: ' {
-#    "errors": [
-#    {
-#         "errorCode": "PMS_POL_009"
-#     }
-#  ]
-#}'
+   #   Pms_DefinePolicy_AlreadyExists_InValid:
+   #      endPoint: /v1/policymanager/policies
+   #      role: partneradmin
+   #      description: Define policy for existing policy
+   #      uniqueIdentifier: TC_PMS_definePolicy_12
+   #      restMethod: post
+   #      inputTemplate: pms/DefinePolicy/definePolicy
+   #      outputTemplate: pms/error
+   #      input: '{
+   #      "desc": "desc mosip policy",
+   #      "name": "mosip policy Neg",
+   #      "authSubType": "FINGER",
+   #      "authType": "bio",
+   #      "mandatory": true,
+   #      "attributeName": "string",
+   #      "authTokenType": "partner",
+   #      "policyGroupName": "mosip policy group",
+   #      "policyType": "Auth",
+   #      "version": "1.0",
+   #      "requesttime": "$TIMESTAMP$"
+   #}'
+   #      output: ' {
+   #    "errors": [
+   #    {
+   #         "errorCode": "PMS_POL_009"
+   #     }
+   #  ]
+   #}'
    Pms_DefinePolicy_PolicyGrpNotExists_InValid_Neg:
       endPoint: /v1/policymanager/policies
       role: partneradmin
@@ -880,6 +880,56 @@ definePolicy:
     "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
     "name": "$RUNCONTEXT$credential partner bio extractors neg",
     "desc": "$RUNCONTEXT$credential partner bio extractors neg",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_ExtractorsNotAdded_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_44
+      description: Validate that a policy is successfully created for the mapping-approval extractors-not-added negative test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner extractors not added",
+	"name": "$RUNCONTEXT$credential partner extractors not added",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner extractors not added",
+    "desc": "$RUNCONTEXT$credential partner extractors not added",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypesNotAdded_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_45
+      description: Validate that a policy is successfully created for the mapping-approval credential-types-not-added negative test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner credential types not added",
+	"name": "$RUNCONTEXT$credential partner credential types not added",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner credential types not added",
+    "desc": "$RUNCONTEXT$credential partner credential types not added",
     "is_Active": false
 }'
 
