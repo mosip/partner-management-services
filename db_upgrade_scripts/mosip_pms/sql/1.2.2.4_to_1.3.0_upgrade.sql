@@ -405,3 +405,32 @@ BEGIN
         DELETE FROM pms.partner_type WHERE code = 'Partner_Admin';
     END IF;
 END $$;
+
+-- -------------------------------------------------------------------------------------------------
+-- Remove unused pms.misp and pms.tspid_seq tables
+-- NOTE: each table is dropped only if it currently has no rows. If a table still
+-- has data, the drop is skipped and a WARNING is raised so it can be investigated
+-- and removed manually in a later upgrade.
+-- -------------------------------------------------------------------------------------------------
+
+DO $$
+BEGIN
+    IF to_regclass('pms.misp') IS NOT NULL THEN
+        IF EXISTS (SELECT 1 FROM pms.misp) THEN
+            RAISE WARNING 'Skipping removal of pms.misp: table still has data. Manual cleanup required before it can be dropped.';
+        ELSE
+            DROP TABLE pms.misp;
+        END IF;
+    END IF;
+END $$;
+
+DO $$
+BEGIN
+    IF to_regclass('pms.tspid_seq') IS NOT NULL THEN
+        IF EXISTS (SELECT 1 FROM pms.tspid_seq) THEN
+            RAISE WARNING 'Skipping removal of pms.tspid_seq: table still has data. Manual cleanup required before it can be dropped.';
+        ELSE
+            DROP TABLE pms.tspid_seq;
+        END IF;
+    END IF;
+END $$;
