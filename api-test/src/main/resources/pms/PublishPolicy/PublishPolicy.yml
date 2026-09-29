@@ -1,7 +1,7 @@
 createPublishPolicy:
    Pms_PublishPolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
-      uniqueIdentifier: TC_PMS_publishPolicy_01
+      uniqueIdentifier: TC_PMS_publishPolicy_01	  
       description: Validate that a policy can be published successfully with all valid inputs
       role: partneradmin
       restMethod: post
@@ -40,7 +40,7 @@ createPublishPolicy:
    Pms_PublishPolicy_InValid_AlreadyPublished_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_03
-      description: Validate that publishing a policy fails when the policy has already been published
+      description: Validate that publishing a policy fails when the policy has already been published    
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -57,11 +57,11 @@ createPublishPolicy:
         }
        ] 
     }'
-
+    
    Pms_PublishPolicy_InValid_policygroupId_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_04
-      description: Validate that publishing a policy fails when an invalid policy group ID is provided
+      description: Validate that publishing a policy fails when an invalid policy group ID is provided    
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -78,11 +78,11 @@ createPublishPolicy:
         }
        ] 
     }'
-
+    
    Pms_PublishPolicy_InValid_policyId_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_05
-      description: Validate that publishing a policy fails when an invalid policy ID is provided
+      description: Validate that publishing a policy fails when an invalid policy ID is provided     
       role: partneradmin
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -99,11 +99,11 @@ createPublishPolicy:
         }
        ] 
     }'
-
+    
    Pms_PublishPolicy_invalid_auth_neg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_06
-      description: Validate that publishing a policy fails when invalid authentication details are provided
+      description: Validate that publishing a policy fails when invalid authentication details are provided    
       role: invalidtoken
       restMethod: post
       inputTemplate: pms/PublishPolicy/publishPolicy
@@ -119,8 +119,8 @@ createPublishPolicy:
           "errorCode": "KER-ATH-401"
         }
        ] 
-    }'
-
+    }'                 
+                          
    Pms_PublishPolicy_ForDeactive_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_07
@@ -163,8 +163,8 @@ createPublishPolicy:
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
-    }'
-
+    }'  
+    
    Pms_PublishPolicy_All_Valid_forDeactivatePolicyGroup_ForNeg:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_09
@@ -185,8 +185,8 @@ createPublishPolicy:
         "policyType": "Auth",
         "status": "PUBLISHED",
         "is_Active": true
-    }'
-
+    }'  
+    
    Partner_PublishDataSharePolicy_All_Valid_Smoke:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_10
@@ -208,7 +208,7 @@ createPublishPolicy:
         "status": "PUBLISHED",
         "is_Active": true
     }'
-
+    
    Pms_PublishPolicy_All_Valid_ForRejectPolicyMapping:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_11
@@ -230,7 +230,7 @@ createPublishPolicy:
         "status": "PUBLISHED",
         "is_Active": true
     }'
-
+    
    Pms_PublishPolicy_All_Valid_ForInProgressPolicyMapping:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_12

@@ -470,14 +470,14 @@ AddBioExtractors:
     ]
   }'
    Pms_AddBioExtractors_With_SpecialCharacter_ExtractorProvider_Neg:
-      endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
-      uniqueIdentifier: TC_PMS_addBioExtractors_24
-      description: Validate that adding bio extractors fails when extractorProvider contains special characters
-      role: partneradmin
-      restMethod: post
-      inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
-      outputTemplate: pms/error
-      input: '{
+        endPoint: /v1/partnermanager/partner-policy-requests/{requestId}/bio-extractors-request
+        uniqueIdentifier: TC_PMS_addBioExtractors_24
+        description: Validate that adding bio extractors fails when extractorProvider contains special characters
+        role: partneradmin
+        restMethod: post
+        inputTemplate: pms/credentialPartner/AddBioExtractors/addBioExtractorsSingleAttribute
+        outputTemplate: pms/error
+        input: '{
       "requestId":"$ID:Credential_PartnerPolicyMapping_ForBioExtractorsNeg_All_Valid_sid_mappingkey$",
       "requestTime": "$TIMESTAMP$",
       "attributeName":"photo",
@@ -486,7 +486,7 @@ AddBioExtractors:
       "extractorProvider":"@Invalid#Provider!%",
       "extractorProviderVersion":"1.1"
     }'
-      output: '{
+        output: '{
         "errors": [
           {
              "errorCode": "PMS_REQUEST_ERROR_007"

@@ -1,12 +1,12 @@
 partnerPolicyMapping:
    Pms_partnerPolicyMapping_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
-      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_05
+      uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_05	  
       description: Validate that partner policy mappings are retrieved successfully for all valid entries
       role: partnerauth
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01  
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
@@ -18,15 +18,15 @@ partnerPolicyMapping:
       output: '{
         "message": "Policy mapping request submitted successfully."
     }'
-
+    
    Pms_partnerPolicyMapping_ForDeactivateOIDCNeg_All_Valid_Smoke_sid:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_02
       description: Validate that partner-policy mappings are retrieved successfully for all valid entries in scenarios related to OIDC client deactivation
       role: partnerauth
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
@@ -45,7 +45,7 @@ partnerPolicyMapping:
       role: partneradmin
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_CreateMISPPartnerRegistration_01
-      restMethod: post
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
@@ -56,15 +56,15 @@ partnerPolicyMapping:
     }'
       output: '{
         "message": "Policy mapping request submitted successfully."
-    }'
+    }'    
    Pms_partnerPolicyMapping_invalid_policyName_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_07
-      description: Validate that retrieving partner-policy mappings fails when an invalid policy name is provided
+      description: Validate that retrieving partner-policy mappings fails when an invalid policy name is provided     
       role: partnerauth
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01	  
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
@@ -83,10 +83,10 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_invalid_partnerId_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_08
-      description: Validate that retrieving partner-policy mappings fails when an invalid partner ID is provided
+      description: Validate that retrieving partner-policy mappings fails when an invalid partner ID is provided    
       role: partnerauth
       checkErrorsOnlyInResponse: true
-      restMethod: post
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
@@ -105,11 +105,11 @@ partnerPolicyMapping:
    Pms_partnerPolicyMapping_missing_policyName_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_09
-      description: Validate that retrieving partner-policy mappings fails when the policy name is missing
+      description: Validate that retrieving partner-policy mappings fails when the policy name is missing      
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
@@ -125,15 +125,15 @@ partnerPolicyMapping:
         }
        ]
     }'
-
+    
    Pms_partnerPolicyMapping_missing_useCaseDescription_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_10
-      description: Validate that retrieving partner-policy mappings fails when the use case description is missing
+      description: Validate that retrieving partner-policy mappings fails when the use case description is missing     
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
@@ -157,7 +157,7 @@ partnerPolicyMapping:
       role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_10
-      restMethod: post
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/error
       input: '{
@@ -173,7 +173,7 @@ partnerPolicyMapping:
     }
   ]
     }'
-
+    
    Pms_SubmitPartnerApiKeyRequest_Map_partner_partner_inprogress_state_Neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_04
@@ -196,7 +196,7 @@ partnerPolicyMapping:
     }
   ]
     }'
-
+    
    Pms_CredPartnerApiKeyRequest_With_Invalid_useCaseDescription_neg:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyCredentialPartner_05
@@ -283,7 +283,7 @@ partnerPolicyMapping:
       output: '{
         "message": "Policy mapping request submitted successfully."
     }'
-
+    
    Pms_partnerPolicyMapping_ForPending_All_Valid_sid:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyauthPartner_12
@@ -291,7 +291,7 @@ partnerPolicyMapping:
       role: partnerauth
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
-      restMethod: post
+      restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
