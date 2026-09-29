@@ -164,6 +164,14 @@ ALTER TABLE pms.partner_contact
     ALTER COLUMN address TYPE character varying(10000),
     ADD COLUMN email_id_hash character varying(3000);
 
+-- POST /partners/{partnerId}/contact/add is deprecated. If pms.partner_contact has data, archive it.
+DO $$
+BEGIN
+    IF to_regclass('pms.partner_contact') IS NOT NULL AND EXISTS (SELECT 1 FROM pms.partner_contact) THEN
+        RAISE WARNING 'pms.partner_contact has data. Archive it — POST /partners/{partnerId}/contact/add is deprecated.';
+    END IF;
+END $$;
+
 -- Add new column for license_key_name in misp_license table
 ALTER TABLE pms.misp_license ADD COLUMN license_key_name character varying(128);
 
