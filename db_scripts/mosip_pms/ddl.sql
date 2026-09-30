@@ -5,7 +5,6 @@
 \ir ddl/pms-device_detail.sql
 \ir ddl/pms-device_detail_sbi.sql
 \ir ddl/pms-ftp_chip_detail.sql
-\ir ddl/pms-misp.sql
 \ir ddl/pms-misp_license.sql
 \ir ddl/pms-partner.sql
 \ir ddl/pms-partner_contact.sql
@@ -22,7 +21,6 @@
 \ir ddl/pms-reg_device_type.sql
 \ir ddl/pms-secure_biometric_interface.sql
 \ir ddl/pms-secure_biometric_interface_h.sql
-\ir ddl/pms-tspid_seq.sql
 \ir ddl/pms-oidc_client.sql
 \ir ddl/pms-user_details.sql
 \ir ddl/pms-fk.sql
