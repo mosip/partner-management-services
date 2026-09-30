@@ -215,9 +215,6 @@ public class PartnerManagementServiceImpl implements PartnerManagerService {
 	AuthPolicyRepository authPolicyRepository;
 
 	@Autowired
-	MispServiceRepository mispRepository;
-	
-	@Autowired
 	MispLicenseV2Repository mispLicenseV2Repository;
 
 	@Autowired

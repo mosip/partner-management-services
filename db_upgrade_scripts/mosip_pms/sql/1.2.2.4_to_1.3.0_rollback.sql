@@ -163,3 +163,61 @@ WHERE id='mpolicy-default-qrcode';
 UPDATE pms.auth_policy
 SET  policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}'
 WHERE id='mpolicy-default-euin';
+
+-- -------------------------------------------------------------------------------------------------
+-- Rollback for removal of pms.misp and pms.tspid_seq tables
+-- NOTE: structure only; any data that existed before the upgrade drop is not restored.
+-- -------------------------------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS pms.misp(
+	id character varying(36) NOT NULL,
+	name character varying(128) NOT NULL,
+	address character varying(2000),
+	contact_no character varying(16),
+	email_id character varying(256),
+	user_id character varying(256) NOT NULL,
+	status_code character varying(36) NOT NULL,
+	is_active boolean NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	is_deleted boolean DEFAULT FALSE,
+	del_dtimes timestamp,
+	CONSTRAINT pk_misp PRIMARY KEY (id),
+	CONSTRAINT uk_misp UNIQUE (name)
+);
+COMMENT ON TABLE pms.misp IS 'MISP: MISP, acronym for MOSIP Identity Service Provider, stores the master list of MISPs.';
+COMMENT ON COLUMN pms.misp.id IS 'MISP ID: Unique ID generated / assigned for a MISP.';
+COMMENT ON COLUMN pms.misp.name IS 'Name: Name of the MISP orgranization.';
+COMMENT ON COLUMN pms.misp.address IS 'Address: Address of the MISP organization.';
+COMMENT ON COLUMN pms.misp.contact_no IS 'Contact Number: Contact number of the MISP organization';
+COMMENT ON COLUMN pms.misp.email_id IS 'Email ID: Email ID of the MISP organization / contact person';
+COMMENT ON COLUMN pms.misp.user_id IS 'User ID: Login ID assigned by MOSIP to MISP Admin. It is a general/common id for a MISP that is generated and assigned when the MISP is created.';
+COMMENT ON COLUMN pms.misp.status_code IS 'Status Code: Status of MISP';
+COMMENT ON COLUMN pms.misp.is_active IS 'Active Flag: Flag to mark whether the record is Active or In-active';
+COMMENT ON COLUMN pms.misp.cr_by IS 'Created By : ID or name of the user who create / insert record';
+COMMENT ON COLUMN pms.misp.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+COMMENT ON COLUMN pms.misp.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+COMMENT ON COLUMN pms.misp.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+COMMENT ON COLUMN pms.misp.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+COMMENT ON COLUMN pms.misp.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.misp TO pmsuser;
+
+CREATE TABLE IF NOT EXISTS pms.tspid_seq(
+	curr_seq_no integer NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp,
+	CONSTRAINT pk_tspidseq_id PRIMARY KEY (curr_seq_no)
+);
+COMMENT ON TABLE pms.tspid_seq IS 'Trusted Service Provider ID Sequence : Maintains latest sequence number available for TSP ID  generation';
+COMMENT ON COLUMN pms.tspid_seq.curr_seq_no IS 'Current Sequence Number : Latest sequence number available for TSP (Trusted Service Provider) ID generation';
+COMMENT ON COLUMN pms.tspid_seq.cr_by IS 'Created By : ID or name of the user who create / insert record';
+COMMENT ON COLUMN pms.tspid_seq.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+COMMENT ON COLUMN pms.tspid_seq.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+COMMENT ON COLUMN pms.tspid_seq.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.tspid_seq TO pmsuser;
