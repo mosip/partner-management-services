@@ -9,7 +9,8 @@
 -- Modified Date        Modified By         Comments / Remarks
 -- ------------------------------------------------------------------------------------------
 -- Jan-2021		Ram Bhatt	    Set is_deleted flag to not null and default false
--- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5   
+-- Mar-2021		Ram Bhatt	    Reverting is_deleted flag not null changes for 1.1.5
+-- Sep-2026		Chetan Kumar Hirematha	    Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner
 -- ------------------------------------------------------------------------------------------
 
 -- object: pms.partner_contact | type: TABLE --
@@ -34,7 +35,7 @@ CREATE TABLE pms.partner_contact(
 
 );
 -- ddl-end --
-COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.';
+COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table. Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner.';
 -- ddl-end --
 COMMENT ON COLUMN pms.partner_contact.id IS 'Contact ID : Unique ID generated / assigned for partner';
 -- ddl-end --

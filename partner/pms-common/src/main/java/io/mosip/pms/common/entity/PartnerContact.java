@@ -8,8 +8,10 @@ import java.time.LocalDateTime;
 
 /**
  * The persistent class for the partner_contact database table.
- * 
+ *
+ * @deprecated backs the deprecated POST /partners/{partnerId}/contact/add endpoint.
  */
+@Deprecated(since = "release-1.3.0")
 @Entity
 @Table(name="partner_contact")
 @NamedQuery(name="PartnerContact.findAll", query="SELECT p FROM PartnerContact p")

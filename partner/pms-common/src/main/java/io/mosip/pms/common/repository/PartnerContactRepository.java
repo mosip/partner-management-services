@@ -8,6 +8,7 @@ import io.mosip.pms.common.entity.PartnerContact;
 
 import java.util.List;
 
+@Deprecated(since = "release-1.3.0")
 @Repository
 public interface PartnerContactRepository extends JpaRepository<PartnerContact, String> {
 

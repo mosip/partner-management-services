@@ -243,8 +243,12 @@ public class PartnerServiceController {
 	 * @return
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscontactadd())")
+	@Deprecated(since = "release-1.3.0")
 	@RequestMapping(value = "{partnerId}/contact/add", method = RequestMethod.POST)
-	@Operation(summary = "Service to add additional contact deatils of partner", description = "Service to add additional contact deatils of partner")
+	@Operation(
+			summary = "Service to add additional contact details of partner - deprecated since release-1.3.0",
+			description = "This endpoint has been deprecated since release-1.3.0 because pms.partner_contact is not synchronized with the partner's primary record in pms.partner. Use PUT /partners/{partnerId} or PUT /partners/v2/{partnerId} to update the partner's primary contact details instead.",
+			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addContact(@PathVariable String partnerId,@RequestBody @Valid RequestWrapper<AddContactRequestDto>request){
 		ResponseWrapper<String> response = new ResponseWrapper<>();
 		auditUtil.setAuditRequestDto(PartnerServiceAuditEnum.ADD_CONTACTS, partnerId, "partnerId");
