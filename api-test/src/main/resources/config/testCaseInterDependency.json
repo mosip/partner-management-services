@@ -445,6 +445,14 @@
         "TC_PMS_definePolicyGroup_17",
         "TC_PMS_definePolicy_37"
     ],
+    "TC_PMS_publishPolicy_24": [
+        "TC_PMS_definePolicyGroup_17",
+        "TC_PMS_definePolicy_44"
+    ],
+    "TC_PMS_publishPolicy_25": [
+        "TC_PMS_definePolicyGroup_17",
+        "TC_PMS_definePolicy_45"
+    ],
     "TC_PMS_publishPolicy_13": [
         "TC_PMS_definePolicyGroup_17",
         "TC_PMS_definePolicy_32"
@@ -611,6 +619,8 @@
     "TC_PMS_definePolicy_35": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_definePolicy_36": ["TC_PMS_definePolicyGroup_01"],
     "TC_PMS_definePolicy_37": ["TC_PMS_updatePolicyGroup_03"],
+    "TC_PMS_definePolicy_44": ["TC_PMS_updatePolicyGroup_03"],
+    "TC_PMS_definePolicy_45": ["TC_PMS_updatePolicyGroup_03"],
     "TC_PMS_GetAllNotifications_60": ["TC_PMS_GenerateApikey_01"],
     "TC_PMS_GetAllNotifications_61": ["TC_PMS_uploadPartnerCert_01"],
     "TC_PMS_definePolicy_29": ["TC_PMS_definePolicyGroup_11"],
@@ -1072,11 +1082,23 @@
         "TC_PMS_createCredentialPartnerSelfRegistration_01",
         "TC_PMS_definePolicy_37"
     ],
+    "TC_PMS_partnerPolicyMapping_12": [
+        "TC_PMS_createCredentialPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_44"
+    ],
+    "TC_PMS_ApproveAPIKey_27": ["TC_PMS_partnerPolicyMapping_12"],
+    "TC_PMS_partnerPolicyMapping_13": [
+        "TC_PMS_createCredentialPartnerSelfRegistration_01",
+        "TC_PMS_definePolicy_45"
+    ],
+    "TC_PMS_addBioExtractors_40": ["TC_PMS_partnerPolicyMapping_13"],
+    "TC_PMS_ApproveAPIKey_28": ["TC_PMS_addBioExtractors_40"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_21": [
         "TC_PMS_CreateMISPPartnerRegistration_01",
         "TC_PMS_DefineMISPPolicy_01"
     ],
     "TC_PMS_GetBioExtractorConfigurationById_02": ["TC_PMS_CreateBioExtractorConfiguration_01"],
+    "TC_PMS_GetBioExtractorConfigurationById_10": ["TC_PMS_CreateBioExtractorConfiguration_01"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_22": ["TC_PMS_CreateMISPPartnerRegistration_01"],
     "TC_PMS_GenerateMISPPartnerLicenseNegativeScenarios_26": ["TC_PMS_CreateMISPPartnerRegistration_01", "TC_PMS_definePolicy_01"],
     "TC_PMS_partnerPolicyMapping_03": [
