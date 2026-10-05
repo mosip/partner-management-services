@@ -15,19 +15,14 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * The kernel auth adapter turns on CSRF with a cookie repository but does not
- * set a request handler. Spring Security 6 then uses the XOR (masked token)
- * handler with a lazily created token. That causes two problems for the portal:
- * the XSRF-TOKEN cookie is not set until the first POST/PUT (which gets a 403),
- * and the raw cookie value the portal sends in X-XSRF-TOKEN is rejected.
- * This switches the filter to the plain handler and loads the token on every
- * request, so the cookie is set early and the raw value is accepted.
- *
- * The services are stateless and authenticate every request. Spring's
- * SessionManagementFilter then runs CsrfAuthenticationStrategy on every
- * request, which deletes the XSRF-TOKEN cookie the browser just sent and does
- * not create a new one. That strategy is replaced with a no-op, since there is
- * no session whose token needs replacing.
+ * The kernel auth adapter enables CSRF with a cookie repository but sets no
+ * request handler, so Spring Security 6 uses the XOR handler with a lazy token.
+ * That leaves the XSRF-TOKEN cookie unset until the first POST/PUT (403) and
+ * rejects the raw token the portal sends in X-XSRF-TOKEN.
+ * <p>
+ * This switches to the plain handler and loads the token on every request.
+ * The services are stateless, so the session strategy that would delete the
+ * cookie on each request is replaced with a no-op.
  */
 @Configuration
 public class CsrfRequestHandlerConfig {
