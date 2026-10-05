@@ -50,6 +50,9 @@ public class CsrfRequestHandlerConfig {
 						ReflectionUtils.makeAccessible(field);
 						ReflectionUtils.setField(field, bean, noOp);
 						LOGGER.info("Session authentication strategy (CSRF token replace) disabled for stateless service");
+					} else {
+						throw new IllegalStateException(
+								"SessionManagementFilter.sessionAuthenticationStrategy not found; CSRF cookie would be cleared on every request");
 					}
 				}
 				return bean;
@@ -70,8 +73,8 @@ public class CsrfRequestHandlerConfig {
 					}
 				}
 			}
-			LOGGER.debug("CSRF check {} {}: cookiePresent={}, headerPresent={}, match={}", request.getMethod(),
-					request.getRequestURI(), cookiePresent, actual != null,
+			LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, match={}", request.getMethod(),
+					cookiePresent, actual != null,
 					actual != null && actual.equals(csrfToken.getToken()));
 			return actual;
 		}
