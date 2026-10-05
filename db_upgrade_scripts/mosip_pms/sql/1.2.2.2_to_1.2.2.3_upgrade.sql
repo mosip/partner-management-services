@@ -1,5 +1,7 @@
 \c mosip_pms
 
+-- Release 1.2.2.3: default policy validity (MOSIP-42249) and corrected default policy data (MOSIP-42571).
+
 -- -------------------------------------------------------------------------------------------------
 -- MOSIP-42249: default policy expiry dates were hardcoded and have started to expire.
 -- Extend validity of the default policies and default partner policies to 200 years.

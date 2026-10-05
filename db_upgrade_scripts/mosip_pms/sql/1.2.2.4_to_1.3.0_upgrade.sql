@@ -1,5 +1,34 @@
 \c mosip_pms
 
+-- =================================================================================================
+-- Upgrade 1.2.2.4 -> 1.3.0 (consolidated from the 1.3.0 beta releases).
+-- Each section below is marked with the release in which the change first shipped:
+--
+--   1.3.0-beta.1 : Spring Batch tables, notifications table, user_details.notifications_seen_dtimes,
+--                  QR code / e-UIN policy filters, partner email_id_hash and wider contact columns
+--   1.3.0-beta.2 : no database changes
+--   1.3.0-beta.3 : misp_license.license_key_name, partner.email_id NOT NULL, cr_by on device types,
+--                  otp_transaction dropped
+--   1.3.0-beta.4 : oidc_client.additional_config
+--   1.3.0-beta.5 : typeOfShare "direct" -> "Data Share", bioextractor_configuration,
+--                  partner_policy_bioextract_request, partner_policy_credential_type_request
+--   1.3.0 (GA)   : bioextractor_configuration soft delete / attribute_name / credential_data_format,
+--                  misp_license surrogate primary key, Partner_Admin removed, partner_contact deprecated,
+--                  pms.misp and pms.tspid_seq dropped, default policy history, request status case, comments
+--
+-- Changes made in the 1.2.2.x patch releases are NOT repeated here; they are in the earlier scripts:
+--   1.2.2.2 -> 1.2.2.3 : default policy validity (200 years), repair of broken policy JSON in the default data
+--   1.2.2.3 -> 1.2.2.4 : "photo" attribute, declaredAsDeceased (CRVS), matching history row
+--
+-- Existing partner rows keep a NULL email_id_hash after this upgrade. The services treat a NULL hash as a
+-- legacy (not yet encrypted) row, so no SQL data migration is needed.
+-- =================================================================================================
+
+
+-- =================================================================================================
+-- [1.3.0-beta.1] Batch tables, notifications, user_details, QR/e-UIN policies, partner email hash and column sizes
+-- =================================================================================================
+
 --- These tables are required by Spring Batch framework
 
 create table pms.batch_job_instance (
@@ -164,6 +193,10 @@ ALTER TABLE pms.partner_contact
     ALTER COLUMN address TYPE character varying(10000),
     ADD COLUMN email_id_hash character varying(3000);
 
+-- =================================================================================================
+-- [1.3.0 GA] (#2063) partner_contact deprecation check
+-- =================================================================================================
+
 -- POST /partners/{partnerId}/contact/add is deprecated. If pms.partner_contact has data, archive it.
 DO $$
 BEGIN
@@ -171,6 +204,10 @@ BEGIN
         RAISE WARNING 'pms.partner_contact has data. Archive it — POST /partners/{partnerId}/contact/add is deprecated.';
     END IF;
 END $$;
+
+-- =================================================================================================
+-- [1.3.0-beta.3] misp_license.license_key_name, email_id NOT NULL, device type cr_by, otp_transaction drop
+-- =================================================================================================
 
 -- Add new column for license_key_name in misp_license table
 ALTER TABLE pms.misp_license ADD COLUMN license_key_name character varying(128);
@@ -190,8 +227,16 @@ SET cr_by = 'superadmin';
 -- Drop the otp_transaction
 DROP TABLE IF EXISTS pms.otp_transaction CASCADE;
 
+-- =================================================================================================
+-- [1.3.0-beta.4] oidc_client.additional_config
+-- =================================================================================================
+
 -- Add new column for additional_config in oidc_client table
 ALTER TABLE pms.oidc_client ADD COLUMN additional_config character varying;
+
+-- =================================================================================================
+-- [1.3.0-beta.5] typeOfShare fix, bioextractor_configuration and the two *_request tables
+-- =================================================================================================
 
 -- Updated type of share from direct to data share for the below policies
 UPDATE pms.auth_policy
@@ -351,6 +396,10 @@ WHERE status_code = 'approved';
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_credential_type_request TO pmsuser;
 
 -- -------------------------------------------------------------------------------------------------
+-- =================================================================================================
+-- [1.3.0 GA] bioextractor_configuration soft delete (attribute_name / credential_data_format are part of the table above)
+-- =================================================================================================
+
 -- Bioextractor configuration soft delete support
 -- -------------------------------------------------------------------------------------------------
 
@@ -367,7 +416,7 @@ ON pms.bioextractor_configuration (lower(config_name))
 WHERE is_deleted = false;
 
 -- -------------------------------------------------------------------------------------------------
--- MISP License: replace composite PK (misp_id, license_key) with surrogate PK misp_license_id
+-- [1.3.0 GA] MISP License: replace composite PK (misp_id, license_key) with surrogate PK misp_license_id
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE pms.misp_license ADD COLUMN IF NOT EXISTS misp_license_id character varying(36);
@@ -385,7 +434,7 @@ ALTER TABLE pms.misp_license ADD CONSTRAINT uk_mlic UNIQUE (misp_id, license_key
 COMMENT ON COLUMN pms.misp_license.misp_license_id IS 'MISP License ID: Unique surrogate identifier (primary key) for the license record.';
 
 -- -------------------------------------------------------------------------------------------------
--- Remove unused Partner_Admin partner type
+-- [1.3.0 GA] Remove unused Partner_Admin partner type
 -- -------------------------------------------------------------------------------------------------
 
 DO $$
@@ -398,7 +447,7 @@ BEGIN
 END $$;
 
 -- -------------------------------------------------------------------------------------------------
--- Remove unused pms.misp and pms.tspid_seq tables
+-- [1.3.0 GA] Remove unused pms.misp and pms.tspid_seq tables
 -- NOTE: each table is dropped only if it currently has no rows. If a table still
 -- has data, the drop is skipped and a WARNING is raised so it can be investigated
 -- and removed manually in a later upgrade.
@@ -427,7 +476,7 @@ BEGIN
 END $$;
 
 -- -------------------------------------------------------------------------------------------------
--- Default policy history (pms.auth_policy_h): keep in sync with db_scripts/mosip_pms/dml/pms-auth_policy_h.csv
+-- [1.3.0 GA] Default policy history (pms.auth_policy_h): keep in sync with db_scripts/mosip_pms/dml/pms-auth_policy_h.csv
 -- (the pms.auth_policy rows for these policies are updated above)
 -- -------------------------------------------------------------------------------------------------
 
@@ -437,7 +486,7 @@ WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
 -- -------------------------------------------------------------------------------------------------
--- Table and column comments added in 1.3.0 DDL (db_scripts/mosip_pms/ddl) that the statements above do not set,
+-- [1.3.0 GA] Table and column comments added in 1.3.0 DDL (db_scripts/mosip_pms/ddl) that the statements above do not set,
 -- so an upgraded database carries the same comments as a fresh install.
 -- -------------------------------------------------------------------------------------------------
 
@@ -457,7 +506,7 @@ COMMENT ON COLUMN pms.oidc_client.additional_config IS 'Additional Config: Addit
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table. Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner.';
 
 -- -------------------------------------------------------------------------------------------------
--- Partner policy request status: use lower case 'approved' everywhere.
+-- [1.3.0 GA] Partner policy request status: use lower case 'approved' everywhere.
 -- Databases created from pms-partner_policy_request.csv hold 'Approved' for the default PDFCard and digitalcard
 -- requests. The status lookups and the new *_request tables expect lower case 'approved'.
 -- -------------------------------------------------------------------------------------------------

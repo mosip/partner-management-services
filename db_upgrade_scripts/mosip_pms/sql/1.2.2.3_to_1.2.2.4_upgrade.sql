@@ -1,5 +1,7 @@
 \c mosip_pms
 
+-- Release 1.2.2.4: CRVS support (#1956): face attribute renamed to photo (#1937) and declaredAsDeceased added (#1957).
+
 -- Attribute name changed from individualBiometrics to photo in pms.partner_policy_bioextract for mpartner-default-auth face record
 UPDATE pms.partner_policy_bioextract
 SET attribute_name='photo',
