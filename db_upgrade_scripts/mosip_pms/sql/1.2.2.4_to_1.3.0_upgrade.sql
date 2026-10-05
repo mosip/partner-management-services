@@ -581,7 +581,7 @@ WHERE status_code = 'Approved';
 
 -- -------------------------------------------------------------------------------------------------
 -- [1.2.2.4 changes, repeated] CRVS attributes for the default auth policy (#1956).
--- These are also applied by 1.2.2.3_to_1.2.2.4. Repeated here so a database that missed them is fixed too.
+-- Shipped with release 1.2.2.4 (#1937, #1957). Repeated here so a database that missed them is fixed too.
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy
