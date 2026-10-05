@@ -1,5 +1,20 @@
 \c mosip_pms
 
+-- -------------------------------------------------------------------------------------------------
+-- Pre-check: pms.partner.email_id becomes NOT NULL in this upgrade (1.3.0-beta.3). Stop before any change is made if
+-- a partner has no email, otherwise the upgrade would fail half way through. Fix: set an email_id on these partners.
+-- -------------------------------------------------------------------------------------------------
+
+DO $$
+DECLARE
+    missing_email_count integer;
+BEGIN
+    SELECT count(*) INTO missing_email_count FROM pms.partner WHERE email_id IS NULL;
+    IF missing_email_count > 0 THEN
+        RAISE EXCEPTION 'Upgrade stopped: % row(s) in pms.partner have a NULL email_id. Set an email_id for these partners (SELECT id FROM pms.partner WHERE email_id IS NULL) and run the upgrade again.', missing_email_count;
+    END IF;
+END $$;
+
 -- =================================================================================================
 -- [1.3.0-beta.1] Batch tables, notifications, user_details, QR/e-UIN policies, partner email hash and column sizes
 -- =================================================================================================
