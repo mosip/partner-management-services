@@ -51,3 +51,8 @@ SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinu
 WHERE id='mpolicy-default-PDFCard'
 AND eff_dtimes='2023-11-14 05:59:00.000'
 AND policy_file_id LIKE '{dataSharePolicies:%';
+
+-- Remove the leading space from the description of the default adjudication policy group (pms-policy_group.csv fix).
+UPDATE pms.policy_group
+SET descr = trim(descr)
+WHERE id = 'mpolicygroup-default-adjudication' AND descr <> trim(descr);

@@ -435,3 +435,23 @@ UPDATE pms.auth_policy_h
 SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}'
 WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
+
+-- -------------------------------------------------------------------------------------------------
+-- Table and column comments added in 1.3.0 DDL (db_scripts/mosip_pms/ddl) that the statements above do not set,
+-- so an upgraded database carries the same comments as a fresh install.
+-- -------------------------------------------------------------------------------------------------
+
+COMMENT ON TABLE pms.bioextractor_configuration IS 'Bioextractor Configuration: Stores configuration details for biometric extractor providers.';
+COMMENT ON COLUMN pms.bioextractor_configuration.id IS 'ID: Unique identifier for the bioextractor configuration record.';
+COMMENT ON COLUMN pms.bioextractor_configuration.config_name IS 'Config Name: Unique name identifying this configuration.';
+COMMENT ON COLUMN pms.bioextractor_configuration.bioextractor_provider_name IS 'Bioextractor Provider Name: Name of the biometric extractor provider.';
+COMMENT ON COLUMN pms.bioextractor_configuration.bioextractor_provider_version IS 'Bioextractor Provider Version: Version of the biometric extractor provider.';
+COMMENT ON COLUMN pms.bioextractor_configuration.bio_modality IS 'Bio Modality: Biometric modality (e.g. face, finger, iris).';
+COMMENT ON COLUMN pms.bioextractor_configuration.attribute_name IS 'Attribute Name: Biometric attribute name (e.g. photo, iris, finger) associated with this configuration.';
+COMMENT ON COLUMN pms.bioextractor_configuration.credential_data_format IS 'Credential Data Format: Format of biometric data to be shared (e.g. rawData, templateData).';
+COMMENT ON COLUMN pms.bioextractor_configuration.cr_by IS 'Created By: ID or name of the user who created the record.';
+COMMENT ON COLUMN pms.bioextractor_configuration.cr_dtimes IS 'Created DateTimestamp: Date and Timestamp when the record was created.';
+COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft delete flag. true indicates logically deleted record.';
+COMMENT ON COLUMN pms.misp_license.license_key_name IS 'License Key Name: Name given to the license key.';
+COMMENT ON COLUMN pms.oidc_client.additional_config IS 'Additional Config: Additional configuration parameters for the OIDC client in JSON format.';
+COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table. Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner.';
