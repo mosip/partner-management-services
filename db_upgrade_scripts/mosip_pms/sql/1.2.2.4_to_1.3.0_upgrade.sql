@@ -442,3 +442,36 @@ BEGIN
         END IF;
     END IF;
 END $$;
+
+-- -------------------------------------------------------------------------------------------------
+-- Default policy history (pms.auth_policy_h): keep in sync with db_scripts/mosip_pms/dml/pms-auth_policy_h.csv
+-- (the pms.auth_policy rows for these policies are updated above)
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"},{"attributeName":"declaredAsDeceased","source":[{"attribute":"declaredAsDeceased"}],"encrypted":true}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}'
+WHERE id='mpolicy-default-auth'
+AND eff_dtimes='2020-11-10 05:55:00.000';
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}'
+WHERE id='mpolicy-default-euin'
+AND eff_dtimes='2020-11-13 05:58:00.000';
+
+-- -------------------------------------------------------------------------------------------------
+-- Default data validity: extend validity of the default policies and default partner policies to 200 years.
+-- Same change that db_scripts/mosip_pms/dml.sql applies on a fresh install, so upgraded and fresh databases match.
+-- Without this, default policies seeded in older releases keep their original (possibly already passed) end date.
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.auth_policy
+SET valid_to_date = valid_from_date + interval '200 years'
+WHERE policy_group_id LIKE 'mpolicygroup-default%' AND id LIKE 'mpolicy-default%';
+
+UPDATE pms.auth_policy_h
+SET valid_to_date = valid_from_date + interval '200 years'
+WHERE policy_group_id LIKE 'mpolicygroup-default%' AND id LIKE 'mpolicy-default%';
+
+UPDATE pms.partner_policy
+SET valid_to_datetime = valid_from_datetime + interval '200 years'
+WHERE part_id LIKE 'mpartner-default%' AND policy_id LIKE 'mpolicy-default%';
