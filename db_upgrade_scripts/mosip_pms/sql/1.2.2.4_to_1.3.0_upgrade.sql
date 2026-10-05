@@ -568,6 +568,7 @@ COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft
 COMMENT ON COLUMN pms.misp_license.license_key_name IS 'License Key Name: Name given to the license key.';
 COMMENT ON COLUMN pms.oidc_client.additional_config IS 'Additional Config: Additional configuration parameters for the OIDC client in JSON format.';
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table. Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner.';
+COMMENT ON TABLE pms.user_details IS 'This table has consents of partners.';
 
 -- -------------------------------------------------------------------------------------------------
 -- [1.3.0 GA] Partner policy request status: use lower case 'approved' everywhere.
