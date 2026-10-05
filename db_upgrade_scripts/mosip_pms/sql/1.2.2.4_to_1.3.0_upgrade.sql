@@ -16,6 +16,80 @@ BEGIN
 END $$;
 
 -- =================================================================================================
+-- [1.2.2.x fixes] Changes missed in the released 1.2.2.0, 1.2.2.3 and 1.2.2.4 upgrade scripts.
+-- Every statement only changes rows that still have the problem, so it is safe on a database that already has the fix.
+-- =================================================================================================
+
+-- Missed in release 1.2.2.0 (1.2.1.0_to_1.2.2.0 upgrade script)
+-- Repair corrupted mpolicy-default-PDFCard policy JSON on environments freshly installed with 1.2.1.0.
+-- 1.2.1.0_to_1.2.2.0 repaired mpolicy-default-qrcode and mpolicy-default-reprint but not mpolicy-default-PDFCard.
+-- Only a corrupted row (not starting with {") is updated.
+UPDATE pms.auth_policy
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false},{"attributeName":"dob","source":[{"attribute":"dateOfBirth"}],"encrypted":false},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='mpolicy-default-PDFCard' AND policy_file_id NOT LIKE '{"%';
+
+-- Missed in release 1.2.2.3 (1.2.2.2_to_1.2.2.3 upgrade script), commit 28a30463 (#1479)
+-- MOSIP-42249: Extend validity of default auth policies and default partner policies.
+-- Fresh-install dml.sql does this since 1.2.2.3; it was not carried over for upgraded environments.
+UPDATE pms.auth_policy
+SET valid_to_date = valid_from_date + interval '200 years',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE policy_group_id LIKE 'mpolicygroup-default%' AND id LIKE 'mpolicy-default%';
+
+UPDATE pms.auth_policy_h
+SET valid_to_date = valid_from_date + interval '200 years'
+WHERE policy_group_id LIKE 'mpolicygroup-default%' AND id LIKE 'mpolicy-default%';
+
+UPDATE pms.partner_policy
+SET valid_to_datetime = valid_from_datetime + interval '200 years',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE part_id LIKE 'mpartner-default%' AND policy_id LIKE 'mpolicy-default%';
+
+-- Missed in release 1.2.2.3 (1.2.2.2_to_1.2.2.3 upgrade script), commit 28a30463 (#1479)
+-- MOSIP-42571: Fix invalid JSON (",,") in mpolicy-default-mobile policy.
+-- Corrected in pms-auth_policy.csv and pms-auth_policy_h.csv since 1.2.2.3; it was not carried over for upgraded environments.
+UPDATE pms.auth_policy
+SET policy_file_id = replace(policy_file_id, ',,"format"', ',"format"'),
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='mpolicy-default-mobile' AND policy_file_id LIKE '%,,"format"%';
+
+UPDATE pms.auth_policy_h
+SET policy_file_id = replace(policy_file_id, ',,"format"', ',"format"')
+WHERE id='mpolicy-default-mobile' AND policy_file_id LIKE '%,,"format"%';
+
+-- Missed in release 1.2.2.3 (1.2.2.2_to_1.2.2.3 upgrade script), commit 28a30463 (#1479)
+-- Repair corrupted policy JSON on environments freshly installed with 1.2.2.0 / 1.2.2.1 / 1.2.2.2.
+-- The CSV quoting bug in pms-auth_policy.csv / pms-auth_policy_h.csv (fixed in 1.2.2.3) loaded these policies with all
+-- double quotes stripped (e.g. {dataSharePolicies:{typeOfShare:...}). Only corrupted rows (not starting with {") are updated,
+-- so valid or customised policies are left untouched.
+UPDATE pms.auth_policy
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='mpolicy-default-qrcode' AND policy_file_id NOT LIKE '{"%';
+
+UPDATE pms.auth_policy
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='mpolicy-default-reprint' AND policy_file_id NOT LIKE '{"%';
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"DD/MM/YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"VID","source":[{"attribute":"VID","filter":[{"type":"PERPETUAL"}]}],"encrypted":false,"format":"RETRIEVE"},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"bestTwoFingers","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Finger"}]}],"encrypted":false,"format":"bestTwoFingers"},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":false,"format":"extraction"}]}'
+WHERE id='mpolicy-default-PDFCard' AND policy_file_id NOT LIKE '{"%';
+
+-- Missed in release 1.2.2.4 (1.2.2.3_to_1.2.2.4 upgrade script), commit feb5d2bd (#1956)
+-- #1941: Missing grant on pms.user_details. In 1.2.2.4 it was added only to the already-released
+-- 1.2.1.0_to_1.2.2.0 upgrade script, so environments already on 1.2.2.0 or later never received it.
+GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.user_details TO pmsuser;
+GRANT ALL ON TABLE pms.user_details TO postgres;
+
+-- =================================================================================================
 -- [1.3.0-beta.1] Batch tables, notifications, user_details, QR/e-UIN policies, partner email hash and column sizes
 -- =================================================================================================
 

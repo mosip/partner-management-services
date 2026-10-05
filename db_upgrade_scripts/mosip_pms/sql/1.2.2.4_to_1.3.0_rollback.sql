@@ -243,3 +243,6 @@ SET attribute_name = 'individualBiometrics',
     upd_dtimes = now()
 WHERE part_id = 'mpartner-default-auth'
   AND biometric_modality = 'face';
+
+-- NOTE: the [1.2.2.x fixes] section of the upgrade (repaired policy data, 200 year validity, user_details grants) is not reverted:
+-- these are corrections that are also valid on 1.2.2.4.

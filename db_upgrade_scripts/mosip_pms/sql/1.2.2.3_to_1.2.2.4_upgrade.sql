@@ -1,7 +1,5 @@
 \c mosip_pms
 
--- Release 1.2.2.4: CRVS support (#1956): face attribute renamed to photo (#1937) and declaredAsDeceased added (#1957).
-
 -- Attribute name changed from individualBiometrics to photo in pms.partner_policy_bioextract for mpartner-default-auth face record
 UPDATE pms.partner_policy_bioextract
 SET attribute_name='photo',
@@ -16,13 +14,3 @@ SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source"
     upd_dtimes=now()
 WHERE id='mpolicy-default-auth';
 
--- declaredAsDeceased attribute added to mpolicy-default-auth history row in pms.auth_policy_h (keeps history in sync with dml csv)
-UPDATE pms.auth_policy_h
-SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"},{"attributeName":"declaredAsDeceased","source":[{"attribute":"declaredAsDeceased"}],"encrypted":true}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}'
-WHERE id='mpolicy-default-auth'
-AND eff_dtimes='2020-11-10 05:55:00.000';
-
--- Missing grants on pms.user_details (#1941). The table was created in 1.2.2.0 without them; the same grants were added
--- to the 1.2.1.0_to_1.2.2.0 script later, which does not run again for databases already on 1.2.2.0 or newer.
-GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.user_details TO pmsuser;
-GRANT ALL ON TABLE pms.user_details TO postgres;
