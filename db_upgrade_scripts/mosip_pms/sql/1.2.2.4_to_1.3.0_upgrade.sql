@@ -461,7 +461,7 @@ AND eff_dtimes='2020-11-13 05:58:00.000';
 -- -------------------------------------------------------------------------------------------------
 -- Default data validity: extend validity of the default policies and default partner policies to 200 years.
 -- Same change that db_scripts/mosip_pms/dml.sql applies on a fresh install, so upgraded and fresh databases match.
--- Without this, default policies seeded in older releases keep their original (possibly already passed) end date.
+-- Already applied by 1.2.2.2_to_1.2.2.3; repeated here (safe to re-run) for databases that reached 1.2.2.4 without it.
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy
