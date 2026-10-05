@@ -219,3 +219,5 @@ COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external pa
 
 -- NOTE: the widened pms.partner / partner_h / partner_contact columns (contact_no, email_id, address) are not
 -- shrunk back, because values longer than the old limits (for example encrypted data) would be truncated or rejected.
+
+-- NOTE: status_code 'Approved' -> 'approved' on pms.partner_policy_request is not reverted; lower case is the correct value.

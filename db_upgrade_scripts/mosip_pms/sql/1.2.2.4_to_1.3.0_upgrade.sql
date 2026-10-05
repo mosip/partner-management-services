@@ -455,3 +455,13 @@ COMMENT ON COLUMN pms.bioextractor_configuration.is_deleted IS 'Is Deleted: Soft
 COMMENT ON COLUMN pms.misp_license.license_key_name IS 'License Key Name: Name given to the license key.';
 COMMENT ON COLUMN pms.oidc_client.additional_config IS 'Additional Config: Additional configuration parameters for the OIDC client in JSON format.';
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table. Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner.';
+
+-- -------------------------------------------------------------------------------------------------
+-- Partner policy request status: use lower case 'approved' everywhere.
+-- Databases created from pms-partner_policy_request.csv hold 'Approved' for the default PDFCard and digitalcard
+-- requests. The status lookups and the new *_request tables expect lower case 'approved'.
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.partner_policy_request
+SET status_code = 'approved'
+WHERE status_code = 'Approved';
