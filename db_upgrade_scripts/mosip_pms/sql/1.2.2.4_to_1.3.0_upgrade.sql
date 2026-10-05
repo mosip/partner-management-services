@@ -1,31 +1,6 @@
 \c mosip_pms
 
 -- =================================================================================================
--- Upgrade 1.2.2.4 -> 1.3.0 (consolidated from the 1.3.0 beta releases).
--- Each section below is marked with the release in which the change first shipped:
---
---   1.3.0-beta.1 : Spring Batch tables, notifications table, user_details.notifications_seen_dtimes,
---                  QR code / e-UIN policy filters, partner email_id_hash and wider contact columns
---   1.3.0-beta.2 : no database changes
---   1.3.0-beta.3 : misp_license.license_key_name, partner.email_id NOT NULL, cr_by on device types,
---                  otp_transaction dropped
---   1.3.0-beta.4 : oidc_client.additional_config
---   1.3.0-beta.5 : typeOfShare "direct" -> "Data Share", bioextractor_configuration,
---                  partner_policy_bioextract_request, partner_policy_credential_type_request
---   1.3.0 (GA)   : bioextractor_configuration soft delete / attribute_name / credential_data_format,
---                  misp_license surrogate primary key, Partner_Admin removed, partner_contact deprecated,
---                  pms.misp and pms.tspid_seq dropped, default policy history, request status case, comments
---
--- Changes made in the 1.2.2.x patch releases are NOT repeated here; they are in the earlier scripts:
---   1.2.2.2 -> 1.2.2.3 : default policy validity (200 years), repair of broken policy JSON in the default data
---   1.2.2.3 -> 1.2.2.4 : "photo" attribute, declaredAsDeceased (CRVS), matching history row
---
--- Existing partner rows keep a NULL email_id_hash after this upgrade. The services treat a NULL hash as a
--- legacy (not yet encrypted) row, so no SQL data migration is needed.
--- =================================================================================================
-
-
--- =================================================================================================
 -- [1.3.0-beta.1] Batch tables, notifications, user_details, QR/e-UIN policies, partner email hash and column sizes
 -- =================================================================================================
 
