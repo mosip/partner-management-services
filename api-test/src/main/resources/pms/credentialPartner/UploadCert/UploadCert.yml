@@ -4,7 +4,7 @@ uploadPartnerCert:
       uniqueIdentifier: TC_PMS_uploadCredentialPartnerCert_01
       description: Validate that certificates are successfully uploaded when all inputs are valid
       role: partner
-      additionalDependencies: TC_PMS_uploadCert_01,TC_PMS_uploadCert_03 
+      additionalDependencies: TC_PMS_uploadCredentialPartnerCACert_01,TC_PMS_uploadCredentialPartnerSubcaCert_03
       checkErrorsOnlyInResponse: true
       restMethod: post
       inputTemplate: pms/credentialPartner/UploadCert/uploadCert

@@ -84,7 +84,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_08
       description: Validate that retrieving partner-policy mappings fails when an invalid partner ID is provided    
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       restMethod: post 
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
@@ -154,7 +154,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_03
       description: Validate that partner API key request approval fails when the associated policy is deactivated
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createPartnerSelfRegistration_10
       restMethod: post 
@@ -270,12 +270,12 @@ partnerPolicyMapping:
       description: Validate that all valid partner-policy mappings are accessible and correctly listed during API key rejection processes (retry scenario)
       role: partnerauth
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_uploadPartnerCert_10,TC_PMS_publishPolicy_22
+      additionalDependencies: TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_22
       restMethod: post
       inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
       outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
       input: '{
-        "partnerId": "$ID:PartnerSelfRegistration_ForRejectMappingRetry_All_Valid_Smoke_sid_partnerId$",
+        "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
         "policyName": "$ID:DefinePolicy_All_Valid_For_Reject_Policy_pms_Retry_sid_name$",
         "useCaseDescription": "Need to submit for Rejecting",
 		"requesttime": "$TIMESTAMP$"
@@ -308,7 +308,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_RequestAPIKeyForAuthPartner_01
       description: Validate that partner API key requests can be submitted and rejected successfully for all valid entries
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
@@ -329,7 +329,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_01
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
@@ -349,7 +349,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_06
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for bio extractors negative tests
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
@@ -369,7 +369,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_09
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for bio extractors empty-biometricSubTypes
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_publishPolicy_23
       restMethod: post
@@ -389,7 +389,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_07
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for bio extractors multiple-extractors
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
@@ -409,7 +409,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_08
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for credential-types-request PARTNER role
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
       restMethod: post
@@ -429,7 +429,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_10
       description: Validate that partner policy mapping API key requests can be submitted with all valid entries for credential-types-request PARTNER role (retry scenario)
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadCredentialPartnerCert_02,TC_PMS_publishPolicy_21
       restMethod: post

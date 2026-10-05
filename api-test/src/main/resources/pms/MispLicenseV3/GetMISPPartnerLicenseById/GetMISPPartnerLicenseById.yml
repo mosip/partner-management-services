@@ -24,6 +24,7 @@ GetMISPPartnerLicenseById:
   Pms_GetMISPPartnerLicenseById_Old_License_Is_Inactive_After_Regenerate:
     endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
     uniqueIdentifier: TC_PMS_GetMISPPartnerLicenseById_02
+    additionalDependencies: TC_PMS_GenerateMISPPartnerLicense_07
     description: Validate that the original MISP partner license becomes INACTIVE after a new license is generated for the same partner via repeat POST
     role: partneradmin
     restMethod: get
