@@ -1,0 +1,15 @@
+DbValidatorMISPLicenseDeactivate:
+   Pms_DBValidator_All_Valid_Smoke_data_updated_for_MISPLicense_Deactivate:
+      endPoint: SELECT * FROM pms.misp_license WHERE is_active = false AND upd_by IS NOT NULL AND upd_dtimes IS NOT NULL AND
+      uniqueIdentifier: TC_PMS_DBValidator_08
+      description: Validate that the MISP license record is correctly marked inactive with upd_by and upd_dtimes populated after deactivation via the API
+      role: pms
+      restMethod: post
+      additionalDependencies: TC_PMS_DeactivateMISPPartnerLicense_01
+      inputTemplate: pms/DbValidatorTest/dbValidatorTestOidcClient
+      outputTemplate: pms/DbValidatorTest/dbValidatorTestOidcClientResult
+      input: '{
+      "misp_license_id": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_mispLicenseId$"
+    }'
+      output: '{
+    }'

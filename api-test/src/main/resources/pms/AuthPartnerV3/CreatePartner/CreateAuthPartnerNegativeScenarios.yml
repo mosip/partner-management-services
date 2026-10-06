@@ -1,0 +1,30 @@
+CreateAuthPartnerNegativeScenarios:
+   Pms_AuthPartnerRegistration_Invalid_PolicyGroup_Neg:
+      endPoint: /v1/partnermanager/partners/v3
+      uniqueIdentifier: TC_PMS_CreateAuthPartnerNegativeScenarios_01
+      description: Validate that the API returns an error when attempting to register an Auth partner with an invalid policy group
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/MISPPartnerV3/CreatePartner/CreateMISPPartner
+      outputTemplate: pms/error
+      input: '{
+        "id": "mosip.pms.create.partner.post",
+        "version": "1.0",
+		"requestTime": "$TIMESTAMP$",
+        "partnerId": "$RUNCONTEXT$pms-111446",
+        "organizationName": "AuthPartner",
+        "address": "Bangalore",
+        "contactNumber": "8553967572",
+        "emailId": "newauthpartner01@gmail.com",
+        "partnerType": "Auth_Partner",
+        "policyGroup": "Automation-invalid-policy-group",
+        "logoUrl": "https://example.com/logo.png",
+        "langCode": "eng"
+}'
+      output: '{
+	  "errors": [
+      {
+       "errorCode": "PMS_PRT_002"
+       }
+       ]
+}'

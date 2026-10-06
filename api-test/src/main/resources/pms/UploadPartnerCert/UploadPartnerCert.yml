@@ -125,7 +125,7 @@ uploadPartnerCert:
       description: Validate that uploading a Partner Certificate and FTM Provider Certificate with all valid inputs is successful
       role: partnerftm
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_createPartnerSelfRegistration_07,TC_PMS_UploadCACertificate_05, TC_PMS_UploadCACertificate_06
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_07,TC_PMS_UploadCACertificate_08, TC_PMS_UploadCACertificate_09
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
@@ -148,7 +148,7 @@ uploadPartnerCert:
       restMethod: post
       inputTemplate: pms/UploadPartnerCert/uploadCert
       outputTemplate: pms/UploadPartnerCert/uploadCertResult
-      input: '{  
+      input: '{
   "requesttime": "$TIMESTAMP$",
   "certificateData": "$PARTNERCERT$",
   "partnerId": "$ID:PartnerSelfRegistration_For_Device_provider_sid_partnerId$",

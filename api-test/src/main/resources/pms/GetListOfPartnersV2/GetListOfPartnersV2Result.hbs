@@ -1,12 +1,9 @@
 {
     "response": {
         "pageNo": "{{pageNo}}",
-        "partners": [
-            {{#each partners}}
-            {
-                "logoUrl": "{{logoUrl}}",
-                "additionalInfo": "{{additionalInfo}}"
-            }
+        "data": [
+            {{#each data}}
+            {{json this}}
             {{#unless @last}},{{/unless}}
             {{/each}}
         ]
