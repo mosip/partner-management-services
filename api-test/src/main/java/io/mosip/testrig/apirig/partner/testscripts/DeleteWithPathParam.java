@@ -44,19 +44,11 @@ public class DeleteWithPathParam extends PMSUtil implements ITest {
 			logger.setLevel(Level.ERROR);
 	}
 
-	/**
-	 * get current testcaseName
-	 */
 	@Override
 	public String getTestName() {
 		return testCaseName;
 	}
 
-	/**
-	 * Data provider class provides test case list
-	 *
-	 * @return object of data provider
-	 */
 	@DataProvider(name = "testcaselist")
 	public Object[] getTestCaseList(ITestContext context) {
 		String ymlFile = context.getCurrentXmlTest().getLocalParameters().get("ymlFile");
@@ -109,11 +101,6 @@ public class DeleteWithPathParam extends PMSUtil implements ITest {
 		}
 	}
 
-	/**
-	 * The method ser current test name to result
-	 *
-	 * @param result
-	 */
 	@AfterMethod(alwaysRun = true)
 	public void setResultTestName(ITestResult result) {
 		result.setAttribute("TestCaseName", testCaseName);
