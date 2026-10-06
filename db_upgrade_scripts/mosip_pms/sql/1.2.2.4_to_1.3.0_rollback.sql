@@ -206,7 +206,7 @@ COMMENT ON COLUMN pms.tspid_seq.upd_dtimes IS 'Updated DateTimestamp : Date and 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.tspid_seq TO pmsuser;
 
 -- -------------------------------------------------------------------------------------------------
--- Rollback for default policy history (pms.auth_policy_h) changes: restore the 1.2.2.4 values
+-- [1.3.0] Restore mpolicy-default-euin history row (1.2.2.4 value)
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy_h
@@ -214,19 +214,15 @@ SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinu
 WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
--- Restore the original pms.partner_contact table comment (the 1.3.0 upgrade comment adds a deprecation note)
+-- [1.3.0] Restore the partner_contact table comment
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.';
 
--- NOTE: the widened pms.partner / partner_h / partner_contact columns (contact_no, email_id, address) are not
--- shrunk back, because values longer than the old limits (for example encrypted data) would be truncated or rejected.
+-- [1.3.0] contact_no, email_id and address columns stay widened (shrinking could truncate stored values)
 
--- NOTE: status_code 'Approved' -> 'approved' on pms.partner_policy_request is not reverted; lower case is the correct value.
+-- [1.3.0] status_code stays 'approved'
 
 -- -------------------------------------------------------------------------------------------------
--- CRVS attributes (declaredAsDeceased in mpolicy-default-auth, face attribute_name 'photo' in
--- partner_policy_bioextract) are NOT rolled back here: they were released in 1.2.2.4
--- (1.2.2.3_to_1.2.2.4 upgrade script, #1937/#1957), so they must remain after rolling back to 1.2.2.4.
+-- [1.2.2.4] CRVS values (declaredAsDeceased, photo) are kept; they are part of 1.2.2.4
 -- -------------------------------------------------------------------------------------------------
 
--- NOTE: the [1.2.2.x fixes] section of the upgrade (repaired policy data, 200 year validity, user_details grants) is not reverted:
--- these are corrections that are also valid on 1.2.2.4.
+-- [1.2.2.x] Default policy data repairs and grants are kept; they are valid on 1.2.2.4

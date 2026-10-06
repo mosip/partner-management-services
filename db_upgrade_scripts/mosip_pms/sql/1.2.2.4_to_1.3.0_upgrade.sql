@@ -1,8 +1,8 @@
 \c mosip_pms
 
 -- -------------------------------------------------------------------------------------------------
--- Pre-check: pms.partner.email_id becomes NOT NULL in this upgrade (1.3.0-beta.3). Stop before any change is made if
--- a partner has no email, otherwise the upgrade would fail half way through. Fix: set an email_id on these partners.
+-- Pre-check: pms.partner.email_id is NOT NULL from 1.3.0-beta.3.
+-- Stops the upgrade before any change if a partner has no email_id.
 -- -------------------------------------------------------------------------------------------------
 
 DO $$
@@ -16,23 +16,18 @@ BEGIN
 END $$;
 
 -- =================================================================================================
--- [1.2.2.x fixes] Changes missed in the released 1.2.2.0, 1.2.2.3 and 1.2.2.4 upgrade scripts.
--- Every statement only changes rows that still have the problem, so it is safe on a database that already has the fix.
+-- [1.2.2.x] Default policy data repairs and grants
+-- Each statement only changes rows that still need it.
 -- =================================================================================================
 
--- Missed in release 1.2.2.0 (1.2.1.0_to_1.2.2.0 upgrade script)
--- Repair corrupted mpolicy-default-PDFCard policy JSON on environments freshly installed with 1.2.1.0.
--- 1.2.1.0_to_1.2.2.0 repaired mpolicy-default-qrcode and mpolicy-default-reprint but not mpolicy-default-PDFCard.
--- Only a corrupted row (not starting with {") is updated.
+-- [1.2.2.0] Repair mpolicy-default-PDFCard policy JSON (quotes stripped on databases installed with 1.2.1.0)
 UPDATE pms.auth_policy
 SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false},{"attributeName":"dob","source":[{"attribute":"dateOfBirth"}],"encrypted":false},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}',
     upd_by='admin',
     upd_dtimes=now()
 WHERE id='mpolicy-default-PDFCard' AND policy_file_id NOT LIKE '{"%';
 
--- Missed in release 1.2.2.3 (1.2.2.2_to_1.2.2.3 upgrade script), commit 28a30463 (#1479)
--- MOSIP-42249: Extend validity of default auth policies and default partner policies.
--- Fresh-install dml.sql does this since 1.2.2.3; it was not carried over for upgraded environments.
+-- [1.2.2.3] MOSIP-42249: default policy validity extended to 200 years (same as dml.sql)
 UPDATE pms.auth_policy
 SET valid_to_date = valid_from_date + interval '200 years',
     upd_by='admin',
@@ -49,9 +44,7 @@ SET valid_to_datetime = valid_from_datetime + interval '200 years',
     upd_dtimes=now()
 WHERE part_id LIKE 'mpartner-default%' AND policy_id LIKE 'mpolicy-default%';
 
--- Missed in release 1.2.2.3 (1.2.2.2_to_1.2.2.3 upgrade script), commit 28a30463 (#1479)
--- MOSIP-42571: Fix invalid JSON (",,") in mpolicy-default-mobile policy.
--- Corrected in pms-auth_policy.csv and pms-auth_policy_h.csv since 1.2.2.3; it was not carried over for upgraded environments.
+-- [1.2.2.3] MOSIP-42571: fix invalid JSON (",,") in mpolicy-default-mobile
 UPDATE pms.auth_policy
 SET policy_file_id = replace(policy_file_id, ',,"format"', ',"format"'),
     upd_by='admin',
@@ -62,11 +55,7 @@ UPDATE pms.auth_policy_h
 SET policy_file_id = replace(policy_file_id, ',,"format"', ',"format"')
 WHERE id='mpolicy-default-mobile' AND policy_file_id LIKE '%,,"format"%';
 
--- Missed in release 1.2.2.3 (1.2.2.2_to_1.2.2.3 upgrade script), commit 28a30463 (#1479)
--- Repair corrupted policy JSON on environments freshly installed with 1.2.2.0 / 1.2.2.1 / 1.2.2.2.
--- The CSV quoting bug in pms-auth_policy.csv / pms-auth_policy_h.csv (fixed in 1.2.2.3) loaded these policies with all
--- double quotes stripped (e.g. {dataSharePolicies:{typeOfShare:...}). Only corrupted rows (not starting with {") are updated,
--- so valid or customised policies are left untouched.
+-- [1.2.2.3] Repair quote-stripped qrcode and reprint policies and PDFCard history row (databases installed with 1.2.2.0 to 1.2.2.2)
 UPDATE pms.auth_policy
 SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}',
     upd_by='admin',
@@ -83,9 +72,7 @@ UPDATE pms.auth_policy_h
 SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"DD/MM/YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"VID","source":[{"attribute":"VID","filter":[{"type":"PERPETUAL"}]}],"encrypted":false,"format":"RETRIEVE"},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"bestTwoFingers","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Finger"}]}],"encrypted":false,"format":"bestTwoFingers"},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":false,"format":"extraction"}]}'
 WHERE id='mpolicy-default-PDFCard' AND policy_file_id NOT LIKE '{"%';
 
--- Missed in release 1.2.2.4 (1.2.2.3_to_1.2.2.4 upgrade script), commit feb5d2bd (#1956)
--- #1941: Missing grant on pms.user_details. In 1.2.2.4 it was added only to the already-released
--- 1.2.1.0_to_1.2.2.0 upgrade script, so environments already on 1.2.2.0 or later never received it.
+-- [1.2.2.4] #1941: grants on pms.user_details for pmsuser and postgres
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.user_details TO pmsuser;
 GRANT ALL ON TABLE pms.user_details TO postgres;
 
@@ -258,7 +245,7 @@ ALTER TABLE pms.partner_contact
     ADD COLUMN email_id_hash character varying(3000);
 
 -- =================================================================================================
--- [1.3.0 GA] (#2063) partner_contact deprecation check
+-- [1.3.0] (#2063) partner_contact deprecation check
 -- =================================================================================================
 
 -- POST /partners/{partnerId}/contact/add is deprecated. If pms.partner_contact has data, archive it.
@@ -461,7 +448,7 @@ GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy
 
 -- -------------------------------------------------------------------------------------------------
 -- =================================================================================================
--- [1.3.0 GA] bioextractor_configuration soft delete (attribute_name / credential_data_format are part of the table above)
+-- [1.3.0] bioextractor_configuration soft delete (attribute_name / credential_data_format are part of the table above)
 -- =================================================================================================
 
 -- Bioextractor configuration soft delete support
@@ -480,7 +467,7 @@ ON pms.bioextractor_configuration (lower(config_name))
 WHERE is_deleted = false;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0 GA] MISP License: replace composite PK (misp_id, license_key) with surrogate PK misp_license_id
+-- [1.3.0] MISP License: replace composite PK (misp_id, license_key) with surrogate PK misp_license_id
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE pms.misp_license ADD COLUMN IF NOT EXISTS misp_license_id character varying(36);
@@ -498,7 +485,7 @@ ALTER TABLE pms.misp_license ADD CONSTRAINT uk_mlic UNIQUE (misp_id, license_key
 COMMENT ON COLUMN pms.misp_license.misp_license_id IS 'MISP License ID: Unique surrogate identifier (primary key) for the license record.';
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0 GA] Remove unused Partner_Admin partner type
+-- [1.3.0] Remove unused Partner_Admin partner type
 -- -------------------------------------------------------------------------------------------------
 
 DO $$
@@ -511,7 +498,7 @@ BEGIN
 END $$;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0 GA] Remove unused pms.misp and pms.tspid_seq tables
+-- [1.3.0] Remove unused pms.misp and pms.tspid_seq tables
 -- NOTE: each table is dropped only if it currently has no rows. If a table still
 -- has data, the drop is skipped and a WARNING is raised so it can be investigated
 -- and removed manually in a later upgrade.
@@ -540,8 +527,7 @@ BEGIN
 END $$;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0 GA] Default policy history (pms.auth_policy_h): keep in sync with db_scripts/mosip_pms/dml/pms-auth_policy_h.csv
--- (the pms.auth_policy rows for these policies are updated above)
+-- [1.3.0] mpolicy-default-euin history row (auth_policy_h): language filters, same as pms-auth_policy_h.csv
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy_h
@@ -550,8 +536,7 @@ WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0 GA] Table and column comments added in 1.3.0 DDL (db_scripts/mosip_pms/ddl) that the statements above do not set,
--- so an upgraded database carries the same comments as a fresh install.
+-- [1.3.0] Table and column comments, same as the 1.3.0 DDL
 -- -------------------------------------------------------------------------------------------------
 
 COMMENT ON TABLE pms.bioextractor_configuration IS 'Bioextractor Configuration: Stores configuration details for biometric extractor providers.';
@@ -571,9 +556,7 @@ COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external pa
 COMMENT ON TABLE pms.user_details IS 'This table has consents of partners.';
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0 GA] Partner policy request status: use lower case 'approved' everywhere.
--- Databases created from pms-partner_policy_request.csv hold 'Approved' for the default PDFCard and digitalcard
--- requests. The status lookups and the new *_request tables expect lower case 'approved'.
+-- [1.3.0] partner_policy_request.status_code: 'Approved' -> 'approved' (default PDFCard and digitalcard requests)
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.partner_policy_request
@@ -581,8 +564,7 @@ SET status_code = 'approved'
 WHERE status_code = 'Approved';
 
 -- -------------------------------------------------------------------------------------------------
--- [1.2.2.4 changes, repeated] CRVS attributes for the default auth policy (#1956).
--- Shipped with release 1.2.2.4 (#1937, #1957). Repeated here so a database that missed them is fixed too.
+-- [1.2.2.4] CRVS: declaredAsDeceased in mpolicy-default-auth (policy and history row), face attribute renamed to photo (#1937, #1957)
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy
