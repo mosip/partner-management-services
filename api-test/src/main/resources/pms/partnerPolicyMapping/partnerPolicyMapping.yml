@@ -268,7 +268,7 @@ partnerPolicyMapping:
       endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
       uniqueIdentifier: TC_PMS_partnerPolicyMapping_11
       description: Validate that all valid partner-policy mappings are accessible and correctly listed during API key rejection processes (retry scenario)
-      role: partnerauth
+      role: partner
       checkErrorsOnlyInResponse: true
       additionalDependencies: TC_PMS_uploadPartnerCert_01,TC_PMS_publishPolicy_22
       restMethod: post
@@ -378,6 +378,46 @@ partnerPolicyMapping:
       input: '{
         "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
         "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsEmptySubTypesNeg_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "message": "Policy mapping request submitted successfully."
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForExtractorsNotAdded_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_12
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the mapping-approval extractors-not-added negative test
+      role: partner
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_ExtractorsNotAdded_sid_name$",
+        "useCaseDescription": "Need to submit the payment",
+		"requesttime": "$TIMESTAMP$"
+    }'
+      output: '{
+        "message": "Policy mapping request submitted successfully."
+    }'
+
+   Pms_Credential_PartnerPolicyMapping_ForCredentialTypesNotAdded_All_Valid_sid:
+      endPoint: /v1/partnermanager/partners/{partnerId}/policy/map
+      uniqueIdentifier: TC_PMS_partnerPolicyMapping_13
+      description: Validate that partner policy mapping API key requests can be submitted with all valid entries for the mapping-approval credential-types-not-added negative test
+      role: partner
+      checkErrorsOnlyInResponse: true
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      restMethod: post
+      inputTemplate: pms/partnerPolicyMapping/partnerPolicyMapping
+      outputTemplate: pms/partnerPolicyMapping/partnerPolicyMappingResult
+      input: '{
+        "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypesNotAdded_sid_name$",
         "useCaseDescription": "Need to submit the payment",
 		"requesttime": "$TIMESTAMP$"
     }'

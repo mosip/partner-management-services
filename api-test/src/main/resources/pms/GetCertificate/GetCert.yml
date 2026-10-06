@@ -32,6 +32,25 @@ GetPartnerCert:
        ]
 }'
 
+   Pms_GetPartnerCert_PartnerAdmin_with_unregistered_partner_neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/certificate
+      description: Validate that partner certificate retrieval fails when a partner admin requests an unregistered partner
+      uniqueIdentifier: TC_PMS_GetPartnerCert_05
+      role: partneradmin
+      restMethod: get
+      inputTemplate: pms/GetCertificate/getCert
+      outputTemplate: pms/error
+      input: '{
+	"partnerId": "848484848"
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_PRT_005"
+       }
+       ]
+}'
+
    Pms_GetPartnerCert_DeviceProvider_All_Valid_Smoke:
       endPoint: /v1/partnermanager/partners/{partnerId}/certificate
       description: Validate that all partner certificates are successfully retrieved for a device provider with valid inputs

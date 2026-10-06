@@ -883,6 +883,56 @@ definePolicy:
     "is_Active": false
 }'
 
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_ExtractorsNotAdded_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_44
+      description: Validate that a policy is successfully created for the mapping-approval extractors-not-added negative test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner extractors not added",
+	"name": "$RUNCONTEXT$credential partner extractors not added",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner extractors not added",
+    "desc": "$RUNCONTEXT$credential partner extractors not added",
+    "is_Active": false
+}'
+
+   Pms_DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypesNotAdded_sid:
+      endPoint: /v1/policymanager/policies
+      uniqueIdentifier: TC_PMS_definePolicy_45
+      description: Validate that a policy is successfully created for the mapping-approval credential-types-not-added negative test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/DefinePolicy/definePolicy
+      outputTemplate: pms/DefinePolicy/definePolicyResult
+      input: '{
+	"desc": "$RUNCONTEXT$credential partner credential types not added",
+	"name": "$RUNCONTEXT$credential partner credential types not added",
+	"attributeName": "fullName",
+	"authTokenType": "policy",
+	"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+	"policyType": "Auth",
+	"version": "1.0",
+	"requesttime": "$TIMESTAMP$"
+}'
+      output: ' {
+    "policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+    "name": "$RUNCONTEXT$credential partner credential types not added",
+    "desc": "$RUNCONTEXT$credential partner credential types not added",
+    "is_Active": false
+}'
+
    Pms_DefinePolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple_sid:
       endPoint: /v1/policymanager/policies
       uniqueIdentifier: TC_PMS_definePolicy_38

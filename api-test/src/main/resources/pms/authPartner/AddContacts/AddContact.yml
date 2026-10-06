@@ -93,3 +93,27 @@ AddContact:
     }
   ]
 }'
+   Pms_AddContact_CrossPartner_BOLA_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/contact/add
+      uniqueIdentifier: TC_PMS_AddContact_05
+      description: Validate that a partner cannot add or overwrite contact details of a partner it does not own
+      role: partnerauth
+      restMethod: post
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      inputTemplate: pms/authPartner/AddContacts/addContact
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+    "address": "Bangalore",
+    "contactNumber": "9903255448",
+    "emailId": "bola.attacker@email.com",
+    "is_Active": true,
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_055"
+    }
+  ]
+}'
