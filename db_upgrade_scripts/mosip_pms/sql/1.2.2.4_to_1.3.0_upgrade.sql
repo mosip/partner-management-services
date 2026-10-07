@@ -15,10 +15,11 @@ BEGIN
     END IF;
 END $$;
 
--- =================================================================================================
--- [1.2.2.x] Default policy data repairs and grants
+-- =====================================================================================
+-- [1.2.2.0] Default policy data repair
+-- =====================================================================================
+
 -- Each statement only changes rows that still need it.
--- =================================================================================================
 
 -- [1.2.2.0] Repair mpolicy-default-PDFCard policy JSON (quotes stripped on databases installed with 1.2.1.0)
 UPDATE pms.auth_policy
@@ -26,6 +27,10 @@ SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForIn
     upd_by='admin',
     upd_dtimes=now()
 WHERE id='mpolicy-default-PDFCard' AND policy_file_id NOT LIKE '{"%';
+
+-- =====================================================================================
+-- [1.2.2.3] Default policy data repairs
+-- =====================================================================================
 
 -- [1.2.2.3] MOSIP-42249: default policy validity extended to 200 years (same as dml.sql)
 UPDATE pms.auth_policy
@@ -72,9 +77,35 @@ UPDATE pms.auth_policy_h
 SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"DD/MM/YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"VID","source":[{"attribute":"VID","filter":[{"type":"PERPETUAL"}]}],"encrypted":false,"format":"RETRIEVE"},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"bestTwoFingers","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Finger"}]}],"encrypted":false,"format":"bestTwoFingers"},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":false,"format":"extraction"}]}'
 WHERE id='mpolicy-default-PDFCard' AND policy_file_id NOT LIKE '{"%';
 
+-- =====================================================================================
+-- [1.2.2.4] user_details grants and CRVS values
+-- =====================================================================================
+
 -- [1.2.2.4] #1941: grants on pms.user_details for pmsuser and postgres
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON TABLE pms.user_details TO pmsuser;
 GRANT ALL ON TABLE pms.user_details TO postgres;
+
+-- -------------------------------------------------------------------------------------------------
+-- [1.2.2.4] CRVS: declaredAsDeceased in mpolicy-default-auth (policy and history row), face attribute renamed to photo (#1937, #1957)
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.auth_policy
+SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"zone","source":[{"attribute":"zone"}],"encrypted":true},{"attributeName":"preferredLang","source":[{"attribute":"preferredLang"}],"encrypted":false},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"},{"attributeName":"declaredAsDeceased","source":[{"attribute":"declaredAsDeceased"}],"encrypted":true}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}',
+    upd_by='admin',
+    upd_dtimes=now()
+WHERE id='mpolicy-default-auth';
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"},{"attributeName":"declaredAsDeceased","source":[{"attribute":"declaredAsDeceased"}],"encrypted":true}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}'
+WHERE id='mpolicy-default-auth'
+AND eff_dtimes='2020-11-10 05:55:00.000';
+
+UPDATE pms.partner_policy_bioextract
+SET attribute_name = 'photo',
+    upd_by = 'admin',
+    upd_dtimes = now()
+WHERE part_id = 'mpartner-default-auth'
+  AND biometric_modality = 'face';
 
 -- =================================================================================================
 -- [1.3.0-beta.1] Batch tables, notifications, user_details, QR/e-UIN policies, partner email hash and column sizes
@@ -245,18 +276,6 @@ ALTER TABLE pms.partner_contact
     ADD COLUMN email_id_hash character varying(3000);
 
 -- =================================================================================================
--- [1.3.0] (#2063) partner_contact deprecation check
--- =================================================================================================
-
--- POST /partners/{partnerId}/contact/add is deprecated. If pms.partner_contact has data, archive it.
-DO $$
-BEGIN
-    IF to_regclass('pms.partner_contact') IS NOT NULL AND EXISTS (SELECT 1 FROM pms.partner_contact) THEN
-        RAISE WARNING 'pms.partner_contact has data. Archive it — POST /partners/{partnerId}/contact/add is deprecated.';
-    END IF;
-END $$;
-
--- =================================================================================================
 -- [1.3.0-beta.3] misp_license.license_key_name, email_id NOT NULL, device type cr_by, otp_transaction drop
 -- =================================================================================================
 
@@ -294,23 +313,19 @@ UPDATE pms.auth_policy
 SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
 WHERE id='mpolicy-default-eUIN_with_faceQR';
 
-
 UPDATE pms.auth_policy
 SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
 WHERE id='mpolicy-default-eUIN_with_QR';
-
 
 UPDATE pms.auth_policy_h
 SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
 WHERE id='mpolicy-default-eUIN_with_faceQR'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
-
 UPDATE pms.auth_policy_h
 SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
 WHERE id='mpolicy-default-eUIN_with_QR'
 AND eff_dtimes='2020-11-13 05:58:00.000';
-
 
 UPDATE pms.auth_policy_h
 SET policy_file_id = REPLACE(policy_file_id, '"typeOfShare":"direct"', '"typeOfShare":"Data Share"')
@@ -446,13 +461,13 @@ WHERE status_code = 'approved';
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.partner_policy_credential_type_request TO pmsuser;
 
--- -------------------------------------------------------------------------------------------------
--- =================================================================================================
--- [1.3.0] bioextractor_configuration soft delete (attribute_name / credential_data_format are part of the table above)
--- =================================================================================================
+-- =====================================================================================
+-- [1.3.0] Bioextractor soft delete, MISP license key, reference data clean-up, comments and status
+-- =====================================================================================
 
--- Bioextractor configuration soft delete support
--- -------------------------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
+-- [1.3.0] bioextractor_configuration soft delete
+-- -------------------------------------------------------------------------------------
 
 ALTER TABLE IF EXISTS pms.bioextractor_configuration
     ADD COLUMN IF NOT EXISTS is_deleted boolean NOT NULL DEFAULT false;
@@ -494,6 +509,18 @@ BEGIN
         RAISE WARNING 'Skipping removal of partner_type Partner_Admin: existing pms.partner rows still reference it. Manual cleanup required: reassign or remove the referencing pms.partner rows, then delete pms.partner_type row with code = ''Partner_Admin''.';
     ELSE
         DELETE FROM pms.partner_type WHERE code = 'Partner_Admin';
+    END IF;
+END $$;
+
+-- -------------------------------------------------------------------------------------
+-- [1.3.0] (#2063) partner_contact deprecation check
+-- -------------------------------------------------------------------------------------
+
+-- POST /partners/{partnerId}/contact/add is deprecated. If pms.partner_contact has data, archive it.
+DO $$
+BEGIN
+    IF to_regclass('pms.partner_contact') IS NOT NULL AND EXISTS (SELECT 1 FROM pms.partner_contact) THEN
+        RAISE WARNING 'pms.partner_contact has data. Archive it — POST /partners/{partnerId}/contact/add is deprecated.';
     END IF;
 END $$;
 
@@ -562,25 +589,3 @@ COMMENT ON TABLE pms.user_details IS 'This table has consents of partners.';
 UPDATE pms.partner_policy_request
 SET status_code = 'approved'
 WHERE status_code = 'Approved';
-
--- -------------------------------------------------------------------------------------------------
--- [1.2.2.4] CRVS: declaredAsDeceased in mpolicy-default-auth (policy and history row), face attribute renamed to photo (#1937, #1957)
--- -------------------------------------------------------------------------------------------------
-
-UPDATE pms.auth_policy
-SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"zone","source":[{"attribute":"zone"}],"encrypted":true},{"attributeName":"preferredLang","source":[{"attribute":"preferredLang"}],"encrypted":false},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"},{"attributeName":"declaredAsDeceased","source":[{"attribute":"declaredAsDeceased"}],"encrypted":true}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}',
-    upd_by='admin',
-    upd_dtimes=now()
-WHERE id='mpolicy-default-auth';
-
-UPDATE pms.auth_policy_h
-SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"},{"attributeName":"declaredAsDeceased","source":[{"attribute":"declaredAsDeceased"}],"encrypted":true}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}'
-WHERE id='mpolicy-default-auth'
-AND eff_dtimes='2020-11-10 05:55:00.000';
-
-UPDATE pms.partner_policy_bioextract
-SET attribute_name = 'photo',
-    upd_by = 'admin',
-    upd_dtimes = now()
-WHERE part_id = 'mpartner-default-auth'
-  AND biometric_modality = 'face';
