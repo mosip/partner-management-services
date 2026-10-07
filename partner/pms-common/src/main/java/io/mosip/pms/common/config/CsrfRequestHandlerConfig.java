@@ -24,8 +24,8 @@ import org.springframework.util.ReflectionUtils;
  * This switches to the plain handler and loads the token on every request.
  * The services are stateless, so the session strategy that would delete the
  * cookie on each request is replaced with a no-op. The check is limited to
- * browser requests (Origin or Referer present), so direct API callers are not
- * blocked.
+ * browser requests (Sec-Fetch-Site, Origin or Referer present), so direct API
+ * callers are not blocked.
  */
 @Configuration
 public class CsrfRequestHandlerConfig {
@@ -55,7 +55,7 @@ public class CsrfRequestHandlerConfig {
 					RequestMatcher existing = (RequestMatcher) ReflectionUtils.getField(matcherField, csrfFilter);
 					csrfFilter.setRequireCsrfProtectionMatcher(
 							request -> existing.matches(request) && isBrowserRequest(request));
-					LOGGER.info("CSRF check limited to browser requests (Origin or Referer header present)");
+					LOGGER.info("CSRF check limited to browser requests (Sec-Fetch-Site, Origin or Referer header present)");
 				}
 				if (bean instanceof SessionManagementFilter) {
 					SessionAuthenticationStrategy noOp = (authentication, request, response) -> {
@@ -76,9 +76,13 @@ public class CsrfRequestHandlerConfig {
 		};
 	}
 
-	/** Browsers always send Origin (even "null") or Referer on POST/PUT; scripts and other services usually do not. */
+	/**
+	 * Browsers send Sec-Fetch-Site, and Origin (even "null") or Referer on POST/PUT; scripts and other
+	 * services usually send none of them.
+	 */
 	static boolean isBrowserRequest(HttpServletRequest request) {
-		return request.getHeader("Origin") != null || request.getHeader("Referer") != null;
+		return request.getHeader("Sec-Fetch-Site") != null || request.getHeader("Origin") != null
+				|| request.getHeader("Referer") != null;
 	}
 
 	/** Same as the plain handler, but logs (yes/no only) what the browser sent. */
