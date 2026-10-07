@@ -130,6 +130,37 @@ public class CsrfRequestHandlerConfigTest {
 	}
 
 	@Test
+	public void postWithOnlyCrossSiteFetchMetadataIsStillChecked() throws Exception {
+		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
+		post.addHeader("Sec-Fetch-Site", "cross-site");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		MockFilterChain chain = new MockFilterChain();
+
+		csrfFilter.doFilter(post, response, chain);
+
+		assertEquals(403, response.getStatus());
+		assertNull(chain.getRequest());
+	}
+
+	@Test
+	public void postWithSameOriginFetchMetadataStillNeedsToken() throws Exception {
+		MockHttpServletRequest noToken = new MockHttpServletRequest("POST", "/partners");
+		noToken.addHeader("Sec-Fetch-Site", "same-origin");
+		MockHttpServletResponse rejected = new MockHttpServletResponse();
+		csrfFilter.doFilter(noToken, rejected, new MockFilterChain());
+		assertEquals(403, rejected.getStatus());
+
+		String token = fetchTokenWithGet();
+		MockHttpServletRequest withToken = new MockHttpServletRequest("POST", "/partners");
+		withToken.addHeader("Sec-Fetch-Site", "same-origin");
+		withToken.setCookies(new Cookie(COOKIE_NAME, token));
+		withToken.addHeader(HEADER_NAME, token);
+		MockHttpServletResponse accepted = new MockHttpServletResponse();
+		csrfFilter.doFilter(withToken, accepted, new MockFilterChain());
+		assertEquals(200, accepted.getStatus());
+	}
+
+	@Test
 	public void postWithNullOriginIsStillChecked() throws Exception {
 		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
 		post.addHeader("Origin", "null");
