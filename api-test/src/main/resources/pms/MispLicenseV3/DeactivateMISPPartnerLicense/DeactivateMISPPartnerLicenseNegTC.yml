@@ -153,3 +153,26 @@ DeactivateMISPPartnerLicenseNegTC:
         }
       ]
 }'
+  Pms_DeactivateMISPPartnerLicenseNegTC_with_Already_Deactivated_License_Neg:
+    endPoint: /v1/partnermanager/misp-licenses/{mispLicenseId}
+    uniqueIdentifier: TC_PMS_DeactivateMISPPartnerLicenseNegTC_08
+    description: Validate that deactivating a MISP partner license fails when it is already INACTIVE
+    role: partneradmin
+    additionalDependencies: TC_PMS_DeactivateMISPPartnerLicense_01
+    restMethod: patch
+    inputTemplate: pms/MispLicenseV3/DeactivateMISPPartnerLicense/DeactivateMISPPartnerLicense
+    outputTemplate: pms/error
+    input: '{
+      "id": "mosip.pms.update.misp.license.patch",
+      "version": "1.0",
+      "requestTime": "$TIMESTAMP$",
+      "mispLicenseId": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_mispLicenseId$",
+      "status": "INACTIVE"
+}'
+    output: '{
+      "errors": [
+        {
+          "errorCode": "PMS_MSP_434"
+        }
+      ]
+}'

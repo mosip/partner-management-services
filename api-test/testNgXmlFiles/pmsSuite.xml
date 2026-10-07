@@ -301,8 +301,32 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
-		</classes>
+        </classes>
+    </test>
+    <test name="AuthPartnerV3NegativeScenarios">
+        <parameter name="ymlFile"
+                   value="pms/AuthPartnerV3/CreatePartner/CreateAuthPartnerNegativeScenarios.yml" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+        </classes>
 	</test>
+    <test name="DeviceProviderPartnerV3NegativeScenarios">
+        <parameter name="ymlFile"
+                   value="pms/DeviceProviderPartnerV3/CreatePartner/CreateDeviceProviderPartnerNegativeScenarios.yml" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+        </classes>
+    </test>
+    <test name="FTMProviderPartnerV3NegativeScenarios">
+        <parameter name="ymlFile"
+                   value="pms/FTMProviderPartnerV3/CreatePartner/CreateFTMProviderPartnerNegativeScenarios.yml" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.SimplePost" />
+        </classes>
+    </test>
 	<test name="UploadABISPartnerCertificate">
 		<parameter name="ymlFile"
 			value="pms/ABISPartnerV3/UploadPartnerCertificateABIS/UploadABISPartnerCertificate.yml" />
@@ -643,7 +667,16 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
-		</classes>
+        </classes>
+    </test>
+    <test name="ApproveMappingKeyForRejectMappingRetry">
+        <parameter name="ymlFile"
+                   value="pms/ApproveMappingKey/ApproveMappingKeyForRejectMappingRetry.yml" />
+        <parameter name="pathParams" value="mappingkey" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+        </classes>
 	</test>
 	<test name="MapPartnerAndPolicytoCredentialType">
 		<parameter name="ymlFile"
@@ -763,7 +796,60 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBodyForAutoGenId" />
-		</classes>
+        </classes>
+    </test>
+    <test name="InsertCredentialType">
+        <parameter name="ymlFile"
+                   value="pms/InsertDBData/InsertCredentialType.yml" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.DBIntegration" />
+        </classes>
+    </test>
+    <test name="GetCredentialTypesByPartnerAndPolicyMultiple">
+        <parameter name="ymlFile"
+                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicyMultiple.yml"/>
+        <parameter name="pathParams" value="partnerId,policyId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+        </classes>
+    </test>
+    <test name="GetCredentialTypesByPartnerAndPolicyExcludesInactive">
+        <parameter name="ymlFile"
+                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicyExcludesInactive.yml"/>
+        <parameter name="pathParams" value="partnerId,policyId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+        </classes>
+    </test>
+    <test name="GetCredentialTypesByPartnerAndPolicyPostNotAllowed">
+        <parameter name="ymlFile"
+                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicyPostNotAllowed.yml"/>
+        <parameter name="pathParams" value="partnerId,policyId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
+        </classes>
+    </test>
+    <test name="GetCredentialTypesByPartnerAndPolicyPutNotAllowed">
+        <parameter name="ymlFile"
+                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicyMethodNotAllowed.yml"/>
+        <parameter name="pathParams" value="partnerId,policyId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.PutWithPathParamsAndBody" />
+        </classes>
+    </test>
+    <test name="GetCredentialTypesByPartnerAndPolicyDeleteNotAllowed">
+        <parameter name="ymlFile"
+                   value="pms/GetCredentialTypesByPartnerAndPolicy/GetCredentialTypesByPartnerAndPolicyDeleteNotAllowed.yml"/>
+        <parameter name="pathParams" value="partnerId,policyId"/>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.DeleteWithPathParam" />
+        </classes>
 	</test>
 	<test name="UpdateOrDeactivateApiKey">
 		<parameter name="ymlFile"
@@ -1739,16 +1825,6 @@
 				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
-	<test name="GenerateMISPPartnerLicenseNegativeScenarios">
-		<parameter name="ymlFile"
-			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml" />
-		<parameter name="idKeyName"
-			value="id,partnerId,policyId,licenseKeyName,licenseKey,mispLicenseId" />
-		<classes>
-			<class
-				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
-		</classes>
-	</test>
 	<test name="DeactivateMISPLicense">
 		<parameter name="ymlFile"
 			value="pms/DeactivateMISPLicense/DeactivateMISPLicense.yml" />
@@ -1765,6 +1841,16 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+		</classes>
+	</test>
+	<test name="GenerateMISPPartnerLicenseNegativeScenarios">
+		<parameter name="ymlFile"
+			value="pms/MispLicenseV3/GenerateMISPPartnerLicense/GenerateMISPPartnerLicenseNegativeScenarios.yml" />
+		<parameter name="idKeyName"
+			value="id,partnerId,policyId,licenseKeyName,licenseKey,mispLicenseId" />
+		<classes>
+			<class
+				name="io.mosip.testrig.apirig.partner.testscripts.SimplePostForAutoGenId" />
 		</classes>
 	</test>
 	<test name="GetMISPPartnerLicense">
@@ -2025,9 +2111,24 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PatchWithPathParamsAndBody" />
+        </classes>
+    </test>
+    <test name="DbValidatorMISPLicenseDeactivate">
+        <parameter name="ymlFile"
+                   value="pms/DbValidatorTest/DbValidatorMISPLicenseDeactivate.yml" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.DBValidator" />
+        </classes>
+	</test>
+	<test name="GetMISPPartnerLicenseAfterDeactivation">
+		<parameter name="ymlFile"
+				   value="pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseAfterDeactivation.yml" />
+		<classes>
+			<class
+					name="io.mosip.testrig.apirig.partner.testscripts.GetWithQueryParam" />
 		</classes>
 	</test>
-
 
 	<test name="DeactivateDevice">
 		<parameter name="ymlFile"
@@ -2082,7 +2183,15 @@
 		<classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.PostWithBodyAndPathParams" />
-		</classes>
+        </classes>
+    </test>
+    <test name="GetAllDeviceListMappedWithSbiAfterDeactivation">
+        <parameter name="ymlFile"
+                   value="pms/GetAllDeviceListMappedWithSbi/GetAllDeviceListMappedWithSbiAfterDeactivation.yml" />
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
+        </classes>
 	</test>
 
 	<test name="DeactivateFtm">
@@ -2225,7 +2334,15 @@
 	<test name="GetAllApiKeyForAuthPartnerV2NegativeScenarios">
 		<parameter name="ymlFile"
 			value="pms/GetAllApiKeyForAuthPartnerV2/GetAllApiKeyForAuthPartnerV2NegativeScenarios.yml" />
-		<classes>
+        <classes>
+            <class
+                    name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam"/>
+        </classes>
+    </test>
+    <test name="GetNotificationsSeenTimestampBeforeUpdate">
+        <parameter name="ymlFile"
+                   value="pms/GetNotificationsSeenTimestamp/GetNotificationsSeenTimestampBeforeUpdate.yml" />
+        <classes>
 			<class
 				name="io.mosip.testrig.apirig.partner.testscripts.GetWithParam" />
 		</classes>

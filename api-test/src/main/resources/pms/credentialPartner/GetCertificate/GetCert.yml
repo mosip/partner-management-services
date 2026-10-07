@@ -5,7 +5,7 @@ GetPartnerCert:
       description: Validate that partner certificates are retrieved successfully when all inputs are valid
       role: partner
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_uploadcredentialPartnerCert_01
+      additionalDependencies: TC_PMS_uploadCredentialPartnerCert_01
       restMethod: get
       inputTemplate: pms/credentialPartner/GetCertificate/getCert
       outputTemplate: pms/credentialPartner/GetCertificate/getCertResult

@@ -34,7 +34,6 @@ import io.mosip.testrig.apirig.utils.SecurityXSSException;
 public class DBValidator extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(DBValidator.class);
 	protected String testCaseName = "";
-	public static List<String> templateFields = new ArrayList<>();
 
 	@BeforeClass
 	public static void setLogLevel() {
