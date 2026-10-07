@@ -37,23 +37,6 @@ ALTER TABLE IF EXISTS pms.bioextractor_configuration
 ALTER TABLE IF EXISTS pms.bioextractor_configuration
     DROP COLUMN IF EXISTS is_deleted;
 
--- -------------------------------------------------------------------------------------------------
--- Rollback for CRVS attributes: remove declaredAsDeceased from mpolicy-default-auth
--- -------------------------------------------------------------------------------------------------
-
-UPDATE pms.auth_policy
-SET policy_file_id='{"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":true},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":true},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":true},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":true},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":true},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":true},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":true},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":true},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":true},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":true},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":true},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":true},{"attributeName":"zone","source":[{"attribute":"zone"}],"encrypted":true},{"attributeName":"preferredLang","source":[{"attribute":"preferredLang"}],"encrypted":false},{"attributeName":"individualBiometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics"}],"encrypted":true,"format":"extraction"}],"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"}}',
-    upd_by='admin',
-    upd_dtimes=now()
-WHERE id='mpolicy-default-auth';
-
-UPDATE pms.partner_policy_bioextract
-SET attribute_name = 'individualBiometrics',
-    upd_by = 'admin',
-    upd_dtimes = now()
-WHERE part_id = 'mpartner-default-auth'
-  AND biometric_modality = 'face';
-
 -- Rollback: Revert typeOfShare from "Data Share" back to "direct"
 
 UPDATE pms.auth_policy
@@ -221,3 +204,25 @@ COMMENT ON COLUMN pms.tspid_seq.upd_by IS 'Updated By : ID or name of the user w
 COMMENT ON COLUMN pms.tspid_seq.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.tspid_seq TO pmsuser;
+
+-- -------------------------------------------------------------------------------------------------
+-- [1.3.0] Restore mpolicy-default-euin history row (1.2.2.4 value)
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName","filter":[{"language":"eng"}]}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":true,"format":"extraction"}]}'
+WHERE id='mpolicy-default-euin'
+AND eff_dtimes='2020-11-13 05:58:00.000';
+
+-- [1.3.0] Restore the partner_contact table comment
+COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.';
+
+-- [1.3.0] contact_no, email_id and address columns stay widened (shrinking could truncate stored values)
+
+-- [1.3.0] status_code stays 'approved'
+
+-- -------------------------------------------------------------------------------------------------
+-- [1.2.2.4] CRVS values (declaredAsDeceased, photo) are kept; they are part of 1.2.2.4
+-- -------------------------------------------------------------------------------------------------
+
+-- [1.2.2.x] Default policy data repairs and grants are kept; they are valid on 1.2.2.4
