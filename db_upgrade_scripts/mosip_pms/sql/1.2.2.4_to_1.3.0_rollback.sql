@@ -1,11 +1,11 @@
 \c mosip_pms
 
 -- =====================================================================================
--- [1.3.0] Rollback of the 1.3.0 changes
+-- [1.3.0-beta.5 → 1.3.0] Rollback of the 1.3.0 changes
 -- =====================================================================================
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0] Bioextractor configuration soft delete
+-- [1.3.0-beta.5 → 1.3.0] Bioextractor configuration soft delete
 -- -------------------------------------------------------------------------------------------------
 
 -- Remove soft-deleted rows to safely restore uniqueness
@@ -22,7 +22,7 @@ ALTER TABLE IF EXISTS pms.bioextractor_configuration
     DROP COLUMN IF EXISTS is_deleted;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0] Restore the MISP license composite key
+-- [1.3.0-beta.5 → 1.3.0] Restore the MISP license composite key
 -- -------------------------------------------------------------------------------------------------
 
 ALTER TABLE IF EXISTS pms.misp_license DROP CONSTRAINT IF EXISTS uk_mlic;
@@ -34,7 +34,7 @@ ALTER TABLE IF EXISTS pms.misp_license ADD CONSTRAINT pk_mlic PRIMARY KEY (misp_
 ALTER TABLE IF EXISTS pms.misp_license DROP COLUMN IF EXISTS misp_license_id;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0] Restore the Partner_Admin partner type
+-- [1.3.0-beta.5 → 1.3.0] Restore the Partner_Admin partner type
 -- -------------------------------------------------------------------------------------------------
 
 INSERT INTO pms.partner_type (code, partner_description, is_policy_required, is_active, cr_by, cr_dtimes)
@@ -42,7 +42,7 @@ VALUES ('Partner_Admin', 'Partner Admin', FALSE, TRUE, 'superadmin', now())
 ON CONFLICT (code) DO NOTHING;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0] Recreate the pms.misp and pms.tspid_seq tables
+-- [1.3.0-beta.5 → 1.3.0] Recreate the pms.misp and pms.tspid_seq tables
 -- NOTE: structure only; any data that existed before the upgrade drop is not restored.
 -- -------------------------------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ COMMENT ON COLUMN pms.tspid_seq.upd_dtimes IS 'Updated DateTimestamp : Date and 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.tspid_seq TO pmsuser;
 
 -- -------------------------------------------------------------------------------------------------
--- [1.3.0] Restore mpolicy-default-euin history row (1.2.2.4 value)
+-- [1.3.0-beta.5 → 1.3.0] Restore mpolicy-default-euin history row (1.2.2.4 value)
 -- -------------------------------------------------------------------------------------------------
 
 UPDATE pms.auth_policy_h
@@ -108,15 +108,15 @@ SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinu
 WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
--- [1.3.0] Restore the partner_contact table comment
+-- [1.3.0-beta.5 → 1.3.0] Restore the partner_contact table comment
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.';
 
--- [1.3.0] contact_no, email_id and address columns stay widened (shrinking could truncate stored values)
+-- [1.3.0-beta.5 → 1.3.0] contact_no, email_id and address columns stay widened (shrinking could truncate stored values)
 
--- [1.3.0] status_code stays 'approved'
+-- [1.3.0-beta.5 → 1.3.0] status_code stays 'approved'
 
 -- =====================================================================================
--- [1.3.0-beta.5] Rollback
+-- [1.3.0-beta.4 → 1.3.0-beta.5] Rollback
 -- =====================================================================================
 
 -- Rollback: Revert typeOfShare from "Data Share" back to "direct"
@@ -151,14 +151,14 @@ DROP TABLE IF EXISTS pms.bioextractor_configuration;
 DROP TABLE IF EXISTS pms.partner_policy_credential_type_request CASCADE;
 
 -- =====================================================================================
--- [1.3.0-beta.4] Rollback
+-- [1.3.0-beta.3 → 1.3.0-beta.4] Rollback
 -- =====================================================================================
 
 -- Rollback script for the additional_config column in oidc_client table
 ALTER TABLE pms.oidc_client DROP COLUMN IF EXISTS additional_config;
 
 -- =====================================================================================
--- [1.3.0-beta.3] Rollback
+-- [1.3.0-beta.2 → 1.3.0-beta.3] Rollback
 -- =====================================================================================
 
 -- Rollback script for the license_key_name column in misp_license table
@@ -206,7 +206,11 @@ COMMENT ON COLUMN pms.otp_transaction.del_dtimes IS 'Deleted DateTimestamp : Whe
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.otp_transaction TO pmsuser;
 
 -- =====================================================================================
--- [1.3.0-beta.1] Rollback
+-- [1.3.0-beta.1 → 1.3.0-beta.2] No database changes
+-- =====================================================================================
+
+-- =====================================================================================
+-- [1.2.2.4 → 1.3.0-beta.1] Rollback
 -- =====================================================================================
 
 -- Rollback script for the email_id_hash column added to partner, partner_h and partner_contact tables
@@ -242,7 +246,7 @@ WHERE id='mpolicy-default-euin';
 -- =====================================================================================
 
 -- -------------------------------------------------------------------------------------------------
--- [1.2.2.4] CRVS values (declaredAsDeceased, photo) are kept; they are part of 1.2.2.4
+-- [1.2.2.3 → 1.2.2.4] CRVS values (declaredAsDeceased, photo) are kept; they are part of 1.2.2.4
 -- -------------------------------------------------------------------------------------------------
 
 -- [1.2.2.x] Default policy data repairs and grants are kept; they are valid on 1.2.2.4
