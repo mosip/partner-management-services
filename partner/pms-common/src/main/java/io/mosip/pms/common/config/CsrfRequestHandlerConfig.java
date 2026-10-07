@@ -12,6 +12,7 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.session.SessionManagementFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -22,7 +23,9 @@ import org.springframework.util.ReflectionUtils;
  * <p>
  * This switches to the plain handler and loads the token on every request.
  * The services are stateless, so the session strategy that would delete the
- * cookie on each request is replaced with a no-op.
+ * cookie on each request is replaced with a no-op. The check is limited to
+ * browser requests (Origin or Referer present), so direct API callers are not
+ * blocked.
  */
 @Configuration
 public class CsrfRequestHandlerConfig {
@@ -40,6 +43,19 @@ public class CsrfRequestHandlerConfig {
 					handler.setCsrfRequestAttributeName(null);
 					csrfFilter.setRequestHandler(handler);
 					LOGGER.info("CSRF request handler replaced with plain CsrfTokenRequestAttributeHandler");
+
+					// keep the adapter's own rules (safe methods, csrf_ignore.url) and add the browser check
+					java.lang.reflect.Field matcherField = ReflectionUtils.findField(CsrfFilter.class,
+							"requireCsrfProtectionMatcher");
+					if (matcherField == null) {
+						throw new IllegalStateException(
+								"CsrfFilter.requireCsrfProtectionMatcher not found; cannot limit CSRF checks to browser requests");
+					}
+					ReflectionUtils.makeAccessible(matcherField);
+					RequestMatcher existing = (RequestMatcher) ReflectionUtils.getField(matcherField, csrfFilter);
+					csrfFilter.setRequireCsrfProtectionMatcher(
+							request -> existing.matches(request) && isBrowserRequest(request));
+					LOGGER.info("CSRF check limited to browser requests (Origin or Referer header present)");
 				}
 				if (bean instanceof SessionManagementFilter) {
 					SessionAuthenticationStrategy noOp = (authentication, request, response) -> {
@@ -58,6 +74,11 @@ public class CsrfRequestHandlerConfig {
 				return bean;
 			}
 		};
+	}
+
+	/** Browsers always send Origin (even "null") or Referer on POST/PUT; scripts and other services usually do not. */
+	static boolean isBrowserRequest(HttpServletRequest request) {
+		return request.getHeader("Origin") != null || request.getHeader("Referer") != null;
 	}
 
 	/** Same as the plain handler, but logs (yes/no only) what the browser sent. */

@@ -19,12 +19,16 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.session.SessionManagementFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class CsrfRequestHandlerConfigTest {
 
 	private static final String COOKIE_NAME = "XSRF-TOKEN";
 	private static final String HEADER_NAME = "X-XSRF-TOKEN";
+	private static final String ORIGIN = "http://localhost:3000";
 
 	private BeanPostProcessor postProcessor;
 	private CsrfFilter csrfFilter;
@@ -60,6 +64,7 @@ public class CsrfRequestHandlerConfigTest {
 		String token = fetchTokenWithGet();
 		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
 		post.setCookies(new Cookie(COOKIE_NAME, token));
+		post.addHeader("Origin", ORIGIN);
 		post.addHeader(HEADER_NAME, token);
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockFilterChain chain = new MockFilterChain();
@@ -75,6 +80,7 @@ public class CsrfRequestHandlerConfigTest {
 		String token = fetchTokenWithGet();
 		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
 		post.setCookies(new Cookie(COOKIE_NAME, token));
+		post.addHeader("Origin", ORIGIN);
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockFilterChain chain = new MockFilterChain();
 
@@ -89,6 +95,7 @@ public class CsrfRequestHandlerConfigTest {
 		String token = fetchTokenWithGet();
 		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
 		post.setCookies(new Cookie(COOKIE_NAME, token));
+		post.addHeader("Origin", ORIGIN);
 		post.addHeader(HEADER_NAME, "not-the-token");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockFilterChain chain = new MockFilterChain();
@@ -97,6 +104,62 @@ public class CsrfRequestHandlerConfigTest {
 
 		assertEquals(403, response.getStatus());
 		assertNull(chain.getRequest());
+	}
+
+	@Test
+	public void postWithoutOriginOrRefererSkipsCsrfCheck() throws Exception {
+		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		MockFilterChain chain = new MockFilterChain();
+
+		csrfFilter.doFilter(post, response, chain);
+
+		assertEquals(200, response.getStatus());
+		assertNotNull("direct API caller must reach the rest of the chain", chain.getRequest());
+	}
+
+	@Test
+	public void postWithRefererOnlyIsStillChecked() throws Exception {
+		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
+		post.addHeader("Referer", ORIGIN + "/page");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+
+		csrfFilter.doFilter(post, response, new MockFilterChain());
+
+		assertEquals(403, response.getStatus());
+	}
+
+	@Test
+	public void postWithNullOriginIsStillChecked() throws Exception {
+		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
+		post.addHeader("Origin", "null");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+
+		csrfFilter.doFilter(post, response, new MockFilterChain());
+
+		assertEquals(403, response.getStatus());
+	}
+
+	@Test
+	public void adapterIgnoreListIsKept() throws Exception {
+		CsrfFilter filter = new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse());
+		filter.setRequireCsrfProtectionMatcher(new AndRequestMatcher(CsrfFilter.DEFAULT_CSRF_MATCHER,
+				new NegatedRequestMatcher(new AntPathRequestMatcher("/ignored/**"))));
+		filter = (CsrfFilter) postProcessor.postProcessBeforeInitialization(filter, "csrfFilter");
+
+		MockHttpServletRequest ignored = new MockHttpServletRequest("POST", "/ignored/x");
+		ignored.setServletPath("/ignored/x");
+		ignored.addHeader("Origin", ORIGIN);
+		MockHttpServletResponse ignoredResponse = new MockHttpServletResponse();
+		filter.doFilter(ignored, ignoredResponse, new MockFilterChain());
+		assertEquals("ignored URL must still skip the check", 200, ignoredResponse.getStatus());
+
+		MockHttpServletRequest checked = new MockHttpServletRequest("POST", "/partners");
+		checked.setServletPath("/partners");
+		checked.addHeader("Origin", ORIGIN);
+		MockHttpServletResponse checkedResponse = new MockHttpServletResponse();
+		filter.doFilter(checked, checkedResponse, new MockFilterChain());
+		assertEquals(403, checkedResponse.getStatus());
 	}
 
 	@Test
