@@ -2,31 +2,29 @@ package io.mosip.pms.common.config;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.ReflectionUtils;
 
+import java.util.function.Supplier;
+
 /**
- * Temporary workaround for the kernel auth adapter, which enables CSRF with a cookie
- * repository but sets no request handler. With Spring Security 6 that leaves the
- * XSRF-TOKEN cookie unset until the first POST/PUT (403), rejects the raw token the
- * portal sends in X-XSRF-TOKEN, and, as the services are stateless, deletes the
- * cookie on every request. Remove once the adapter sets the handler itself.
- * <p>
- * Only active when mosip.security.csrf-enable=true. The token check is limited to
- * browser requests (Sec-Fetch-Site, Origin or Referer present), so direct API
- * callers are not blocked. The token is not rotated after login (no session), so a
- * token planted in advance, for example from a sibling subdomain, stays valid.
+ * Workaround for the kernel auth adapter's CSRF setup under Spring Security 6; remove once the adapter fixes it.
+ * Active only when mosip.security.csrf-enable=true. The token is not rotated after login.
  */
 @Configuration
 @ConditionalOnProperty(name = "mosip.security.csrf-enable", havingValue = "true")
@@ -34,23 +32,31 @@ public class CsrfRequestHandlerConfig {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CsrfRequestHandlerConfig.class);
 
-	/** Must match the cookie name of the adapter's CookieCsrfTokenRepository (the default). */
+	/** Cookie name used by the adapter's CookieCsrfTokenRepository. */
 	static final String XSRF_COOKIE_NAME = "XSRF-TOKEN";
 
-	/** Plain token handler, token loaded on every request, check limited to browser requests. */
+	/** Accept the raw cookie value besides the masked token (default true). */
+	static final String ACCEPT_RAW_TOKEN_PROPERTY = "mosip.pms.csrf.accept-raw-token";
+
+	/**
+	 * Sends a new masked token with every browser response and limits the token check to browser requests.
+	 */
 	@Bean
-	public static BeanPostProcessor csrfPlainRequestHandlerPostProcessor() {
+	public static BeanPostProcessor csrfMaskedTokenPostProcessor(Environment environment) {
+		return createCsrfPostProcessor(environment.getProperty(ACCEPT_RAW_TOKEN_PROPERTY, Boolean.class, true));
+	}
+
+	static BeanPostProcessor createCsrfPostProcessor(boolean acceptRawToken) {
 		return new BeanPostProcessor() {
 			@Override
 			public Object postProcessBeforeInitialization(Object bean, String beanName) {
 				if (bean instanceof CsrfFilter csrfFilter) {
-					CsrfTokenRequestAttributeHandler handler = new LoggingCsrfTokenRequestHandler();
-					// null name = load the token on every request, so the cookie is always set
+					MaskedCsrfTokenRequestHandler handler = new MaskedCsrfTokenRequestHandler(acceptRawToken);
 					handler.setCsrfRequestAttributeName(null);
 					csrfFilter.setRequestHandler(handler);
-					LOGGER.info("CSRF request handler replaced with plain CsrfTokenRequestAttributeHandler");
+					LOGGER.info("CSRF request handler replaced with masked token handler (raw token accepted: {})",
+							acceptRawToken);
 
-					// keep the adapter's own rules (safe methods, csrf_ignore.url) and add the browser check
 					java.lang.reflect.Field matcherField = ReflectionUtils.findField(CsrfFilter.class,
 							"requireCsrfProtectionMatcher");
 					if (matcherField == null) {
@@ -68,7 +74,9 @@ public class CsrfRequestHandlerConfig {
 		};
 	}
 
-	/** Replaces the session strategy that would delete the XSRF-TOKEN cookie on every stateless request. */
+	/**
+	 * Stops the session strategy from deleting the XSRF-TOKEN cookie on every request.
+	 */
 	@Bean
 	public static BeanPostProcessor statelessSessionStrategyPostProcessor() {
 		return new BeanPostProcessor() {
@@ -94,19 +102,47 @@ public class CsrfRequestHandlerConfig {
 	}
 
 	/**
-	 * Browsers send Sec-Fetch-Site, and Origin (even "null") or Referer on POST/PUT; scripts and other
-	 * services usually send none of them.
+	 * True if the request has Sec-Fetch-Site, Origin or Referer, which browsers send and scripts usually do not.
 	 */
 	static boolean isBrowserRequest(HttpServletRequest request) {
 		return request.getHeader("Sec-Fetch-Site") != null || request.getHeader("Origin") != null
 				|| request.getHeader("Referer") != null;
 	}
 
-	/** Same as the plain handler, but logs (yes/no only) what the browser sent. */
-	static class LoggingCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
+	/**
+	 * Sends a new XOR masked token in the X-XSRF-TOKEN response header and accepts it, or the raw cookie value if allowed.
+	 */
+	static class MaskedCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
+
+		private final XorCsrfTokenRequestAttributeHandler maskedHandler = new XorCsrfTokenRequestAttributeHandler();
+		private final CsrfTokenRequestAttributeHandler rawHandler = new CsrfTokenRequestAttributeHandler();
+		private final boolean acceptRawToken;
+
+		MaskedCsrfTokenRequestHandler(boolean acceptRawToken) {
+			this.acceptRawToken = acceptRawToken;
+		}
+
+		void setCsrfRequestAttributeName(String name) {
+			maskedHandler.setCsrfRequestAttributeName(name);
+		}
+
+		@Override
+		public void handle(HttpServletRequest request, HttpServletResponse response,
+				Supplier<CsrfToken> deferredCsrfToken) {
+			maskedHandler.handle(request, response, deferredCsrfToken);
+			if (isBrowserRequest(request)) {
+				CsrfToken masked = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+				response.setHeader(masked.getHeaderName(), masked.getToken());
+			}
+		}
+
 		@Override
 		public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
-			String actual = super.resolveCsrfTokenValue(request, csrfToken);
+			String actual = maskedHandler.resolveCsrfTokenValue(request, csrfToken);
+			boolean masked = actual != null && actual.equals(csrfToken.getToken());
+			if (!masked && acceptRawToken) {
+				actual = rawHandler.resolveCsrfTokenValue(request, csrfToken);
+			}
 			if (LOGGER.isDebugEnabled()) {
 				boolean cookiePresent = false;
 				if (request.getCookies() != null) {
@@ -116,8 +152,9 @@ public class CsrfRequestHandlerConfig {
 						}
 					}
 				}
-				LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, match={}", request.getMethod(),
-						cookiePresent, actual != null, actual != null && actual.equals(csrfToken.getToken()));
+				LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, masked={}, match={}",
+						request.getMethod(), cookiePresent, actual != null, masked,
+						actual != null && actual.equals(csrfToken.getToken()));
 			}
 			return actual;
 		}

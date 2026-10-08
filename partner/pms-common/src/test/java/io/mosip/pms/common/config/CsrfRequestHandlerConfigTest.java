@@ -2,6 +2,7 @@ package io.mosip.pms.common.config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -38,9 +39,8 @@ public class CsrfRequestHandlerConfigTest {
 
 	@Before
 	public void setUp() {
-		postProcessor = CsrfRequestHandlerConfig.csrfPlainRequestHandlerPostProcessor();
+		postProcessor = CsrfRequestHandlerConfig.createCsrfPostProcessor(true);
 		sessionPostProcessor = CsrfRequestHandlerConfig.statelessSessionStrategyPostProcessor();
-		// same setup as the kernel auth adapter: cookie repository, no request handler
 		csrfFilter = new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		csrfFilter = (CsrfFilter) postProcessor.postProcessBeforeInitialization(csrfFilter, "csrfFilter");
 	}
@@ -199,15 +199,13 @@ public class CsrfRequestHandlerConfigTest {
 	}
 
 	@Test
-	public void loggingHandlerReturnsHeaderValueAndHandlesMissingCookies() {
-		CsrfRequestHandlerConfig.LoggingCsrfTokenRequestHandler handler = new CsrfRequestHandlerConfig.LoggingCsrfTokenRequestHandler();
+	public void handlerReturnsHeaderValueAndHandlesMissingCookies() {
+		CsrfRequestHandlerConfig.MaskedCsrfTokenRequestHandler handler = new CsrfRequestHandlerConfig.MaskedCsrfTokenRequestHandler(true);
 		CsrfToken csrfToken = CookieCsrfTokenRepository.withHttpOnlyFalse()
 				.generateToken(new MockHttpServletRequest());
 
-		// no cookies at all, no header
 		assertNull(handler.resolveCsrfTokenValue(new MockHttpServletRequest("POST", "/x"), csrfToken));
 
-		// header present, other cookie only
 		MockHttpServletRequest request = new MockHttpServletRequest("POST", "/x");
 		request.setCookies(new Cookie("other", "v"));
 		request.addHeader(HEADER_NAME, csrfToken.getToken());
@@ -259,17 +257,93 @@ public class CsrfRequestHandlerConfigTest {
 				.withUserConfiguration(CsrfRequestHandlerConfig.class);
 
 		runner.withPropertyValues("mosip.security.csrf-enable=true").run(context -> {
-			assertTrue(context.containsBean("csrfPlainRequestHandlerPostProcessor"));
+			assertTrue(context.containsBean("csrfMaskedTokenPostProcessor"));
 			assertTrue(context.containsBean("statelessSessionStrategyPostProcessor"));
 		});
 		runner.withPropertyValues("mosip.security.csrf-enable=false").run(context -> {
-			assertFalse(context.containsBean("csrfPlainRequestHandlerPostProcessor"));
+			assertFalse(context.containsBean("csrfMaskedTokenPostProcessor"));
 			assertFalse(context.containsBean("statelessSessionStrategyPostProcessor"));
 		});
 		runner.run(context -> {
-			assertFalse(context.containsBean("csrfPlainRequestHandlerPostProcessor"));
+			assertFalse(context.containsBean("csrfMaskedTokenPostProcessor"));
 			assertFalse(context.containsBean("statelessSessionStrategyPostProcessor"));
 		});
+	}
+
+	@Test
+	public void browserResponseCarriesNewMaskedTokenEachTime() throws Exception {
+		String raw = fetchTokenWithGet();
+
+		String first = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
+		String second = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
+
+		assertNotNull(first);
+		assertNotNull(second);
+		assertNotEquals("masked token must differ from the raw cookie value", raw, first);
+		assertNotEquals("every response must carry a new masked token", first, second);
+	}
+
+	@Test
+	public void nonBrowserResponseCarriesNoMaskedToken() throws Exception {
+		MockHttpServletResponse response = new MockHttpServletResponse();
+
+		csrfFilter.doFilter(new MockHttpServletRequest("GET", "/partners"), response, new MockFilterChain());
+
+		assertNull(response.getHeader(HEADER_NAME));
+	}
+
+	@Test
+	public void postWithMaskedTokenFromResponseHeaderIsAccepted() throws Exception {
+		String raw = fetchTokenWithGet();
+		String first = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
+		String second = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
+
+		assertEquals(200, postWithToken(csrfFilter, raw, first).getStatus());
+		assertEquals(200, postWithToken(csrfFilter, raw, second).getStatus());
+	}
+
+	@Test
+	public void maskedTokenForADifferentCookieIsRejected() throws Exception {
+		String otherRaw = fetchTokenWithGet();
+		String masked = getWithOrigin(csrfFilter, otherRaw).getHeader(HEADER_NAME);
+		String raw = fetchTokenWithGet();
+
+		assertEquals(403, postWithToken(csrfFilter, raw, masked).getStatus());
+	}
+
+	@Test
+	public void rawCookieValueIsRejectedWhenRawTokenIsNotAccepted() throws Exception {
+		CsrfFilter strict = (CsrfFilter) CsrfRequestHandlerConfig.createCsrfPostProcessor(false)
+				.postProcessBeforeInitialization(new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse()),
+						"csrfFilter");
+		MockHttpServletResponse first = getWithOrigin(strict, null);
+		String raw = first.getCookie(COOKIE_NAME).getValue();
+		String masked = first.getHeader(HEADER_NAME);
+
+		assertEquals(403, postWithToken(strict, raw, raw).getStatus());
+		assertEquals(200, postWithToken(strict, raw, masked).getStatus());
+	}
+
+	private MockHttpServletResponse getWithOrigin(CsrfFilter filter, String rawCookie) throws Exception {
+		MockHttpServletRequest get = new MockHttpServletRequest("GET", "/partners");
+		get.addHeader("Origin", ORIGIN);
+		if (rawCookie != null) {
+			get.setCookies(new Cookie(COOKIE_NAME, rawCookie));
+		}
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		filter.doFilter(get, response, new MockFilterChain());
+		return response;
+	}
+
+	private MockHttpServletResponse postWithToken(CsrfFilter filter, String rawCookie, String headerValue)
+			throws Exception {
+		MockHttpServletRequest post = new MockHttpServletRequest("POST", "/partners");
+		post.addHeader("Origin", ORIGIN);
+		post.setCookies(new Cookie(COOKIE_NAME, rawCookie));
+		post.addHeader(HEADER_NAME, headerValue);
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		filter.doFilter(post, response, new MockFilterChain());
+		return response;
 	}
 
 	/** Does a GET through the filter and returns the cookie value the browser would store. */
