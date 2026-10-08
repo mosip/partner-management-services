@@ -200,7 +200,7 @@ public class CsrfRequestHandlerConfigTest {
 
 	@Test
 	public void handlerReturnsHeaderValueAndHandlesMissingCookies() {
-		CsrfRequestHandlerConfig.MaskedCsrfTokenRequestHandler handler = new CsrfRequestHandlerConfig.MaskedCsrfTokenRequestHandler(true);
+		CsrfRequestHandlerConfig.XorCsrfTokenRequestHandler handler = new CsrfRequestHandlerConfig.XorCsrfTokenRequestHandler(true);
 		CsrfToken csrfToken = CookieCsrfTokenRepository.withHttpOnlyFalse()
 				.generateToken(new MockHttpServletRequest());
 
@@ -257,15 +257,15 @@ public class CsrfRequestHandlerConfigTest {
 				.withUserConfiguration(CsrfRequestHandlerConfig.class);
 
 		runner.withPropertyValues("mosip.security.csrf-enable=true").run(context -> {
-			assertTrue(context.containsBean("csrfMaskedTokenPostProcessor"));
+			assertTrue(context.containsBean("csrfXorTokenPostProcessor"));
 			assertTrue(context.containsBean("statelessSessionStrategyPostProcessor"));
 		});
 		runner.withPropertyValues("mosip.security.csrf-enable=false").run(context -> {
-			assertFalse(context.containsBean("csrfMaskedTokenPostProcessor"));
+			assertFalse(context.containsBean("csrfXorTokenPostProcessor"));
 			assertFalse(context.containsBean("statelessSessionStrategyPostProcessor"));
 		});
 		runner.run(context -> {
-			assertFalse(context.containsBean("csrfMaskedTokenPostProcessor"));
+			assertFalse(context.containsBean("csrfXorTokenPostProcessor"));
 			assertFalse(context.containsBean("statelessSessionStrategyPostProcessor"));
 		});
 	}
