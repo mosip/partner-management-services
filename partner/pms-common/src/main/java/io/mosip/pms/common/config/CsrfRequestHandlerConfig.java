@@ -35,11 +35,11 @@ public class CsrfRequestHandlerConfig {
 	/** Cookie name used by the adapter's CookieCsrfTokenRepository. */
 	static final String XSRF_COOKIE_NAME = "XSRF-TOKEN";
 
-	/** Accept the raw cookie value besides the masked token (default true). */
+	/** Accept the raw cookie value besides the XOR token (default true). */
 	static final String ACCEPT_RAW_TOKEN_PROPERTY = "mosip.pms.csrf.accept-raw-token";
 
 	/**
-	 * Sends a new masked token with every browser response and limits the token check to browser requests.
+	 * Sends a new XOR token with every browser response and limits the token check to browser requests.
 	 */
 	@Bean
 	public static BeanPostProcessor csrfXorTokenPostProcessor(Environment environment) {
@@ -54,7 +54,7 @@ public class CsrfRequestHandlerConfig {
 					XorCsrfTokenRequestHandler handler = new XorCsrfTokenRequestHandler(acceptRawToken);
 					handler.setCsrfRequestAttributeName(null);
 					csrfFilter.setRequestHandler(handler);
-					LOGGER.info("CSRF request handler replaced with masked token handler (raw token accepted: {})",
+					LOGGER.info("CSRF request handler replaced with XOR token handler (raw token accepted: {})",
 							acceptRawToken);
 
 					java.lang.reflect.Field matcherField = ReflectionUtils.findField(CsrfFilter.class,
@@ -110,7 +110,7 @@ public class CsrfRequestHandlerConfig {
 	}
 
 	/**
-	 * Sends a new XOR masked token in the X-XSRF-TOKEN response header and accepts it, or the raw cookie value if allowed.
+	 * Sends a new XOR token in the X-XSRF-TOKEN response header and accepts it, or the raw cookie value if allowed.
 	 */
 	static class XorCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 
@@ -131,16 +131,16 @@ public class CsrfRequestHandlerConfig {
 				Supplier<CsrfToken> deferredCsrfToken) {
 			xorHandler.handle(request, response, deferredCsrfToken);
 			if (isBrowserRequest(request)) {
-				CsrfToken masked = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-				response.setHeader(masked.getHeaderName(), masked.getToken());
+				CsrfToken xorToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+				response.setHeader(xorToken.getHeaderName(), xorToken.getToken());
 			}
 		}
 
 		@Override
 		public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
 			String actual = xorHandler.resolveCsrfTokenValue(request, csrfToken);
-			boolean masked = actual != null && actual.equals(csrfToken.getToken());
-			if (!masked && acceptRawToken) {
+			boolean xorValid = actual != null && actual.equals(csrfToken.getToken());
+			if (!xorValid && acceptRawToken) {
 				actual = rawHandler.resolveCsrfTokenValue(request, csrfToken);
 			}
 			if (LOGGER.isDebugEnabled()) {
@@ -152,8 +152,8 @@ public class CsrfRequestHandlerConfig {
 						}
 					}
 				}
-				LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, masked={}, match={}",
-						request.getMethod(), cookiePresent, actual != null, masked,
+				LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, xor={}, match={}",
+						request.getMethod(), cookiePresent, actual != null, xorValid,
 						actual != null && actual.equals(csrfToken.getToken()));
 			}
 			return actual;
