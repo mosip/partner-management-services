@@ -23,7 +23,7 @@ import org.springframework.util.ReflectionUtils;
 import java.util.function.Supplier;
 
 /**
- * Workaround for the kernel auth adapter's CSRF setup under Spring Security 6; remove once the adapter fixes it.
+ * Configures CSRF handling for the kernel auth adapter under Spring Security 6.
  * Active only when mosip.security.csrf-enable=true. The token is not rotated after login.
  */
 @Configuration
