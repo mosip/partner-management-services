@@ -271,7 +271,7 @@ public class CsrfRequestHandlerConfigTest {
 	}
 
 	@Test
-	public void browserResponseCarriesNewMaskedTokenEachTime() throws Exception {
+	public void browserResponseCarriesNewXorTokenEachTime() throws Exception {
 		String raw = fetchTokenWithGet();
 
 		String first = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
@@ -279,12 +279,12 @@ public class CsrfRequestHandlerConfigTest {
 
 		assertNotNull(first);
 		assertNotNull(second);
-		assertNotEquals("masked token must differ from the raw cookie value", raw, first);
-		assertNotEquals("every response must carry a new masked token", first, second);
+		assertNotEquals("XOR token must differ from the raw cookie value", raw, first);
+		assertNotEquals("every response must carry a new XOR token", first, second);
 	}
 
 	@Test
-	public void nonBrowserResponseCarriesNoMaskedToken() throws Exception {
+	public void nonBrowserResponseCarriesNoXorToken() throws Exception {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 
 		csrfFilter.doFilter(new MockHttpServletRequest("GET", "/partners"), response, new MockFilterChain());
@@ -293,7 +293,7 @@ public class CsrfRequestHandlerConfigTest {
 	}
 
 	@Test
-	public void postWithMaskedTokenFromResponseHeaderIsAccepted() throws Exception {
+	public void postWithXorTokenFromResponseHeaderIsAccepted() throws Exception {
 		String raw = fetchTokenWithGet();
 		String first = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
 		String second = getWithOrigin(csrfFilter, raw).getHeader(HEADER_NAME);
@@ -303,12 +303,12 @@ public class CsrfRequestHandlerConfigTest {
 	}
 
 	@Test
-	public void maskedTokenForADifferentCookieIsRejected() throws Exception {
+	public void xorTokenForADifferentCookieIsRejected() throws Exception {
 		String otherRaw = fetchTokenWithGet();
-		String masked = getWithOrigin(csrfFilter, otherRaw).getHeader(HEADER_NAME);
+		String xorToken = getWithOrigin(csrfFilter, otherRaw).getHeader(HEADER_NAME);
 		String raw = fetchTokenWithGet();
 
-		assertEquals(403, postWithToken(csrfFilter, raw, masked).getStatus());
+		assertEquals(403, postWithToken(csrfFilter, raw, xorToken).getStatus());
 	}
 
 	@Test
@@ -318,10 +318,10 @@ public class CsrfRequestHandlerConfigTest {
 						"csrfFilter");
 		MockHttpServletResponse first = getWithOrigin(strict, null);
 		String raw = first.getCookie(COOKIE_NAME).getValue();
-		String masked = first.getHeader(HEADER_NAME);
+		String xorToken = first.getHeader(HEADER_NAME);
 
 		assertEquals(403, postWithToken(strict, raw, raw).getStatus());
-		assertEquals(200, postWithToken(strict, raw, masked).getStatus());
+		assertEquals(200, postWithToken(strict, raw, xorToken).getStatus());
 	}
 
 	private MockHttpServletResponse getWithOrigin(CsrfFilter filter, String rawCookie) throws Exception {
