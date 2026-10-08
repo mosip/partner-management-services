@@ -9,7 +9,6 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -35,27 +34,23 @@ public class CsrfRequestHandlerConfig {
 	/** Cookie name used by the adapter's CookieCsrfTokenRepository. */
 	static final String XSRF_COOKIE_NAME = "XSRF-TOKEN";
 
-	/** Accept the raw cookie value besides the XOR token (default true). */
-	static final String ACCEPT_RAW_TOKEN_PROPERTY = "mosip.pms.csrf.accept-raw-token";
-
 	/**
 	 * Sends a new XOR token with every browser response and limits the token check to browser requests.
 	 */
 	@Bean
-	public static BeanPostProcessor csrfXorTokenPostProcessor(Environment environment) {
-		return createCsrfPostProcessor(environment.getProperty(ACCEPT_RAW_TOKEN_PROPERTY, Boolean.class, true));
+	public static BeanPostProcessor csrfXorTokenPostProcessor() {
+		return createCsrfPostProcessor();
 	}
 
-	static BeanPostProcessor createCsrfPostProcessor(boolean acceptRawToken) {
+	static BeanPostProcessor createCsrfPostProcessor() {
 		return new BeanPostProcessor() {
 			@Override
 			public Object postProcessBeforeInitialization(Object bean, String beanName) {
 				if (bean instanceof CsrfFilter csrfFilter) {
-					XorCsrfTokenRequestHandler handler = new XorCsrfTokenRequestHandler(acceptRawToken);
+					XorCsrfTokenRequestHandler handler = new XorCsrfTokenRequestHandler();
 					handler.setCsrfRequestAttributeName(null);
 					csrfFilter.setRequestHandler(handler);
-					LOGGER.info("CSRF request handler replaced with XOR token handler (raw token accepted: {})",
-							acceptRawToken);
+					LOGGER.info("CSRF request handler replaced with XOR token handler");
 
 					java.lang.reflect.Field matcherField = ReflectionUtils.findField(CsrfFilter.class,
 							"requireCsrfProtectionMatcher");
@@ -110,18 +105,12 @@ public class CsrfRequestHandlerConfig {
 	}
 
 	/**
-	 * Sends a new XOR token in the X-XSRF-TOKEN response header and accepts it, or the raw cookie value if allowed.
+	 * Sends a new XOR token in the X-XSRF-TOKEN response header and accepts it, or the raw cookie value.
 	 */
 	static class XorCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 
 		private final XorCsrfTokenRequestAttributeHandler xorHandler = new XorCsrfTokenRequestAttributeHandler();
 		private final CsrfTokenRequestAttributeHandler rawHandler = new CsrfTokenRequestAttributeHandler();
-		private final boolean acceptRawToken;
-
-		XorCsrfTokenRequestHandler(boolean acceptRawToken) {
-			this.acceptRawToken = acceptRawToken;
-		}
-
 		void setCsrfRequestAttributeName(String name) {
 			xorHandler.setCsrfRequestAttributeName(name);
 		}
@@ -140,7 +129,7 @@ public class CsrfRequestHandlerConfig {
 		public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
 			String actual = xorHandler.resolveCsrfTokenValue(request, csrfToken);
 			boolean xorValid = actual != null && actual.equals(csrfToken.getToken());
-			if (!xorValid && acceptRawToken) {
+			if (!xorValid) {
 				actual = rawHandler.resolveCsrfTokenValue(request, csrfToken);
 			}
 			if (LOGGER.isDebugEnabled()) {

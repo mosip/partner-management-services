@@ -39,7 +39,7 @@ public class CsrfRequestHandlerConfigTest {
 
 	@Before
 	public void setUp() {
-		postProcessor = CsrfRequestHandlerConfig.createCsrfPostProcessor(true);
+		postProcessor = CsrfRequestHandlerConfig.createCsrfPostProcessor();
 		sessionPostProcessor = CsrfRequestHandlerConfig.statelessSessionStrategyPostProcessor();
 		csrfFilter = new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		csrfFilter = (CsrfFilter) postProcessor.postProcessBeforeInitialization(csrfFilter, "csrfFilter");
@@ -200,7 +200,7 @@ public class CsrfRequestHandlerConfigTest {
 
 	@Test
 	public void handlerReturnsHeaderValueAndHandlesMissingCookies() {
-		CsrfRequestHandlerConfig.XorCsrfTokenRequestHandler handler = new CsrfRequestHandlerConfig.XorCsrfTokenRequestHandler(true);
+		CsrfRequestHandlerConfig.XorCsrfTokenRequestHandler handler = new CsrfRequestHandlerConfig.XorCsrfTokenRequestHandler();
 		CsrfToken csrfToken = CookieCsrfTokenRepository.withHttpOnlyFalse()
 				.generateToken(new MockHttpServletRequest());
 
@@ -309,19 +309,6 @@ public class CsrfRequestHandlerConfigTest {
 		String raw = fetchTokenWithGet();
 
 		assertEquals(403, postWithToken(csrfFilter, raw, xorToken).getStatus());
-	}
-
-	@Test
-	public void rawCookieValueIsRejectedWhenRawTokenIsNotAccepted() throws Exception {
-		CsrfFilter strict = (CsrfFilter) CsrfRequestHandlerConfig.createCsrfPostProcessor(false)
-				.postProcessBeforeInitialization(new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse()),
-						"csrfFilter");
-		MockHttpServletResponse first = getWithOrigin(strict, null);
-		String raw = first.getCookie(COOKIE_NAME).getValue();
-		String xorToken = first.getHeader(HEADER_NAME);
-
-		assertEquals(403, postWithToken(strict, raw, raw).getStatus());
-		assertEquals(200, postWithToken(strict, raw, xorToken).getStatus());
 	}
 
 	private MockHttpServletResponse getWithOrigin(CsrfFilter filter, String rawCookie) throws Exception {
