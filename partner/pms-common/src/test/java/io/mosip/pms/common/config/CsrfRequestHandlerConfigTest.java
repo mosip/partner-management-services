@@ -1,6 +1,7 @@
 package io.mosip.pms.common.config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -31,11 +33,13 @@ public class CsrfRequestHandlerConfigTest {
 	private static final String ORIGIN = "http://localhost:3000";
 
 	private BeanPostProcessor postProcessor;
+	private BeanPostProcessor sessionPostProcessor;
 	private CsrfFilter csrfFilter;
 
 	@Before
 	public void setUp() {
-		postProcessor = CsrfRequestHandlerConfig.csrfRequestHandlerPostProcessor();
+		postProcessor = CsrfRequestHandlerConfig.csrfPlainRequestHandlerPostProcessor();
+		sessionPostProcessor = CsrfRequestHandlerConfig.statelessSessionStrategyPostProcessor();
 		// same setup as the kernel auth adapter: cookie repository, no request handler
 		csrfFilter = new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		csrfFilter = (CsrfFilter) postProcessor.postProcessBeforeInitialization(csrfFilter, "csrfFilter");
@@ -45,6 +49,7 @@ public class CsrfRequestHandlerConfigTest {
 	public void otherBeansAreReturnedUnchanged() {
 		Object bean = new Object();
 		assertSame(bean, postProcessor.postProcessBeforeInitialization(bean, "anyBean"));
+		assertSame(bean, sessionPostProcessor.postProcessBeforeInitialization(bean, "anyBean"));
 	}
 
 	@Test
@@ -216,7 +221,7 @@ public class CsrfRequestHandlerConfigTest {
 		SessionManagementFilter filter = new SessionManagementFilter(new RequestAttributeSecurityContextRepository(),
 				original);
 
-		postProcessor.postProcessBeforeInitialization(filter, "sessionManagementFilter");
+		sessionPostProcessor.postProcessBeforeInitialization(filter, "sessionManagementFilter");
 
 		SessionAuthenticationStrategy replaced = (SessionAuthenticationStrategy) ReflectionTestUtils
 				.getField(filter, "sessionAuthenticationStrategy");
@@ -224,6 +229,47 @@ public class CsrfRequestHandlerConfigTest {
 		replaced.onAuthentication(null, new MockHttpServletRequest(), new MockHttpServletResponse());
 		assertTrue("original strategy must be replaced", replaced != original);
 		assertEquals("replacement must do nothing", false, called[0]);
+	}
+
+	@Test
+	public void csrfPostProcessorLeavesSessionStrategyAlone() {
+		SessionAuthenticationStrategy original = (authentication, request, response) -> {
+		};
+		SessionManagementFilter filter = new SessionManagementFilter(new RequestAttributeSecurityContextRepository(),
+				original);
+
+		postProcessor.postProcessBeforeInitialization(filter, "sessionManagementFilter");
+
+		assertSame(original, ReflectionTestUtils.getField(filter, "sessionAuthenticationStrategy"));
+	}
+
+	@Test
+	public void sessionPostProcessorLeavesCsrfFilterAlone() throws Exception {
+		CsrfFilter untouched = new CsrfFilter(CookieCsrfTokenRepository.withHttpOnlyFalse());
+		Object requestHandlerBefore = ReflectionTestUtils.getField(untouched, "requestHandler");
+
+		sessionPostProcessor.postProcessBeforeInitialization(untouched, "csrfFilter");
+
+		assertSame(requestHandlerBefore, ReflectionTestUtils.getField(untouched, "requestHandler"));
+	}
+
+	@Test
+	public void configIsActiveOnlyWhenCsrfIsEnabled() {
+		ApplicationContextRunner runner = new ApplicationContextRunner()
+				.withUserConfiguration(CsrfRequestHandlerConfig.class);
+
+		runner.withPropertyValues("mosip.security.csrf-enable=true").run(context -> {
+			assertTrue(context.containsBean("csrfPlainRequestHandlerPostProcessor"));
+			assertTrue(context.containsBean("statelessSessionStrategyPostProcessor"));
+		});
+		runner.withPropertyValues("mosip.security.csrf-enable=false").run(context -> {
+			assertFalse(context.containsBean("csrfPlainRequestHandlerPostProcessor"));
+			assertFalse(context.containsBean("statelessSessionStrategyPostProcessor"));
+		});
+		runner.run(context -> {
+			assertFalse(context.containsBean("csrfPlainRequestHandlerPostProcessor"));
+			assertFalse(context.containsBean("statelessSessionStrategyPostProcessor"));
+		});
 	}
 
 	/** Does a GET through the filter and returns the cookie value the browser would store. */

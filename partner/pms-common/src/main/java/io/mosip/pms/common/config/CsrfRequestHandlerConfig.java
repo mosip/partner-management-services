@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -16,24 +17,29 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * The kernel auth adapter enables CSRF with a cookie repository but sets no
- * request handler, so Spring Security 6 uses the XOR handler with a lazy token.
- * That leaves the XSRF-TOKEN cookie unset until the first POST/PUT (403) and
- * rejects the raw token the portal sends in X-XSRF-TOKEN.
+ * Temporary workaround for the kernel auth adapter, which enables CSRF with a cookie
+ * repository but sets no request handler. With Spring Security 6 that leaves the
+ * XSRF-TOKEN cookie unset until the first POST/PUT (403), rejects the raw token the
+ * portal sends in X-XSRF-TOKEN, and, as the services are stateless, deletes the
+ * cookie on every request. Remove once the adapter sets the handler itself.
  * <p>
- * This switches to the plain handler and loads the token on every request.
- * The services are stateless, so the session strategy that would delete the
- * cookie on each request is replaced with a no-op. The check is limited to
+ * Only active when mosip.security.csrf-enable=true. The token check is limited to
  * browser requests (Sec-Fetch-Site, Origin or Referer present), so direct API
- * callers are not blocked.
+ * callers are not blocked. The token is not rotated after login (no session), so a
+ * token planted in advance, for example from a sibling subdomain, stays valid.
  */
 @Configuration
+@ConditionalOnProperty(name = "mosip.security.csrf-enable", havingValue = "true")
 public class CsrfRequestHandlerConfig {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CsrfRequestHandlerConfig.class);
 
+	/** Must match the cookie name of the adapter's CookieCsrfTokenRepository (the default). */
+	static final String XSRF_COOKIE_NAME = "XSRF-TOKEN";
+
+	/** Plain token handler, token loaded on every request, check limited to browser requests. */
 	@Bean
-	public static BeanPostProcessor csrfRequestHandlerPostProcessor() {
+	public static BeanPostProcessor csrfPlainRequestHandlerPostProcessor() {
 		return new BeanPostProcessor() {
 			@Override
 			public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -57,6 +63,17 @@ public class CsrfRequestHandlerConfig {
 							request -> existing.matches(request) && isBrowserRequest(request));
 					LOGGER.info("CSRF check limited to browser requests (Sec-Fetch-Site, Origin or Referer header present)");
 				}
+				return bean;
+			}
+		};
+	}
+
+	/** Replaces the session strategy that would delete the XSRF-TOKEN cookie on every stateless request. */
+	@Bean
+	public static BeanPostProcessor statelessSessionStrategyPostProcessor() {
+		return new BeanPostProcessor() {
+			@Override
+			public Object postProcessBeforeInitialization(Object bean, String beanName) {
 				if (bean instanceof SessionManagementFilter) {
 					SessionAuthenticationStrategy noOp = (authentication, request, response) -> {
 					};
@@ -90,17 +107,18 @@ public class CsrfRequestHandlerConfig {
 		@Override
 		public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
 			String actual = super.resolveCsrfTokenValue(request, csrfToken);
-			boolean cookiePresent = false;
-			if (request.getCookies() != null) {
-				for (Cookie c : request.getCookies()) {
-					if ("XSRF-TOKEN".equals(c.getName())) {
-						cookiePresent = true;
+			if (LOGGER.isDebugEnabled()) {
+				boolean cookiePresent = false;
+				if (request.getCookies() != null) {
+					for (Cookie c : request.getCookies()) {
+						if (XSRF_COOKIE_NAME.equals(c.getName())) {
+							cookiePresent = true;
+						}
 					}
 				}
+				LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, match={}", request.getMethod(),
+						cookiePresent, actual != null, actual != null && actual.equals(csrfToken.getToken()));
 			}
-			LOGGER.debug("CSRF check {}: cookiePresent={}, headerPresent={}, match={}", request.getMethod(),
-					cookiePresent, actual != null,
-					actual != null && actual.equals(csrfToken.getToken()));
 			return actual;
 		}
 	}
