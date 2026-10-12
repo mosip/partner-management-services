@@ -111,7 +111,7 @@ AND eff_dtimes='2020-11-13 05:58:00.000';
 -- [1.3.0-beta.5 → 1.3.0] Restore the partner_contact table comment
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.';
 
--- [1.3.0-beta.5 → 1.3.0] contact_no, email_id and address columns stay widened (shrinking could truncate stored values)
+-- [1.3.0-beta.5 → 1.3.0] user_details table comment stays as is (1.2.2.4 installs have 'consents of partners', upgraded databases have 'consents of users'; comment text only)
 
 -- [1.3.0-beta.5 → 1.3.0] status_code stays 'approved'
 
@@ -163,6 +163,8 @@ ALTER TABLE pms.oidc_client DROP COLUMN IF EXISTS additional_config;
 
 -- Rollback script for the license_key_name column in misp_license table
 ALTER TABLE pms.misp_license DROP COLUMN IF EXISTS license_key_name;
+
+-- [1.3.0-beta.2 → 1.3.0-beta.3] cr_by = 'superadmin' on reg_device_type and reg_device_sub_type is kept (the old values are not stored, so they cannot be restored)
 
 -- Remove NOT NULL constraint from email_id
 ALTER TABLE pms.partner
@@ -217,6 +219,8 @@ GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.otp_transactio
 ALTER TABLE pms.partner DROP COLUMN IF EXISTS email_id_hash;
 ALTER TABLE pms.partner_h DROP COLUMN IF EXISTS email_id_hash;
 ALTER TABLE pms.partner_contact DROP COLUMN IF EXISTS email_id_hash;
+
+-- [1.2.2.4 → 1.3.0-beta.1] contact_no, email_id and address columns in partner, partner_h and partner_contact stay widened (shrinking could truncate stored values)
 
 drop table if exists pms.batch_job_execution_context;
 drop table if exists pms.batch_step_execution_context;
