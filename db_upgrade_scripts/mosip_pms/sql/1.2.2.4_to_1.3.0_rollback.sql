@@ -108,10 +108,27 @@ SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinu
 WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
+-- -------------------------------------------------------------------------------------------------
+-- [1.3.0-beta.5 → 1.3.0] Restore the Binding_Partner partner type
+-- -------------------------------------------------------------------------------------------------
+
+INSERT INTO pms.partner_type (code, partner_description, is_policy_required, is_active, cr_by, cr_dtimes)
+VALUES ('Binding_Partner', 'Binding Partner', TRUE, TRUE, 'superadmin', now())
+ON CONFLICT (code) DO NOTHING;
+
+-- -------------------------------------------------------------------------------------------------
+-- [1.3.0-beta.5 → 1.3.0] Restore mpolicy-default-PDFCard history row (1.2.2.4 value)
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"direct","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"DD/MM/YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"VID","source":[{"attribute":"VID","filter":[{"type":"PERPETUAL"}]}],"encrypted":false,"format":"RETRIEVE"},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"bestTwoFingers","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Finger"}]}],"encrypted":false,"format":"bestTwoFingers"},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":false,"format":"extraction"}]}'
+WHERE id='mpolicy-default-PDFCard'
+AND eff_dtimes='2023-11-14 05:59:00.000';
+
 -- [1.3.0-beta.5 → 1.3.0] Restore the partner_contact table comment
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table.';
 
--- [1.3.0-beta.5 → 1.3.0] user_details table comment stays as is (1.2.2.4 installs have 'consents of partners', upgraded databases have 'consents of users'; comment text only)
+-- [1.3.0-beta.5 → 1.3.0] user_details table and column comments stay as is (1.2.2.4 installs say 'partner', databases upgraded from 1.2.1.0 say 'user'; comment text only)
 
 -- [1.3.0-beta.5 → 1.3.0] status_code stays 'approved'
 
@@ -190,21 +207,21 @@ CREATE TABLE IF NOT EXISTS pms.otp_transaction (
     CONSTRAINT pk_otpt_id PRIMARY KEY (id)
 );
 
-COMMENT ON TABLE pms.otp_transaction IS 'OTP Transaction: All OTP related data and validation details are maintained here for partner management service.';
-COMMENT ON COLUMN pms.otp_transaction.id IS 'ID: Unique transaction id for each OTP transaction request';
-COMMENT ON COLUMN pms.otp_transaction.ref_id IS 'Reference ID: Reference information received from OTP requester used while validating the OTP.';
-COMMENT ON COLUMN pms.otp_transaction.otp_hash IS 'OTP Hash: Hash of id, ref_id and otp based on configuration setup and sent to requester module.';
-COMMENT ON COLUMN pms.otp_transaction.generated_dtimes IS 'Generated Date Time: Timestamp when the OTP was generated';
-COMMENT ON COLUMN pms.otp_transaction.expiry_dtimes IS 'Expiry Date Time: Timestamp when the OTP expires';
-COMMENT ON COLUMN pms.otp_transaction.validation_retry_count IS 'Validation Retry Count: Number of OTP validation retries.';
-COMMENT ON COLUMN pms.otp_transaction.status_code IS 'Status Code: Status of the OTP (active or expired).';
+COMMENT ON TABLE pms.otp_transaction IS 'OTP Transaction: All OTP related data and validation details are maintained here fro partner managment service.';
+COMMENT ON COLUMN pms.otp_transaction.id IS 'ID: Unique transaction id for each otp transaction request';
+COMMENT ON COLUMN pms.otp_transaction.ref_id IS 'Reference ID: Reference ID is a reference information received from OTP requester which can be used while validating the OTP. AM: please give examples of ref_id';
+COMMENT ON COLUMN pms.otp_transaction.otp_hash IS 'OTP Hash: Hash of id, ref_id and otp which is generated based on the configuration setup and sent to the requester application / module.';
+COMMENT ON COLUMN pms.otp_transaction.generated_dtimes IS 'Generated Date Time: Date and Time when the OTP was generated';
+COMMENT ON COLUMN pms.otp_transaction.expiry_dtimes IS 'Expiry Date Time: Date Time when the OTP will be expired';
+COMMENT ON COLUMN pms.otp_transaction.validation_retry_count IS 'Validation Retry Count: Validation retry counts of this OTP request. If the validation retry crosses the threshold limit, then the OTP will be de-activated.';
+COMMENT ON COLUMN pms.otp_transaction.status_code IS 'Status Code: Status of the OTP whether it is active or expired. AM: please enumerate the status types. They are only a few, not infinite';
 COMMENT ON COLUMN pms.otp_transaction.is_active IS 'IS_Active : Flag to mark whether the record is Active or In-active';
-COMMENT ON COLUMN pms.otp_transaction.cr_by IS 'Created By : ID or name of the user who created the record';
-COMMENT ON COLUMN pms.otp_transaction.cr_dtimes IS 'Created DateTimestamp : When the record was inserted';
-COMMENT ON COLUMN pms.otp_transaction.upd_by IS 'Updated By : ID or name of the user who updated the record';
-COMMENT ON COLUMN pms.otp_transaction.upd_dtimes IS 'Updated DateTimestamp : When the record was last updated';
-COMMENT ON COLUMN pms.otp_transaction.is_deleted IS 'IS_Deleted : Soft delete flag';
-COMMENT ON COLUMN pms.otp_transaction.del_dtimes IS 'Deleted DateTimestamp : When the record was soft deleted';
+COMMENT ON COLUMN pms.otp_transaction.cr_by IS 'Created By : ID or name of the user who create / insert record';
+COMMENT ON COLUMN pms.otp_transaction.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
+COMMENT ON COLUMN pms.otp_transaction.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
+COMMENT ON COLUMN pms.otp_transaction.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+COMMENT ON COLUMN pms.otp_transaction.is_deleted IS 'IS_Deleted : Flag to mark whether the record is Soft deleted.';
+COMMENT ON COLUMN pms.otp_transaction.del_dtimes IS 'Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE';
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.otp_transaction TO pmsuser;
 

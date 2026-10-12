@@ -516,6 +516,19 @@ BEGIN
     END IF;
 END $$;
 
+-- -------------------------------------------------------------------------------------------------
+-- [1.3.0-beta.5 → 1.3.0] Remove unused Binding_Partner partner type
+-- -------------------------------------------------------------------------------------------------
+
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pms.partner WHERE partner_type_code = 'Binding_Partner') THEN
+        RAISE WARNING 'Skipping removal of partner_type Binding_Partner: existing pms.partner rows still reference it. Manual cleanup required: reassign or remove the referencing pms.partner rows, then delete pms.partner_type row with code = ''Binding_Partner''.';
+    ELSE
+        DELETE FROM pms.partner_type WHERE code = 'Binding_Partner';
+    END IF;
+END $$;
+
 -- -------------------------------------------------------------------------------------
 -- [1.3.0-beta.5 → 1.3.0] (#2063) partner_contact deprecation check
 -- -------------------------------------------------------------------------------------
@@ -567,6 +580,15 @@ WHERE id='mpolicy-default-euin'
 AND eff_dtimes='2020-11-13 05:58:00.000';
 
 -- -------------------------------------------------------------------------------------------------
+-- [1.3.0-beta.5 → 1.3.0] mpolicy-default-PDFCard history row (auth_policy_h): same as pms-auth_policy_h.csv
+-- -------------------------------------------------------------------------------------------------
+
+UPDATE pms.auth_policy_h
+SET policy_file_id='{"dataSharePolicies":{"typeOfShare":"Data Share","validForInMinutes":"30","transactionsAllowed":"2","encryptionType":"Partner Based","shareDomain":"datashare.datashare","source":"ID Repository"},"shareableAttributes":[{"attributeName":"fullName","source":[{"attribute":"fullName"}],"encrypted":false},{"attributeName":"dateOfBirth","source":[{"attribute":"dateOfBirth"}],"encrypted":false,"format":"DD/MM/YYYY"},{"attributeName":"gender","source":[{"attribute":"gender"}],"encrypted":false},{"attributeName":"phone","source":[{"attribute":"phone"}],"encrypted":false},{"attributeName":"email","source":[{"attribute":"email"}],"encrypted":false},{"attributeName":"addressLine1","source":[{"attribute":"addressLine1"}],"encrypted":false},{"attributeName":"addressLine2","source":[{"attribute":"addressLine2"}],"encrypted":false},{"attributeName":"addressLine3","source":[{"attribute":"addressLine3"}],"encrypted":false},{"attributeName":"region","source":[{"attribute":"region"}],"encrypted":false},{"attributeName":"province","source":[{"attribute":"province"}],"encrypted":false},{"attributeName":"city","source":[{"attribute":"city"}],"encrypted":false},{"attributeName":"UIN","source":[{"attribute":"UIN"}],"encrypted":false},{"attributeName":"VID","source":[{"attribute":"VID","filter":[{"type":"PERPETUAL"}]}],"encrypted":false,"format":"RETRIEVE"},{"attributeName":"postalCode","source":[{"attribute":"postalCode"}],"encrypted":false},{"attributeName":"bestTwoFingers","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Finger"}]}],"encrypted":false,"format":"bestTwoFingers"},{"attributeName":"biometrics","group":"CBEFF","source":[{"attribute":"individualBiometrics","filter":[{"type":"Face"},{"type":"Finger","subType":["Left Thumb","Right Thumb"]}]}],"encrypted":false,"format":"extraction"}]}'
+WHERE id='mpolicy-default-PDFCard'
+AND eff_dtimes='2023-11-14 05:59:00.000';
+
+-- -------------------------------------------------------------------------------------------------
 -- [1.3.0-beta.5 → 1.3.0] Table and column comments, same as the 1.3.0 DDL
 -- -------------------------------------------------------------------------------------------------
 
@@ -585,6 +607,8 @@ COMMENT ON COLUMN pms.misp_license.license_key_name IS 'License Key Name: Name g
 COMMENT ON COLUMN pms.oidc_client.additional_config IS 'Additional Config: Additional configuration parameters for the OIDC client in JSON format.';
 COMMENT ON TABLE pms.partner_contact IS 'Partner Contact: Registered external partners use will have mutiple contact and these contacts are maintained in this table. Deprecated since release-1.3.0: backs POST /partners/{partnerId}/contact/add, which is deprecated because this table is not synchronized with pms.partner.';
 COMMENT ON TABLE pms.user_details IS 'This table has consents of partners.';
+COMMENT ON COLUMN pms.user_details.user_id IS 'User Id: user id of the partner.';
+COMMENT ON COLUMN pms.user_details.consent_given IS 'Consent Given : Indicates whether consent has been given by the partner.';
 
 -- -------------------------------------------------------------------------------------------------
 -- [1.3.0-beta.5 → 1.3.0] partner_policy_request.status_code: 'Approved' -> 'approved' (default PDFCard and digitalcard requests)
