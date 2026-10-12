@@ -113,7 +113,7 @@ WHERE part_id = 'mpartner-default-auth'
 
 --- These tables are required by Spring Batch framework
 
-create table pms.batch_job_instance (
+create table if not exists pms.batch_job_instance (
     job_instance_id bigint not null primary key,
     version bigint,
     job_name varchar(100) not null,
@@ -123,7 +123,7 @@ create table pms.batch_job_instance (
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_instance TO pmsuser;
 
-create table pms.batch_job_execution (
+create table if not exists pms.batch_job_execution (
     job_execution_id bigint not null primary key,
     version bigint,
     job_instance_id bigint not null,
@@ -140,7 +140,7 @@ create table pms.batch_job_execution (
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution TO pmsuser;
 
-create table pms.batch_job_execution_params (
+create table if not exists pms.batch_job_execution_params (
     job_execution_id bigint not null,
     parameter_name varchar(100) not null,
     parameter_type varchar(100) not null,
@@ -152,7 +152,7 @@ create table pms.batch_job_execution_params (
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution_params TO pmsuser;
 
-create table pms.batch_step_execution (
+create table if not exists pms.batch_step_execution (
     step_execution_id bigint not null primary key,
     version bigint not null,
     step_name varchar(100) not null,
@@ -178,7 +178,7 @@ create table pms.batch_step_execution (
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_step_execution TO pmsuser;
 
-create table pms.batch_step_execution_context (
+create table if not exists pms.batch_step_execution_context (
     step_execution_id bigint not null primary key,
     short_context varchar(2500) not null,
     serialized_context text,
@@ -188,7 +188,7 @@ create table pms.batch_step_execution_context (
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_step_execution_context TO pmsuser;
 
-create table pms.batch_job_execution_context (
+create table if not exists pms.batch_job_execution_context (
     job_execution_id bigint not null primary key,
     short_context varchar(2500) not null,
     serialized_context text,
@@ -198,14 +198,14 @@ create table pms.batch_job_execution_context (
 
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.batch_job_execution_context TO pmsuser;
 
-create sequence pms.batch_step_execution_seq maxvalue 9223372036854775807 no cycle;
-create sequence pms.batch_job_execution_seq maxvalue 9223372036854775807 no cycle;
-create sequence pms.batch_job_seq maxvalue 9223372036854775807 no cycle;
+create sequence if not exists pms.batch_step_execution_seq maxvalue 9223372036854775807 no cycle;
+create sequence if not exists pms.batch_job_execution_seq maxvalue 9223372036854775807 no cycle;
+create sequence if not exists pms.batch_job_seq maxvalue 9223372036854775807 no cycle;
 
 grant usage, select on all sequences in schema pms to pmsuser;
 
 -- This table stores notifications for root, intermediate, and partner certificate expiry, as well as SBI expiry and API key expiry.
-CREATE TABLE pms.notifications
+CREATE TABLE IF NOT EXISTS pms.notifications
 (
     id character varying(128) NOT NULL,
     partner_id character varying(128) NOT NULL,
@@ -240,7 +240,7 @@ COMMENT ON COLUMN pms.notifications.upd_dtimes IS 'Updated Timestamp: The date a
 GRANT SELECT, INSERT, TRUNCATE, REFERENCES, UPDATE, DELETE ON pms.notifications TO pmsuser;
 
 -- add new columns in user_details table
-ALTER TABLE pms.user_details Add COLUMN notifications_seen_dtimes timestamp;
+ALTER TABLE pms.user_details ADD COLUMN IF NOT EXISTS notifications_seen_dtimes timestamp;
 COMMENT ON COLUMN pms.user_details.notifications_seen_dtimes IS 'Notifications Seen Timestamp: The date and time when the notifications was seen.';
 
 UPDATE pms.auth_policy
@@ -253,7 +253,7 @@ WHERE id='mpolicy-default-euin';
 
 -- Add new column for email hash
 ALTER TABLE pms.partner
-ADD COLUMN email_id_hash VARCHAR(3000);
+ADD COLUMN IF NOT EXISTS email_id_hash VARCHAR(3000);
 
 -- Update column sizes in pms.partner
 ALTER TABLE pms.partner
@@ -266,14 +266,14 @@ ALTER TABLE pms.partner_h
     ALTER COLUMN contact_no TYPE character varying(1000),
     ALTER COLUMN email_id TYPE character varying(3000),
     ALTER COLUMN address TYPE character varying(10000),
-    ADD COLUMN email_id_hash character varying(3000);
+    ADD COLUMN IF NOT EXISTS email_id_hash character varying(3000);
 
 -- Update column sizes in pms.partner_contact
 ALTER TABLE pms.partner_contact
     ALTER COLUMN contact_no TYPE character varying(1000),
     ALTER COLUMN email_id TYPE character varying(3000),
     ALTER COLUMN address TYPE character varying(10000),
-    ADD COLUMN email_id_hash character varying(3000);
+    ADD COLUMN IF NOT EXISTS email_id_hash character varying(3000);
 
 -- =================================================================================================
 -- [1.3.0-beta.1 → 1.3.0-beta.2] No database changes
@@ -284,7 +284,7 @@ ALTER TABLE pms.partner_contact
 -- =================================================================================================
 
 -- Add new column for license_key_name in misp_license table
-ALTER TABLE pms.misp_license ADD COLUMN license_key_name character varying(128);
+ALTER TABLE pms.misp_license ADD COLUMN IF NOT EXISTS license_key_name character varying(128);
 
 -- Add NOT NULL constraint to email_id
 ALTER TABLE pms.partner
@@ -306,7 +306,7 @@ DROP TABLE IF EXISTS pms.otp_transaction CASCADE;
 -- =================================================================================================
 
 -- Add new column for additional_config in oidc_client table
-ALTER TABLE pms.oidc_client ADD COLUMN additional_config character varying;
+ALTER TABLE pms.oidc_client ADD COLUMN IF NOT EXISTS additional_config character varying;
 
 -- =================================================================================================
 -- [1.3.0-beta.4 → 1.3.0-beta.5] typeOfShare fix, bioextractor_configuration and the two *_request tables
@@ -498,6 +498,8 @@ ALTER TABLE pms.misp_license ALTER COLUMN misp_license_id SET NOT NULL;
 ALTER TABLE pms.misp_license DROP CONSTRAINT IF EXISTS pk_mlic;
 
 ALTER TABLE pms.misp_license ADD CONSTRAINT pk_mlic PRIMARY KEY (misp_license_id);
+
+ALTER TABLE pms.misp_license DROP CONSTRAINT IF EXISTS uk_mlic;
 
 ALTER TABLE pms.misp_license ADD CONSTRAINT uk_mlic UNIQUE (misp_id, license_key);
 
