@@ -170,8 +170,9 @@ ALTER TABLE pms.misp_license DROP COLUMN IF EXISTS license_key_name;
 ALTER TABLE pms.partner
     ALTER COLUMN email_id DROP NOT NULL;
 
--- Create the otp_transaction table
-CREATE TABLE pms.otp_transaction (
+-- Recreate the otp_transaction table
+-- NOTE: structure only; any data that existed before the upgrade drop is not restored.
+CREATE TABLE IF NOT EXISTS pms.otp_transaction (
     id character varying(36) NOT NULL,
     ref_id character varying(64) NOT NULL,
     otp_hash character varying(512) NOT NULL,
