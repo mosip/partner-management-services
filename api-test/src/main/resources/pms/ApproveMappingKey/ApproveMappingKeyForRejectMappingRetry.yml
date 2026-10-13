@@ -1,0 +1,18 @@
+ApproveMappingKeyForRejectMappingRetry:
+   Pms_ApproveMappingKey_Reject_Retry_All_Valid:
+      endPoint: /v1/partnermanager/partners/policy/{mappingkey}
+      uniqueIdentifier: TC_PMS_ApproveAPIKey_25
+      description: Validate that a mapping key is successfully rejected when all input parameters are valid
+      role: partneradmin
+      additionalDependencies: TC_PMS_partnerPolicyMapping_11
+      restMethod: put
+      inputTemplate: pms/ApproveMappingKey/approveMappingKey
+      outputTemplate: pms/ApproveMappingKey/approveMappingKeyResult
+      input: '{
+      "status": "Rejected",
+      "mappingkey": "$ID:partnerPolicyMapping_ForRejecting_Retry_All_Valid_sid_mappingkey$",
+	  "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+        "response": "Policy mapping rejected successfully"
+    }'

@@ -410,3 +410,23 @@ definePolicyGroup:
         "desc": "$RUNCONTEXT$12345",
         "is_Active": true
 }'
+   Pms_DefinePolicyGroup_XSS_Script_In_Name_Neg:
+      endPoint: /v1/policymanager/policies/group/new
+      description: Validate that policy group creation fails when the policy group name contains script/HTML content
+      role: partneradmin
+      uniqueIdentifier: TC_PMS_definePolicyGroup_24
+      restMethod: post
+      inputTemplate: pms/DefinePolicyGroup/definePolicyGroup
+      outputTemplate: pms/error
+      input: '{
+    "desc": "desc mosip policy group xss",
+    "name": "<script>alert(1)</script>",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: ' {
+      "errors": [
+       {
+            "errorCode": "PMS_REQUEST_ERROR_007"
+        }
+  ]
+    }'

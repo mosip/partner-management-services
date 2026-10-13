@@ -36,7 +36,6 @@ public class PostWithBodyAndPathParamsAndAutoGenId extends PMSUtil implements IT
 	protected String testCaseName = "";
 	String pathParams = null;
 	public String idKeyName = null;
-	String headers = null;
 	public Response response = null;
 
 	@BeforeClass
@@ -65,7 +64,6 @@ public class PostWithBodyAndPathParamsAndAutoGenId extends PMSUtil implements IT
 		String ymlFile = context.getCurrentXmlTest().getLocalParameters().get("ymlFile");
 		pathParams = context.getCurrentXmlTest().getLocalParameters().get("pathParams");
 		idKeyName = context.getCurrentXmlTest().getLocalParameters().get("idKeyName");
-		headers = context.getCurrentXmlTest().getLocalParameters().get("headers");
 		logger.info("Started executing yml: " + ymlFile);
 		return getYmlTestData(ymlFile);
 	}

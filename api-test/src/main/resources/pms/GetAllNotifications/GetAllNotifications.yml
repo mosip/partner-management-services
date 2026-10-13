@@ -277,6 +277,7 @@ GetAllNotifications:
       endPoint: /v1/partnermanager/notifications?notificationType=ROOT_CERT_EXPIRY&pageNo=0&pageSize=4
       role: partneradmin
       description: Validate that the Get All Notifications API correctly retrieves notifications related to root certificates when filtered by the appropriate notificationType
+      uniqueIdentifier: TC_PMS_GetAllNotifications_18
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetAllNotifications/GetAllNotifications
@@ -1181,4 +1182,106 @@ GetAllNotifications:
       "notificationType": "PARTNER_CERT_EXPIRY"
 }'
       output: '{
+}'
+   Pms_GetAllNotifications_Filter_invalid_ftmId_Format_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&ftmId=%2Aftm123
+      role: partneradmin
+      description: Validate that retrieving notifications fails when ftmId contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetAllNotifications_69
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_make_Format_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&make=%2Amake123
+      role: partneradmin
+      description: Validate that retrieving notifications fails when make contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetAllNotifications_70
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_model_Format_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=FTM_CHIP_CERT_EXPIRY&model=%2Amodel123
+      role: partneradmin
+      description: Validate that retrieving notifications fails when model contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetAllNotifications_71
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_policyName_Format_Neg:
+      endPoint: /v1/partnermanager/notifications?policyName=%2Apolicy123
+      role: partneradmin
+      description: Validate that retrieving notifications fails when policyName contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetAllNotifications_72
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_sbiId_Format_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=SBI_EXPIRY&sbiId=%2Asbi123
+      role: partneradmin
+      description: Validate that retrieving notifications fails when sbiId contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetAllNotifications_73
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
+}'
+   Pms_GetAllNotifications_Filter_invalid_mispLicenseKeyName_Format_Neg:
+      endPoint: /v1/partnermanager/notifications?notificationType=API_KEY_EXPIRY&mispLicenseKeyName=%2Amisp123
+      role: partneradmin
+      description: Validate that retrieving notifications fails when mispLicenseKeyName contains characters outside the allowed format
+      uniqueIdentifier: TC_PMS_GetAllNotifications_74
+      restMethod: get
+      inputTemplate: pms/GetAllNotifications/GetAllNotifications
+      outputTemplate: pms/error
+      input: '{
+}'
+      output: '{
+      "errors": [
+      {
+       "errorCode": "PMS_REQUEST_ERROR_007"
+       }
+       ]
 }'

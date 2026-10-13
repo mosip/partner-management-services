@@ -1,25 +1,12 @@
 package io.mosip.testrig.apirig.partner.testrunner;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.testng.TestNG;
-
-import com.nimbusds.jose.jwk.KeyUse;
-import com.nimbusds.jose.jwk.RSAKey;
 
 import io.mosip.testrig.apirig.dataprovider.BiometricDataProvider;
 import io.mosip.testrig.apirig.dbaccess.DBManager;
@@ -55,7 +42,6 @@ public class MosipTestRunner {
 	private static String generateDependency;
 
 	public static String jarUrl = MosipTestRunner.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-	public static List<String> languageList = new ArrayList<>();
 
 	/**
 	 * C Main method to start mosip test execution
@@ -164,8 +150,6 @@ public class MosipTestRunner {
 
 	/**
 	 * The method to start mosip testng execution
-	 * 
-	 * @throws IOException
 	 */
 	public static void startTestRunner() {
 		File homeDir = null;
@@ -200,11 +184,9 @@ public class MosipTestRunner {
 
 	/**
 	 * The method to return class loader resource path
-	 * 
+	 *
 	 * @return String
-	 * @throws IOException
 	 */
-
 	public static String getGlobalResourcePath() {
 		if (cachedPath != null) {
 			return cachedPath;
@@ -226,95 +208,6 @@ public class MosipTestRunner {
 		} else {
 			return "Global Resource File Path Not Found";
 		}
-	}
-
-	public static String getResourcePath() {
-		return getGlobalResourcePath();
-	}
-
-	public static String generatePulicKey() {
-		String publicKey = null;
-		try {
-			KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-			keyGenerator.initialize(2048, BaseTestCase.secureRandom);
-			final KeyPair keypair = keyGenerator.generateKeyPair();
-			publicKey = java.util.Base64.getEncoder().encodeToString(keypair.getPublic().getEncoded());
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage());
-		}
-		return publicKey;
-	}
-
-	public static KeyPairGenerator keyPairGen = null;
-
-	public static KeyPairGenerator getKeyPairGeneratorInstance() {
-		if (keyPairGen != null)
-			return keyPairGen;
-		try {
-			keyPairGen = KeyPairGenerator.getInstance("RSA");
-			keyPairGen.initialize(2048);
-
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage());
-		}
-
-		return keyPairGen;
-	}
-
-	public static String generatePublicKeyForMimoto() {
-
-		String vcString = "";
-		try {
-			KeyPairGenerator keyPairGenerator = getKeyPairGeneratorInstance();
-			KeyPair keyPair = keyPairGenerator.generateKeyPair();
-			PublicKey publicKey = keyPair.getPublic();
-			StringWriter stringWriter = new StringWriter();
-			try (JcaPEMWriter pemWriter = new JcaPEMWriter(stringWriter)) {
-				pemWriter.writeObject(publicKey);
-				pemWriter.flush();
-				vcString = stringWriter.toString();
-				if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-					vcString = vcString.replaceAll("\r\n", "\\\\n");
-				} else {
-					vcString = vcString.replaceAll("\n", "\\\\n");
-				}
-			} catch (Exception e) {
-				throw e;
-			}
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		return vcString;
-	}
-
-	public static String generateJWKPublicKey() {
-		try {
-			KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-			keyGenerator.initialize(2048, BaseTestCase.secureRandom);
-			final KeyPair keypair = keyGenerator.generateKeyPair();
-			RSAKey jwk = new RSAKey.Builder((RSAPublicKey) keypair.getPublic()).keyID("RSAKeyID")
-					.keyUse(KeyUse.SIGNATURE).privateKey(keypair.getPrivate()).build();
-
-			return jwk.toJSONString();
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage());
-			return null;
-		}
-	}
-
-	public static Properties getproperty(String path) {
-		Properties prop = new Properties();
-		FileInputStream inputStream = null;
-		try {
-			File file = new File(path);
-			inputStream = new FileInputStream(file);
-			prop.load(inputStream);
-		} catch (Exception e) {
-			LOGGER.error(GlobalConstants.EXCEPTION_STRING_2 + e.getMessage());
-		} finally {
-			AdminTestUtil.closeInputStream(inputStream);
-		}
-		return prop;
 	}
 
 	/**

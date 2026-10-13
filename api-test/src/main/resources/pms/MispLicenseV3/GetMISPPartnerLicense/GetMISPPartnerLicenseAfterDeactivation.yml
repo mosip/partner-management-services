@@ -1,0 +1,27 @@
+GetMISPPartnerLicenseAfterDeactivation:
+    Pms_GetMISPPartnerLicense_Deactivated_License_Shows_Inactive:
+        endPoint: /v1/partnermanager/misp-licenses
+        uniqueIdentifier: TC_PMS_GetMISPPartnerLicense_36
+        description: Validate that a license deactivated via PATCH appears with status INACTIVE when the list is filtered by partnerId and status
+        role: partneradmin
+        restMethod: get
+        additionalDependencies: TC_PMS_DeactivateMISPPartnerLicense_01
+        inputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicense
+        outputTemplate: pms/MispLicenseV3/GetMISPPartnerLicense/GetMISPPartnerLicenseAfterDeactivationResult
+        input: '{
+        "pageNo": "0",
+        "pageSize": "1",
+        "partnerId": "$ID:MISPPartnerRegistration_All_Valid_Smoke_reqsid_Sid_partnerId$",
+        "orgName": "$REMOVE$",
+        "policyGroupName": "$REMOVE$",
+        "policyName": "$REMOVE$",
+        "mispLicenseKeyName": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_licenseKeyName$",
+        "sortFieldName": "$REMOVE$",
+        "sortType": "$REMOVE$",
+        "status": "INACTIVE",
+        "expiryPeriod": "$REMOVE$"
+}'
+        output: '{
+    "mispLicenseId": "$ID:GenerateMISPPartnerLicense_Regenerate_Via_Repeat_Post_sid_mispLicenseId$",
+    "status": "INACTIVE"
+}'

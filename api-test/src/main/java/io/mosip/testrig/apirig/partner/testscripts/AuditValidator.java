@@ -32,7 +32,6 @@ import io.mosip.testrig.apirig.utils.SecurityXSSException;
 public class AuditValidator extends PMSUtil implements ITest {
 	private static final Logger logger = Logger.getLogger(AuditValidator.class);
 	protected String testCaseName = "";
-	public static List<String> templateFields = new ArrayList<>();
 
 	/**
 	 * get current testcaseName
