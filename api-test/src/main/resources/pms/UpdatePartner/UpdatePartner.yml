@@ -85,3 +85,25 @@ UpdatePartnerDetails:
   ]
 }'
 
+   Pms_UpdatePartnerDetails_CrossPartner_BOLA_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}
+      uniqueIdentifier: TC_PMS_updatePartnerDetails_05
+      description: Validate that a partner cannot update the details of a partner it does not own
+      role: partnerauth
+      restMethod: put
+      additionalDependencies: TC_PMS_createCredentialPartnerSelfRegistration_01
+      inputTemplate: pms/UpdatePartner/updatePartner
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_credentialpartner_All_Valid_Smoke_sid_partnerId$",
+    "address": "Bangalore Ind",
+    "contactNumber": "8553967576",
+    "requesttime": "$TIMESTAMP$"
+  }'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_PRT_055"
+    }
+  ]
+}'

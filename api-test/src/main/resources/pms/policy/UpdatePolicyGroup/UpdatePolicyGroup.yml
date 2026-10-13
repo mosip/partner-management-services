@@ -69,3 +69,13 @@ UpdatePolicyGroup:
     outputTemplate: pms/error
     restMethod: put
     role: partner
+  Pms_UpdatePolicyGroup_XSS_Script_In_Name_Neg:
+    endPoint: "/v1/policymanager/policies/group/{policyGroupId}"
+    uniqueIdentifier: TC_PMS_updatePolicyGroup_08
+    description: Validate that updating a policy group fails when the policy group name contains script/HTML content
+    input: "{ \"isActive\": true, \"desc\": \"desc mosip policy group xss\", \"name\": \"<script>alert(1)</script>\", \"policyGroupId\": \"$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$\", \"requesttime\": \"$TIMESTAMP$\" }"
+    inputTemplate: pms/policy/UpdatePolicyGroup/updatePolicyGroup
+    output: "{ \"errors\": [ { \"errorCode\": \"PMS_REQUEST_ERROR_007\" } ] }"
+    outputTemplate: pms/error
+    restMethod: put
+    role: partner

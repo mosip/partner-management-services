@@ -6,7 +6,7 @@ UploadCertificateOfFtpChip:
       description: Validate that uploading a Certificate with all valid inputs for a given FTM/FTP Provider ID is successful
       restMethod: post
       checkErrorsOnlyInResponse: true
-      additionalDependencies: TC_PMS_UploadCaCertificateOfFtpChip_01, TC_PMS_UploadCaCertificateOfFtpChip_02
+      additionalDependencies: TC_PMS_UploadCACertificate_08, TC_PMS_UploadCACertificate_09
       inputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChip
       outputTemplate: pms/UploadCertificateOfFtpChip/UploadCertificateOfFtpChipResult
       input: '{

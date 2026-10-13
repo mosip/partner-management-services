@@ -194,3 +194,25 @@ GenerateApiKey:
    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
     "label": "pmsAutomation-19235"    
 }'
+   Pms_GenerateApiKey_XSS_Script_In_Label_Neg:
+      endPoint: /v1/partnermanager/partners/{partnerId}/generate/apikey
+      description: Validate that generating an API key fails when the label contains script/HTML content
+      role: partnerauth
+      uniqueIdentifier: TC_PMS_GenerateApikey_10
+      restMethod: patch
+      additionalDependencies: TC_PMS_createPartnerSelfRegistration_01
+      inputTemplate: pms/GenerateApiKey/generateApiKey
+      outputTemplate: pms/error
+      input: '{
+    "partnerId": "$ID:PartnerSelfRegistration_All_Valid_Smoke_sid_partnerId$",
+    "policyName": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_name$",
+    "label": "<script>alert(1)</script>",
+    "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_007"
+    }
+  ]
+}'

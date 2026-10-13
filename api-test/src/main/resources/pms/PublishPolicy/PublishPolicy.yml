@@ -297,6 +297,50 @@ createPublishPolicy:
         "is_Active": true
     }'
 
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_ExtractorsNotAdded:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_24
+      description: Validate that a policy can be published successfully for the mapping-approval extractors-not-added negative test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_ExtractorsNotAdded_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_ExtractorsNotAdded_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
+   Pms_PublishPolicy_All_Valid_For_CredentialPartner_CredentialTypesNotAdded:
+      endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
+      uniqueIdentifier: TC_PMS_publishPolicy_25
+      description: Validate that a policy can be published successfully for the mapping-approval credential-types-not-added negative test
+      role: partneradmin
+      restMethod: post
+      inputTemplate: pms/PublishPolicy/publishPolicy
+      outputTemplate: pms/PublishPolicy/publishPolicyResult
+      input: '{
+      "policygroupId": "$ID:DefinePolicyGroup_Active_All_Valid_Smoke_sid_id$",
+      "policyId": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypesNotAdded_sid_id$",
+      "requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+        "policyGroupName": "$RUNCONTEXT$mosip policy group",
+        "policyGroupStatus": true,
+        "policyName": "$ID:DefinePolicy_All_Valid_For_CredentialPartner_CredentialTypesNotAdded_sid_name$",
+        "policyType": "Auth",
+        "status": "PUBLISHED",
+        "is_Active": true
+    }'
+
    Pms_PublishPolicy_All_Valid_For_CredentialPartner_BioExtractorsMultiple:
       endPoint: /v1/policymanager/policies/{policyId}/group/{policygroupId}/publish
       uniqueIdentifier: TC_PMS_publishPolicy_19

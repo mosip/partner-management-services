@@ -209,3 +209,32 @@ createUpdatePolicy:
     }
   ]
 }'
+   Pms_UpdatePolicy_XSS_Script_In_Name_Neg:
+      endPoint: /v1/policymanager/policies/{policyId}
+      uniqueIdentifier: TC_PMS_createUpdatePolicy_09
+      description: Validate that updating a policy fails when the policy name contains script/HTML content
+      role: partneradmin
+      restMethod: put
+      inputTemplate: pms/policy/UpdatePolicy/updatePolicy
+      outputTemplate: pms/error
+      input: '{
+		"desc": "desc mosip policy xss",
+		"name": "<script>alert(1)</script>",
+		"policyId": "$ID:DefinePolicy_All_Valid_Smoke_pms_sid_id$",
+		"authSubType": "FINGER",
+		"authType": "bio",
+		"mandatory": true,
+		"attributeName": "string",
+		"authTokenType": "partner",
+		"policyGroupName": "$ID:UpdatePolicyGroup_activate_All_Valid_Smoke_Sid_name$",
+		"policyType": "Auth",
+		"version": "1.0",
+		"requesttime": "$TIMESTAMP$"
+}'
+      output: '{
+   "errors": [
+    {
+      "errorCode": "PMS_REQUEST_ERROR_007"
+    }
+  ]
+}'
