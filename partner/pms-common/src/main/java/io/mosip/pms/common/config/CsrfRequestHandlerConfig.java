@@ -24,6 +24,9 @@ import java.util.function.Supplier;
 /**
  * Configures CSRF handling for the kernel auth adapter under Spring Security 6.
  * Active only when mosip.security.csrf-enable=true. The token is not rotated after login.
+ * The portal runs on a different host and cannot read the API's cookie, so it gets its token from the
+ * X-XSRF-TOKEN response header (exposed through the CORS policy in the helm charts). The XOR masking gives
+ * the portal a readable token; it is not there for BREACH protection, as the raw cookie value is also accepted.
  */
 @Configuration
 @ConditionalOnProperty(name = "mosip.security.csrf-enable", havingValue = "true")
