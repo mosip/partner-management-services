@@ -459,6 +459,8 @@ istio:
       - PATCH
       - PUT
       - DELETE
+    exposeHeaders:
+      - X-XSRF-TOKEN
 
 # Set configuration
 # springConfigNameEnv:
