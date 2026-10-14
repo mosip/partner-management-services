@@ -23,7 +23,14 @@ import java.util.function.Supplier;
 
 /**
  * Configures CSRF handling for the kernel auth adapter under Spring Security 6.
+ * Temporary workaround for the adapter's SecurityConfig, which sets no CSRF request handler and keeps the
+ * default CSRF session strategy together with STATELESS sessions, so the XSRF-TOKEN cookie is cleared on every
+ * request. PMS handles this here by using an XOR token handler and a no-op session strategy; the adapter does
+ * not do this yet.
  * Active only when mosip.security.csrf-enable=true. The token is not rotated after login.
+ * The portal runs on a different host and cannot read the API's cookie, so it gets its token from the
+ * X-XSRF-TOKEN response header (exposed through the CORS policy in the helm charts). The XOR masking gives
+ * the portal a readable token; it is not there for BREACH protection, as the raw cookie value is also accepted.
  */
 @Configuration
 @ConditionalOnProperty(name = "mosip.security.csrf-enable", havingValue = "true")
