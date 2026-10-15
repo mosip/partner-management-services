@@ -916,7 +916,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Endpoint to deactivate API key and/or update expiry date",
-                "description": "Available since release-1.3.0-beta.4.\r\n\r\nThis endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated. Note: Only Partner Admin can update the expiry date of the API key. Authentication Partners can only update the status.",
+                "description": "Available since release 1.3.0 (1.3.0-beta.4).\r\n\r\nThis endpoint allows deactivating an API key or updating its expiry date and time. The request must include at least one of: status or expiryDateTime. Set status to 'De-active' to deactivate the API key. Provide expiryDateTime to update the expiry date. The expiry date can be updated only for active API keys and cannot be changed once the API key is deactivated. Note: Only Partner Admin can update the expiry date of the API key. Authentication Partners can only update the status.",
                 "operationId": "updateAPIKey",
                 "parameters": [
                     {
@@ -1770,7 +1770,7 @@
                     "partner-service-controller"
                 ],
                 "summary": "NEW: Partner self registration",
-                "description": "Available since release-1.3.0-beta.3.\nThis endpoint is used for partner self-registration.\n\nAvailable for all partner roles.\nIf the role is PARTNER_ADMIN, the email provided in the request body will be used for registration.\nFor all other partner roles, the email from the logged-in user’s token will be used for registration.",
+                "description": "Available since release 1.3.0 (1.3.0-beta.3).\nThis endpoint is used for partner self-registration.\n\nAvailable for all partner roles.\nIf the role is PARTNER_ADMIN, the email provided in the request body will be used for registration.\nFor all other partner roles, the email from the logged-in user’s token will be used for registration.",
                 "operationId": "create-partner-v3",
                 "requestBody": {
                     "required": true,
@@ -2948,7 +2948,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Link a Policy Group to a Partner",
-                "description": "Available since release-1.3.0-beta.3.\nThis endpoint is used for linking a policy group to a partner.\n\nThis endpoint is available for users with the PARTNER_ADMIN role.\nIt is used to link a policy group to a partner with the MISP_PARTNER role, if not already linked.",
+                "description": "Available since release 1.3.0 (1.3.0-beta.3).\nThis endpoint is used for linking a policy group to a partner.\n\nThis endpoint is available for users with the PARTNER_ADMIN role.\nIt is used to link a policy group to a partner with the MISP_PARTNER role, if not already linked.",
                 "operationId": "link-policy-group",
                 "parameters": [
                     {
@@ -4306,7 +4306,7 @@
                     "client-management-controller"
                 ],
                 "summary": "NEW: Create new OIDC client",
-                "description": "Creates a new OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new `additionalConfig` field in the request.",
+                "description": "Creates a new OIDC client for a given Auth Partner. Available since release 1.3.0 (1.3.0-beta.4). \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new `additionalConfig` field in the request.",
                 "operationId": "create-oidc-clients",
                 "requestBody": {
                     "required": true,
@@ -4929,7 +4929,7 @@
                     "client-management-controller"
                 ],
                 "summary": "NEW: Get details of an existing OIDC client",
-                "description": "Retrieves details of an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the response.",
+                "description": "Retrieves details of an existing OIDC client for a given Auth Partner. Available since release 1.3.0 (1.3.0-beta.4). \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the response.",
                 "operationId": "get-oidc-client-details",
                 "responses": {
                     "200": {
@@ -5239,7 +5239,7 @@
                     "client-management-controller"
                 ],
                 "summary": "NEW: Update existing OIDC client",
-                "description": "Updates an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the request.",
+                "description": "Updates an existing OIDC client for a given Auth Partner. Available since release 1.3.0 (1.3.0-beta.4). \n\nThis endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new `additionalConfig` field in the request.",
                 "operationId": "update-oidc-clients",
                 "requestBody": {
                     "required": true,
@@ -5583,7 +5583,7 @@
                     "client-management-controller"
                 ],
                 "summary": "NEW: Deactivate OIDC client",
-                "description": "Deactivates an existing OIDC client for a given Auth Partner. Available since release 1.3.0-beta.4. \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and can only deactivate clients that are currently in `ACTIVE` status.",
+                "description": "Deactivates an existing OIDC client for a given Auth Partner. Available since release 1.3.0 (1.3.0-beta.4). \n\nThis endpoint is accessible to users with PARTNER_ADMIN or AUTH_PARTNER roles and can only deactivate clients that are currently in `ACTIVE` status.",
                 "operationId": "deactivate-oidc-clients",
                 "requestBody": {
                     "required": true,
@@ -9069,7 +9069,7 @@
                 "x-stoplight": {
                     "id": "86rs9kczv4mw3"
                 },
-                "description": "Available since release-1.3.0-beta.1.\r\n\r\nThis endpoint retrieves notifications for all partner IDs linked to the logged-in user. Supports pagination, sorting, and filtering.\r\n\r\nIf notificationType is ROOT_CERT_EXPIRY, INTERMEDIATE_CERT_EXPIRY, WEEKLY_SUMMARY, or MISP_LICENSE_KEY_EXPIRY, the PARTNER_ADMIN role is required in the token.",
+                "description": "Available since release 1.3.0 (1.3.0-beta.1).\r\n\r\nThis endpoint retrieves notifications for all partner IDs linked to the logged-in user. Supports pagination, sorting, and filtering.\r\n\r\nIf notificationType is ROOT_CERT_EXPIRY, INTERMEDIATE_CERT_EXPIRY, WEEKLY_SUMMARY, or MISP_LICENSE_KEY_EXPIRY, the PARTNER_ADMIN role is required in the token.",
                 "tags": [
                     "notifications-controller"
                 ]
@@ -9211,7 +9211,7 @@
                 "x-stoplight": {
                     "id": "q4srlqtqnp7yk"
                 },
-                "description": "Available since release-1.3.0-beta.1.\r\n\r\nThis endpoint is used to dismiss a notification.",
+                "description": "Available since release 1.3.0 (1.3.0-beta.1).\r\n\r\nThis endpoint is used to dismiss a notification.",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -10469,7 +10469,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Add bio extractors for partner policy request",
-                "description": "Submits bio extractor details for an **in-progress** partner policy mapping request identified by `{requestId}`. Rows are persisted for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request with the given `{requestId}` (`pms.partner_policy_request.req_id`) must exist with status **IN_PROGRESS**.\r\n- Only **one** bio-extractors submission is accepted per partner policy request; subsequent calls return a business error.\r\n- Attribute name + biometric modality combinations in the payload must be unique within the request and must not duplicate existing extractor configuration for the same partner and policy.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/bioextractors/{policyId}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors`. Accessible by both partner users and PARTNER_ADMIN. Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "description": "Submits bio extractor details for an **in-progress** partner policy mapping request identified by `{requestId}`. Rows are persisted for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request with the given `{requestId}` (`pms.partner_policy_request.req_id`) must exist with status **IN_PROGRESS**.\r\n- Only **one** bio-extractors submission is accepted per partner policy request; subsequent calls return a business error.\r\n- Attribute name + biometric modality combinations in the payload must be unique within the request and must not duplicate existing extractor configuration for the same partner and policy.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapperV2` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/bioextractors/{policyId}` (deprecated since release 1.3.0 (1.3.0-beta.5)).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors`. Accessible by both partner users and PARTNER_ADMIN. Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
                 "operationId": "submitBioExtractorsRequest",
                 "parameters": [
                     {
@@ -10652,7 +10652,7 @@
                     "partner-management-controller"
                 ],
                 "summary": "NEW: Add a credential type for partner policy request",
-                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{requestId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release-1.3.0-beta.5).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
+                "description": "Submits the credential type to associate with an **in-progress** partner policy mapping request. The value is stored for approval as part of the partner–policy mapping workflow.\r\n\r\n**Prerequisites**\r\n- A partner policy request must exist for `{requestId}` with status **IN_PROGRESS**.\r\n- `request.partnerPolicyRequestId` must be the **business** request id (`pms.partner_policy_request.req_id`) for that mapping.\r\n- Only **one** credential-type request is accepted per partner policy request.\r\n- The credential type must be one of the values configured for the deployment (`pmp.allowed.credential.types`, comma-separated; for example `auth`, `qrcode`, `euin`, `reprint` in a minimal setup).\r\n- The credential type must not already be mapped for this partner.\r\n\r\n**Success response:** HTTP 200 with `ResponseWrapper` envelope; `response` is the confirmation message string.\r\n\r\n**Deprecated replacement:** This endpoint replaces `POST /partners/{partnerId}/credentialtype/{credentialType}/policies/{policyName}` (deprecated since release 1.3.0 (1.3.0-beta.5)).\r\n\r\n**Authorization:** Uses `mosip.role.pms.postpartnersbioextractors` (same SpEL role key as submit bio extractors). Example role list in default configuration: PARTNER, CREDENTIAL_PARTNER, PARTNER_ADMIN, CREDENTIAL_ISSUANCE, CREATE_SHARE, ONLINE_VERIFICATION_PARTNER (verify against your deployment `application.properties`).",
                 "operationId": "submitCredentialTypesRequest",
                 "parameters": [
                     {
