@@ -74,20 +74,20 @@ public class MISPLicenseController {
 	@Value("${mosip.pms.api.id.update.misp.license.patch}")
 	private String patchUpdateMISPApiId;
 
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmisplicense())")
 	@PostMapping(value = "/misps")
-	@Operation(summary = "Service to generate license for misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /misp-licenses endpoint.")
+	@Operation(summary = "Service to generate license for misp - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the POST /misp-licenses endpoint.")
 	public ResponseWrapper<MISPLicenseResponseDto> generateLicense(@RequestBody @Valid RequestWrapper<MISPLicenseRequestDto> request){	
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
 		response.setResponse(infraProviderService.approveInfraProvider(request.getRequest().getProviderId()));
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutmisplicense())")
 	@PutMapping(value = "/misps")
-	@Operation(summary = "Service to update license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the PATCH /misp-licenses/{partnerId} endpoint.")
+	@Operation(summary = "Service to update license details of misp - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the PATCH /misp-licenses/{partnerId} endpoint.")
 	public ResponseWrapper<MISPLicenseResponseDto> updateLicenseDetails(@RequestBody @Valid RequestWrapper<MISPLicenseUpdateRequestDto> request){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<MISPLicenseResponseDto>();
 		response.setResponse(infraProviderService.updateInfraProvider(request.getRequest().getProviderId(), request.getRequest().getLicenseKey(),
@@ -95,30 +95,30 @@ public class MISPLicenseController {
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicense())")
 	@GetMapping(value = "/misps")
-	@Operation(summary = "Service to get license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the GET /misp-licenses endpoint.")
+	@Operation(summary = "Service to get license details of misp - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the GET /misp-licenses endpoint.")
 	public ResponseWrapper<List<MISPLicenseEntity>> getLicenseDetails(){
 		ResponseWrapper<List<MISPLicenseEntity>> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.getInfraProvider());
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetmisplicensekey())")
 	@GetMapping(value = "/misps/{mispId}/licenseKey")
-	@Operation(summary = "Service to get/regenarate license details of misp - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /misp-licenses endpoint.")
+	@Operation(summary = "Service to get/regenarate license details of misp - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the POST /misp-licenses endpoint.")
 	public ResponseWrapper<MISPLicenseResponseDto> regenarteLicenseKey(@PathVariable @Valid String mispId){
 		ResponseWrapper<MISPLicenseResponseDto> response = new ResponseWrapper<>();
 		response.setResponse(infraProviderService.regenerateKey(mispId));
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PostMapping("/misps/filtervalues")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmispfiltervalues())")
-	@Operation(summary = "Service to filter misp details - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the GET /misp-licenses endpoint.")
+	@Operation(summary = "Service to filter misp details - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the GET /misp-licenses endpoint.")
 	public ResponseWrapper<FilterResponseCodeDto> filterValues(
 			@RequestBody @Valid RequestWrapper<FilterValueDto> request) {
 		ResponseWrapper<FilterResponseCodeDto> responseWrapper = new ResponseWrapper<>();
@@ -126,10 +126,10 @@ public class MISPLicenseController {
 		return responseWrapper;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PostMapping("/misps/search")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostmispsearch())")
-	@Operation(summary = "Service to search misp details  - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the GET /misp-licenses endpoint.")
+	@Operation(summary = "Service to search misp details  - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the GET /misp-licenses endpoint.")
 	public ResponseWrapper<PageResponseDto<MISPLicenseEntity>> search(
 			@RequestBody @Valid RequestWrapper<SearchDto> request) {
 		ResponseWrapper<PageResponseDto<MISPLicenseEntity>> responseWrapper = new ResponseWrapper<>();		

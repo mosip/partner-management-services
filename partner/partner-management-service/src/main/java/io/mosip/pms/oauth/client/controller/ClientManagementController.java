@@ -67,9 +67,9 @@ public class ClientManagementController {
 	@Autowired
 	private InputValidator inputValidator;
 
-	@Deprecated(since = "release-1.3.0-beta.4")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.4)")
 	@RequestMapping(value = "/oauth/client", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Service to create OAuth client  - deprecated since release-1.3.0-beta.4", description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the POST /oidc-clients endpoint.")
+	@Operation(summary = "Service to create OAuth client  - deprecated since release 1.3.0 (1.3.0-beta.4)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.4) and replaced by the POST /oidc-clients endpoint.")
 	public ResponseWrapper<ClientDetailResponse> createOAUTHClient(
 			@Valid @RequestBody RequestWrapper<ClientDetailCreateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
@@ -79,9 +79,9 @@ public class ClientManagementController {
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.4")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.4)")
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Service to update OAuth client  - deprecated since release-1.3.0-beta.4", description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the PUT /oidc-clients/{clientId} endpoint.")
+	@Operation(summary = "Service to update OAuth client  - deprecated since release 1.3.0 (1.3.0-beta.4)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.4) and replaced by the PUT /oidc-clients/{clientId} endpoint.")
 	public ResponseWrapper<ClientDetailResponse> updateOAUTHClient(@PathVariable("client_id") String clientId,
 			@Valid @RequestBody RequestWrapper<ClientDetailUpdateRequestV2> requestWrapper) throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
@@ -102,9 +102,9 @@ public class ClientManagementController {
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.4")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.4)")
 	@RequestMapping(value = "/oauth/client/{client_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Operation(summary = "Service to get OAuth client details  - deprecated since release-1.3.0-beta.4", description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the GET /oidc-clients/{clientId} endpoint.")
+	@Operation(summary = "Service to get OAuth client details  - deprecated since release 1.3.0 (1.3.0-beta.4)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.4) and replaced by the GET /oidc-clients/{clientId} endpoint.")
 	public ResponseWrapper<ClientDetail> getOAuthClient(@PathVariable("client_id") String clientId)
 			throws Exception {
 		featureAvailabilityUtil.validateOidcClientFeatureEnabled();
@@ -160,8 +160,8 @@ public class ClientManagementController {
 	@Deprecated
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
 	@GetMapping(value = "/oauth/client")
-	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by the Auth Partners - deprecated since release-1.3.0-beta.4.",
-			description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the GET /oidc-clients endpoint. This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles.")
+	@Operation(summary = "This endpoint retrieves a list of all OAuth clients created by the Auth Partners - deprecated since release 1.3.0 (1.3.0-beta.4).",
+			description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.4) and replaced by the GET /oidc-clients endpoint. This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OAuth clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -191,7 +191,7 @@ public class ClientManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoauthpartnersclients())")
 	@GetMapping(value = "/oidc-clients")
 	@Operation(summary = "Endpoint to get the list of all the OIDC clients created by the Auth Partners. Supports Esignet v1.6.2.",
-			description = "Available since release-1.3.0-beta.4. This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OIDC clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OIDC clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles. Also it is an enhanced version of the previous GET /oauth/client endpoint.")
+			description = "Available since release 1.3.0 (1.3.0-beta.4). This endpoint supports pagination, sorting, and and filtering based on optional query parameters.  If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the OIDC clients created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the OIDC clients created by all the partners. It is configured for PARTNER_ADMIN and AUTH_PARTNER roles. Also it is an enhanced version of the previous GET /oauth/client endpoint.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -246,7 +246,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc-clients", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostcreateoidcclient())")
 	@Operation(summary = "Creates a new OIDC client for a given Auth Partner. Supports Esignet v1.6.2.",
-			description = " Available since release 1.3.0-beta.4. This endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new additionalConfig field in the request.")
+			description = " Available since release 1.3.0 (1.3.0-beta.4). This endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous POST /oauth/client endpoint, with support for the new additionalConfig field in the request.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -268,7 +268,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPutupdateoidcclient())")
 	@Operation(summary = "Update existing OIDC client by Client ID. Supports Esignet v1.6.2.",
-			description = " Available since release 1.3.0-beta.4. This endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the request.")
+			description = " Available since release 1.3.0 (1.3.0-beta.4). This endpoint is only accessible to users with AUTH_PARTNER role and is an enhanced version of the previous PUT /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the request.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -292,7 +292,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetoidcclientdetails())")
 	@Operation(summary = "Get details of an existing OIDC client. Supports Esignet v1.6.2.",
-			description = " Available since release 1.3.0-beta.4. This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the response.")
+			description = " Available since release 1.3.0 (1.3.0-beta.4). This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role and is an enhanced version of the previous GET /oauth/client/{client_id} endpoint, with support for the new additionalConfig field in the response.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -309,7 +309,7 @@ public class ClientManagementController {
 	@RequestMapping(value = "/oidc-clients/{clientId}", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchdeactivateoidcclient())")
 	@Operation(summary = "Deactivate OIDC client by Client ID. Supports Esignet v1.6.2.",
-			description = " Available since release 1.3.0-beta.4. This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role.")
+			description = " Available since release 1.3.0 (1.3.0-beta.4). This endpoint is accessible to users with AUTH_PARTNER or PARTNER_ADMIN role.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
