@@ -110,7 +110,7 @@ GetDetailsOfPartner:
       endPoint: /v1/partnermanager/admin-partners/{partnerId}
       description: Validate that partner details retrieval fails when attempted without an admin role
       uniqueIdentifier: TC_PMS_GetPartnerDetails_08
-      role: idrepo
+      role: partnerftm
       checkErrorsOnlyInResponse: true
       restMethod: get
       inputTemplate: pms/GetDetailsOfPartner/getDetailsOfPartner
