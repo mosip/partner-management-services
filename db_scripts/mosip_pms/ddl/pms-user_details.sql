@@ -21,3 +21,4 @@ COMMENT ON COLUMN pms.user_details.cr_by IS 'Created By : ID or name of the user
 COMMENT ON COLUMN pms.user_details.consent_given IS 'Consent Given : Indicates whether consent has been given by the partner.';
 COMMENT ON COLUMN pms.user_details.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN pms.user_details.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+COMMENT ON COLUMN pms.user_details.notifications_seen_dtimes IS 'Notifications Seen Timestamp: The date and time when the notifications was seen.';

@@ -119,9 +119,9 @@ public class PartnerServiceController {
 	 *            this class contains partner details
 	 * @return response this class contains partner response
 	 */	
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@PostMapping
-	@Operation(summary = "partner self registration - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /partners/v3 endpoint.")
+	@Operation(summary = "partner self registration - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the POST /partners/v3 endpoint.")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerSelfRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequest> request) {
 		requestValidator.validateReqTime(request.getRequesttime());
@@ -138,9 +138,9 @@ public class PartnerServiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@Deprecated(since = "release-1.3.0-beta.3")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.3)")
 	@RequestMapping(value = "/v2", method = RequestMethod.POST)
-	@Operation(summary = "partner registration - deprecated since release-1.3.0-beta.3", description = "This endpoint has been deprecated since the release-1.3.0-beta.3 and replaced by the POST /partners/v3 endpoint.")
+	@Operation(summary = "partner registration - deprecated since release 1.3.0 (1.3.0-beta.3)", description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.3) and replaced by the POST /partners/v3 endpoint.")
 	public ResponseEntity<ResponseWrapper<PartnerResponse>> partnerRegistration(
 			@RequestBody @Valid RequestWrapper<PartnerRequestDto> request) {
 		ResponseWrapper<PartnerResponse> response = new ResponseWrapper<>();
@@ -162,11 +162,11 @@ public class PartnerServiceController {
 	 * @return
 	 */
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnersbioextractors())")
-	@Deprecated(since = "release-1.3.0-beta.5")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.5)")
 	@RequestMapping(value = "/{partnerId}/bioextractors/{policyId}", method = RequestMethod.POST)
 	@Operation(
-			summary = "Service to add bio extractors - deprecated since release-1.3.0-beta.5",
-			description = "This endpoint has been deprecated since the release-1.3.0-beta.5 and replaced by the POST /partner-policy-requests/{requestId}/bio-extractors-request endpoint.",
+			summary = "Service to add bio extractors - deprecated since release 1.3.0 (1.3.0-beta.5)",
+			description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.5) and replaced by the POST /partner-policy-requests/{requestId}/bio-extractors-request endpoint.",
 			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> addBiometricExtractors(@PathVariable String partnerId ,@PathVariable String policyId,
 			@RequestBody @Valid RequestWrapper<ExtractorsDto> request){
@@ -197,12 +197,12 @@ public class PartnerServiceController {
 	/**
 	 * @deprecated Replaced by POST /partner-policy-requests/{requestId}/credential-types-request.
 	 */
-	@Deprecated(since = "release-1.3.0-beta.5")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.5)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostpartnerscredentialtypepolicies())")
 	@RequestMapping(value = "/{partnerId}/credentialtype/{credentialType}/policies/{policyName}",method = RequestMethod.POST)
 	@Operation(
-			summary = "Service to map partner and policy to a credential type — deprecated since release-1.3.0-beta.5",
-			description = "Deprecated since release-1.3.0-beta.5. Replaced by POST /partner-policy-requests/{requestId}/credential-types-request.",
+			summary = "Service to map partner and policy to a credential type — deprecated since release 1.3.0 (1.3.0-beta.5)",
+			description = "Deprecated since release 1.3.0 (1.3.0-beta.5). Replaced by POST /partner-policy-requests/{requestId}/credential-types-request.",
 			deprecated = true)
 	public ResponseEntity<ResponseWrapper<String>> mapPolicyToCredentialType(@PathVariable @Valid String partnerId ,@PathVariable @Valid String policyName,
 			@PathVariable @Valid String credentialType){
@@ -590,7 +590,7 @@ public class PartnerServiceController {
 
 	@PutMapping("/exists")
 	@Operation(summary = "This endpoint is used for verification of partner",
-			description = "Available since release 1.3.0-beta.3. This endpoint checks whether a partner already exists in PMS. It validates the partner by checking for duplicates based on the provided email and partner ID, and returns a conflict if either is already registered.")
+			description = "Available since release 1.3.0 (1.3.0-beta.3). This endpoint checks whether a partner already exists in PMS. It validates the partner by checking for duplicates based on the provided email and partner ID, and returns a conflict if either is already registered.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})
@@ -636,7 +636,7 @@ public class PartnerServiceController {
 
 	@PostMapping(value = "/v3")
 	@Operation(summary = "This endpoint is used for partner self registration",
-			description = "Available since release-1.3.0-beta.3. Available for all partner roles. If the role is PARTNER_ADMIN, the email provided in the request body will be used for registration. For all other partner roles, the email from the logged-in user’s token will be used for registration.")
+			description = "Available since release 1.3.0 (1.3.0-beta.3). Available for all partner roles. If the role is PARTNER_ADMIN, the email provided in the request body will be used for registration. For all other partner roles, the email from the logged-in user’s token will be used for registration.")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))})

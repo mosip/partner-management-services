@@ -299,15 +299,15 @@ public class PartnerManagementController {
 	}
 	
 	/*
-	 * This endpoint has been deprecated since the release-1.3.0-beta.4
+	 * This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.4)
 	 * It has been replaced by the new PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint.
 	 * Please use the new endpoint for all future requests.
 	 */
-	@Deprecated(since = "release-1.3.0-beta.4")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.4)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPatchpartnerspolicyapikeystatus())")
 	@PatchMapping(value = "/partners/{partnerId}/policy/{policyId}/apiKey/status")
-	@Operation(summary = "Service to activate/de-activate partner API key - deprecated since release-1.3.0-beta.4",
-			description = "This endpoint has been deprecated since the release-1.3.0-beta.4 and replaced by the PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint")
+	@Operation(summary = "Service to activate/de-activate partner API key - deprecated since release 1.3.0 (1.3.0-beta.4)",
+			description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.4) and replaced by the PATCH /partners/{partnerId}/policies/{policyId}/api-keys/{apiKeyName} endpoint")
 	public ResponseEntity<ResponseWrapper<String>> activateDeactivatePartnerAPIKey(@PathVariable String partnerId,
 			@PathVariable String policyId, @RequestBody @Valid RequestWrapper<APIkeyStatusUpdateRequestDto> request) {
 		ResponseWrapper<String> response = new ResponseWrapper<>();
@@ -622,11 +622,11 @@ public class PartnerManagementController {
 		return response;
 	}
 
-	@Deprecated(since = "release-1.3.0-beta.2")
+	@Deprecated(since = "release 1.3.0 (1.3.0-beta.2)")
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys")
-	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners - deprecated since the release-1.3.0-beta.2",
-	description = "This endpoint has been deprecated since the release-1.3.0-beta.2 and replaced by the GET /partner-api-keys/v2 endpoint")
+	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners - deprecated since release 1.3.0 (1.3.0-beta.2)",
+	description = "This endpoint has been deprecated since release 1.3.0 (1.3.0-beta.2) and replaced by the GET /partner-api-keys/v2 endpoint")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -658,7 +658,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getGetpartnersapikeyrequests())")
 	@GetMapping(value = "/partner-api-keys/v2")
 	@Operation(summary = "This endpoint retrieves a list of all the API keys created by the Auth Partners.",
-			description = "Available since release-1.3.0-beta.1. This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
+			description = "Available since release 1.3.0 (1.3.0-beta.1). This endpoint supports pagination, sorting, and and filtering based on optional query parameters. If the token used to access this endpoint, does not have the PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners associated with the logged in user only. If the token used to access this endpoint, has PARTNER_ADMIN role, then it will fetch all the API keys created by all the partners.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -811,7 +811,7 @@ public class PartnerManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getPostlinkpolicygrouptopartner())")
 	@PostMapping(value = "/{partnerId}/policy-group")
 	@Operation(summary = "This endpoint is used for linking a policy group to a partner.",
-			description = "Available since release-1.3.0-beta.3. This endpoint is available for users with the PARTNER_ADMIN role. It is used to link a policy group to a partner with the MISP_PARTNER role, if not already linked.")
+			description = "Available since release 1.3.0 (1.3.0-beta.3). This endpoint is available for users with the PARTNER_ADMIN role. It is used to link a policy group to a partner with the MISP_PARTNER role, if not already linked.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Policy group linked successfully"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
