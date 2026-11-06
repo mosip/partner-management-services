@@ -3,7 +3,7 @@ GetPartnerExpiringCertificateBeforeCertificateUpload:
       endPoint: /v1/partnermanager/partners/partner-certificates-details
       role: partnerdevice
       description: Validate that no expiring partner certificates are returned if certificates have not been uploaded yet
-      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_03
+      uniqueIdentifier: TC_PMS_GetPartnerExpiringCertificateNegativeScenariosNegativeScenarios_05
       restMethod: get
       inputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUpload
       outputTemplate: pms/GetPartnerExpiringCertificate/GetPartnerExpiringCertificateBeforeCertificateUploadResult

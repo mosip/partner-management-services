@@ -1,7 +1,7 @@
 createSearchPolicy:
    Pms_SearchPolicy_AllValid_Smoke:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_01
+      uniqueIdentifier: TC_PMS_SearchPolicy_01
       description: Validate that policies can be searched and retrieved successfully for all valid inputs
       role: partner
       checkErrorsOnlyInResponse: true
@@ -25,7 +25,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_Only_FilterCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_03
+      uniqueIdentifier: TC_PMS_SearchPolicy_03
       description: Validate that policies can be searched successfully using only filter criteria
       role: partner
       checkErrorsOnlyInResponse: true
@@ -50,7 +50,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_Only_SortaCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_04
+      uniqueIdentifier: TC_PMS_SearchPolicy_04
       description: Validate that policies can be searched successfully using only sorting
       role: partner
       checkErrorsOnlyInResponse: true
@@ -80,7 +80,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_Only_PaginationCriteria_Smoke:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_05
+      uniqueIdentifier: TC_PMS_SearchPolicy_05
       description: Validate that policies can be searched successfully using only pagination
       role: partner
       checkErrorsOnlyInResponse: true
@@ -104,7 +104,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_type_contains_Smoke_asc:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_06
+      uniqueIdentifier: TC_PMS_SearchPolicy_06
       description: Validate that policies can be searched successfully when the type contains a given value sorted in ascending order
       role: partner
       restMethod: post
@@ -141,7 +141,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_type_contains_Smoke_desc:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_07
+      uniqueIdentifier: TC_PMS_SearchPolicy_07
       description: Validate that policies can be searched successfully when the type contains a given value sorted in descending order
       role: partner
       restMethod: post
@@ -178,7 +178,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_type_equals_Smoke_desc:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_08
+      uniqueIdentifier: TC_PMS_SearchPolicy_08
       description: Validate that policies can be searched successfully when the type equals a given value sorted in descending order
       role: partner
       restMethod: post
@@ -214,7 +214,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_type_equals_Smoke_asc:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_09
+      uniqueIdentifier: TC_PMS_SearchPolicy_09
       description: Validate that policies can be searched successfully when the type equals a given value sorted in ascending order  
       role: partner
       restMethod: post
@@ -250,7 +250,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_type_startswith_Smoke_asc:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_10
+      uniqueIdentifier: TC_PMS_SearchPolicy_10
       description: Validate that policies can be searched successfully when the type starts with a given value sorted in ascending order
       role: partner
       restMethod: post
@@ -286,7 +286,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_type_startswith_Smoke_desc:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_11
+      uniqueIdentifier: TC_PMS_SearchPolicy_11
       description: Validate that policies can be searched successfully when the type starts with a given value sorted in descending order
       role: partner
       restMethod: post
@@ -323,7 +323,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_invalid_value_contains:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_12
+      uniqueIdentifier: TC_PMS_SearchPolicy_12
       description: Validate that searching policies returns fails when an invalid value is used with the contains filter
       role: partner
       checkErrorsOnlyInResponse: true
@@ -355,7 +355,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_invalid_value_equals:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_13
+      uniqueIdentifier: TC_PMS_SearchPolicy_13
       description: Validate that searching policies returns fails when an invalid value is used with the equals filter
       role: partner
       checkErrorsOnlyInResponse: true
@@ -386,7 +386,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_invalid_value_startswith:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_14
+      uniqueIdentifier: TC_PMS_SearchPolicy_14
       description: Validate that searching policies returns fails when an invalid value is used with the starts with filter
       role: partner
       checkErrorsOnlyInResponse: true
@@ -417,7 +417,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_invalid_columnName:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_15
+      uniqueIdentifier: TC_PMS_SearchPolicy_15
       description: Validate that searching policies fails when an invalid column name is provided
       role: partner
       restMethod: post
@@ -452,7 +452,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_missing_columnName:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_16
+      uniqueIdentifier: TC_PMS_SearchPolicy_16
       description: Validate that searching policies fails when the column name is missing
       role: partner
       restMethod: post
@@ -488,7 +488,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_missing_type:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_17
+      uniqueIdentifier: TC_PMS_SearchPolicy_17
       description: Validate that searching policies fails when the type filter is missing
       role: partner
       restMethod: post
@@ -523,7 +523,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_invalid_sort_type:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_18
+      uniqueIdentifier: TC_PMS_SearchPolicy_18
       description: Validate that searching policies fails when an invalid sort type is provided
       role: partner
       restMethod: post
@@ -558,7 +558,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_missing_sort_type:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_19
+      uniqueIdentifier: TC_PMS_SearchPolicy_19
       description: Validate that searching policies fails when the sort type is missing
       role: partner
       restMethod: post
@@ -593,7 +593,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_invalid_sort_field:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_20
+      uniqueIdentifier: TC_PMS_SearchPolicy_20
       description: Validate that searching policies fails when an invalid sort field is provided
       role: partner
       restMethod: post
@@ -628,7 +628,7 @@ createSearchPolicy:
 }'
    Pms_SearchPolicy_with_missing_sort_field:
       endPoint: /v1/policymanager/policies/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_21
+      uniqueIdentifier: TC_PMS_SearchPolicy_21
       description: Validate that searching policies fails when the sort field is missing
       role: partner
       restMethod: post

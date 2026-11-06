@@ -240,7 +240,6 @@ SaveSecureBiometricInterfaceCreateDto:
       description: Validate that secure biometric interface details can be saved successfully with all valid inputs
       checkErrorsOnlyInResponse: true
       restMethod: post
-      uniqueIdentifier: TC_PMS_createSaveSecureBiometricInterface_12
       inputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDto
       outputTemplate: pms/SaveSecureBiometricInterfaceCreateDto/SaveSecureBiometricInterfaceCreateDtoResult
       input: '{

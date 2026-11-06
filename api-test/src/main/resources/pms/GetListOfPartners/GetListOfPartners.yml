@@ -421,7 +421,7 @@ GetListOfPartners:
    Pms_GetListOfPartners_emailAddress_asc:
       endPoint: /v1/partnermanager/admin-partners?sortFieldName=partnerId&sortType=asc&pageNo=0&pageSize=8
       description: Validate that partners are successfully retrieved and sorted in ascending order when filtered by a valid email address
-      uniqueIdentifier: TC_PMS_GetListOfPartners_28
+      uniqueIdentifier: TC_PMS_GetListOfPartners_51
       role: partneradmin
       checkErrorsOnlyInResponse: true
       restMethod: get

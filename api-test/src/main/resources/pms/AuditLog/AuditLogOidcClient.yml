@@ -4,7 +4,7 @@ addContact:
       uniqueIdentifier: TC_PMS_addContact_02
       description: Validate that creating an OIDC client via PMS fires a partner service audit log entry
       role: audit
-      additionalDependencies: TC_PMS_CreateOIDCClient_01
+      additionalDependencies: TC_PMS_CreateOIDCClient_01,TC_PMS_CreateOIDCClient_76
       templateFields: ["partnerQuery","partner service"]
       restMethod: post
       inputTemplate: pms/AuditLog/auditlog

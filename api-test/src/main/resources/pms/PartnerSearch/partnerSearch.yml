@@ -1,7 +1,7 @@
 createSearchPartner:
    Pms_SearchPartner_type_contains_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_01
+      uniqueIdentifier: TC_PMS_PartnerSearch_01
       description: Validate that partners can be searched successfully using the type field with partial matches sorted in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
@@ -32,7 +32,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_type__Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_02
+      uniqueIdentifier: TC_PMS_PartnerSearch_02
       description: Validate that partners can be searched successfully using the type field with exact matches, sorted in ascending order
       role: partner
       checkErrorsOnlyInResponse: true
@@ -63,7 +63,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_type_contains_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_03
+      uniqueIdentifier: TC_PMS_PartnerSearch_03
       description: Validate that partners can be searched successfully using the type field with partial matches sorted in descending order
       role: partner
       checkErrorsOnlyInResponse: true
@@ -94,7 +94,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_type_equals_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_04
+      uniqueIdentifier: TC_PMS_PartnerSearch_04
       description: Validate that partners can be searched successfully using the type field with exact matches sorted in descending order
       role: partner
       restMethod: post
@@ -129,7 +129,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_type_equals_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_05
+      uniqueIdentifier: TC_PMS_PartnerSearch_05
       description: Validate that partners can be searched successfully using the type field with exact matches sorted in ascending order
       role: partner
       restMethod: post
@@ -164,7 +164,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_type_startswith_Smoke_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_06
+      uniqueIdentifier: TC_PMS_PartnerSearch_06
       description: Validate that partners can be searched successfully when the type field starts with a given value sorted in ascending order
       role: partner
       restMethod: post
@@ -199,7 +199,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_type_startswith_Smoke_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_07
+      uniqueIdentifier: TC_PMS_PartnerSearch_07
       description: Validate that partners can be searched successfully when the type field starts with a given value sorted in descending order
       role: partner
       restMethod: post
@@ -234,7 +234,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_columnname_id_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_08
+      uniqueIdentifier: TC_PMS_PartnerSearch_08
       description: Validate that partners can be retrieved and sorted correctly in descending order based on the ID column
       role: partner
       checkErrorsOnlyInResponse: true
@@ -271,7 +271,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_columnname_id_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_09
+      uniqueIdentifier: TC_PMS_PartnerSearch_09
       description: Validate that partners can be retrieved and sorted correctly in ascending order based on the ID column
       role: partner
       checkErrorsOnlyInResponse: true
@@ -307,7 +307,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_columnname_address_asc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_10
+      uniqueIdentifier: TC_PMS_PartnerSearch_10
       description: Validate that partners can be retrieved and sorted correctly in ascending order based on the address column
       role: partner
       checkErrorsOnlyInResponse: true
@@ -344,7 +344,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_columnname_address_desc_sid:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_11
+      uniqueIdentifier: TC_PMS_PartnerSearch_11
       description: Validate that partners are listed correctly when sorted by the address column in descending order
       role: partner
       checkErrorsOnlyInResponse: true
@@ -381,7 +381,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_invalid_value_containts:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_12
+      uniqueIdentifier: TC_PMS_PartnerSearch_12
       description: Validate that searching partners fails or returns no results when an invalid value is used with the contains filter
       role: partner
       restMethod: post
@@ -416,7 +416,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_invalid_value_equals:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_13
+      uniqueIdentifier: TC_PMS_PartnerSearch_13
       description: Validate that searching partners fails or returns no results when an invalid value is used with the equals filter
       role: partner
       restMethod: post
@@ -451,7 +451,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_invalid_value_startswith:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_14
+      uniqueIdentifier: TC_PMS_PartnerSearch_14
       description: Validate that searching partners fails or returns no results when an invalid value is used with the starts with filter
       role: partner
       restMethod: post
@@ -486,7 +486,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_invalid_columnName:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_15
+      uniqueIdentifier: TC_PMS_PartnerSearch_15
       description: Validate that the system handles invalid column names gracefully and prevents incorrect partner search results
       role: partner
       restMethod: post
@@ -521,7 +521,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_missing_columnName:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_16
+      uniqueIdentifier: TC_PMS_PartnerSearch_16
       description: Validate that partners can be retrieved successfully when filtered by the type field
       role: partner
       restMethod: post
@@ -556,7 +556,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_missing_type:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_17
+      uniqueIdentifier: TC_PMS_PartnerSearch_17
       description: Validate that searching partners fails or returns an error when the type filter is missing
       role: partner
       restMethod: post
@@ -591,7 +591,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_invalid_sort_type:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_18
+      uniqueIdentifier: TC_PMS_PartnerSearch_18
       description: Validate that searching partners fails an error when an invalid sort type is provided
       role: partner
       restMethod: post
@@ -626,7 +626,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_missing_sort_type:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_19
+      uniqueIdentifier: TC_PMS_PartnerSearch_19
       description: Validate that searching partners fails an error when the sort type is missing
       role: partner
       restMethod: post
@@ -661,7 +661,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_invalid_sort_field:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_20
+      uniqueIdentifier: TC_PMS_PartnerSearch_20
       description: Validate that searching partners fails an error when an invalid sort field is provided
       role: partner
       restMethod: post
@@ -696,7 +696,7 @@ createSearchPartner:
 }'
    Pms_SearchPartner_with_missing_sort_field:
       endPoint: /v1/partnermanager/partners/search
-      uniqueIdentifier: TC_PMS_createSearchPartner_21
+      uniqueIdentifier: TC_PMS_PartnerSearch_21
       description: Validate that searching partners fails an error when the sort field is missing
       role: partner
       restMethod: post
