@@ -1,7 +1,7 @@
 DeactivateSBIWithAssociatedDevicesNegativeScenarios:
    Pms_DeactivateSBIWithAssociatedDevices_Without_Authentication_Neg:
       endPoint: /v1/partnermanager/securebiometricinterface/{sbiId}
-      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_01
+      uniqueIdentifier: TC_PMS_DeactivateSBIWithAssociatedDevices_26
       description: Validate that SBI deactivation fails when authentication is not provided even if it has associated devices
       role: invalidtoken
       checkErrorsOnlyInResponse: true

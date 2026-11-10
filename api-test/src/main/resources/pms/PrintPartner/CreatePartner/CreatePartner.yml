@@ -24,7 +24,7 @@ createPartnerSelfRegistration:
     
    Pms_PartnerSelfRegistration_PrintPartner_DuplicateEmail_Neg:
       endPoint: /v1/partnermanager/partners/v2
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_02
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_23
       description: Validate that partner self-registration fails when a duplicate email is provided
       role: partner
       restMethod: post
@@ -50,7 +50,7 @@ createPartnerSelfRegistration:
     
    Pms_PartnerSelfRegistration_PrintPartner_SpaceIn_PartnerId_Neg:
       endPoint: /v1/partnermanager/partners/v2
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_03
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_24
       description: Validate that partner self-registration fails when the Partner ID contains only spaces
       role: partner
       restMethod: post

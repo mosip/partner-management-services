@@ -501,7 +501,7 @@ createPartnerSelfRegistration:
       endPoint: /v1/partnermanager/partners
       description: Validate that a partner successfully completes self registration when all required inputs are valid
       role: partnerauth
-      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_21
+      uniqueIdentifier: TC_PMS_createPartnerSelfRegistration_22
       restMethod: post
       inputTemplate: pms/CreatePartner/createPartner
       outputTemplate: pms/error

@@ -90,7 +90,7 @@ public class PatchWithPathParamsAndBodyForAutoGenId extends PMSUtil implements I
 				getJsonFromTemplate(testCaseDTO.getInput(), testCaseDTO.getInputTemplate()), COOKIENAME,
 				testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams, idKeyName);
 
-		validateResponse(response, testCaseName);
+		validateResponse(response, testCaseName, idKeyName);
 		Map<String, List<OutputValidationDto>> ouputValid = OutputValidationUtil.doJsonOutputValidation(
 				response.asString(), getJsonFromTemplate(testCaseDTO.getOutput(), testCaseDTO.getOutputTemplate()),
 				testCaseDTO, response.getStatusCode());

@@ -115,7 +115,7 @@ public class PutWithPathParamsAndBody extends PMSUtil implements ITest {
 				response = putWithPathParamsBodyAndCookie(ApplnURI + testCaseDTO.getEndPoint(), inputJson, COOKIENAME,
 						testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), pathParams);
 			}
-			validateResponse(response, testCaseName);
+			validateResponse(response, testCaseName, idKeyName);
 			Map<String, List<OutputValidationDto>> ouputValid = null;
 
 			if (idKeyName != null && !idKeyName.isEmpty() && testCaseName.toLowerCase().contains("_sid")) {

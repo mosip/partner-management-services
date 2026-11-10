@@ -122,7 +122,7 @@ public class SimplePostForAutoGenId extends PMSUtil implements ITest {
 						auditLogCheck, COOKIENAME, testCaseDTO.getRole(), testCaseDTO.getTestCaseName(), idKeyName);
 			}
 		}
-		validateResponse(response, testCaseName);
+		validateResponse(response, testCaseName, idKeyName);
 		Map<String, List<OutputValidationDto>> ouputValid = null;
 
 		ouputValid = OutputValidationUtil.doJsonOutputValidation(response.asString(),
