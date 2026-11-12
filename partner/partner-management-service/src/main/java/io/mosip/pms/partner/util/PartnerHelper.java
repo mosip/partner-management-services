@@ -221,8 +221,7 @@ public class PartnerHelper {
 
     /**
      * Roles that skip the "does this partner id belong to me" check, but only on the policies API
-     * used by the credential service. Empty by default, so nobody skips the check.
-     * (mosip.pms.required.roles does the same thing for every API that performs the ownership check.)
+     * used by the credential service.
      */
     @Value("${mosip.pms.ownership.exempt.service.roles:}")
     private List<String> ownershipExemptServiceRoles;
