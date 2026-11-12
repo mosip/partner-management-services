@@ -1264,7 +1264,9 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	public PartnerCredentialTypePolicyDto getPartnerCredentialTypePolicy(String credentialType, String partnerId)
 			throws JsonParseException, JsonMappingException, IOException {
-		partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole(partnerId);
+		if (!partnerHelper.hasInternalServiceRole()) {
+			partnerHelper.validateLoggedInUserAuthorization(partnerId);
+		}
 		PartnerPolicyCredentialType partnerCredentialTypePolicy = partnerCredentialTypePolicyRepo
 				.findByPartnerIdAndCrdentialType(partnerId, credentialType);
 		if (partnerCredentialTypePolicy == null) {

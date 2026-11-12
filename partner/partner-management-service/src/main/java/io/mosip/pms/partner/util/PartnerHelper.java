@@ -390,17 +390,9 @@ public class PartnerHelper {
     }
 
     /**
-     * Skips the ownership check for callers that hold a role listed in either
-     * mosip.pms.required.roles.internalservices or mosip.pms.required.roles. Everyone else gets the normal check.
+     * True when the logged-in user holds a role listed in mosip.pms.required.roles.internalservices.
      */
-    public void validateLoggedInUserAuthorizationOrInternalServiceRole(String partnerId) {
-        if (hasInternalServiceRole()) {
-            return;
-        }
-        validateLoggedInUserAuthorization(partnerId);
-    }
-
-    private boolean hasInternalServiceRole() {
+    public boolean hasInternalServiceRole() {
         if (internalServiceRoles == null || internalServiceRoles.isEmpty()) {
             return false;
         }

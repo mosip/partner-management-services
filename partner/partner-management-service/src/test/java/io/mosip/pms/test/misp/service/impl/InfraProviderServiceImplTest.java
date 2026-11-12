@@ -1282,45 +1282,44 @@ public class InfraProviderServiceImplTest {
 		org.springframework.security.core.context.SecurityContextHolder.setContext(context);
 		ReflectionTestUtils.setField(partnerHelper, "internalServiceRoles",
 				List.of("CREDENTIAL_REQUEST", "CREDENTIAL_ISSUANCE"));
-		Mockito.when(searchHelper.isLoggedInUserMismatch("other-partner")).thenReturn(true);
 	}
 
 	@Test
-	public void validateLoggedInUserAuthorizationOrInternalServiceRole_serviceRoleSkipsOwnershipCheck() {
+	public void hasInternalServiceRole_listedRole_returnsTrue() {
 		try {
 			givenLoggedInRoles("CREDENTIAL_REQUEST");
-			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
+			assertTrue(partnerHelper.hasInternalServiceRole());
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
 	}
 
 	@Test
-	public void validateLoggedInUserAuthorizationOrInternalServiceRole_rolePrefixIsIgnored() {
+	public void hasInternalServiceRole_rolePrefixIsIgnored() {
 		try {
 			givenLoggedInRoles("ROLE_CREDENTIAL_ISSUANCE");
-			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
+			assertTrue(partnerHelper.hasInternalServiceRole());
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
 	}
 
-	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
-	public void validateLoggedInUserAuthorizationOrInternalServiceRole_otherRoleStillChecked() {
+	@Test
+	public void hasInternalServiceRole_otherRole_returnsFalse() {
 		try {
 			givenLoggedInRoles("PARTNER");
-			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
+			assertFalse(partnerHelper.hasInternalServiceRole());
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
 	}
 
-	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
-	public void validateLoggedInUserAuthorizationOrInternalServiceRole_emptyPropertyKeepsCheck() {
+	@Test
+	public void hasInternalServiceRole_emptyProperty_returnsFalse() {
 		try {
 			givenLoggedInRoles("CREDENTIAL_REQUEST");
 			ReflectionTestUtils.setField(partnerHelper, "internalServiceRoles", List.of());
-			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
+			assertFalse(partnerHelper.hasInternalServiceRole());
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
