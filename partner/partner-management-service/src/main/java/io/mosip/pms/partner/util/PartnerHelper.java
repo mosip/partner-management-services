@@ -223,8 +223,8 @@ public class PartnerHelper {
      * Roles that skip the "does this partner id belong to me" check, but only on the policies API
      * used by the credential service.
      */
-    @Value("${mosip.pms.ownership.exempt.service.roles:}")
-    private List<String> ownershipExemptServiceRoles;
+    @Value("${mosip.pms.credential.required.roles:}")
+    private List<String> credentialRequiredRoles;
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
@@ -390,18 +390,18 @@ public class PartnerHelper {
     }
 
     /**
-     * Same as validateLoggedInUserAuthorization, but callers that hold a role listed in
-     * mosip.pms.ownership.exempt.service.roles skip the ownership check.
+     * Skips the ownership check for callers that hold a role listed in either
+     * mosip.pms.credential.required.roles or mosip.pms.required.roles. Everyone else gets the normal check.
      */
-    public void validateLoggedInUserAuthorizationOrServiceRole(String partnerId) {
-        if (hasOwnershipExemptServiceRole()) {
+    public void validateLoggedInUserAuthorizationOrCredentialRole(String partnerId) {
+        if (hasCredentialRequiredRole()) {
             return;
         }
         validateLoggedInUserAuthorization(partnerId);
     }
 
-    private boolean hasOwnershipExemptServiceRole() {
-        if (ownershipExemptServiceRoles == null || ownershipExemptServiceRoles.isEmpty()) {
+    private boolean hasCredentialRequiredRole() {
+        if (credentialRequiredRoles == null || credentialRequiredRoles.isEmpty()) {
             return false;
         }
         AuthUserDetails user = UserDetailUtil.getLoggedInUserDetails();
@@ -410,7 +410,7 @@ public class PartnerHelper {
         }
         return user.getAuthorities().stream()
                 .map(a -> a.getAuthority().replaceFirst("^ROLE_", ""))
-                .anyMatch(ownershipExemptServiceRoles::contains);
+                .anyMatch(credentialRequiredRoles::contains);
     }
 
     /**
