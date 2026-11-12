@@ -1093,7 +1093,7 @@ public class PartnerServiceImplTest {
 	@Test(expected = PartnerServiceException.class)
 	public void getPartnerCredentialTypePolicy_whenOwnershipCheckFails_throws() throws JsonParseException, JsonMappingException, IOException {
 		Mockito.doThrow(io.mosip.pms.partner.exception.PartnerServiceException.class)
-				.when(partnerHelper).validateLoggedInUserAuthorization("not-logged-in-partner-id");
+				.when(partnerHelper).validateLoggedInUserAuthorizationOrServiceRole("not-logged-in-partner-id");
 		pserviceImpl.getPartnerCredentialTypePolicy("euin", "not-logged-in-partner-id");
 	}
 
