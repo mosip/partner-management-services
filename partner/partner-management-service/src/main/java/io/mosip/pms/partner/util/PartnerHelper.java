@@ -223,8 +223,8 @@ public class PartnerHelper {
      * Roles that skip the "does this partner id belong to me" check, but only on the policies API
      * used by the credential service.
      */
-    @Value("${mosip.pms.credential.required.roles:}")
-    private List<String> credentialRequiredRoles;
+    @Value("${mosip.pms.required.roles.internalservices:}")
+    private List<String> internalServiceRoles;
 
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
@@ -391,17 +391,17 @@ public class PartnerHelper {
 
     /**
      * Skips the ownership check for callers that hold a role listed in either
-     * mosip.pms.credential.required.roles or mosip.pms.required.roles. Everyone else gets the normal check.
+     * mosip.pms.required.roles.internalservices or mosip.pms.required.roles. Everyone else gets the normal check.
      */
-    public void validateLoggedInUserAuthorizationOrCredentialRole(String partnerId) {
-        if (hasCredentialRequiredRole()) {
+    public void validateLoggedInUserAuthorizationOrInternalServiceRole(String partnerId) {
+        if (hasInternalServiceRole()) {
             return;
         }
         validateLoggedInUserAuthorization(partnerId);
     }
 
-    private boolean hasCredentialRequiredRole() {
-        if (credentialRequiredRoles == null || credentialRequiredRoles.isEmpty()) {
+    private boolean hasInternalServiceRole() {
+        if (internalServiceRoles == null || internalServiceRoles.isEmpty()) {
             return false;
         }
         AuthUserDetails user = UserDetailUtil.getLoggedInUserDetails();
@@ -410,7 +410,7 @@ public class PartnerHelper {
         }
         return user.getAuthorities().stream()
                 .map(a -> a.getAuthority().replaceFirst("^ROLE_", ""))
-                .anyMatch(credentialRequiredRoles::contains);
+                .anyMatch(internalServiceRoles::contains);
     }
 
     /**

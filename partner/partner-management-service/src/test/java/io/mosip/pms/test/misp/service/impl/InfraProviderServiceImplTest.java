@@ -1280,47 +1280,47 @@ public class InfraProviderServiceImplTest {
 				.mock(org.springframework.security.core.context.SecurityContext.class);
 		Mockito.when(context.getAuthentication()).thenReturn(authentication);
 		org.springframework.security.core.context.SecurityContextHolder.setContext(context);
-		ReflectionTestUtils.setField(partnerHelper, "credentialRequiredRoles",
+		ReflectionTestUtils.setField(partnerHelper, "internalServiceRoles",
 				List.of("CREDENTIAL_REQUEST", "CREDENTIAL_ISSUANCE"));
 		Mockito.when(searchHelper.isLoggedInUserMismatch("other-partner")).thenReturn(true);
 	}
 
 	@Test
-	public void validateLoggedInUserAuthorizationOrCredentialRole_serviceRoleSkipsOwnershipCheck() {
+	public void validateLoggedInUserAuthorizationOrInternalServiceRole_serviceRoleSkipsOwnershipCheck() {
 		try {
 			givenLoggedInRoles("CREDENTIAL_REQUEST");
-			partnerHelper.validateLoggedInUserAuthorizationOrCredentialRole("other-partner");
+			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
 	}
 
 	@Test
-	public void validateLoggedInUserAuthorizationOrCredentialRole_rolePrefixIsIgnored() {
+	public void validateLoggedInUserAuthorizationOrInternalServiceRole_rolePrefixIsIgnored() {
 		try {
 			givenLoggedInRoles("ROLE_CREDENTIAL_ISSUANCE");
-			partnerHelper.validateLoggedInUserAuthorizationOrCredentialRole("other-partner");
+			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
 	}
 
 	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
-	public void validateLoggedInUserAuthorizationOrCredentialRole_otherRoleStillChecked() {
+	public void validateLoggedInUserAuthorizationOrInternalServiceRole_otherRoleStillChecked() {
 		try {
 			givenLoggedInRoles("PARTNER");
-			partnerHelper.validateLoggedInUserAuthorizationOrCredentialRole("other-partner");
+			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
 	}
 
 	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
-	public void validateLoggedInUserAuthorizationOrCredentialRole_emptyPropertyKeepsCheck() {
+	public void validateLoggedInUserAuthorizationOrInternalServiceRole_emptyPropertyKeepsCheck() {
 		try {
 			givenLoggedInRoles("CREDENTIAL_REQUEST");
-			ReflectionTestUtils.setField(partnerHelper, "credentialRequiredRoles", List.of());
-			partnerHelper.validateLoggedInUserAuthorizationOrCredentialRole("other-partner");
+			ReflectionTestUtils.setField(partnerHelper, "internalServiceRoles", List.of());
+			partnerHelper.validateLoggedInUserAuthorizationOrInternalServiceRole("other-partner");
 		} finally {
 			org.springframework.security.core.context.SecurityContextHolder.clearContext();
 		}
