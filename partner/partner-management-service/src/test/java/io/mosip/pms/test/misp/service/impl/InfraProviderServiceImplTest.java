@@ -1264,4 +1264,65 @@ public class InfraProviderServiceImplTest {
 		assertErrorCode(result.getErrors(), "PMS_MSP_441");
 		verify(mispLicenseV2Repository, never()).save(any());
 	}
+
+	private void givenLoggedInRoles(String... roles) {
+		java.util.List<org.springframework.security.core.GrantedAuthority> authorities = new java.util.ArrayList<>();
+		for (String role : roles) {
+			authorities.add(new org.springframework.security.core.authority.SimpleGrantedAuthority(role));
+		}
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails user = Mockito
+				.mock(io.mosip.kernel.openid.bridge.model.AuthUserDetails.class);
+		Mockito.doReturn(authorities).when(user).getAuthorities();
+		org.springframework.security.core.Authentication authentication = Mockito
+				.mock(org.springframework.security.core.Authentication.class);
+		Mockito.when(authentication.getPrincipal()).thenReturn(user);
+		org.springframework.security.core.context.SecurityContext context = Mockito
+				.mock(org.springframework.security.core.context.SecurityContext.class);
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		org.springframework.security.core.context.SecurityContextHolder.setContext(context);
+		ReflectionTestUtils.setField(partnerHelper, "ownershipExemptServiceRoles",
+				List.of("CREDENTIAL_REQUEST", "CREDENTIAL_ISSUANCE"));
+		Mockito.when(searchHelper.isLoggedInUserMismatch("other-partner")).thenReturn(true);
+	}
+
+	@Test
+	public void validateLoggedInUserAuthorizationOrServiceRole_serviceRoleSkipsOwnershipCheck() {
+		try {
+			givenLoggedInRoles("CREDENTIAL_REQUEST");
+			partnerHelper.validateLoggedInUserAuthorizationOrServiceRole("other-partner");
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test
+	public void validateLoggedInUserAuthorizationOrServiceRole_rolePrefixIsIgnored() {
+		try {
+			givenLoggedInRoles("ROLE_CREDENTIAL_ISSUANCE");
+			partnerHelper.validateLoggedInUserAuthorizationOrServiceRole("other-partner");
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void validateLoggedInUserAuthorizationOrServiceRole_otherRoleStillChecked() {
+		try {
+			givenLoggedInRoles("PARTNER");
+			partnerHelper.validateLoggedInUserAuthorizationOrServiceRole("other-partner");
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test(expected = io.mosip.pms.partner.exception.PartnerServiceException.class)
+	public void validateLoggedInUserAuthorizationOrServiceRole_emptyPropertyKeepsCheck() {
+		try {
+			givenLoggedInRoles("CREDENTIAL_REQUEST");
+			ReflectionTestUtils.setField(partnerHelper, "ownershipExemptServiceRoles", List.of());
+			partnerHelper.validateLoggedInUserAuthorizationOrServiceRole("other-partner");
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
 }
