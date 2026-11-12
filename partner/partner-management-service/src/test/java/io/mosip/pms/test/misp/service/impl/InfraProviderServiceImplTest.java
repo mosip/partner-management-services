@@ -1264,4 +1264,64 @@ public class InfraProviderServiceImplTest {
 		assertErrorCode(result.getErrors(), "PMS_MSP_441");
 		verify(mispLicenseV2Repository, never()).save(any());
 	}
+
+	private void givenLoggedInRoles(String... roles) {
+		java.util.List<org.springframework.security.core.GrantedAuthority> authorities = new java.util.ArrayList<>();
+		for (String role : roles) {
+			authorities.add(new org.springframework.security.core.authority.SimpleGrantedAuthority(role));
+		}
+		io.mosip.kernel.openid.bridge.model.AuthUserDetails user = Mockito
+				.mock(io.mosip.kernel.openid.bridge.model.AuthUserDetails.class);
+		Mockito.doReturn(authorities).when(user).getAuthorities();
+		org.springframework.security.core.Authentication authentication = Mockito
+				.mock(org.springframework.security.core.Authentication.class);
+		Mockito.when(authentication.getPrincipal()).thenReturn(user);
+		org.springframework.security.core.context.SecurityContext context = Mockito
+				.mock(org.springframework.security.core.context.SecurityContext.class);
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		org.springframework.security.core.context.SecurityContextHolder.setContext(context);
+		ReflectionTestUtils.setField(partnerHelper, "internalServiceRoles",
+				List.of("CREDENTIAL_REQUEST", "CREDENTIAL_ISSUANCE"));
+	}
+
+	@Test
+	public void hasInternalServiceRole_listedRole_returnsTrue() {
+		try {
+			givenLoggedInRoles("CREDENTIAL_REQUEST");
+			assertTrue(partnerHelper.hasInternalServiceRole());
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test
+	public void hasInternalServiceRole_rolePrefixIsIgnored() {
+		try {
+			givenLoggedInRoles("ROLE_CREDENTIAL_ISSUANCE");
+			assertTrue(partnerHelper.hasInternalServiceRole());
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test
+	public void hasInternalServiceRole_otherRole_returnsFalse() {
+		try {
+			givenLoggedInRoles("PARTNER");
+			assertFalse(partnerHelper.hasInternalServiceRole());
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
+
+	@Test
+	public void hasInternalServiceRole_emptyProperty_returnsFalse() {
+		try {
+			givenLoggedInRoles("CREDENTIAL_REQUEST");
+			ReflectionTestUtils.setField(partnerHelper, "internalServiceRoles", List.of());
+			assertFalse(partnerHelper.hasInternalServiceRole());
+		} finally {
+			org.springframework.security.core.context.SecurityContextHolder.clearContext();
+		}
+	}
 }
