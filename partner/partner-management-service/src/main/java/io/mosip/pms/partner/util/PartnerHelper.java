@@ -14,7 +14,9 @@ import io.mosip.pms.common.helper.SearchHelper;
 import io.mosip.pms.common.repository.DeviceDetailSbiRepository;
 import io.mosip.pms.common.repository.PolicyGroupRepository;
 import io.mosip.pms.common.request.dto.RequestWrapper;
+import io.mosip.kernel.openid.bridge.model.AuthUserDetails;
 import io.mosip.pms.common.util.PMSLogger;
+import io.mosip.pms.common.util.UserDetailUtil;
 import io.mosip.pms.common.util.RestUtil;
 import io.mosip.pms.device.authdevice.entity.DeviceDetail;
 import io.mosip.pms.device.authdevice.entity.SecureBiometricInterface;
@@ -217,6 +219,13 @@ public class PartnerHelper {
     @Value("${pmp.allowed.credential.types}")
     private String allowedCredentialTypes;
 
+    /**
+     * Roles that skip the "does this partner id belong to me" check, but only on the policies API
+     * used by the credential service.
+     */
+    @Value("${mosip.pms.required.roles.internalservices:}")
+    private List<String> internalServiceRoles;
+
     public void validateSbiDeviceMapping(String partnerId, String sbiId, String deviceDetailId, boolean isOrphanedDevice) {
         if (!isOrphanedDevice) {
             Optional<SecureBiometricInterface> secureBiometricInterface = secureBiometricInterfaceRepository.findById(sbiId);
@@ -378,6 +387,22 @@ public class PartnerHelper {
             throw new PartnerServiceException(ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorCode(),
                     ErrorCode.LOGGEDIN_USER_NOT_AUTHORIZED.getErrorMessage());
         }
+    }
+
+    /**
+     * True when the logged-in user holds a role listed in mosip.pms.required.roles.internalservices.
+     */
+    public boolean hasInternalServiceRole() {
+        if (internalServiceRoles == null || internalServiceRoles.isEmpty()) {
+            return false;
+        }
+        AuthUserDetails user = UserDetailUtil.getLoggedInUserDetails();
+        if (user == null) {
+            return false;
+        }
+        return user.getAuthorities().stream()
+                .map(a -> a.getAuthority().replaceFirst("^ROLE_", ""))
+                .anyMatch(internalServiceRoles::contains);
     }
 
     /**
