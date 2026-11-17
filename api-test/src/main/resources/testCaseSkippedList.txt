@@ -1,2 +1,8 @@
 ##### JIRA number;testcase
 #MOSIP-12456------Mimoto_AddIdentity_Binding_smoke_Pos
+GI-2049------Pms_CreateOIDCClient_Invalid_GrantTypes_neg
+GI-2049------Pms_CreateOIDCClient_Multiple_GrantTypes_neg
+GI-2049------Pms_CreateOIDCClient_Empty_GrantTypes_neg
+GI-2049------Pms_CreateOIDCClient_GrantTypes_Special_Character_neg
+GI-2049------Pms_CreateOIDCClient_GrantTypes_Extra_Spaces_Trimmed_neg
+GI-2049------Pms_UpdateOIDCClient_Invalid_GrantType_Neg
