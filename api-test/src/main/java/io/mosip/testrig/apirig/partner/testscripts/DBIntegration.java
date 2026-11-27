@@ -13,7 +13,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import io.mosip.testrig.apirig.dto.TestCaseDTO;
-import io.mosip.testrig.apirig.partner.utils.ExtendedDBManager;
+import io.mosip.testrig.apirig.dbaccess.DBManager;
 import io.mosip.testrig.apirig.partner.utils.PMSConfigManager;
 import io.mosip.testrig.apirig.partner.utils.PMSUtil;
 import io.mosip.testrig.apirig.testrunner.HealthChecker;
@@ -85,7 +85,7 @@ public class DBIntegration extends PMSUtil implements ITest {
 
 		try {
 			GlobalMethods.reportRequest(null, sqlQuery, "SQL_Insert_Query");
-			ExtendedDBManager.executeDBWithQueries(PMSConfigManager.getPMSDbUrl(),
+			DBManager.executeDBWithQueries(PMSConfigManager.getPMSDbUrl(),
 					PMSConfigManager.getproperty("db-su-user"),
 					PMSConfigManager.getproperty("postgres-password"),
 					PMSConfigManager.getproperty("pms_db_schema"), sqlQuery);
